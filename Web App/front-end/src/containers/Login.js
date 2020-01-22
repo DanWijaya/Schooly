@@ -4,10 +4,13 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './Login.css';
 import logo from "./images/Schooly_logo.png";
+import { RemoveRedEye } from '@material-ui/icons';
+import PasswordMask from 'react-password-mask';
 
 function Login(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordIsMasked, setMasked] = useState(true);
 
     function validateForm(){
         return email.length > 0 && password.length > 0;
@@ -16,6 +19,10 @@ function Login(props) {
     function handleSubmit(event) {
         event.preventDefault();
     }
+
+    // function setMasked(passwordIsMasked) {
+    //   useState(!passwordIsMasked);
+    // }
 
     return (
         <div className="Login">
@@ -48,8 +55,8 @@ function Login(props) {
               placeholder="Enter Password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                type="password"
-              />
+                type="password">
+                </Form.Control>
             </Form.Group>
             <Button 
             block 
