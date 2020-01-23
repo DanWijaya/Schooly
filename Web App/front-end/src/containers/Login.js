@@ -39,12 +39,12 @@ function Login(props) {
             </Form.Group>
 
             <Form.Group controlId="email" bsSize="large">
-            <Form.Label type="user-type"> Email </Form.Label>
+            <Form.Label type="user-type"> Username </Form.Label>
               <Form.Control
                 autoFocus
                 type="email"
                 value={email}
-                placeholder="Enter Email"
+                placeholder="Enter Username"
                 onChange={e => setEmail(e.target.value)}
               />
             </Form.Group>
