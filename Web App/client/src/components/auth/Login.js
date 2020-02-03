@@ -11,7 +11,8 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {}
+      errors: {},
+      passwordIsMasked: true,
     };
   }
   
@@ -49,8 +50,16 @@ class Login extends Component {
     this.props.loginUser(userData);
   };
 
+  togglePasswordMask = () => {
+    this.setState(prevState =>
+    ({passwordIsMasked: !(prevState.passwordIsMasked)
+  })); 
+};
+
+
   render() {
     const { errors } = this.state;
+    const {passwordIsMasked} = this.state;
 
     return (
       <div className="container">
@@ -92,11 +101,16 @@ class Login extends Component {
                   value={this.state.password}
                   error={errors.password}
                   id="password"
-                  type="password"
+                  type={passwordIsMasked ? 'password' : 'text'}
                   className={classnames("", {
                     invalid: errors.password || errors.passwordincorrect
                   })}
-                />
+
+                  
+
+                /> <button className="mask-btn" onClick={this.togglePasswordMask} value="
+                Toggle"/>
+                
                 <label htmlFor="password">Password</label>
                 <span className="red-text">
                   {errors.password}

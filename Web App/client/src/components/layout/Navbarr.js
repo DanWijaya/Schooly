@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import './Navbar.css';
 import logo from './Schooly_logo.png';
+import Navbar from 'react-bootstrap/Navbar'
 
-class Navbar extends Component {
+class Navbarr extends Component {
   render() {
     return (
       <div >
@@ -27,4 +28,4 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+export default Navbarr;
