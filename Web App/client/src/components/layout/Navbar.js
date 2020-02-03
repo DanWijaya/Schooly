@@ -4,7 +4,7 @@ import './Navbar.css';
 import logo from './Schooly_logo.png';
 import Navbar from 'react-bootstrap/Navbar'
 
-class Navbarr extends Component {
+class Navbar extends Component {
   render() {
     return (
       <div >
@@ -28,4 +28,4 @@ class Navbarr extends Component {
   }
 }
 
-export default Navbarr;
+export default Navbar;
