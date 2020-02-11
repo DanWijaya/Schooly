@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import logo from "./Schooly_logo.png";
 import './Landing.css';
+import Navbar from "./Navbar";
 
 class Landing extends Component {
   render() {
     return (
       <center>
         <div>
+        <Navbar />
           <h4>Schooly makes school work easy!</h4>
           <br className="spacing"/>
             <div className="col s6">
