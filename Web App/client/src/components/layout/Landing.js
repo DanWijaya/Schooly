@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 
 class Landing extends Component {
   render() {
+    document.title="Schooly - Home"
     return (
       <center>
         <div>
@@ -39,7 +40,7 @@ class Landing extends Component {
                 Log In
               </Link>
         </div>
-        
+
       </div>
       </center>
     );

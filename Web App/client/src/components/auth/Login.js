@@ -1,10 +1,31 @@
+//IMPORT COMPONENETS
+  //Basic Components and Login Component
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
-import classnames from "classnames";
 
+  //Grid System
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+//CODE
+  //Grid System
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+}));
+
+  //Login System
 class Login extends Component {
   constructor() {
     super();
@@ -15,7 +36,7 @@ class Login extends Component {
       passwordIsMasked: true,
     };
   }
-  
+
   componentDidMount() {
     // If logged in and user navigates to Login page, should redirect them to dashboard
     if (this.props.auth.isAuthenticated) {
@@ -53,16 +74,41 @@ class Login extends Component {
   togglePasswordMask = () => {
     this.setState(prevState =>
     ({passwordIsMasked: !(prevState.passwordIsMasked)
-  })); 
+  }));
 };
 
-
   render() {
+    document.title="Schooly - Login"
     const { errors } = this.state;
     const {passwordIsMasked} = this.state;
 
     return (
-      <div className="container">
+      <div>
+      <div>
+<Grid container spacing={3}>
+  <Grid item xs={12}>
+    <Paper>xs=12</Paper>
+  </Grid>
+  <Grid item xs={6}>
+    <Paper>xs=6</Paper>
+  </Grid>
+  <Grid item xs={6}>
+    <Paper>xs=6</Paper>
+  </Grid>
+  <Grid item xs={3}>
+    <Paper>xs=3</Paper>
+  </Grid>
+  <Grid item xs={3}>
+    <Paper>xs=3</Paper>
+  </Grid>
+  <Grid item xs={3}>
+    <Paper>xs=3</Paper>
+  </Grid>
+  <Grid item xs={3}>
+    <Paper>xs=3</Paper>
+  </Grid>
+</Grid>
+</div>
         <div style={{ marginTop: "4rem" }} className="row">
           <div className="col s8 offset-s2">
             <Link to="/" className="btn-flat waves-effect">
@@ -106,11 +152,11 @@ class Login extends Component {
                     invalid: errors.password || errors.passwordincorrect
                   })}
 
-                  
+
 
                 /> <button className="mask-btn" onClick={this.togglePasswordMask} value="
                 Toggle"/>
-                
+
                 <label htmlFor="password">Password</label>
                 <span className="red-text">
                   {errors.password}

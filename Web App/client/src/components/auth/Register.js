@@ -50,6 +50,7 @@ class Register extends Component {
   };
 
   render() {
+    document.title="Schooly - Register"
     const { errors } = this.state;
 
     return (
