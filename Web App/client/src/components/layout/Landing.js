@@ -3,13 +3,17 @@ import { Link } from "react-router-dom";
 import logo from "./Schooly_logo.png";
 import './Landing.css';
 import Navbar from "./Navbar";
+import Grid from '@material-ui/core/Grid';
 
 class Landing extends Component {
   render() {
     return (
       <center>
         <div>
-        <Navbar />
+        <br/><br/><br/><br/>
+        <img src={logo} className="schooly_logo"/>
+        <br/>
+        <br/>
           <h4>Schooly makes school work easy!</h4>
           <br className="spacing"/>
             <div className="col s6">

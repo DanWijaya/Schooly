@@ -5,7 +5,23 @@ import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
 import classnames from "classnames";
 
+// Dari websitenya. 
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+}));
+
+
 class Login extends Component {
+  
   constructor() {
     super();
     this.state = {
@@ -23,6 +39,11 @@ class Login extends Component {
     }
   }
 
+  CenteredGrid() {
+    const classes = useStyles();
+  }
+  
+  handleChange(event) {}
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
@@ -60,10 +81,11 @@ class Login extends Component {
   render() {
     const { errors } = this.state;
     const {passwordIsMasked} = this.state;
-
+    document.title = "Schooly - Login"
     return (
       <div className="container">
-        <div style={{ marginTop: "4rem" }} className="row">
+        <br/><br/><br/><br/>
+        {/* <div style={{ marginTop: "4rem" }} className="row"> */}
           <div className="col s8 offset-s2">
             <Link to="/" className="btn-flat waves-effect">
               <i className="material-icons left">keyboard_backspace</i> Back to
@@ -73,10 +95,8 @@ class Login extends Component {
               <h4>
                 <b>Login</b> below
               </h4>
-              {/* <p className="grey-text text-darken-1">
-                Don't have an account? <Link to="/register">Register</Link>
-              </p> */}
             </div>
+            
             <form noValidate onSubmit={this.onSubmit}>
               <div className="input-field col s12">
                 <input
@@ -109,7 +129,7 @@ class Login extends Component {
                   
 
                 /> <button className="mask-btn" onClick={this.togglePasswordMask} value="
-                Toggle"/>
+                Toggle" type="button"/> Show password
                 
                 <label htmlFor="password">Password</label>
                 <span className="red-text">
@@ -133,7 +153,7 @@ class Login extends Component {
               </div>
             </form>
           </div>
-        </div>
+        {/* </div> */}
       </div>
     );
   }

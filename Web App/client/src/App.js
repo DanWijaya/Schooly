@@ -14,8 +14,10 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
-
+import NavBar from './components/NavBar/NavBar';
+import BackDrop from './components/Backdrop/Backdrop';
 import "./App.css";
+import SideDrawer from "./components/SideDrawer/SideDrawer";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -37,9 +39,35 @@ if (localStorage.jwtToken) {
   }
 }
 class App extends Component {
+ 
+  state = {
+    sideDrawerOpen: false
+  };
+
+  drawerToggleClickHandler = () => {
+    this.setState((prevState) => {
+      return {sideDrawerOpen: !prevState.sideDrawerOpen};
+    });
+  };
+  
+  //38:55
+  backdropClickHandler = () => {
+    this.setState({sideDrawerOpen: false});
+  }
+
   render() {
+    // let sideDrawer;
+    let backdrop;
+
+    if(this.state.sideDrawerOpen){
+      // sideDrawer = <SideDrawer/>
+      backdrop = <BackDrop click={this.state.backdropClickHandler}/>
+    }
     return (
-      <Provider store={store}>
+      <div style={{height: '100%'}}>
+        <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
+        <SideDrawer show={this.state.sideDrawerOpen}/>
+       <Provider store={store}>
         <Router>
           <div className="App">
             <Route exact path="/" component={Landing} />
@@ -50,8 +78,26 @@ class App extends Component {
             </Switch>
           </div>
         </Router>
-      </Provider>
+      </Provider> 
+        {backdrop}
+        {/* <main style={{marginTop: '64px'}}>
+          <p>This is the page content!</p>
+        </main> */}
+      </div>
     );
   }
 }
 export default App;
+
+{/* <Provider store={store}>
+        <Router>
+          <div className="App">
+            <Route exact path="/" component={Landing} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+            <Switch>
+              <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            </Switch>
+          </div>
+        </Router>
+      </Provider> */}
