@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 
 class Landing extends Component {
   render() {
+    document.title="Schooly - Home"
     return (
       <center>
         <div>
@@ -43,7 +44,7 @@ class Landing extends Component {
                 Log In
               </Link>
         </div>
-        
+
       </div>
       </center>
     );

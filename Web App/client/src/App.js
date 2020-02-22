@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
@@ -8,7 +8,7 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-
+import HomeTest from "./components/layout/HomeTest";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -71,6 +71,7 @@ class App extends Component {
         <Router>
           <div className="App">
             <Route exact path="/" component={Landing} />
+            <Route exact path="/hometest" component={HomeTest} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Switch>
