@@ -4,22 +4,29 @@ import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 import NavBar from "../NavBar/NavBar";
 import SideDrawer from "../SideDrawer/SideDrawer";
-
+import SideBar from '../SideDrawer/SideBar'
 class Dashboard extends Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {
+          sidebarOpen: true
+      };
+    }
+
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logoutUser();
   };
 
-
   render() {
     const { user } = this.props.auth;
-  
+    document.body.style.background = "white"
     return (
-          <div style={{ height: "75vh" }} className="container valign-wrapper">
-            {/* <Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>
-        <SideDrawer show={this.state.sideDrawerOpen}/> */}
-          {/* <div className="row"> */}
+      
+      <div>
+          <div style={{ height: "75vh"}} className="container valign-wrapper">
+
             <div className="landing-copy col s12 center-align">
               <h4>
                 <b>Hey there, </b> {user.name.split(" ")[0]}
@@ -42,6 +49,7 @@ class Dashboard extends Component {
               </button>
             </div>
           {/* </div> */}
+          </div>
           </div>
     )
   };

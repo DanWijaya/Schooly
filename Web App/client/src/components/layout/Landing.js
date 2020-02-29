@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import logo from "./Schooly_logo.png";
 import './Landing.css';
-import Navbar from "./Navbar";
 import Grid from '@material-ui/core/Grid';
+import SideDrawer from '../SideDrawer/SideDrawer';
 
 class Landing extends Component {
   render() {

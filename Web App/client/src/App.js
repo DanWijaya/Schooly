@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
@@ -8,16 +8,17 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-import HomeTest from "./components/layout/HomeTest";
+
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
 import NavBar from './components/NavBar/NavBar';
-import BackDrop from './components/Backdrop/Backdrop';
+import BackDrop from '../src/Backdrop/Backdrop';
 import "./App.css";
 import SideDrawer from "./components/SideDrawer/SideDrawer";
+import SideBar from "../src/components/SideDrawer/SideBar";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -61,7 +62,7 @@ class App extends Component {
 
     if(this.state.sideDrawerOpen){
       // sideDrawer = <SideDrawer/>
-      backdrop = <BackDrop click={this.state.backdropClickHandler}/>
+      backdrop = <BackDrop click={this.backdropClickHandler}/>
     }
     return (
       <div style={{height: '100%'}}>
@@ -71,7 +72,6 @@ class App extends Component {
         <Router>
           <div className="App">
             <Route exact path="/" component={Landing} />
-            <Route exact path="/hometest" component={HomeTest} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Switch>
