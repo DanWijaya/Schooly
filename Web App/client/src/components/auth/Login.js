@@ -1,5 +1,5 @@
-//IMPORT COMPONENETS
-  //Basic Components and Login Component
+//IMPORT COMPONENTS
+  //Basic Components and Login Components
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -10,6 +10,15 @@ import { loginUser } from "../../actions/authActions";
 // Dari websitenya. 
 import { makeStyles } from '@material-ui/core/styles';
 
+// =======
+//   //Grid Components
+// import { makeStyles } from '@material-ui/core/styles';
+// import Paper from '@material-ui/core/Paper';
+// import Grid from '@material-ui/core/Grid';
+
+// //FUNCTIONS
+//   //Grid Fucntions
+// >>>>>>> e53449c9a39fa85ca1294d013c37834f3d204e9e
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -21,8 +30,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// <<<<<<< HEAD
+// =======
+//   //Login Functions
+// >>>>>>> e53449c9a39fa85ca1294d013c37834f3d204e9e
 class Login extends Component {
-  
+
   constructor() {
     super();
     this.state = {
@@ -43,7 +56,7 @@ class Login extends Component {
   CenteredGrid() {
     const classes = useStyles();
   }
-  
+
   handleChange(event) {}
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
@@ -85,7 +98,6 @@ class Login extends Component {
     document.title = "Schooly - Login"
     return (
       <div className="container">
-        <br/><br/><br/><br/>
         {/* <div style={{ marginTop: "4rem" }} className="row"> */}
           <div className="col s8 offset-s2">
             <Link to="/" className="btn-flat waves-effect">
@@ -97,7 +109,7 @@ class Login extends Component {
                 <b>Login</b> below
               </h4>
             </div>
-            
+
             <form noValidate onSubmit={this.onSubmit}>
               <div className="input-field col s12">
                 <input
@@ -132,6 +144,7 @@ class Login extends Component {
                 /> <button className="mask-btn" onClick={this.togglePasswordMask} value="
                 Toggle" type="button"/> Show password
                 
+
                 <label htmlFor="password">Password</label>
                 <span className="red-text">
                   {errors.password}
@@ -154,6 +167,32 @@ class Login extends Component {
               </div>
             </form>
           </div>
+          <div>
+            {/*
+  <Grid container spacing={3}>
+    <Grid item xs={12}>
+      <Paper>xs=12</Paper>
+    </Grid>
+    <Grid item xs={6}>
+      <Paper>xs=6</Paper>
+    </Grid>
+    <Grid item xs={6}>
+      <Paper>xs=6</Paper>
+    </Grid>
+    <Grid item xs={3}>
+      <Paper>xs=3</Paper>
+    </Grid>
+    <Grid item xs={3}>
+      <Paper>xs=3</Paper>
+    </Grid>
+    <Grid item xs={3}>
+      <Paper>xs=3</Paper>
+    </Grid>
+    <Grid item xs={3}>
+      <Paper>xs=3</Paper>
+    </Grid>
+            </Grid> */}
+</div>
         {/* </div> */}
       </div>
     );

@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 
+import Profile from "./components/auth/Profile";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -40,7 +41,7 @@ if (localStorage.jwtToken) {
   }
 }
 class App extends Component {
- 
+
   state = {
     sideDrawerOpen: false
   };
@@ -50,7 +51,7 @@ class App extends Component {
       return {sideDrawerOpen: !prevState.sideDrawerOpen};
     });
   };
-  
+
   //38:55
   backdropClickHandler = () => {
     this.setState({sideDrawerOpen: false});
@@ -68,10 +69,12 @@ class App extends Component {
       <div style={{height: '100%'}}>
         <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
         <SideDrawer show={this.state.sideDrawerOpen}/>
+        <br/><br/><br/><br/>
        <Provider store={store}>
         <Router>
           <div className="App">
             <Route exact path="/" component={Landing} />
+            <Route exact path="/profile" component={Profile} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Switch>
@@ -79,7 +82,7 @@ class App extends Component {
             </Switch>
           </div>
         </Router>
-      </Provider> 
+      </Provider>
         {backdrop}
         {/* <main style={{marginTop: '64px'}}>
           <p>This is the page content!</p>
