@@ -21,13 +21,13 @@ const sideDrawer = props => {
     }
   }
 
-  function addEntry(id) {
-    var ul = document.getElementById(id)
-    var newLink = document.createElement('a')
-    newLink.setAttribute('class', "w3-bar-item w3-button");
-    newLink.appendChild(document.createTextNode("Class 3"));
-    ul.appendChild(newLink);
-  }
+  // function addEntry(id) {
+  //   var ul = document.getElementById(id)
+  //   var newLink = document.createElement('a')
+  //   newLink.setAttribute('class', "w3-bar-item w3-button");
+  //   newLink.appendChild(document.createTextNode("Class 3"));
+  //   ul.appendChild(newLink);
+  // }
   
   
   return (
@@ -52,9 +52,9 @@ const sideDrawer = props => {
                 <a class="w3-bar-item w3-button">Class 1</a>
                 <a class="w3-bar-item w3-button">Class 2</a>
               </div>
-
+{/* 
               <button class="add" onClick={() => addEntry("classes")} > Add classes</button>
-              <button class="add" onClick={() => addEntry("task")} > Add Tasks</button>
+              <button class="add" onClick={() => addEntry("task")} > Add Tasks</button> */}
         </div>
 
           
