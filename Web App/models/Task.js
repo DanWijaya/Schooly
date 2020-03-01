@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
 // Create Task Schema 
 const TaskSchema = new Schema({ 
     name: {
@@ -9,16 +10,16 @@ const TaskSchema = new Schema({
     },
     deadline: {
         type: Date, 
-        required: true
+        required: [true, "The task has no deadline?"]
     }, 
-    score: {
-        type: Number,
-        required: true
+    subject: {
+        type: String,
     },
     submitted: {
         type: Boolean,
-        default: false
-    }
+        default: false,
+    },
+   
 })
 
 module.exports = Task = mongoose.model("tasks", TaskSchema);

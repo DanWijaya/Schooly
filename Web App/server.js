@@ -5,6 +5,8 @@ const passport = require("passport");
 
 const users = require("./routes/api/users");
 const tasks = require("./routes/api/tasks");
+const classes = require("./routes/api/classes");
+
 const app = express();
 
 // Bodyparser middleware
@@ -35,7 +37,9 @@ require("./config/passport")(passport);
 console.log("Check routes");
 // Routes
 app.use("/api/users", users);
- app.use("/api/tasks", tasks);
+app.use("/api/tasks", tasks);
+app.use("/api/classes", classes);
+
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));

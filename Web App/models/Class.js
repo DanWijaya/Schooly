@@ -12,7 +12,7 @@ const ClassSchema = new Schema({
       required: true
   },
   ukuran: {
-    type: Int32Array,
+    type: Number,
     required: true
   },
   nihil: {
