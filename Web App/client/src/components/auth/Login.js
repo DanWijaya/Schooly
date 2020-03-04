@@ -2,7 +2,7 @@
   //Basic Components and Login Components
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"; //Helps in minimizing the problem in React by checking the types passed in the props object. 
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
