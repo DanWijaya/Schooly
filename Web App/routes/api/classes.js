@@ -38,5 +38,18 @@ router.post("/view", (req, res) => {
     });
 });
 
+<<<<<<< HEAD
+=======
+router.post("/viewall", (req, res) => {
+    Class.findOne({}).then(kelas => {
+        if(!kelas){
+            return res.json("No classes have been created yet");
+        } else{ 
+            console.log(kelas);
+            res.json(kelas);
+        }
+    })
+})
+>>>>>>> 0d49960b3df37ad2be0d9a33cfb1888bd3b5429d
 
 module.exports = router;
