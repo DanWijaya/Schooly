@@ -20,6 +20,7 @@ import BackDrop from '../src/Backdrop/Backdrop';
 import "./App.css";
 import SideDrawer from "./components/SideDrawer/SideDrawer";
 import SideBar from "../src/components/SideDrawer/SideBar";
+import Axios from "axios";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -43,7 +44,8 @@ if (localStorage.jwtToken) {
 class App extends Component {
 
   state = {
-    sideDrawerOpen: false
+    sideDrawerOpen: false,
+    posts: []
   };
 
   drawerToggleClickHandler = () => {
@@ -57,6 +59,21 @@ class App extends Component {
     this.setState({sideDrawerOpen: false});
   }
 
+  getData = () => {
+    Axios.get('/api/')
+      .then((res) => {
+        const data = res.data;
+        this.setState({posts: data});
+        console.log('Data has been received!');
+      })
+      .catch(() => {
+        alert('Error fetching data');
+      });
+  }
+
+  componentDidMount = () => {
+    this.getData();
+  }
   render() {
     // let sideDrawer;
     let backdrop;

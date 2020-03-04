@@ -32,16 +32,11 @@ router.post("/view", (req, res) => {
         if(!kelas){
             return res.status(404).json("Class does not exist");
         } else {
-            const payload = {
-                name: req.body.name,
-                walikelas: req.body.walikelas,
-                nihil: req.body.nihil,
-                ukuran: req.body.ukuran,
-            }
-
-            res.json(payload);
+            // console.log(kelas);
+            res.json(kelas);
         }
     });
 });
+
 
 module.exports = router;

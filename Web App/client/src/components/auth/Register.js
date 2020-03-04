@@ -23,8 +23,8 @@ class Register extends Component {
       this.props.history.push("/dashboard");
     }
   }
-
-  componentWillReceiveProps(nextProps) {
+   
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
         errors: nextProps.errors
@@ -52,7 +52,6 @@ class Register extends Component {
   render() {
     document.title="Schooly - Register"
     const { errors } = this.state;
-    document.title = "Schooly - Register"
     return (
       <div className="container">
         {/* <div className="row" style={{ marginTop: "4rem" }}> */}
