@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './SideDrawer.css'
+import './sideDrawer.css'
 
 const sideDrawer = props => {
   // let drawerClasses = ['side-drawer'];
@@ -10,6 +10,9 @@ const sideDrawer = props => {
     drawerClasses = "w3-sidebar w3-light-grey w3-bar-block side-drawer open";
   }
 
+<<<<<<< HEAD:Web App/client/src/components/misc/sideDrawer/sideDrawer.js
+
+=======
   function actionDropdowns(id) {
     var x = document.getElementById(id);
     if (x.className.indexOf("w3-show") == -1) {
@@ -30,6 +33,7 @@ const sideDrawer = props => {
   // }
   
   
+>>>>>>> 838a7926c3155c7e10660cc411c9b5ace6bb4c58:Web App/client/src/components/SideDrawer/SideDrawer.js
   return (
     <div>
       <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>

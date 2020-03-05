@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
-import NavBar from "../NavBar/NavBar";
-import SideDrawer from "../SideDrawer/SideDrawer";
-import SideBar from '../SideDrawer/SideBar'
+import { logoutUser } from "../../../actions/authActions";
+import NavBar from "../../misc/navBar/navBar";
+import SideDrawer from "../../misc/sideDrawer/sideDrawer";
 
 class Dashboard extends Component {
 

@@ -4,7 +4,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import classnames from "classnames";
+<<<<<<< HEAD
 import CreateClass from "../objects/classes/CreateClass.js"
+=======
+import './register.css';
+
+>>>>>>> 45889e628cd747ff71bd763a1978081c10bd8f47
 class Register extends Component {
   constructor() {
     super();

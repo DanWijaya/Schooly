@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import '../SideDrawer/DrawerToggleButton';
-import './NavBar.css'
-import DrawerToggleButton from '../SideDrawer/DrawerToggleButton.js';
-import logo from '../layout/S_logo.png';
+import '../sideDrawer/drawerToggleButton';
+import './navBar.css'
+import DrawerToggleButton from '../sideDrawer/drawerToggleButton.js';
+import logo from './S_logo.png';
 
 class NavBar extends Component {
   render() {
@@ -26,8 +26,8 @@ class NavBar extends Component {
             <a href="/register">Register </a>
             </li>
           </ul>
-        
-        
+
+
       </div>
     </nav>
     </header>
