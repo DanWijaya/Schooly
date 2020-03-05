@@ -5,6 +5,7 @@ import { logoutUser } from "../../actions/authActions";
 import NavBar from "../NavBar/NavBar";
 import SideDrawer from "../SideDrawer/SideDrawer";
 import SideBar from '../SideDrawer/SideBar'
+
 class Dashboard extends Component {
 
     constructor(props) {

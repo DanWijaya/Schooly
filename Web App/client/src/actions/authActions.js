@@ -22,6 +22,7 @@ export const loginUser = userData => dispatch => {
   axios
     .post("/api/users/login", userData)
     .then(res => {
+      console.log("Berhasil login")
       // Save to localStorage
 
       // Set token to localStorage
@@ -34,11 +35,13 @@ export const loginUser = userData => dispatch => {
       // Set current user
       dispatch(setCurrentUser(decoded));
     })
-    .catch(err =>
+    .catch(err => {
+      console.log("error")
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
+        payload: err.response.data 
       })
+    }
     );
 };
 

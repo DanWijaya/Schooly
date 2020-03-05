@@ -38,8 +38,6 @@ router.post("/view", (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-=======
 router.post("/viewall", (req, res) => {
     Class.findOne({}).then(kelas => {
         if(!kelas){
@@ -50,6 +48,18 @@ router.post("/viewall", (req, res) => {
         }
     })
 })
->>>>>>> 0d49960b3df37ad2be0d9a33cfb1888bd3b5429d
+
+router.route('delete/:id').delete((req, res, next) => {
+    Class.findByIdAndRemove(req.params.id, (error, data) => {
+        if(error) {
+            return next(error);
+        } else {
+            res.status(200).json({
+                msg: data
+            })
+        }
+    })
+})
+
 
 module.exports = router;

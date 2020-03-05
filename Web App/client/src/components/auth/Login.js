@@ -95,7 +95,6 @@ class Login extends Component {
     document.title="Schooly - Login"
     const { errors } = this.state;
     const {passwordIsMasked} = this.state;
-    document.title = "Schooly - Login"
     return (
       <div className="container" style={{marginLeft: "500px"}}>
         {/* <div style={{ marginTop: "4rem" }} className="row"> */}

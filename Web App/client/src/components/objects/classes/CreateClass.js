@@ -1,46 +1,59 @@
-import React, { Component } from 'react'
-import { Link, withRouter } from "react-router-dom";
+import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import classNames from "classnames";
+import { createClass } from "../../../actions/classActions"
 
-class AddClass extends Component {
-    constructor(){
-        super();
+class CreateClass extends Component {
+    constructor(props) {
+        super(props);
+
         this.state = {
-            name: "",
-            nihil: null,
-            walikelas: "",
-            ukuran: 0,   
+            name: '',
+            nihil: true,
+            walikelas: '',
+            ukuran: 0,
+            errors: {}
         };
     }
-    
-    onChange = e => {
-        this.setState({ [e.target.id]: e.target.value });
-    }  
+
+    onChange = (e) => {
+        this.setState({ [e.target.id]: e.target.value});
+    }
 
     onSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        const newClass = {
+        const classObject = {
             name: this.state.name,
-            nihil: this.state.email,
+            nihil: this.state.nihil,
             walikelas: this.state.walikelas,
-            ukuran: this.state.ukuran
-        }
+            ukuran: this.state.ukuran,
+            errors: {}
+        };
+
+        // this.props.createClass(classObject);
+        // Axios.post('api/classes/create', classObject)
+        //     .then((res) => {
+        //         console.log(res.data)
+        //     }).catch((error) => {
+        //         console.log(error)
+        //     });
+        // this.props.createClass(classObject);
+        this.setState({name: '', nihil: true, walikelas: '', ukuran: null})
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.errors) {
-            this.setState({
-                errors: nextProps.errors
-            });
-        }
-    }
+    // componentDidMount() {
+    //     if(this.props.auth.isAuthenticated) {
+    //         this.props.history.push("/viewclass");
+    //     }
+    // }
 
     render() {
-        document.title = "Schooly - Tambah Kelas"
+        
+        document.title = "Schooly - Membuat Kelas"
         const { errors } = this.state;
-
+        
         return (
             <div> 
                 <div className="col s12" style={{paddingLeft: "11.250px"}}>
@@ -124,9 +137,22 @@ class AddClass extends Component {
                     </div>
                 </form>
             </div>
-        );
+        )
+        }
     }
-}
 
-export default AddClass
+CreateClass.propTypes = {
+    createClass: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired
+};
 
+// const mapStateToProps = state => ({
+//     errors: state.errors
+// })
+
+// export default connect(
+//     mapStateToProps, { createClass }
+// ) (CreateClass)
+
+
+export default CreateClass;
