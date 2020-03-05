@@ -11,40 +11,19 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-<<<<<<< HEAD
-//Other Components
-import "./App.css";
-import PrivateRoute from "./components/private-route/PrivateRoute";
-
-  //auth Folder Components
-import Register from "./components/auth/register";
-import Login from "./components/auth/login";
-
-  //layout Folder Components
 import Profile from "./components/layout/profile/profile";
 import Landing from "./components/layout/landing/landing";
-import Dashboard from "./components/layout/dashboard/dashboard";
-
-  //misc Folder Components
-import NavBar from './components/misc/navBar/navBar';
-import BackDrop from './components/misc/backdrop/backdrop';
-import SideDrawer from "./components/misc/sideDrawer/sideDrawer";
-=======
-
-import Profile from "./components/auth/Profile";
-import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
-import Dashboard from "./components/dashboard/Dashboard";
-import NavBar from './components/NavBar/NavBar';
+import Dashboard from "./components/layout/dashboard/dashboard.js";
+import NavBar from "./components/misc/navBar/navBar";
 import BackDrop from '../src/Backdrop/Backdrop';
 import "./App.css";
-import SideDrawer from "./components/SideDrawer/SideDrawer";
+import SideDrawer from "./components/misc/sideDrawer/sideDrawer"
 import CreateClass from "./components/objects/classes/CreateClass"
 
 import Axios from "axios";
->>>>>>> 838a7926c3155c7e10660cc411c9b5ace6bb4c58
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {

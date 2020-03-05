@@ -18,7 +18,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // //FUNCTIONS
 //   //Grid Fucntions
-// >>>>>>> e53449c9a39fa85ca1294d013c37834f3d204e9e
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -30,10 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// <<<<<<< HEAD
-// =======
 //   //Login Functions
-// >>>>>>> e53449c9a39fa85ca1294d013c37834f3d204e9e
 class Login extends Component {
 
   constructor() {
@@ -166,8 +162,6 @@ class Login extends Component {
               </div>
             </form>
           </div>
-<<<<<<< HEAD
-=======
           <div>
             {/*
   <Grid container spacing={3}>
@@ -194,7 +188,6 @@ class Login extends Component {
     </Grid>
             </Grid> */}
 </div>
->>>>>>> 838a7926c3155c7e10660cc411c9b5ace6bb4c58
         {/* </div> */}
       </div>
     );
