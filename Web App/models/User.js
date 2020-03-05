@@ -1,4 +1,7 @@
+// Require Mongoose
 const mongoose = require("mongoose");
+
+// Define a Schema
 const Schema = mongoose.Schema;
 
 // Create Schema
@@ -21,4 +24,5 @@ const UserSchema = new Schema({
   }
 });
 
+// Models are created from schemas using the mongoose.model() method. 
 module.exports = User = mongoose.model("users", UserSchema);

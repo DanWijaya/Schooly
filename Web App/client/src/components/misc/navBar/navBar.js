@@ -11,7 +11,7 @@ class NavBar extends Component {
     <header className="NavBar__a">
     <nav className="navbar-light bg-transparent NavBar__navigation">
       <div className="NavBar__toggle-button">
-          <DrawerToggleButton click={this.props.drawerClickHandler}/>
+          <DrawerToggleButton click={this.props.drawerClickHandler} />
       </div>
       <div className="NavBar__logo">
         <a href="/"><img src={logo} className="logo"/></a>

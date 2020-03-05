@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import logo from "./Schooly_logo.png";
+<<<<<<< HEAD:Web App/client/src/components/layout/landing/landing.js
 import './landing.css';
+=======
+import './Landing.css';
+>>>>>>> 838a7926c3155c7e10660cc411c9b5ace6bb4c58:Web App/client/src/components/layout/Landing.js
 import Grid from '@material-ui/core/Grid';
+import SideDrawer from '../SideDrawer/SideDrawer';
 
 class Landing extends Component {
   render() {

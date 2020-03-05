@@ -1,25 +1,43 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+<<<<<<< HEAD:Web App/client/src/components/layout/dashboard/dashboard.js
 import { logoutUser } from "../../../actions/authActions";
 import NavBar from "../../misc/navBar/navBar";
 import SideDrawer from "../../misc/sideDrawer/sideDrawer";
 
+=======
+import { logoutUser } from "../../actions/authActions";
+import NavBar from "../NavBar/NavBar";
+import SideDrawer from "../SideDrawer/SideDrawer";
+import SideBar from '../SideDrawer/SideBar'
+>>>>>>> 838a7926c3155c7e10660cc411c9b5ace6bb4c58:Web App/client/src/components/dashboard/Dashboard.js
 class Dashboard extends Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {
+          sidebarOpen: true
+      };
+    }
+
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logoutUser();
   };
 
-
   render() {
     const { user } = this.props.auth;
+<<<<<<< HEAD:Web App/client/src/components/layout/dashboard/dashboard.js
 
+=======
+    document.body.style.background = "white"
+>>>>>>> 838a7926c3155c7e10660cc411c9b5ace6bb4c58:Web App/client/src/components/dashboard/Dashboard.js
     return (
-          <div style={{ height: "75vh" }} className="container valign-wrapper">
-            {/* <Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>
-        <SideDrawer show={this.state.sideDrawerOpen}/> */}
-          {/* <div className="row"> */}
+      
+      <div>
+          <div style={{ height: "75vh"}} className="container valign-wrapper">
+
             <div className="landing-copy col s12 center-align">
               <h4>
                 <b>Hey there, </b> {user.name.split(" ")[0]}
@@ -42,6 +60,7 @@ class Dashboard extends Component {
               </button>
             </div>
           {/* </div> */}
+          </div>
           </div>
     )
   };

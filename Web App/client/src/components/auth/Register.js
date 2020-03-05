@@ -24,8 +24,8 @@ class Register extends Component {
       this.props.history.push("/dashboard");
     }
   }
-
-  componentWillReceiveProps(nextProps) {
+   
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
         errors: nextProps.errors
@@ -53,10 +53,8 @@ class Register extends Component {
   render() {
     document.title="Schooly - Register"
     const { errors } = this.state;
-    document.title = "Schooly - Register"
     return (
       <div className="container">
-        <br/><br/><br/><br/>
         {/* <div className="row" style={{ marginTop: "4rem" }}> */}
           <div className="col s8 offset-s2">
             <Link to="/" className="btn-flat waves-effect">
