@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
-import NavBar from "../NavBar/NavBar";
-import SideDrawer from "../SideDrawer/SideDrawer";
+import { logoutUser } from "../../../actions/authActions";
+import NavBar from "../../misc/navBar/navBar";
+import SideDrawer from "../../misc/sideDrawer/sideDrawer";
 
 class Dashboard extends Component {
   onLogoutClick = e => {
@@ -14,7 +14,7 @@ class Dashboard extends Component {
 
   render() {
     const { user } = this.props.auth;
-  
+
     return (
           <div style={{ height: "75vh" }} className="container valign-wrapper">
             {/* <Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>

@@ -1,23 +1,33 @@
+//IMPORT COMPONENTS
+  //Basic Components and Styling Components
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 
+  //Authentication Components
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-import Profile from "./components/auth/Profile";
-import Landing from "./components/layout/Landing";
-import Register from "./components/auth/Register";
-import Login from "./components/auth/Login";
-import PrivateRoute from "./components/private-route/PrivateRoute";
-import Dashboard from "./components/dashboard/Dashboard";
-import NavBar from './components/NavBar/NavBar';
-import BackDrop from './components/Backdrop/Backdrop';
+//Other Components
 import "./App.css";
-import SideDrawer from "./components/SideDrawer/SideDrawer";
+import PrivateRoute from "./components/private-route/PrivateRoute";
+
+  //auth Folder Components
+import Register from "./components/auth/register";
+import Login from "./components/auth/login";
+
+  //layout Folder Components
+import Profile from "./components/layout/profile/profile";
+import Landing from "./components/layout/landing/landing";
+import Dashboard from "./components/layout/dashboard/dashboard";
+
+  //misc Folder Components
+import NavBar from './components/misc/navBar/navBar';
+import BackDrop from './components/misc/backdrop/backdrop';
+import SideDrawer from "./components/misc/sideDrawer/sideDrawer";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {

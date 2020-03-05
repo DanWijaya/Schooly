@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './SideDrawer.css'
+import './sideDrawer.css'
 
 const sideDrawer = props => {
   // let drawerClasses = ['side-drawer'];
@@ -10,7 +10,7 @@ const sideDrawer = props => {
     drawerClasses = 'side-drawer open';
   }
 
-  
+
   return (
     <nav className={drawerClasses}>
       <ul id="dynamic-list">
