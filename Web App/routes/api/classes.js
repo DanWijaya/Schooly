@@ -2,10 +2,19 @@ const express = require("express");
 const router = express.Router();
 const keys = require("../../config/keys");
 
+//Load input validation 
+const validateClassInput = require("../../validation/classdata");
+
 //Load Class Model 
 const Class = require("../../models/Class");
 
 router.post("/create", (req, res) => {
+
+    const { errors, isValid } = validateClassInput(req.body);
+
+    if(!isValid) {
+        return res.status(400).json(errors);
+    }
 
     Class.findOne({ name: req.body.name}).then(kelas => {
         if(kelas) {
@@ -28,6 +37,13 @@ router.post("/create", (req, res) => {
 });
 
 router.post("/view", (req, res) => {
+
+    const { errors, isValid } = validateClassInput(req.body);
+
+    if(!isValid) {
+        return res.status(400).json(errors);
+    }
+
     Class.findOne({ name: req.body.name}).then(kelas => {
         if(!kelas){
             return res.status(404).json("Class does not exist");
@@ -39,6 +55,7 @@ router.post("/view", (req, res) => {
 });
 
 router.post("/viewall", (req, res) => {
+
     Class.findOne({}).then(kelas => {
         if(!kelas){
             return res.json("No classes have been created yet");

@@ -92,7 +92,7 @@ class Login extends Component {
     const { errors } = this.state;
     const {passwordIsMasked} = this.state;
     return (
-      <div className="container" style={{marginLeft: "500px"}}>
+      <div className="container">
         {/* <div style={{ marginTop: "4rem" }} className="row"> */}
           <div className="col s8 offset-s2">
             <Link to="/" className="btn-flat waves-effect">

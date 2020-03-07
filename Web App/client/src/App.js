@@ -21,9 +21,9 @@ import NavBar from "./components/misc/navBar/navBar";
 import BackDrop from '../src/Backdrop/Backdrop';
 import "./App.css";
 import SideDrawer from "./components/misc/sideDrawer/sideDrawer"
-import CreateClass from "./components/objects/classes/CreateClass"
+import CreateClass from "./components/objects/classes/createClass"
+import CreateTask from "./components/objects/tasks/createTask";
 
-import Axios from "axios";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -82,9 +82,10 @@ class App extends Component {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/addclass" component={CreateClass}/>
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/createclass" component={CreateClass}/>
+              <PrivateRoute export path="/createtask" component={CreateTask}/>
             </Switch>
           </div>
         </Router>

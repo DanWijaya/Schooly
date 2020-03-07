@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import classNames from "classnames";
+import classnames from "classnames";
 import { createClass } from "../../../actions/classActions"
 
 class CreateClass extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
 
         this.state = {
             name: '',
@@ -32,15 +32,22 @@ class CreateClass extends Component {
             errors: {}
         };
 
-        // this.props.createClass(classObject);
-        // Axios.post('api/classes/create', classObject)
-        //     .then((res) => {
-        //         console.log(res.data)
-        //     }).catch((error) => {
-        //         console.log(error)
-        //     });
-        // this.props.createClass(classObject);
-        this.setState({name: '', nihil: true, walikelas: '', ukuran: null})
+        this.props.createClass(classObject);
+        this.setState({name: '', nihil: true, walikelas: '', ukuran: 0})
+    }
+
+     // UNSAFE_componentWillReceiveProps() is invoked before
+    //  a mounted component receives new props. If you need 
+    //   update the state in response to prop changes (for example, to reset it), 
+    //   you may compare this.props and nextProps and perform state transitions 
+    //   using this.setState() in this method.
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if(nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
     }
 
     // componentDidMount() {
@@ -51,11 +58,12 @@ class CreateClass extends Component {
 
     render() {
         
-        document.title = "Schooly - Membuat Kelas"
+        document.title = "Schooly - Create Kelas"
         const { errors } = this.state;
         
         return (
-            <div> 
+            <div className="container">
+                <div className="col s8 offset-s2"> 
                 <div className="col s12" style={{paddingLeft: "11.250px"}}>
                     <h4>
                         <b> Fill up Class details to add class</b>
@@ -69,7 +77,7 @@ class CreateClass extends Component {
                             error={errors.name}
                             id="name"
                             type="text"
-                            className={classNames("", {
+                            className={classnames("", {
                                 invalid: errors.name
                             })}
                         />
@@ -77,20 +85,20 @@ class CreateClass extends Component {
                         <span className="red-text">{errors.name}</span>
                     </div>
 
-                    <div className="input-field col s12">
+                    {/* <div className="input-field col s12">
                         <input 
                             onChange={this.onChange}
                             value={this.state.nihil}
                             error={errors.nihil}
                             id="nihil"
                             type="radio"
-                            className={classNames("", {
+                            className={classnames("", {
                                 invalid: errors.nihil
                             })}
                         />
                         <label htmlFor="nihil">Nihil</label>
                         <span className="red-text">{errors.nihil}</span>
-                    </div>
+                    </div> */}
 
                     <div className="input-field col s12">
                         <input 
@@ -99,7 +107,7 @@ class CreateClass extends Component {
                             error={errors.walikelas}
                             id="walikelas"
                             type="text"
-                            className={classNames("", {
+                            className={classnames("", {
                                 invalid: errors.walikelas
                             })}
                         />
@@ -114,7 +122,7 @@ class CreateClass extends Component {
                             error={errors.ukuran}
                             id="ukuran"
                             type="number"
-                            className={classNames("", {
+                            className={classnames("", {
                                 invalid: errors.ukuran
                             })}
                         />
@@ -137,6 +145,7 @@ class CreateClass extends Component {
                     </div>
                 </form>
             </div>
+        </div>
         )
         }
     }
@@ -146,13 +155,13 @@ CreateClass.propTypes = {
     errors: PropTypes.object.isRequired
 };
 
-// const mapStateToProps = state => ({
-//     errors: state.errors
-// })
+const mapStateToProps = state => ({
+    errors: state.errors
+})
 
-// export default connect(
-//     mapStateToProps, { createClass }
-// ) (CreateClass)
+export default connect(
+    mapStateToProps, { createClass }
+) (CreateClass)
 
 
-export default CreateClass;
+// export default CreateClass;

@@ -1,6 +1,6 @@
 .side-drawer {
-    max-width: 300px;
-    margin-top:"60px";
+    max-width: 200px;
+    margin-top:60px;
     height: 100%;
     position: fixed;
     top: 0;
@@ -38,8 +38,8 @@
 .side-drawer a:active {
     color: #fa923f;
 }
-
-@media (min-width: 779px) {
+/* 779px original */
+@media (min-width: 1450px) {
     .side-drawer{
         transform: translateX(0);
     }

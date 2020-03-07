@@ -17,6 +17,7 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
+// to initiate a dispatch, pass the result to the dispatch() function. 
 // Login - get user token
 export const loginUser = userData => dispatch => {
   axios
