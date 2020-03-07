@@ -71,7 +71,7 @@ class CreateClass extends Component {
                 </div>
                 <form noValidate onSubmit={this.onSubmit}>
                     <div className="input-field col s12">
-                        <input 
+                        <input
                             onChange={this.onChange}
                             value={this.state.name}
                             error={errors.name}

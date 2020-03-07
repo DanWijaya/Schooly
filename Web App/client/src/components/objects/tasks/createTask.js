@@ -3,6 +3,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import { createTask } from "../../../actions/taskActions"
+import moment from "moment";
+import { SingleDatePicker } from 'react-dates';
+import { MongooseDocument } from 'mongoose';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 class CreateTask extends Component {
     constructor() {
@@ -10,8 +16,9 @@ class CreateTask extends Component {
 
         this.state = {
             name: '',
-            deadline: null,
             subject: '',
+            deadline: moment(),
+            focused: false,
             submitted: false,
             errors: {}
         };
@@ -26,7 +33,7 @@ class CreateTask extends Component {
 
         const taskObject = {
             name: this.state.name,
-            deadline: this.state.deadline,
+            deadline: moment().toDate(),
             subject: this.state.subject,
             submitted: this.state.submitted,
             errors: {}
@@ -80,20 +87,30 @@ class CreateTask extends Component {
                 <label htmlFor="name">Name</label>
                 <span className="red-text">{errors.name}</span>
               </div>
+
               <div className="input-field col s12">
-                <input
+                {/* <input
                   onChange={this.onChange}
                   value={this.state.deadline}
                   error={errors.deadline}
                   id="deadline"
-                  type="Date"
+                  type="date"
                   className={classnames("", {
                     invalid: errors.deadline
                   })}
-                />
-                <label htmlFor="deadline">Deadline</label>
+                /> */}
+                Deadline <SingleDatePicker
+                  id="deadline"
+                  date={this.state.deadline}
+                  onDateChange={(date) => this.setState({ deadline : date})}
+                  focused={this.state.focused}
+                  onFocusChange={({focused}) => this.setState({ focused})}
+                  />
+                  
+                {/* <label htmlFor="deadline">Deadline</label> */}
                 <span className="red-text">{errors.deadline}</span>
               </div>
+
               <div className="input-field col s12">
                 <input
                   onChange={this.onChange}
@@ -115,7 +132,8 @@ class CreateTask extends Component {
                     width: "150px",
                     borderRadius: "3px",
                     letterSpacing: "1.5px",
-                    marginTop: "1rem"
+                    marginTop: "1rem",
+                    zIndex: 0
                   }}
                   type="submit"
                   className="btn btn-large waves-effect waves-light hoverable blue accent-3"
@@ -126,7 +144,7 @@ class CreateTask extends Component {
             </form>
           </div>
       </div>
-        );
+                  );
     }
 }
 

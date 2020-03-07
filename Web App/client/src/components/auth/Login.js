@@ -95,7 +95,7 @@ class Login extends Component {
       <div className="container">
         {/* <div style={{ marginTop: "4rem" }} className="row"> */}
           <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect">
+            <Link to="/" className="btn-flat waves-effect" style={{zIndex: 0}}>
               <i className="material-icons left">keyboard_backspace</i> Back to
               home
             </Link>
@@ -152,7 +152,8 @@ class Login extends Component {
                     width: "150px",
                     borderRadius: "3px",
                     letterSpacing: "1.5px",
-                    marginTop: "1rem"
+                    marginTop: "1rem",
+                    zIndex: 0
                   }}
                   type="submit"
                   className="btn btn-large waves-effect waves-light hoverable blue accent-3"
