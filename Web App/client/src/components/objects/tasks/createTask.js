@@ -5,10 +5,8 @@ import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import moment from "moment";
 import { SingleDatePicker } from 'react-dates';
-import { MongooseDocument } from 'mongoose';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import zIndex from '@material-ui/core/styles/zIndex';
 
 class CreateTask extends Component {
     constructor() {

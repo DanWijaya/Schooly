@@ -9,7 +9,7 @@ import setAuthToken from "./utils/setAuthToken";
   //Authentication Components
 import { setCurrentUser, logoutUser } from "./actions/AuthActions";
 import { Provider } from "react-redux";
-import store from "./store";
+import store from "./Store";
 
 import Profile from "./components/layout/profile/Profile";
 import Landing from "./components/layout/landing/Landing";
@@ -17,7 +17,7 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/layout/dashboard/Dashboard.js";
-import NavBar from "./components/misc/navBar/NavBar";
+import NavBar from "./components/misc/nav-bar/NavBar";
 import BackDrop from '../src/Backdrop/Backdrop';
 import "./App.css";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer"
