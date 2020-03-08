@@ -33,10 +33,12 @@ router.post("/create", (req, res) => {
     
 router.post("/view", (req, res) => {
     
-    const name = req.body.name;
-    const subject = req.body.subject;
+    // const name = req.body.name;
+    // const subject = req.body.subject;
+    let id = req.params.id;
 
-    Task.findOne({ name, subject  }).then(task => {
+    Task.findById(id)
+        .then(task => {
         //Check if task exists
         if (!task) {
             return res.status(404).json({ tasknotfound: "Task not found"});
@@ -60,6 +62,17 @@ router.get('/viewall', (req, res) => {
         else 
             return res.json(tasks);
     })
+})
+
+router.delete('/delete/:id', (req, res) => {
+    Task.findByIdAndRemove(req.params.id)
+        .then((tasks, err) => {
+            if(!tasks) {
+                res.status(400).json(err);
+            } else {
+                res.json(tasks);
+            }
+        })
 })
 
 module.exports = router;

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import logo from "./Schooly_logo.png";
 import './landing.css';
 import Grid from '@material-ui/core/Grid';
-import SideDrawer from '../../misc/sideDrawer/sideDrawer';
+import SideDrawer from '../../misc/side-drawer/SideDrawer';
 
 class Landing extends Component {
   render() {

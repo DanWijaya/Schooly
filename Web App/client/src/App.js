@@ -20,7 +20,7 @@ import Dashboard from "./components/layout/dashboard/dashboard.js";
 import NavBar from "./components/misc/navBar/navBar";
 import BackDrop from '../src/Backdrop/Backdrop';
 import "./App.css";
-import SideDrawer from "./components/misc/sideDrawer/sideDrawer"
+import SideDrawer from "./components/misc/side-drawer/SideDrawer"
 import CreateClass from "./components/objects/classes/createClass"
 import CreateTask from "./components/objects/tasks/createTask";
 

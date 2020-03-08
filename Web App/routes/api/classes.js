@@ -37,7 +37,7 @@ router.post("/create", (req, res) => {
 });
 router.get("/view/:id", (req, res) => {
 
-    Class.findOne({ name: req.body.name}).then(kelas => {
+    Class.findById(req.params.id).then(kelas => {
         if(!kelas){
             return res.status(400).json("Class does not exist");
         } else {
@@ -59,9 +59,10 @@ router.get('/edit/:id', (req, res) => {
     });
 });
 
-router.get('/update/:id').get((req, res) => {
+router.get('/update/:id', (req,res) => {
     let id = req.params.id;
-    Class.findById(id, (classes, err) => {
+    Class.findById(id)
+        .then((classes, err) => {
         if(!classes){
             return res.status(400).json("Class to update not found");
         }
@@ -87,18 +88,6 @@ router.get('/update/:id').get((req, res) => {
 //         res.json(classes);
 //     });
 // });
-
-router.route('delete/:id').delete((req, res, next) => {
-    Class.findByIdAndRemove(req.params.id, (error, data) => {
-        if(error) {
-            return next(error);
-        } else {
-            res.status(200).json({
-                msg: data
-            })
-        }
-    });
-});
 
 router.get('/viewall', (req, res) => {
     Class.find({}).then((classes, err) => {
