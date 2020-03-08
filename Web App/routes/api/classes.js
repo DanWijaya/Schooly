@@ -35,18 +35,11 @@ router.post("/create", (req, res) => {
         }
     });
 });
-
-router.post("/view", (req, res) => {
-
-    const { errors, isValid } = validateClassInput(req.body);
-
-    if(!isValid) {
-        return res.status(400).json(errors);
-    }
+router.get("/view/:id", (req, res) => {
 
     Class.findOne({ name: req.body.name}).then(kelas => {
         if(!kelas){
-            return res.status(404).json("Class does not exist");
+            return res.status(400).json("Class does not exist");
         } else {
             // console.log(kelas);
             res.json(kelas);
@@ -54,17 +47,46 @@ router.post("/view", (req, res) => {
     });
 });
 
-router.post("/viewall", (req, res) => {
-
-    Class.findOne({}).then(kelas => {
-        if(!kelas){
-            return res.json("No classes have been created yet");
-        } else{ 
+router.get('/edit/:id', (req, res) => {
+    let id = req.params.id;
+    Class.findById(id, (classes,err) => {
+        if(!classes){
+            return res.status(400).json("Class does not exist");
+        } else {
             console.log(kelas);
-            res.json(kelas);
+            res.json(classes);
+        }
+    });
+});
+
+router.get('/update/:id').get((req, res) => {
+    let id = req.params.id;
+    Class.findById(id, (classes, err) => {
+        if(!classes){
+            return res.status(400).json("Class to update not found");
+        }
+        else {
+            classes.name = req.body.name;
+            classes.walikelas = req.body.walikelas;
+            classes.nihil = req.body.nihil;
+            classes.ukuran = req.body.ukuran;
+
+            classes.save().then(classes => {
+                res.json("Edit completed");
+            })
+            .catch(err => {
+                res.status(400).send("Undable to edit the database");
+            })
         }
     })
 })
+
+// router.route('/edit/:id').get((req, res) => {
+//     let id = req.params.id;
+//     Class.findById(id, (classes, err) => {
+//         res.json(classes);
+//     });
+// });
 
 router.route('delete/:id').delete((req, res, next) => {
     Class.findByIdAndRemove(req.params.id, (error, data) => {
@@ -75,8 +97,27 @@ router.route('delete/:id').delete((req, res, next) => {
                 msg: data
             })
         }
-    })
-})
+    });
+});
 
+router.get('/viewall', (req, res) => {
+    Class.find({}).then((classes, err) => {
+        if(!classes)
+            res.status(400).json(err);
+        else 
+            res.json(classes);
+    });
+});
+
+router.delete('/delete/:id', (req, res) => {
+    Class.findByIdAndRemove(req.params.id)
+        .then((classes, err) => {
+            if(!classes) {
+                res.status(400).json(err);
+            } else {
+                res.json(classes);
+            }
+        })
+})
 
 module.exports = router;

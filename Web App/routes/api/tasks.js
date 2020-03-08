@@ -52,5 +52,14 @@ router.post("/view", (req, res) => {
     });
 });
 
+router.get('/viewall', (req, res) => {
+    
+    Task.find({}).then((tasks, err) => {
+        if(!tasks)
+            return res.status(400).json("Tasks are not found");
+        else 
+            return res.json(tasks);
+    })
+})
 
 module.exports = router;
