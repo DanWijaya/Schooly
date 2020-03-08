@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import '../side-drawer/drawerToggleButton';
-import './navBar.css'
-import DrawerToggleButton from '../side-drawer/drawerToggleButton.js';
+import '../side-drawer/DrawerToggleButton';
+import './NavBar.css'
+import DrawerToggleButton from '../side-drawer/DrawerToggleButton.js';
 import logo from './S_logo.png';
 
 class NavBar extends Component {

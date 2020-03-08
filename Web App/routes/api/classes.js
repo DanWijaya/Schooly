@@ -3,7 +3,7 @@ const router = express.Router();
 const keys = require("../../config/keys");
 
 //Load input validation 
-const validateClassInput = require("../../validation/classdata");
+const validateClassInput = require("../../validation/ClassData");
 
 //Load Class Model 
 const Class = require("../../models/Class");

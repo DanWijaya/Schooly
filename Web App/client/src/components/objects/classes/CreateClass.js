@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
-import { createClass } from "../../../actions/classActions"
+import { createClass } from "../../../actions/ClassActions"
 
 class CreateClass extends Component {
     constructor() {

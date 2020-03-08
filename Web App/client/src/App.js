@@ -7,22 +7,22 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 
   //Authentication Components
-import { setCurrentUser, logoutUser } from "./actions/authActions";
+import { setCurrentUser, logoutUser } from "./actions/AuthActions";
 import { Provider } from "react-redux";
 import store from "./store";
 
-import Profile from "./components/layout/profile/profile";
-import Landing from "./components/layout/landing/landing";
+import Profile from "./components/layout/profile/Profile";
+import Landing from "./components/layout/landing/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
-import Dashboard from "./components/layout/dashboard/dashboard.js";
-import NavBar from "./components/misc/navBar/navBar";
+import Dashboard from "./components/layout/dashboard/Dashboard.js";
+import NavBar from "./components/misc/navBar/NavBar";
 import BackDrop from '../src/Backdrop/Backdrop';
 import "./App.css";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer"
-import CreateClass from "./components/objects/classes/createClass"
-import CreateTask from "./components/objects/tasks/createTask";
+import CreateClass from "./components/objects/classes/CreateClass"
+import CreateTask from "./components/objects/tasks/CreateTask";
 
 
 // Check for token to keep user logged in

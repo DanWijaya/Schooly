@@ -12,16 +12,6 @@ class ViewClass extends Component {
 
     }
 
-    // componentDidMount() {
-    //     Axios.get('/api/classes/view')
-    //         .then(res => {
-    //             console.log("Berhasil");
-    //             this.setState({ classesCollection: res.data});
-    //         })
-    //         .catch((err) => console.log("Error hak"))
-    // }
-
-
     dataTable() {
         return this.state.classesCollection.map((data, i) => {
             return <DataTable obj={data} key={i}/>;

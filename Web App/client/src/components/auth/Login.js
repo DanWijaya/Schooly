@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types"; //Helps in minimizing the problem in React by checking the types passed in the props object. 
 import classnames from "classnames";
 import { connect } from "react-redux";
-import { loginUser } from "../../actions/authActions";
+import { loginUser } from "../../actions/AuthActions";
 
 // Dari websitenya. 
 import { makeStyles } from '@material-ui/core/styles';

@@ -2,7 +2,7 @@
   //Basic Components and Styling Components
 import React, { Component } from "react";
 import classnames from "classnames";
-import './profile.css'
+import './Profile.css'
 
  //Third Function Components
 

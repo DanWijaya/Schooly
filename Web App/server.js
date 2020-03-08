@@ -4,9 +4,9 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const cors = require('cors');
 
-const users = require("./routes/api/users");
-const tasks = require("./routes/api/tasks");
-const classes = require("./routes/api/classes");
+const users = require("./routes/api/Users");
+const tasks = require("./routes/api/Tasks");
+const classes = require("./routes/api/Classes");
 
 const app = express();
 // Bodyparser middleware

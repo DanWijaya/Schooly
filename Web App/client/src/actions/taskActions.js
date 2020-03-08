@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS } from './types';
+import { GET_ERRORS } from './Types';
 
 // Addtask 
 export const createTask = (taskData, history) => dispatch => {

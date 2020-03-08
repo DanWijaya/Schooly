@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
-import { createTask } from "../../../actions/taskActions"
+import { createTask } from "../../../actions/TaskActions"
 import moment from "moment";
 import { SingleDatePicker } from 'react-dates';
 import { MongooseDocument } from 'mongoose';
@@ -89,16 +89,6 @@ class CreateTask extends Component {
               </div>
 
               <div className="input-field col s12">
-                {/* <input
-                  onChange={this.onChange}
-                  value={this.state.deadline}
-                  error={errors.deadline}
-                  id="deadline"
-                  type="date"
-                  className={classnames("", {
-                    invalid: errors.deadline
-                  })}
-                /> */}
                 Deadline <SingleDatePicker
                   id="deadline"
                   date={this.state.deadline}
