@@ -8,6 +8,7 @@ export const createClass = (classData) => dispatch => {
         .post("/api/classes/create", classData)
         .then(res => { 
             // history.pushState("/view")
+            res.send(classData)
             alert("Class is created")
         })
         .catch(err => 
@@ -19,9 +20,9 @@ export const createClass = (classData) => dispatch => {
     };
 
 // View Class
-export const viewClass = (classData) => dispatch => {
+export const editClass = (classData) => dispatch => {
     axios
-        .post("/api/classes/view", classData)
+        .get("/api/classes/view", classData)
         .then(res => {
             console.log("Berhasil view Class");
             res.send(classData);
@@ -36,11 +37,16 @@ export const viewClass = (classData) => dispatch => {
 }
 
 // View All Class 
-export const viewAllClass = (classData) => dispatch => {
+export const viewClass = () => dispatch => {
     axios
-        .post("/api/classes/viewall", classData)
-        .then(res => res.send(classData))
+        .get("/api/classes/viewall")
+        .then(res => {
+            console.log(res.data)
+            console.log("Data should be here")
+        })
+
         .catch(err => {
+            // console.log("Data should be here")
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data

@@ -23,6 +23,7 @@ import "./App.css";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer"
 import CreateClass from "./components/objects/classes/CreateClass"
 import CreateTask from "./components/objects/tasks/CreateTask";
+import ViewClass from "./components/objects/classes/ViewClass";
 
 
 // Check for token to keep user logged in
@@ -85,7 +86,8 @@ class App extends Component {
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
-              <PrivateRoute export path="/createtask" component={CreateTask}/>
+              <PrivateRoute exact path="/createtask" component={CreateTask}/>
+              <PrivateRoute exact path="/viewclass" component={ViewClass}/>
             </Switch>
           </div>
         </Router>

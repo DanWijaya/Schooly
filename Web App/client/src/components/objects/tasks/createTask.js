@@ -31,7 +31,7 @@ class CreateTask extends Component {
 
         const taskObject = {
             name: this.state.name,
-            deadline: moment().toDate(),
+            deadline: this.state.deadline,
             subject: this.state.subject,
             submitted: this.state.submitted,
             errors: {}

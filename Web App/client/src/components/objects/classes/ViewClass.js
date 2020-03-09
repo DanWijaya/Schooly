@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import Axios from 'axios';
+import DataTable from './DataTable';
+import { viewClass } from "../../../actions/ClassActions"
 
 class ViewClass extends Component {
     constructor(props) {
@@ -12,23 +14,39 @@ class ViewClass extends Component {
 
     }
 
+    showData() {
+        this.dataTable();
+    }
+
     dataTable() {
         return this.state.classesCollection.map((data, i) => {
             return <DataTable obj={data} key={i}/>;
         });
     }
 
+    componentDidMount(){
+        
+        Axios.get('/api/classes/view')
+          .then(response => {
+            this.setState({ classesCollection: response.data });
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+      }
+
     render() {
         return( 
             <div className="wrapper-classes">
             <div className="container">
-                <table className="table table-striped table-dark">
+                <h3 align="center">List of Classes</h3>
+                <table className="table table-striped table-dark" style={{ marginTop: 20}}>
                     <thead className="thead-dark">
                         <tr>
                             <td>Name</td>
                             <td>Nihil</td>
                             <td>Walikelas</td>
-                            <td>UKuran</td>
+                            <td>Ukuran</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,4 +59,15 @@ class ViewClass extends Component {
     }
 }
 
-export default ViewClass;
+ViewClass.propTypes = {
+    viewClass: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+    errors: state.errors
+})
+
+export default connect(
+    mapStateToProps, { viewClass }
+) (ViewClass)

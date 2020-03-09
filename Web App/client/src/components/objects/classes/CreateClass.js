@@ -152,6 +152,7 @@ class CreateClass extends Component {
 
 CreateClass.propTypes = {
     createClass: PropTypes.func.isRequired,
+    // success: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
 
