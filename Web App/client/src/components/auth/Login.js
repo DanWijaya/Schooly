@@ -2,31 +2,11 @@
   //Basic Components and Login Components
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types"; //Helps in minimizing the problem in React by checking the types passed in the props object. 
+import PropTypes from "prop-types"; //Helps in minimizing the problem in React by checking the types passed in the props object.
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
-
-// Dari websitenya. 
 import { makeStyles } from '@material-ui/core/styles';
-
-// =======
-//   //Grid Components
-// import { makeStyles } from '@material-ui/core/styles';
-// import Paper from '@material-ui/core/Paper';
-// import Grid from '@material-ui/core/Grid';
-
-//   //Grid Fucntions
-// const useStyles = makeStyles(theme => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   paper: {
-//     padding: theme.spacing(2),
-//     textAlign: 'center',
-//     color: theme.palette.text.secondary,
-//   },
-// }));
 
 //   //Login Functions
 class Login extends Component {
@@ -133,7 +113,7 @@ class Login extends Component {
 
                 /> <button className="mask-btn" onClick={this.togglePasswordMask} value="
                 Toggle" type="button"/> Show password
-                
+
 
                 <label htmlFor="password">Password</label>
                 <span className="red-text">
@@ -158,33 +138,6 @@ class Login extends Component {
               </div>
             </form>
           </div>
-          <div>
-            {/*
-  <Grid container spacing={3}>
-    <Grid item xs={12}>
-      <Paper>xs=12</Paper>
-    </Grid>
-    <Grid item xs={6}>
-      <Paper>xs=6</Paper>
-    </Grid>
-    <Grid item xs={6}>
-      <Paper>xs=6</Paper>
-    </Grid>
-    <Grid item xs={3}>
-      <Paper>xs=3</Paper>
-    </Grid>
-    <Grid item xs={3}>
-      <Paper>xs=3</Paper>
-    </Grid>
-    <Grid item xs={3}>
-      <Paper>xs=3</Paper>
-    </Grid>
-    <Grid item xs={3}>
-      <Paper>xs=3</Paper>
-    </Grid>
-            </Grid> */}
-</div>
-        {/* </div> */}
       </div>
     );
   }
