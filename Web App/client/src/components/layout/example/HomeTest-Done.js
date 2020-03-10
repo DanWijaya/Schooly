@@ -9,7 +9,7 @@ import './HomeTest.css';
 class HomeTest extends Component {
   render() {
     return(
-      <div style={{width: '100%', margin: 'auto'}}>
+      <div style={{width: "100%", margin: "auto"}}>
         <Navbar />
         <Grid className="hometest-grid">
           <Cell col={6}>
