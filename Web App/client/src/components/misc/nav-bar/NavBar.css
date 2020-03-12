@@ -1,9 +1,9 @@
-.NavBar__a { 
+.NavBar__a {
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
-    background: black;
+    background: #2196f3;
     height: 60px;
 }
 
