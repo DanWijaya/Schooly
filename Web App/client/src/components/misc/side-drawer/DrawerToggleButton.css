@@ -13,10 +13,11 @@
   
   .toggle-button:focus {
     outline: none;
+    background: none;
+
   }
   
   .DrawerButton {
-    margin-right: 0;
     margin-left: auto;
   }
   

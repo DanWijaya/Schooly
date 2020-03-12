@@ -24,7 +24,7 @@ import SideDrawer from "./components/misc/side-drawer/SideDrawer"
 import CreateClass from "./components/objects/classes/CreateClass"
 import CreateTask from "./components/objects/tasks/CreateTask";
 import ViewClass from "./components/objects/classes/ViewClass";
-
+import ViewTask from "./components/objects/tasks/ViewTask";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -88,6 +88,7 @@ class App extends Component {
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
               <PrivateRoute exact path="/createtask" component={CreateTask}/>
               <PrivateRoute exact path="/viewclass" component={ViewClass}/>
+              <PrivateRoute exact path="/viewtask" component={ViewTask}/>
             </Switch>
           </div>
         </Router>

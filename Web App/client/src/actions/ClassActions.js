@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-import { GET_ERRORS } from './Types';
+import { GET_ERRORS, GET_CLASSES } from './Types';
 
 // Add Class 
 export const createClass = (classData) => dispatch => {
     axios
         .post("/api/classes/create", classData)
         .then(res => { 
+            console.log(res.data)
             // history.pushState("/view")
-            res.send(classData)
             alert("Class is created")
         })
-        .catch(err => 
+        .catch(err =>
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data
@@ -44,6 +44,10 @@ export const viewClass = () => dispatch => {
         .then(res => {
             console.log(res.data)
             console.log("Data should be here")
+            dispatch({
+                type: GET_CLASSES,
+                payload: res.data
+            })
         })
 
         .catch(err => {

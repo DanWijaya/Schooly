@@ -3,50 +3,66 @@ import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
-import Axios from 'axios';
-import DataTable from './DataTable';
+import ClassDataTable from './ClassDataTable';
 import { viewClass } from "../../../actions/ClassActions"
 
 class ViewClass extends Component {
     constructor(props) {
         super(props);
-        this.state = { classesCollection: []};
-
+        this.state = { classesCollection: []}
     }
 
-    showData() {
-        this.dataTable();
+    // componentDidMount(nextProps) {
+    //     console.log("Receive")
+    //     console.log(nextProps.classesCollection.classesCollection);
+    //     if(!nextProps.classesCollection.classesCollection)
+    //         this.setState({ classesCollection: nextProps.classesCollection});
+    // }
+
+    // componentDidUpdate(nextProps){
+    //     console.log("Props is received");
+    //     if(nextProps.classesCollection) {
+    //         this.setState({ classesCollection: nextProps.classesCollection})
+    //     }
+    // }
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        console.log("Props is received");
+        if(nextProps.classesCollection) {
+            this.setState({ classesCollection: nextProps.classesCollection})
+        }
     }
+
+    // onSearch = (e) => {
+    //     e.preventDefault();
+
+    //     this.props.viewClass();
+    // }
 
     dataTable() {
+        const { classesCollection } = this.state;
+        if(classesCollection.length == 0)
+            this.props.viewClass();
+
         return this.state.classesCollection.map((data, i) => {
-            return <DataTable obj={data} key={i}/>;
+            return <ClassDataTable obj={data} key={i}/>;
         });
     }
 
-    componentDidMount(){
-        
-        Axios.get('/api/classes/view')
-          .then(response => {
-            this.setState({ classesCollection: response.data });
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-      }
-
     render() {
+
         return( 
-            <div className="wrapper-classes">
+            <div className="wrapper-classesCollection">
             <div className="container">
-                <h3 align="center">List of Classes</h3>
+                <h3 align="center">List of classesCollection</h3>
                 <table className="table table-striped table-dark" style={{ marginTop: 20}}>
                     <thead className="thead-dark">
                         <tr>
-                            <td>Name</td>
-                            <td>Nihil</td>
-                            <td>Walikelas</td>
-                            <td>Ukuran</td>
+                            <th style={{textAlign: "center"}}>Name</th>
+                            <th style={{textAlign: "center"}}>Walikelas</th>
+                            <th style={{textAlign: "center"}}>Ukuran</th>
+                            <th colSpan="2" style={{textAlign: "center"}}>
+                                Action 
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,13 +77,16 @@ class ViewClass extends Component {
 
 ViewClass.propTypes = {
     viewClass: PropTypes.func.isRequired,
+    classesCollection: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-    errors: state.errors
+    errors: state.errors,
+    classesCollection: state.classesCollection
 })
 
 export default connect(
-    mapStateToProps, { viewClass }
+    mapStateToProps, 
+    { viewClass }
 ) (ViewClass)

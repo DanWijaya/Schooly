@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 
-class DataTable extends Component {
+class ClassDataTable extends Component {
 
     render(){
         return(
             <tr>
-                <td>
+                <td style={{textAlign: "center"}}>
                     {this.props.obj.name}
                 </td>
-                <td>
+                <td style={{textAlign: "center"}}>
                     {this.props.obj.walikelas}
                 </td>
-                <td>
+                <td style={{textAlign: "center"}}>
                     {this.props.obj.ukuran}
                 </td>
-                <td>
-                    {this.props.obj.nihil}
-                </td>
-                <td>
+                <td style={{textAlign: "center"}}>
                     <button className="btn btn-primary">Edit</button>
                  </td>
-                <td>
+                <td style={{textAlign: "center"}}>
                     <button className="btn btn-danger">Delete</button>
                 </td>
             </tr>
@@ -28,4 +25,4 @@ class DataTable extends Component {
     }
 }
 
-export default DataTable;
+export default ClassDataTable;

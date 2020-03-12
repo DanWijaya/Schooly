@@ -34,6 +34,11 @@
     margin: 0.5rem 0;
 }
 
+.w3-button:focus {
+    background: lightblue;
+    outline: none;
+}
+
 .side-drawer a:hover, 
 .side-drawer a:active {
     color: #fa923f;
@@ -43,6 +48,4 @@
     .side-drawer{
         transform: translateX(0);
     }
-
-    
 }

@@ -13,6 +13,11 @@
     height: 55px;
 }
 
+.NavBar__logo:focus {
+    background: none;
+    outline: none;
+}
+
 .NavBar__logo a{
     color: white;
     text-decoration: none;

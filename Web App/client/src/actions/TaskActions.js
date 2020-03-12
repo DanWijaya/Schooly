@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS } from './Types';
+import { GET_TASKS, GET_ERRORS, ADD_TASKS} from './Types';
 
 // Addtask 
 export const createTask = (taskData, history) => dispatch => {
@@ -18,14 +18,18 @@ export const createTask = (taskData, history) => dispatch => {
 };
 
 // View Task
-export const viewTask = (taskData) => dispatch => {
+export const viewTask = () => dispatch => {
     axios
-        .post("/api/tasks/view", taskData)
+        .post("/api/tasks/view")
         .then(res => {
-            console.log("Berhasil view task");
-            res.send(taskData);
+            console.log(res.data);
+            dispatch({
+                type: GET_TASKS,
+                payload: res.data
+            })
         })
         .catch(err => {
+            console.log("Error has occured");
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data

@@ -13,6 +13,7 @@ router.post("/create", (req, res) => {
     const { errors, isValid } = validateClassInput(req.body);
 
     if(!isValid) {
+        console.log("Not valid");
         return res.status(400).json(errors);
     }
 
