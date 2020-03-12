@@ -53,17 +53,16 @@ class Profile extends Component {
               </Grid>
               <Grid item xs={5}>
                 <h1>Contacts</h1>
-                  Phone Number: 69696969
-                  Instagram: leonardtot
-                  Faecbook:Bapak kau
-                  Twitter: XXX
+                  Phone Number: 69696969<br/>
+                  Instagram: leonardtot<br/>
+                  Faecbook:Bapak kau<br/>
+                  Twitter: XXX<br/>
                 <h1>Adress</h1>
-                  Jalan biologytot
+                  Jalan biologytot<br/>
               </Grid>
               <Grid item xs={7}>
                 <AppBar position="static">
                   <Tabs
-                    variant="auto"
                     indicatorColor="white"
                     textColor="blue"
                     >
