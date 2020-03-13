@@ -20,7 +20,7 @@ export const createTask = (taskData, history) => dispatch => {
 // View Task
 export const viewTask = () => dispatch => {
     axios
-        .post("/api/tasks/view")
+        .get("/api/tasks/viewall")
         .then(res => {
             console.log(res.data);
             dispatch({
@@ -38,11 +38,15 @@ export const viewTask = () => dispatch => {
 }
 
 // View All Tasks
-export const viewAllTasks = (taskData) => dispatch => {
+export const editTask = (taskData) => dispatch => {
     axios
-        .post("/api/tasks/viewall", taskData)
-        .then(res => res.send(taskData))
+        .get("/api/tasks/edit", taskData)
+        .then(res => {
+            console.log("Berhasil view Task");
+            
+        })
         .catch(err => {
+            console.log("error")
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data

@@ -15,7 +15,7 @@ class TaskDataTable extends Component {
                     {this.props.obj.deadline}
                 </td>
                 <td style={{textAlign: "center"}}>
-                    {this.props.obj.submitted}
+                    {this.props.obj.submitted.toString()}
                 </td>
                 <td style={{textAlign: "center"}}>
                     <button className="btn btn-primary">Edit</button>

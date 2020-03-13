@@ -15,6 +15,9 @@ class ClassDataTable extends Component {
                     {this.props.obj.ukuran}
                 </td>
                 <td style={{textAlign: "center"}}>
+                    {this.props.obj.nihil.toString()}
+                </td>
+                <td style={{textAlign: "center"}}>
                     <button className="btn btn-primary">Edit</button>
                  </td>
                 <td style={{textAlign: "center"}}>

@@ -13,6 +13,14 @@ class ViewTask extends Component {
 
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        console.log("Props is received");
+        if(nextProps.tasksCollection){
+            this.setState({ tasksCollection: nextProps.tasksCollection})
+        }
+    }
+
+
     dataTable(){
 
         const { tasksCollection } = this.state;
@@ -22,6 +30,7 @@ class ViewTask extends Component {
             return this.state.tasksCollection.map((data, i) => {
                 return <TaskDataTable obj={data} key={i}/>;            })
     }
+    
     render() {
 
         return( 
@@ -56,6 +65,8 @@ ViewTask.propTypes = {
     errors: PropTypes.object.isRequired
 }
 
+// If your mapStateToProps function is declared as taking one parameter, 
+// it will be called whenever the store state changes, and given the store state as the only parameter.
 const mapStateToProps = state => (
     {
         tasksCollection: state.tasksCollection,

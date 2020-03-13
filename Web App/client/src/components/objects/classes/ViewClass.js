@@ -60,6 +60,7 @@ class ViewClass extends Component {
                             <th style={{textAlign: "center"}}>Name</th>
                             <th style={{textAlign: "center"}}>Walikelas</th>
                             <th style={{textAlign: "center"}}>Ukuran</th>
+                            <th style={{textAlign: "center"}}>Nihil</th>
                             <th colSpan="2" style={{textAlign: "center"}}>
                                 Action 
                             </th>
@@ -81,6 +82,8 @@ ViewClass.propTypes = {
     errors: PropTypes.object.isRequired
 }
 
+// If your mapStateToProps function is declared as taking one parameter, 
+// it will be called whenever the store state changes, and given the store state as the only parameter.
 const mapStateToProps = state => ({
     errors: state.errors,
     classesCollection: state.classesCollection

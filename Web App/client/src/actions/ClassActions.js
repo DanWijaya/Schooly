@@ -26,7 +26,7 @@ export const editClass = (classData) => dispatch => {
         .get("/api/classes/view", classData)
         .then(res => {
             console.log("Berhasil view Class");
-            res.send(classData);
+            // res.send(classData);
         })
         .catch(err => {
             console.log("error")

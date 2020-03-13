@@ -36,7 +36,7 @@ router.post("/view", (req, res) => {
     // const name = req.body.name;
     // const subject = req.body.subject;
     let id = req.params.id;
-
+    console.log("req");
     Task.findById(id)
         .then(task => {
         //Check if task exists
