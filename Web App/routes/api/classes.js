@@ -48,41 +48,6 @@ router.get("/view/:id", (req, res) => {
     });
 });
 
-router.get('/edit/:id', (req, res) => {
-    let id = req.params.id;
-    Class.findById(id, (classes,err) => {
-        if(!classes){
-            return res.status(400).json("Class does not exist");
-        } else {
-            console.log(kelas);
-            res.json(classes);
-        }
-    });
-});
-
-router.get('/update/:id', (req,res) => {
-    let id = req.params.id;
-    Class.findById(id)
-        .then((classes, err) => {
-        if(!classes){
-            return res.status(400).json("Class to update not found");
-        }
-        else {
-            classes.name = req.body.name;
-            classes.walikelas = req.body.walikelas;
-            classes.nihil = req.body.nihil;
-            classes.ukuran = req.body.ukuran;
-
-            classes.save().then(classes => {
-                res.json("Edit completed");
-            })
-            .catch(err => {
-                res.status(400).send("Undable to edit the database");
-            })
-        }
-    })
-})
-
 // router.route('/edit/:id').get((req, res) => {
 //     let id = req.params.id;
 //     Class.findById(id, (classes, err) => {
@@ -108,6 +73,34 @@ router.delete('/delete/:id', (req, res) => {
                 res.json(classes);
             }
         })
+})
+
+router.get('/edit/:id', (req, res) => {
+    let id = req.params.id;
+    console.log(id);
+    Class.findById(id, (err, classData) => {
+        res.json(classData)
+    });
+})
+
+router.post('/update/:id', (req,res) => {
+    let id = req.params.id;
+    Class.findById(id, (err, classData) => {
+        if(!classData){
+            return res.status(400).json("Class to update not found");
+        }
+        else {
+            classData.name = req.body.name;
+            classData.walikelas = req.body.walikelas;
+            classData.nihil = req.body.nihil;
+            classData.ukuran = req.body.ukuran;
+
+            classData
+                .save()
+                .then(() => res.json("Update class completed"))
+                .catch(err => res.status(400).send("Unable to update class Database"));
+        }      
+    })
 })
 
 module.exports = router;

@@ -7,6 +7,7 @@ const keys = require("../../config/keys");
 // Load Task model
 const Task = require("../../models/Task");
 
+//Define create route
 router.post("/create", (req, res) => {
     Task.findOne({ name: req.body.name, subject: req.body.subject})
         .then(task => { 
@@ -54,8 +55,8 @@ router.post("/view", (req, res) => {
     });
 });
 
+//Define View classes route
 router.get('/viewall', (req, res) => {
-    
     Task.find({}).then((tasks, err) => {
         if(!tasks)
             return res.status(400).json("Tasks are not found");
@@ -64,6 +65,7 @@ router.get('/viewall', (req, res) => {
     })
 })
 
+//Define delete routes
 router.delete('/delete/:id', (req, res) => {
     Task.findByIdAndRemove(req.params.id)
         .then((tasks, err) => {
@@ -74,5 +76,35 @@ router.delete('/delete/:id', (req, res) => {
             }
         })
 })
+
+//Define Edit routes
+router.get('/edit/:id', (req, res) => {
+    let id = req.params.id;
+    Task.findById(id, (err, taskData) => {
+        res.json(taskData);
+    })
+})
+
+//Define update routes
+router.post('/update/:id', (req, res) => {
+    let id = req.params.id;
+    console.log(req.body.name);
+    Task.findById(id, (err, taskData) => {
+        if(!taskData)
+            res.status(404).send("Task data is not found");
+        else{
+            taskData.name = req.body.name;
+            taskData.deadine = req.body.deadine;
+            taskData.subject = req.body.subject;
+            taskData.submitted = req.body.submitted;
+        
+            taskData
+                .save()
+                .then(taskData => res.json("Update Task complete"))
+                .catch(err => res.status(400).send("Unable to update task database"));
+        
+        }
+        });
+    });
 
 module.exports = router;

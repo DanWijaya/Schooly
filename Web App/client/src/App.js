@@ -25,6 +25,8 @@ import CreateClass from "./components/objects/classes/CreateClass"
 import CreateTask from "./components/objects/tasks/CreateTask";
 import ViewClass from "./components/objects/classes/ViewClass";
 import ViewTask from "./components/objects/tasks/ViewTask";
+import EditTask from "./components/objects/tasks/EditTask";
+import EditClass from "./components/objects/classes/EditClass";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -85,10 +87,16 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+
+              {/* Route buat Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
-              <PrivateRoute exact path="/createtask" component={CreateTask}/>
               <PrivateRoute exact path="/viewclass" component={ViewClass}/>
+              <PrivateRoute exact path="/editclass" component={EditClass}/>
+
+              {/* Route buat Task  */}
+              <PrivateRoute exact path="/createtask" component={CreateTask}/>
               <PrivateRoute exact path="/viewtask" component={ViewTask}/>
+              <PrivateRoute exact path="/edittask" component={EditTask}/>
             </Switch>
           </div>
         </Router>

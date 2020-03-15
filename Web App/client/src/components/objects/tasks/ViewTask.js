@@ -28,7 +28,7 @@ class ViewTask extends Component {
             this.props.viewTask();
         
             return this.state.tasksCollection.map((data, i) => {
-                return <TaskDataTable obj={data} key={i}/>;            })
+                return <TaskDataTable obj={data} key={i} style={{overflow: "auto"}}/>;            })
     }
     
     render() {

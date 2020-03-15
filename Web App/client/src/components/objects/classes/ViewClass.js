@@ -53,7 +53,7 @@ class ViewClass extends Component {
         return( 
             <div className="wrapper-classesCollection">
             <div className="container">
-                <h3 align="center">List of classesCollection</h3>
+                <h3 align="center">List of Classes</h3>
                 <table className="table table-striped table-dark" style={{ marginTop: 20}}>
                     <thead className="thead-dark">
                         <tr>

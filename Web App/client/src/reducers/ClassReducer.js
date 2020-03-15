@@ -1,4 +1,5 @@
-import { CLASSES_LOADING, GET_CLASSES} from "../actions/Types";
+import { GET_CLASSES} from "../actions/Types";
+import isEmpty from "is-empty";
 
 const initialState = {};
 
@@ -8,6 +9,7 @@ export default function(state = initialState, action) {
             console.log("Payload : ", action.payload);
             return action.payload;
         }
+
         default: 
             return state
     }

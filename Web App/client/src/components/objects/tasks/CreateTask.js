@@ -37,7 +37,7 @@ class CreateTask extends Component {
             errors: {}
         };
 
-        this.props.createTask(taskObject);
+        this.props.createTask(taskObject, this.props.history);
         this.setState({name: '', subject: ''})
 
     }

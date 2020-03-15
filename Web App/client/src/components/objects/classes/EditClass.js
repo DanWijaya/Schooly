@@ -1,71 +1,67 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import classnames from "classnames";
-import { createClass } from "../../../actions/ClassActions"
+import { editClass, updateClass } from '../../../actions/ClassActions';
+import { connect } from 'react-redux';
 
-class CreateClass extends Component {
-    constructor() {
-        super();
+class EditClass extends Component {
+    constructor(props) {
+        super(props);
 
         this.state = {
             name: '',
             nihil: true,
             walikelas: '',
             ukuran: 0,
-            errors: {}
-        };
+            errors: {},
+            classesCollection: []
+        }
+        const { classId } = this.props.location.state;
+        console.log(classId);
+        console.log("Aduh");
+        this.props.editClass(classId)
     }
 
     onChange = (e) => {
         this.setState({ [e.target.id]: e.target.value});
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        console.log("Class props is received")
+        const { name } = this.state;
+        if(!name){
+            this.setState({ 
+                name: nextProps.classesCollection.name,
+                nihil: nextProps.classesCollection.nihil,
+                walikelas: nextProps.classesCollection.walikelas,
+                ukuran: nextProps.classesCollection.ukuran
+            });
+        }
+
+        
+    }
     onSubmit = (e) => {
         e.preventDefault()
 
+        const { classId } = this.props.location.state;
         const classObject = {
             name: this.state.name,
             nihil: this.state.nihil,
             walikelas: this.state.walikelas,
-            ukuran: this.state.ukuran,
-            errors: {}
-        };
-
-        this.props.createClass(classObject, this.props.history);
-        this.setState({name: '', nihil: true, walikelas: '', ukuran: 0})
-    }
-
-     // UNSAFE_componentWillReceiveProps() is invoked before
-    //  a mounted component receives new props. If you need 
-    //   update the state in response to prop changes (for example, to reset it), 
-    //   you may compare this.props and nextProps and perform state transitions 
-    //   using this.setState() in this method.
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        // if(nextProps.success) {
-        //     this.props.history.push('/viewclass');
-        // }
-
-        if(nextProps.errors) {
-            this.setState({
-                errors: nextProps.errors
-            });
+            nihil: this.state.nihil
         }
-    }
 
-    // componentDidMount() {
-    //     if(this.props.auth.isAuthenticated) {
-    //         this.props.history.push("/viewclass");
-    //     }
-    // }
+        this.props.updateClass(classObject, classId, this.props.history);
+        this.setState({name: '', nihil: true, walikelas: '', ukuran: 0})
+        }
 
+    
     render() {
-        
-        document.title = "Schooly - Create Kelas"
+        document.title = "Schooly - Edit Class"
         const { errors } = this.state;
-        
-        return (
+
+        return(
             <div className="container">
                 <div className="col s8 offset-s2"> 
                 <div className="col s12" style={{paddingLeft: "11.250px"}}>
@@ -144,29 +140,30 @@ class CreateClass extends Component {
                             type="submit"
                             className="btn btn-large waves-effect waves-light hoverable blue accent-3"
                             >
-                                Add Class
+                                Edit Class
                             </button>
                     </div>
                 </form>
             </div>
         </div>
         )
-        }
     }
+}
 
-CreateClass.propTypes = {
-    createClass: PropTypes.func.isRequired,
-    // success: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+EditClass.propTypes = {
+    editClass: PropTypes.func.isRequired,
+    updateClass: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired,
+    classesCollection: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
     errors: state.errors,
+    classesCollection: state.classesCollection
 })
 
 export default connect(
-    mapStateToProps, { createClass }
-) (CreateClass)
+    mapStateToProps, { editClass, updateClass } 
+) (EditClass)
 
 
-// export default CreateClass;

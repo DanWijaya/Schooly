@@ -1,4 +1,6 @@
+// Nanti bakal ganti viewnya di sidebarnya? 
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class ClassDataTable extends Component {
 
@@ -18,7 +20,13 @@ class ClassDataTable extends Component {
                     {this.props.obj.nihil.toString()}
                 </td>
                 <td style={{textAlign: "center"}}>
-                    <button className="btn btn-primary">Edit</button>
+                <Link to={{
+                    pathname: "/editclass",
+                    state:{ 
+                        classId : this.props.obj._id
+                        }
+                    }}
+                className="btn btn-primary">Edit</Link>
                  </td>
                 <td style={{textAlign: "center"}}>
                     <button className="btn btn-danger">Delete</button>
