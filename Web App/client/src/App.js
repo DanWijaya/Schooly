@@ -91,12 +91,13 @@ class App extends Component {
               {/* Route buat Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
               <PrivateRoute exact path="/viewclass" component={ViewClass}/>
-              <PrivateRoute exact path="/editclass" component={EditClass}/>
+              <PrivateRoute exact path="/class/:id" component={EditClass}/>
 
               {/* Route buat Task  */}
               <PrivateRoute exact path="/createtask" component={CreateTask}/>
               <PrivateRoute exact path="/viewtask" component={ViewTask}/>
-              <PrivateRoute exact path="/edittask" component={EditTask}/>
+              <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
+              <PrivateRoute exact path="/task/:id" component={EditTask}/>
             </Switch>
           </div>
         </Router>

@@ -4,17 +4,29 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import TaskDataTable from './TaskDataTable';
-import { viewTask } from '../../../actions/TaskActions'
+import { viewTask, deleteTask } from '../../../actions/TaskActions'
 
 class ViewTask extends Component {
     constructor(props) {
         super(props);
         this.state = { tasksCollection: []}
-
+        
+        console.log(this.props.location)
+        if(this.props.location.state != null){
+            const { taskId } = this.props.location.state
+            console.log(taskId)
+        }
     }
-
+    
     UNSAFE_componentWillReceiveProps(nextProps) {
-        console.log("Props is received");
+        // console.log(nextProps.location.state)
+        // console.log(nextProps.tasksCollection);
+        if(nextProps.location.state != null){
+            const { taskId } = nextProps.location.state;
+            this.props.deleteTask(taskId, nextProps.history)
+            this.props.viewTask()
+        }
+        
         if(nextProps.tasksCollection){
             this.setState({ tasksCollection: nextProps.tasksCollection})
         }
@@ -62,7 +74,7 @@ class ViewTask extends Component {
 ViewTask.propTypes = {
     viewTask: PropTypes.func.isRequired,
     tasksCollection: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
 }
 
 // If your mapStateToProps function is declared as taking one parameter, 
@@ -76,5 +88,5 @@ const mapStateToProps = state => (
 
 export default connect(
     mapStateToProps, 
-    { viewTask }
+    { viewTask , deleteTask}
 ) (ViewTask)

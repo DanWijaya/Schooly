@@ -76,3 +76,20 @@ export const updateTask = (taskData, taskId, history) => dispatch => {
             })
         })
 }
+
+export const deleteTask = (taskId, history) => dispatch => {
+    axios
+        .delete("/api/tasks/delete/" + taskId)
+        .then((res) => {
+            console.log(res.data)
+            alert("Deleted")
+            history.push("/viewtask")}
+            )
+        .catch(err => {
+            console.log(err);
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })
+}

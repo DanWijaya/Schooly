@@ -67,7 +67,7 @@ class EditTask extends Component {
                 <div className="col s8 offset-s2">
                     <div className="col s12" style={{ paddingLeft: "11.250px"}}>
                         <h4>
-                         <b>Edit task for {this.state.name}</b>
+                         <b>Edit task</b>
                         </h4>
                     </div>
                     <form noValidate onSubmit={this.onSubmit}>

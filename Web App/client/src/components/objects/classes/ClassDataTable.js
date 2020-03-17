@@ -21,7 +21,7 @@ class ClassDataTable extends Component {
                 </td>
                 <td style={{textAlign: "center"}}>
                 <Link to={{
-                    pathname: "/editclass",
+                    pathname: `/class/${this.props.obj._id}`,
                     state:{ 
                         classId : this.props.obj._id
                         }

@@ -56,11 +56,26 @@ class EditClass extends Component {
         this.setState({name: '', nihil: true, walikelas: '', ukuran: 0})
         }
 
-    
+    // autoFocus() {
+    //     let a = document.getElementById("name")
+    //     let b = document.getElementById("walikelas")
+    //     let c = document.getElementById("ukuran")
+
+    //     a.focus();
+    //     b.focus();
+    //     c.focus();
+    // }
+
     render() {
+        // window.onloadstart=function(){
+        //     console.log("Hey");
+        //     document.getElementById("name").focus();
+        //     document.getElementById("walikelas").focus();
+        //     document.getElementById("ukuran").focus();
+        //     };
         document.title = "Schooly - Edit Class"
         const { errors } = this.state;
-
+        
         return(
             <div className="container">
                 <div className="col s8 offset-s2"> 
@@ -77,6 +92,7 @@ class EditClass extends Component {
                             error={errors.name}
                             id="name"
                             type="text"
+                            clicked="true"
                             className={classnames("", {
                                 invalid: errors.name
                             })}
@@ -105,6 +121,7 @@ class EditClass extends Component {
                             onChange={this.onChange}
                             value={this.state.walikelas}
                             error={errors.walikelas}
+                            name="editinput"
                             id="walikelas"
                             type="text"
                             className={classnames("", {
@@ -120,6 +137,7 @@ class EditClass extends Component {
                             onChange={this.onChange}
                             value={this.state.ukuran}
                             error={errors.ukuran}
+                            name="editinput"
                             id="ukuran"
                             type="number"
                             className={classnames("", {

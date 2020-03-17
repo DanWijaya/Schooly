@@ -66,7 +66,7 @@ export const editClass = (classId) => dispatch => {
 export const updateClass = (classData, classId, history) => dispatch => {
     axios
         .post("/api/classes/update/" + classId, classData)
-        .the(res => {
+        .then(res => {
             console.log("Class updated to be : ", res.data);
             alert("Class is updated successfully")
             history.push("/viewclass")
