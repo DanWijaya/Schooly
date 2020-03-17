@@ -46,7 +46,6 @@ class ViewClass extends Component {
 
     dataTable() {
         const { classesCollection } = this.state;
-        console.log(classesCollection, "a")
         if(classesCollection.length == 0)
             this.props.viewClass();
 

@@ -11,11 +11,6 @@ class ViewTask extends Component {
         super(props);
         this.state = { tasksCollection: []}
         
-        console.log(this.props.location)
-        if(this.props.location.state != null){
-            const { taskId } = this.props.location.state
-            console.log(taskId)
-        }
     }
     
     UNSAFE_componentWillReceiveProps(nextProps) {
