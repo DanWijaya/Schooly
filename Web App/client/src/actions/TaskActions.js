@@ -82,7 +82,7 @@ export const deleteTask = (taskId, history) => dispatch => {
         .delete("/api/tasks/delete/" + taskId)
         .then((res) => {
             console.log(res.data)
-            alert("Deleted")
+            alert("Task Deleted")
             history.push("/viewtask")}
             )
         .catch(err => {

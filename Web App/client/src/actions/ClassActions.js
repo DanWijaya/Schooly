@@ -80,3 +80,20 @@ export const updateClass = (classData, classId, history) => dispatch => {
         })
 }
 
+export const deleteClass = (classId, history) => dispatch => {
+    axios
+        .delete("/api/classes/delete/" + classId)
+        .then(res => {
+            console.log(res.data)
+            alert("Class Deleted")
+            history.push("/viewclass")
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })
+}
+

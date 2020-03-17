@@ -29,7 +29,13 @@ class ClassDataTable extends Component {
                 className="btn btn-primary">Edit</Link>
                  </td>
                 <td style={{textAlign: "center"}}>
-                    <button className="btn btn-danger">Delete</button>
+                    <Link to={{
+                        pathname: `/deleteclass/${this.props.obj._id}`,
+                        state:{
+                            classId : this.props.obj._id
+                        }
+                    }}
+                    className="btn btn-danger">Delete</Link>
                 </td>
             </tr>
         )

@@ -19,8 +19,6 @@ class ViewTask extends Component {
     }
     
     UNSAFE_componentWillReceiveProps(nextProps) {
-        // console.log(nextProps.location.state)
-        // console.log(nextProps.tasksCollection);
         if(nextProps.location.state != null){
             const { taskId } = nextProps.location.state;
             this.props.deleteTask(taskId, nextProps.history)
@@ -43,7 +41,7 @@ class ViewTask extends Component {
                 return <TaskDataTable obj={data} key={i} style={{overflow: "auto"}}/>;            })
     }
     
-    
+
     render() {
 
         return( 

@@ -56,15 +56,18 @@ class TaskDataTable extends Component {
                     {/* If want to pass datas, use this kind of Link format  */}
                     <Link to={{
                         pathname: `/task/${this.props.obj._id}`,
-                        state:{  taskId : this.props.obj._id
-                            }
+                        state:{  
+                            taskId : this.props.obj._id
+                        }
                     }} 
                     className="btn btn-primary">Edit</Link>
                     </td>
                     <td style={{textAlign: "center"}}>
                         <Link to={{
                             pathname: `/deletetask/${this.props.obj._id}`,
-                            state:{ taskId: this.props.obj._id}
+                            state:{ 
+                                taskId: this.props.obj._id
+                            }
                         }}
                         className="btn btn-danger">Delete</Link>
                     </td>

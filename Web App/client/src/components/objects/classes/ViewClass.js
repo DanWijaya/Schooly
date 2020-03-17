@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import ClassDataTable from './ClassDataTable';
-import { viewClass } from "../../../actions/ClassActions"
+import { viewClass, deleteClass } from "../../../actions/ClassActions"
 
 class ViewClass extends Component {
     constructor(props) {
@@ -26,6 +26,12 @@ class ViewClass extends Component {
     //     }
     // }
     UNSAFE_componentWillReceiveProps(nextProps) {
+        if(nextProps.location.state != null){
+            const { classId } = nextProps.location.state;
+            this.props.deleteClass(classId, nextProps.history)
+            this.props.viewClass()
+        }
+
         console.log("Props is received");
         if(nextProps.classesCollection) {
             this.setState({ classesCollection: nextProps.classesCollection})
@@ -40,9 +46,11 @@ class ViewClass extends Component {
 
     dataTable() {
         const { classesCollection } = this.state;
+        console.log(classesCollection, "a")
         if(classesCollection.length == 0)
             this.props.viewClass();
 
+        console.log(this.state.classesCollection)
         return this.state.classesCollection.map((data, i) => {
             return <ClassDataTable obj={data} key={i}/>;
         });
@@ -79,7 +87,8 @@ class ViewClass extends Component {
 ViewClass.propTypes = {
     viewClass: PropTypes.func.isRequired,
     classesCollection: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
+    deleteClass: PropTypes.func.isRequired
 }
 
 // If your mapStateToProps function is declared as taking one parameter, 
@@ -91,5 +100,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps, 
-    { viewClass }
+    { viewClass, deleteClass }
 ) (ViewClass)
