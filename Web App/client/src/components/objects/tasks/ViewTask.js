@@ -43,6 +43,7 @@ class ViewTask extends Component {
                 return <TaskDataTable obj={data} key={i} style={{overflow: "auto"}}/>;            })
     }
     
+    
     render() {
 
         return( 
