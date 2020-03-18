@@ -57,7 +57,7 @@ class TaskDataTable extends Component {
                     <Link to={{
                         pathname: `/task/${this.props.obj._id}`,
                         state:{  
-                            taskId : this.props.obj._id
+                            taskId : this.props.obj._id,
                         }
                     }} 
                     className="btn btn-primary">Edit</Link>

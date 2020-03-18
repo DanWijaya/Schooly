@@ -81,7 +81,7 @@ class EditClass extends Component {
                 <div className="col s8 offset-s2"> 
                 <div className="col s12" style={{paddingLeft: "11.250px"}}>
                     <h4>
-                        <b> Fill up Class details to add class</b>
+                        <b> Edit Class</b>
                     </h4>
                 </div>
                 <form noValidate onSubmit={this.onSubmit}>
@@ -97,7 +97,10 @@ class EditClass extends Component {
                                 invalid: errors.name
                             })}
                         />
-                        <label htmlFor="name">Name</label>
+                        {/* <label htmlFor="name">Name</label> */}
+                        {this.state.name === "" ? 
+                        <label htmlFor="name">Name</label> :
+                        <label htmlFor="name" class="active">Name</label>}
                         <span className="red-text">{errors.name}</span>
                     </div>
 
@@ -128,7 +131,10 @@ class EditClass extends Component {
                                 invalid: errors.walikelas
                             })}
                         />
-                        <label htmlFor="walikelas">Walikelas</label>
+                        {/* <label htmlFor="walikelas">Walikelas</label> */}
+                        {this.state.walikelas === "" ? 
+                        <label htmlFor="walikelas">Walikelas</label> :
+                        <label htmlFor="walikelas" class="active">Walikelas</label>}
                         <span className="red-text">{errors.walikelas}</span>
                     </div>
 
@@ -144,7 +150,10 @@ class EditClass extends Component {
                                 invalid: errors.ukuran
                             })}
                         />
-                        <label htmlFor="ukuran">Ukuran</label>
+                        {/* <label htmlFor="ukuran">Ukuran</label> */}
+                        {this.state.ukuran === "" ? 
+                        <label htmlFor="ukuran">Ukuran</label> :
+                        <label htmlFor="ukuran" class="active">Ukuran</label>}
                         <span className="red-text">{errors.ukuran}</span>
                     </div>
                     <div className="col s12" style={{ paddingLeft: "11.250px" }}>

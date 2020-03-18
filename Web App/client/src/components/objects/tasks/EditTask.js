@@ -22,6 +22,9 @@ class EditTask extends Component {
             submitted: false,
             errors: {},
         }
+        this.nameInput = React.createRef();
+        this.subjectInput = React.createRef();
+
         const { taskId } = this.props.location.state;
         this.props.editTask(taskId)
     }
@@ -41,6 +44,7 @@ class EditTask extends Component {
                 deadline: moment(nextProps.tasksCollection.deadline)
 
             })
+            this.focus();
         }
     }
 
@@ -59,9 +63,14 @@ class EditTask extends Component {
         this.props.updateTask(taskObject, taskId, this.props.history);
     }
 
+    focus = () =>{
+        this.nameInput.current.click();
+        this.subjectInput.current.click()
+    }
     render() {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
+
         return ( 
             <div className="container">
                 <div className="col s8 offset-s2">
@@ -72,8 +81,9 @@ class EditTask extends Component {
                     </div>
                     <form noValidate onSubmit={this.onSubmit}>
                     <div className="input-field col s12">
-                        <input
+                        <input  
                         onChange={this.onChange}
+                        ref={this.nameInput}
                         value={this.state.name}
                         error={errors.name}
                         id="name"
@@ -83,9 +93,14 @@ class EditTask extends Component {
                             invalid: errors.name
                         })}
                         />
-                        <label htmlFor="name">Name</label>
+                        {/* <label htmlFor="name" class="active">Name</label> */}
+                        {/* This is another solution */}
+                        {this.state.name === "" ? 
+                    <label htmlFor="name">Name</label> :
+                    <label htmlFor="name" class="active">Name</label>}
                         <span className="red-text">{errors.name}</span>
                     </div>
+                    
 
                     <div className="input-field col s12">
                       Deadline <SingleDatePicker
@@ -105,14 +120,18 @@ class EditTask extends Component {
                     onChange={this.onChange}
                     value={this.state.subject}
                     error={errors.subject}
+                    ref={this.subjectInput}
                     id="subject"
                     type="text"
                     className={classnames("", {
                         invalid: errors.subject
                     })}
                     />
-
-                    <label htmlFor="subject">Subject</label>
+                    {/* <label htmlFor="subject" class="active">Subject</label> */}
+                   {/* This is another solution, might not an elegant solution...  */}
+                   {this.state.subject === "" ? 
+                    <label htmlFor="subject">Subject</label> :
+                    <label htmlFor="subject" class="active">Subject</label>}
                     <span className="red-text">{errors.subject}</span>
                     </div>
 

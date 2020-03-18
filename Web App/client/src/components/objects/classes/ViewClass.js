@@ -5,11 +5,17 @@ import classnames from "classnames";
 import { connect } from "react-redux";
 import ClassDataTable from './ClassDataTable';
 import { viewClass, deleteClass } from "../../../actions/ClassActions"
+import { Modal, Button } from 'react-bootstrap';
+import './ViewClass.css'
 
 class ViewClass extends Component {
     constructor(props) {
         super(props);
-        this.state = { classesCollection: []}
+        this.state = { 
+            classesCollection: [], 
+            show: false,
+            isDelete: false
+        }
     }
 
     // componentDidMount(nextProps) {
@@ -27,8 +33,15 @@ class ViewClass extends Component {
     // }
     UNSAFE_componentWillReceiveProps(nextProps) {
         if(nextProps.location.state != null){
-            const { classId } = nextProps.location.state;
-            this.props.deleteClass(classId, nextProps.history)
+
+            this.showModal()
+
+            if(this.state.isDelete){
+                const { classId } = nextProps.location.state;
+                this.props.deleteClass(classId, nextProps.history)
+                this.closeModal()
+            }
+
             this.props.viewClass()
         }
 
@@ -55,10 +68,40 @@ class ViewClass extends Component {
         });
     }
 
+    showModal(){
+        this.setState({ show: true})
+    }
+
+    closeModal(){
+        this.setState({ show: false, isDelete: false})
+    }
+
     render() {
 
         return( 
             <div className="wrapper-classesCollection">
+            
+            <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
+            <Modal.Header>Deleting Class {this.props.classesCollection.name} <Link to="/viewclass" class="close" onClick={() => {this.closeModal()}}>
+                <span aria-hidden="true">x</span>
+                <span class="sr-only">Close</span>
+                </Link></Modal.Header>
+
+                <Modal.Body> Are you sure you want to delete the class? </Modal.Body>
+                <Modal.Footer>
+                <Button className="btn btn-danger" onClick={() => { 
+                    this.setState({isDelete: true, show:false})}
+                }>
+                    Yes, Delete
+                </Button>
+
+                <Link to="/viewclass" className="btn btn-primary" onClick={() => { this.closeModal()}
+                }>
+                    No, Cancel
+                </Link>
+            </Modal.Footer>
+            </Modal>
+
             <div className="container">
                 <h3 align="center">List of Classes</h3>
                 <table className="table table-striped table-dark" style={{ marginTop: 20}}>

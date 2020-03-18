@@ -5,18 +5,38 @@ import classnames from "classnames";
 import { connect } from "react-redux";
 import TaskDataTable from './TaskDataTable';
 import { viewTask, deleteTask } from '../../../actions/TaskActions'
-
+import { Modal, Button } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './ViewTask.css'
 class ViewTask extends Component {
     constructor(props) {
         super(props);
-        this.state = { tasksCollection: []}
+        this.state = { 
+            tasksCollection: [],
+            show: false,
+            isDelete: false
+        }
         
     }
     
+    showModal(){
+        this.setState({show: true})
+    }
+
+    closeModal(){
+        this.setState({ show: false, isDelete: false})
+    }
+
     UNSAFE_componentWillReceiveProps(nextProps) {
         if(nextProps.location.state != null){
-            const { taskId } = nextProps.location.state;
-            this.props.deleteTask(taskId, nextProps.history)
+            this.showModal()
+
+            if(this.state.isDelete){
+                const { taskId } = nextProps.location.state;
+                this.props.deleteTask(taskId, nextProps.history)
+                this.closeModal()
+            }
+
             this.props.viewTask()
         }
         
@@ -41,7 +61,27 @@ class ViewTask extends Component {
 
         return( 
             <div className="wrapper-taskCollection">
+            <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
+            <Modal.Header>Deleting Task {this.props.tasksCollection.name} <Link to="/viewtask" class="close" onClick={() => {this.closeModal()}}>
+                <span aria-hidden="true">x</span>
+                <span class="sr-only">Close</span>
+                </Link></Modal.Header>
+            <Modal.Body> Are you sure you want to delete the task? </Modal.Body>
+            <Modal.Footer>
+                <Button className="btn btn-danger" onClick={() => { 
+                    this.setState({isDelete: true, show:false})}
+                }>
+                    Yes, Delete
+                </Button>
+
+                <Link to="/viewtask" className="btn btn-primary" onClick={() => { this.closeModal()}
+                }>
+                    No, Cancel
+                </Link>
+            </Modal.Footer>
+            </Modal>
             <div className="container">
+
                 <h3 align="center">List of tasks</h3>
                 <table className="table table-striped table-dark" style={{ marginTop: 20}}>
                     <thead className="thead-dark">
