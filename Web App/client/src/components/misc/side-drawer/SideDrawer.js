@@ -36,7 +36,7 @@ const sideDrawer = props => {
       <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
 
         {/* Sidebar */}
-        <div className={drawerClasses} style={{marginTop:"60px", width:"25%", color: "black"}}>
+        <div className={drawerClasses} style={{marginTop:"45.5px", width:"25%", color: "black"}}>
           <h3 class="w3-bar-item">Menu</h3>
 
           <button class="w3-button w3-block w3-left-align">About</button>

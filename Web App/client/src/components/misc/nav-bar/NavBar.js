@@ -8,7 +8,7 @@ class NavBar extends Component {
   render() {
     return (
     <header className="NavBar__a">
-    <nav className="navbar-light bg-transparent NavBar__navigation">
+    <nav className="navbar-light NavBar__navigation">
       <div className="NavBar__toggle-button">
           <DrawerToggleButton click={this.props.drawerClickHandler} />
       </div>
@@ -19,10 +19,10 @@ class NavBar extends Component {
       <div className="NavBar_navigation-items">
            <ul>
             <li>
-              <a href="/login"> Login </a>
+              <a href="/profile"> Profile </a>
              </li>
             <li>
-            <a href="/register">Register </a>
+            <a href="/">Settings </a>
             </li>
           </ul>
 
