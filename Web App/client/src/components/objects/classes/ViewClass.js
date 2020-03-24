@@ -18,44 +18,33 @@ class ViewClass extends Component {
         }
     }
 
-    // componentDidMount(nextProps) {
-    //     console.log("Receive")
-    //     console.log(nextProps.classesCollection.classesCollection);
-    //     if(!nextProps.classesCollection.classesCollection)
-    //         this.setState({ classesCollection: nextProps.classesCollection});
-    // }
-
-    // componentDidUpdate(nextProps){
-    //     console.log("Props is received");
-    //     if(nextProps.classesCollection) {
-    //         this.setState({ classesCollection: nextProps.classesCollection})
-    //     }
-    // }
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if(nextProps.location.state != null){
-
-            this.showModal()
-
-            if(this.state.isDelete){
-                const { classId } = nextProps.location.state;
-                this.props.deleteClass(classId, nextProps.history)
-                this.closeModal()
-            }
-
-            this.props.viewClass()
-        }
-
-        console.log("Props is received");
-        if(nextProps.classesCollection) {
-            this.setState({ classesCollection: nextProps.classesCollection})
-        }
+    showModal(){
+        this.setState({ show: true})
     }
 
-    // onSearch = (e) => {
-    //     e.preventDefault();
+    closeModal(){
+        this.setState({ show: false, isDelete: false})
+    }
 
-    //     this.props.viewClass();
-    // }
+    UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+
+        if(nextProps.location.state){
+            if(!this.state.isDelete)
+                this.showModal()
+            else{
+                const { classId } = nextProps.location.state;
+                this.props.deleteClass(classId, nextProps.history)
+                this.props.viewClass()
+            }
+        }
+
+        if(this.props.classesCollection.length - nextProps.classesCollection.length == 1)
+            this.closeModal()
+        
+        if(nextProps.classesCollection)
+            this.setState({ classesCollection: nextProps.classesCollection})
+
+    }
 
     dataTable() {
         const { classesCollection } = this.state;
@@ -68,16 +57,7 @@ class ViewClass extends Component {
         });
     }
 
-    showModal(){
-        this.setState({ show: true})
-    }
-
-    closeModal(){
-        this.setState({ show: false, isDelete: false})
-    }
-
     render() {
-
         return( 
             <div className="wrapper-classesCollection">
             
@@ -90,7 +70,8 @@ class ViewClass extends Component {
                 <Modal.Body> Are you sure you want to delete the class? </Modal.Body>
                 <Modal.Footer>
                 <Button className="btn btn-danger" onClick={() => { 
-                    this.setState({isDelete: true, show:false})}
+                    this.setState({isDelete: true, show:false})
+                    this.props.viewClass()}
                 }>
                     Yes, Delete
                 </Button>

@@ -3,12 +3,20 @@ const router = express.Router();
 const keys = require("../../config/keys");
 
 //Load input validation
-
+const validateTaskInput = require("../../validation/TaskData")
 // Load Task model
 const Task = require("../../models/Task");
 
 //Define create route
 router.post("/create", (req, res) => {
+
+    const { errors, isValid } = validateTaskInput(req.body)
+
+    if(!isValid) { 
+        console.log("Not Valid");
+        return res.status(400).json(errors);
+    }
+
     Task.findOne({ name: req.body.name, subject: req.body.subject})
         .then(task => { 
         if(task) {
@@ -87,6 +95,13 @@ router.get('/edit/:id', (req, res) => {
 
 //Define update routes
 router.post('/update/:id', (req, res) => {
+    const { errors, isValid } = validateTaskInput(req.body)
+
+    if(!isValid) { 
+        console.log("Not Valid");
+        return res.status(400).json(errors);
+    }
+    
     let id = req.params.id;
     console.log(req.body.name);
     Task.findById(id, (err, taskData) => {

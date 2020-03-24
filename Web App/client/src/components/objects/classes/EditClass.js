@@ -49,11 +49,11 @@ class EditClass extends Component {
             name: this.state.name,
             nihil: this.state.nihil,
             walikelas: this.state.walikelas,
-            nihil: this.state.nihil
+            ukuran: this.state.ukuran,
+            errors: {}
         }
 
         this.props.updateClass(classObject, classId, this.props.history);
-        this.setState({name: '', nihil: true, walikelas: '', ukuran: 0})
         }
 
     // autoFocus() {
@@ -92,7 +92,6 @@ class EditClass extends Component {
                             error={errors.name}
                             id="name"
                             type="text"
-                            clicked="true"
                             className={classnames("", {
                                 invalid: errors.name
                             })}

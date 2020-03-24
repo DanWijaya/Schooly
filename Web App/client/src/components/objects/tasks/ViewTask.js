@@ -8,13 +8,14 @@ import { viewTask, deleteTask } from '../../../actions/TaskActions'
 import { Modal, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ViewTask.css'
+import isEmpty from 'is-empty';
 class ViewTask extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             tasksCollection: [],
             show: false,
-            isDelete: false
+            isDelete: false,
         }
         
     }
@@ -23,23 +24,27 @@ class ViewTask extends Component {
         this.setState({show: true})
     }
 
-    closeModal(){
+    closeModal(){ // update show and isDelete to false. 
         this.setState({ show: false, isDelete: false})
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if(nextProps.location.state != null){
-            this.showModal()
+    UNSAFE_componentWillReceiveProps(nextProps) { // bakal dirun pas cuma props yg berubah... State berubah dia tak dirun...
 
-            if(this.state.isDelete){
+        if(nextProps.location.state){
+
+            if(!this.state.isDelete) 
+                this.showModal()
+            else{
                 const { taskId } = nextProps.location.state;
                 this.props.deleteTask(taskId, nextProps.history)
-                this.closeModal()
+                this.props.viewTask()
             }
-
-            this.props.viewTask()
         }
-        
+
+        if(this.props.tasksCollection.length - nextProps.tasksCollection.length == 1) // This is to update state to modal closed and isDelete false when it is already deleted
+            this.closeModal()
+
+        console.log(nextProps.tasksCollection)
         if(nextProps.tasksCollection){
             this.setState({ tasksCollection: nextProps.tasksCollection})
         }
@@ -49,8 +54,9 @@ class ViewTask extends Component {
     dataTable(){
 
         const { tasksCollection } = this.state;
-        if(tasksCollection.length == 0)
+        if(tasksCollection.length == 0){
             this.props.viewTask();
+        }
         
             return this.state.tasksCollection.map((data, i) => {
                 return <TaskDataTable obj={data} key={i} style={{overflow: "auto"}}/>;            })
@@ -68,8 +74,9 @@ class ViewTask extends Component {
                 </Link></Modal.Header>
             <Modal.Body> Are you sure you want to delete the task? </Modal.Body>
             <Modal.Footer>
-                <Button className="btn btn-danger" onClick={() => { 
-                    this.setState({isDelete: true, show:false})}
+                <Button  className="btn btn-danger" onClick={() => { 
+                    this.setState({isDelete: true, show:false})
+                    this.props.viewTask()} // ini ada call this.props.viewTask() for the sake function itu dirun... 
                 }>
                     Yes, Delete
                 </Button>

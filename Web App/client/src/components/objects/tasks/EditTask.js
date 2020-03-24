@@ -22,8 +22,8 @@ class EditTask extends Component {
             submitted: false,
             errors: {},
         }
-        this.nameInput = React.createRef();
-        this.subjectInput = React.createRef();
+        // this.nameInput = React.createRef();
+        // this.subjectInput = React.createRef();
 
         const { taskId } = this.props.location.state;
         this.props.editTask(taskId)
@@ -44,7 +44,6 @@ class EditTask extends Component {
                 deadline: moment(nextProps.tasksCollection.deadline)
 
             })
-            this.focus();
         }
     }
 
@@ -63,10 +62,10 @@ class EditTask extends Component {
         this.props.updateTask(taskObject, taskId, this.props.history);
     }
 
-    focus = () =>{
-        this.nameInput.current.click();
-        this.subjectInput.current.click()
-    }
+    // focus = () =>{
+    //     this.nameInput.current.click();
+    //     this.subjectInput.current.click()
+    // }
     render() {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
@@ -82,16 +81,14 @@ class EditTask extends Component {
                     <form noValidate onSubmit={this.onSubmit}>
                     <div className="input-field col s12">
                         <input  
-                        onChange={this.onChange}
-                        ref={this.nameInput}
-                        value={this.state.name}
-                        error={errors.name}
-                        id="name"
-                        type="text"
-                        focused
-                        className={classnames("", {
-                            invalid: errors.name
-                        })}
+                            onChange={this.onChange}
+                            value={this.state.name}
+                            error={errors.name}
+                            id="name"
+                            type="text"
+                            className={classnames("", {
+                                invalid: errors.name
+                            })}
                         />
                         {/* <label htmlFor="name" class="active">Name</label> */}
                         {/* This is another solution */}
