@@ -3,7 +3,8 @@
     margin: 40px 0;
 }
 
-.schooly_logo {
-    width: 200px;
-    height: 100px;
+.schooly-logo {
+    width: 400px;
+    height: 200px;
+    text-shadow: 2px;
 }

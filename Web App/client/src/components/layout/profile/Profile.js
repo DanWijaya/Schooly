@@ -11,9 +11,7 @@ import Grid from "@material-ui/core/Grid";
 
   //Tab Components
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { AppBar, Tabs, Tab, Paper } from "@material-ui/core";
 
   //Icons
 import PhoneIcon from "@material-ui/icons/Phone";
@@ -25,23 +23,22 @@ class Profile extends Component {
     // document.body.classList.add('profile-grid');
 
     return(
-        <div style={{width: "100%", margin: "auto"}}>
           <Grid
             className="profile-grid"
-            container
-              spacing={4}
-              justify="center"
+            container spacing={1} justify="center"
           >
               <Grid item xs={5}>
-                <img
-                  src={DefaultAvatar}
-                  alt="avatar"
-                  className="avatar"
-                />
-                <br/>
-                Insert Profile Picture Here
+                <Paper><div>
+                  <img
+                    src={DefaultAvatar}
+                    alt="avatar"
+                    className="avatar"
+                  />
+                  <br/>
+                  Insert Profile Picture Here
+                </div></Paper>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={7}><Paper>
                 <div>
                   <h1>Leonardus Leonard</h1>
                   <p>
@@ -49,18 +46,18 @@ class Profile extends Component {
                       <br/><br/>
                     Class XA
                   </p>
-                </div>
+                </div></Paper>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={5}><Paper>
                 <h1>Contacts</h1>
                   Phone Number: 69696969<br/>
                   Instagram: leonardtot<br/>
                   Faecbook:Bapak kau<br/>
                   Twitter: XXX<br/>
-                <h1>Adress</h1>
-                  Jalan biologytot<br/>
+                <h1>Address</h1>
+                  Jalan biologytot<br/></Paper>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={7}><Paper>
                 <AppBar position="static">
                   <Tabs
                     indicatorColor="white"
@@ -70,10 +67,9 @@ class Profile extends Component {
                     <Tab icon={<FavoriteIcon />} label="Extracurriculum Agenda" />
                     <Tab icon={<PersonPinIcon />} label="Class History" />
                   </Tabs>
-                </AppBar>
+                </AppBar></Paper>
               </Grid>
           </Grid>
-        </div>
     )
   }
 }

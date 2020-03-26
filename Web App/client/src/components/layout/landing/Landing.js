@@ -1,23 +1,23 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import logo from "./Schooly_logo.png";
+import logo from "../../../logos/Schooly Logo.png";
 import './Landing.css';
-// import Grid from '@material-ui/core/Grid';
-// import SideDrawer from '../../misc/side-drawer/SideDrawer';
+import Grid from '@material-ui/core/Grid';
 
 class Landing extends Component {
   render() {
     document.title="Schooly - Home"
     return (
-      <center>
+      <div>
+        <center>
         <div>
-        <br/><br/><br/><br/>
-        <img src={logo} className="schooly_logo"/>
-        <br/>
-        <br/>
+          <img src={logo} className="schooly-logo"/>
+          <br/>
+          <h4>Logonya nda rusak itu diganti jadi warna putih</h4>
+          <br/>
           <h4>Schooly makes school work easy!</h4>
           <br className="spacing"/>
-            <div className="col s6">
+          <div className="col s6">
               <Link
                 to="/register"
                 style={{
@@ -29,9 +29,10 @@ class Landing extends Component {
               >
                 Register
               </Link>
-            </div>
-            <br/>
-            <div className="col s6">
+          </div>
+        </div>
+
+        <div className="col s6">
               <Link
                 to="/login"
                 style={{
@@ -44,9 +45,8 @@ class Landing extends Component {
                 Log In
               </Link>
         </div>
-
+        </center>
       </div>
-      </center>
     );
   }
 }

@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import store from "./Store";
 
 import Profile from "./components/layout/profile/Profile";
+import About from "./components/layout/about/About";
 import Landing from "./components/layout/landing/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -77,7 +78,6 @@ class App extends Component {
       <div style={{height: '100%'}}>
         <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
         <SideDrawer show={this.state.sideDrawerOpen}/>
-        <br/><br/><br/><br/>
        <Provider store={store}>
         <Router>
           <div className="App">
@@ -85,17 +85,18 @@ class App extends Component {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/about-schooly" component={About} />
             {/* <Route exact path="/setting" component={Setting}/> */}
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
-              {/* Route buat Class */}
+              {/* Route Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
               <PrivateRoute exact path="/viewclass" component={ViewClass}/>
               <PrivateRoute exact path="/class/:id" component={EditClass}/>
               <PrivateRoute exact path="/deleteclass/:id" component={ViewClass}/>
 
-              {/* Route buat Task  */}
+              {/* Route Task  */}
               <PrivateRoute exact path="/createtask" component={CreateTask}/>
               <PrivateRoute exact path="/viewtask" component={ViewTask}/>
               <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
