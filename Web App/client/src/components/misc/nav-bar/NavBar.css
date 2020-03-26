@@ -45,12 +45,13 @@ nav{
 
     .NavBar__logo {
         margin-left: 0 ;
+        align-items: center;
     }
 }
 
 .logo{
     width: 100px;
     height: 50px;
-    margin-left: 2em;
-    align-items: center;
+ /*it was 2em before, em kurang lebih is 16px  */
+    align-self: center;
 }
