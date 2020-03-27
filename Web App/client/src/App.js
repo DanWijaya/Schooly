@@ -77,7 +77,7 @@ class App extends Component {
     return (
       <div style={{height: '100%'}}>
         <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
-        <SideDrawer show={this.state.sideDrawerOpen}/>
+        {/* <SideDrawer show={this.state.sideDrawerOpen}/> */}
        <Provider store={store}>
         <Router>
           <div className="App">

@@ -24,8 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
+      // width: `calc(100% - ${drawerWidth}px)`,
     },
   },
   menuButton: {
@@ -35,9 +34,10 @@ const useStyles = makeStyles(theme => ({
     },
   },
   // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
+
   drawerPaper: {
     width: drawerWidth,
+    marginTop: '64px' // Ikuti heightnya si Navbar pokoknya. 
   },
   content: {
     flexGrow: 1,
@@ -110,6 +110,11 @@ function NavBar(props){
             onClose={handleDrawerToggle}
             classes={{
               paper: classes.drawerPaper,
+            }}
+            id="DrawerBar"
+            className="Toggled"
+            style={{ 
+              marginTop: '64px'
             }}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
