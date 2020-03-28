@@ -1,5 +1,7 @@
 .root {
   flex-grow: 1;
+  margin-left: 220px;
+  margin-top: 20px;
 }
 
 .profile-grid {

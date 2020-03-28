@@ -12,15 +12,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 // import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 
-const drawerWidth = 0;
+const drawerWidth = 200;
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
+    display: 'flex'
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
+      flexShrink: 0
     },
   },
   appBar: {
@@ -31,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
-      display: 'none',
+      display: 'none'
     },
   },
   // necessary for content to be below app bar
@@ -40,11 +39,16 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
     marginTop: '64px' // Ikuti heightnya si Navbar pokoknya.
   },
+  toolbar: {
+    backgroundColor: "#2196f3", 
+    display: 'flex', 
+    justifyContent: 'space-between'
+  },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-}));
+    padding: theme.spacing(3)
+  }
+  }))
 
 // use the responsiveDrawer
 function NavBar(props){
@@ -84,8 +88,8 @@ function NavBar(props){
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar style={{backgroundColor: "#2196f3"}}>
+      <AppBar position="flex" className={classes.appBar}>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -98,10 +102,13 @@ function NavBar(props){
           <div className="NavBar__logo">
               <a href="/"><img src={logo} className="logo"/></a>
           </div>
+          <div className="NavBar_navigation-items">
+            <a href="/profile">Profile</a>
+            <a href="/about-schooly">About</a>
+          </div>
         </Toolbar>
       </AppBar>
-      <Toolbar /> //Fix items being hidden under navbar
-      <nav className={classes.drawer} aria-label="mailbox folders">
+      <nav className={classes.drawer} id="drawer" aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
@@ -114,7 +121,6 @@ function NavBar(props){
               paper: classes.drawerPaper,
             }}
             id="DrawerBar"
-            className="Toggled"
             style={{
               marginTop: '64px'
             }}

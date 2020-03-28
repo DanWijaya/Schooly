@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+// For working with Reducers
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../../actions/AuthActions";
+
 // import NavBar from "../../misc/nav-bar/NavBar";
 // import SideDrawer from "../../misc/side-drawer/SideDrawer";
 
