@@ -20,7 +20,6 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/layout/dashboard/Dashboard.js";
 import NavBar from "./components/misc/nav-bar/NavBar";
 import Backdrop from '../src/components/misc/back-drop/Backdrop';
-import "./App.css";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer"
 import CreateClass from "./components/objects/classes/CreateClass"
 import CreateTask from "./components/objects/tasks/CreateTask";

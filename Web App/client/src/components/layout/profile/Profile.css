@@ -1,12 +1,13 @@
+.root {
+  flex-grow: 1;
+}
+
 .profile-grid {
-  align-items: center;
-  text-align: justify;
 }
 
 .profile-grid div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 2;
+  text-align: justify;
 }
 
 .avatar {

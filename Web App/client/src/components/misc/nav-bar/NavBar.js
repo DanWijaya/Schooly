@@ -11,7 +11,8 @@ import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 // import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-const drawerWidth = 200; // lebar sidebarnya.. 
+
+const drawerWidth = 0;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
   drawerPaper: {
     width: drawerWidth,
-    marginTop: '64px' // Ikuti heightnya si Navbar pokoknya. 
+    marginTop: '64px' // Ikuti heightnya si Navbar pokoknya.
   },
   content: {
     flexGrow: 1,
@@ -46,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // use the responsiveDrawer
-function NavBar(props){ 
+function NavBar(props){
   const { container } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -99,6 +100,7 @@ function NavBar(props){
           </div>
         </Toolbar>
       </AppBar>
+      <Toolbar /> //Fix items being hidden under navbar
       <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
@@ -113,7 +115,7 @@ function NavBar(props){
             }}
             id="DrawerBar"
             className="Toggled"
-            style={{ 
+            style={{
               marginTop: '64px'
             }}
             ModalProps={{
@@ -137,7 +139,7 @@ function NavBar(props){
       </nav>
       </div>
   )
- } 
+ }
 
 // function ElevationScroll(props) {
 //       const { children } = props;
