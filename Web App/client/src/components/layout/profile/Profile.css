@@ -1,13 +1,19 @@
 .root {
   flex-grow: 1;
+  margin-left: 1cm;
 }
 
-.profile-grid {
+.profile-grid h1 {
+  font-family: "Tahoma", Geneva, sans-serif;
 }
 
-.profile-grid div {
-  padding: 2;
-  text-align: justify;
+.profile-grid h3 {
+  font-family: "Tahoma", Geneva, sans-serif;
+}
+
+.profile-grid h4 {
+  font-family: "Tahoma", Geneva, sans-serif;
+  color: blue;
 }
 
 .avatar {

@@ -7,9 +7,10 @@ import DefaultAvatar from "./default-avatar.jpg";
 import PropTypes from "prop-types";
 import { AppBar, Typography, Box, Tabs, Tab, Grid, Paper } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
+import Rating from '@material-ui/lab/Rating';
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
+import DescriptionIcon from '@material-ui/icons/Description';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,43 +62,34 @@ function Profile() {
 
     return(
         <div className="root">
-          <Grid className="profile-grid"
-            container
-            spacing={1}
-          >
-              <Grid item xs={5}>
+          <Grid container spacing={1} className="profile-grid">
+              <Grid item xs={4}>
                 <Paper>
-                  <img
-                    src={DefaultAvatar}
-                    alt="avatar"
-                    className="avatar"
-                  />
+                  <img src={DefaultAvatar} alt="avatar" className="avatar" />
                   <br/>
-                  Insert Profile Picture Here
                 </Paper>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={8} className="right-grid">
                 <Paper>
                   <h1>Leonardus Leonard</h1>
-                  <p>
-                    High School Student
-                      <br/><br/>
-                    Class XA
-                  </p>
+                  <h4>High School Student</h4> <br />
+                  Class XA <br />
+                  <Rating name="read-only" value={5} readOnly /> <br /><br />
+                  <button>Edit Profile</button>
                 </Paper>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={4}>
                 <Paper>
-                <h1>Contacts</h1>
-                  Phone Number: 69696969<br/>
-                  Instagram: leonardtot<br/>
-                  Facebook:Bapak kau<br/>
-                  Twitter: XXX<br/>
-                <h1>Address</h1>
-                  Jalan biologytot<br/>
+                <h3>Contacts</h3>
+                  Email: <br />
+                  Phone Number: <br/>
+                  Instagram: <br/>
+                  Spotify: <br/>
+                <h3>Address</h3>
+                  Insert Adress Here<br/>
                 </Paper>
               </Grid>
-              <Grid item xs={7}>
+              <Grid item xs={8}>
                 <AppBar position="static" color="default">
                   <Tabs
                     value={value}
@@ -107,9 +99,9 @@ function Profile() {
                     variant="fullWidth"
                     aria-label="full width tabs example"
                   >
-                    <Tab label="Item One" icon={<PhoneIcon />} {...a11yProps(0)} />
-                    <Tab label="Item Two" icon={<FavoriteIcon />} {...a11yProps(1)} />
-                    <Tab label="Item Three" icon={<PersonPinIcon />} {...a11yProps(2)} />
+                    <Tab label="Biography" icon={<DescriptionIcon />} {...a11yProps(0)} />
+                    <Tab label="Career Path" icon={<BusinessCenterIcon />} {...a11yProps(1)} />
+                    <Tab label="About" icon={<AccountBoxIcon />} {...a11yProps(2)} />
                   </Tabs>
                 </AppBar>
                 <SwipeableViews
@@ -118,13 +110,18 @@ function Profile() {
                   onChangeIndex={handleChangeIndex}
                 >
                   <TabPanel value={value} index={0} dir={theme.direction}>
-                    Budi
+                    My name is Budi bla bla bla bla
                   </TabPanel>
                   <TabPanel value={value} index={1} dir={theme.direction}>
-                    Sok Tjeng
+                    Excels at: <br />
+                    Dream Occupation: <br />
+                    Universities I'm Interested at: <br />
                   </TabPanel>
                   <TabPanel value={value} index={2} dir={theme.direction}>
-                    Daniel Lau cek kong
+                    Gender: <br />
+                    Birthday: <br />
+                    Hobbies and Interests: <br />
+                    Extracurricular Skills: <br />
                   </TabPanel>
                 </SwipeableViews>
               </Grid>
