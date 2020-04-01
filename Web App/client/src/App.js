@@ -8,7 +8,7 @@ import setAuthToken from "./utils/setAuthToken";
 
   //Authentication Components
 import { setCurrentUser, logoutUser } from "./actions/AuthActions";
-import { Provider } from "react-redux";
+import { Provider } from "react-redux"; //provide state from Store to the component
 import store from "./Store";
 
 import Profile from "./components/layout/profile/Profile";
@@ -75,10 +75,11 @@ class App extends Component {
     }
     return (
       <div style={{height: '100%'}}>
-        <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
+        {/* <NavBar drawerClickHandler={this.drawerToggleClickHandler}/> */}
         {/* <SideDrawer show={this.state.sideDrawerOpen}/> */}
        <Provider store={store}>
         <Router>
+          <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
           <div className="App">
             <Route exact path="/" component={Landing} />
             <Route exact path="/profile" component={Profile} />
@@ -86,6 +87,7 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/about-schooly" component={About} />
             {/* <Route exact path="/setting" component={Setting}/> */}
+
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
 

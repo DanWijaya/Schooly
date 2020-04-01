@@ -11,6 +11,8 @@ class Register extends Component {
     this.state = {
       name: "",
       email: "",
+      address: "",
+      phone_number:"",
       password: "",
       password2: "",
       errors: {}
@@ -42,6 +44,8 @@ class Register extends Component {
     const newUser = {
       name: this.state.name,
       email: this.state.email,
+      // phone_number: this.state.phone_number,
+      // address: this.state.address,
       password: this.state.password,
       password2: this.state.password2
     };

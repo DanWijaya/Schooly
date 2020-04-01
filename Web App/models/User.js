@@ -21,7 +21,15 @@ const UserSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
-  }
+  }, 
+  // phone_number: {
+  //   type: Number,
+  //   required: true
+  // },
+  // address: {
+  //   type: String, 
+  //   required: true
+  // }
 });
 
 var User = mongoose.model("users", UserSchema)

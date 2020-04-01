@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const cors = require('cors');
+const multer = require("multer");
 
 const users = require("./routes/api/Users");
 const tasks = require("./routes/api/Tasks");
 const classes = require("./routes/api/Classes");
 
 const app = express();
+
 // Bodyparser middleware
 app.use(
   bodyParser.urlencoded({
@@ -32,6 +34,21 @@ mongoose
     )
   .catch(err => console.log(err));
 
+// Mutler Middleware
+app.use(express.static('public'))
+ 
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+  cb(null, 'public/images/uploads')
+},
+filename: (req, file, cb) => {
+  cb(null, Date.now() + '-' + file.originalname)
+  }
+  }
+);
+
+const upload = multer({ storage })
+
 // Passport middleware
 app.use(passport.initialize());
 
@@ -40,10 +57,19 @@ require("./config/passport")(passport);
 console.log("Check routes");
 // Routes
 app.use(cors());
+app.post('/upload', upload.single('image'), (req, res) => {
+  if (req.file){
+    res.json({
+    imageUrl: `images/uploads/${req.file.filename}`
+    });
+  }
+  else 
+    res.status("409").json("No Files to Upload.");   
+})
+
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
 
 const port = process.env.PORT || 5000;
-
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));

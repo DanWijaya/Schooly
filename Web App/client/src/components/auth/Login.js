@@ -150,7 +150,7 @@ Login.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth,
+  auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
   errors: state.errors
 });
 

@@ -6,9 +6,21 @@ import logo from '../../../logos/Schooly Logo.png';
 import PropTypes from "prop-types";
 import {AppBar, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem, ListItemIcon,
         ListItemText, Toolbar, Typography} from "@material-ui/core";
+import { Link } from 'react-router-dom';
+
+// Import all Icon needed 
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
+import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
+import DashboardIcon from '@material-ui/icons/DashboardOutlined';
+import AnnouncementIcon from '@material-ui/icons/Announcement';
+import ClassIcon from '@material-ui/icons/Class';
+import SettingIcon from '@material-ui/icons/SettingsOutlined'
+import AccountIcon from '@material-ui/icons/AccountBox';
+import AboutIcon from '@material-ui/icons/Info';
+import AssessmentIcon from '@material-ui/icons/AssessmentOutlined';
+
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 // import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 
@@ -61,23 +73,66 @@ function NavBar(props){
     setMobileOpen(!mobileOpen);
   };
 
+  const generateIcon = (item) => {
+    switch(item) {
+      case 'Tasks':
+        return <AssignmentIcon/>
+      case 'Class':
+        return <ClassIcon/>
+      case 'Dashboard':
+        return <DashboardIcon/>
+      case 'Announcements' : 
+        return <AnnouncementIcon/>
+      case 'Assessments' : 
+        return <AssessmentIcon/>
+      case 'Settings' : 
+        return <SettingIcon/>
+      case 'Profile' : 
+        return <AccountIcon/>
+      case 'About Schooly' : 
+        return <AboutIcon/>
+      
+      default: return ""
+    }
+  }
+
+  const generateLink = (item) => {
+    switch(item) {
+      case 'Tasks':
+        return "/viewtask"
+      case 'Class':
+        return "/viewclass"
+      case 'Dashboard':
+        return "/dashboard"
+      case 'Announcements' : 
+        return "/announcments"
+      case "Assessments": 
+        return "/assessments"
+      case 'Settings' : 
+        return "/settings"
+      case 'Profile' : 
+        return "/profile"
+      case 'About Schooly' : 
+        return "/about-schooly"
+    }
+  }
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
-      <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+        {['Dashboard', 'Class', 'Tasks', 'Announcements', 'Assessments'].map((text, index) => (
+          <ListItem button component={Link} to={generateLink(text)}>
+            <ListItemIcon>{ generateIcon(text) }</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+        {['Profile', 'Settings', 'About Schooly'].map((text, index) => (
+          <ListItem button component={Link} to={generateLink(text)} key={text}>
+            <ListItemIcon>{ generateIcon(text)}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
@@ -100,7 +155,7 @@ function NavBar(props){
             <MenuIcon />
           </IconButton>
           <div className="NavBar__logo">
-              <a href="/"><img src={logo} className="logo"/></a>
+              <a href="/dashboard"><img src={logo} className="logo"/></a>
           </div>
           <div className="NavBar_navigation-items">
             <a href="/profile">Profile</a>
