@@ -22,7 +22,18 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   }, 
-  // phone_number: {
+  address: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  emergency_phone: {
+    type: String,
+    required: true
+  }  // phone_number: {
   //   type: Number,
   //   required: true
   // },

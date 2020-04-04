@@ -32,7 +32,10 @@ router.post("/register", (req, res) => {
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        phone: req.body.phone,
+        emergency_phone: req.body.emergency_phone,
+        address: req.body.address,
       });
 
       // Hash password before saving in database
@@ -78,9 +81,14 @@ router.post("/login", (req, res) => {
       if (isMatch) {
         // User matched
         // Create JWT Payload
+        console.log(user.email)
         const payload = {
           id: user.id,
-          name: user.name
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          emergency_phone: user.emergency_phone,
+          address: user.address // Don't include password because don't want to make it visible by accessing token.. 
         };
 
         // Sign token

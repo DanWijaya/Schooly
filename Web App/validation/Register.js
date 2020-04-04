@@ -7,6 +7,9 @@ module.exports = function validateRegisterInput(data) {
   // Convert empty fields to an empty string so we can use validator functions
   data.name = !isEmpty(data.name) ? data.name : "";
   data.email = !isEmpty(data.email) ? data.email : "";
+  data.phone = !isEmpty(data.phone) ? data.phone : "";
+  data.emergency_phone = !isEmpty(data.emergency_phone) ? data.emergency_phone : "";
+  data.address = !isEmpty(data.address) ? data.address : "";
   data.password = !isEmpty(data.password) ? data.password : "";
   data.password2 = !isEmpty(data.password2) ? data.password2 : "";
 
@@ -20,6 +23,21 @@ module.exports = function validateRegisterInput(data) {
     errors.email = "Email field is required";
   } else if (!Validator.isEmail(data.email)) {
     errors.email = "Email is invalid";
+  }
+
+  // Phone checks
+  if (Validator.isEmpty(data.phone)) {
+    errors.phone = "Phone contact number field is required"
+  }
+
+  // Emergency phone checks
+  if (Validator.isEmpty(data.emergency_phone)) {
+    errors.phone = "Emergency contact number field is required"
+  }
+
+  // Emergency phone checks
+  if (Validator.isEmpty(data.address)) {
+    errors.address = "Address field is required"
   }
 
   // Password checks

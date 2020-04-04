@@ -12,7 +12,8 @@ class Register extends Component {
       name: "",
       email: "",
       address: "",
-      phone_number:"",
+      phone:"",
+      emergency_phone:"",
       password: "",
       password2: "",
       errors: {}
@@ -44,8 +45,9 @@ class Register extends Component {
     const newUser = {
       name: this.state.name,
       email: this.state.email,
-      // phone_number: this.state.phone_number,
-      // address: this.state.address,
+      phone: this.state.phone,
+      emergency_phone: this.state.emergency_phone,
+      address: this.state.address,
       password: this.state.password,
       password2: this.state.password2
     };
@@ -73,6 +75,7 @@ class Register extends Component {
               </p>
             </div>
             <form noValidate onSubmit={this.onSubmit}>
+
               <div className="input-field col s12">
                 <input
                   onChange={this.onChange}
@@ -87,6 +90,7 @@ class Register extends Component {
                 <label htmlFor="name">Name</label>
                 <span className="red-text">{errors.name}</span>
               </div>
+
               <div className="input-field col s12">
                 <input
                   onChange={this.onChange}
@@ -100,6 +104,52 @@ class Register extends Component {
                 />
                 <label htmlFor="email">Email</label>
                 <span className="red-text">{errors.email}</span>
+              </div>
+
+              <div className="input-field col s12">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.phone}
+                  error={errors.phone}
+                  id="phone"
+                  type="text"
+                  className={classnames("", {
+                    invalid: errors.phone
+                  })}
+                />
+                <label htmlFor="email">Phone Contact </label>
+                <span className="red-text">{errors.phone}</span>
+              </div>
+
+              <div className="input-field col s12">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.emergency_phone}
+                  error={errors.emergency_phone}
+                  id="emergency_phone"
+                  type="text"
+                  className={classnames("", {
+                    invalid: errors.emergency_phone
+                  })}
+                />
+                <label htmlFor="email">Emergency Contact</label>
+                <span className="red-text">{errors.emergency_phone}</span>
+              </div>
+
+              <div className="input-field col s12">
+                <input
+                  onChange={this.onChange}
+                  value={this.state.address}
+                  error={errors.address}
+                  id="address"
+                  type="text"
+                  className={classnames("", {
+
+                    invalid: errors.address
+                  })}
+                />
+                <label htmlFor="email">Address</label>
+                <span className="red-text">{errors.address}</span>
               </div>
               <div className="input-field col s12">
                 <input

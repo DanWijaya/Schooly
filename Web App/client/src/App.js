@@ -82,7 +82,6 @@ class App extends Component {
           <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
           <div className="App">
             <Route exact path="/" component={Landing} />
-            <Route exact path="/profile" component={Profile} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/about-schooly" component={About} />
@@ -90,7 +89,7 @@ class App extends Component {
 
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
-
+              <PrivateRoute exact path="/profile" component={Profile} />
               {/* Route Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
               <PrivateRoute exact path="/viewclass" component={ViewClass}/>

@@ -13,7 +13,6 @@ import { connect } from "react-redux";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-
     return (
       <Typography
         component="div"
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function Profile() {
+function Profile(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
@@ -58,6 +57,7 @@ function Profile() {
     const handleChangeIndex = (index) => {
       setValue(index);
     };
+    const { user } = props.auth;
 
     return(
         <div className="root">
@@ -70,8 +70,8 @@ function Profile() {
               </Grid>
               <Grid item xs={8} className="right-grid">
                 <Paper>
-                  <h1>Leonardus Leonard</h1>
-                  <h4>High School Student</h4> <br />
+                  <h1>{ user.name }</h1>
+                  <h4>High School Student </h4> <br />
                   Class XA <br />
                   <Rating name="read-only" value={5} readOnly /> <br /><br />
                   <button>Edit Profile</button>
@@ -80,12 +80,11 @@ function Profile() {
               <Grid item xs={4}>
                 <Paper>
                 <h3>Contacts</h3>
-                  Email: <br />
-                  Phone Number: <br/>
-                  Instagram: <br/>
-                  Spotify: <br/>
-                <h3>Address</h3>
-                  Insert Adress Here<br/>
+                  Email: {user.email}<br />
+                  Phone Number: {user.phone} <br/>
+                  Emergency Phone number: {user.emergency_phone}<br/>
+                <h3>Address </h3>
+                  {user.address}<br/>
                 </Paper>
               </Grid>
               <Grid item xs={8}>
