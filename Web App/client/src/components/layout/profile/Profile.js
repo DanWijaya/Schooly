@@ -10,6 +10,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import "./Profile.css";
 import { connect } from "react-redux";
+import Avatar from '@material-ui/core/Avatar';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -40,15 +41,9 @@ function a11yProps(index) {
     };
   }
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-      backgroundColor: theme.palette.background.paper,
-      width: 500,
-    },
-  }));
 
 function Profile(props) {
-    const classes = useStyles();
+   
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
@@ -59,19 +54,39 @@ function Profile(props) {
     };
     const { user } = props.auth;
 
+    const useStyles = makeStyles((theme) => ({
+      root: {
+        display: 'flex',
+        '& > *': {
+          margin: theme.spacing(1),
+        },
+      },
+      small: {
+        fontSize: '20px',
+        width: theme.spacing(5),
+        height: theme.spacing(5),
+      },
+      large: {
+        fontSize: '50px',
+        width: theme.spacing(12),
+        height: theme.spacing(12),
+      },
+    }));
+
+    const classes = useStyles();
     return(
         <div className="root">
           <Grid container spacing={1} className="profile-grid">
-              <Grid item xs={4}>
-                <Paper>
-                  <img src={DefaultAvatar} alt="avatar" className="avatar" />
+              <Grid item xs={4} >
+                <Paper style={{ width: 'inherit', height: '190px'}}>
+                <Avatar style={{ backgroundColor: 'magenta'}} className={classes.small}>{user.name[0]}</Avatar>
                   <br/>
                 </Paper>
               </Grid>
               <Grid item xs={8} className="right-grid">
-                <Paper>
+                <Paper style={{width: 'inherit', height: '190px'}}>
                   <h1>{ user.name }</h1>
-                  <h4>High School Student </h4> <br />
+                  <h4>High School {user.role} </h4> <br />
                   Class XA <br />
                   <Rating name="read-only" value={5} readOnly /> <br /><br />
                   <button>Edit Profile</button>

@@ -4,12 +4,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/AuthActions";
 import classnames from "classnames";
+import { Select , MenuItem, InputLabel} from "@material-ui/core";
 
 class Register extends Component {
   constructor() {
     super();
     this.state = {
       name: "",
+      role: "",
       email: "",
       address: "",
       phone:"",
@@ -36,7 +38,10 @@ class Register extends Component {
   }
 
   onChange = e => {
-    this.setState({ [e.target.id]: e.target.value });
+    if(e.target.id)
+      this.setState({ [e.target.id]: e.target.value });
+    else
+      this.setState({role: e.target.value});
   };
 
   onSubmit = e => {
@@ -44,6 +49,7 @@ class Register extends Component {
 
     const newUser = {
       name: this.state.name,
+      role: this.state.role,
       email: this.state.email,
       phone: this.state.phone,
       emergency_phone: this.state.emergency_phone,
@@ -55,10 +61,13 @@ class Register extends Component {
     this.props.registerUser(newUser, this.props.history);
   };
 
+  
   render() {
     document.title="Schooly - Register"
     const { errors } = this.state;
+    console.log(this.state.role)
     return (
+      
       <div className="container">
         {/* <div className="row" style={{ marginTop: "4rem" }}> */}
           <div className="col s8 offset-s2">
@@ -74,8 +83,23 @@ class Register extends Component {
                 Already have an account? <Link to="/login">Log in</Link>
               </p>
             </div>
-            <form noValidate onSubmit={this.onSubmit}>
-
+           
+            <form noValidate onSubmit={this.onSubmit} id="registerform">
+              <div className="col s12">
+                <InputLabel id="demo-simple-select-label">Register As</InputLabel>
+                <Select
+                  style={{ width: '200px'}}
+                  labelId="demo-simple-select-label"
+                  id="role"
+                  name="role"
+                  value={this.state.role}
+                  onChange={this.onChange}>
+                    <MenuItem value={'Student'}>Student</MenuItem>
+                    <MenuItem value={'Teacher'}>Teacher</MenuItem>
+                    <MenuItem value={'Admin'}>Admin</MenuItem>
+                </Select>
+                {/* <label htmlFor="role">Register As</label> */}
+              </div>
               <div className="input-field col s12">
                 <input
                   onChange={this.onChange}

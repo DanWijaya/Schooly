@@ -9,6 +9,7 @@ import { Modal, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ViewTask.css'
 import isEmpty from 'is-empty';
+
 class ViewTask extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +20,7 @@ class ViewTask extends Component {
         }
         
     }
+    
     
     showModal(){
         this.setState({show: true})
@@ -62,13 +64,10 @@ class ViewTask extends Component {
                 return <TaskDataTable obj={data} key={i} style={{overflow: "auto"}}/>;            })
     }
     
-
-    render() {
-
-        return( 
-            <div className="wrapper-taskCollection">
-            <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
-            <Modal.Header>Deleting Task {this.props.tasksCollection.name} <Link to="/viewtask" class="close" onClick={() => {this.closeModal()}}>
+    deletePopWindow = () => {
+        return(
+        <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
+            <Modal.Header>Deleting Task <Link to="/viewtask" class="close" onClick={() => {this.closeModal()}}>
                 <span aria-hidden="true">x</span>
                 <span class="sr-only">Close</span>
                 </Link></Modal.Header>
@@ -80,35 +79,50 @@ class ViewTask extends Component {
                 }>
                     Yes, Delete
                 </Button>
-
                 <Link to="/viewtask" className="btn btn-primary" onClick={() => { this.closeModal()}
                 }>
                     No, Cancel
                 </Link>
             </Modal.Footer>
-            </Modal>
-            <div className="container">
-
-                <h3 align="center">List of tasks</h3>
-                <table className="table table-striped table-dark" style={{ marginTop: 20}}>
-                    <thead className="thead-dark">
-                        <tr>
-                            <th style={{textAlign: "center"}}>Name</th>
-                            <th style={{textAlign: "center"}}>Subject</th>
-                            <th style={{textAlign: "center"}}>Deadline</th>
-                            <th style={{textAlign: "center"}}>Submitted</th>
-                            <th colSpan="2" style={{textAlign: "center"}}>
-                                Action 
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.dataTable()}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </Modal>
         )
+    }
+
+    render() {
+        const { user } = this.props.auth
+        if( user.role == "Teacher") {
+
+            return( 
+                <div className="wrapper-taskCollection">
+                    {this.deletePopWindow()}
+                <div className="container">
+                    <h3 align="center">List of tasks</h3>
+                    <table className="table table-striped table-dark" style={{ marginTop: 20}}>
+                        <thead className="thead-dark">
+                            <tr>
+                                <th style={{textAlign: "center"}}>Name</th>
+                                <th style={{textAlign: "center"}}>Subject</th>
+                                <th style={{textAlign: "center"}}>Deadline</th>
+                                <th style={{textAlign: "center"}}>Submitted</th>
+                                <th colSpan="2" style={{textAlign: "center"}}>
+                                    Action 
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.dataTable()}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            )
+        } else if (user.role == "Student"){
+            return (
+                <div className="wrapper-taskCollection">
+                    <h1> Here is your due task</h1>
+                </div>
+            )
+        }
     }
 }
 
@@ -116,12 +130,14 @@ ViewTask.propTypes = {
     viewTask: PropTypes.func.isRequired,
     tasksCollection: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired
 }
 
 // If your mapStateToProps function is declared as taking one parameter, 
 // it will be called whenever the store state changes, and given the store state as the only parameter.
 const mapStateToProps = state => (
     {
+        auth: state.auth,
         tasksCollection: state.tasksCollection,
         errors: state.errors
     }

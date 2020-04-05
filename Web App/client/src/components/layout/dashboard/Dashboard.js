@@ -24,14 +24,14 @@ class Dashboard extends Component {
   render() {
     const { user } = this.props.auth;
     document.body.style.background = "white"
+    
     return (
-      
       <div>
           <div style={{ height: "75vh"}} className="container valign-wrapper">
 
             <div className="landing-copy col s12 center-align">
               <h4>
-                <b>Hey there, </b> {user.name.split(" ")[0]}
+                <b>Hey there {user.role} </b> {user.name.split(" ")[0]}
                 <p className="flow-text grey-text text-darken-1">
                   You are logged into our Schooly Web app! {" "}
                   <span style={{ fontFamily: "monospace" }}>MERN</span> app 👏

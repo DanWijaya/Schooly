@@ -10,11 +10,51 @@ const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
 
 // Load User model
-const User = require("../../models/User");
+const User= require("../../models/User");
+const Student = require("../../models/Student");
+const Teacher = require("../../models/Teacher");
 
 // @route POST api/users/register
 // @desc Register user
 // @access Public
+// router.post("/register", (req, res) => {
+//   // Form validation
+
+//   const { errors, isValid } = validateRegisterInput(req.body);
+
+//   // Check validation
+//   if (!isValid) {
+//     return res.status(400).json(errors);
+//   }
+
+//   User.findOne({ email: req.body.email }).then(user => {
+//     if (user) {
+//       return res.status(400).json({ email: "Email already exists" });
+//     } else {
+//       const newUser = new User({
+//         name: req.body.name,
+//         email: req.body.email,
+//         password: req.body.password,
+//         phone: req.body.phone,
+//         emergency_phone: req.body.emergency_phone,
+//         address: req.body.address,
+//       });
+
+//       // Hash password before saving in database
+//       bcrypt.genSalt(10, (err, salt) => {
+//         bcrypt.hash(newUser.password, salt, (err, hash) => {
+//           if (err) throw err;
+//           newUser.password = hash;
+//           newUser
+//             .save()
+//             .then(user => res.json(user))
+//             .catch(err => console.log(err));
+//         });
+//       });
+//     }
+//   });
+// });
+
 router.post("/register", (req, res) => {
   // Form validation
 
@@ -24,12 +64,18 @@ router.post("/register", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
+  var reg_user
+  if(req.body.role == "Student")
+    reg_user = Student
+  else 
+    reg_user = Teacher
 
-  User.findOne({ email: req.body.email }).then(user => {
+  reg_user.findOne({ email: req.body.email }).then(user => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" });
     } else {
-      const newUser = new User({
+      // if(req.body.role == "Student")
+      const newUser = new reg_user({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
@@ -81,9 +127,9 @@ router.post("/login", (req, res) => {
       if (isMatch) {
         // User matched
         // Create JWT Payload
-        console.log(user.email)
         const payload = {
           id: user.id,
+          role: user.role,
           name: user.name,
           email: user.email,
           phone: user.phone,
