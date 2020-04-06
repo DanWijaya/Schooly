@@ -127,15 +127,34 @@ router.post("/login", (req, res) => {
       if (isMatch) {
         // User matched
         // Create JWT Payload
-        const payload = {
+        var payload
+        if(user.role == "Student"){
+          payload = {
+            id: user.id,
+            role: user.role,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            emergency_phone: user.emergency_phone,
+            address: user.address,
+            //Information specific on Student
+            kelas: user.kelas // Don't include password because don't want to make it visible by accessing token.. 
+          };
+      }
+
+      else if(user.role == "Teacher") {
+        payload = {
           id: user.id,
           role: user.role,
           name: user.name,
           email: user.email,
           phone: user.phone,
           emergency_phone: user.emergency_phone,
-          address: user.address // Don't include password because don't want to make it visible by accessing token.. 
-        };
+          address: user.address,
+          // Information specific on Teacher 
+          subject_teached: user.subject_teached
+        }
+      }
 
         // Sign token
         jwt.sign(
