@@ -46,6 +46,32 @@ class ViewClass extends Component {
 
     }
 
+    deletePopWindow = () => {
+        return (
+        <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
+        <Modal.Header>Deleting Class {this.props.classesCollection.name} <Link to="/viewclass" class="close" onClick={() => {this.closeModal()}}>
+            <span aria-hidden="true">x</span>
+            <span class="sr-only">Close</span>
+            </Link></Modal.Header>
+
+            <Modal.Body> Are you sure you want to delete the class? </Modal.Body>
+            <Modal.Footer>
+            <Button className="btn btn-danger" onClick={() => { 
+                this.setState({isDelete: true, show:false})
+                this.props.viewClass()}
+            }>
+                Yes, Delete
+            </Button>
+
+            <Link to="/viewclass" className="btn btn-primary" onClick={() => { this.closeModal()}
+            }>
+                No, Cancel
+            </Link>
+        </Modal.Footer>
+        </Modal>
+        )
+    }
+
     dataTable() {
         const { classesCollection } = this.state;
         if(classesCollection.length == 0)
@@ -57,38 +83,13 @@ class ViewClass extends Component {
         });
     }
 
-    deletePopUpWindow = () => {
-        return(
-            <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
-            <Modal.Header>Deleting Class {this.props.classesCollection.name} <Link to="/viewclass" class="close" onClick={() => {this.closeModal()}}>
-                <span aria-hidden="true">x</span>
-                <span class="sr-only">Close</span>
-                </Link></Modal.Header>
-
-                <Modal.Body> Are you sure you want to delete the class? </Modal.Body>
-                <Modal.Footer>
-                <Button className="btn btn-danger" onClick={() => { 
-                    this.setState({isDelete: true, show:false})
-                    this.props.viewClass()}
-                }>
-                    Yes, Delete
-                </Button>
-
-                <Link to="/viewclass" className="btn btn-primary" onClick={() => { this.closeModal()}
-                }>
-                    No, Cancel
-                </Link>
-            </Modal.Footer>
-            </Modal>
-        )
-    }
     render() {
         const { user } = this.props.auth;
 
         if( user.role == "Teacher") {
             return( 
                 <div className="wrapper-classesCollection">
-                    {this.deletePopUpWindow()}
+                    {this.deletePopWindow()}
                 <div className="container">
                     <h3 align="center">List of Classes</h3>
                     <table className="table table-striped table-dark" style={{ marginTop: 20}}>
