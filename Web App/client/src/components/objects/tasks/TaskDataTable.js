@@ -26,7 +26,13 @@ class TaskDataTable extends Component {
     // }
 
     render(){
-
+        const class_assigned= this.props.obj.class_assigned
+        var classes = ""
+        for (var i = 0; i < class_assigned.length; i++) {
+            classes += class_assigned[i].name
+            if(i != class_assigned.length - 1)
+                classes += ","
+        }
         // // GEt the modal 
         // let id = "id_" + this.props.obj._id;
         // let modal = document.getElementById(id);
@@ -38,7 +44,7 @@ class TaskDataTable extends Component {
         // }
 
         return(
-
+                
                 <tr>
                     <td style={{textAlign: "center"}}>
                         {this.props.obj.name}
@@ -49,9 +55,9 @@ class TaskDataTable extends Component {
                     <td style={{textAlign: "center"}}>
                         {this.props.obj.deadline}
                     </td>
-                    {/* <td style={{textAlign: "center"}}>
-                        {this.props.obj.submitted.toString()}
-                    </td> */}
+                    <td style={{textAlign: "center"}}>
+                        {classes}
+                    </td>
                     <td style={{textAlign: "center"}}>
                     {/* If want to pass datas, use this kind of Link format  */}
                     <Link to={{

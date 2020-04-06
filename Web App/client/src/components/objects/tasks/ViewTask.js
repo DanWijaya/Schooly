@@ -66,7 +66,7 @@ class ViewTask extends Component {
     
     deletePopWindow = () => {
         return(
-        <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
+        <Modal style={{marginTop: '250px'}} show={this.state.show} onHide={() => {this.closeModal()}}>
             <Modal.Header>Deleting Task <Link to="/viewtask" class="close" onClick={() => {this.closeModal()}}>
                 <span aria-hidden="true">x</span>
                 <span class="sr-only">Close</span>

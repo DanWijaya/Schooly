@@ -9,21 +9,18 @@ const Task = require("../../models/Task");
 const Class = require("../../models/Class")
 //Define create route
 router.post("/create", (req, res) => {
-
     const { errors, isValid } = validateTaskInput(req.body)
-
     if(!isValid) { 
         console.log("Not Valid");
         return res.status(400).json(errors);
     }
-
     Task.findOne({ name: req.body.name, subject: req.body.subject})
         .then(task => { 
         if(task) {
             return res.status(400).json({ name: "tasks with same name and subject already exist"});
         }
+        
         else {
-            console.log(req.body.class_assigned)
             const newTask = new Task({
             name: req.body.name,
             deadline: req.body.deadline,
