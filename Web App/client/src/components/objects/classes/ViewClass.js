@@ -57,10 +57,8 @@ class ViewClass extends Component {
         });
     }
 
-    render() {
-        return( 
-            <div className="wrapper-classesCollection">
-            
+    deletePopUpWindow = () => {
+        return(
             <Modal show={this.state.show} onHide={() => {this.closeModal()}}>
             <Modal.Header>Deleting Class {this.props.classesCollection.name} <Link to="/viewclass" class="close" onClick={() => {this.closeModal()}}>
                 <span aria-hidden="true">x</span>
@@ -82,28 +80,43 @@ class ViewClass extends Component {
                 </Link>
             </Modal.Footer>
             </Modal>
-
-            <div className="container">
-                <h3 align="center">List of Classes</h3>
-                <table className="table table-striped table-dark" style={{ marginTop: 20}}>
-                    <thead className="thead-dark">
-                        <tr>
-                            <th style={{textAlign: "center"}}>Name</th>
-                            <th style={{textAlign: "center"}}>Walikelas</th>
-                            <th style={{textAlign: "center"}}>Ukuran</th>
-                            <th style={{textAlign: "center"}}>Nihil</th>
-                            <th colSpan="2" style={{textAlign: "center"}}>
-                                Action 
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.dataTable()}
-                    </tbody>
-                </table>
-            </div>
-        </div>
         )
+    }
+    render() {
+        const { user } = this.props.auth;
+
+        if( user.role == "Teacher") {
+            return( 
+                <div className="wrapper-classesCollection">
+                    {this.deletePopUpWindow()}
+                <div className="container">
+                    <h3 align="center">List of Classes</h3>
+                    <table className="table table-striped table-dark" style={{ marginTop: 20}}>
+                        <thead className="thead-dark">
+                            <tr>
+                                <th style={{textAlign: "center"}}>Name</th>
+                                <th style={{textAlign: "center"}}>Walikelas</th>
+                                <th style={{textAlign: "center"}}>Ukuran</th>
+                                <th style={{textAlign: "center"}}>Nihil</th>
+                                <th colSpan="2" style={{textAlign: "center"}}>
+                                    Action 
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.dataTable()}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            )} else if (user.role =="Student") {
+                return( 
+                    <div style={{ marginLeft: '250px'}}>
+                    <h1 style={{ alignItems : 'center'}}> Your class is <b>{user.kelas}</b></h1>
+                    </div>
+                )
+            }
+        
     }
 }
 
@@ -111,14 +124,16 @@ ViewClass.propTypes = {
     viewClass: PropTypes.func.isRequired,
     classesCollection: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
-    deleteClass: PropTypes.func.isRequired
+    deleteClass: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
 }
 
 // If your mapStateToProps function is declared as taking one parameter, 
 // it will be called whenever the store state changes, and given the store state as the only parameter.
 const mapStateToProps = state => ({
     errors: state.errors,
-    classesCollection: state.classesCollection
+    classesCollection: state.classesCollection,
+    auth: state.auth
 })
 
 export default connect(

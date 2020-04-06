@@ -49,9 +49,9 @@ class TaskDataTable extends Component {
                     <td style={{textAlign: "center"}}>
                         {this.props.obj.deadline}
                     </td>
-                    <td style={{textAlign: "center"}}>
+                    {/* <td style={{textAlign: "center"}}>
                         {this.props.obj.submitted.toString()}
-                    </td>
+                    </td> */}
                     <td style={{textAlign: "center"}}>
                     {/* If want to pass datas, use this kind of Link format  */}
                     <Link to={{

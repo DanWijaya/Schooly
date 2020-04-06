@@ -7,6 +7,8 @@ import moment from "moment";
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+import { Multiselect } from 'multiselect-react-dropdown';
+import { InputLabel } from '@material-ui/core';
 
 class CreateTask extends Component {
     constructor() {
@@ -17,7 +19,8 @@ class CreateTask extends Component {
             subject: '',
             deadline: moment(),
             focused: false,
-            submitted: false,
+            // submitted: false,
+            class_assigned: [],
             errors: {}
         };
     }
@@ -33,7 +36,8 @@ class CreateTask extends Component {
             name: this.state.name,
             deadline: this.state.deadline,
             subject: this.state.subject,
-            submitted: this.state.submitted,
+            class_assigned: this.state.class_assigned,
+            // submitted: this.state.submitted,
             errors: {}
         };
 
@@ -42,6 +46,14 @@ class CreateTask extends Component {
 
     }
 
+    onSelect = (selectedList, selectedItem) => {
+      console.log(this.state.class_assigned)
+      this.setState({ class_assigned: selectedList})
+    } 
+
+    onRemove = (selectedList, selectedItem) => {
+      this.setState({ class_assigned: selectedList})
+    }
 
     // UNSAFE_componentWillReceiveProps() is invoked before
     //  a mounted component receives new props. If you need 
@@ -60,16 +72,44 @@ class CreateTask extends Component {
     render() {
         document.title = "Schooly - Create Task"
         const { errors } = this.state;
-
+        const options = [
+          {
+            name: 'X A',
+            id: 'X A'
+          },
+          {
+            name: 'X B',
+            id: 'X B'
+          },
+          {
+            name: 'XI A',
+            id: 'XI A'
+          },
+          {
+            name: 'XI B',
+            id: 'XI B'
+          },
+          {
+            name: 'XII A',
+            id: 'XII A'
+          },
+          {
+            name: 'XII B',
+            id: 'XII B'
+          },
+          
+        ]
         return(
 
         <div className="container">
           <div className="col s8 offset-s2">
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4>
-                <b>Fill up Task details to add class</b>
+                <b>Fill up details to add tasks</b>
               </h4>
             </div>
+           
+
             <form noValidate onSubmit={this.onSubmit}>
               <div className="input-field col s12">
                 <input
@@ -113,6 +153,15 @@ class CreateTask extends Component {
                 <label htmlFor="subject">Subject</label>
                 <span className="red-text">{errors.subject}</span>
               </div>
+
+              <div className=" col s12">
+                <InputLabel id="class-assigned">Classes assigned</InputLabel>
+              <Multiselect id="class_assigned" options={options} onSelect={this.onSelect} 
+              onRemove={this.onRemove} displayValue="name" error={errors.class_assigned} showCheckBox={true}
+              className={classnames("", {
+                invalid: errors.class_assigned
+              })}/>
+            </div>
               
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <button
@@ -139,10 +188,11 @@ class CreateTask extends Component {
 CreateTask.propTypes = {
     createTask: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
+    classCollections: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  errors: state.errors
+  errors: state.errors,
 })
 
 export default connect(

@@ -103,7 +103,7 @@ class ViewTask extends Component {
                                 <th style={{textAlign: "center"}}>Name</th>
                                 <th style={{textAlign: "center"}}>Subject</th>
                                 <th style={{textAlign: "center"}}>Deadline</th>
-                                <th style={{textAlign: "center"}}>Submitted</th>
+                                <th style={{textAlign: "center"}}>Assigned Class</th>
                                 <th colSpan="2" style={{textAlign: "center"}}>
                                     Action 
                                 </th>
@@ -118,7 +118,7 @@ class ViewTask extends Component {
             )
         } else if (user.role == "Student"){
             return (
-                <div className="wrapper-taskCollection">
+                <div style={{ marginLeft: '250px'}} className="wrapper-taskCollection">
                     <h1> Here is your due task</h1>
                 </div>
             )

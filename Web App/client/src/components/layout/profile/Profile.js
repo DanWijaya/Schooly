@@ -88,7 +88,7 @@ function Profile(props) {
                   <h1>{ user.name }</h1>
                   <h4>High School {user.role} </h4> <br />
                   Class XA <br />
-                  <Rating name="read-only" value={5} readOnly /> <br /><br />
+                  {/* <Rating name="read-only" value={4} readOnly /><br /><br />  */}
                   <button>Edit Profile</button>
                 </Paper>
               </Grid>
@@ -99,7 +99,6 @@ function Profile(props) {
                   Phone Number: {user.phone} <br/>
                   Emergency Phone number: {user.emergency_phone}<br/>
                 <h3>Address </h3>
-                  {user.address}<br/>
                 </Paper>
               </Grid>
               <Grid item xs={8}>

@@ -13,11 +13,12 @@ const TaskSchema = new Schema({
     }, 
     subject: {
         type: String,
+        required: true
     },
-    submitted: {
-        type: Boolean,
-        default: false,
-    },
+    class_assigned: {
+        type: Array,
+        required: true
+    }
    
 })
 

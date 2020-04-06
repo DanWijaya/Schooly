@@ -20,41 +20,6 @@ const Teacher = require("../../models/user_model/Teacher");
 // router.post("/register", (req, res) => {
 //   // Form validation
 
-//   const { errors, isValid } = validateRegisterInput(req.body);
-
-//   // Check validation
-//   if (!isValid) {
-//     return res.status(400).json(errors);
-//   }
-
-//   User.findOne({ email: req.body.email }).then(user => {
-//     if (user) {
-//       return res.status(400).json({ email: "Email already exists" });
-//     } else {
-//       const newUser = new User({
-//         name: req.body.name,
-//         email: req.body.email,
-//         password: req.body.password,
-//         phone: req.body.phone,
-//         emergency_phone: req.body.emergency_phone,
-//         address: req.body.address,
-//       });
-
-//       // Hash password before saving in database
-//       bcrypt.genSalt(10, (err, salt) => {
-//         bcrypt.hash(newUser.password, salt, (err, hash) => {
-//           if (err) throw err;
-//           newUser.password = hash;
-//           newUser
-//             .save()
-//             .then(user => res.json(user))
-//             .catch(err => console.log(err));
-//         });
-//       });
-//     }
-//   });
-// });
-
 router.post("/register", (req, res) => {
   // Form validation
 
@@ -74,15 +39,16 @@ router.post("/register", (req, res) => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" });
     } else {
-      // if(req.body.role == "Student")
-      const newUser = new reg_user({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        phone: req.body.phone,
-        emergency_phone: req.body.emergency_phone,
-        address: req.body.address,
-      });
+
+        const newUser = new reg_user({
+          name: req.body.name,
+          email: req.body.email,
+          password: req.body.password,
+          phone: req.body.phone,
+          emergency_phone: req.body.emergency_phone,
+          address: req.body.address,
+          kelas: req.body.kelas,
+        });
 
       // Hash password before saving in database
       bcrypt.genSalt(10, (err, salt) => {
@@ -127,16 +93,34 @@ router.post("/login", (req, res) => {
       if (isMatch) {
         // User matched
         // Create JWT Payload
-        const payload = {
-          id: user.id,
-          role: user.role,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          emergency_phone: user.emergency_phone,
-          address: user.address // Don't include password because don't want to make it visible by accessing token.. 
-        };
-
+        
+        var payload;
+        if(user.role == "Student") {
+          payload = {
+            id: user.id,
+            role: user.role,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            emergency_phone: user.emergency_phone,
+            address: user.address,
+            // Student specific data
+            kelas: user.kelas // Don't include password because don't want to make it visible by accessing token.. 
+          };
+        }
+        else if(user.role == "Teacher") {
+          payload = {
+            id: user.id,
+            role: user.role,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            emergency_phone: user.emergency_phone,
+            address: user.address,
+            // Teacher specific data
+            subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token.. 
+          };
+        }
         // Sign token
         jwt.sign(
           payload,

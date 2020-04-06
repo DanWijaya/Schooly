@@ -6,7 +6,7 @@ const keys = require("../../config/keys");
 const validateTaskInput = require("../../validation/TaskData")
 // Load Task model
 const Task = require("../../models/Task");
-
+const Class = require("../../models/Class")
 //Define create route
 router.post("/create", (req, res) => {
 
@@ -23,11 +23,13 @@ router.post("/create", (req, res) => {
             return res.status(400).json({ name: "tasks with same name and subject already exist"});
         }
         else {
+            console.log(req.body.class_assigned)
             const newTask = new Task({
             name: req.body.name,
             deadline: req.body.deadline,
             subject: req.body.subject,
-            submitted: req.body.submitted
+            class_assigned: req.body.class_assigned
+            // submitted: req.body.submitted
         });
         newTask
             .save()
@@ -56,7 +58,8 @@ router.post("/view", (req, res) => {
                 name : req.body.name,
                 deadline : req.body.deadline,
                 subject : req.body.subject,
-                submitted : req.body.submitted,
+                task_assigned : req.body.task_assigned
+                // submitted : req.body.submitted,
                 }
             res.json(payload);     
             }  
@@ -111,7 +114,7 @@ router.post('/update/:id', (req, res) => {
             taskData.name = req.body.name;
             taskData.deadine = req.body.deadine;
             taskData.subject = req.body.subject;
-            taskData.submitted = req.body.submitted;
+            // taskData.submitted = req.body.submitted;
         
             taskData
                 .save()

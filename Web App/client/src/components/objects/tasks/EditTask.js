@@ -19,7 +19,6 @@ class EditTask extends Component {
             deadline: moment(),
             tasksCollection: [],
             focused: false,
-            submitted: false,
             errors: {},
         }
         // this.nameInput = React.createRef();
@@ -37,6 +36,7 @@ class EditTask extends Component {
         console.log("Tasks props is received");
         const { name } = this.state;
         // console.log(nextProps.tasksCollection.deadline);
+        console.log(nextProps.tasksCollection);
         if(!name){
             this.setState({
                 name: nextProps.tasksCollection.name,
@@ -55,7 +55,6 @@ class EditTask extends Component {
             name: this.state.name,
             deadline: this.state.deadline,
             subject: this.state.subject,
-            submitted: this.state.submitted,
             errors: {}
         }
 
