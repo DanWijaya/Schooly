@@ -6,7 +6,8 @@ import classnames from "classnames";
 import moment from "moment";
 import { SingleDatePicker } from 'react-dates';
 import { editTask, updateTask } from '../../../actions/TaskActions';
-
+import { Multiselect } from 'multiselect-react-dropdown';
+import { InputLabel } from '@material-ui/core';
 // import { viewTask } from '../../../actions/TaskActions'
 
 class EditTask extends Component {
@@ -18,6 +19,7 @@ class EditTask extends Component {
             subject: '',
             deadline: moment(),
             tasksCollection: [],
+            class_assigned: [],
             focused: false,
             errors: {},
         }
@@ -41,11 +43,21 @@ class EditTask extends Component {
             this.setState({
                 name: nextProps.tasksCollection.name,
                 subject: nextProps.tasksCollection.subject,
-                deadline: moment(nextProps.tasksCollection.deadline)
+                deadline: moment(nextProps.tasksCollection.deadline),
+                class_assigned: nextProps.tasksCollection.class_assigned
 
             })
         }
     }
+
+    onSelect = (selectedList, selectedItem) => {
+        console.log(this.state.class_assigned)
+        this.setState({ class_assigned: selectedList})
+      } 
+  
+      onRemove = (selectedList, selectedItem) => {
+        this.setState({ class_assigned: selectedList})
+      }
 
     onSubmit = (e) => {
         e.preventDefault();
@@ -55,6 +67,7 @@ class EditTask extends Component {
             name: this.state.name,
             deadline: this.state.deadline,
             subject: this.state.subject,
+            class_assigned: this.state.class_assigned,
             errors: {}
         }
 
@@ -69,6 +82,33 @@ class EditTask extends Component {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
 
+        const options = [
+            {
+              name: 'X A',
+              id: 'X A'
+            },
+            {
+              name: 'X B',
+              id: 'X B'
+            },
+            {
+              name: 'XI A',
+              id: 'XI A'
+            },
+            {
+              name: 'XI B',
+              id: 'XI B'
+            },
+            {
+              name: 'XII A',
+              id: 'XII A'
+            },
+            {
+              name: 'XII B',
+              id: 'XII B'
+            },
+            
+          ]
         return ( 
             <div className="container">
                 <div className="col s8 offset-s2">
@@ -129,6 +169,15 @@ class EditTask extends Component {
                     <label htmlFor="subject">Subject</label> :
                     <label htmlFor="subject" class="active">Subject</label>}
                     <span className="red-text">{errors.subject}</span>
+                    </div>
+
+                    <div className=" col s12">
+                        <InputLabel id="class-assigned">Classes assigned</InputLabel>
+                        <Multiselect id="class_assigned" options={options} selectedValues={this.state.class_assigned} onSelect={this.onSelect} 
+                        onRemove={this.onRemove} value displayValue="name" error={errors.class_assigned} showCheckBox={true}
+                        className={classnames("", {
+                            invalid: errors.class_assigned
+                        })}/>
                     </div>
 
                     <div className="col s12" style={{ paddingLeft: "11.250px" }}>
