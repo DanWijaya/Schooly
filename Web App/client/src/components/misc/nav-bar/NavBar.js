@@ -8,7 +8,7 @@ import {AppBar, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem
         ListItemText, Toolbar, Typography} from "@material-ui/core";
 import { Link } from 'react-router-dom';
 
-// Import all Icon needed 
+// Import all Icon needed
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -52,8 +52,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: '64px' // Ikuti heightnya si Navbar pokoknya.
   },
   toolbar: {
-    backgroundColor: "#2196f3", 
-    display: 'flex', 
+    backgroundColor: "#2196f3",
+    display: 'flex',
     justifyContent: 'space-between'
   },
   content: {
@@ -81,17 +81,17 @@ function NavBar(props){
         return <ClassIcon/>
       case 'Dashboard':
         return <DashboardIcon/>
-      case 'Announcements' : 
+      case 'Announcements' :
         return <AnnouncementIcon/>
-      case 'Assessments' : 
+      case 'Assessments' :
         return <AssessmentIcon/>
-      case 'Settings' : 
+      case 'Settings' :
         return <SettingIcon/>
-      case 'Profile' : 
+      case 'Profile' :
         return <AccountIcon/>
-      case 'About Schooly' : 
+      case 'About Schooly' :
         return <AboutIcon/>
-      
+
       default: return ""
     }
   }
@@ -104,15 +104,15 @@ function NavBar(props){
         return "/viewclass"
       case 'Dashboard':
         return "/dashboard"
-      case 'Announcements' : 
+      case 'Announcements' :
         return "/announcments"
-      case "Assessments": 
+      case "Assessments":
         return "/assessments"
-      case 'Settings' : 
+      case 'Settings' :
         return "/settings"
-      case 'Profile' : 
+      case 'Profile' :
         return "/profile"
-      case 'About Schooly' : 
+      case 'About Schooly' :
         return "/about-schooly"
     }
   }
@@ -163,6 +163,7 @@ function NavBar(props){
           </div>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <nav className={classes.drawer} id="drawer" aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">

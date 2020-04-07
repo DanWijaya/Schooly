@@ -1,16 +1,13 @@
-//IMPORT COMPONENTS
-  //Basic Components and Styling Components
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-
-  //Authentication Components
 import { setCurrentUser, logoutUser } from "./actions/AuthActions";
 import { Provider } from "react-redux"; //provide state from Store to the component
 import store from "./Store";
 
+//Components and Pages
 import Profile from "./components/layout/profile/Profile";
 import About from "./components/layout/about/About";
 import Landing from "./components/layout/landing/Landing";
@@ -27,6 +24,7 @@ import ViewClass from "./components/objects/classes/ViewClass";
 import ViewTask from "./components/objects/tasks/ViewTask";
 import EditTask from "./components/objects/tasks/EditTask";
 import EditClass from "./components/objects/classes/EditClass";
+import NewTask from "./prototypes/NewTask";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -85,6 +83,7 @@ class App extends Component {
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/about-schooly" component={About} />
+            <Route excat path="/new-task" component={NewTask} />
             {/* <Route exact path="/setting" component={Setting}/> */}
 
             <Switch>
