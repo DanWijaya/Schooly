@@ -1,258 +1,221 @@
-import React, { Component } from 'react'
-import DrawerToggleButton from '../side-drawer/DrawerToggleButton.js';
-import '../side-drawer/DrawerToggleButton';
-import './NavBar.css'
-import logo from '../../../logos/Schooly Logo.png';
+import React, { Component } from "react"
+import { Link } from "react-router-dom";
+import clsx from "clsx";
+import "../side-drawer/DrawerToggleButton";
+import logo from "../../../logos/Schooly Logo.png";
 import PropTypes from "prop-types";
-import {AppBar, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem, ListItemIcon,
-        ListItemText, Toolbar, Typography} from "@material-ui/core";
-import { Link } from 'react-router-dom';
+import {AppBar, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem,
+        ListItemIcon, ListItemText, Toolbar, Typography} from "@material-ui/core";
+import {makeStyles, useTheme} from "@material-ui/core/styles";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import MenuIcon from "@material-ui/icons/Menu"
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
+import DashboardIcon from "@material-ui/icons/DashboardOutlined";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
+import ClassIcon from "@material-ui/icons/Class";
+import SettingIcon from "@material-ui/icons/SettingsOutlined"
+import AccountIcon from "@material-ui/icons/AccountBox";
+import AboutIcon from "@material-ui/icons/Info";
+import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 
-// Import all Icon needed
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
-import DashboardIcon from '@material-ui/icons/DashboardOutlined';
-import AnnouncementIcon from '@material-ui/icons/Announcement';
-import ClassIcon from '@material-ui/icons/Class';
-import SettingIcon from '@material-ui/icons/SettingsOutlined'
-import AccountIcon from '@material-ui/icons/AccountBox';
-import AboutIcon from '@material-ui/icons/Info';
-import AssessmentIcon from '@material-ui/icons/AssessmentOutlined';
+const drawerWidth = 240;
 
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-// import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-
-const drawerWidth = 200;
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      flexShrink: 0
-    },
+    display: "flex",
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
-      // width: `calc(100% - ${drawerWidth}px)`,
-    },
+    backgroundColor: "#2196f3",
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none'
+    marginRight: 36,
+  },
+  hide: {
+    display: "none",
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: "hidden",
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing(9) + 1,
     },
   },
-  // necessary for content to be below app bar
-
-  drawerPaper: {
-    width: drawerWidth,
-    marginTop: '64px' // Ikuti heightnya si Navbar pokoknya.
+  schoolyLogo: {
+    width: "100px",
+    height: "50px",
+  },
+  navbarNavigationItems: {
+    margin: "10px",
+    color: "white",
+    fontSize: "medium",
   },
   toolbar: {
-    backgroundColor: "#2196f3",
-    display: 'flex',
-    justifyContent: 'space-between'
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3)
-  }
-  }))
+    padding: theme.spacing(3),
+  },
+}));
 
-// use the responsiveDrawer
+function DrawerItemList(props) {
+  return <ListItem button component="a" {...props} />;
+}
+
 function NavBar(props){
-  const { container } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+  const handleDrawerOpen = () => {
+    setOpen(true);
   };
 
-  const generateIcon = (item) => {
-    switch(item) {
-      case 'Tasks':
-        return <AssignmentIcon/>
-      case 'Class':
-        return <ClassIcon/>
-      case 'Dashboard':
-        return <DashboardIcon/>
-      case 'Announcements' :
-        return <AnnouncementIcon/>
-      case 'Assessments' :
-        return <AssessmentIcon/>
-      case 'Settings' :
-        return <SettingIcon/>
-      case 'Profile' :
-        return <AccountIcon/>
-      case 'About Schooly' :
-        return <AboutIcon/>
-
-      default: return ""
-    }
-  }
-
-  const generateLink = (item) => {
-    switch(item) {
-      case 'Tasks':
-        return "/viewtask"
-      case 'Class':
-        return "/viewclass"
-      case 'Dashboard':
-        return "/dashboard"
-      case 'Announcements' :
-        return "/announcments"
-      case "Assessments":
-        return "/assessments"
-      case 'Settings' :
-        return "/settings"
-      case 'Profile' :
-        return "/profile"
-      case 'About Schooly' :
-        return "/about-schooly"
-    }
-  }
-
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <List>
-        {['Dashboard', 'Class', 'Tasks', 'Announcements', 'Assessments'].map((text, index) => (
-          <ListItem button component={Link} to={generateLink(text)}>
-            <ListItemIcon>{ generateIcon(text) }</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['Profile', 'Settings', 'About Schooly'].map((text, index) => (
-          <ListItem button component={Link} to={generateLink(text)} key={text}>
-            <ListItemIcon>{ generateIcon(text)}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="flex" className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
+            onClick={handleDrawerOpen}
             edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
           >
             <MenuIcon />
           </IconButton>
-          <div className="NavBar__logo">
-              <a href="/dashboard"><img src={logo} className="logo"/></a>
+          <div className={classes.navbarLogo}>
+            <a href="/dashboard"><img src={logo} className={classes.schoolyLogo}/></a>
           </div>
-          <div className="NavBar_navigation-items">
+          <div className={classes.navbarNavigationItems}>
             <a href="/profile">Profile</a>
             <a href="/about-schooly">About</a>
           </div>
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <nav className={classes.drawer} id="drawer" aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            id="DrawerBar"
-            style={{
-              marginTop: '64px'
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-      </div>
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <DrawerItemList href="/viewtask">
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Tasks" />
+          </DrawerItemList>
+          <DrawerItemList href="/viewclass">
+              <ListItemIcon>
+                <ClassIcon />
+              </ListItemIcon>
+              <ListItemText primary="Classes" />
+          </DrawerItemList>
+          <DrawerItemList href="/dashboard">
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+          </DrawerItemList>
+          <DrawerItemList href="/announcements">
+              <ListItemIcon>
+                <AnnouncementIcon />
+              </ListItemIcon>
+              <ListItemText primary="Announcements" />
+          </DrawerItemList>
+          <DrawerItemList href="/assessments">
+              <ListItemIcon>
+                <AssessmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Assessments" />
+          </DrawerItemList>
+        </List>
+        <Divider />
+        <List>
+          <DrawerItemList href="/settings">
+              <ListItemIcon>
+                <SettingIcon />
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+          </DrawerItemList>
+          <DrawerItemList href="/profile">
+              <ListItemIcon>
+                <AccountIcon />
+              </ListItemIcon>
+              <ListItemText primary="Profile" />
+          </DrawerItemList>
+          <DrawerItemList href="/about-schooly">
+              <ListItemIcon>
+                <AboutIcon />
+              </ListItemIcon>
+              <ListItemText primary="About Schooly" />
+          </DrawerItemList>
+        </List>
+      </Drawer>
+    </div>
   )
  }
-
-// function ElevationScroll(props) {
-//       const { children } = props;
-//       const trigger = useScrollTrigger({
-//         disableHysteresis: true,
-//         threshold: 0,
-//       });
-
-//       return React.cloneElement(children, {
-//         elevation: trigger ? 4 : 0,
-//       });
-// }
-
-// ElevationScroll.propTypes = {
-//       children: PropTypes.element.isRequired,
-// };
-
-
-// function NavBar(props){
-
-//   return(
-//       <React.Fragment>
-//         <CssBaseline />
-//           <ElevationScroll {...props}>
-//             <AppBar >
-//               <Toolbar style={{ backgroundColor: "#2196f3"}}>
-//                 {/* <nav className="navbar-light NavBar__navigation">
-//                 <div>
-//                     <DrawerToggleButton click={props.drawerClickHandler} />
-//                 </div> */}
-//                 <div className="NavBar__logo">
-//                   <a href="/"><img src={logo} className="logo"/></a>
-//                 </div>
-//                 <div className="spacer" />
-//                 <div className="NavBar_navigation-items">
-//                      <ul>
-//                       <li>
-//                         <a href="/profile"> Profile </a>
-//                        </li>
-//                       <li>
-//                       <a href="/about-schooly">About </a>
-//                       </li>
-//                     </ul>
-//                 </div>
-//                 {/* </nav> */}
-//               </Toolbar>
-//             </AppBar>
-//           </ElevationScroll>
-//           <Toolbar />
-//       </React.Fragment>
-//   );
-// }
 
 export default NavBar;
