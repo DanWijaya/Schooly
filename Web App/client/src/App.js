@@ -25,6 +25,7 @@ import ViewTask from "./components/objects/tasks/ViewTask";
 import EditTask from "./components/objects/tasks/EditTask";
 import EditClass from "./components/objects/classes/EditClass";
 import NewTask from "./prototypes/NewTask";
+import ClassSubjectList from "./prototypes/ClassSubjectList";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -83,7 +84,8 @@ class App extends Component {
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/about-schooly" component={About} />
-            <Route excat path="/new-task" component={NewTask} />
+            <Route exact path="/new-task" component={NewTask} />
+            <Route exact path="/class-subject-list" component={ClassSubjectList} />
             {/* <Route exact path="/setting" component={Setting}/> */}
 
             <Switch>
