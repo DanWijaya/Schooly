@@ -15,10 +15,10 @@ const TaskSchema = new Schema({
         type: String,
         required: true
     },
-    class_assigned: {
-        type: Array,
+    class_assigned: [{
+        type: Schema.Types.ObjectId,
         required: true
-    }
+    }]
     
    
 })

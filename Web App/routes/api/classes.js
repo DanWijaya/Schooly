@@ -48,12 +48,6 @@ router.get("/view/:id", (req, res) => {
     });
 });
 
-// router.route('/edit/:id').get((req, res) => {
-//     let id = req.params.id;
-//     Class.findById(id, (classes, err) => {
-//         res.json(classes);
-//     });
-// });
 
 router.get('/viewall', (req, res) => {
     Class.find({}).then((classes, err) => {

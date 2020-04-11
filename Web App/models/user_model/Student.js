@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const User = require('./User');
 
 const Student = User.discriminator('Student', new mongoose.Schema({
-    kelas: { type: String, default: 'X C'},
+    kelas: { type: Schema.Types.ObjectId, ref: "classes"},
     })
 );
 

@@ -27,6 +27,7 @@ export const viewClass = () => dispatch => {
         .get("/api/classes/viewall")
         .then(res => {
             console.log(res.data)
+
             console.log("Data should be here")
             dispatch({
                 type: GET_CLASSES,

@@ -13,6 +13,9 @@ class CreateClass extends Component {
             nihil: true,
             walikelas: '',
             ukuran: 0,
+            ketua_kelas: '',
+            sekretaris: '',
+            bendahara: '',
             errors: {}
         };
     }
@@ -29,6 +32,9 @@ class CreateClass extends Component {
             nihil: this.state.nihil,
             walikelas: this.state.walikelas,
             ukuran: this.state.ukuran,
+            ketua_kelas: this.state.ketua_kelas,
+            sekretaris: this.state.sekretaris,
+            bendahara: this.state.bendahara,
             errors: {}
         };
 
@@ -89,20 +95,6 @@ class CreateClass extends Component {
                         <span className="red-text">{errors.name}</span>
                     </div>
 
-                    {/* <div className="input-field col s12">
-                        <input 
-                            onChange={this.onChange}
-                            value={this.state.nihil}
-                            error={errors.nihil}
-                            id="nihil"
-                            type="radio"
-                            className={classnames("", {
-                                invalid: errors.nihil
-                            })}
-                        />
-                        <label htmlFor="nihil">Nihil</label>
-                        <span className="red-text">{errors.nihil}</span>
-                    </div> */}
 
                     <div className="input-field col s12">
                         <input 

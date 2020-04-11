@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
+
 import { createTask } from "../../../actions/TaskActions"
+import { viewClass } from "../../../actions/ClassActions";
+
 import moment from "moment";
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/initialize';
@@ -23,6 +26,8 @@ class CreateTask extends Component {
             class_assigned: [],
             errors: {}
         };
+
+        
     }
 
     onChange = (e) => {
@@ -62,43 +67,36 @@ class CreateTask extends Component {
     //   using this.setState() in this method.
 
     UNSAFE_componentWillReceiveProps(nextProps){
+
         if(nextProps.errors){
             this.setState({
                 errors: nextProps.errors
             });
         }
+      
+        
+    }
+
+    componentDidMount() {
+      this.props.viewClass()
+      console.log("AAA")
     }
 
     render() {
+      const classesCollection = this.props.classesCollection;
+      
+        // if(this.props.classesCollection)
+        //     this.props.viewClass()
+
+        var options = []
+        if(Object.keys(classesCollection).length != 0) {
+          options = classesCollection        
+        }
+
         document.title = "Schooly - Create Task"
         const { errors } = this.state;
-        const options = [
-          {
-            name: 'X A',
-            id: 'X A'
-          },
-          {
-            name: 'X B',
-            id: 'X B'
-          },
-          {
-            name: 'XI A',
-            id: 'XI A'
-          },
-          {
-            name: 'XI B',
-            id: 'XI B'
-          },
-          {
-            name: 'XII A',
-            id: 'XII A'
-          },
-          {
-            name: 'XII B',
-            id: 'XII B'
-          },
-          
-        ]
+        
+        console.log(options)
         return(
 
         <div className="container">
@@ -188,14 +186,15 @@ class CreateTask extends Component {
 CreateTask.propTypes = {
     createTask: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
-    classCollections: PropTypes.object.isRequired,
+    viewClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
+  classesCollection: state.classesCollection
 })
 
 export default connect(
-  mapStateToProps, { createTask }
+  mapStateToProps, { createTask, viewClass }
 ) (CreateTask)
 

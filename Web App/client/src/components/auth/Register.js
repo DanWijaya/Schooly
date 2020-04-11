@@ -3,8 +3,11 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/AuthActions";
+import { viewClass } from "../../actions/ClassActions";
 import classnames from "classnames";
 import { Select , MenuItem, InputLabel} from "@material-ui/core";
+import { Multiselect } from 'multiselect-react-dropdown';
+
 
 class Register extends Component {
   constructor() {
@@ -24,9 +27,14 @@ class Register extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
+
+    this.props.viewClass()
+
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
+
+    
   }
    
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -61,11 +69,26 @@ class Register extends Component {
     this.props.registerUser(newUser, this.props.history);
   };
 
+
+  onSelect(selectedList, selectedItem) {
+    if(selectedList.length > 1)
+      selectedList.shift()
+
+    return selectedList
+}
   
   render() {
     document.title="Schooly - Register"
     const { errors } = this.state;
     console.log(this.state.role)
+    const classesCollection = this.props.classesCollection;
+  
+    var options = []
+    
+    if(Object.keys(classesCollection).length != 0){
+      options = classesCollection
+    }
+
     return (
       
       <div className="container">
@@ -115,6 +138,31 @@ class Register extends Component {
                 <span className="red-text">{errors.name}</span>
               </div>
 
+            {this.state.role === "Student" ? 
+            <div className=" col s12">
+            <InputLabel id="class">Class</InputLabel>
+          <Multiselect id="class" options={options} onSelect={this.onSelect} 
+          onRemove={this.onRemove} displayValue="name" error={errors.class_assigned} showCheckBox={true}
+          className={classnames("", {
+            invalid: errors.class
+          })}/>
+        </div>
+        : 
+        this.state.role === "Teacher" ? 
+          <div className="input-field col s12">
+            <input
+              onChange={this.onChange}
+              value={this.state.subject_teached}
+              error={errors.subject_teached}
+              id="subject_teached"
+              type="text"
+              className={classnames("", {
+                invalid: errors.subject_teached
+              })}
+            />
+            <label htmlFor="subject_teached">Subject Teached</label>
+            <span className="red-text">{errors.subject_teached}</span>
+          </div> : null}
               <div className="input-field col s12">
                 <input
                   onChange={this.onChange}
@@ -229,15 +277,17 @@ class Register extends Component {
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  viewClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
+  classesCollection: state.classesCollection
 });
 
 export default connect(
   mapStateToProps,
-  { registerUser }
+  { registerUser , viewClass}
 )(withRouter(Register));
