@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
 import { makeStyles } from '@material-ui/core/styles';
 import { Select , MenuItem, InputLabel} from "@material-ui/core";
+import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
 //   //Login Functions
 class Login extends Component {
 
@@ -112,8 +113,10 @@ class Login extends Component {
 
 
 
-                /> <button className="mask-btn" onClick={this.togglePasswordMask} value="
-                Toggle" type="button"/> Show password
+                /> 
+                <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
+                Toggle" type="button"/> 
+                {this.state.passwordIsMasked ? "Show" : "Hide"}
 
 
                 <label htmlFor="password">Password</label>
