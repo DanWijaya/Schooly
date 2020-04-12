@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import { createClass } from "../../../actions/ClassActions"
+import { getUsers } from "../../../actions/AuthActions";
+import { Multiselect } from 'multiselect-react-dropdown';
+import { InputLabel } from '@material-ui/core';
 
 class CreateClass extends Component {
     constructor() {
@@ -11,13 +14,14 @@ class CreateClass extends Component {
         this.state = {
             name: '',
             nihil: true,
-            walikelas: '',
+            walikelas: {},
             ukuran: 0,
             ketua_kelas: '',
             sekretaris: '',
             bendahara: '',
             errors: {}
         };
+        
     }
 
     onChange = (e) => {
@@ -42,6 +46,17 @@ class CreateClass extends Component {
         this.setState({name: '', nihil: true, walikelas: '', ukuran: 0})
     }
 
+    onSelect = (selectedList, selectedItem) => {
+        if(selectedList.length > 1)
+            selectedList.shift()
+
+        this.setState({ walikelas: selectedList[0]})
+      } 
+  
+      onRemove = (selectedList, selectedItem) => {
+        this.setState({ class_assigned: selectedList[0]})
+      }
+
      // UNSAFE_componentWillReceiveProps() is invoked before
     //  a mounted component receives new props. If you need 
     //   update the state in response to prop changes (for example, to reset it), 
@@ -60,17 +75,17 @@ class CreateClass extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     if(this.props.auth.isAuthenticated) {
-    //         this.props.history.push("/viewclass");
-    //     }
-    // }
+    componentDidMount() {
+        this.props.getUsers()
+    }
 
     render() {
+        const { all_users } = this.props.auth
         
         document.title = "Schooly - Create Kelas"
         const { errors } = this.state;
         
+        var options = all_users
         return (
             <div className="container">
                 <div className="col s8 offset-s2"> 
@@ -96,7 +111,7 @@ class CreateClass extends Component {
                     </div>
 
 
-                    <div className="input-field col s12">
+                    {/* <div className="input-field col s12">
                         <input 
                             onChange={this.onChange}
                             value={this.state.walikelas}
@@ -109,6 +124,14 @@ class CreateClass extends Component {
                         />
                         <label htmlFor="walikelas">Walikelas</label>
                         <span className="red-text">{errors.walikelas}</span>
+                    </div> */}
+                     <div className=" col s12">
+                    <InputLabel id="walikelas">Walikelas</InputLabel>
+                    <Multiselect id="walikelas" options={options} onSelect={this.onSelect} 
+                    onRemove={this.onRemove} displayValue="name" error={errors.walikelas} showCheckBox={true}
+                    className={classnames("", {
+                        invalid: errors.walikelas
+                    })}/>
                     </div>
 
                     <div className="input-field col s12">
@@ -149,15 +172,17 @@ class CreateClass extends Component {
 CreateClass.propTypes = {
     createClass: PropTypes.func.isRequired,
     // success: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
+    getUsers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     errors: state.errors,
+    auth: state.auth
 })
 
 export default connect(
-    mapStateToProps, { createClass }
+    mapStateToProps, { createClass , getUsers}
 ) (CreateClass)
 
 

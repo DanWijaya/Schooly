@@ -15,7 +15,10 @@ class EditClass extends Component {
             walikelas: '',
             ukuran: 0,
             errors: {},
-            classesCollection: []
+            classesCollection: [],
+            ketua_kelas: {},
+            sekretaris: {},
+            bendahara: {}
         }
         const { classId } = this.props.location.state;
         console.log(classId);

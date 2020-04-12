@@ -6,7 +6,7 @@ module.exports = function validateClassInput(data) {
 
     // Convert empty fields to an empty strings so validator functions can be used
     data.name = isEmpty(data.name) ? "" : data.name;
-    data.walikelas = isEmpty(data.walikelas) ? "" : data.walikelas;
+    // data.walikelas = isEmpty(data.walikelas) ? "" : data.walikelas;
     data.ukuran = isEmpty(data.ukuran) ? 0 : data.ukuran;
 
     // Name checks
@@ -15,9 +15,9 @@ module.exports = function validateClassInput(data) {
     }
 
     // Kedepannya, Walikelas harus pakai Object guru. 
-    if(Validator.isEmpty(data.walikelas)) {
-        errors.walikelas = "Waliklas field is required" 
-    } 
+    // if(Validator.isEmpty(data.walikelas)) {
+    //     errors.walikelas = "Waliklas field is required" 
+    // } 
 
     if(data.ukuran <= 0) {
         errors.ukuran = "Class size must be positive"

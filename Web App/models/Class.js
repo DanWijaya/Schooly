@@ -8,7 +8,7 @@ const ClassSchema = new Schema({
     required: true
   },
   walikelas: {
-      type: String,
+      type: Object,
       required: true
   },
   ukuran: {
@@ -20,19 +20,19 @@ const ClassSchema = new Schema({
       default: true
   }, 
   ketua_kelas: {
-    type: Schema.Types.ObjectId,
+    type: Object,
     ref: "users"
   },
   bendahara: {
-    type: Schema.Types.ObjectId,
+    type: Object,
     ref: "users"
   },
   sekretaris: {
-    type: Schema.Types.ObjectId,
+    type: Object,
     ref: "users"
   },
   semua_murid : [{
-    type: Schema.Types.ObjectId,
+    type: Object,
     ref: "users"
   }]
 

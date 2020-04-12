@@ -85,7 +85,7 @@ class ViewClass extends Component {
 
     render() {
         const { user } = this.props.auth;
-
+        
         if( user.role == "Teacher") {
             return( 
                 <div className="wrapper-classesCollection">
@@ -113,7 +113,7 @@ class ViewClass extends Component {
             )} else if (user.role =="Student") {
                 return( 
                     <div style={{ marginLeft: '250px'}}>
-                    <h1 style={{ alignItems : 'center'}}> Your class is <b>{user.kelas}</b></h1>
+                    <h1 style={{ alignItems : 'center'}}> Your class is <b>{user.kelas.name}</b></h1>
                     </div>
                 )
             }

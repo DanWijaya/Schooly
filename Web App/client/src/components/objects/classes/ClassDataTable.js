@@ -11,7 +11,7 @@ class ClassDataTable extends Component {
                     {this.props.obj.name}
                 </td>
                 <td style={{textAlign: "center"}}>
-                    {this.props.obj.walikelas}
+                    {this.props.obj.walikelas.name}
                 </td>
                 <td style={{textAlign: "center"}}>
                     {this.props.obj.ukuran}

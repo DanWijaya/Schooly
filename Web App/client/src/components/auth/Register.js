@@ -21,7 +21,13 @@ class Register extends Component {
       emergency_phone:"",
       password: "",
       password2: "",
-      errors: {}
+      errors: {},
+
+      // Student only datas 
+      kelas: {},
+
+      // Teacher only datas
+      subject_teached: ''
     };
   }
 
@@ -55,27 +61,52 @@ class Register extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const newUser = {
-      name: this.state.name,
-      role: this.state.role,
-      email: this.state.email,
-      phone: this.state.phone,
-      emergency_phone: this.state.emergency_phone,
-      address: this.state.address,
-      password: this.state.password,
-      password2: this.state.password2
-    };
+    var newUser
+    const role = this.state.role;
+    if(role == "Student") {
+      newUser = {
+        name: this.state.name,
+        role: this.state.role,
+        email: this.state.email,
+        phone: this.state.phone,
+        emergency_phone: this.state.emergency_phone,
+        address: this.state.address,
+        password: this.state.password,
+        password2: this.state.password2, 
+
+        //Student data
+        kelas: this.state.kelas,
+      };
+    } else if (role == "Teacher") {
+      newUser = {
+        name: this.state.name,
+        role: this.state.role,
+        email: this.state.email,
+        phone: this.state.phone,
+        emergency_phone: this.state.emergency_phone,
+        address: this.state.address,
+        password: this.state.password,
+        password2: this.state.password2, 
+
+        //Student data
+        subject_teached: this.state.subject_teached,
+      };
+    }
 
     this.props.registerUser(newUser, this.props.history);
   };
 
 
-  onSelect(selectedList, selectedItem) {
+  onSelect = (selectedList, selectedItem) => {
+    
     if(selectedList.length > 1)
       selectedList.shift()
 
-    return selectedList
+    this.setState({ kelas: selectedList[0]})
+    console.log(selectedItem)
 }
+
+  
   
   render() {
     document.title="Schooly - Register"

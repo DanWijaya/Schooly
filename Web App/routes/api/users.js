@@ -144,4 +144,13 @@ router.post("/login", (req, res) => {
   });
 });
 
+router.get("/getusers", (req, res) => {
+  User.find({}).then((users, err) => {
+    if(!users)
+      console.log("No users yet in Schooly System")
+    else 
+      return res.json(users)
+  })
+})
+
 module.exports = router;
