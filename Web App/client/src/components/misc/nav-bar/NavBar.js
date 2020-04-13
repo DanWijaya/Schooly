@@ -135,7 +135,7 @@ function NavBar(props){
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar>
+        <Toolbar style={{ display: 'flex', justifyContent: 'space-between'}}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -152,22 +152,22 @@ function NavBar(props){
           </div>
           <div className={classes.navbarNavigationItems}>
             <a href="/profile">
-              <Tooltip title="Profile">
+              {/* <Tooltip title="Profile"> */}
                 <Avatar className={classes.navbarProfilePicture} />
-              </Tooltip>
+              {/* </Tooltip> */}
             </a>
-            <Tooltip title="Notifications"> //Tooltip nda berfungsi buat function (NavBarItem)
+            {/* <Tooltip title="Notifications"> //Tooltip nda berfungsi buat function (NavBarItem) */}
               <NavBarItem href="/notifications">
                 <Badge badgeContent={11} color="secondary">
                   <NotificationsIcon />
                 </Badge>
               </NavBarItem>
-            </Tooltip>
-            <Tooltip title="Help and Support"> //Tooltip nda berfungsi buat function
+            {/* </Tooltip> */}
+            {/* <Tooltip title="Help and Support"> //Tooltip nda berfungsi buat function */}
               <NavBarItem href="/support">
                 <HelpIcon />
               </NavBarItem>
-            </Tooltip>
+            {/* </Tooltip> */}
           </div>
         </Toolbar>
       </AppBar>
