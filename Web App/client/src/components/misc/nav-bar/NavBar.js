@@ -81,13 +81,14 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
   },
   navbarNavigationItems: {
-    margin: "10px",
+    // margin: "10px",
     color: "white",
     alignItems: "center", //bikin vertical aligment ke tengah
     justifyContent: "flex-end", //harusnya ini bikin hor aligment ke kanan
-    [theme.breakpoints.up('md')]: {
-      display: 'flex', //pake ini bakal fix vertical alignmetnya yang avatar cuma kalo di half size browser bakal rusak lagi, kurang ngerti
-    },
+    display: 'flex',
+    // [theme.breakpoints.up('md')]: {
+    //   display: 'flex', //pake ini bakal fix vertical alignmetnya yang avatar cuma kalo di half size browser bakal rusak lagi, kurang ngerti
+    // },
   },
   toolbar: {
     display: "flex",
