@@ -1,11 +1,12 @@
 import React, { Component } from "react"
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import { connect } from "react-redux";
 import "../side-drawer/DrawerToggleButton";
 import logo from "../../../logos/Schooly Logo.png";
 import PropTypes from "prop-types";
-import {AppBar, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem,
-        ListItemIcon, ListItemText, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Avatar, Badge, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem,
+        ListItemIcon, ListItemText, Toolbar, Tooltip, Typography} from "@material-ui/core";
 import {makeStyles, useTheme} from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -15,9 +16,10 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import ClassIcon from "@material-ui/icons/Class";
 import SettingIcon from "@material-ui/icons/SettingsOutlined"
-import AccountIcon from "@material-ui/icons/AccountBox";
 import AboutIcon from "@material-ui/icons/Info";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import HelpIcon from '@material-ui/icons/Help';
 
 const drawerWidth = 240;
 
@@ -74,15 +76,23 @@ const useStyles = makeStyles((theme) => ({
     width: "100px",
     height: "50px",
   },
+  navbarProfilePicture: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
   navbarNavigationItems: {
     margin: "10px",
     color: "white",
-    fontSize: "medium",
+    alignItems: "center", //bikin vertical aligment ke tengah
+    justifyContent: "flex-end", //harusnya ini bikin hor aligment ke kanan
+    [theme.breakpoints.up('md')]: {
+      display: 'flex', //pake ini bakal fix vertical alignmetnya yang avatar cuma kalo di half size browser bakal rusak lagi, kurang ngerti
+    },
   },
   toolbar: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justify: "flex-end",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -93,6 +103,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function NavBarItem(props) {
+  return <IconButton component="a" {...props} />;
+}
+
 function DrawerItemList(props) {
   return <ListItem button component="a" {...props} />;
 }
@@ -101,6 +115,8 @@ function NavBar(props){
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  const { user } = props.auth;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -135,8 +151,23 @@ function NavBar(props){
             <a href="/dashboard"><img src={logo} className={classes.schoolyLogo}/></a>
           </div>
           <div className={classes.navbarNavigationItems}>
-            <a href="/profile">Profile</a>
-            <a href="/about-schooly">About</a>
+            <a href="/profile">
+              <Tooltip title="Profile">
+                <Avatar className={classes.navbarProfilePicture} />
+              </Tooltip>
+            </a>
+            <Tooltip title="Notifications"> //Tooltip nda berfungsi buat function (NavBarItem)
+              <NavBarItem href="/notifications">
+                <Badge badgeContent={11} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </NavBarItem>
+            </Tooltip>
+            <Tooltip title="Help and Support"> //Tooltip nda berfungsi buat function
+              <NavBarItem href="/support">
+                <HelpIcon />
+              </NavBarItem>
+            </Tooltip>
           </div>
         </Toolbar>
       </AppBar>
@@ -161,11 +192,11 @@ function NavBar(props){
         </div>
         <Divider />
         <List>
-          <DrawerItemList href="/viewtask">
+          <DrawerItemList href="/dashboard">
               <ListItemIcon>
-                <AssignmentIcon />
+                <DashboardIcon />
               </ListItemIcon>
-              <ListItemText primary="Tasks" />
+              <ListItemText primary="Dashboard" />
           </DrawerItemList>
           <DrawerItemList href="/viewclass">
               <ListItemIcon>
@@ -173,17 +204,17 @@ function NavBar(props){
               </ListItemIcon>
               <ListItemText primary="Classes" />
           </DrawerItemList>
-          <DrawerItemList href="/dashboard">
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Dashboard" />
-          </DrawerItemList>
           <DrawerItemList href="/announcements">
               <ListItemIcon>
                 <AnnouncementIcon />
               </ListItemIcon>
               <ListItemText primary="Announcements" />
+          </DrawerItemList>
+          <DrawerItemList href="/viewtask">
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Tasks" />
           </DrawerItemList>
           <DrawerItemList href="/assessments">
               <ListItemIcon>
@@ -194,23 +225,17 @@ function NavBar(props){
         </List>
         <Divider />
         <List>
+        <DrawerItemList href="/about-schooly">
+            <ListItemIcon>
+              <AboutIcon />
+            </ListItemIcon>
+            <ListItemText primary="About Schooly" />
+        </DrawerItemList>
           <DrawerItemList href="/settings">
               <ListItemIcon>
                 <SettingIcon />
               </ListItemIcon>
               <ListItemText primary="Settings" />
-          </DrawerItemList>
-          <DrawerItemList href="/profile">
-              <ListItemIcon>
-                <AccountIcon />
-              </ListItemIcon>
-              <ListItemText primary="Profile" />
-          </DrawerItemList>
-          <DrawerItemList href="/about-schooly">
-              <ListItemIcon>
-                <AboutIcon />
-              </ListItemIcon>
-              <ListItemText primary="About Schooly" />
           </DrawerItemList>
         </List>
       </Drawer>
@@ -218,4 +243,14 @@ function NavBar(props){
   )
  }
 
-export default NavBar;
+NavBar.propTypes = {
+   auth: PropTypes.object.isRequired,
+ }
+
+const mapStateToProps = (state) => ({
+   auth: state.auth
+ });
+
+export default connect(
+   mapStateToProps
+ ) (NavBar);

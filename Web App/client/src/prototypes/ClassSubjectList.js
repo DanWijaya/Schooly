@@ -1,14 +1,17 @@
 import React from "react";
-import { Grid, Paper, Typography } from "@material-ui/core"
+import { Badge, Button, Grid, IconButton, Paper, Typography } from "@material-ui/core"
+import AnnouncementIcon from "@material-ui/icons/Announcement";
+import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 function ClassSubjectList() {
   return(
-    <div>
+    <div style={{marginLeft: "100px"}}>
       <Paper>
         <Grid container spacing={2}>
           <Grid item>
-              <img />Insert Image Here (mungkin bakal ada image khusus per pelajaran mau cari icon pack)
-              dan foto kelas kalau mau diupload
+              <img src="" />
           </Grid>
           <Grid item xs={12} sm container>
             <Grid item xs container direction="column" spacing={2}>
@@ -25,16 +28,40 @@ function ClassSubjectList() {
               </Grid>
               <Grid item>
                 <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                  Mungkin bakal direplace dengan beberapa icon kayak notif icon
+                  <IconButton>
+                    <Badge badgeContent={5} color="secondary">
+                      <AnnouncementIcon />
+                    </Badge>
+                  </IconButton>
+                  <IconButton>
+                    <Badge badgeContent={17} color="secondary">
+                      <AssignmentIcon />
+                    </Badge>
+                  </IconButton>
+                  <IconButton>
+                    <Badge badgeContent={50} color="secondary">
+                      <AssessmentIcon />
+                    </Badge>
+                  </IconButton>
                 </Typography>
               </Grid>
             </Grid>
             <Grid item>
-              <Typography variant="subtitle1">Nilai rata-rata subject?</Typography>
+              <Typography variant="subtitle1">
+                Hooray, there is no work assigned!
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
       </Paper>
+
+      <Button
+        variant="contained"
+        color="secondary"
+        startIcon={<AddBoxIcon />}
+      > //This button will only be showed for administators
+        Add A New Class
+      </Button>
     </div>
   )
 }
