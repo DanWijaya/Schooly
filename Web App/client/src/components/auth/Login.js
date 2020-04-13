@@ -1,17 +1,14 @@
-//IMPORT COMPONENTS
-  //Basic Components and Login Components
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types"; //Helps in minimizing the problem in React by checking the types passed in the props object.
+import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
-import { makeStyles } from '@material-ui/core/styles';
-import { Select , MenuItem, InputLabel} from "@material-ui/core";
-import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
-//   //Login Functions
-class Login extends Component {
+import { makeStyles } from "@material-ui/core/styles";
+import { Button, Select , MenuItem, InputLabel} from "@material-ui/core";
+import RemoveRedEyeIcon from "@material-ui/icons/RemoveRedEye";
 
+class Login extends Component {
   constructor() {
     super();
     this.state = {
@@ -69,7 +66,6 @@ class Login extends Component {
     const {passwordIsMasked} = this.state;
     return (
       <div className="container">
-        {/* <div style={{ marginTop: "4rem" }} className="row"> */}
           <div className="col s8 offset-s2">
             <Link to="/" className="btn-flat waves-effect" style={{zIndex: 0}}>
               <i className="material-icons left">keyboard_backspace</i> Back to
@@ -106,16 +102,16 @@ class Login extends Component {
                   value={this.state.password}
                   error={errors.password}
                   id="password"
-                  type={passwordIsMasked ? 'password' : 'text'}
+                  type={passwordIsMasked ? "password" : "text"}
                   className={classnames("", {
                     invalid: errors.password || errors.passwordincorrect
                   })}
 
 
 
-                /> 
+                />
                 <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
-                Toggle" type="button"/> 
+                Toggle" type="button"/>
                 {this.state.passwordIsMasked ? "Show" : "Hide"}
 
 
@@ -126,19 +122,13 @@ class Login extends Component {
                 </span>
               </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <button
-                  style={{
-                    width: "150px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem",
-                    zIndex: 0
-                  }}
-                  type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3"
+                <Button
+                  variant="contained"
+                  size="large"
+                  style={{backgroundColor: "#2196f3"}}
                 >
                   Login
-                </button>
+                </Button>
               </div>
             </form>
           </div>

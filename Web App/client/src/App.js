@@ -84,8 +84,8 @@ class App extends Component {
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/about-schooly" component={About} />
-            <Route exact path="/new-task" component={NewTask} />
-            <Route exact path="/class-subject-list" component={ClassSubjectList} />
+            <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
+            <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
             {/* <Route exact path="/setting" component={Setting}/> */}
 
             <Switch>

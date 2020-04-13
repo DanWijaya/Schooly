@@ -23,7 +23,7 @@ class Register extends Component {
       password2: "",
       errors: {},
 
-      // Student only datas 
+      // Student only datas
       kelas: {},
 
       // Teacher only datas
@@ -40,9 +40,9 @@ class Register extends Component {
       this.props.history.push("/dashboard");
     }
 
-    
+
   }
-   
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
@@ -72,7 +72,7 @@ class Register extends Component {
         emergency_phone: this.state.emergency_phone,
         address: this.state.address,
         password: this.state.password,
-        password2: this.state.password2, 
+        password2: this.state.password2,
 
         //Student data
         kelas: this.state.kelas,
@@ -86,7 +86,7 @@ class Register extends Component {
         emergency_phone: this.state.emergency_phone,
         address: this.state.address,
         password: this.state.password,
-        password2: this.state.password2, 
+        password2: this.state.password2,
 
         //Student data
         subject_teached: this.state.subject_teached,
@@ -98,7 +98,7 @@ class Register extends Component {
 
 
   onSelect = (selectedList, selectedItem) => {
-    
+
     if(selectedList.length > 1)
       selectedList.shift()
 
@@ -106,22 +106,22 @@ class Register extends Component {
     console.log(selectedItem)
 }
 
-  
-  
+
+
   render() {
     document.title="Schooly - Register"
     const { errors } = this.state;
     console.log(this.state.role)
     const classesCollection = this.props.classesCollection;
-  
+
     var options = []
-    
+
     if(Object.keys(classesCollection).length != 0){
       options = classesCollection
     }
 
     return (
-      
+
       <div className="container">
         {/* <div className="row" style={{ marginTop: "4rem" }}> */}
           <div className="col s8 offset-s2">
@@ -137,7 +137,7 @@ class Register extends Component {
                 Already have an account? <Link to="/login">Log in</Link>
               </p>
             </div>
-           
+
             <form noValidate onSubmit={this.onSubmit} id="registerform">
               <div className="col s12">
                 <InputLabel id="demo-simple-select-label">Register As</InputLabel>
@@ -169,17 +169,17 @@ class Register extends Component {
                 <span className="red-text">{errors.name}</span>
               </div>
 
-            {this.state.role === "Student" ? 
+            {this.state.role === "Student" ?
             <div className=" col s12">
             <InputLabel id="class">Class</InputLabel>
-          <Multiselect id="class" options={options} onSelect={this.onSelect} 
+          <Multiselect id="class" options={options} onSelect={this.onSelect}
           onRemove={this.onRemove} displayValue="name" error={errors.class_assigned} showCheckBox={true}
           className={classnames("", {
             invalid: errors.class
           })}/>
         </div>
-        : 
-        this.state.role === "Teacher" ? 
+        :
+        this.state.role === "Teacher" ?
           <div className="input-field col s12">
             <input
               onChange={this.onChange}

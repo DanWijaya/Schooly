@@ -1,50 +1,47 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../logos/Schooly Logo.png";
-import './Landing.css';
-import Grid from '@material-ui/core/Grid';
+import "./Landing.css";
+import { Button } from "@material-ui/core";
 
 class Landing extends Component {
   render() {
-    document.title="Schooly - Home"
+    document.title="Schooly"
     return (
       <div>
         <center>
-        <div>
-          <img src={logo} className="schooly-logo"/>
-          <br/>
-          <h4>Logonya nda rusak itu diganti jadi warna putih</h4>
-          <br/>
-          <h4>Schooly makes school work easy!</h4>
-          <br className="spacing"/>
-          <div className="col s6">
-              <Link
-                to="/register"
-                style={{
-                  width: "140px",
-                  borderRadius: "3px",
-                  letterSpacing: "1.5px"
-                }}
-                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-              >
-                Register
-              </Link>
-          </div>
-        </div>
-
-        <div className="col s6">
-              <Link
-                to="/login"
-                style={{
-                  width: "140px",
-                  borderRadius: "3px",
-                  letterSpacing: "1.5px"
-                }}
-                className="btn btn-large btn-flat waves-effect black white-text"
-              >
-                Log In
-              </Link>
-        </div>
+        <img src={logo} className="schooly-logo"/>
+          <br/><br/>
+        <h4>Schooly makes school work easy!</h4>
+          <br/><br/>
+        <Button
+          href="/register"
+          variant="contained"
+          size="large"
+          style={{
+            backgroundColor: "#2196f3",
+            fontSize: "12",
+            color: "white",
+            width: "120px",
+            height: "60px",
+          }}
+        >
+          Register
+        </Button>
+          <br/><br/>
+        <Button
+          href="/login"
+          variant="contained"
+          size="large"
+          style={{
+            backgroundColor: "black",
+            color: "white",
+            width: "120px",
+            height: "60px",
+          }}
+        >
+          Log In
+        </Button>
         </center>
       </div>
     );

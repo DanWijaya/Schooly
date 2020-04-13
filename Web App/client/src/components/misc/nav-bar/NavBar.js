@@ -1,25 +1,24 @@
 import React, { Component } from "react"
 import { Link } from "react-router-dom";
-import clsx from "clsx";
 import { connect } from "react-redux";
-import "../side-drawer/DrawerToggleButton";
+import clsx from "clsx";
 import logo from "../../../logos/Schooly Logo.png";
 import PropTypes from "prop-types";
 import {AppBar, Avatar, Badge, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem,
         ListItemIcon, ListItemText, Toolbar, Tooltip, Typography} from "@material-ui/core";
 import {makeStyles, useTheme} from "@material-ui/core/styles";
+import AboutIcon from "@material-ui/icons/Info";
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
+import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
+import ClassIcon from "@material-ui/icons/Class";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import MenuIcon from "@material-ui/icons/Menu"
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import ClassIcon from "@material-ui/icons/Class";
-import SettingIcon from "@material-ui/icons/SettingsOutlined"
-import AboutIcon from "@material-ui/icons/Info";
-import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import HelpIcon from '@material-ui/icons/Help';
+import MenuIcon from "@material-ui/icons/Menu"
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import SettingIcon from "@material-ui/icons/SettingsOutlined"
 
 const drawerWidth = 240;
 
@@ -81,14 +80,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
   },
   navbarNavigationItems: {
-    // margin: "10px",
     color: "white",
-    alignItems: "center", //bikin vertical aligment ke tengah
-    justifyContent: "flex-end", //harusnya ini bikin hor aligment ke kanan
+    alignItems: "center",
+    justifyContent: "flex-end",
     display: 'flex',
-    // [theme.breakpoints.up('md')]: {
-    //   display: 'flex', //pake ini bakal fix vertical alignmetnya yang avatar cuma kalo di half size browser bakal rusak lagi, kurang ngerti
-    // },
   },
   toolbar: {
     display: "flex",
@@ -103,10 +98,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
 }));
-
-function NavBarItem(props) {
-  return <IconButton component="a" {...props} />;
-}
 
 function DrawerItemList(props) {
   return <ListItem button component="a" {...props} />;
@@ -153,22 +144,22 @@ function NavBar(props){
           </div>
           <div className={classes.navbarNavigationItems}>
             <a href="/profile">
-              {/* <Tooltip title="Profile"> */}
+              <Tooltip title={user.name}>
                 <Avatar className={classes.navbarProfilePicture} />
-              {/* </Tooltip> */}
+              </Tooltip>
             </a>
-            {/* <Tooltip title="Notifications"> //Tooltip nda berfungsi buat function (NavBarItem) */}
-              <NavBarItem href="/notifications">
+            <Tooltip title="Notifications">
+              <IconButton href="/notifications">
                 <Badge badgeContent={11} color="secondary">
                   <NotificationsIcon />
                 </Badge>
-              </NavBarItem>
-            {/* </Tooltip> */}
-            {/* <Tooltip title="Help and Support"> //Tooltip nda berfungsi buat function */}
-              <NavBarItem href="/support">
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Help and Support">
+              <IconButton href="/support">
                 <HelpIcon />
-              </NavBarItem>
-            {/* </Tooltip> */}
+              </IconButton>
+            </Tooltip>
           </div>
         </Toolbar>
       </AppBar>
