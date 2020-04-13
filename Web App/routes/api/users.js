@@ -40,15 +40,28 @@ router.post("/register", (req, res) => {
       return res.status(400).json({ email: "Email already exists" });
     } else {
 
-        const newUser = new reg_user({
-          name: req.body.name,
-          email: req.body.email,
-          password: req.body.password,
-          phone: req.body.phone,
-          emergency_phone: req.body.emergency_phone,
-          address: req.body.address,
-          kelas: req.body.kelas,
-        });
+        var newUser
+        if(req.body.role == "Student")
+          newUser = new Student({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            phone: req.body.phone,
+            emergency_phone: req.body.emergency_phone,
+            address: req.body.address,
+            kelas: req.body.kelas,
+          });
+
+        else if(req.body.role == "Teacher")
+          newUser = new Teacher({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            phone: req.body.phone,
+            emergency_phone: req.body.emergency_phone,
+            address: req.body.address,
+            subject_teached: req.body.subject_teached
+          });
 
       // Hash password before saving in database
       bcrypt.genSalt(10, (err, salt) => {
@@ -144,11 +157,21 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get("/getusers", (req, res) => {
-  User.find({}).then((users, err) => {
+router.get("/getteachers", (req, res) => {
+  User.find({ role: 'Teacher' }).then((users, err) => {
     if(!users)
-      console.log("No users yet in Schooly System")
+      console.log("No teachers yet in Schooly System")
     else 
+      return res.json(users)
+  })
+})
+
+router.get("/getstudents", (req,res) => {
+  User.find({ role: 'Student'}).then((users, err) => {
+    if(!users)
+      console.log("No students yet in Schooly System")
+    
+    else
       return res.json(users)
   })
 })

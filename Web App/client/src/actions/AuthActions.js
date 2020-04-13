@@ -2,7 +2,8 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING, GET_USERS } from "./Types";
+import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
+   GET_USERS, GET_STUDENTS, GET_TEACHERS } from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -66,18 +67,33 @@ export const setUserLoading = () => {
   };
 };
 
-export const getUsers = () => dispatch => {
+export const getStudents = () => dispatch => {
   axios
-      .get("/api/users/getusers")
+      .get("/api/users/getstudents")
       .then(res => {
         console.log(res.data)
         dispatch({
-          type: GET_USERS,
+          type: GET_STUDENTS,
           payload: res.data
         })
       })
       .catch(err => {
-        console.log("Error in getting all users");
+        console.log("Error in getting all Students");
+      })
+}
+
+export const getTeachers = () => dispatch => {
+  axios
+      .get("/api/users/getteachers")
+      .then(res => {
+        console.log(res.data)
+        dispatch({
+          type: GET_TEACHERS,
+          payload: res.data
+        })
+      })
+      .catch(err => {
+        console.log("Error in getting all Teachers");
       })
 }
 // Log user out

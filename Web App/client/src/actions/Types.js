@@ -2,6 +2,8 @@
 export const USER_LOADING = "USER_LOADING";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const GET_USERS = "GET_USERS"
+export const GET_TEACHERS = 'GET_TEACHERS';
+export const GET_STUDENTS = 'GET_STUDENTS';
 
 //CLASSES ACTION TYPES
 export const GET_CLASSES = "GET_CLASSES";

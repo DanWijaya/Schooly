@@ -50,7 +50,7 @@ router.get("/view/:id", (req, res) => {
 
 
 router.get('/viewall', (req, res) => {
-    Class.find({}).then((classes, err) => {
+    Class.find({ }).then((classes, err) => {
         if(!classes)
             res.status(400).json(err);
         else 
@@ -88,7 +88,10 @@ router.post('/update/:id', (req,res) => {
             classData.walikelas = req.body.walikelas;
             classData.nihil = req.body.nihil;
             classData.ukuran = req.body.ukuran;
-
+            classData.ketua_kelas = req.body.ketua_kelas;
+            classData.sekretaris = req.body.sekretaris;
+            classData.bendahara = req.body.bendahara;
+            
             classData
                 .save()
                 .then(() => res.json("Update class completed"))

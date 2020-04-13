@@ -16,7 +16,7 @@ const TaskSchema = new Schema({
         required: true
     },
     class_assigned: [{
-        type: Schema.Types.ObjectId,
+        type: Object,
         required: true
     }]
     

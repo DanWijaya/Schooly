@@ -1,11 +1,12 @@
-import { SET_CURRENT_USER, USER_LOADING, GET_USERS } from "../actions/Types";
+import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_TEACHERS, GET_STUDENTS } from "../actions/Types";
 
 const isEmpty = require("is-empty");
 
 const initialState = {
   isAuthenticated: false,
   user: {},
-  all_users: [],
+  all_teachers: [],
+  all_students: [],
   loading: false
 };
 
@@ -24,10 +25,16 @@ export default function(state = initialState, action) {
         loading: true
       };
     
-    case GET_USERS:
+    case GET_TEACHERS:
       return{
         ...state,
-        all_users: action.payload
+        all_teachers: action.payload
+      }
+    
+      case GET_STUDENTS: 
+      return{
+        ...state,
+        all_students: action.payload
       }
     default:
       return state;

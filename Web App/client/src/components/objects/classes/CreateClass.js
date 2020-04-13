@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import { createClass } from "../../../actions/ClassActions"
-import { getUsers } from "../../../actions/AuthActions";
+import { getTeachers } from "../../../actions/AuthActions";
 import { Multiselect } from 'multiselect-react-dropdown';
 import { InputLabel } from '@material-ui/core';
 
@@ -16,9 +16,9 @@ class CreateClass extends Component {
             nihil: true,
             walikelas: {},
             ukuran: 0,
-            ketua_kelas: '',
-            sekretaris: '',
-            bendahara: '',
+            // ketua_kelas: {},
+            // sekretaris: '',
+            // bendahara: '',
             errors: {}
         };
         
@@ -76,16 +76,16 @@ class CreateClass extends Component {
     }
 
     componentDidMount() {
-        this.props.getUsers()
+        this.props.getTeachers()
     }
 
     render() {
-        const { all_users } = this.props.auth
+        const {all_teachers } = this.props.auth
         
         document.title = "Schooly - Create Kelas"
         const { errors } = this.state;
         
-        var options = all_users
+        var options = all_teachers
         return (
             <div className="container">
                 <div className="col s8 offset-s2"> 
@@ -110,21 +110,6 @@ class CreateClass extends Component {
                         <span className="red-text">{errors.name}</span>
                     </div>
 
-
-                    {/* <div className="input-field col s12">
-                        <input 
-                            onChange={this.onChange}
-                            value={this.state.walikelas}
-                            error={errors.walikelas}
-                            id="walikelas"
-                            type="text"
-                            className={classnames("", {
-                                invalid: errors.walikelas
-                            })}
-                        />
-                        <label htmlFor="walikelas">Walikelas</label>
-                        <span className="red-text">{errors.walikelas}</span>
-                    </div> */}
                      <div className=" col s12">
                     <InputLabel id="walikelas">Walikelas</InputLabel>
                     <Multiselect id="walikelas" options={options} onSelect={this.onSelect} 
@@ -171,9 +156,8 @@ class CreateClass extends Component {
 
 CreateClass.propTypes = {
     createClass: PropTypes.func.isRequired,
-    // success: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
-    getUsers: PropTypes.func.isRequired
+    getTeachers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -182,7 +166,7 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { createClass , getUsers}
+    mapStateToProps, { createClass , getTeachers}
 ) (CreateClass)
 
 

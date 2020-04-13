@@ -5,46 +5,18 @@ import { Link } from 'react-router-dom';
 
 class TaskDataTable extends Component {
 
-    // constructor(){
-    //     super()
-    
-    //     this.state = {
-    //         modalIsOpen: false,
-    //         setIsOpen: false
-    //     }
-    // }
-    //When the user clicks anywhere outside of the modal, close it. 
-
-    // clickToClose = () => {
-    //     let id = "id_" + this.props.obj._id;
-    //     document.getElementById(id).style.display='none'
-    // }
-
-    // clickToShow = () => {
-    //     let id = "id_" + this.props.obj._id;
-    //     document.getElementById(id).style.display='block'
-    // }
-
     render(){
         const class_assigned= this.props.obj.class_assigned
         var classes = ""
-        for (var i = 0; i < class_assigned.length; i++) {
-            classes += class_assigned[i].name
+        
+        var i
+        for (i = 0; i < class_assigned.length; i++) {
+            classes = classes + class_assigned[i].name
             if(i != class_assigned.length - 1)
-                classes += ","
-        }
-        // // GEt the modal 
-        // let id = "id_" + this.props.obj._id;
-        // let modal = document.getElementById(id);
+                classes = classes + ", "
+          }
 
-        // window.onclick = function(event) {
-        //     if(event.target == modal ){
-        //         modal.style.display = "none";
-        //     }
-        // }
-
-        return(
-                
+        return(   
                 <tr>
                     <td style={{textAlign: "center"}}>
                         {this.props.obj.name}
@@ -56,6 +28,7 @@ class TaskDataTable extends Component {
                         {this.props.obj.deadline}
                     </td>
                     <td style={{textAlign: "center"}}>
+
                         {classes}
                     </td>
                     <td style={{textAlign: "center"}}>
