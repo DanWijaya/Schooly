@@ -1,19 +1,40 @@
 import React from "react";
 import { Badge, Button, Grid, IconButton, Paper, Typography } from "@material-ui/core"
+import { makeStyles, useTheme } from "@material-ui/core/styles"
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
+const useStyles = makeStyles((theme) => ({
+  classCard: {
+    margin: "auto",
+    marginTop: "30px",
+    maxWidth: "1000px",
+  },
+  classCardPaper: {
+    padding: "15px",
+  },
+  classWallpaper: {
+    width: "50%",
+    height: "50%",
+  },
+  classInfo: {
+    margin: "auto",
+  },
+}));
+
 function ClassSubjectList() {
+  const classes = useStyles();
+
   return(
-    <div style={{marginLeft: "100px"}}>
-      <Paper>
+    <div className={classes.classCard}>
+      <Paper className={classes.classCardPaper}>
         <Grid container spacing={2}>
           <Grid item>
-              <img src="" />
+              <img src="" className={classes.classWallpaper} />
           </Grid>
-          <Grid item xs={12} sm container>
+          <Grid item xs={6} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
                 <Typography gutterBottom variant="subtitle1">
@@ -47,7 +68,7 @@ function ClassSubjectList() {
               </Grid>
             </Grid>
             <Grid item>
-              <Typography variant="subtitle1">
+              <Typography variant="subtitle1" className={classes.classInfo}>
                 Hooray, there is no work assigned!
               </Typography>
             </Grid>
@@ -55,11 +76,14 @@ function ClassSubjectList() {
         </Grid>
       </Paper>
 
+      {/*This button will only be showed for administators or maybe teacher*/}
       <Button
         variant="contained"
-        color="secondary"
         startIcon={<AddBoxIcon />}
-      > //This button will only be showed for administators
+        style={{
+          marginTop: "30px",
+        }}
+      >
         Add A New Class
       </Button>
     </div>
