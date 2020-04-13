@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme) => ({
     height: "50%",
   },
   classInfo: {
-    margin: "auto",
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
@@ -67,8 +68,8 @@ function ClassSubjectList() {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item>
-              <Typography variant="subtitle1" className={classes.classInfo}>
+            <Grid item className={classes.classInfo}>
+              <Typography variant="subtitle1">
                 Hooray, there is no work assigned!
               </Typography>
             </Grid>

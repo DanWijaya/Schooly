@@ -123,6 +123,7 @@ class Login extends Component {
               </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <Button
+                  type="submit"
                   variant="contained"
                   size="large"
                   style={{backgroundColor: "#2196f3"}}
