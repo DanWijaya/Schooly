@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import TaskDataTable from './TaskDataTable';
 import { viewTask, deleteTask } from '../../../actions/TaskActions'
 import { Modal, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ViewTask.css'
+import {Typography} from "@material-ui/core";
 import isEmpty from 'is-empty';
 
 class ViewTask extends Component {
@@ -89,6 +91,7 @@ class ViewTask extends Component {
     }
 
     render() {
+
         const { user } = this.props.auth
         if( user.role == "Teacher") {
 
@@ -96,7 +99,7 @@ class ViewTask extends Component {
                 <div className="wrapper-taskCollection">
                     {this.deletePopWindow()}
                 <div className="container">
-                    <h3 align="center">List of tasks</h3>
+                    {/* <h3 align="center">List of tasks</h3>
                     <table className="table table-striped table-dark" style={{ marginTop: 20}}>
                         <thead className="thead-dark">
                             <tr>
@@ -112,14 +115,16 @@ class ViewTask extends Component {
                         <tbody>
                             {this.dataTable()}
                         </tbody>
-                    </table>
+                    </table> */}
+                    {this.dataTable()}
                 </div>
             </div>
             )
         } else if (user.role == "Student"){
             return (
-                <div style={{ marginLeft: '250px'}} className="wrapper-taskCollection">
-                    <h1> Here is your due task</h1>
+                <div className="wrapper-taskCollection">
+                    <Typography variant="h3" align-items="center"> Here is your due task</Typography>
+                    {this.dataTable()}
                 </div>
             )
         }

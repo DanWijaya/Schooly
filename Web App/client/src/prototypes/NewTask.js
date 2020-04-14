@@ -17,6 +17,8 @@ const useStyles = makeStyles((theme) => ({
   workBox: {
     margin: "auto",
     marginTop: "30px",
+    justifyContent: "center",
+    flexDirection: "row"
   },
   workButtonContainer: {
     display: "flex",
