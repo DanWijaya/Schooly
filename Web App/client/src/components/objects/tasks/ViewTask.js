@@ -123,7 +123,7 @@ class ViewTask extends Component {
         } else if (user.role == "Student"){
             return (
                 <div className="wrapper-taskCollection">
-                    <Typography variant="h3" align-items="center"> Here is your due task</Typography>
+                    <Typography variant="h4" style={{ display: 'flex' , justifyContent : 'center'}}> Here is your due task</Typography>
                     {this.dataTable()}
                 </div>
             )
