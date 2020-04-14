@@ -80,10 +80,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
   },
   navbarNavigationItems: {
+    display: 'flex',
     color: "white",
     alignItems: "center",
-    justifyContent: "flex-end",
-    display: 'flex',
+    justifyContent: "space-between",
   },
   toolbar: {
     display: "flex",
@@ -208,7 +208,7 @@ function NavBar(props){
               </ListItemIcon>
               <ListItemText primary="Tasks" />
           </DrawerItemList>
-          <DrawerItemList href="/assessments">
+          <DrawerItemList href="/assessments" disabled>
               <ListItemIcon>
                 <AssessmentIcon />
               </ListItemIcon>

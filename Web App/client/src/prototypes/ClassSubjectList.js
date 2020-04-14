@@ -7,7 +7,7 @@ import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
 const useStyles = makeStyles((theme) => ({
-  classCard: {
+  root: {
     margin: "auto",
     marginTop: "30px",
     maxWidth: "1000px",
@@ -29,7 +29,7 @@ function ClassSubjectList() {
   const classes = useStyles();
 
   return(
-    <div className={classes.classCard}>
+    <div className={classes.root}>
       <Paper className={classes.classCardPaper}>
         <Grid container spacing={2}>
           <Grid item>
@@ -38,7 +38,7 @@ function ClassSubjectList() {
           <Grid item xs={6} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-                <Typography gutterBottom variant="subtitle1">
+                <Typography variant="subtitle1" gutterBottom>
                   <h2>Subject Name</h2>
                 </Typography>
                 <Typography variant="body2" gutterBottom>
