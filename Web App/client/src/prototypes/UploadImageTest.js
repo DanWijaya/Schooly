@@ -37,22 +37,20 @@ function ImageUpload() {
       />
       <div
         style={{
-          height: "60px",
-          width: "60px",
+          height: "160px",
+          width: "160px",
           border: "1px dashed black"
         }}
-        onClick={() => imageUploader.current.click()}
       >
         <img
           ref={uploadedImage}
           style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute"
+            width: "160px",
+            height: "160px",
           }}
         />
       </div>
-      Click to upload Image
+      <button onClick={() => imageUploader.current.click()}>Click to upload Image</button>
     </div>
   );
 }
