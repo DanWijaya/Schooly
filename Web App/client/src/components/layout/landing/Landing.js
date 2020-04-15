@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../../logos/Schooly Logo.png";
+import schoolyLogo from "../../../logos/SchoolyLogo.png";
 import "./Landing.css";
 import { Button } from "@material-ui/core";
 
@@ -10,7 +10,7 @@ class Landing extends Component {
     return (
       <div>
         <center>
-        <img src={logo} className="schooly-logo"/>
+        <img src={schoolyLogo} className="SchoolyLogo"/>
           <br/><br/>
         <h4>Schooly makes school work easy!</h4>
           <br/><br/>
@@ -23,7 +23,7 @@ class Landing extends Component {
             fontSize: "12",
             color: "white",
             width: "120px",
-            height: "60px",
+            height: "40px",
           }}
         >
           Register
@@ -37,7 +37,7 @@ class Landing extends Component {
             backgroundColor: "black",
             color: "white",
             width: "120px",
-            height: "60px",
+            height: "40px",
           }}
         >
           Log In

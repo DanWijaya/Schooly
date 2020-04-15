@@ -8,7 +8,7 @@ import SmsIcon from "@material-ui/icons/Sms";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    marginTop: "30px",
+    marginTop: "30px", //Should be deleted after theme passing from navbar worked
     maxWidth: "1075px",
   },
   paperBox :{

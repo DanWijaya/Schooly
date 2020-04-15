@@ -19,7 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import logo from '../../../logos/Schooly Logo.png';
+import logo from '../../../logos/SchoolyLogo.png';
 const drawerWidth = 240;
 
 // const useStyles = makeStyles(theme => ({
@@ -56,7 +56,7 @@ const drawerWidth = 240;
 // }));
 
 // // use the responsiveDrawer
-// function SideDrawer(props){ 
+// function SideDrawer(props){
 //   const { container } = props;
 //   const classes = useStyles();
 //   const theme = useTheme();
@@ -142,7 +142,7 @@ const drawerWidth = 240;
 //       </nav>
 //       </div>
 //   )
-//  } 
+//  }
 
 // const SideDrawer = props => {
 //   // let drawerClasses = ['side-drawer'];
@@ -158,7 +158,7 @@ const drawerWidth = 240;
 //     if (x.className.indexOf("w3-show") == -1) {
 //       x.className += " w3-show";
 //       // x.previousElementSibling.className += " w3-blue";
-//     } else { 
+//     } else {
 //       x.className = x.className.replace(" w3-show", "");
 //       x.previousElementSibling.className = x.previousElementSibling.className.replace(" w3-blue", "");
 //     }
@@ -171,8 +171,8 @@ const drawerWidth = 240;
 //   //   newLink.appendChild(document.createTextNode("Class 3"));
 //   //   ul.appendChild(newLink);
 //   // }
-  
-  
+
+
 //   return (
 //     <div>
 //       <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
@@ -195,12 +195,12 @@ const drawerWidth = 240;
 //                 <a class="w3-bar-item w3-button">Class 1</a>
 //                 <a class="w3-bar-item w3-button">Class 2</a>
 //               </div>
-// {/* 
+// {/*
 //               <button class="add" onClick={() => addEntry("classes")} > Add classes</button>
 //               <button class="add" onClick={() => addEntry("task")} > Add Tasks</button> */}
 //         </div>
 
-          
+
 //       </div>
 //     );
 //   }

@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
-import logo from "../../../logos/Schooly Logo.png";
+import schoolyLogo from "../../../logos/SchoolyLogo.png";
 import PropTypes from "prop-types";
 import {AppBar, Avatar, Badge, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem,
         ListItemIcon, ListItemText, Toolbar, Tooltip, Typography} from "@material-ui/core";
@@ -140,7 +140,7 @@ function NavBar(props){
             <MenuIcon />
           </IconButton>
           <div className={classes.navbarLogo}>
-            <a href="/dashboard"><img src={logo} className={classes.schoolyLogo}/></a>
+            <a href="/dashboard"><img src={schoolyLogo} className={classes.schoolyLogo}/></a>
           </div>
           <div className={classes.navbarNavigationItems}>
             <a href="/profile">

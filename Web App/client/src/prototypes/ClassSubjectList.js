@@ -9,7 +9,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    marginTop: "30px",
+    marginTop: "30px", //Should be deleted after theme passing from navbar worked
     maxWidth: "1000px",
   },
   classCardPaper: {

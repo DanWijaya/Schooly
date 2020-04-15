@@ -88,11 +88,12 @@ class App extends Component {
             <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
             <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
             <Route exact path="/image-upload" component={ImageUpload} /> {/*prototypetest*/}
+            <Route exact path="/profile" component={Profile} /> {/*Delete later, enable private routing*/}
             {/* <Route exact path="/setting" component={Setting}/> */}
 
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
-              <PrivateRoute exact path="/profile" component={Profile} />
+              {/*<PrivateRoute exact path="/profile" component={Profile} />*/}
               {/* Route Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
               <PrivateRoute exact path="/viewclass" component={ViewClass}/>
