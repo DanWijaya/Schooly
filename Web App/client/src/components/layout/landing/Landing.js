@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import schoolyLogo from "../../../logos/SchoolyLogo.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import "./Landing.css";
 import { Button } from "@material-ui/core";
 

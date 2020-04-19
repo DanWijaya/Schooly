@@ -6,18 +6,23 @@ import { AppBar, Avatar, Button, Box, Tabs, Tab, Grid, Paper, Typography } from 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
+import CreateIcon from '@material-ui/icons/Create';
 import DescriptionIcon from '@material-ui/icons/Description';
 import defaultAvatar from "./DefaultAvatar.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
     maxWidth: "1200px",
     margin: "auto",
     marginTop: "30px", //Should be deleted after theme passing from navbar worked
   },
-  paperBox: {
-    padding: "5px",
+  avatar: {
+    width: theme.spacing(20),
+    height: theme.spacing(20),
+  },
+  profileGrid: {
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
@@ -65,65 +70,19 @@ function Profile(props) {
   const classes = useStyles();
   return(
     <div className={classes.root}>
-      <Grid container spacing={2} className="profile-grid">
-          <Grid item xs={4} >
-            <Paper className={classes.paperBox}>
-              <img src={defaultAvatar} style={{width: "300px", height: "300px" }}/>
-            </Paper>
-          </Grid>
-          <Grid item xs={8} className="right-grid">
-            <Paper className={classes.paperBox}>
-              <h1>{ user.name }</h1>
-              <h4>High School {user.role} </h4> <br />
-              Class XA <br />
-              {/* <Rating name="read-only" value={4} readOnly /><br /><br />  */}
-              <button>Edit Profile</button>
-            </Paper>
-          </Grid>
-          <Grid item xs={4}>
-            <Paper className={classes.paperBox}>
-            <h3>Contacts</h3>
-              Email: {user.email}<br />
-              Phone Number: {user.phone} <br/>
-              Emergency Phone number: {user.emergency_phone}<br/>
-            <h3>Address </h3>
-            </Paper>
-          </Grid>
-          <Grid item xs={8}>
-            <AppBar position="static" color="default">
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-              >
-                <Tab label="Biography" icon={<DescriptionIcon />} {...TabPanelPage(0)} />
-                <Tab label="Career Path" icon={<BusinessCenterIcon />} {...TabPanelPage(1)} />
-                <Tab label="About" icon={<AccountBoxIcon />} {...TabPanelPage(2)} />
-              </Tabs>
-            </AppBar>
-            <SwipeableViews
-              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-              index={value}
-              onChangeIndex={handleChangeIndex}
-            >
-              <TabPanel value={value} index={0} dir={theme.direction}>
-                My name is Budi bla bla bla bla
-              </TabPanel>
-              <TabPanel value={value} index={1} dir={theme.direction}>
-                Excels at: <br />
-                Dream Occupation: <br />
-                Universities I'm Interested at: <br />
-              </TabPanel>
-              <TabPanel value={value} index={2} dir={theme.direction}>
-                Gender: <br />
-                Birthday: <br />
-                Hobbies and Interests: <br />
-                Extracurricular Skills: <br />
-              </TabPanel>
-            </SwipeableViews>
-          </Grid>
+      <Grid container direction="column" className={classes.profileGrid}>
+        <Grid item style={{textAlign:"center"}}>
+          <Avatar src={defaultAvatar} className={classes.avatar} />
+          <Typography variant="subtitle2">
+            <h2>{user.name}</h2>
+          </Typography>
+          <Typography>
+            High School {user.role}
+          </Typography>
+          <Typography>
+            Class XA
+          </Typography>
+        </Grid>
       </Grid>
     </div>
   )
@@ -140,3 +99,72 @@ const mapStateToProps = (state) => ({
 export default connect(
     mapStateToProps
   ) (Profile);
+
+{/*<Grid container spacing={2} className="profile-grid">
+    <Grid container>
+      <Grid item xs={4} >
+          <img src={defaultAvatar} className={classes.avatar}/>
+      </Grid>
+      <Grid item xs={8} className="right-grid">
+        <Typography>
+          <h1>{ user.name }</h1>
+        <Typography>
+          <h4>High School {user.role} </h4> <br />
+          Class XA <br />
+          <Rating name="read-only" value={4} readOnly /><br /><br />
+          <Button
+            variant="contained"
+            startIcon={<CreateIcon />}
+          >
+            Edit Profile
+          </Button>
+      </Grid>
+    </Grid>
+  </Paper>
+  <Grid container>
+    <Grid item xs={4}>
+      <Paper className={classes.paperBox}>
+      <h3>Contacts</h3>
+        Email: {user.email}<br />
+        Phone Number: {user.phone} <br/>
+        Emergency Phone number: {user.emergency_phone}<br/>
+      <h3>Address </h3>
+      </Paper>
+    </Grid>
+    <Grid item xs={8}>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+        >
+          <Tab label="Biography" icon={<DescriptionIcon />} {...TabPanelPage(0)} />
+          <Tab label="Career Path" icon={<BusinessCenterIcon />} {...TabPanelPage(1)} />
+          <Tab label="About" icon={<AccountBoxIcon />} {...TabPanelPage(2)} />
+        </Tabs>
+      </AppBar>
+      <SwipeableViews
+        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={value}
+        onChangeIndex={handleChangeIndex}
+      >
+        <TabPanel value={value} index={0} dir={theme.direction}>
+          My name is Budi bla bla bla bla
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          Excels at: <br />
+          Dream Occupation: <br />
+          Universities I'm Interested at: <br />
+        </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          Gender: <br />
+          Birthday: <br />
+          Hobbies and Interests: <br />
+          Extracurricular Skills: <br />
+        </TabPanel>
+      </SwipeableViews>
+    </Grid>
+  </Grid>
+</Grid>*/}

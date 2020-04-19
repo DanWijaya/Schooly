@@ -19,7 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import logo from '../../../logos/SchoolyLogo.png';
+import logo from '../../../images/SchoolyLogo.png';
 const drawerWidth = 240;
 
 // const useStyles = makeStyles(theme => ({

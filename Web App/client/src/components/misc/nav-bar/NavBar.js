@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
-import schoolyLogo from "../../../logos/SchoolyLogo.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import PropTypes from "prop-types";
 import {AppBar, Avatar, Badge, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem,
         ListItemIcon, ListItemText, Toolbar, Tooltip, Typography} from "@material-ui/core";
@@ -79,6 +79,10 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
+  navbarItems: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
   navbarNavigationItems: {
     display: 'flex',
     color: "white",
@@ -127,7 +131,7 @@ function NavBar(props){
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar style={{ display: 'flex', justifyContent: 'space-between'}}>
+        <Toolbar className={classes.navbarItems}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -140,7 +144,9 @@ function NavBar(props){
             <MenuIcon />
           </IconButton>
           <div className={classes.navbarLogo}>
-            <a href="/dashboard"><img src={schoolyLogo} className={classes.schoolyLogo}/></a>
+            <a href="/dashboard">
+              <img src={schoolyLogo} className={classes.schoolyLogo}/>
+            </a>
           </div>
           <div className={classes.navbarNavigationItems}>
             <a href="/profile">
