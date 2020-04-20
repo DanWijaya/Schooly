@@ -1,0 +1,25 @@
+Current Task
+Botak:
+1. Rapiin login.js dan register.js (mau belajar withstyles)
+2. Bikin profile jadi editable text
+3. Betulin navbar lagi buat (export props themenya, Icon only navbar masih nda centered)
+4. Create togglebutton buat mobile
+5. Betulin hijau2 pas klik iconbuttons
+6. Notifications List Page
+7. Notifications Page
+8. Create notification (admin) [?]
+9. Task List Page
+10. Comments Section
+11. Kalau udah selesai semua - Tes zoom in dan zoom out per Page
+
+Daniel:
+1.
+2.
+
+Evaluations
+Botak > Daniel:
+-
+-
+Daniel > Botak:
+-
+-
