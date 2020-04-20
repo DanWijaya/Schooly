@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { registerUser } from "../../actions/AuthActions";
 import { viewClass } from "../../actions/ClassActions";
 import classnames from "classnames";
-import { Select , MenuItem, InputLabel} from "@material-ui/core";
+import { Button, MenuItem, InputLabel, Select } from "@material-ui/core";
 import { Multiselect } from 'multiselect-react-dropdown';
 
 
@@ -208,7 +208,6 @@ class Register extends Component {
                 <label htmlFor="email">Email</label>
                 <span className="red-text">{errors.email}</span>
               </div>
-
               <div className="input-field col s12">
                 <input
                   onChange={this.onChange}
@@ -283,19 +282,14 @@ class Register extends Component {
                 <span className="red-text">{errors.password2}</span>
               </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                <button
-                  style={{
-                    width: "150px",
-                    borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem",
-                    zIndex: 0
-                  }}
+                <Button
                   type="submit"
-                  className="btn btn-large waves-effect waves-light hoverable blue accent-3"
+                  variant="contained"
+                  size="large"
+                  style={{backgroundColor: "#2196f3"}}
                 >
-                  Sign up
-                </button>
+                  Register
+                </Button>
               </div>
             </form>
           </div>

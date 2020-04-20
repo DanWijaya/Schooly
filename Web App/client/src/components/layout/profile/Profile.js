@@ -2,17 +2,30 @@ import React, { Component } from "react";
 import SwipeableViews from "react-swipeable-views";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { AppBar, Avatar, Button, Box, Tabs, Tab, Grid, Paper, Typography } from "@material-ui/core";
+import { AppBar, Avatar, Button, Box, Tabs, Tab, Grid, IconButton, List, ListItem, ListItemText,
+   ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Paper, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
-import CreateIcon from '@material-ui/icons/Create';
+import BookIcon from '@material-ui/icons/Book';
+import CakeIcon from '@material-ui/icons/Cake';
 import DescriptionIcon from '@material-ui/icons/Description';
+import EmailIcon from '@material-ui/icons/Email';
+import GamesIcon from '@material-ui/icons/Games';
+import HomeIcon from '@material-ui/icons/Home';
+import LockIcon from '@material-ui/icons/Lock';
+import PersonIcon from '@material-ui/icons/Person';
+import PhoneIcon from '@material-ui/icons/Phone';
+import WcIcon from '@material-ui/icons/Wc';
+import SchoolIcon from '@material-ui/icons/School';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import WorkIcon from '@material-ui/icons/Work';
 import defaultAvatar from "./DefaultAvatar.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "1200px",
+    maxWidth: "750px",
     margin: "auto",
     marginTop: "30px", //Should be deleted after theme passing from navbar worked
   },
@@ -20,68 +33,146 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(20),
     height: theme.spacing(20),
   },
-  profileGrid: {
-    display: "flex",
-    alignItems: "center",
-  },
+  paperBox: {
+    width: "750px",
+    paddingTop: "20px",
+    paddingBottom: "10px",
+    paddingLeft: "17.5px",
+    paddingRight: "17.5px",
+  }
 }));
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function TabPanelPage(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
+function ProfileData(props) {
+  return(
+    <List>
+      <ListItem>
+          <ListItemAvatar>
+            <Avatar>
+              {props.profileDataIcon}
+            </Avatar>
+          </ListItemAvatar>
+            <Grid container>
+              <Grid item xs={4}>
+                <Typography variant="button">
+                  {props.profileDataCategory}
+                </Typography>
+              </Grid>
+              <Grid item xs>
+                {props.profileDataInfo}
+              </Grid>
+            </Grid>
+          <ListItemSecondaryAction>
+            <IconButton edge="end">
+              <ArrowRightIcon style={{color: "#2196f3"}} />
+            </IconButton>
+          </ListItemSecondaryAction>
+      </ListItem>
+    </List>
+  )
 }
 
 function Profile(props) {
 
-  const theme = useTheme();
-  const [value, setValue] = React.useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
   const { user } = props.auth;
-
   const classes = useStyles();
+
   return(
     <div className={classes.root}>
-      <Grid container direction="column" className={classes.profileGrid}>
-        <Grid item style={{textAlign:"center"}}>
+      <Grid container direction="column" alignItems="center" spacing={5}>
+        <Grid item container direction="column" alignItems="center">
           <Avatar src={defaultAvatar} className={classes.avatar} />
           <Typography variant="subtitle2">
             <h2>{user.name}</h2>
           </Typography>
           <Typography>
-            High School {user.role}
+            "School Name" High School {user.role}
           </Typography>
           <Typography>
             Class XA
           </Typography>
+        </Grid>
+        <Grid item container spacing={4}>
+          <Grid item>
+            <Paper className={classes.paperBox}>
+                <Typography variant="subtitle2" gutterBottom>
+                  <h4>Personal Info</h4>
+                </Typography>
+                <ProfileData
+                  profileDataIcon={<PersonIcon />}
+                  profileDataCategory="Name"
+                  profileDataInfo={user.name}
+                />
+                <ProfileData
+                  profileDataIcon={<CakeIcon />}
+                  profileDataCategory="Birthday"
+                  profileDataInfo="fucker"
+                />
+                <ProfileData
+                  profileDataIcon={<WcIcon />}
+                  profileDataCategory="Gender"
+                  profileDataInfo="Nigga"
+                />
+                <ProfileData
+                  profileDataIcon={<LockIcon />}
+                  profileDataCategory="Password"
+                  profileDataInfo="Nigga"
+                />
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.paperBox}>
+                <Typography variant="subtitle2" gutterBottom>
+                  <h4>Contact Info</h4>
+                </Typography>
+                <ProfileData
+                  profileDataIcon={<EmailIcon />}
+                  profileDataCategory="Email"
+                  profileDataInfo={user.email}
+                />
+                <ProfileData
+                  profileDataIcon={<PhoneIcon />}
+                  profileDataCategory="Phone Number"
+                  profileDataInfo={user.phone}
+                />
+                <ProfileData
+                  profileDataIcon={<SupervisorAccountIcon />}
+                  profileDataCategory="Emergency Phone Number"
+                  profileDataInfo={user.emergency_phone}
+                />
+                <ProfileData
+                  profileDataIcon={<HomeIcon />}
+                  profileDataCategory="Address"
+                  profileDataInfo={user.address}
+                />
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.paperBox}>
+                <Typography variant="subtitle2" gutterBottom>
+                  <h4>Other Info</h4>
+                </Typography>
+                <ProfileData
+                  profileDataIcon={<GamesIcon />}
+                  profileDataCategory="Hobbies and Interest"
+                  profileDataInfo="Killin, fuckin, and rapin"
+                />
+                <ProfileData
+                  profileDataIcon={<BookIcon />}
+                  profileDataCategory="Extracurricular Skills"
+                  profileDataInfo="fuckin"
+                />
+                <ProfileData
+                  profileDataIcon={<WorkIcon />}
+                  profileDataCategory="Dream Job"
+                  profileDataInfo="fucker"
+                />
+                <ProfileData
+                  profileDataIcon={<SchoolIcon />}
+                  profileDataCategory="Universities I'm Interested at"
+                  profileDataInfo="fucker university"
+                />
+            </Paper>
+          </Grid>
         </Grid>
       </Grid>
     </div>
@@ -99,72 +190,3 @@ const mapStateToProps = (state) => ({
 export default connect(
     mapStateToProps
   ) (Profile);
-
-{/*<Grid container spacing={2} className="profile-grid">
-    <Grid container>
-      <Grid item xs={4} >
-          <img src={defaultAvatar} className={classes.avatar}/>
-      </Grid>
-      <Grid item xs={8} className="right-grid">
-        <Typography>
-          <h1>{ user.name }</h1>
-        <Typography>
-          <h4>High School {user.role} </h4> <br />
-          Class XA <br />
-          <Rating name="read-only" value={4} readOnly /><br /><br />
-          <Button
-            variant="contained"
-            startIcon={<CreateIcon />}
-          >
-            Edit Profile
-          </Button>
-      </Grid>
-    </Grid>
-  </Paper>
-  <Grid container>
-    <Grid item xs={4}>
-      <Paper className={classes.paperBox}>
-      <h3>Contacts</h3>
-        Email: {user.email}<br />
-        Phone Number: {user.phone} <br/>
-        Emergency Phone number: {user.emergency_phone}<br/>
-      <h3>Address </h3>
-      </Paper>
-    </Grid>
-    <Grid item xs={8}>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-        >
-          <Tab label="Biography" icon={<DescriptionIcon />} {...TabPanelPage(0)} />
-          <Tab label="Career Path" icon={<BusinessCenterIcon />} {...TabPanelPage(1)} />
-          <Tab label="About" icon={<AccountBoxIcon />} {...TabPanelPage(2)} />
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          My name is Budi bla bla bla bla
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          Excels at: <br />
-          Dream Occupation: <br />
-          Universities I'm Interested at: <br />
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          Gender: <br />
-          Birthday: <br />
-          Hobbies and Interests: <br />
-          Extracurricular Skills: <br />
-        </TabPanel>
-      </SwipeableViews>
-    </Grid>
-  </Grid>
-</Grid>*/}
