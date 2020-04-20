@@ -33,8 +33,8 @@ class Dashboard extends Component {
               <h4>
                 <b>Hey there {user.role} </b> {user.name.split(" ")[0]}
                 <p className="flow-text grey-text text-darken-1">
-                  You are logged into our Schooly Web app! {" "}
-                  <span style={{ fontFamily: "monospace" }}>MERN</span> app 👏
+                  You are logged into our Schooly Web app 👏! {" "}
+                  {/* <span style={{ fontFamily: "monospace" }}>MERN</span> app 👏 */}
                 </p>
               </h4>
               <button

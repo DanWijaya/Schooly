@@ -5,21 +5,25 @@ Botak:
 3. Betulin navbar lagi buat (export props themenya, Icon only navbar masih nda centered)
 4. Create togglebutton buat mobile
 5. Betulin hijau2 pas klik iconbuttons
-6. Notifications List Page
-7. Notifications Page
-8. Create notification (admin) [?]
-9. Task List Page
-10. Comments Section
-11. Kalau udah selesai semua - Tes zoom in dan zoom out per Page
+6. Task List Page
+7. Comments Section
+8. Kalau udah selesai semua - Tes zoom in dan zoom out per Page
 
 Daniel:
-1.
-2.
+1. Class Page 
+2. Buat User Schemanya sesuai dgn yang ada di profile
+3. Buat fitur Uplaod Image, Upload file (buat tugas) dan lain lain. 
+4. Cari tau gimana remind student tugas kalo deadline sudah dekat. 
+5. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
+5. Mungkin buat page utk si Admin utk bisa manage users (?)
+6. Notificatons page (previewnya muncul di Dashboard)
+7. Notifications List Page
+8. Notification page buat Guru broadcast ke student. Utk admin juga mungkin. 
 
 Evaluations
 Botak > Daniel:
 -
 -
 Daniel > Botak:
--
+- 
 -
