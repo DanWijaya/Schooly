@@ -63,7 +63,7 @@ class Login extends Component {
   render() {
     document.title="Schooly - Login"
     const { errors } = this.state;
-    const {passwordIsMasked} = this.state;
+    const { passwordIsMasked } = this.state;
     return (
       <div className="container">
           <div className="col s8 offset-s2">
@@ -73,12 +73,10 @@ class Login extends Component {
             </Link>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <h4>
-                <b>Login</b> below
+                <b>Login to Schooly</b>
               </h4>
             </div>
-
             <form noValidate onSubmit={this.onSubmit}>
-
               <div className="input-field col s12">
                 <input
                   onChange={this.onChange}
@@ -106,15 +104,10 @@ class Login extends Component {
                   className={classnames("", {
                     invalid: errors.password || errors.passwordincorrect
                   })}
-
-
-
                 />
                 <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
                 Toggle" type="button"/>
                 {this.state.passwordIsMasked ? "Show" : "Hide"}
-
-
                 <label htmlFor="password">Password</label>
                 <span className="red-text">
                   {errors.password}
