@@ -16,9 +16,8 @@ Daniel:
 4. Cari tau gimana remind student tugas kalo deadline sudah dekat. 
 5. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 5. Mungkin buat page utk si Admin utk bisa manage users (?)
-6. Notificatons page (previewnya muncul di Dashboard)
-7. Notifications List Page
-8. Notification page buat Guru broadcast ke student. Utk admin juga mungkin. 
+6. Notificatons page dan listnya (previewnya muncul di Dashboard)
+7. Notification page buat Guru broadcast ke student. Utk admin juga mungkin. 
 
 Evaluations
 Botak > Daniel:
