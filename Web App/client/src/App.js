@@ -26,6 +26,7 @@ import EditTask from "./components/objects/tasks/EditTask";
 import EditClass from "./components/objects/classes/EditClass";
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
+import UploadImageTest from './prototypes/UploadImageTest';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -91,6 +92,7 @@ class App extends Component {
 
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/image-upload" component={UploadImageTest}/>
               {/*<PrivateRoute exact path="/profile" component={Profile} />*/}
               {/* Route Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
