@@ -44,30 +44,28 @@ const useStyles = makeStyles((theme) => ({
 
 function ProfileData(props) {
   return(
-    <List>
-      <ListItem>
-          <ListItemAvatar>
-            <Avatar>
-              {props.profileDataIcon}
-            </Avatar>
-          </ListItemAvatar>
-            <Grid container>
-              <Grid item xs={4}>
-                <Typography variant="button">
-                  {props.profileDataCategory}
-                </Typography>
-              </Grid>
-              <Grid item xs>
-                {props.profileDataInfo}
-              </Grid>
+    <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+            {props.profile_data_icon}
+          </Avatar>
+        </ListItemAvatar>
+          <Grid container>
+            <Grid item xs={4}>
+              <Typography variant="button">
+                {props.profile_data_category}
+              </Typography>
             </Grid>
-          <ListItemSecondaryAction>
-            <IconButton edge="end">
-              <ArrowRightIcon style={{color: "#2196f3"}} />
-            </IconButton>
-          </ListItemSecondaryAction>
-      </ListItem>
-    </List>
+            <Grid item xs>
+              {props.profile_data_info}
+            </Grid>
+          </Grid>
+        <ListItemSecondaryAction>
+          <IconButton edge="end">
+            <ArrowRightIcon style={{color: "#2196f3"}} />
+          </IconButton>
+        </ListItemSecondaryAction>
+    </ListItem>
   )
 }
 
@@ -97,26 +95,28 @@ function Profile(props) {
                 <Typography variant="subtitle2" gutterBottom>
                   <h4>Personal Info</h4>
                 </Typography>
-                <ProfileData
-                  profileDataIcon={<PersonIcon />}
-                  profileDataCategory="Name"
-                  profileDataInfo={user.name}
-                />
-                <ProfileData
-                  profileDataIcon={<CakeIcon />}
-                  profileDataCategory="Birthday"
-                  profileDataInfo="fucker"
-                />
-                <ProfileData
-                  profileDataIcon={<WcIcon />}
-                  profileDataCategory="Gender"
-                  profileDataInfo="Nigga"
-                />
-                <ProfileData
-                  profileDataIcon={<LockIcon />}
-                  profileDataCategory="Password"
-                  profileDataInfo="Nigga"
-                />
+                <List>
+                  <ProfileData
+                    profile_data_icon={<PersonIcon />}
+                    profile_data_category="Name"
+                    profile_data_info={user.name}
+                  />
+                  <ProfileData
+                    profile_data_icon={<CakeIcon />}
+                    profile_data_category="Birthday"
+                    profile_data_info="fucker"
+                  />
+                  <ProfileData
+                    profile_data_icon={<WcIcon />}
+                    profile_data_category="Gender"
+                    profile_data_info="Nigga"
+                  />
+                  <ProfileData
+                    profile_data_icon={<LockIcon />}
+                    profile_data_category="Password"
+                    profile_data_info="Nigga"
+                  />
+                </List>
             </Paper>
           </Grid>
           <Grid item>
@@ -124,26 +124,28 @@ function Profile(props) {
                 <Typography variant="subtitle2" gutterBottom>
                   <h4>Contact Info</h4>
                 </Typography>
-                <ProfileData
-                  profileDataIcon={<EmailIcon />}
-                  profileDataCategory="Email"
-                  profileDataInfo={user.email}
-                />
-                <ProfileData
-                  profileDataIcon={<PhoneIcon />}
-                  profileDataCategory="Phone Number"
-                  profileDataInfo={user.phone}
-                />
-                <ProfileData
-                  profileDataIcon={<SupervisorAccountIcon />}
-                  profileDataCategory="Emergency Phone Number"
-                  profileDataInfo={user.emergency_phone}
-                />
-                <ProfileData
-                  profileDataIcon={<HomeIcon />}
-                  profileDataCategory="Address"
-                  profileDataInfo={user.address}
-                />
+                <List>
+                  <ProfileData
+                    profile_data_icon={<EmailIcon />}
+                    profile_data_category="Email"
+                    profile_data_info={user.email}
+                  />
+                  <ProfileData
+                    profile_data_icon={<PhoneIcon />}
+                    profile_data_category="Phone Number"
+                    profile_data_info={user.phone}
+                  />
+                  <ProfileData
+                    profile_data_icon={<SupervisorAccountIcon />}
+                    profile_data_category="Emergency Phone Number"
+                    profile_data_info={user.emergency_phone}
+                  />
+                  <ProfileData
+                    profile_data_icon={<HomeIcon />}
+                    profile_data_category="Address"
+                    profile_data_info={user.address}
+                  />
+                </List>
             </Paper>
           </Grid>
           <Grid item>
@@ -151,26 +153,28 @@ function Profile(props) {
                 <Typography variant="subtitle2" gutterBottom>
                   <h4>Other Info</h4>
                 </Typography>
-                <ProfileData
-                  profileDataIcon={<GamesIcon />}
-                  profileDataCategory="Hobbies and Interest"
-                  profileDataInfo="Killin, fuckin, and rapin"
-                />
-                <ProfileData
-                  profileDataIcon={<BookIcon />}
-                  profileDataCategory="Extracurricular Skills"
-                  profileDataInfo="fuckin"
-                />
-                <ProfileData
-                  profileDataIcon={<WorkIcon />}
-                  profileDataCategory="Dream Job"
-                  profileDataInfo="fucker"
-                />
-                <ProfileData
-                  profileDataIcon={<SchoolIcon />}
-                  profileDataCategory="Universities I'm Interested at"
-                  profileDataInfo="fucker university"
-                />
+                <List>
+                  <ProfileData
+                    profile_data_icon={<GamesIcon />}
+                    profile_data_category="Hobbies and Interest"
+                    profile_data_info="Killin, fuckin, and rapin"
+                  />
+                  <ProfileData
+                    profile_data_icon={<BookIcon />}
+                    profile_data_category="Extracurricular Skills"
+                    profile_data_info="fuckin"
+                  />
+                  <ProfileData
+                    profile_data_icon={<WorkIcon />}
+                    profile_data_category="Dream Job"
+                    profile_data_info="fucker"
+                  />
+                  <ProfileData
+                    profile_data_icon={<SchoolIcon />}
+                    profile_data_category="Universities I'm Interested at"
+                    profile_data_info="fucker university"
+                  />
+                </List>
             </Paper>
           </Grid>
         </Grid>

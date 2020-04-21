@@ -1,9 +1,11 @@
 import React from "react";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Avatar, Button, Divider, Grid, IconButton, List, ListItem,
+  ListItemAvatar, ListItemText, Paper, TextField, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import PublishIcon from "@material-ui/icons/Publish";
 import SmsIcon from "@material-ui/icons/Sms";
+import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,59 +22,122 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexDirection: "row"
   },
-  workButtonContainer: {
-    display: "flex",
-    justifyContent: "center",
-  },
   workButton: {
     width: "200px",
   }
 }));
+
+function TaskDiscussionComment(props) {
+  return(
+    <ListItem>
+      <ListItemAvatar>
+        <Avatar>
+          {props.user_photo}
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={props.user_name}
+        secondary={props.user_task_discussion_comment}
+      />
+    </ListItem>
+  )
+}
 
 function NewTask() {
   const classes = useStyles();
 
   return(
     <div className={classes.root}>
-      <Grid container spacing={2} style={{display: "flex", justifyContent: "space-between"}}>
+      <Grid container
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "space-between"
+          }}
+      >
         <Paper className={classes.paperBox}>
-          <Grid item xs container direction="column" spacing={2} style={{width: "700px"}}>
-            <Typography variant="subtitle1" >
-              <h2>Task Title</h2>
-            </Typography>
-            <Typography variant="caption" color="textSecondary">
-              <h6>Subject Name</h6>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <h5>Due Date:</h5>
-              <h5>Maximum Score: 100</h5>
-            </Typography>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-              Assigned by:
-            </Typography>
-            <Typography>
-              Task Description:
-            </Typography>
-            <Typography variant="paragraph" gutterBottom>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-              unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-              dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-            </Typography>
-            <Typography>
-              Attached Files:
-            </Typography>
+          <Grid item
+            container spacing={2}
+            style={{width: "700px"}}
+          >
+            <Grid item xs={6}>
+              <Typography variant="subtitle1" >
+                <h2>Task Title</h2>
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                <h6>Subject Name</h6>
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Assigned by:
+              </Typography>
+            </Grid>
+            <Grid item xs={6}
+              container
+              direction="column"
+              alignItems="flex-end"
+            >
+              <Typography variant="overline" color="textSecondary">
+                Due Date:
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Maximum Score: 100
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                Task Description:
+              </Typography>
+              <Typography variant="paragraph" gutterBottom>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
+                dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                Attached Files:
+              </Typography>
+            </Grid>
           </Grid>
         </Paper>
         <Paper className={classes.paperBox}>
-          <Grid item xs style={{width: "300px"}}>
-            <Typography variant="h6">
-              <SmsIcon /> Private Discussion
-            </Typography>
+          <Grid item
+            container
+            direction="column"
+            justify="space-evenly"
+            style={{width: "300px"}}
+          >
+            <Grid item>
+              <Typography variant="h6">
+                <SmsIcon /> Task Dicussion
+              </Typography>
+            </Grid>
+            <Divider />
+            <Grid item>{/*A height should be set*/}
+              <List>
+                <TaskDiscussionComment
+                  user_photo={<SmsIcon/>}
+                  user_name="Mr Budi"
+                  user_task_discussion_comment="fuck you"
+                />
+              </List>
+            </Grid>
+            <Divider />
+            <Grid item>
+              <Avatar>
+                <SmsIcon />
+              </Avatar>
+              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+              <IconButton>
+                <SendIcon style={{color: "#2196f3"}}/>
+              </IconButton>
+            </Grid>
           </Grid>
         </Paper>
       </Grid>
-      <Grid container direction="column" spacing={2} className={classes.workBox}>
-        <Grid item className={classes.workButtonContainer}>
+
+      <Grid container spacing={2} className={classes.workBox}>
+        <Grid item>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
@@ -82,7 +147,7 @@ function NewTask() {
             Upload Your Work
           </Button>
         </Grid>
-        <Grid item className={classes.workButtonContainer}>
+        <Grid item>
           <Button
             variant="contained"
             startIcon={<PublishIcon />}
@@ -93,6 +158,18 @@ function NewTask() {
           </Button>
         </Grid>
       </Grid>
+
+      <div>
+        <Paper>
+          <Typography style={{color: "red"}} gutterBottom>
+            Not Submitted/Due Soon/Not Graded/Graded
+          </Typography>
+          <Typography>
+            <h3>Your Score:</h3>
+            You got a motherfuckin rotten egg u stupid
+          </Typography>
+        </Paper>
+      </div>
     </div>
   )
 }
