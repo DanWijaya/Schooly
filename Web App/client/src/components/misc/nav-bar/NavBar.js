@@ -118,12 +118,13 @@ function NavBar(props){
 
   
   const handleDrawerOpen = () => {
+    props.callbackFromParent(!open)
     if(!open)
       setOpen(true);
     else 
       setOpen(false)
 
-      props.callbackFromParent(open)
+      
   };
 
 

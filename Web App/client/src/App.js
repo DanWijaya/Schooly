@@ -51,7 +51,6 @@ class App extends Component {
 
   state = {
     sideDrawerOpen: false,
-    firstTimeRendered: true,
     posts: []
   };
 
@@ -100,7 +99,7 @@ class App extends Component {
        <Provider store={store}>
         <Router>
           <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
-          {(this.state.sideDrawerOpen || this.state.firstTimeRendered) ? translateXValue = '0px' : translateXValue = '220px'}
+          {(this.state.sideDrawerOpen ) ? translateXValue = '240px' : translateXValue = '0px'}
           {/* transform: `translateX(${translateXValue})` */}
           <div className="App" style={{ marginLeft: `${translateXValue}` }}>
             <Route exact path="/" component={Landing} />
