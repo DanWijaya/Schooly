@@ -116,20 +116,21 @@ function NavBar(props){
   
   const { user } = props.auth;
 
+  
   const handleDrawerOpen = () => {
     if(!open)
       setOpen(true);
     else 
       setOpen(false)
+
+      props.callbackFromParent(open)
   };
+
 
   // const handleDrawerClose = () => {
 
   // }
 
-  const DrawerToggleClickHandler = ()  => {
-      props.drawerClickHandler(true);
-  }
 
   return (
     <div className={classes.root}>

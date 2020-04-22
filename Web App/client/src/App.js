@@ -51,14 +51,19 @@ class App extends Component {
 
   state = {
     sideDrawerOpen: false,
+    firstTimeRendered: true,
     posts: []
   };
 
-  drawerToggleClickHandler = () => {
-    this.setState((prevState) => {
-      return {sideDrawerOpen: !prevState.sideDrawerOpen};
-    });
-  };
+  // drawerToggleClickHandler = () => {
+  //   this.setState((prevState) => {
+  //     return {sideDrawerOpen: !prevState.sideDrawerOpen};
+  //   });
+  // };
+
+  myCallback = (dataFromChild) => {
+    this.setState({ sideDrawerOpen: dataFromChild, firstTimeRendered: false})
+  }
 
   //38:55
   backdropClickHandler = () => {
@@ -94,10 +99,10 @@ class App extends Component {
         {/* <SideDrawer show={this.state.sideDrawerOpen}/> */}
        <Provider store={store}>
         <Router>
-          <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
-          {(this.state.sideDrawerOpen == true) ? translateXValue = '50px' : translateXValue = '0px'}
-
-          <div className="App" style={{ transform : `translateX(${translateXValue})`}}>
+          <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
+          {(this.state.sideDrawerOpen || this.state.firstTimeRendered) ? translateXValue = '0px' : translateXValue = '220px'}
+          {/* transform: `translateX(${translateXValue})` */}
+          <div className="App" style={{ marginLeft: `${translateXValue}` }}>
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
