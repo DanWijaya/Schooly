@@ -67,12 +67,27 @@ class App extends Component {
 
   render() {
     // let sideDrawer;
+    console.log(this.state.sideDrawerOpen)
     let backdrop;
+    let translateXValue
 
     if(this.state.sideDrawerOpen){
       // sideDrawer = <SideDrawer/>
       backdrop = <Backdrop click={this.backdropClickHandler}/>
     }
+
+    // toolbar: {
+    //   display: "flex",
+    //   alignItems: "center",
+    //   justify: "flex-end",
+    //   padding: theme.spacing(0, 1),
+    //   // necessary for content to be below app bar
+    //   ...theme.mixins.toolbar,
+    // },
+    // content: {
+    //   flexGrow: 1,
+    //   padding: theme.spacing(3),
+    // },
     return (
       <div style={{height: '100%'}}>
         {/* <NavBar drawerClickHandler={this.drawerToggleClickHandler}/> */}
@@ -80,7 +95,9 @@ class App extends Component {
        <Provider store={store}>
         <Router>
           <NavBar drawerClickHandler={this.drawerToggleClickHandler}/>
-          <div className="App">
+          {(this.state.sideDrawerOpen == true) ? translateXValue = '50px' : translateXValue = '0px'}
+
+          <div className="App" style={{ transform : `translateX(${translateXValue})`}}>
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />

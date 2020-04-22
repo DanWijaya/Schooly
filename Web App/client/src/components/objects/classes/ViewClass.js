@@ -3,10 +3,48 @@ import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
-import ClassDataTable from './ClassDataTable';
+// import ClassDataTable from './ClassDataTable';
 import { viewClass, deleteClass } from "../../../actions/ClassActions"
 import { Modal, Button } from 'react-bootstrap';
 import './ViewClass.css'
+
+function ClassDataView(props) {
+    return(
+        <tr>
+            <td style={{textAlign: "center"}}>
+                {props.obj.name}
+            </td>
+            <td style={{textAlign: "center"}}>
+                {props.obj.walikelas.name}
+            </td>
+            <td style={{textAlign: "center"}}>
+                {props.obj.ukuran}
+            </td>
+            <td style={{textAlign: "center"}}>
+                {props.obj.nihil.toString()}
+            </td>
+            <td style={{textAlign: "center"}}>
+            <Link to={{
+                pathname: `/class/${props.obj._id}`,
+                state:{ 
+                    classId : props.obj._id
+                    }
+                }}
+            className="btn btn-primary">Edit</Link>
+             </td>
+            <td style={{textAlign: "center"}}>
+                <Link to={{
+                    pathname: `/deleteclass/${props.obj._id}`,
+                    state:{
+                        classId : props.obj._id
+                    }
+                }}
+                className="btn btn-danger">Delete</Link>
+            </td>
+        </tr>
+    )
+}
+
 
 class ViewClass extends Component {
     constructor(props) {
@@ -79,7 +117,7 @@ class ViewClass extends Component {
 
         console.log(this.state.classesCollection)
         return this.state.classesCollection.map((data, i) => {
-            return <ClassDataTable obj={data} key={i}/>;
+            return <ClassDataView obj={data} key={i}/>;
         });
     }
 

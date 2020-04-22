@@ -20,7 +20,7 @@ import MenuIcon from "@material-ui/icons/Menu"
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SettingIcon from "@material-ui/icons/SettingsOutlined"
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,17 +36,19 @@ const useStyles = makeStyles((theme) => ({
   },
   appBarShift: {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    width: `calc(100%)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
+
   menuButton: {
     marginRight: 36,
   },
   hide: {
-    display: "none",
+    marginRight: 36,
+    // display: "",
   },
   drawer: {
     width: drawerWidth,
@@ -111,16 +113,23 @@ function NavBar(props){
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
+  
   const { user } = props.auth;
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    if(!open)
+      setOpen(true);
+    else 
+      setOpen(false)
   };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  // const handleDrawerClose = () => {
+
+  // }
+
+  const DrawerToggleClickHandler = ()  => {
+      props.drawerClickHandler(true);
+  }
 
   return (
     <div className={classes.root}>
@@ -184,7 +193,7 @@ function NavBar(props){
         }}
       >
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton >
             {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
