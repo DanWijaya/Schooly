@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css'
+import "bootstrap/dist/css/bootstrap.min.css"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/AuthActions";
 import { Provider } from "react-redux"; //provide state from Store to the component
 import store from "./Store";
-
-//Components and Pages
+import {drawerWidth}  from "./components/misc/nav-bar/NavBar";
 import Profile from "./components/layout/profile/Profile";
 import About from "./components/layout/about/About";
 import Landing from "./components/layout/landing/Landing";
@@ -16,7 +15,7 @@ import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/layout/dashboard/Dashboard.js";
 import NavBar from "./components/misc/nav-bar/NavBar";
-import Backdrop from '../src/components/misc/back-drop/Backdrop';
+import Backdrop from "../src/components/misc/back-drop/Backdrop";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer"
 import CreateClass from "./components/objects/classes/CreateClass"
 import CreateTask from "./components/objects/tasks/CreateTask";
@@ -55,12 +54,6 @@ class App extends Component {
     posts: []
   };
 
-  // drawerToggleClickHandler = () => {
-  //   this.setState((prevState) => {
-  //     return {sideDrawerOpen: !prevState.sideDrawerOpen};
-  //   });
-  // };
-
   myCallback = (dataFromChild) => {
     this.setState({ sideDrawerOpen: dataFromChild, firstTimeRendered: false})
   }
@@ -71,6 +64,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(drawerWidth)
     // let sideDrawer;
     console.log(this.state.sideDrawerOpen)
     let backdrop;
@@ -81,27 +75,14 @@ class App extends Component {
       backdrop = <Backdrop click={this.backdropClickHandler}/>
     }
 
-    // toolbar: {
-    //   display: "flex",
-    //   alignItems: "center",
-    //   justify: "flex-end",
-    //   padding: theme.spacing(0, 1),
-    //   // necessary for content to be below app bar
-    //   ...theme.mixins.toolbar,
-    // },
-    // content: {
-    //   flexGrow: 1,
-    //   padding: theme.spacing(3),
-    // },
     return (
-      <div style={{height: '100%'}}>
+      <div>
         {/* <NavBar drawerClickHandler={this.drawerToggleClickHandler}/> */}
         {/* <SideDrawer show={this.state.sideDrawerOpen}/> */}
        <Provider store={store}>
         <Router>
           <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
-          {(this.state.sideDrawerOpen ) ? translateXValue = '240px' : translateXValue = '0px'}
-          {/* transform: `translateX(${translateXValue})` */}
+          {(this.state.sideDrawerOpen ) ? translateXValue = `${drawerWidth}px` : translateXValue = "0px"}
           <div className="App" style={{ marginLeft: `${translateXValue}` }}>
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />
@@ -117,6 +98,7 @@ class App extends Component {
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/image-upload" component={UploadImageTest}/>
               {/*<PrivateRoute exact path="/profile" component={Profile} />*/}
+
               {/* Route Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
               <PrivateRoute exact path="/viewclass" component={ViewClass}/>
@@ -133,24 +115,8 @@ class App extends Component {
         </Router>
       </Provider>
         {backdrop}
-        {/* <main style={{marginTop: '64px'}}>
-          <p>This is the page content!</p>
-        </main> */}
       </div>
     );
   }
 }
 export default App;
-
-{/* <Provider store={store}>
-        <Router>
-          <div className="App">
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
-            <Switch>
-              <PrivateRoute exact path="/dashboard" component={Dashboard} />
-            </Switch>
-          </div>
-        </Router>
-      </Provider> */}
