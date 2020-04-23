@@ -42,14 +42,6 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-
-  menuButton: {
-    marginRight: 36,
-  },
-  hide: {
-    marginRight: 36,
-    // display: "",
-  },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -91,18 +83,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justify: "flex-end",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
 }));
 
 function DrawerItemList(props) {
@@ -113,25 +93,16 @@ function NavBar(props){
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  
+
   const { user } = props.auth;
 
-  
   const handleDrawerOpen = () => {
     props.callbackFromParent(!open)
     if(!open)
       setOpen(true);
-    else 
+    else
       setOpen(false)
-
-      
   };
-
-
-  // const handleDrawerClose = () => {
-
-  // }
-
 
   return (
     <div className={classes.root}>
@@ -148,9 +119,6 @@ function NavBar(props){
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
           >
             <MenuIcon />
           </IconButton>
@@ -194,11 +162,7 @@ function NavBar(props){
           }),
         }}
       >
-        <div className={classes.toolbar}>
-          <IconButton >
-            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </div>
+        <Toolbar />
         <Divider />
         <List>
           <DrawerItemList href="/dashboard">
@@ -259,6 +223,8 @@ NavBar.propTypes = {
 const mapStateToProps = (state) => ({
    auth: state.auth
  });
+
+export { drawerWidth };
 
 export default connect(
    mapStateToProps
