@@ -27,6 +27,7 @@ import EditClass from "./components/objects/classes/EditClass";
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
 import UploadImageTest from './prototypes/UploadImageTest';
+import Notifications from './prototypes/Notifications';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -109,6 +110,7 @@ class App extends Component {
             <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
             <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
             <Route exact path="/profile" component={Profile} /> {/*Delete later, enable private routing*/}
+            <Route exact path="/notifications" component={Notifications}/>
             {/* <Route exact path="/setting" component={Setting}/> */}
 
             <Switch>
