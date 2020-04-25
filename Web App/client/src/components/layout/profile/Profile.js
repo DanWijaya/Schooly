@@ -22,6 +22,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import WorkIcon from '@material-ui/icons/Work';
 import defaultAvatar from "./DefaultAvatar.jpg";
+import './Profile.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "17.5px",
     paddingRight: "17.5px",
   }
+
 }));
 
 function ProfileData(props) {
@@ -62,7 +64,7 @@ function ProfileData(props) {
           </Grid>
         <ListItemSecondaryAction>
           <IconButton edge="end">
-            <ArrowRightIcon style={{color: "#2196f3"}} />
+            <ArrowRightIcon  className="arrowBtn" style={{color: "#2196f3"}} />
           </IconButton>
         </ListItemSecondaryAction>
     </ListItem>

@@ -77,8 +77,6 @@ class App extends Component {
 
     return (
       <div>
-        {/* <NavBar drawerClickHandler={this.drawerToggleClickHandler}/> */}
-        {/* <SideDrawer show={this.state.sideDrawerOpen}/> */}
        <Provider store={store}>
         <Router>
           <NavBar callbackFromParent={(data) => this.myCallback(data)}/>

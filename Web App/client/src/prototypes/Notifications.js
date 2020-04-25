@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {List, ListItem, Typography, Grid, Paper, makeStyles} from '@material-ui/core'
-
+import {List, ListItem, Typography, Grid, Paper, makeStyles, Icon, Avatar, ListItemAvatar} from '@material-ui/core'
+import SchoolIcon from '@material-ui/icons/School';
+import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
+import NewReleasesRoundedIcon from '@material-ui/icons/NewReleasesRounded';
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxWidth: '900px',
+        maxWidth: '1500px',
         margin: 'auto',
         marginTop: '30px'
     }
@@ -13,8 +15,13 @@ const useStyles = makeStyles((theme) => ({
 function NotificationItem(props) {
     return (
         <ListItem>
+            <ListItemAvatar>
+                <Avatar>
+                    {props.icon}
+                </Avatar>
+            </ListItemAvatar>
             <Typography>
-                Notification Item {props.number}
+                {props.statement}
             </Typography>
         </ListItem>
     )
@@ -29,11 +36,12 @@ function Notifications(props) {
             <Typography variant="h5">
                 Your Notifications
             </Typography>
-            <Grid item>
+            <br/>
+            <Grid item >
                 <Paper className="paperBox">
                     <List>
-                        <NotificationItem number={1}/>
-                        <NotificationItem number={2}/>
+                        <NotificationItem statement={"Ingat! Tugas mu yang harus dikelarkan besok belum kamu kumpul."} icon={<AssignmentRoundedIcon/>}/>
+    <NotificationItem statement={"Botol air mu ketinggalan, ambil di meja security di lobby."} icon={<NewReleasesRoundedIcon/>}/>
                         <NotificationItem number={3}/>
                         <NotificationItem number={4}/>
                         <NotificationItem number={5}/>

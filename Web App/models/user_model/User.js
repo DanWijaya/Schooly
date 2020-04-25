@@ -36,6 +36,10 @@ const UserSchema = new Schema({
   emergency_phone: {
     type: String,
     required: true
+    },
+    avatar_name: {
+      type: String,
+      default: null
     }
 }, options )
 
