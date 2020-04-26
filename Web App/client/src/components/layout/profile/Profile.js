@@ -78,7 +78,7 @@ function Profile(props) {
   const { user } = props.auth;
   const classes = useStyles();
 
-  console.log(user.role)
+  console.log(user.avatar)
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>

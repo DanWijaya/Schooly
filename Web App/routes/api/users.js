@@ -117,6 +117,7 @@ router.post("/login", (req, res) => {
             phone: user.phone,
             emergency_phone: user.emergency_phone,
             address: user.address,
+            avatar: user.avatar,
             // Student specific data
             kelas: user.kelas // Don't include password because don't want to make it visible by accessing token.. 
           };
@@ -130,6 +131,7 @@ router.post("/login", (req, res) => {
             phone: user.phone,
             emergency_phone: user.emergency_phone,
             address: user.address,
+            avatar: user.avatar,
             // Teacher specific data
             subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token.. 
           };

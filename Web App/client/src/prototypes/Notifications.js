@@ -3,18 +3,25 @@ import {List, ListItem, Typography, Grid, Paper, makeStyles, Icon, Avatar, ListI
 import SchoolIcon from '@material-ui/icons/School';
 import AssignmentRoundedIcon from '@material-ui/icons/AssignmentRounded';
 import NewReleasesRoundedIcon from '@material-ui/icons/NewReleasesRounded';
+import { grey } from '@material-ui/core/colors';
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxWidth: '1500px',
+        maxWidth: '1100px',
         margin: 'auto',
         marginTop: '30px'
+    },
+    time: {
+        color: grey,
+        marginRight: 0,
     }
 
 }));
 
 function NotificationItem(props) {
+    const classes = useStyles();
+
     return (
-        <ListItem>
+        <ListItem style={{display: 'flex', justifyContent: 'space-between'}}>
             <ListItemAvatar>
                 <Avatar>
                     {props.icon}
@@ -22,6 +29,9 @@ function NotificationItem(props) {
             </ListItemAvatar>
             <Typography>
                 {props.statement}
+            </Typography>
+            <Typography variant="subtitle" style={{ color: 'grey', marginRight: '0px'}}>
+                {props.time}
             </Typography>
         </ListItem>
     )
@@ -40,11 +50,11 @@ function Notifications(props) {
             <Grid item >
                 <Paper className="paperBox">
                     <List>
-                        <NotificationItem statement={"Ingat! Tugas mu yang harus dikelarkan besok belum kamu kumpul."} icon={<AssignmentRoundedIcon/>}/>
-    <NotificationItem statement={"Botol air mu ketinggalan, ambil di meja security di lobby."} icon={<NewReleasesRoundedIcon/>}/>
-                        <NotificationItem number={3}/>
-                        <NotificationItem number={4}/>
-                        <NotificationItem number={5}/>
+                        <NotificationItem time={"20m ago"} statement={"Ingat! Tugas mu yang harus dikelarkan besok belum kamu kumpul."} icon={<AssignmentRoundedIcon/>}/>
+    <NotificationItem time={"1h ago"}  statement={"Botol air mu ketinggalan, ambil di meja security di lobby."} icon={<NewReleasesRoundedIcon/>}/>
+                        <NotificationItem time={"2h ago"}  statement={"Ingat! Tugas mu yang harus dikelarkan besok belum kamu kumpul."} number={3}/>
+                        <NotificationItem time={"3h ago"}  statement={"Ingat! Tugas mu yang harus dikelarkan besok belum kamu kumpul."} number={4}/>
+                        <NotificationItem time={"10h ago"}  statement={"Ingat! Tugas mu yang harus dikelarkan besok belum kamu kumpul."} number={5}/>
                     </List>
                 </Paper>
             </Grid>
