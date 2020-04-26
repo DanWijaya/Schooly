@@ -22,7 +22,9 @@ import SchoolIcon from '@material-ui/icons/School';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import WorkIcon from '@material-ui/icons/Work';
 import defaultAvatar from "./DefaultAvatar.jpg";
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import './Profile.css'
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,11 +78,18 @@ function Profile(props) {
   const { user } = props.auth;
   const classes = useStyles();
 
+  console.log(user.role)
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
-          <Avatar src={defaultAvatar} className={classes.avatar} />
+          {user.avatar ? 
+          <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.avatar}/> : 
+          <Avatar src={defaultAvatar} className={classes.avatar}/>}
+
+          <Link to="/image-upload"><AddAPhotoIcon type="button"/></Link>
+          <br/>
+
           <Typography variant="subtitle2">
             <h2>{user.name}</h2>
           </Typography>
@@ -187,6 +196,7 @@ function Profile(props) {
 
 Profile.propTypes = {
     auth: PropTypes.object.isRequired,
+
   }
 
 const mapStateToProps = (state) => ({
@@ -194,5 +204,5 @@ const mapStateToProps = (state) => ({
   });
 
 export default connect(
-    mapStateToProps
+    mapStateToProps, 
   ) (Profile);

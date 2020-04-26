@@ -1,9 +1,13 @@
 import React, { Component } from "react"
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import {updateUser} from '../actions/AuthActions';
 
-function ImageUpload() {
+function ImageUpload(props) {
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
 
+  const { user } = props.auth;
   const handleImageUpload = e => {
     const [file] = e.target.files;
     if (file) {
@@ -17,29 +21,18 @@ function ImageUpload() {
     }
   };
 
+  const updateAvatar = () => {
+    let userData = user;
+    let userId = user.id;
+
+    props.updateUser(userData, userId, props.history)
+  } 
+
   // const uploadImage = () => {
 
   // }
 
   return (
-
-    // <div class="container">
-    //     <div class="row">
-    //         <div class="col-md-6 m-auto">
-    //             <h1 class="my-4">Lets upload some image</h1>
-    //             <form action="/upload" method="post" enctype="multipart/form-data">
-    //                 <div class="custom-file mb-3">
-    //                     <input type="file" class="custom-file-input" name="avatar" id="avatar1" onchange="readSingleFile(this.files)"/>
-    //                     <label class="custom-file-label" for="file1" id="file-label">Choose file</label>
-    //                 </div>
-    //                 <input type="submit" value="Submit" class="btn btn-primary btn-block"/>
-    //             </form>
-    //             <hr>
-
-    //             </hr>
-    //         </div>
-    //     </div>
-    // </div>
     
      <div
       style={{
@@ -49,8 +42,8 @@ function ImageUpload() {
         justifyContent: "center"
       }}
     >
-      <h1 class="my-4">Upload your Avatar</h1>
-      <form action="/api/uploads/upload" method="post" encType="multipart/form-data">
+      <h1 class="my-4"> Upload your Avatar</h1>
+      <form action={`/api/uploads/upload/${user.id}`} method="post" encType="multipart/form-data">
       <input
         type="file"
         name="avatar" 
@@ -77,10 +70,24 @@ function ImageUpload() {
           }}
         />
       </div>
-      <button type="button" onClick={() => imageUploader.current.click()}>Click to upload Image</button>
-      <input type="submit" value="Submit" class="btn btn-primary btn-block"/>
+      <button type="button" onClick={() => {
+        imageUploader.current.click()}}>Click to upload Image</button>
+
+      <input type="submit" onSubmit={updateAvatar} value="Submit" class="btn btn-primary btn-block"/>
       </form>
     </div> 
   )
   }
-export default ImageUpload;
+
+ImageUpload.propTypes = {
+  auth: PropTypes.object.isRequired,
+  updateUser : PropTypes.func.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+export default connect(
+    mapStateToProps, {updateUser}
+) (ImageUpload);

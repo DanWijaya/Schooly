@@ -157,6 +157,25 @@ router.post("/login", (req, res) => {
   });
 });
 
+router.post("/update/:id", (req,res) => {
+  
+  let id = req.params.id;
+  console.log(req.body);
+
+  User.findById(id, (err, userData) => {
+    if(!userData)
+      res.status(404).send("User data is not found");
+    else{
+      userData.avatar = req.body.avatar;
+
+      userData
+            .save()
+            .then(userData => res.json("Update User complete"))
+            .catch(err => res.status(400).send("Unable to update user"))
+    }
+  })
+})
+
 router.get("/getteachers", (req, res) => {
   User.find({ role: 'Teacher' }).then((users, err) => {
     if(!users)

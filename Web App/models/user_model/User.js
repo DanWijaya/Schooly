@@ -37,10 +37,10 @@ const UserSchema = new Schema({
     type: String,
     required: true
     },
-    avatar_name: {
-      type: String,
-      default: null
-    }
+  avatar: {
+    type: String,
+    default: ""
+  }
 }, options )
 
 const User = mongoose.model('users', UserSchema);

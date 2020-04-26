@@ -10,6 +10,7 @@ const methodOverride = require("method-override")
 
 
 const mongoose = require("mongoose");
+const User= require("../../models/user_model/User");
 
 // Create Mongo Connection 
 const conn = mongoose.createConnection(keys.mongoURI)
@@ -72,15 +73,31 @@ router.get('/image-upload', (req,res) => {
   })
   // @route POST /upload
   // @desc Upload files to DB
-  router.post('/upload', upload.single('avatar'), (req,res) => {
+  router.post('/upload/:id', upload.single('avatar'), (req,res) => {
     // res.json({ file: req.file});
-    res.redirect('/image-upload')
+    let id = req.params.id
+
+    User.findById(id, (err, userData) => {
+      if(!userData)
+        res.status(404).send("User data is not found");
+      else{
+        userData.avatar = req.file.filename;
+  
+        userData
+              .save()
+              .then()
+              .catch(err => res.status(400).send("Unable to update user"))
+      }
+    })
+
+    res.redirect('/image-upload');
+    console.log(req.params)
     console.log(req.file.filename)
   });
   
   // @route GET /files
   // @desc Display all files in JSON
-  router.get('/files', (req, res) => {
+  router.get('/files/', (req, res) => {
     gfs.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {

@@ -21,6 +21,22 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
+export const updateUser = (userData, userId, history) => dispatch => {
+  axios
+      .post("/api/users/update/" + userId, userData)
+      .then(res => {
+        alert("Your avatar is updated successfully")
+        history.push("/profile")
+      })
+      .catch(err => {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      })
+
+}
+
 // to initiate a dispatch, pass the result to the dispatch() function. 
 // Login - get user token
 export const loginUser = (userData) => dispatch => {
