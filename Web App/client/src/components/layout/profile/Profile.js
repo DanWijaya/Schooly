@@ -78,7 +78,6 @@ function Profile(props) {
   const { user } = props.auth;
   const classes = useStyles();
 
-  console.log(user.avatar)
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
@@ -104,27 +103,27 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2" gutterBottom>
-                  <h4>Personal Info</h4>
+                  <h4>Informasi Pribadi</h4>
                 </Typography>
                 <List>
                   <ProfileData
                     profile_data_icon={<PersonIcon />}
-                    profile_data_category="Name"
+                    profile_data_category="Nama"
                     profile_data_info={user.name}
                   />
                   <ProfileData
                     profile_data_icon={<CakeIcon />}
-                    profile_data_category="Birthday"
+                    profile_data_category="Tanggal Lahir"
                     profile_data_info="fucker"
                   />
                   <ProfileData
                     profile_data_icon={<WcIcon />}
-                    profile_data_category="Gender"
+                    profile_data_category="Jenis Kelamin"
                     profile_data_info="Nigga"
                   />
                   <ProfileData
                     profile_data_icon={<LockIcon />}
-                    profile_data_category="Password"
+                    profile_data_category="Kata Sandi"
                     profile_data_info="Nigga"
                   />
                 </List>
@@ -133,7 +132,7 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2" gutterBottom>
-                  <h4>Contact Info</h4>
+                  <h4>Kontak</h4>
                 </Typography>
                 <List>
                   <ProfileData
@@ -143,17 +142,17 @@ function Profile(props) {
                   />
                   <ProfileData
                     profile_data_icon={<PhoneIcon />}
-                    profile_data_category="Phone Number"
+                    profile_data_category="Nomor Telp."
                     profile_data_info={user.phone}
                   />
                   <ProfileData
                     profile_data_icon={<SupervisorAccountIcon />}
-                    profile_data_category="Emergency Phone Number"
+                    profile_data_category="Nomor Telp. Darurat"
                     profile_data_info={user.emergency_phone}
                   />
                   <ProfileData
                     profile_data_icon={<HomeIcon />}
-                    profile_data_category="Address"
+                    profile_data_category="Alamat"
                     profile_data_info={user.address}
                   />
                 </List>
@@ -162,27 +161,27 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2" gutterBottom>
-                  <h4>Other Info</h4>
+                  <h4>Informasi lainnya</h4>
                 </Typography>
                 <List>
                   <ProfileData
                     profile_data_icon={<GamesIcon />}
-                    profile_data_category="Hobbies and Interest"
+                    profile_data_category="Hobi dan minat"
                     profile_data_info="Killin, fuckin, and rapin"
                   />
                   <ProfileData
                     profile_data_icon={<BookIcon />}
-                    profile_data_category="Extracurricular Skills"
+                    profile_data_category="Skill Extrakurikuler"
                     profile_data_info="fuckin"
                   />
                   <ProfileData
                     profile_data_icon={<WorkIcon />}
-                    profile_data_category="Dream Job"
+                    profile_data_category="Cita Cita"
                     profile_data_info="fucker"
                   />
                   <ProfileData
                     profile_data_icon={<SchoolIcon />}
-                    profile_data_category="Universities I'm Interested at"
+                    profile_data_category="Perguruan Tinggi yang saya minati"
                     profile_data_info="fucker university"
                   />
                 </List>

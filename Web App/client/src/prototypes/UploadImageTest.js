@@ -1,15 +1,28 @@
 import React, { Component } from "react"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import {updateUser} from '../actions/AuthActions';
+import { updateUser } from '../actions/AuthActions';
+import { Avatar } from '@material-ui/core';
+import defaultAvatar from '../components/layout/profile/DefaultAvatar.jpg'
+import { makeStyles } from '@material-ui/core/styles'
+const useStyles = makeStyles((theme) => ({
+  avatar: {
+    width: theme.spacing(20),
+    height: theme.spacing(20)
+  }
 
+}))
 function ImageUpload(props) {
+  const classes = useStyles()
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
+  const [profileImg, setProfileImg] = React.useState(null);
 
   const { user } = props.auth;
+
   const handleImageUpload = e => {
     const [file] = e.target.files;
+    setProfileImg(e.target.files[0])
     if (file) {
       const reader = new FileReader();
       const { current } = uploadedImage;
@@ -19,18 +32,25 @@ function ImageUpload(props) {
       };
       reader.readAsDataURL(file);
     }
+    
   };
 
-  const updateAvatar = () => {
-    let userData = user;
-    let userId = user.id;
+  
+  const onSubmitForm = (e) => {
+    e.preventDefault()
+    console.log("AAA")
+    let formData = new FormData()
+    console.log(profileImg)
+    formData.append("avatar", profileImg)
 
-    props.updateUser(userData, userId, props.history)
+
+    let userData = user
+    let userId = user.id;
+    
+    props.updateUser(userData, userId, formData, props.history)
+
   } 
 
-  // const uploadImage = () => {
-
-  // }
 
   return (
     
@@ -42,8 +62,9 @@ function ImageUpload(props) {
         justifyContent: "center"
       }}
     >
-      <h1 class="my-4"> Upload your Avatar</h1>
-      <form action={`/api/uploads/upload/${user.id}`} method="post" encType="multipart/form-data">
+      <h1 class="my-4"> Unggah/Upload profil foto</h1>
+      {/* action={`/api/users/update/${user.id}`} method="post" */}
+      <form onSubmit={onSubmitForm}>
       <input
         type="file"
         name="avatar" 
@@ -59,7 +80,7 @@ function ImageUpload(props) {
         style={{
           height: "160px",
           width: "160px",
-          border: "1px dashed black"
+          // border: "1px dashed black"
         }}
       >
         <img
@@ -69,11 +90,14 @@ function ImageUpload(props) {
             height: "160px",
           }}
         />
+        {/* {user.avatar ? 
+          <img ref={uploadedImage}  className={classes.avatar}/> : 
+          <Avatar ref={uploadedImage}  className={classes.avatar}/>} */}
       </div>
       <button type="button" onClick={() => {
-        imageUploader.current.click()}}>Click to upload Image</button>
+        imageUploader.current.click()}}>Klik untuk upload</button>
 
-      <input type="submit" onSubmit={updateAvatar} value="Submit" class="btn btn-primary btn-block"/>
+      <input type="submit" value="Submit" class="btn btn-primary btn-block"/>
       </form>
     </div> 
   )

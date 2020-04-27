@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const keys = require("../../config/keys");
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 const GridFsStorage = require("multer-gridfs-storage")
 const GridFsStream = require("gridfs-stream");
 const methodOverride = require("method-override")
-
+const jwt = require("jsonwebtoken");
+const keys = require("../../config/keys")
 
 const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
@@ -57,7 +57,7 @@ router.get('/image-upload', (req,res) => {
         res.render('image-upload', {files: false})
       } else {
         files.map(file => {
-          if(file.contentType === 'image/jpeg' || file.contentType === 'img/png' || file.contentType === 'img/jpg')
+          if(file.contentType === 'image/jpeg' || file.contentType === 'image/png' || file.contentType === 'image/jpg')
           {
             file.isImage = true;
           } else {
@@ -139,7 +139,7 @@ router.get('/image-upload', (req,res) => {
         });
       }
       // Check if Image
-      if (file.contentType === 'image/jpeg' || file.contentType === 'img/png' || file.contentType === 'img/jpg') {
+      if (file.contentType === 'image/jpeg' || file.contentType === 'image/png' || file.contentType === 'image/jpg') {
         // Show outputnya di browser kita
         const readStream = gfs.createReadStream(file.filename);
         readStream.pipe(res)
@@ -151,4 +151,16 @@ router.get('/image-upload', (req,res) => {
     });
   });
 
-module.exports = router;
+// // @route DELETE /files/:id 
+// // @desc Delete File
+
+// router.delete('/files/:name', (req,res) => {
+//   gfs.remove({ filename: req.params.name, root: 'uploads' }, (err, gridStore) => {
+//     if (err) {
+//       return res.status(404).json({ err: err });
+//     }
+
+//     res.redirect('/');
+//   });
+// })
+module.exports = {router, upload};

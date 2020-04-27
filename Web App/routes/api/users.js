@@ -1,3 +1,4 @@
+const test = require('./uploads');
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -13,6 +14,7 @@ const validateLoginInput = require("../../validation/login");
 const User= require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
+
 
 // @route POST api/users/register
 // @desc Register user
@@ -159,23 +161,67 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.post("/update/:id", (req,res) => {
-  
+router.post("/update/:id", test.upload.single('avatar'), (req,res) => {
+  console.log(req.file.filename)
   let id = req.params.id;
-  console.log(req.body);
 
-  User.findById(id, (err, userData) => {
-    if(!userData)
+  User.findById(id , (err, user) => {
+    if(!user)
       res.status(404).send("User data is not found");
     else{
-      userData.avatar = req.body.avatar;
+      user.avatar = req.file.filename;
 
-      userData
-            .save()
-            .then(userData => res.json("Update User complete"))
-            .catch(err => res.status(400).send("Unable to update user"))
-    }
-  })
+      user
+          .save()
+          .then()
+          .catch(err => res.status(400).send("Unable to update user"))
+      
+      var payload;
+      if(user.role == "Student") {
+        payload = {
+          id: user.id,
+          role: user.role,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          emergency_phone: user.emergency_phone,
+          address: user.address,
+          avatar: user.avatar,
+          // Student specific data
+          kelas: user.kelas // Don't include password because don't want to make it visible by accessing token.. 
+        };
+      }
+      else if(user.role == "Teacher") {
+        payload = {
+          id: user.id,
+          role: user.role,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          emergency_phone: user.emergency_phone,
+          address: user.address,
+          avatar: user.avatar,
+          // Teacher specific data
+          subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token.. 
+        };
+      }
+      // Sign token
+      jwt.sign(
+        payload,
+        keys.secretOrKey,
+        {
+          expiresIn: 31556926 // 1 year in seconds
+        },
+        (err, token) => {
+          res.json({
+            success: true,
+            token: "Bearer " + token
+          });
+        }
+      );
+  }
+
+})
 })
 
 router.get("/getteachers", (req, res) => {

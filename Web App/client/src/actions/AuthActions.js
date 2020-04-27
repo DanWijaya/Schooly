@@ -21,11 +21,21 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
-export const updateUser = (userData, userId, history) => dispatch => {
+export const updateUser = (userData, userId, formData, history) => dispatch => {
   axios
-      .post("/api/users/update/" + userId, userData)
+      .post("/api/users/update/" + userId, formData, userData)
       .then(res => {
-        alert("Your avatar is updated successfully")
+        
+          // Set token to localStorage
+        const { token } = res.data;
+        localStorage.setItem("jwtToken", token);
+        // Set token to Auth header
+        setAuthToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current user
+        dispatch(setCurrentUser(decoded));
+        console.log("success")
         history.push("/profile")
       })
       .catch(err => {
@@ -55,6 +65,7 @@ export const loginUser = (userData) => dispatch => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
+      
     })
     .catch(err => {
       console.log("error")

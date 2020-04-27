@@ -57,7 +57,7 @@ console.log("Check routes");
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
-app.use("/api/uploads", uploads)
+app.use("/api/uploads", uploads.router)
 
 // Always put this in the end
 const port = process.env.PORT || 5000;

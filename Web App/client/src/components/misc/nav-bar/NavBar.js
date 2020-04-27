@@ -130,7 +130,7 @@ function NavBar(props){
           <div className={classes.navbarNavigationItems}>
             <a href="/profile">
               <Tooltip title={user.name}>
-                <Avatar className={classes.navbarProfilePicture} />
+                <Avatar src={`/api/uploads/image/${user.avatar}`}className={classes.navbarProfilePicture} />
               </Tooltip>
             </a>
             <Tooltip title="Notifications">
