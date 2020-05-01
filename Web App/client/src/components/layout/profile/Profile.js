@@ -24,6 +24,8 @@ import {Link} from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
 import {updateUser} from "../../../actions/AuthActions"
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +72,7 @@ function getModalStyle() {
 
 function UploadModal(props) {
   const classes = useStyles();
-  const uploadedImage = React.useRef(null);
+  var uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const [profileImg, setProfileImg] = React.useState(null);
 
@@ -103,6 +105,10 @@ function UploadModal(props) {
     
   };
 
+  const clear = () => {
+     setProfileImg(null)
+  }
+
   const onSubmitForm = (e) => {
     e.preventDefault()
     console.log("AAA")
@@ -115,7 +121,7 @@ function UploadModal(props) {
     let userId = user.id;
     
     updateUser(userData, userId, formData)
-
+    setProfileImg(null)
   } 
 
   const content = ( 
@@ -141,7 +147,7 @@ function UploadModal(props) {
           display: "none"
         }}
       />
-      {uploadedImage != null ? <Avatar style={{ width: "160px",height: "160px", margin: 'auto'}}>
+      {!profileImg ? <Avatar style={{ width: "160px",height: "160px", margin: 'auto'}}>
         <img  src={`/api/uploads/image/${user.avatar}`}
         ref={uploadedImage} 
         style={{ width: "160px",
@@ -163,23 +169,32 @@ function UploadModal(props) {
       {/* <input type="button" class="btn btn-block" value="Klik untuk upload foto" type="button" onClick={() => {
         imageUploader.current.click()}}/> */}
       <br/>
-      <input type="submit" value="Jadikan Profil foto" class="btn btn-primary btn-block"/>
-
+      <input type="submit" value="Jadikan profil foto" class="btn btn-primary btn-block"/>
+      <input type="button" onClick={clear} value="Buang" className="my-button" class="btn btn-block"/>
       </form>
+      
+
       </div>
     </div>
   )
 
   return (
     <div>
-      <AddAPhotoIcon type="button" onClick={handleOpen}/>
+      <AddAPhotoIcon style={{color: '#2196f3' }}type="button" onClick={handleOpen}/>
       <Modal 
         open={open}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
         >
+          <Fade in={open}>
           {content}
+          </Fade>
         </Modal>
     </div>
   )

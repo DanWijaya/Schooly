@@ -2,3 +2,8 @@ arrowBtn:focus{
     outline: 'none';
     background: 'none';
 }
+
+my-button:active {
+    outline: 'none';
+    background: 'none'
+}

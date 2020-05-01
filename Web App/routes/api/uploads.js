@@ -12,7 +12,7 @@ const keys = require("../../config/keys")
 const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
 
-// Create Mongo Connection 
+// Create Mongo Connection F
 const conn = mongoose.createConnection(keys.mongoURI)
 
 // Initialize gfs 
