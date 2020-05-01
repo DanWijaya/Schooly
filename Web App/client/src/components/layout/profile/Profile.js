@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(20),
     height: theme.spacing(20),
+    margin: 'auto'
   },
   paperBox: {
     width: "750px",
@@ -106,7 +107,7 @@ function UploadModal(props) {
   };
 
   const clear = () => {
-     setProfileImg(null)
+     setProfileImg(false)
   }
 
   const onSubmitForm = (e) => {
@@ -147,16 +148,16 @@ function UploadModal(props) {
           display: "none"
         }}
       />
-      {!profileImg ? <Avatar style={{ width: "160px",height: "160px", margin: 'auto'}}>
+      {!profileImg ? 
+      <Avatar className={classes.avatar}>
         <img  src={`/api/uploads/image/${user.avatar}`}
         ref={uploadedImage} 
-        style={{ width: "160px",
-        height: "160px" }}/> 
+        className={classes.avatar}/> 
       </Avatar> :  
-      <Avatar style={{ width: "160px",height: "160px", margin: 'auto'}}>
+      
+      <Avatar className={classes.avatar}>
         <img  ref={uploadedImage} 
-        style={{ width: "160px",
-        height: "160px" }}/> 
+        className={classes.avatar}/> 
       </Avatar>
       }
       
