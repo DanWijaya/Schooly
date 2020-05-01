@@ -1,16 +1,12 @@
-import React, { Component } from "react";
-import SwipeableViews from "react-swipeable-views";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { AppBar, Avatar, Button, Box, Tabs, Tab, Grid, IconButton, List, ListItem, ListItemText,
    ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Paper, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import BookIcon from '@material-ui/icons/Book';
 import CakeIcon from '@material-ui/icons/Cake';
-import DescriptionIcon from '@material-ui/icons/Description';
 import EmailIcon from '@material-ui/icons/Email';
 import GamesIcon from '@material-ui/icons/Games';
 import HomeIcon from '@material-ui/icons/Home';
@@ -25,6 +21,9 @@ import defaultAvatar from "./DefaultAvatar.jpg";
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import './Profile.css'
 import {Link} from 'react-router-dom';
+import Modal from '@material-ui/core/Modal';
+import {updateUser} from "../../../actions/AuthActions"
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,9 +41,149 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "10px",
     paddingLeft: "17.5px",
     paddingRight: "17.5px",
-  }
+  }, 
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 
 }));
+
+function getModalStyle() {
+  const top = 50
+  const left = 50
+  const width = 400
+  const height = 500
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    width: `${width}px`,
+    height: `${height}px`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+function UploadModal(props) {
+  const classes = useStyles();
+  const uploadedImage = React.useRef(null);
+  const imageUploader = React.useRef(null);
+  const [profileImg, setProfileImg] = React.useState(null);
+
+  const {user} = props;
+  const {updateUser} = props;
+
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleImageUpload = e => {
+    const [file] = e.target.files;
+    setProfileImg(e.target.files[0])
+    if (file) {
+      const reader = new FileReader();
+      const { current } = uploadedImage;
+      current.file = file;
+      reader.onload = e => {
+        current.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    
+  };
+
+  const onSubmitForm = (e) => {
+    e.preventDefault()
+    console.log("AAA")
+    let formData = new FormData()
+    console.log(profileImg)
+    formData.append("avatar", profileImg)
+
+
+    let userData = user
+    let userId = user.id;
+    
+    updateUser(userData, userId, formData)
+
+  } 
+
+  const content = ( 
+    <div style={modalStyle} className={classes.paper}>
+      <div
+      style={{
+        display: "flex",
+        flexDirection: 'column',
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+      <h2 id="simple-modal-title">Unggah profil foto</h2>
+      <br/>
+      <form onSubmit={onSubmitForm} >
+      <input
+        type="file"
+        name="avatar" 
+        id="avatar1"
+        class="custom-file-input"
+        onChange={handleImageUpload}
+        ref={imageUploader}
+        style={{
+          display: "none"
+        }}
+      />
+      {uploadedImage != null ? <Avatar style={{ width: "160px",height: "160px", margin: 'auto'}}>
+        <img  src={`/api/uploads/image/${user.avatar}`}
+        ref={uploadedImage} 
+        style={{ width: "160px",
+        height: "160px" }}/> 
+      </Avatar> :  
+      <Avatar style={{ width: "160px",height: "160px", margin: 'auto'}}>
+        <img  ref={uploadedImage} 
+        style={{ width: "160px",
+        height: "160px" }}/> 
+      </Avatar>
+      }
+      
+
+      <div style={{display: 'flex', justifyContent: 'center'}}>
+      <CloudUploadIcon onClick={() => {
+        imageUploader.current.click()}}/>
+        
+        </div>
+      {/* <input type="button" class="btn btn-block" value="Klik untuk upload foto" type="button" onClick={() => {
+        imageUploader.current.click()}}/> */}
+      <br/>
+      <input type="submit" value="Jadikan Profil foto" class="btn btn-primary btn-block"/>
+
+      </form>
+      </div>
+    </div>
+  )
+
+  return (
+    <div>
+      <AddAPhotoIcon type="button" onClick={handleOpen}/>
+      <Modal 
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        >
+          {content}
+        </Modal>
+    </div>
+  )
+}
 
 function ProfileData(props) {
   return(
@@ -77,6 +216,7 @@ function Profile(props) {
 
   const { user } = props.auth;
   const classes = useStyles();
+  const updateUser = props.updateUser;
 
   return(
     <div className={classes.root}>
@@ -86,7 +226,8 @@ function Profile(props) {
           <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.avatar}/> : 
           <Avatar src={defaultAvatar} className={classes.avatar}/>}
 
-          <Link to="/image-upload"><AddAPhotoIcon type="button"/></Link>
+          {/* <Link to="/image-upload"><AddAPhotoIcon type="button"/></Link> */}
+          <UploadModal user = {user} updateUser = {updateUser}/>
           <br/>
 
           <Typography variant="subtitle2">
@@ -195,13 +336,14 @@ function Profile(props) {
 
 Profile.propTypes = {
     auth: PropTypes.object.isRequired,
-
+    updateUser: PropTypes.func.isRequired
   }
 
 const mapStateToProps = (state) => ({
     auth: state.auth
   });
 
+
 export default connect(
-    mapStateToProps, 
+    mapStateToProps, {updateUser}
   ) (Profile);

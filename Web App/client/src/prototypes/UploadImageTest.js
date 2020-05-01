@@ -62,6 +62,7 @@ function ImageUpload(props) {
         justifyContent: "center"
       }}
     >
+      <br/>
       <h1 class="my-4"> Unggah/Upload profil foto</h1>
       {/* action={`/api/users/update/${user.id}`} method="post" */}
       <form onSubmit={onSubmitForm}>

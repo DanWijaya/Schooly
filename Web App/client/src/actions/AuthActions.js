@@ -1,6 +1,7 @@
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
+import { Redirect } from 'react-router';
 
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
    GET_USERS, GET_STUDENTS, GET_TEACHERS } from "./Types";
@@ -21,7 +22,7 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
-export const updateUser = (userData, userId, formData, history) => dispatch => {
+export const updateUser = (userData, userId, formData) => dispatch => {
   axios
       .post("/api/users/update/" + userId, formData, userData)
       .then(res => {
@@ -35,8 +36,8 @@ export const updateUser = (userData, userId, formData, history) => dispatch => {
         const decoded = jwt_decode(token);
         // Set current user
         dispatch(setCurrentUser(decoded));
-        console.log("success")
-        history.push("/profile")
+        alert("Profil foto berhasil diganti")
+        
       })
       .catch(err => {
         dispatch({

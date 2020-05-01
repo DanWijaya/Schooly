@@ -17,3 +17,4 @@ export const uploadImage = (image, history) => dispatch => {
             console.log(err);
         })
 }
+
