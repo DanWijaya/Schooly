@@ -116,7 +116,7 @@ class Register extends Component {
     return (
       <div className="container">
         <div>
-          <img src={schoolyLogo} className={classes.schoolyLogo} />
+          <img src={schoolyLogo} className={classes.schoolyLogo}/>
         </div>
 
           <div className="col s8 offset-s2">
@@ -286,6 +286,7 @@ Register.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
+  classes : PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -294,7 +295,12 @@ const mapStateToProps = state => ({
   classesCollection: state.classesCollection
 });
 
-export default connect(
-  mapStateToProps,
-  { registerUser , viewClass}
-)(withRouter(Register));
+export default withRouter(
+  connect(mapStateToProps, { registerUser, viewClass})
+  (withStyles(styles)(Register))
+  )
+
+// export default connect(
+//   mapStateToProps,
+//   { registerUser , viewClass}
+// )(withRouter(Register) );
