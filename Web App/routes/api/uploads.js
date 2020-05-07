@@ -15,7 +15,7 @@ const User= require("../../models/user_model/User");
 // Create Mongo Connection F
 const conn = mongoose.createConnection(keys.mongoURI)
 
-// Initialize gfs 
+// Initialize gfs
 let gfs;
 
 conn.once('open', () => {
@@ -66,7 +66,7 @@ router.get('/image-upload', (req,res) => {
         });
         res.render('image-upload', {files: files})
       }
-  
+
       // Files exist
       return res.json(files);
     });
@@ -82,7 +82,7 @@ router.get('/image-upload', (req,res) => {
         res.status(404).send("User data is not found");
       else{
         userData.avatar = req.file.filename;
-  
+
         userData
               .save()
               .then()
@@ -94,7 +94,7 @@ router.get('/image-upload', (req,res) => {
     console.log(req.params)
     console.log(req.file.filename)
   });
-  
+
   // @route GET /files
   // @desc Display all files in JSON
   router.get('/files/', (req, res) => {
@@ -105,12 +105,12 @@ router.get('/image-upload', (req,res) => {
           err: 'No files exist'
         });
       }
-  
+
       // Files exist
       return res.json(files);
     });
   });
-  
+
   // @route GET /files/:filename
   // @desc  Display single file object
   router.get('/files/:filename', (req, res) => {
@@ -125,9 +125,9 @@ router.get('/image-upload', (req,res) => {
       return res.json(file);
     });
   });
-  
+
   //pakai read stream utk display imagenya di browser
-  
+
   // @route GET /files/:filename
   // @desc  Display single file object
   router.get('/image/:filename', (req, res) => {
@@ -151,7 +151,7 @@ router.get('/image-upload', (req,res) => {
     });
   });
 
-// // @route DELETE /files/:id 
+// // @route DELETE /files/:id
 // // @desc Delete File
 
 // router.delete('/files/:name', (req,res) => {

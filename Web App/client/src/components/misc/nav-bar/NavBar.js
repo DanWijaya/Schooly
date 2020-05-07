@@ -79,9 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   navbarNavigationItems: {
     display: 'flex',
-    color: "white",
     alignItems: "center",
-    justifyContent: "space-between",
   },
 }));
 
@@ -128,11 +126,11 @@ function NavBar(props){
             </a>
           </div>
           <div className={classes.navbarNavigationItems}>
-            <a href="/profile">
-              <Tooltip title={user.name}>
+            <Tooltip title={user.name}>
+              <IconButton href="/profile">
                 <Avatar src={`/api/uploads/image/${user.avatar}`}className={classes.navbarProfilePicture} />
-              </Tooltip>
-            </a>
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Notifications">
               <IconButton href="/notifications">
                 <Badge badgeContent={11} color="secondary">

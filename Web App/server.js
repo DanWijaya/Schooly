@@ -35,7 +35,7 @@ mongoose
     )
   .catch(err => console.log(err));
 
-// Create Mongo Connection 
+// Create Mongo Connection
 const conn = mongoose.createConnection(db)
 
 // Mutler Middleware
@@ -62,4 +62,3 @@ app.use("/api/uploads", uploads.router)
 // Always put this in the end
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
-

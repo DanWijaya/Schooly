@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import TaskDataTable from './TaskDataTable';
 import { viewTask, deleteTask } from '../../../actions/TaskActions'
 import { Modal, Button } from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './ViewTask.css'
 import {Typography} from "@material-ui/core";
 import isEmpty from 'is-empty';
@@ -15,20 +14,18 @@ import isEmpty from 'is-empty';
 class ViewTask extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             tasksCollection: [],
             show: false,
             isDelete: false,
         }
-        
+
     }
-    
-    
     showModal(){
         this.setState({show: true})
     }
 
-    closeModal(){ // update show and isDelete to false. 
+    closeModal(){ // update show and isDelete to false.
         this.setState({ show: false, isDelete: false})
     }
 
@@ -36,7 +33,7 @@ class ViewTask extends Component {
 
         if(nextProps.location.state){
 
-            if(!this.state.isDelete) 
+            if(!this.state.isDelete)
                 this.showModal()
             else{
                 const { taskId } = nextProps.location.state;
@@ -61,11 +58,11 @@ class ViewTask extends Component {
         if(tasksCollection.length == 0){
             this.props.viewTask();
         }
-        
+
             return this.state.tasksCollection.map((data, i) => {
                 return <TaskDataTable obj={data} key={i} style={{overflow: "auto"}}/>;            })
     }
-    
+
     deletePopWindow = () => {
         return(
         <Modal style={{marginTop: '200px'}} show={this.state.show} onHide={() => {this.closeModal()}}>
@@ -75,9 +72,9 @@ class ViewTask extends Component {
                 </Link></Modal.Header>
             <Modal.Body> Are you sure you want to delete the task? </Modal.Body>
             <Modal.Footer>
-                <Button  className="btn btn-danger" onClick={() => { 
+                <Button  className="btn btn-danger" onClick={() => {
                     this.setState({isDelete: true, show:false})
-                    this.props.viewTask()} // ini ada call this.props.viewTask() for the sake function itu dirun... 
+                    this.props.viewTask()} // ini ada call this.props.viewTask() for the sake function itu dirun...
                 }>
                     Yes, Delete
                 </Button>
@@ -95,7 +92,7 @@ class ViewTask extends Component {
         const { user } = this.props.auth
         if( user.role == "Teacher") {
 
-            return( 
+            return(
                 <div className="wrapper-taskCollection">
                     {this.deletePopWindow()}
                 <div className="container">
@@ -108,7 +105,7 @@ class ViewTask extends Component {
                                 <th style={{textAlign: "center"}}>Deadline</th>
                                 <th style={{textAlign: "center"}}>Assigned Class</th>
                                 <th colSpan="2" style={{textAlign: "center"}}>
-                                    Action 
+                                    Action
                                 </th>
                             </tr>
                         </thead>
@@ -138,7 +135,7 @@ ViewTask.propTypes = {
     auth: PropTypes.object.isRequired
 }
 
-// If your mapStateToProps function is declared as taking one parameter, 
+// If your mapStateToProps function is declared as taking one parameter,
 // it will be called whenever the store state changes, and given the store state as the only parameter.
 const mapStateToProps = state => (
     {
@@ -149,6 +146,6 @@ const mapStateToProps = state => (
 )
 
 export default connect(
-    mapStateToProps, 
+    mapStateToProps,
     { viewTask , deleteTask}
 ) (ViewTask)

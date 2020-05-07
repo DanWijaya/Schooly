@@ -1,19 +1,27 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
+import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import classnames from "classnames";
+import { Button, Grid, InputLabel, MenuItem, Paper, Select } from "@material-ui/core";
+import { withStyles, useTheme } from "@material-ui/core/styles";
 import { registerUser } from "../../actions/AuthActions";
 import { viewClass } from "../../actions/ClassActions";
-import classnames from "classnames";
-import { Button, MenuItem, InputLabel, Select } from "@material-ui/core";
-import { Multiselect } from 'multiselect-react-dropdown';
+import schoolyLogo from "../../images/SchoolyLogo.png";
 
+const styles = (theme) => ({
+  schoolyLogo: {
+    width: "30%",
+    height: "30%",
+  },
+});
 
 
 class Register extends Component {
+
   constructor() {
     super();
-
     this.state = {
       name: "",
       role: "",
@@ -24,25 +32,17 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
-
-      // Student only datas
-      kelas: {},
-
-      // Teacher only datas
-      subject_teached: ''
+      kelas: {}, //Student Data
+      subject_teached: "" //Teacher Data
     };
   }
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
-
     this.props.viewClass()
-
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
-
-
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -62,7 +62,6 @@ class Register extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-
     var newUser
     const role = this.state.role;
     if(role == "Student") {
@@ -75,9 +74,7 @@ class Register extends Component {
         address: this.state.address,
         password: this.state.password,
         password2: this.state.password2,
-
-        //Student data
-        kelas: this.state.kelas,
+        kelas: this.state.kelas, //Student Data
       };
     } else if (role == "Teacher") {
       newUser = {
@@ -89,70 +86,53 @@ class Register extends Component {
         address: this.state.address,
         password: this.state.password,
         password2: this.state.password2,
-
-        //Student data
-        subject_teached: this.state.subject_teached,
+        subject_teached: this.state.subject_teached, //Teacher Data
       };
     }
-
     this.props.registerUser(newUser, this.props.history);
   };
 
 
   onSelect = (selectedList, selectedItem) => {
-
     if(selectedList.length > 1)
       selectedList.shift()
-
     this.setState({ kelas: selectedList[0]})
     console.log(selectedItem)
-}
-
-
+  }
 
   render() {
-    document.title="Schooly - Register"
+    document.title="Daftar di Schooly"
+
+    const { classes } = this.props;
     const { errors } = this.state;
+
     console.log(this.state.role)
     const classesCollection = this.props.classesCollection;
-
     var options = []
-
     if(Object.keys(classesCollection).length != 0){
       options = classesCollection
     }
 
     return (
-
       <div className="container">
-        {/* <div className="row" style={{ marginTop: "4rem" }}> */}
-          <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect" style={{zIndex: 0}}>
-              <i className="material-icons left">keyboard_backspace</i> Back to
-              home
-            </Link>
-            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
-                <b>Register</b> below
-              </h4>
-              <p className="grey-text text-darken-1">
-                Already have an account? <Link to="/login">Log in</Link>
-              </p>
-            </div>
+        <div>
+          <img src={schoolyLogo} className={classes.schoolyLogo} />
+        </div>
 
+          <div className="col s8 offset-s2">
             <form noValidate onSubmit={this.onSubmit} id="registerform">
               <div className="col s12">
                 <InputLabel id="demo-simple-select-label">Register As</InputLabel>
                 <Select
-                  style={{ width: '200px'}}
+                  style={{ width: "200px"}}
                   labelId="demo-simple-select-label"
                   id="role"
                   name="role"
                   value={this.state.role}
                   onChange={this.onChange}>
-                    <MenuItem value={'Student'}>Student</MenuItem>
-                    <MenuItem value={'Teacher'}>Teacher</MenuItem>
-                    <MenuItem value={'Admin'}>Admin</MenuItem>
+                    <MenuItem value={"Student"}>Student</MenuItem>
+                    <MenuItem value={"Teacher"}>Teacher</MenuItem>
+                    <MenuItem value={"Admin"}>Admin</MenuItem>
                 </Select>
                 {/* <label htmlFor="role">Register As</label> */}
               </div>

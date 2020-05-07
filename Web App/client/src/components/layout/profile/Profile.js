@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { AppBar, Avatar, Button, Box, Tabs, Tab, Grid, IconButton, List, ListItem, ListItemText,
    ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Paper, Typography } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import BookIcon from '@material-ui/icons/Book';
 import CakeIcon from '@material-ui/icons/Cake';
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "10px",
     paddingLeft: "17.5px",
     paddingRight: "17.5px",
-  }, 
+  },
   paper: {
     position: 'absolute',
     width: 400,
@@ -53,7 +53,13 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-
+  arrowEditButton: {
+    color: "#2196f3",
+    "&:focus": {
+      outline: "none",
+      backgroundColor: "none",
+    }
+  },
 }));
 
 function getModalStyle() {
@@ -73,6 +79,7 @@ function getModalStyle() {
 
 function UploadModal(props) {
   const classes = useStyles();
+
   var uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const [profileImg, setProfileImg] = React.useState(null);
@@ -103,7 +110,7 @@ function UploadModal(props) {
       };
       reader.readAsDataURL(file);
     }
-    
+
   };
 
   const clear = () => {
@@ -120,12 +127,12 @@ function UploadModal(props) {
 
     let userData = user
     let userId = user.id;
-    
+
     updateUser(userData, userId, formData)
     setProfileImg(null)
-  } 
+  }
 
-  const content = ( 
+  const content = (
     <div style={modalStyle} className={classes.paper}>
       <div
       style={{
@@ -139,7 +146,7 @@ function UploadModal(props) {
       <form onSubmit={onSubmitForm} >
       <input
         type="file"
-        name="avatar" 
+        name="avatar"
         id="avatar1"
         class="custom-file-input"
         onChange={handleImageUpload}
@@ -148,24 +155,24 @@ function UploadModal(props) {
           display: "none"
         }}
       />
-      {!profileImg ? 
+      {!profileImg ?
       <Avatar className={classes.avatar}>
         <img  src={`/api/uploads/image/${user.avatar}`}
-        ref={uploadedImage} 
-        className={classes.avatar}/> 
-      </Avatar> :  
-      
+        ref={uploadedImage}
+        className={classes.avatar}/>
+      </Avatar> :
+
       <Avatar className={classes.avatar}>
-        <img  ref={uploadedImage} 
-        className={classes.avatar}/> 
+        <img  ref={uploadedImage}
+        className={classes.avatar}/>
       </Avatar>
       }
-      
+
 
       <div style={{display: 'flex', justifyContent: 'center'}}>
       <CloudUploadIcon onClick={() => {
         imageUploader.current.click()}}/>
-        
+
         </div>
       {/* <input type="button" class="btn btn-block" value="Klik untuk upload foto" type="button" onClick={() => {
         imageUploader.current.click()}}/> */}
@@ -173,7 +180,7 @@ function UploadModal(props) {
       <input type="submit" value="Jadikan profil foto" class="btn btn-primary btn-block"/>
       <input type="button" onClick={clear} value="Buang" className="my-button" class="btn btn-block"/>
       </form>
-      
+
 
       </div>
     </div>
@@ -182,7 +189,7 @@ function UploadModal(props) {
   return (
     <div>
       <AddAPhotoIcon style={{color: '#2196f3' }}type="button" onClick={handleOpen}/>
-      <Modal 
+      <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
@@ -202,6 +209,9 @@ function UploadModal(props) {
 }
 
 function ProfileData(props) {
+
+  const classes = useStyles();
+
   return(
     <ListItem>
         <ListItemAvatar>
@@ -209,19 +219,19 @@ function ProfileData(props) {
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
-          <Grid container>
-            <Grid item xs={4}>
-              <Typography variant="button">
-                {props.profile_data_category}
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              {props.profile_data_info}
-            </Grid>
+        <Grid container>
+          <Grid item xs={4}>
+            <Typography variant="button">
+              {props.profile_data_category}
+            </Typography>
           </Grid>
+          <Grid item xs>
+            {props.profile_data_info}
+          </Grid>
+        </Grid>
         <ListItemSecondaryAction>
           <IconButton edge="end">
-            <ArrowRightIcon  className="arrowBtn" style={{color: "#2196f3"}} />
+            <ArrowRightIcon className="arrowBtn" />
           </IconButton>
         </ListItemSecondaryAction>
     </ListItem>
@@ -230,16 +240,17 @@ function ProfileData(props) {
 
 function Profile(props) {
 
-  const { user } = props.auth;
   const classes = useStyles();
+
+  const { user } = props.auth;
   const updateUser = props.updateUser;
 
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
-          {user.avatar ? 
-          <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.avatar}/> : 
+          {user.avatar ?
+          <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.avatar}/> :
           <Avatar src={defaultAvatar} className={classes.avatar}/>}
 
           {/* <Link to="/image-upload"><AddAPhotoIcon type="button"/></Link> */}
@@ -299,12 +310,12 @@ function Profile(props) {
                   />
                   <ProfileData
                     profile_data_icon={<PhoneIcon />}
-                    profile_data_category="Nomor Telp."
+                    profile_data_category="Nomor Telepon"
                     profile_data_info={user.phone}
                   />
                   <ProfileData
                     profile_data_icon={<SupervisorAccountIcon />}
-                    profile_data_category="Nomor Telp. Darurat"
+                    profile_data_category="Nomor Telepon Darurat"
                     profile_data_info={user.emergency_phone}
                   />
                   <ProfileData
@@ -318,27 +329,27 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2" gutterBottom>
-                  <h4>Informasi lainnya</h4>
+                  <h4>Informasi Lainnya</h4>
                 </Typography>
                 <List>
                   <ProfileData
                     profile_data_icon={<GamesIcon />}
-                    profile_data_category="Hobi dan minat"
+                    profile_data_category="Hobi dan Minat"
                     profile_data_info="Killin, fuckin, and rapin"
                   />
                   <ProfileData
                     profile_data_icon={<BookIcon />}
-                    profile_data_category="Skill Extrakurikuler"
+                    profile_data_category="Kemampuan Extrakurikuler"
                     profile_data_info="fuckin"
                   />
                   <ProfileData
                     profile_data_icon={<WorkIcon />}
-                    profile_data_category="Cita Cita"
+                    profile_data_category="Cita-Cita"
                     profile_data_info="fucker"
                   />
                   <ProfileData
                     profile_data_icon={<SchoolIcon />}
-                    profile_data_category="Perguruan Tinggi yang saya minati"
+                    profile_data_category="Perguruan Tinggi yang Diinginkan"
                     profile_data_info="fucker university"
                   />
                 </List>

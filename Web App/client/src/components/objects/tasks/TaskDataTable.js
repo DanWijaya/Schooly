@@ -1,39 +1,38 @@
-// Nanti bakal ganti viewnya di sidebarnya? 
+// Nanti bakal ganti viewnya di sidebarnya?
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { withStyles, useTheme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import PublishIcon from "@material-ui/icons/Publish";
 import SmsIcon from "@material-ui/icons/Sms";
-import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 
 // import Modal from 'react-modal';
 
 const styles = (theme) => ({
-    root: {
-        margin: "auto",
-        marginTop: "30px",
-        maxWidth: "1075px",
-      },
-      paperBox :{
-        padding: "20px",
-      },
-      workBox: {
-        margin: "auto",
-        marginTop: "30px",
-        justifyContent: "center",
-        flexDirection: "row"
-      },
-      workButtonContainer: {
-        display: "flex",
-        justifyContent: "center",
-      },
-      workButton: {
-        width: "200px",
-      },
-  });
+  root: {
+    margin: "auto",
+    marginTop: "30px",
+    maxWidth: "1075px",
+  },
+  paperBox :{
+    padding: "20px",
+  },
+  workBox: {
+    margin: "auto",
+    marginTop: "30px",
+    justifyContent: "center",
+    flexDirection: "row"
+  },
+  workButtonContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  workButton: {
+    width: "200px",
+  },
+});
 
 class TaskDataTable extends Component {
 
@@ -41,7 +40,6 @@ class TaskDataTable extends Component {
 
         const { classes } = this.props;
 
-    
           return(
             <div className={classes.root}>
               <Grid container spacing={2} style={{display: "flex", justifyContent: "space-between"}}>
@@ -103,7 +101,7 @@ class TaskDataTable extends Component {
               </Grid>
             </div>
           )
-        // return(   
+        // return(
         //         <tr>
         //             <td style={{textAlign: "center"}}>
         //                 {this.props.obj.name}
@@ -122,16 +120,16 @@ class TaskDataTable extends Component {
         //             {/* If want to pass datas, use this kind of Link format  */}
         //             <Link to={{
         //                 pathname: `/task/${this.props.obj._id}`,
-        //                 state:{  
+        //                 state:{
         //                     taskId : this.props.obj._id,
         //                 }
-        //             }} 
+        //             }}
         //             className="btn btn-primary">Edit</Link>
         //             </td>
         //             <td style={{textAlign: "center"}}>
         //                 <Link to={{
         //                     pathname: `/deletetask/${this.props.obj._id}`,
-        //                     state:{ 
+        //                     state:{
         //                         taskId: this.props.obj._id
         //                     }
         //                 }}

@@ -34,7 +34,7 @@ router.post("/register", (req, res) => {
   var reg_user
   if(req.body.role == "Student")
     reg_user = Student
-  else 
+  else
     reg_user = Teacher
 
   reg_user.findOne({ email: req.body.email }).then(user => {
@@ -108,7 +108,7 @@ router.post("/login", (req, res) => {
       if (isMatch) {
         // User matched
         // Create JWT Payload
-        
+
         var payload;
         if(user.role == "Student") {
           payload = {
@@ -121,7 +121,7 @@ router.post("/login", (req, res) => {
             address: user.address,
             avatar: user.avatar,
             // Student specific data
-            kelas: user.kelas // Don't include password because don't want to make it visible by accessing token.. 
+            kelas: user.kelas // Don't include password because don't want to make it visible by accessing token..
           };
         }
         else if(user.role == "Teacher") {
@@ -135,7 +135,7 @@ router.post("/login", (req, res) => {
             address: user.address,
             avatar: user.avatar,
             // Teacher specific data
-            subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token.. 
+            subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token..
           };
         }
         // Sign token
@@ -175,7 +175,7 @@ router.post("/update/:id", test.upload.single('avatar'), (req,res) => {
           .save()
           .then()
           .catch(err => res.status(400).send("Unable to update user"))
-      
+
       var payload;
       if(user.role == "Student") {
         payload = {
@@ -188,7 +188,7 @@ router.post("/update/:id", test.upload.single('avatar'), (req,res) => {
           address: user.address,
           avatar: user.avatar,
           // Student specific data
-          kelas: user.kelas // Don't include password because don't want to make it visible by accessing token.. 
+          kelas: user.kelas // Don't include password because don't want to make it visible by accessing token..
         };
       }
       else if(user.role == "Teacher") {
@@ -202,7 +202,7 @@ router.post("/update/:id", test.upload.single('avatar'), (req,res) => {
           address: user.address,
           avatar: user.avatar,
           // Teacher specific data
-          subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token.. 
+          subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token..
         };
       }
       // Sign token
@@ -228,7 +228,7 @@ router.get("/getteachers", (req, res) => {
   User.find({ role: 'Teacher' }).then((users, err) => {
     if(!users)
       console.log("No teachers yet in Schooly System")
-    else 
+    else
       return res.json(users)
   })
 })
@@ -237,7 +237,7 @@ router.get("/getstudents", (req,res) => {
   User.find({ role: 'Student'}).then((users, err) => {
     if(!users)
       console.log("No students yet in Schooly System")
-    
+
     else
       return res.json(users)
   })

@@ -18,7 +18,7 @@ Daniel:
 4. Cari tau gimana remind student tugas kalo deadline sudah dekat.
 5. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 5. Mungkin buat page utk si Admin utk bisa manage users (?)
-6. Notificatons page dan listnya (previewnya muncul di Dashboard)
+6. Notifications page dan listnya (previewnya muncul di Dashboard)
 7. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
 
 Evaluations
@@ -28,3 +28,9 @@ Botak > Daniel:
 Daniel > Botak:
 -
 -
+
+To be Fixed:
+- Profile picturenya belum bisa skalian hapus dan upload
+- Profile avatar pas preview, rationya jelek
+- Coba pakai withstyles buat yang iconbutton hijau-hijau
+- Setting Navbar untuk kalau udah login aja
