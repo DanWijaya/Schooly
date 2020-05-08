@@ -286,7 +286,6 @@ Register.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
-  classes : PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

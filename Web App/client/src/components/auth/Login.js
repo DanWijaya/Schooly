@@ -146,3 +146,6 @@ export default connect(
   mapStateToProps,
   { loginUser }
 )(Login);
+
+// Format untuk pakai withStyles juga
+// export default withRouter(connect()(withStyles(styles)(FirstPage)))

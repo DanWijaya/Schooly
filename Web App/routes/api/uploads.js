@@ -154,13 +154,16 @@ router.get('/image-upload', (req,res) => {
 // // @route DELETE /files/:id
 // // @desc Delete File
 
-// router.delete('/files/:name', (req,res) => {
-//   gfs.remove({ filename: req.params.name, root: 'uploads' }, (err, gridStore) => {
-//     if (err) {
-//       return res.status(404).json({ err: err });
-//     }
+router.delete('/image/:name', (req,res) => {
+  gfs.remove({ filename: req.params.name, root: 'avatar' }, (err, gridStore) => {
+    if (err) {
+      return res.status(404).json({ err: err });
+    }
+    else{
+     return res.json("Successful")
+    }
+    // res.redirect('/');
+  });
+})
 
-//     res.redirect('/');
-//   });
-// })
 module.exports = {router, upload};

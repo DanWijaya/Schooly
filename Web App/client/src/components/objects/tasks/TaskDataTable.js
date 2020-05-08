@@ -140,8 +140,8 @@ class TaskDataTable extends Component {
           }
 }
 
-TaskDataTable.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
+// TaskDataTable.propTypes = {
+//     classes: PropTypes.object.isRequired,
+// };
 
 export default withStyles(styles)(TaskDataTable);

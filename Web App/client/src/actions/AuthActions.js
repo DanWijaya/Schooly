@@ -23,6 +23,15 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 export const updateUser = (userData, userId, formData) => dispatch => {
+  
+  axios.delete(`/api/uploads/image/${userData.avatar}`)
+    .then(res => {
+      console.log("Old Profile picture is removed")
+    })
+    .catch(err => {
+      console.log("No Profile picture set previously or error occured in removing old Profile picture")
+    })
+
   axios
       .post("/api/users/update/" + userId, formData, userData)
       .then(res => {

@@ -177,9 +177,8 @@ router.post("/update/:id", test.upload.single('avatar'), (req,res) => {
           .catch(err => res.status(400).send("Unable to update user"))
 
       var payload;
-      if(user.role == "Student") {
-        payload = {
-          id: user.id,
+      payload = {
+        id: user.id,
           role: user.role,
           name: user.name,
           email: user.email,
@@ -187,23 +186,37 @@ router.post("/update/:id", test.upload.single('avatar'), (req,res) => {
           emergency_phone: user.emergency_phone,
           address: user.address,
           avatar: user.avatar,
-          // Student specific data
-          kelas: user.kelas // Don't include password because don't want to make it visible by accessing token..
-        };
+      }
+
+      if(user.role == "Student") {
+        payload.kelas = user.kelas
+        // payload = {
+        //   id: user.id,
+        //   role: user.role,
+        //   name: user.name,
+        //   email: user.email,
+        //   phone: user.phone,
+        //   emergency_phone: user.emergency_phone,
+        //   address: user.address,
+        //   avatar: user.avatar,
+        //   // Student specific data
+        //   kelas: user.kelas // Don't include password because don't want to make it visible by accessing token..
+        // };
       }
       else if(user.role == "Teacher") {
-        payload = {
-          id: user.id,
-          role: user.role,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          emergency_phone: user.emergency_phone,
-          address: user.address,
-          avatar: user.avatar,
-          // Teacher specific data
-          subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token..
-        };
+        payload.subject_teached = user.subject_teached
+        // payload = {
+        //   id: user.id,
+        //   role: user.role,
+        //   name: user.name,
+        //   email: user.email,
+        //   phone: user.phone,
+        //   emergency_phone: user.emergency_phone,
+        //   address: user.address,
+        //   avatar: user.avatar,
+        //   // Teacher specific data
+        //   subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token..
+        // };
       }
       // Sign token
       jwt.sign(

@@ -122,6 +122,7 @@ function UploadModal(props) {
     console.log("AAA")
     let formData = new FormData()
     console.log(profileImg)
+
     formData.append("avatar", profileImg)
 
 
