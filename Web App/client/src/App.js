@@ -50,11 +50,17 @@ class App extends Component {
 
   state = {
     sideDrawerOpen: false,
+    loggedIn: false,
     posts: []
   };
 
   myCallback = (dataFromChild) => {
     this.setState({ sideDrawerOpen: dataFromChild, firstTimeRendered: false})
+  }
+
+  // Bascically run this whenever user logs in or logs out. 
+  setLoggedIn = (dataFromChild) => {
+    this.setState({ loggedIn : dataFromChild})
   }
 
   //38:55
