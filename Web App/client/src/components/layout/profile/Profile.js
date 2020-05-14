@@ -1,64 +1,55 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { AppBar, Avatar, Button, Box, Tabs, Tab, Grid, IconButton, List, ListItem, ListItemText,
-   ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Paper, Typography } from "@material-ui/core";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import BookIcon from '@material-ui/icons/Book';
-import CakeIcon from '@material-ui/icons/Cake';
-import EmailIcon from '@material-ui/icons/Email';
-import GamesIcon from '@material-ui/icons/Games';
-import HomeIcon from '@material-ui/icons/Home';
-import LockIcon from '@material-ui/icons/Lock';
-import PersonIcon from '@material-ui/icons/Person';
-import PhoneIcon from '@material-ui/icons/Phone';
-import WcIcon from '@material-ui/icons/Wc';
-import SchoolIcon from '@material-ui/icons/School';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import WorkIcon from '@material-ui/icons/Work';
-import defaultAvatar from "./DefaultAvatar.jpg";
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
-import './Profile.css'
-import {Link} from 'react-router-dom';
-import Modal from '@material-ui/core/Modal';
 import {updateUser} from "../../../actions/AuthActions"
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
+import PropTypes from "prop-types";
+import defaultAvatar from "./DefaultAvatar.jpg";
+import "./Profile.css"
+import { AppBar, Avatar, Backdrop, Button, Box, Fade, Grid, IconButton, List, ListItem, ListItemText,
+   ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Modal, Paper, Tooltip, Typography } from "@material-ui/core";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import BookIcon from "@material-ui/icons/Book";
+import CakeIcon from "@material-ui/icons/Cake";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import EmailIcon from "@material-ui/icons/Email";
+import GamesIcon from "@material-ui/icons/Games";
+import HomeIcon from "@material-ui/icons/Home";
+import LockIcon from "@material-ui/icons/Lock";
+import PersonIcon from "@material-ui/icons/Person";
+import PhoneIcon from "@material-ui/icons/Phone";
+import WcIcon from "@material-ui/icons/Wc";
+import SchoolIcon from "@material-ui/icons/School";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "750px",
     margin: "auto",
-    marginTop: "30px", //Should be deleted after theme passing from navbar worked
   },
   avatar: {
     width: theme.spacing(20),
     height: theme.spacing(20),
-    margin: 'auto'
+    margin: "auto"
   },
   paperBox: {
     width: "750px",
-    paddingTop: "20px",
+    paddingTop: "15px",
     paddingBottom: "10px",
     paddingLeft: "17.5px",
     paddingRight: "17.5px",
   },
-  paper: {
-    position: 'absolute',
+  profilePictureBox: {
+    position: "absolute",
     width: 400,
+    border: "2px solid #000",
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  arrowEditButton: {
-    color: "#2196f3",
-    "&:focus": {
-      outline: "none",
-      backgroundColor: "none",
-    }
+  test: { //idk bro just wtf
+    backgroundColor: "transparent",
   },
 }));
 
@@ -125,7 +116,6 @@ function UploadModal(props) {
 
     formData.append("avatar", profileImg)
 
-
     let userData = user
     let userId = user.id;
 
@@ -134,67 +124,99 @@ function UploadModal(props) {
   }
 
   const content = (
-    <div style={modalStyle} className={classes.paper}>
+    <div className={classes.profilePictureBox} style={modalStyle}>
       <div
-      style={{
-        display: "flex",
-        flexDirection: 'column',
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-      <h2 id="simple-modal-title">Unggah profil foto</h2>
-      <br/>
-      <form onSubmit={onSubmitForm} >
-      <input
-        type="file"
-        name="avatar"
-        id="avatar1"
-        class="custom-file-input"
-        onChange={handleImageUpload}
-        ref={imageUploader}
         style={{
-          display: "none"
-        }}
-      />
-      {!profileImg ?
-      <Avatar className={classes.avatar}>
-        <img  src={`/api/uploads/image/${user.avatar}`}
-        ref={uploadedImage}
-        className={classes.avatar}/>
-      </Avatar> :
-
-      <Avatar className={classes.avatar}>
-        <img  ref={uploadedImage}
-        className={classes.avatar}/>
-      </Avatar>
-      }
-
-
-      <div style={{display: 'flex', justifyContent: 'center'}}>
-      <CloudUploadIcon onClick={() => {
-        imageUploader.current.click()}}/>
-
-        </div>
-      {/* <input type="button" class="btn btn-block" value="Klik untuk upload foto" type="button" onClick={() => {
-        imageUploader.current.click()}}/> */}
-      <br/>
-      <input type="submit" value="Jadikan profil foto" class="btn btn-primary btn-block"/>
-      <input type="button" onClick={clear} value="Buang" className="my-button" class="btn btn-block"/>
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+      <Typography variant="h4" gutterBottom>
+        Unggah Foto Profil
+      </Typography>
+      <form onSubmit={onSubmitForm}>
+        <input
+          accept="image/*"
+          type="file"
+          name="avatar"
+          onChange={handleImageUpload}
+          ref={imageUploader}
+          style={{
+            display: "none"
+          }}
+        />
+        {!profileImg ?
+          <Avatar className={classes.avatar}>
+            <img src={`/api/uploads/image/${user.avatar}`}
+            ref={uploadedImage}
+            className={classes.avatar}/>
+          </Avatar>
+          :
+          <Avatar className={classes.avatar}>
+            <img ref={uploadedImage}
+            className={classes.avatar}/>
+          </Avatar>
+        }
+        <Grid container direction="column" justify="center" alignItems="center">
+          <Grid item>
+            <Tooltip title="Unggah Foto Profil Baru">
+              <IconButton style={{backgroundColor: "transparent"}}>
+                <CloudUploadIcon
+                  onClick={() => {imageUploader.current.click()}}
+                  style={{
+                    color: "#2196f3",
+                    height: "35px",
+                    width: "35px",
+                  }}
+                />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Button
+            type="submit"
+            style={{
+              backgroundColor: "#2196f3",
+              color: "white",
+              width: "100px",
+            }}
+          >
+            Simpan
+          </Button>
+          <Button
+            type="button"
+            onClick={clear}
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              width: "100px",
+            }}
+          >
+            Buang
+          </Button>
+        </Grid>
       </form>
-
-
       </div>
     </div>
   )
 
   return (
     <div>
-      <AddAPhotoIcon style={{color: '#2196f3' }}type="button" onClick={handleOpen}/>
+      <Tooltip title="Ganti Foto Profil">
+        <IconButton style={{backgroundColor: "transparent"}}>
+          <AddAPhotoIcon
+            onClick={handleOpen}
+            style={{
+              color: "#2196f3",
+              height: "35px",
+              width: "35px",
+            }}
+          />
+        </IconButton>
+      </Tooltip>
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -204,15 +226,13 @@ function UploadModal(props) {
           <Fade in={open}>
           {content}
           </Fade>
-        </Modal>
+      </Modal>
     </div>
   )
 }
 
 function ProfileData(props) {
-
   const classes = useStyles();
-
   return(
     <ListItem>
         <ListItemAvatar>
@@ -221,7 +241,7 @@ function ProfileData(props) {
           </Avatar>
         </ListItemAvatar>
         <Grid container>
-          <Grid item xs={4}>
+          <Grid item xs={5}>
             <Typography variant="button">
               {props.profile_data_category}
             </Typography>
@@ -231,8 +251,8 @@ function ProfileData(props) {
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end">
-            <ArrowRightIcon className="arrowBtn" />
+          <IconButton edge="end" style={{backgroundColor: "transparent"}}>
+            <ArrowRightIcon />
           </IconButton>
         </ListItemSecondaryAction>
     </ListItem>
@@ -251,13 +271,10 @@ function Profile(props) {
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar ?
-          <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.avatar}/> :
-          <Avatar src={defaultAvatar} className={classes.avatar}/>}
-
-          {/* <Link to="/image-upload"><AddAPhotoIcon type="button"/></Link> */}
-          <UploadModal user = {user} updateUser = {updateUser}/>
-          <br/>
-
+            <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.avatar}/> :
+            <Avatar src={defaultAvatar} className={classes.avatar}/>
+          }
+          <UploadModal user={user} updateUser={updateUser}/>
           <Typography variant="subtitle2">
             <h2>{user.name}</h2>
           </Typography>

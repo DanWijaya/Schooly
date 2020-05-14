@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { Avatar, Button, Divider, Grid, IconButton, List, ListItem,
   ListItemAvatar, ListItemText, Paper, TextField, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -43,7 +45,9 @@ function TaskDiscussionComment(props) {
   )
 }
 
-function NewTask() {
+function NewTask(props) {
+
+  const { user } = props.auth;
   const classes = useStyles();
 
   return(
@@ -124,10 +128,8 @@ function NewTask() {
             </Grid>
             <Divider />
             <Grid item>
-              <Avatar>
-                <SmsIcon />
-              </Avatar>
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+              <Avatar src={`/api/uploads/image/${user.avatar}`}className={classes.navbarProfilePicture} />
+              <TextField label="Tulis komentar pribadi" variant="outlined" />
               <IconButton>
                 <SendIcon style={{color: "#2196f3"}}/>
               </IconButton>
@@ -174,4 +176,14 @@ function NewTask() {
   )
 }
 
-export default NewTask;
+NewTask.propTypes = {
+   auth: PropTypes.object.isRequired,
+ }
+
+const mapStateToProps = (state) => ({
+   auth: state.auth
+ });
+
+export default connect(
+   mapStateToProps
+ ) (NewTask);
