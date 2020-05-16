@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
   },
-  
   appBar: {
     backgroundColor: "#2196f3",
     zIndex: theme.zIndex.drawer + 1,
@@ -67,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   schoolyLogo: {
     width: "100px",
     height: "50px",
-    
+
   },
   navbarProfilePicture: {
     width: theme.spacing(3),
@@ -114,21 +113,21 @@ function NavBar(props){
   };
 
   let leftSideNavBarContents; // konten Navbar di bagian kiri logo
-  let rightSideNavBarContents; // konten Navbar di bagian kanan logo 
-  let navBarContentsStyle; 
+  let rightSideNavBarContents; // konten Navbar di bagian kanan logo
+  let navBarContentsStyle;
   let loggedInSideDrawerContents;
 
   if(user.name != undefined) {
     leftSideNavBarContents = (
-        <IconButton
-            color="inherit"
-            edge="start"
-            className={classes.iconButton}
-            onClick={handleDrawerOpen}
-          >
-            <MenuIcon />
-          </IconButton>
-      )
+      <IconButton
+          color="inherit"
+          edge="start"
+          className={classes.iconButton}
+          onClick={handleDrawerOpen}
+        >
+        <MenuIcon />
+      </IconButton>
+    )
 
     rightSideNavBarContents = (
       <div className={classes.navbarNavigationItems}>
@@ -136,13 +135,10 @@ function NavBar(props){
             <IconButton href="/profile">
               <Avatar src={`/api/uploads/image/${user.avatar}`}className={classes.navbarProfilePicture} />
             </IconButton>
-          </Tooltip> 
-            
+          </Tooltip>
+
           <Tooltip title="Notifications">
-            <IconButton
-              color="inherit"
-              href="/notifications"
-            >
+            <IconButton color="inherit" href="/notifications">
               <Badge badgeContent={11} color="secondary">
                 <NotificationsIcon />
               </Badge>
@@ -150,15 +146,13 @@ function NavBar(props){
           </Tooltip>
 
           <Tooltip title="Help and Support">
-            <IconButton
-              color="inherit"
-              href="/support"
-            >
+            <IconButton color="inherit" href="/support">
               <HelpIcon />
             </IconButton>
           </Tooltip>
         </div>
     )
+
     navBarContentsStyle = classes.navbarLoggedInItems
 
     loggedInSideDrawerContents = (
@@ -196,69 +190,67 @@ function NavBar(props){
       </List>
       )
     }
-  
-  
-    else {
-      leftSideNavBarContents = (<IconButton
-        color="inherit"
+
+  else {
+    leftSideNavBarContents = (
+      <IconButton
         edge="start"
-        
+        color="inherit"
         className={classes.iconButton}
         onClick={handleDrawerOpen}
       >
+        <MenuIcon />
       </IconButton>
-      )
-      rightSideNavBarContents = (
-        <div className={classes.navbarNavigationItems}>
-        <Link to="/register">
-          <Button
-            variant="contained"
-            size="medium"
-            style={{
-              backgroundColor: "#2196f3",
-              fontSize: "6",
-              color: "white",
-              width: "90px",
-              height: "30px",
-            }}
-          >
-            Register
-          </Button>
-        </Link>
-          <br/><br/>
-        <Link to="/login">
-          <Button
-            variant="contained"
-            size="small"
-            style={{
-              backgroundColor: "black",
-              color: "white",
-              fontSize: "6",
-              width: "90px",
-              height: "30px",
-            }}
-          >
-            Log In
-          </Button>
-        </Link>
-      </div>
-      )
-      navBarContentsStyle = classes.navbarLoggedInItems
-      loggedInSideDrawerContents = null
-    }
-
-    var navBarContents = (
-      <Toolbar className={navBarContentsStyle}>
-        {leftSideNavBarContents}
-        
-          <a href="/dashboard">
-            <img src={schoolyLogo} className={classes.schoolyLogo}/>
-          </a>
-        
-        {rightSideNavBarContents}
-
-      </Toolbar>
     )
+    rightSideNavBarContents = (
+      <div className={classes.navbarNavigationItems}>
+      <Link to="/register">
+        <Button
+          variant="contained"
+          size="medium"
+          style={{
+            backgroundColor: "white",
+            fontSize: "6",
+            color: "#2196f3",
+            width: "90px",
+            height: "30px",
+          }}
+        >
+          Register
+        </Button>
+      </Link>
+        <br/><br/>
+      <Link to="/login">
+        <Button
+          variant="contained"
+          size="small"
+          style={{
+            backgroundColor: "white",
+            color: "#2196f3",
+            fontSize: "6",
+            width: "90px",
+            height: "30px",
+          }}
+        >
+          Log In
+        </Button>
+      </Link>
+    </div>
+    )
+    navBarContentsStyle = classes.navbarLoggedInItems
+    loggedInSideDrawerContents = null
+  }
+
+  var navBarContents = (
+    <Toolbar className={navBarContentsStyle}>
+      {leftSideNavBarContents}
+        <a href="/dashboard">
+          <img src={schoolyLogo} className={classes.schoolyLogo}/>
+        </a>
+      {rightSideNavBarContents}
+    </Toolbar>
+  )
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -269,9 +261,7 @@ function NavBar(props){
         })}
       >
          {navBarContents}
-
       </AppBar>
-
       <Toolbar />
       <Drawer
         variant="permanent"
@@ -289,7 +279,7 @@ function NavBar(props){
         <Toolbar />
          <Divider />
          {loggedInSideDrawerContents}
-        <Divider /> 
+        <Divider />
         <List>
         <DrawerItemList href="/about-schooly">
             <ListItemIcon>
@@ -307,7 +297,7 @@ function NavBar(props){
       </Drawer>
     </div>
   )
- }
+}
 
 NavBar.propTypes = {
    auth: PropTypes.object.isRequired,
@@ -316,7 +306,6 @@ NavBar.propTypes = {
 const mapStateToProps = (state) => ({
    auth: state.auth
  });
-
 
 export default connect(
    mapStateToProps

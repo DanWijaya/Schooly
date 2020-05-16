@@ -23,7 +23,6 @@ const styles = (theme) => ({
   },
 });
 
-
 class Register extends Component {
   constructor() {
     super();

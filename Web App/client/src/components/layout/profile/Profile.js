@@ -5,11 +5,10 @@ import {updateUser} from "../../../actions/AuthActions"
 import PropTypes from "prop-types";
 import defaultAvatar from "./DefaultAvatar.jpg";
 import "./Profile.css"
+import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { AppBar, Avatar, Backdrop, Button, Box, Dialog, DialogContent, DialogContentText, DialogTitle,
    Fade, Grid, IconButton, List, ListItem, ListItemText, ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Modal,
    Paper, Typography } from "@material-ui/core";
-
-import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -55,9 +54,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus": {
     backgroundColor: 'transparent'
     },
-
   }
-
 }));
 
 function UploadDialog(props) {
@@ -115,8 +112,8 @@ function UploadDialog(props) {
 
   return (
     <div>
-      <LightTooltip title="Ganti Foto Profil" className={classes.tooltip}>
-        <IconButton onClick={handleClickOpen} style={{backgroundColor: "transparent"}}>
+      <LightTooltip title="Ganti Foto Profil">
+        <IconButton onClick={handleClickOpen} className={classes.iconButton}>
           <AddAPhotoIcon
             style={{
               color: "#2196f3",
@@ -160,8 +157,8 @@ function UploadDialog(props) {
             }
             <Grid container direction="column" justify="center" alignItems="center">
               <Grid item>
-                <LightTooltip title="Pilih Foto Profil" style={{ }}>
-                  <IconButton style={{backgroundColor: "transparent"}}>
+                <LightTooltip title="Pilih Foto Profil">
+                  <IconButton className={classes.iconButton}>
                     <CloudUploadIcon
                       onClick={() => {imageUploader.current.click()}}
                       style={{
@@ -337,7 +334,7 @@ function Profile(props) {
                   />
                   <ProfileDataItem
                     profile_data_icon={<SchoolIcon />}
-                    profile_data_category="Perguruan Tinggi yang Diinginkan"
+                    profile_data_category="Perguruan Tinggi Impian"
                     profile_data_info="fucker university"
                   />
                 </List>
@@ -357,7 +354,6 @@ Profile.propTypes = {
 const mapStateToProps = (state) => ({
     auth: state.auth
   });
-
 
 export default connect(
     mapStateToProps, {updateUser}

@@ -4,14 +4,15 @@ Botak:
 2. Bikin profile jadi editable text
 3. Betulin navbar lagi buat (export props themenya, Icon only navbar masih nda centered)
 4. Create togglebutton buat mobile
-5. Betulin hijau2 pas klik iconbuttons
+5. Betulin hijau2 pas klik iconbuttons (Done)
 6. Task List Page
 7. Comments Section
 8. Kalau udah selesai semua - Tes zoom in dan zoom out per Page
 9. Bikin gambar-gambar yang diperlukan (belajar AI)
 10. Bikin page createclassform, createtask form
 11. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/) ?
-12. Implemen Customized Tooltip
+12. Implemen Customized Tooltip (Done = LightTooltip)
+13. RAPIKAN SEMUANYA
 
 Daniel:
 1. Class Page
@@ -22,7 +23,7 @@ Daniel:
 5. Mungkin buat page utk si Admin utk bisa manage users (?)
 6. Notifications page dan listnya (previewnya muncul di Dashboard)
 7. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-8. Buat Navigation Bar cuma muncul pas udah login (atauu buat tampilannya beda)
+8. Buat Navigation Bar cuma muncul pas udah login (atauu buat tampilannya beda) (Done)
 
 Evaluations
 Botak > Daniel:

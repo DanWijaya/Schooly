@@ -66,7 +66,7 @@ function NewTask(props) {
           >
             <Grid item xs={6}>
               <Typography variant="subtitle1" >
-                <h2>Task Title</h2>
+                <h3>Task Title</h3>
               </Typography>
               <Typography variant="caption" color="textSecondary">
                 <h6>Subject Name</h6>
