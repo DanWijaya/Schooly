@@ -10,6 +10,8 @@ Botak:
 8. Kalau udah selesai semua - Tes zoom in dan zoom out per Page
 9. Bikin gambar-gambar yang diperlukan (belajar AI)
 10. Bikin page createclassform, createtask form
+11. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/) ?
+12. Implemen Customized Tooltip
 
 Daniel:
 1. Class Page

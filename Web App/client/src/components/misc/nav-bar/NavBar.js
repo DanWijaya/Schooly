@@ -79,6 +79,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: "center",
   },
+  iconButton: {
+    "&:focus": {
+      outline: "transparent",
+      backgroundColor: "transparent",
+    },
+  },
 }));
 
 function DrawerItemList(props) {
@@ -113,8 +119,8 @@ function NavBar(props){
           <IconButton
             color="inherit"
             edge="start"
+            className={classes.iconButton}
             onClick={handleDrawerOpen}
-            style={{backgroundColor: "transparent"}}
           >
             <MenuIcon />
           </IconButton>
