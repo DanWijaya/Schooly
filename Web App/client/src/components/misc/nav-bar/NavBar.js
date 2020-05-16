@@ -12,8 +12,6 @@ import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import ClassIcon from "@material-ui/icons/Class";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from '@material-ui/icons/Help';
 import MenuIcon from "@material-ui/icons/Menu"
@@ -114,9 +112,9 @@ function NavBar(props){
         <Toolbar className={classes.navbarItems}>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
             edge="start"
+            onClick={handleDrawerOpen}
+            style={{backgroundColor: "transparent"}}
           >
             <MenuIcon />
           </IconButton>
@@ -132,14 +130,20 @@ function NavBar(props){
               </IconButton>
             </Tooltip>
             <Tooltip title="Notifications">
-              <IconButton href="/notifications">
+              <IconButton
+                color="inherit"
+                href="/notifications"
+              >
                 <Badge badgeContent={11} color="secondary">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
             </Tooltip>
             <Tooltip title="Help and Support">
-              <IconButton href="/support">
+              <IconButton
+                color="inherit"
+                href="/support"
+              >
                 <HelpIcon />
               </IconButton>
             </Tooltip>
