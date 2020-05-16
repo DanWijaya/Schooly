@@ -7,7 +7,9 @@ import defaultAvatar from "./DefaultAvatar.jpg";
 import "./Profile.css"
 import { AppBar, Avatar, Backdrop, Button, Box, Dialog, DialogContent, DialogContentText, DialogTitle,
    Fade, Grid, IconButton, List, ListItem, ListItemText, ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Modal,
-   Paper, Tooltip, Typography } from "@material-ui/core";
+   Paper, Typography } from "@material-ui/core";
+
+import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -49,6 +51,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 4, 3),
   },
+  iconButton: {
+    "&:focus": {
+    backgroundColor: 'transparent'
+    },
+
+  }
+
 }));
 
 function UploadDialog(props) {
@@ -106,7 +115,7 @@ function UploadDialog(props) {
 
   return (
     <div>
-      <Tooltip title="Ganti Foto Profil">
+      <LightTooltip title="Ganti Foto Profil" className={classes.tooltip}>
         <IconButton onClick={handleClickOpen} style={{backgroundColor: "transparent"}}>
           <AddAPhotoIcon
             style={{
@@ -116,7 +125,7 @@ function UploadDialog(props) {
             }}
           />
         </IconButton>
-      </Tooltip>
+      </LightTooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           Unggah Foto Profil
@@ -151,7 +160,7 @@ function UploadDialog(props) {
             }
             <Grid container direction="column" justify="center" alignItems="center">
               <Grid item>
-                <Tooltip title="Pilih Foto Profil">
+                <LightTooltip title="Pilih Foto Profil" style={{ }}>
                   <IconButton style={{backgroundColor: "transparent"}}>
                     <CloudUploadIcon
                       onClick={() => {imageUploader.current.click()}}
@@ -162,7 +171,7 @@ function UploadDialog(props) {
                       }}
                     />
                   </IconButton>
-                </Tooltip>
+                </LightTooltip>
               </Grid>
               <Button
                 type="submit"
@@ -212,7 +221,7 @@ function ProfileDataItem(props) {
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" style={{backgroundColor: "transparent"}}>
+          <IconButton edge="end" className={classes.iconButton}>
             <ArrowRightIcon />
           </IconButton>
         </ListItemSecondaryAction>

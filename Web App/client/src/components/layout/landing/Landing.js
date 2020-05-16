@@ -14,34 +14,38 @@ class Landing extends Component {
           <br/><br/>
         <h4>Schooly makes school work easy!</h4>
           <br/><br/>
-        <Button
-          href="/register"
-          variant="contained"
-          size="large"
-          style={{
-            backgroundColor: "#2196f3",
-            fontSize: "12",
-            color: "white",
-            width: "120px",
-            height: "40px",
-          }}
-        >
-          Register
-        </Button>
+          
+        <Link to="/register">
+          <Button
+            variant="contained"
+            size="large"
+            style={{
+              backgroundColor: "#2196f3",
+              fontSize: "12",
+              color: "white",
+              width: "120px",
+              height: "40px",
+            }}
+          >
+            Register
+          </Button>
+        </Link>
           <br/><br/>
-        <Button
-          href="/login"
-          variant="contained"
-          size="large"
-          style={{
-            backgroundColor: "black",
-            color: "white",
-            width: "120px",
-            height: "40px",
-          }}
-        >
-          Log In
-        </Button>
+        <Link to="/login">
+          <Button
+            variant="contained"
+            size="large"
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              width: "120px",
+              height: "40px",
+            }}
+          >
+            Log In
+          </Button>
+        </Link>
+
         </center>
       </div>
     );
