@@ -66,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
   schoolyLogo: {
     width: "100px",
     height: "50px",
-
   },
   navbarProfilePicture: {
     width: theme.spacing(3),
@@ -80,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
-
   navbarNavigationItems: {
     display: 'flex',
     alignItems: "space-between",
@@ -133,7 +131,7 @@ function NavBar(props){
       <div className={classes.navbarNavigationItems}>
           <Tooltip title={user.name}>
             <IconButton href="/profile">
-              <Avatar src={`/api/uploads/image/${user.avatar}`}className={classes.navbarProfilePicture} />
+              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
           </Tooltip>
 

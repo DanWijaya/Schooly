@@ -50,7 +50,7 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "notification", numeric: false, disablePadding: true, label: "Notifikasi" },
+  { id: "notification", numeric: false, disablePadding: true, label: "Judul Notifikasi" },
   { id: "notificationtype", numeric: false, disablePadding: false, label: "Kategori" },
   { id: "time", numeric: true, disablePadding: false, label: "Waktu" },
 ];

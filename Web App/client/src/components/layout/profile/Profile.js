@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import {updateUser} from "../../../actions/AuthActions"
 import PropTypes from "prop-types";
 import defaultAvatar from "./DefaultAvatar.jpg";
-import "./Profile.css"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { AppBar, Avatar, Backdrop, Button, Box, Dialog, DialogContent, DialogContentText, DialogTitle,
    Fade, Grid, IconButton, List, ListItem, ListItemText, ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Modal,

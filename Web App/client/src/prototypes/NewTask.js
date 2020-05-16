@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "30px", //Should be deleted after theme passing from navbar worked
     maxWidth: "1075px",
   },
+  navbarProfilePicture: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
   paperBox :{
     padding: "20px",
   },
@@ -30,12 +34,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TaskDiscussionComment(props) {
+  const classes = useStyles();
+
   return(
     <ListItem>
       <ListItemAvatar>
-        <Avatar>
-          {props.user_photo}
-        </Avatar>
+        <Avatar src={props.user_photo} className={classes.navbarProfilePicture} />
       </ListItemAvatar>
       <ListItemText
         primary={props.user_name}
@@ -61,12 +65,13 @@ function NewTask(props) {
       >
         <Paper className={classes.paperBox}>
           <Grid item
-            container spacing={2}
+            container
+            spacing={2}
             style={{width: "700px"}}
           >
             <Grid item xs={6}>
-              <Typography variant="subtitle1" >
-                <h3>Task Title</h3>
+              <Typography variant="h4" >
+                Task Title
               </Typography>
               <Typography variant="caption" color="textSecondary">
                 <h6>Subject Name</h6>
@@ -120,15 +125,15 @@ function NewTask(props) {
             <Grid item>{/*A height should be set*/}
               <List>
                 <TaskDiscussionComment
-                  user_photo={<SmsIcon/>}
-                  user_name="Mr Budi"
-                  user_task_discussion_comment="fuck you"
+                  user_photo={`/api/uploads/image/${user.avatar}`}
+                  user_name={user.name}
+                  user_task_discussion_comment="My name is Budi"
                 />
               </List>
             </Grid>
             <Divider />
             <Grid item>
-              <Avatar src={`/api/uploads/image/${user.avatar}`}className={classes.navbarProfilePicture} />
+              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
               <TextField label="Tulis komentar pribadi" variant="outlined" />
               <IconButton>
                 <SendIcon style={{color: "#2196f3"}}/>
