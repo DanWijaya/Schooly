@@ -1,13 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Avatar, Button, Divider, Grid, IconButton, List, ListItem,
-  ListItemAvatar, ListItemText, Paper, Snackbar, TextField, Typography } from "@material-ui/core";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { Avatar, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+   Menu, MenuItem, Paper, Snackbar, TextField, Typography } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import AddIcon from "@material-ui/icons/Add";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from "@material-ui/icons/Publish";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,42 +38,6 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function SubmitButton() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Button
-        variant="contained"
-        startIcon={<PublishIcon />}
-        onClick={handleClick}
-        className={classes.workButton}
-        style={{color: "white", backgroundColor: "#2196f3"}}
-      >
-        Kumpul Tugas
-      </Button>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
-          File Berhasil Dikumpulkan!
-        </Alert>
-      </Snackbar>
-    </div>
-  );
-}
-
 function WorkFile(props) {
   const classes = useStyles();
 
@@ -89,10 +54,102 @@ function WorkFile(props) {
   )
 }
 
-function NewTask(props) {
+function CheckedWorkFilesButton() {
+  const StyledMenu = withStyles({
+    paper: {
+      border: '1px solid #d3d4d5',
+    },
+  })((props) => (
+    <Menu
+      elevation={0}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      {...props}
+    />
+  ));
 
+  const StyledMenuItem = withStyles((theme) => ({
+    root: {
+      '&:focus': {
+        backgroundColor: "#2196f3",
+        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+          color: theme.palette.common.white,
+        },
+      },
+    },
+  }))(MenuItem);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <Button
+        variant="contained"
+        onClick={handleClick}
+        startIcon={<AssignmentTurnedInIcon />}
+        style={{color: "white", backgroundColor: "#2196f3"}}
+      >
+        Lihat Hasil Pengecekkan
+      </Button>
+      <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <StyledMenuItem>
+          <ListItemAvatar>
+            <Avatar src={0} />
+          </ListItemAvatar>
+          <ListItemText
+            primary="File Name"
+            secondary="File Type"
+          />
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <ListItemIcon>
+            <GetAppIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Download Semua File" />
+        </StyledMenuItem>
+      </StyledMenu>
+    </div>
+  );
+}
+
+function NewTask(props) {
   const { user } = props.auth;
   const classes = useStyles();
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   return(
     <div className={classes.root}>
@@ -165,7 +222,7 @@ function NewTask(props) {
             <Grid item>
               <List>
                 <WorkFile
-                  // file_type_icon={`/api/uploads/image/${user.avatar}`}
+                  file_type_icon={0}
                   file_name="Tugas1Kimia"
                   file_type="PDF Document"
                 />
@@ -184,7 +241,20 @@ function NewTask(props) {
                 </Button>
               </Grid>
               <Grid item>
-                <SubmitButton />
+                <Button
+                  variant="contained"
+                  startIcon={<PublishIcon />}
+                  onClick={handleClick}
+                  className={classes.workButton}
+                  style={{color: "white", backgroundColor: "#2196f3"}}
+                >
+                  Kumpul Tugas
+                </Button>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="success">
+                    File Berhasil Dikumpulkan!
+                  </Alert>
+                </Snackbar>
               </Grid>
             </Grid>
           </Grid>
@@ -192,19 +262,13 @@ function NewTask(props) {
       </Grid>
 
       <Grid container direction="column" alignItems="center">
-        <Typography variant="subtitle2">
-          Not Submitted/Due Soon/Not Graded/Graded
+        <Typography variant="subtitle1">
+          Status: Sudah Diperiksa/Belum Diperiksa
         </Typography>
         <Typography variant="h4" gutterBottom>
           Hasil Penilaian: {100}
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AssignmentTurnedInIcon />}
-          style={{color: "white", backgroundColor: "#2196f3"}}
-        >
-          Lihat Hasil Pengecekkan
-        </Button>
+        <CheckedWorkFilesButton />
       </Grid>
     </div>
   )
