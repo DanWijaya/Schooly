@@ -32,6 +32,12 @@ const useStyles = makeStyles((theme) => ({
   workButton: {
     width: "200px",
   },
+  workResultSection: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: "20px",
+  }
 }));
 
 function Alert(props) {
@@ -163,7 +169,7 @@ function NewTask(props) {
           <Grid item
             container
             spacing={2}
-            style={{width: "700px"}}
+            style={{width: "750px"}}
           >
             <Grid item xs={6}>
               <Typography variant="h4" >
@@ -210,17 +216,29 @@ function NewTask(props) {
             container
             direction="column"
             justify="space-evenly"
-            style={{width: "300px"}}
+            style={{width: "250px"}}
           >
-            <Grid item container justify="center" alignItems="center">
-              <AssignmentIcon style={{marginRight: "10px"}}/>
-              <Typography variant="h6">
-                Hasil Pekerjaan
-              </Typography>
+            <Grid item>
+              <div className={classes.workResultSection}>
+                <AssignmentIcon style={{marginRight: "10px"}}/>
+                <Typography variant="h5">
+                  Hasil Pekerjaan
+                </Typography>
+              </div>
             </Grid>
             <Divider />
             <Grid item>
               <List>
+                <WorkFile
+                  file_type_icon={0}
+                  file_name="Tugas1Kimia"
+                  file_type="PDF Document"
+                />
+                <WorkFile
+                  file_type_icon={0}
+                  file_name="Tugas1Kimia"
+                  file_type="PDF Document"
+                />
                 <WorkFile
                   file_type_icon={0}
                   file_name="Tugas1Kimia"
