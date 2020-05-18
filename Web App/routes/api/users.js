@@ -1,4 +1,4 @@
-const test = require('./uploads');
+const avatar = require('./uploads');
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -161,7 +161,7 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.post("/update/:id", test.upload.single('avatar'), (req,res) => {
+router.post("/update/:id", avatar.upload.single('avatar'), (req,res) => {
   console.log(req.file.filename)
   let id = req.params.id;
 

@@ -7,7 +7,8 @@ import defaultAvatar from "./DefaultAvatar.jpg";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { AppBar, Avatar, Backdrop, Button, Box, Dialog, DialogContent, DialogContentText, DialogTitle,
    Fade, Grid, IconButton, List, ListItem, ListItemText, ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Modal,
-   Paper, Typography } from "@material-ui/core";
+   Paper, Snackbar, Typography } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -56,16 +57,33 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function UploadDialog(props) {
-  const [open, setOpen] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openAlert, setOpenAlert] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
+
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  }
+
+  const handleCloseAlert = (e, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenAlert(false);
+  }
 
   const classes = useStyles();
 
@@ -88,11 +106,13 @@ function UploadDialog(props) {
       };
       reader.readAsDataURL(file);
     }
+    console.log(profileImg)
   };
 
   const clear = () => {
      setProfileImg(false)
   }
+
 
   const onSubmitForm = (e) => {
     e.preventDefault()
@@ -107,12 +127,19 @@ function UploadDialog(props) {
 
     updateUser(userData, userId, formData)
     setProfileImg(null)
+    handleOpenAlert()
   }
 
   return (
     <div>
+      <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleCloseAlert} anchorOrigin={{vertical : 'top', horizontal: 'center'}}>
+        <Alert onClose={handleCloseAlert} severity="success">
+          Profil foto berhasil disimpan!
+        </Alert>
+      </Snackbar>
+
       <LightTooltip title="Ganti Foto Profil">
-        <IconButton onClick={handleClickOpen} className={classes.iconButton}>
+        <IconButton onClick={handleOpenDialog} className={classes.iconButton}>
           <AddAPhotoIcon
             style={{
               color: "#2196f3",
@@ -122,7 +149,7 @@ function UploadDialog(props) {
           />
         </IconButton>
       </LightTooltip>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>
           Unggah Foto Profil
         </DialogTitle>
@@ -193,6 +220,8 @@ function UploadDialog(props) {
             </Grid>
           </form>
       </Dialog>
+
+      
     </div>
   )
 }
@@ -232,6 +261,7 @@ function Profile(props) {
   const { user } = props.auth;
   const updateUser = props.updateUser;
 
+  
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>

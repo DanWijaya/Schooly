@@ -2,8 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-const cors = require('cors');
-const multer = require("multer");
 
 const users = require("./routes/api/Users");
 const tasks = require("./routes/api/Tasks");
@@ -35,8 +33,6 @@ mongoose
     )
   .catch(err => console.log(err));
 
-// Create Mongo Connection
-const conn = mongoose.createConnection(db)
 
 // Mutler Middleware
 app.use(express.static('public'))

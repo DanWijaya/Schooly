@@ -24,6 +24,7 @@ Daniel:
 6. Notifications page dan listnya (previewnya muncul di Dashboard)
 7. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
 8. Buat Navigation Bar cuma muncul pas udah login (atau buat tampilannya beda) (Done)
+9. GridStore needs to be updated to GridFSBucket
 
 Evaluations
 Botak > Daniel:

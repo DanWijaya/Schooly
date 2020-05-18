@@ -1,19 +1,20 @@
-import { TEST_UPLOAD } from "./Types";
+import { UPLOAD_TUGAS } from "./Types";
 import axios from 'axios';
 
-export const uploadImage = (image, history) => dispatch => {
+export const uploadTugas = (tugas) => dispatch => {
     console.log("Hi")
     axios
-        .post("/api/uploads/upload", image)
+        .post("/api/uploads/uploadtugas", tugas)
         .then(res => {
-            // console.log(image)
-            console.log("Profile picture is:" , res.data);
+            console.log("Tugas berhasil di unggah")
+            // console.log("Tugas yang diupload" , res.data);
             dispatch({
-                type: TEST_UPLOAD,
+                type: UPLOAD_TUGAS,
                 payload: res.data
             })
         })
         .catch(err => {
+            console.log("Ada error")
             console.log(err);
         })
 }

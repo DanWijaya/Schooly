@@ -39,13 +39,13 @@ export const updateUser = (userData, userId, formData) => dispatch => {
           // Set token to localStorage
         const { token } = res.data;
         localStorage.setItem("jwtToken", token);
+        console.log("Foto udah diganti")
         // Set token to Auth header
         setAuthToken(token);
         // Decode token to get user data
         const decoded = jwt_decode(token);
         // Set current user
         dispatch(setCurrentUser(decoded));
-        alert("Profil foto berhasil diganti")
         
       })
       .catch(err => {

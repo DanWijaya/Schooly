@@ -17,11 +17,16 @@ const conn = mongoose.createConnection(keys.mongoURI)
 
 // Initialize gfs
 let gfs;
+let gfs2;
 
 conn.once('open', () => {
   // Initialize Stream
   gfs = GridFsStream(conn.db, mongoose.mongo);
   gfs.collection('avatar')
+
+  gfs2 = GridFsStream(conn.db, mongoose.mongo);
+  gfs2.collection('tugas');
+
   // all set!
 })
 
@@ -45,9 +50,30 @@ var storage = new GridFsStorage({
       });
     }
   });
+ 
+  var storage2 = new GridFsStorage({
+    url: keys.mongoURI,
+    file: (req, file) => {
+      return new Promise((resolve, reject) => {
+        crypto.randomBytes(16, (err, buf) => {
+          if (err) {
+            return reject(err);
+          }
+          const filename = buf.toString('hex') + path.extname(file.originalname);
+          const fileInfo = {
+            filename: filename,
+            bucketName: 'tugas'
+          };
+          resolve(fileInfo);
+        });
+      });
+    }
+  });
+
 
 // Create the middleware which facilitates file uploads
 const upload = multer({ storage });
+const upload2 = multer({ storage2 });
 
 router.get('/image-upload', (req,res) => {
     console.log("AA")
@@ -93,6 +119,28 @@ router.get('/image-upload', (req,res) => {
     res.redirect('/image-upload');
     console.log(req.params)
     console.log(req.file.filename)
+  });
+
+  router.post('/uploadtugas', upload2.single('tugas'), (req,res) => {
+    console.log(req.formData, "Tugas")
+
+    console.log("Tugas telah diupload")
+
+    return res.json("Success")
+  })
+
+  router.get('/filetugas/', (req, res) => {
+    gfs2.files.find().toArray((err, files) => {
+      // Check if files
+      if (!files || files.length === 0) {
+        return res.status(404).json({
+          err: 'Tugas belum ada'
+        });
+      }
+
+      // Files exist
+      return res.json(files);
+    });
   });
 
   // @route GET /files

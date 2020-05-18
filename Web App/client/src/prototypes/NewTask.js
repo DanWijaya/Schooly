@@ -10,6 +10,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from "@material-ui/icons/Publish";
+import { uploadTugas } from "../actions/UploadActions"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +40,21 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "20px",
   }
 }));
+
+
+const listWorkFile = (tasks=null) => {
+  // tasks itu nanti lists, bakal di pass. 
+  var tasksContents = [];
+  for (let i = 0 ; i < 3; i++) {
+    tasksContents.push(
+    <WorkFile 
+      file_type_icon={0}
+      file_name={`Tugas ${i} Kimia`}
+      file_type="PDF Document"/>
+      )
+  }
+  return tasksContents
+}
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -143,6 +159,13 @@ function NewTask(props) {
   const { user } = props.auth;
   const classes = useStyles();
 
+  const tugasUploader = React.useRef(null);
+  const uploadedTugas = React.useRef(null);
+
+  const [fileTugas, setFileTugas] = React.useState(null);
+
+  const { uploadTugas } = props;
+
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -156,6 +179,33 @@ function NewTask(props) {
 
     setOpen(false);
   };
+
+  const handleTugasUpload = (e) => {
+    const [file] = e.target.files;
+    setFileTugas(e.target.files[0])
+
+    if (file) {
+      const reader = new FileReader();
+      const { current } = uploadedTugas;
+      current.file = file;
+      reader.onload = e => {
+        current.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    console.log(fileTugas)
+  }
+
+  const onSubmitTugas = (e) => {
+    e.preventDefault();
+    let formData = new FormData()
+    console.log(fileTugas)
+    formData.append("tugas", fileTugas)
+
+    uploadTugas(formData)
+    setFileTugas(null)
+    
+  }
 
   return(
     <div className={classes.root}>
@@ -229,31 +279,29 @@ function NewTask(props) {
             <Divider />
             <Grid item>
               <List>
-                <WorkFile
-                  file_type_icon={0}
-                  file_name="Tugas1Kimia"
-                  file_type="PDF Document"
-                />
-                <WorkFile
-                  file_type_icon={0}
-                  file_name="Tugas1Kimia"
-                  file_type="PDF Document"
-                />
-                <WorkFile
-                  file_type_icon={0}
-                  file_name="Tugas1Kimia"
-                  file_type="PDF Document"
-                />
+                {listWorkFile()}
               </List>
             </Grid>
             <Divider />
             <Grid item container direction="column" spacing={2} className={classes.workBox}>
+            <form onSubmit={onSubmitTugas}>
               <Grid item>
+              <input
+                type="file"
+                name="tugas"
+                onChange={handleTugasUpload}
+                ref={tugasUploader}
+                
+              />
+          <input type="file" name="file" id="file" ref={uploadedTugas} style={{
+                  display: "none"
+                }}/>
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
                   className={classes.workButton}
                   style={{color: "#2196f3", backgroundColor: "white"}}
+                  onClick={() => {tugasUploader.current.click()}}
                 >
                   Unggah Tugas
                 </Button>
@@ -265,6 +313,7 @@ function NewTask(props) {
                   onClick={handleClick}
                   className={classes.workButton}
                   style={{color: "white", backgroundColor: "#2196f3"}}
+                  type="submit"
                 >
                   Kumpul Tugas
                 </Button>
@@ -274,6 +323,7 @@ function NewTask(props) {
                   </Alert>
                 </Snackbar>
               </Grid>
+              </form>
             </Grid>
           </Grid>
         </Paper>
@@ -294,6 +344,7 @@ function NewTask(props) {
 
 NewTask.propTypes = {
    auth: PropTypes.object.isRequired,
+   uploadTugas: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({
@@ -301,5 +352,5 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps
+   mapStateToProps, {uploadTugas}
  ) (NewTask);
