@@ -10,11 +10,15 @@ class Landing extends Component {
     return (
       <div>
         <center>
-        <img src={schoolyLogo} className="SchoolyLogo"/>
+        <img
+          alt="SchoolyLogoLanding"
+          src={schoolyLogo}
+          className="SchoolyLogo"
+        />
           <br/><br/>
         <h4>Schooly makes school work easy!</h4>
           <br/><br/>
-          
+
         <Link to="/register">
           <Button
             variant="contained"

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import TaskDataTable from './TaskDataTable';
@@ -9,7 +8,6 @@ import { viewTask, deleteTask } from '../../../actions/TaskActions'
 import { Modal, Button } from 'react-bootstrap'
 import './ViewTask.css'
 import {Typography} from "@material-ui/core";
-import isEmpty from 'is-empty';
 
 class ViewTask extends Component {
     constructor(props) {
@@ -42,7 +40,7 @@ class ViewTask extends Component {
             }
         }
 
-        if(this.props.tasksCollection.length - nextProps.tasksCollection.length == 1) // This is to update state to modal closed and isDelete false when it is already deleted
+        if(this.props.tasksCollection.length - nextProps.tasksCollection.length === 1) // This is to update state to modal closed and isDelete false when it is already deleted
             this.closeModal()
 
         console.log(nextProps.tasksCollection)
@@ -55,7 +53,7 @@ class ViewTask extends Component {
     dataTable(){
 
         const { tasksCollection } = this.state;
-        if(tasksCollection.length == 0){
+        if(tasksCollection.length === 0){
             this.props.viewTask();
         }
 
@@ -90,7 +88,7 @@ class ViewTask extends Component {
     render() {
 
         const { user } = this.props.auth
-        if( user.role == "Teacher") {
+        if( user.role === "Teacher") {
 
             return(
                 <div className="wrapper-taskCollection">
@@ -117,7 +115,7 @@ class ViewTask extends Component {
                 </div>
             </div>
             )
-        } else if (user.role == "Student"){
+        } else if (user.role === "Student"){
             return (
                 <div className="wrapper-taskCollection">
                     <Typography variant="h4" style={{ display: 'flex' , justifyContent : 'center'}}> Here is your due task</Typography>

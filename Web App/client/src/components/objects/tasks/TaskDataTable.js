@@ -1,14 +1,10 @@
-// Nanti bakal ganti viewnya di sidebarnya?
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import PublishIcon from "@material-ui/icons/Publish";
 import SmsIcon from "@material-ui/icons/Sms";
 import PropTypes from 'prop-types';
-
-// import Modal from 'react-modal';
 
 const styles = (theme) => ({
   root: {

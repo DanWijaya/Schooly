@@ -1,11 +1,11 @@
-import React, { Component } from "react"
+import React from "react"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import PropTypes from "prop-types";
-import {AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Hidden, IconButton, List, ListItem,
-  ListItemIcon, ListItemText, Toolbar, Tooltip, Typography} from "@material-ui/core";
+import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, IconButton, List, ListItem,
+  ListItemIcon, ListItemText, Toolbar, Tooltip } from "@material-ui/core";
 import {makeStyles, useTheme} from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -97,11 +97,10 @@ function DrawerItemList(props) {
 
 function NavBar(props){
   var classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
   const { user } = props.auth;
 
+  const [open, setOpen] = React.useState(false);
+  
   const handleDrawerOpen = () => {
     props.callbackFromParent(!open)
     if(!open)
@@ -115,7 +114,7 @@ function NavBar(props){
   let navBarContentsStyle;
   let loggedInSideDrawerContents;
 
-  if(user.name != undefined) {
+  if(user.name !== undefined) {
     leftSideNavBarContents = (
       <IconButton
           color="inherit"
@@ -243,7 +242,11 @@ function NavBar(props){
     <Toolbar className={navBarContentsStyle}>
       {leftSideNavBarContents}
         <a href="/dashboard">
-          <img src={schoolyLogo} className={classes.schoolyLogo}/>
+          <img
+            alt="SchoolyLogoNavBar"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
         </a>
       {rightSideNavBarContents}
     </Toolbar>

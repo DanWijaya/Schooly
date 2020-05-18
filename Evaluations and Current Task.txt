@@ -23,7 +23,7 @@ Daniel:
 5. Mungkin buat page utk si Admin utk bisa manage users (?)
 6. Notifications page dan listnya (previewnya muncul di Dashboard)
 7. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-8. Buat Navigation Bar cuma muncul pas udah login (atauu buat tampilannya beda) (Done)
+8. Buat Navigation Bar cuma muncul pas udah login (atau buat tampilannya beda) (Done)
 
 Evaluations
 Botak > Daniel:

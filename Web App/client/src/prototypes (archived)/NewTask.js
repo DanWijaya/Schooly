@@ -1,14 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Avatar, Button, Divider, Grid, IconButton, List, ListItem,
-  ListItemAvatar, ListItemText, Paper, Snackbar, TextField, Typography } from "@material-ui/core";
-import MuiAlert from '@material-ui/lab/Alert';
+  ListItemAvatar, ListItemText, Paper, TextField, Typography } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import ForumIcon from '@material-ui/icons/Forum';
 import PublishIcon from "@material-ui/icons/Publish";
+import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(5),
     height: theme.spacing(5),
   },
-  paperBox: {
+  paperBox :{
     padding: "20px",
   },
   workBox: {
@@ -33,57 +32,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-function SubmitButton() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Button
-        variant="contained"
-        startIcon={<PublishIcon />}
-        onClick={handleClick}
-        className={classes.workButton}
-        style={{color: "white", backgroundColor: "#2196f3"}}
-      >
-        Kumpul Tugas
-      </Button>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
-          File Berhasil Dikumpulkan!
-        </Alert>
-      </Snackbar>
-    </div>
-  );
-}
-
-function WorkFile(props) {
+function TaskDiscussionComment(props) {
   const classes = useStyles();
 
   return(
     <ListItem>
       <ListItemAvatar>
-        <Avatar src={props.file_type_icon} className={classes.profilePicture} />
+        <Avatar src={props.user_photo} className={classes.profilePicture} />
       </ListItemAvatar>
       <ListItemText
-        primary={props.file_name}
-        secondary={props.file_type}
+        primary={props.user_name}
+        secondary={props.user_task_discussion_comment}
       />
     </ListItem>
   )
@@ -98,9 +57,10 @@ function NewTask(props) {
     <div className={classes.root}>
       <Grid container
         spacing={2}
-        justify="space-between"
-        alignItems="flex-start"
-        style={{marginBottom: "30px"}}
+        style={{
+          display: "flex",
+          justifyContent: "space-between"
+          }}
       >
         <Paper className={classes.paperBox}>
           <Grid item
@@ -155,57 +115,68 @@ function NewTask(props) {
             justify="space-evenly"
             style={{width: "300px"}}
           >
-            <Grid item container justify="center" alignItems="center">
-              <AssignmentIcon style={{marginRight: "10px"}}/>
+            <Grid item container style={{alignItems: "center"}}>
+              <ForumIcon style={{marginRight: "10px"}}/>
               <Typography variant="h6">
-                Hasil Pekerjaan
+                Diskusi Tugas Pribadi
               </Typography>
             </Grid>
             <Divider />
-            <Grid item>
+            <Grid item>{/*A height should be set*/}
               <List>
-                <WorkFile
-                  // file_type_icon={`/api/uploads/image/${user.avatar}`}
-                  file_name="Tugas1Kimia"
-                  file_type="PDF Document"
+                <TaskDiscussionComment
+                  user_photo={`/api/uploads/image/${user.avatar}`}
+                  user_name={user.name}
+                  user_task_discussion_comment="My name is Budi"
                 />
               </List>
             </Grid>
             <Divider />
-            <Grid item container direction="column" spacing={2} className={classes.workBox}>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  className={classes.workButton}
-                  style={{color: "#2196f3", backgroundColor: "white"}}
-                >
-                  Unggah Tugas
-                </Button>
-              </Grid>
-              <Grid item>
-                <SubmitButton />
-              </Grid>
+            <Grid item>
+              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.profilePicture} />
+              <TextField label="Tulis komentar pribadi" variant="outlined" />
+              <IconButton>
+                <SendIcon style={{color: "#2196f3"}}/>
+              </IconButton>
             </Grid>
           </Grid>
         </Paper>
       </Grid>
 
-      <Grid container direction="column" alignItems="center">
-        <Typography variant="subtitle2">
-          Not Submitted/Due Soon/Not Graded/Graded
-        </Typography>
-        <Typography variant="h4" gutterBottom>
-          Hasil Penilaian: {100}
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AssignmentTurnedInIcon />}
-          style={{color: "white", backgroundColor: "#2196f3"}}
-        >
-          Lihat Hasil Pengecekkan
-        </Button>
+      <Grid container spacing={2} className={classes.workBox}>
+        <Grid item>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            className={classes.workButton}
+            style={{color: "#2196f3", backgroundColor: "white"}}
+          >
+            Unggah Tugas
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            startIcon={<PublishIcon />}
+            className={classes.workButton}
+            style={{color: "white", backgroundColor: "#2196f3"}}
+          >
+            Kumpul Tugas
+          </Button>
+        </Grid>
       </Grid>
+
+      <div>
+        <Paper>
+          <Typography style={{color: "red"}} gutterBottom>
+            Not Submitted/Due Soon/Not Graded/Graded
+          </Typography>
+          <Typography>
+            <h3>Nilai:</h3>
+            You got a motherfuckin rotten egg u stupid
+          </Typography>
+        </Paper>
+      </div>
     </div>
   )
 }

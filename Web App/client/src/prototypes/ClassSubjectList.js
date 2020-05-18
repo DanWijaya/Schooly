@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge, Button, Grid, IconButton, Paper, Typography } from "@material-ui/core"
-import { makeStyles, useTheme } from "@material-ui/core/styles"
+import { makeStyles } from "@material-ui/core/styles"
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";

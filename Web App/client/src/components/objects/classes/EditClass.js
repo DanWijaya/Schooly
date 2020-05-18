@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from "classnames";
 import { editClass, updateClass } from '../../../actions/ClassActions';
@@ -45,12 +44,12 @@ class EditClass extends Component {
 
         if(nextProps.classesCollection.sekretaris)
             next_sekretaris = nextProps.classesCollection.sekretaris
-        
+
         if(nextProps.classesCollection.bendahara)
             next_bendahara = nextProps.classesCollection.bendahara
 
         if(!name){
-            this.setState({ 
+            this.setState({
                 name: nextProps.classesCollection.name,
                 nihil: nextProps.classesCollection.nihil,
                 walikelas: nextProps.classesCollection.walikelas,
@@ -62,7 +61,7 @@ class EditClass extends Component {
 
         }
 
-        
+
     }
     onSubmit = (e) => {
         e.preventDefault()
@@ -83,39 +82,39 @@ class EditClass extends Component {
         }
 
     onSelectTeacher = (selectedList, selectedItem) => {
-        if(selectedList.length == 0)
+        if(selectedList.length === 0)
             selectedList.push(this.state.walikelas)
         if(selectedList.length > 1)
             selectedList.shift()
 
         this.setState({ walikelas: selectedList[0]})
-        } 
-    
+        }
+
     onSelectKetuaKelas = (selectedList, selectedItem) => {
-        if(selectedList.length == 0)
+        if(selectedList.length === 0)
             selectedList.push(this.state.ketua_kelas)
         if(selectedList.length > 1)
             selectedList.shift()
 
-        this.setState({ ketua_kelas: selectedList[0]}) 
+        this.setState({ ketua_kelas: selectedList[0]})
     }
 
     onSelectSekretaris = (selectedList, selectedItem) => {
-        if(selectedList.length == 0)
+        if(selectedList.length === 0)
             selectedList.push(this.state.sekretaris)
         if(selectedList.length > 1)
             selectedList.shift()
 
-        this.setState({ sekretaris: selectedList[0]}) 
+        this.setState({ sekretaris: selectedList[0]})
     }
 
     onSelectBendahara = (selectedList, selectedItem) => {
-        if(selectedList.length == 0)
+        if(selectedList.length === 0)
             selectedList.push(this.state.bendahara)
         if(selectedList.length > 1)
             selectedList.shift()
 
-        this.setState({ bendahara: selectedList[0]}) 
+        this.setState({ bendahara: selectedList[0]})
     }
 
     componentDidMount() {
@@ -126,7 +125,7 @@ class EditClass extends Component {
     render() {
         document.title = "Schooly - Edit Class"
         const { errors } = this.state;
-        
+
         const { all_teachers} = this.props.auth;
         const { all_students } = this.props.auth;
 
@@ -138,7 +137,7 @@ class EditClass extends Component {
 
         return(
             <div className="container">
-                <div className="col s8 offset-s2"> 
+                <div className="col s8 offset-s2">
                 <div className="col s12" style={{paddingLeft: "11.250px"}}>
                     <h4>
                         <b> Edit Class</b>
@@ -157,14 +156,14 @@ class EditClass extends Component {
                             })}
                         />
                         {/* <label htmlFor="name">Name</label> */}
-                        {this.state.name === "" ? 
+                        {this.state.name === "" ?
                         <label htmlFor="name">Name</label> :
                         <label htmlFor="name" class="active">Name</label>}
                         <span className="red-text">{errors.name}</span>
                     </div>
 
                     {/* <div className="input-field col s12">
-                        <input 
+                        <input
                             onChange={this.onChange}
                             value={this.state.nihil}
                             error={errors.nihil}
@@ -187,7 +186,7 @@ class EditClass extends Component {
                     </div>
 
                     <div className="input-field col s12">
-                        <input 
+                        <input
                             onChange={this.onChange}
                             value={this.state.ukuran}
                             error={errors.ukuran}
@@ -199,7 +198,7 @@ class EditClass extends Component {
                             })}
                         />
                         {/* <label htmlFor="ukuran">Ukuran</label> */}
-                        {this.state.ukuran === "" ? 
+                        {this.state.ukuran === "" ?
                         <label htmlFor="ukuran">Ukuran</label> :
                         <label htmlFor="ukuran" class="active">Ukuran</label>}
                         <span className="red-text">{errors.ukuran}</span>
@@ -230,13 +229,13 @@ class EditClass extends Component {
                     </div>
 
                     <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-                        <button 
+                        <button
                             style={{
                                 width: "150px",
                                 borderRadius: "3px",
                                 letterSpacing: "1.5px",
                                 marginTop: "1rem",
-                            }} 
+                            }}
                             type="submit"
                             className="btn btn-large waves-effect waves-light hoverable blue accent-3"
                             >
@@ -266,7 +265,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { editClass, updateClass , getTeachers, getStudents} 
+    mapStateToProps, { editClass, updateClass , getTeachers, getStudents}
 ) (EditClass)
-
-

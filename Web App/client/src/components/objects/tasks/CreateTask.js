@@ -27,7 +27,7 @@ class CreateTask extends Component {
             errors: {}
         };
 
-        
+
     }
 
     onChange = (e) => {
@@ -54,16 +54,16 @@ class CreateTask extends Component {
     onSelect = (selectedList, selectedItem) => {
       console.log(this.state.class_assigned)
       this.setState({ class_assigned: selectedList})
-    } 
+    }
 
     onRemove = (selectedList, selectedItem) => {
       this.setState({ class_assigned: selectedList})
     }
 
     // UNSAFE_componentWillReceiveProps() is invoked before
-    //  a mounted component receives new props. If you need 
-    //   update the state in response to prop changes (for example, to reset it), 
-    //   you may compare this.props and nextProps and perform state transitions 
+    //  a mounted component receives new props. If you need
+    //   update the state in response to prop changes (for example, to reset it),
+    //   you may compare this.props and nextProps and perform state transitions
     //   using this.setState() in this method.
 
     UNSAFE_componentWillReceiveProps(nextProps){
@@ -73,8 +73,8 @@ class CreateTask extends Component {
                 errors: nextProps.errors
             });
         }
-      
-        
+
+
     }
 
     componentDidMount() {
@@ -84,18 +84,18 @@ class CreateTask extends Component {
 
     render() {
       const classesCollection = this.props.classesCollection;
-      
+
         // if(this.props.classesCollection)
         //     this.props.viewClass()
 
         var options = []
-        if(Object.keys(classesCollection).length != 0) {
-          options = classesCollection        
+        if(Object.keys(classesCollection).length !== 0) {
+          options = classesCollection
         }
 
         document.title = "Schooly - Create Task"
         const { errors } = this.state;
-        
+
         console.log(options)
         return(
 
@@ -106,7 +106,7 @@ class CreateTask extends Component {
                 <b>Fill up details to add tasks</b>
               </h4>
             </div>
-           
+
 
             <form noValidate onSubmit={this.onSubmit}>
               <div className="input-field col s12">
@@ -132,7 +132,7 @@ class CreateTask extends Component {
                   focused={this.state.focused}
                   onFocusChange={({focused}) => this.setState({ focused})}
                   />
-                  
+
                 {/* <label htmlFor="deadline">Deadline</label> */}
                 <span className="red-text">{errors.deadline}</span>
               </div>
@@ -154,13 +154,13 @@ class CreateTask extends Component {
 
               <div className=" col s12">
                 <InputLabel id="class-assigned">Classes assigned</InputLabel>
-              <Multiselect id="class_assigned" options={options} onSelect={this.onSelect} 
+              <Multiselect id="class_assigned" options={options} onSelect={this.onSelect}
               onRemove={this.onRemove} displayValue="name" error={errors.class_assigned} showCheckBox={true}
               className={classnames("", {
                 invalid: errors.class_assigned
               })}/>
             </div>
-              
+
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <button
                   style={{
@@ -197,4 +197,3 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps, { createTask, viewClass }
 ) (CreateTask)
-
