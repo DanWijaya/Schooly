@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
+import LightTooltip from "../light-tooltip/LightTooltip";
 import PropTypes from "prop-types";
 import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, List, ListItem,
-  ListItemIcon, ListItemText, Toolbar, Tooltip } from "@material-ui/core";
+  ListItemIcon, ListItemText, Toolbar } from "@material-ui/core";
 import {makeStyles, useTheme} from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -128,23 +129,23 @@ function NavBar(props){
     )
     rightSideNavBarContents = (
       <Grid container className={classes.navbarContainedRightItems}>
-          <Tooltip title={user.name}>
+          <LightTooltip title={user.name}>
             <IconButton href="/profile">
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
-          </Tooltip>
-          <Tooltip title="Notifications">
+          </LightTooltip>
+          <LightTooltip title="Notifications">
             <IconButton color="inherit" href="/notifications">
               <Badge badgeContent={11} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-          </Tooltip>
-          <Tooltip title="Help and Support">
+          </LightTooltip>
+          <LightTooltip title="Help and Support">
             <IconButton color="inherit" href="/support">
               <HelpIcon />
             </IconButton>
-          </Tooltip>
+          </LightTooltip>
         </Grid>
     )
     loggedInSideDrawerContents = (
@@ -195,23 +196,26 @@ function NavBar(props){
       </IconButton>
     )
     rightSideNavBarContents = (
-      <div>
+      <Grid spacing={2}>
+        <Grid>
       <Link to="/register">
         <Button
           variant="contained"
-          size="medium"
+          size="small"
           style={{
             backgroundColor: "white",
             fontSize: "6",
             color: "#2196f3",
             width: "90px",
-            height: "30px",
+            height: "25px",
           }}
         >
           Register
         </Button>
       </Link>
-        <br/><br/>
+      </Grid>
+      
+      <Grid>
       <Link to="/login">
         <Button
           variant="contained"
@@ -221,13 +225,14 @@ function NavBar(props){
             color: "#2196f3",
             fontSize: "6",
             width: "90px",
-            height: "30px",
+            height: "25px",
           }}
         >
           Log In
         </Button>
       </Link>
-    </div>
+      </Grid>
+    </Grid>
     )
     loggedInSideDrawerContents = null
   }
