@@ -13,6 +13,7 @@ Botak:
 11. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/) ?
 12. Implemen Customized Tooltip (Done = LightTooltip)
 13. RAPIKAN SEMUANYA
+14. Icon tab
 
 Daniel:
 1. Class Page
