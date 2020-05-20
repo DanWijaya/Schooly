@@ -5,7 +5,7 @@ import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Select , MenuItem, InputLabel} from "@material-ui/core";
+import { Button, InputLabel, MenuItem, Paper, Select } from "@material-ui/core";
 import RemoveRedEyeIcon from "@material-ui/icons/RemoveRedEye";
 
 class Login extends Component {
@@ -61,7 +61,7 @@ class Login extends Component {
 };
 
   render() {
-    document.title="Schooly - Login"
+    document.title="Masuk ke Schooly"
     const { errors } = this.state;
     const { passwordIsMasked } = this.state;
     return (

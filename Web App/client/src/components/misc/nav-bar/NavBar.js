@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import clsx from "clsx";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import PropTypes from "prop-types";
-import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, IconButton, List, ListItem,
+import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, List, ListItem,
   ListItemIcon, ListItemText, Toolbar, Tooltip } from "@material-ui/core";
 import {makeStyles, useTheme} from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
@@ -63,31 +63,31 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
-  schoolyLogo: {
-    width: "100px",
-    height: "50px",
-  },
-  navbarProfilePicture: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  navbarLoggedInItems: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  navbarLoggedOutItems: {
-    display: "flex",
-    justifyContent: "center",
-  },
-  navbarNavigationItems: {
-    display: 'flex',
-    alignItems: "space-between",
-  },
   iconButton: {
     "&:focus": {
       outline: "transparent",
       backgroundColor: "transparent",
     },
+  },
+  navbarContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  navbarContainedLeftItems: {
+    flex: "1",
+    justifyContent: "flex-start",
+  },
+  navbarContainedRightItems: {
+    flex: "1",
+    justifyContent: "flex-end",
+  },
+  navbarProfilePicture: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+  schoolyLogo: {
+    width: "100px",
+    height: "50px",
   },
 }));
 
@@ -100,7 +100,7 @@ function NavBar(props){
   const { user } = props.auth;
 
   const [open, setOpen] = React.useState(false);
-  
+
   const handleDrawerOpen = () => {
     props.callbackFromParent(!open)
     if(!open)
@@ -109,31 +109,30 @@ function NavBar(props){
       setOpen(false)
   };
 
-  let leftSideNavBarContents; // konten Navbar di bagian kiri logo
-  let rightSideNavBarContents; // konten Navbar di bagian kanan logo
-  let navBarContentsStyle;
+  let leftSideNavBarContents;
+  let rightSideNavBarContents;
   let loggedInSideDrawerContents;
 
   if(user.name !== undefined) {
     leftSideNavBarContents = (
-      <IconButton
-          color="inherit"
-          edge="start"
-          className={classes.iconButton}
-          onClick={handleDrawerOpen}
-        >
-        <MenuIcon />
-      </IconButton>
+      <Grid className={classes.navbarContainedLeftItems}>
+        <IconButton
+            color="inherit"
+            edge="start"
+            className={classes.iconButton}
+            onClick={handleDrawerOpen}
+          >
+          <MenuIcon />
+        </IconButton>
+      </Grid>
     )
-
     rightSideNavBarContents = (
-      <div className={classes.navbarNavigationItems}>
+      <Grid container className={classes.navbarContainedRightItems}>
           <Tooltip title={user.name}>
             <IconButton href="/profile">
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
           </Tooltip>
-
           <Tooltip title="Notifications">
             <IconButton color="inherit" href="/notifications">
               <Badge badgeContent={11} color="secondary">
@@ -141,17 +140,13 @@ function NavBar(props){
               </Badge>
             </IconButton>
           </Tooltip>
-
           <Tooltip title="Help and Support">
             <IconButton color="inherit" href="/support">
               <HelpIcon />
             </IconButton>
           </Tooltip>
-        </div>
+        </Grid>
     )
-
-    navBarContentsStyle = classes.navbarLoggedInItems
-
     loggedInSideDrawerContents = (
       <List>
         <DrawerItemList href="/dashboard">
@@ -200,7 +195,7 @@ function NavBar(props){
       </IconButton>
     )
     rightSideNavBarContents = (
-      <div className={classes.navbarNavigationItems}>
+      <div>
       <Link to="/register">
         <Button
           variant="contained"
@@ -234,12 +229,11 @@ function NavBar(props){
       </Link>
     </div>
     )
-    navBarContentsStyle = classes.navbarLoggedInItems
     loggedInSideDrawerContents = null
   }
 
   var navBarContents = (
-    <Toolbar className={navBarContentsStyle}>
+    <Toolbar className={classes.navbarContainer}>
       {leftSideNavBarContents}
         <a href="/dashboard">
           <img
@@ -278,8 +272,7 @@ function NavBar(props){
         }}
       >
         <Toolbar />
-         <Divider />
-         {loggedInSideDrawerContents}
+        {loggedInSideDrawerContents}
         <Divider />
         <List>
         <DrawerItemList href="/about-schooly">

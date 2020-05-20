@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus": {
     backgroundColor: 'transparent'
     },
+    color: "#2196f3"
   }
 }));
 
@@ -132,9 +133,14 @@ function UploadDialog(props) {
 
   return (
     <div>
-      <Snackbar open={openAlert} autoHideDuration={4000} onClose={handleCloseAlert} anchorOrigin={{vertical : 'top', horizontal: 'center'}}>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{vertical : 'top', horizontal: 'center'}}
+      >
         <Alert onClose={handleCloseAlert} severity="success">
-          Profil foto berhasil disimpan!
+          Foto profil berhasil disimpan!
         </Alert>
       </Snackbar>
 
@@ -220,8 +226,6 @@ function UploadDialog(props) {
             </Grid>
           </form>
       </Dialog>
-
-      
     </div>
   )
 }
@@ -231,7 +235,7 @@ function ProfileDataItem(props) {
   return(
     <ListItem>
         <ListItemAvatar>
-          <Avatar>
+          <Avatar style={{backgroundColor: "#2196f3"}}>
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
@@ -254,6 +258,8 @@ function ProfileDataItem(props) {
   )
 }
 
+
+
 function Profile(props) {
 
   const classes = useStyles();
@@ -261,7 +267,7 @@ function Profile(props) {
   const { user } = props.auth;
   const updateUser = props.updateUser;
 
-  
+
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
