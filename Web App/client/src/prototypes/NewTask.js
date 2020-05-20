@@ -204,7 +204,7 @@ function NewTask(props) {
 
     uploadTugas(formData)
     setFileTugas(null)
-    
+    handleClick()
   }
 
   return(
@@ -286,13 +286,16 @@ function NewTask(props) {
             <Grid item container direction="column" spacing={2} className={classes.workBox}>
             <form onSubmit={onSubmitTugas}>
               <Grid item>
+              
               <input
                 type="file"
                 name="tugas"
                 onChange={handleTugasUpload}
                 ref={tugasUploader}
+                accept="file/*"
                 
               />
+              
           <input type="file" name="file" id="file" ref={uploadedTugas} style={{
                   display: "none"
                 }}/>
@@ -310,7 +313,6 @@ function NewTask(props) {
                 <Button
                   variant="contained"
                   startIcon={<PublishIcon />}
-                  onClick={handleClick}
                   className={classes.workButton}
                   style={{color: "white", backgroundColor: "#2196f3"}}
                   type="submit"
