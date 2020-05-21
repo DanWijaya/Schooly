@@ -303,6 +303,7 @@ function NavBar(props){
             className={classes.schoolyLogo}
           />
         </a>
+        
       </Grid>
     )
     middleNavBarContents = null
