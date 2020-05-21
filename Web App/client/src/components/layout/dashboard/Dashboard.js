@@ -25,6 +25,7 @@ class Dashboard extends Component {
     const { user } = this.props.auth;
     document.body.style.background = "white"
     
+    document.title="Dashboard | Schooly"
     return (
       <div>
           <div style={{ height: "75vh"}} className="container valign-wrapper">

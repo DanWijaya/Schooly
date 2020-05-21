@@ -267,7 +267,8 @@ function Profile(props) {
   const { user } = props.auth;
   const updateUser = props.updateUser;
 
-
+  document.title="Profile | Schooly"
+  
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>

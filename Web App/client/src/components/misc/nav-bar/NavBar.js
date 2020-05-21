@@ -174,13 +174,13 @@ function NavBar(props){
       </Grid>
     )
     middleNavBarContents = (
-      <a href="/dashboard">
+      <Link to="/dashboard">
         <img
           alt="SchoolyLogoNavBar"
           src={schoolyLogo}
           className={classes.schoolyLogo}
         />
-      </a>
+      </Link>
     )
     rightSideNavBarContents = (
       <Grid container className={classes.navbarContainedRightItems}>
@@ -195,12 +195,17 @@ function NavBar(props){
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem href="/profile">
+            
+            <StyledMenuItem>
+            <Link to="/profile" style={{ display: "flex", direction: "column"}}>
               <ListItemIcon>
                 <AccountCircleIcon fontSize="medium" />
               </ListItemIcon>
               <ListItemText primary="Profil Saya" />
+              </Link>
             </StyledMenuItem>
+            
+
             <StyledMenuItem>
               <ListItemIcon>
                 <ExitToAppIcon fontSize="medium" />
@@ -334,7 +339,7 @@ function NavBar(props){
           </Button>
       </Grid>
     )
-    loggedInSideDrawerContents = null
+    loggedInSideDrawerContents = <div style={{display: 'none'}}></div>
   }
 
   var navBarContents = (
