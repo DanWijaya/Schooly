@@ -2,10 +2,11 @@ import React from "react"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
 import PropTypes from "prop-types";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
+import LightTooltip from "../light-tooltip/LightTooltip"
 import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, List, ListItem,
-  ListItemIcon, ListItemText, Toolbar, Tooltip } from "@material-ui/core";
+  ListItemIcon, ListItemText, Toolbar } from "@material-ui/core";
 import {makeStyles, useTheme} from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -22,7 +23,7 @@ export const drawerWidth = 220;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
+    flexGrow: "1",
   },
   appBar: {
     backgroundColor: "#2196f3",
@@ -76,10 +77,12 @@ const useStyles = makeStyles((theme) => ({
   navbarContainedLeftItems: {
     flex: "1",
     justifyContent: "flex-start",
+    alignItems: "center",
   },
   navbarContainedRightItems: {
     flex: "1",
     justifyContent: "flex-end",
+    alignItems: "center",
   },
   navbarProfilePicture: {
     width: theme.spacing(3),
@@ -110,6 +113,7 @@ function NavBar(props){
   };
 
   let leftSideNavBarContents;
+  let middleNavBarContents;
   let rightSideNavBarContents;
   let loggedInSideDrawerContents;
 
@@ -126,138 +130,37 @@ function NavBar(props){
         </IconButton>
       </Grid>
     )
+    middleNavBarContents = (
+      <a href="/dashboard">
+        <img
+          alt="SchoolyLogoNavBar"
+          src={schoolyLogo}
+          className={classes.schoolyLogo}
+        />
+      </a>
+    )
     rightSideNavBarContents = (
       <Grid container className={classes.navbarContainedRightItems}>
-          <Tooltip title={user.name}>
+          <LightTooltip title={user.name}>
             <IconButton href="/profile">
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
-          </Tooltip>
-          <Tooltip title="Notifications">
+          </LightTooltip>
+          <LightTooltip title="Notifications">
             <IconButton color="inherit" href="/notifications">
               <Badge badgeContent={11} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-          </Tooltip>
-          <Tooltip title="Help and Support">
+          </LightTooltip>
+          <LightTooltip title="Help and Support">
             <IconButton color="inherit" href="/support">
               <HelpIcon />
             </IconButton>
-          </Tooltip>
+          </LightTooltip>
         </Grid>
     )
     loggedInSideDrawerContents = (
-      <List>
-        <DrawerItemList href="/dashboard">
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-        </DrawerItemList>
-        <DrawerItemList href="/viewclass">
-            <ListItemIcon>
-              <ClassIcon />
-            </ListItemIcon>
-            <ListItemText primary="Classes" />
-        </DrawerItemList>
-        <DrawerItemList href="/announcements">
-            <ListItemIcon>
-              <AnnouncementIcon />
-            </ListItemIcon>
-            <ListItemText primary="Announcements" />
-        </DrawerItemList>
-        <DrawerItemList href="/viewtask">
-            <ListItemIcon>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Tasks" />
-        </DrawerItemList>
-        <DrawerItemList href="/assessments" disabled>
-            <ListItemIcon>
-              <AssessmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Assessments" />
-        </DrawerItemList>
-      </List>
-      )
-    }
-
-  else {
-    leftSideNavBarContents = (
-      <IconButton
-        edge="start"
-        color="inherit"
-        className={classes.iconButton}
-        onClick={handleDrawerOpen}
-      >
-        <MenuIcon />
-      </IconButton>
-    )
-    rightSideNavBarContents = (
-      <div>
-      <Link to="/register">
-        <Button
-          variant="contained"
-          size="medium"
-          style={{
-            backgroundColor: "white",
-            fontSize: "6",
-            color: "#2196f3",
-            width: "90px",
-            height: "30px",
-          }}
-        >
-          Register
-        </Button>
-      </Link>
-        <br/><br/>
-      <Link to="/login">
-        <Button
-          variant="contained"
-          size="small"
-          style={{
-            backgroundColor: "white",
-            color: "#2196f3",
-            fontSize: "6",
-            width: "90px",
-            height: "30px",
-          }}
-        >
-          Log In
-        </Button>
-      </Link>
-    </div>
-    )
-    loggedInSideDrawerContents = null
-  }
-
-  var navBarContents = (
-    <Toolbar className={classes.navbarContainer}>
-      {leftSideNavBarContents}
-        <a href="/dashboard">
-          <img
-            alt="SchoolyLogoNavBar"
-            src={schoolyLogo}
-            className={classes.schoolyLogo}
-          />
-        </a>
-      {rightSideNavBarContents}
-    </Toolbar>
-  )
-
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-         {navBarContents}
-      </AppBar>
-      <Toolbar />
       <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
@@ -272,7 +175,38 @@ function NavBar(props){
         }}
       >
         <Toolbar />
-        {loggedInSideDrawerContents}
+        <List>
+          <DrawerItemList href="/dashboard">
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+          </DrawerItemList>
+          <DrawerItemList href="/viewclass">
+              <ListItemIcon>
+                <ClassIcon />
+              </ListItemIcon>
+              <ListItemText primary="Classes" />
+          </DrawerItemList>
+          <DrawerItemList href="/announcements">
+              <ListItemIcon>
+                <AnnouncementIcon />
+              </ListItemIcon>
+              <ListItemText primary="Announcements" />
+          </DrawerItemList>
+          <DrawerItemList href="/viewtask">
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Tasks" />
+          </DrawerItemList>
+          <DrawerItemList href="/assessments" disabled>
+              <ListItemIcon>
+                <AssessmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Assessments" />
+          </DrawerItemList>
+        </List>
         <Divider />
         <List>
         <DrawerItemList href="/about-schooly">
@@ -289,6 +223,79 @@ function NavBar(props){
           </DrawerItemList>
         </List>
       </Drawer>
+      )
+    }
+
+  else {
+    leftSideNavBarContents = (
+      <Grid className={classes.navbarContainedLeftItems}>
+        <a href="/dashboard">
+          <img
+            alt="SchoolyLogoNavBar"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
+        </a>
+      </Grid>
+    )
+    middleNavBarContents = null
+    rightSideNavBarContents = (
+      <Grid container className={classes.navbarContainedRightItems}>
+          <Button
+            variant="contained"
+            size="medium"
+            href="/register"
+            style={{
+              backgroundColor: "#61bd4f",
+              color: "white",
+              fontSize: "6",
+              width: "90px",
+              height: "30px",
+              marginRight: "15px"
+            }}
+          >
+            Daftar
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            href="/login"
+            style={{
+              backgroundColor: "white",
+              color: "#2196f3",
+              fontSize: "6",
+              width: "90px",
+              height: "30px",
+            }}
+          >
+            Masuk
+          </Button>
+      </Grid>
+    )
+    loggedInSideDrawerContents = null
+  }
+
+  var navBarContents = (
+    <Toolbar className={classes.navbarContainer}>
+      {leftSideNavBarContents}
+      {middleNavBarContents}
+      {rightSideNavBarContents}
+    </Toolbar>
+  )
+
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+         {navBarContents}
+      </AppBar>
+      <Toolbar />
+      {loggedInSideDrawerContents}
     </div>
   )
 }

@@ -26,6 +26,7 @@ Daniel:
 7. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
 8. Buat Navigation Bar cuma muncul pas udah login (atau buat tampilannya beda) (Done)
 9. GridStore needs to be updated to GridFSBucket
+10. betulin null (0px) logged out drawer (https://stackoverflow.com/questions/53048037/react-showing-0-instead-of-nothing-with-short-circuit-conditional-component)
 
 Evaluations
 Botak > Daniel:
