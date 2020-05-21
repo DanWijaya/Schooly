@@ -97,7 +97,7 @@ router.get('/image-upload', (req,res) => {
       return res.json(files);
     });
   })
-  // @route POST /upload
+  // @route POST /upload  
   // @desc Upload files to DB
   router.post('/upload/:id', upload.single('avatar'), (req,res) => {
     // res.json({ file: req.file});
@@ -161,7 +161,7 @@ router.get('/image-upload', (req,res) => {
   // @route GET /files/:filename
   // @desc  Display single file object
   router.get('/files/:filename', (req, res) => {
-    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    gfs.files.find({ filename: req.params.filename }, (err, file) => {
       // Check if file
       if (!file || file.length === 0) {
         return res.status(404).json({
