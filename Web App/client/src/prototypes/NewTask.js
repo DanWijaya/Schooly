@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import { Avatar, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
-   Menu, MenuItem, Paper, Snackbar, TextField, Typography } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { Avatar, Button, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import AddIcon from "@material-ui/icons/Add";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -43,11 +43,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 const listWorkFile = (tasks=null) => {
-  // tasks itu nanti lists, bakal di pass. 
+  // tasks itu nanti lists, bakal di pass.
   var tasksContents = [];
   for (let i = 0 ; i < 3; i++) {
     tasksContents.push(
-    <WorkFile 
+    <WorkFile
       file_type_icon={0}
       file_name={`Tugas ${i} Kimia`}
       file_type="PDF Document"/>
@@ -286,16 +286,16 @@ function NewTask(props) {
             <Grid item container direction="column" spacing={2} className={classes.workBox}>
             <form onSubmit={onSubmitTugas}>
               <Grid item>
-              
+
               <input
                 type="file"
                 name="tugas"
                 onChange={handleTugasUpload}
                 ref={tugasUploader}
                 accept="file/*"
-                
+
               />
-              
+
           <input type="file" name="file" id="file" ref={uploadedTugas} style={{
                   display: "none"
                 }}/>
