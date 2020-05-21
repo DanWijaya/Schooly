@@ -150,8 +150,8 @@ function NavBar(props){
 
   const onLogoutClick = (e) => {
     e.preventDefault();
-    props.logoutUser();
-
+    handleClose()
+    props.logoutUser(history);
   }
 
   const toProfilePage = (e) => {

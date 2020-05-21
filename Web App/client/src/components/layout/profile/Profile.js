@@ -75,13 +75,12 @@ function ProfileDataItem(props) {
 }
 
 function Profile(props) {
-  document.title="Schooly | Profile Name"
 
   const classes = useStyles();
 
   const { user } = props.auth;
   const updateUser = props.updateUser;
-
+  document.title=`Schooly | ${user.name}`
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
