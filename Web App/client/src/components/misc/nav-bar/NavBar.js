@@ -5,17 +5,18 @@ import clsx from "clsx";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import PropTypes from "prop-types";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
-import LightTooltip from "../light-tooltip/LightTooltip"
 import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, List, ListItem,
-  ListItemIcon, ListItemText, Toolbar } from "@material-ui/core";
-import {makeStyles, useTheme} from "@material-ui/core/styles";
+  ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
+import {makeStyles, withStyles, useTheme} from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import ClassIcon from "@material-ui/icons/Class";
+import CloseIcon from '@material-ui/icons/Close';
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
 import MenuIcon from "@material-ui/icons/Menu"
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -68,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
   },
   iconButton: {
     "&:focus": {
-      outline: "transparent",
       backgroundColor: "transparent",
     },
   },
@@ -96,6 +96,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      backgroundColor: "#2196f3",
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
+
 function DrawerItemList(props) {
   return <ListItem button component="a" {...props} />;
 }
@@ -104,8 +135,17 @@ function NavBar(props){
   var classes = useStyles();
   const { user } = props.auth;
 
-  const [open, setOpen] = React.useState(false);
+  //Profile Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
+  //Drawer
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     props.callbackFromParent(!open)
     if(!open)
@@ -114,6 +154,7 @@ function NavBar(props){
       setOpen(false)
   };
 
+  //NavBar Contents
   let leftSideNavBarContents;
   let middleNavBarContents;
   let rightSideNavBarContents;
@@ -144,10 +185,29 @@ function NavBar(props){
     rightSideNavBarContents = (
       <Grid container className={classes.navbarContainedRightItems}>
           <LightTooltip title={user.name}>
-            <IconButton href="/profile">
+            <IconButton onClick={handleClick} className={classes.iconButton}>
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
           </LightTooltip>
+          <StyledMenu
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <StyledMenuItem href="/profile">
+              <ListItemIcon>
+                <AccountCircleIcon fontSize="medium" />
+              </ListItemIcon>
+              <ListItemText primary="Profil Saya" />
+            </StyledMenuItem>
+            <StyledMenuItem>
+              <ListItemIcon>
+                <ExitToAppIcon fontSize="medium" />
+              </ListItemIcon>
+              <ListItemText primary="Keluar" />
+            </StyledMenuItem>
+          </StyledMenu>
           <LightTooltip title="Notifications">
             <IconButton color="inherit" href="/notifications">
               <Badge badgeContent={11} color="secondary">
@@ -211,12 +271,12 @@ function NavBar(props){
         </List>
         <Divider />
         <List>
-        <DrawerItemList href="/about-schooly">
-            <ListItemIcon>
-              <AboutIcon />
-            </ListItemIcon>
-            <ListItemText primary="About Schooly" />
-        </DrawerItemList>
+          <DrawerItemList href="/about-schooly">
+              <ListItemIcon>
+                <AboutIcon />
+              </ListItemIcon>
+              <ListItemText primary="About Schooly" />
+          </DrawerItemList>
           <DrawerItemList href="/settings">
               <ListItemIcon>
                 <SettingIcon />

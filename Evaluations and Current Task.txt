@@ -32,14 +32,6 @@ Daniel:
 14. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
 15. betulin null (0px) logged out drawer (https://stackoverflow.com/questions/53048037/react-showing-0-instead-of-nothing-with-short-circuit-conditional-component)
 
-Evaluations
-Botak > Daniel:
--
--
-Daniel > Botak:
--
--
-
 To be Fixed:
 - Profile picturenya belum bisa skalian hapus dan upload (Done)
 - Profile avatar pas preview, rationya jelek
