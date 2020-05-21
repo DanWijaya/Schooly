@@ -80,12 +80,18 @@ class App extends Component {
       backdrop = <Backdrop click={this.backdropClickHandler}/>
     }
 
+    if(this.state.sideDrawerOpen) {
+      translateXValue = drawerWidth
+    } else{
+      translateXValue = "0px"
+    }
+
     return (
       <div>
        <Provider store={store}>
         <Router>
           <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
-          {(this.state.sideDrawerOpen ) ? translateXValue = `${drawerWidth}px` : translateXValue = "0px"}
+          <br/>
           <div className="App" style={{ marginLeft: `${translateXValue}` }}>
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />

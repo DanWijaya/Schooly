@@ -1,13 +1,20 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import { connect } from "react-redux";
+import {updateUser} from "../../../actions/AuthActions"
 import PropTypes from "prop-types";
-import { updateUser } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
-import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog"
-import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip"
+import { AppBar, Avatar, Backdrop, Button, Box, Dialog, DialogContent, DialogContentText, DialogTitle,
+   Fade, Grid, IconButton, List, ListItem, ListItemText, ListItemIcon, ListItemAvatar, ListItemSecondaryAction, Modal,
+   Paper, Snackbar, Typography } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import EmailIcon from "@material-ui/icons/Email";
 import GamesIcon from "@material-ui/icons/Games";
 import HomeIcon from "@material-ui/icons/Home";
@@ -43,16 +50,188 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 4, 3),
   },
+  iconButton: {
+    "&:focus": {
+    backgroundColor: 'transparent'
+    },
+    color: "#2196f3"
+  }
 }));
 
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    right: theme.spacing(2),
-    top: theme.spacing(16),
-  },
-}))(Badge);
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function UploadDialog(props) {
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openAlert, setOpenAlert] = React.useState(false);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  }
+
+  const handleCloseAlert = (e, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenAlert(false);
+  }
+
+  const classes = useStyles();
+
+  var uploadedImage = React.useRef(null);
+  const imageUploader = React.useRef(null);
+  const [profileImg, setProfileImg] = React.useState(null);
+
+  const {user} = props;
+  const {updateUser} = props;
+
+  const handleImageUpload = e => {
+    const [file] = e.target.files;
+    setProfileImg(e.target.files[0])
+    if (file) {
+      const reader = new FileReader();
+      const { current } = uploadedImage;
+      current.file = file;
+      reader.onload = e => {
+        current.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    
+  };
+
+  const clear = () => {
+     setProfileImg(false)
+  }
+
+
+  const onSubmitForm = (e) => {
+    e.preventDefault()
+    console.log("AAA")
+    let formData = new FormData()
+    console.log(profileImg)
+
+    formData.append("avatar", profileImg)
+
+    let userData = user
+    let userId = user.id;
+
+    updateUser(userData, userId, formData)
+    setProfileImg(null)
+    handleOpenAlert()
+  }
+
+  return (
+    <div>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{vertical : 'top', horizontal: 'center'}}
+      >
+        <Alert onClose={handleCloseAlert} severity="success">
+          Foto profil berhasil disimpan!
+        </Alert>
+      </Snackbar>
+
+      <LightTooltip title="Ganti Foto Profil">
+        <IconButton onClick={handleOpenDialog} className={classes.iconButton}>
+          <AddAPhotoIcon
+            style={{
+              color: "#2196f3",
+              height: "35px",
+              width: "35px",
+            }}
+          />
+        </IconButton>
+      </LightTooltip>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>
+          Unggah Foto Profil
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            "Mungkin mau nambahin sesuatu disini"
+          </DialogContentText>
+        </DialogContent>
+          <form onSubmit={onSubmitForm}>
+            <input
+              accept="image/*"
+              type="file"
+              name="avatar"
+              onChange={handleImageUpload}
+              ref={imageUploader}
+              style={{
+                display: "none"
+              }}
+            />
+            {!profileImg ?
+              <Avatar className={classes.avatar}>
+                <img src={`/api/uploads/image/${user.avatar}`}
+                ref={uploadedImage}
+                className={classes.avatar}/>
+              </Avatar>
+              :
+              <Avatar className={classes.avatar}>
+                <img ref={uploadedImage}
+                className={classes.avatar}/>
+              </Avatar>
+            }
+            <Grid container direction="column" justify="center" alignItems="center">
+              <Grid item>
+                <LightTooltip title="Pilih Foto Profil">
+                  <IconButton className={classes.iconButton}>
+                    <CloudUploadIcon
+                      onClick={() => {imageUploader.current.click()}}
+                      style={{
+                        color: "#2196f3",
+                        height: "35px",
+                        width: "35px",
+                      }}
+                    />
+                  </IconButton>
+                </LightTooltip>
+              </Grid>
+              <Button
+                type="submit"
+                style={{
+                  backgroundColor: "#2196f3",
+                  color: "white",
+                  width: "100px",
+                }}
+              >
+                Simpan
+              </Button>
+              <Button
+                type="button"
+                onClick={clear}
+                style={{
+                  backgroundColor: "black",
+                  color: "white",
+                  width: "100px",
+                }}
+              >
+                Buang
+              </Button>
+            </Grid>
+          </form>
+      </Dialog>
+    </div>
+  )
+}
 
 function ProfileDataItem(props) {
+  const classes = useStyles();
   return(
     <ListItem>
         <ListItemAvatar>
@@ -61,18 +240,25 @@ function ProfileDataItem(props) {
           </Avatar>
         </ListItemAvatar>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <Typography variant="button">
               {props.profile_data_category}
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs>
             {props.profile_data_info}
           </Grid>
         </Grid>
+        <ListItemSecondaryAction>
+          <IconButton edge="end" className={classes.iconButton}>
+            <ArrowRightIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
     </ListItem>
   )
 }
+
+
 
 function Profile(props) {
 
@@ -81,24 +267,17 @@ function Profile(props) {
   const { user } = props.auth;
   const updateUser = props.updateUser;
 
+  document.title="Profile | Schooly"
+  
   return(
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar ?
-            <StyledBadge
-              badgeContent={
-                <ProfilePictureEditorDialog user={user} updateUser={updateUser}/>
-              }
-            >
-              <Avatar
-                src={`/api/uploads/image/${user.avatar}`}
-                className={classes.avatar}
-              />
-            </StyledBadge>
-            :
-            <Avatar src={defaultAvatar} className={classes.avatar} />
+            <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.avatar}/> :
+            <Avatar src={defaultAvatar} className={classes.avatar}/>
           }
+          <UploadDialog user={user} updateUser={updateUser}/>
           <Typography variant="subtitle2">
             <h2>{user.name}</h2>
           </Typography>
