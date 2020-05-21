@@ -18,15 +18,19 @@ Botak:
 Daniel:
 1. Class Page
 2. Buat User Schemanya sesuai dgn yang ada di profile
-3. Buat fitur Uplaod Image, Upload file (buat tugas) dan lain lain.
-4. Cari tau gimana remind student tugas kalo deadline sudah dekat.
-5. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
-5. Mungkin buat page utk si Admin utk bisa manage users (?)
-6. Notifications page dan listnya (previewnya muncul di Dashboard)
-7. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-8. Buat Navigation Bar cuma muncul pas udah login (atau buat tampilannya beda) (Done)
-9. GridStore needs to be updated to GridFSBucket
-10. betulin null (0px) logged out drawer (https://stackoverflow.com/questions/53048037/react-showing-0-instead-of-nothing-with-short-circuit-conditional-component)
+3. Buat fitur Uplaod Image, Upload file dan lain lain (Done).
+4. Buat file yang udh diupload bisa didownload.
+5. Cari tau gimana remind student tugas kalo deadline sudah dekat.
+6. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
+7. Mungkin buat page utk si Admin utk bisa manage users (?)
+8. Notifications page dan listnya (previewnya muncul di Dashboard)
+9. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
+10. Buat Navigation Bar cuma muncul pas udah login (atau buat tampilannya beda) (Done)
+11. GridStore needs to be updated to GridFSBucket (Done)
+12. Rapikan interface pas uplaod file, Ganti jangan pakai yang Choose File gitu
+13. Tambahin tugas field di User.
+14. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
+15. betulin null (0px) logged out drawer (https://stackoverflow.com/questions/53048037/react-showing-0-instead-of-nothing-with-short-circuit-conditional-component)
 
 Evaluations
 Botak > Daniel:
@@ -37,7 +41,7 @@ Daniel > Botak:
 -
 
 To be Fixed:
-- Profile picturenya belum bisa skalian hapus dan upload
+- Profile picturenya belum bisa skalian hapus dan upload (Done)
 - Profile avatar pas preview, rationya jelek
-- Coba pakai withstyles buat yang iconbutton hijau-hijau
-- Setting Navbar untuk kalau udah login aja
+- Coba pakai withstyles buat yang iconbutton hijau-hijau (Done)
+- Setting Navbar untuk kalau udah login aja (Done)

@@ -25,14 +25,14 @@ conn.once('open', () => {
   gfs.collection('avatar')
 
   gfs2 = GridFsStream(conn.db, mongoose.mongo);
-  gfs2.collection('tugas');
+  gfs2.collection('tugas')
 
   // all set!
 })
 
 
 // Create storage engine
-var storage = new GridFsStorage({
+var avatar_storage = new GridFsStorage({
     url: keys.mongoURI,
     file: (req, file) => {
       return new Promise((resolve, reject) => {
@@ -51,7 +51,7 @@ var storage = new GridFsStorage({
     }
   });
  
-  var storage2 = new GridFsStorage({
+  var tugas_storage = new GridFsStorage({
     url: keys.mongoURI,
     file: (req, file) => {
       return new Promise((resolve, reject) => {
@@ -72,8 +72,8 @@ var storage = new GridFsStorage({
 
 
 // Create the middleware which facilitates file uploads
-const upload = multer({ storage });
-const upload2 = multer({ storage2 });
+const upload = multer({ storage: avatar_storage });
+const upload2 = multer({ storage: tugas_storage });
 
 router.get('/image-upload', (req,res) => {
     console.log("AA")
@@ -102,7 +102,6 @@ router.get('/image-upload', (req,res) => {
   router.post('/upload/:id', upload.single('avatar'), (req,res) => {
     // res.json({ file: req.file});
     let id = req.params.id
-
     User.findById(id, (err, userData) => {
       if(!userData)
         res.status(404).send("User data is not found");
@@ -122,11 +121,11 @@ router.get('/image-upload', (req,res) => {
   });
 
   router.post('/uploadtugas', upload2.single('tugas'), (req,res) => {
-    console.log(req.formData, "Tugas")
-
+    console.log("test upload tugas")
+    console.log(req)
     console.log("Tugas telah diupload")
-
-    return res.json("Success")
+    
+    // return res.json("Success")
   })
 
   router.get('/filetugas/', (req, res) => {
@@ -178,6 +177,22 @@ router.get('/image-upload', (req,res) => {
 
   // @route GET /files/:filename
   // @desc  Display single file object
+
+  router.get('/tugas/:filename', (req,res) => {
+    gfs2.files.findOne({ filename: req.params.filename}, (err, file) => {
+      // Check if tugas exist or not.
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: 'Belum ada tugas yang terupload'
+        });
+      }
+
+      else{
+        res.download(req.params.filename)
+      }
+    })
+  })
+  
   router.get('/image/:filename', (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
@@ -214,4 +229,4 @@ router.delete('/image/:name', (req,res) => {
   });
 })
 
-module.exports = {router, upload};
+module.exports = {router, upload, upload2};

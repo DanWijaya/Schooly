@@ -162,7 +162,7 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/update/:id", avatar.upload.single('avatar'), (req,res) => {
-  console.log(req.file.filename)
+  console.log(req)
   let id = req.params.id;
 
   User.findById(id , (err, user) => {

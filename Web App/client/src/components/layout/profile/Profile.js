@@ -107,7 +107,7 @@ function UploadDialog(props) {
       };
       reader.readAsDataURL(file);
     }
-    console.log(profileImg)
+    
   };
 
   const clear = () => {

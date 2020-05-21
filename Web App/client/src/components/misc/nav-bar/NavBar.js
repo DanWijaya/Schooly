@@ -2,6 +2,8 @@ import React from "react"
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
+import LightTooltip from "../light-tooltip/LightTooltip";
 import PropTypes from "prop-types";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip"
