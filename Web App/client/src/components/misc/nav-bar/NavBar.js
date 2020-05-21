@@ -74,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
     "&:focus": {
       backgroundColor: "transparent",
     },
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
   },
   navbarContainer: {
     display: "flex",
@@ -178,11 +181,12 @@ function NavBar(props){
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
         <IconButton
-            color="inherit"
-            edge="start"
-            className={classes.iconButton}
-            onClick={handleDrawerOpen}
-          >
+          disableRipple
+          color="inherit"
+          edge="start"
+          className={classes.iconButton}
+          onClick={handleDrawerOpen}
+        >
           <MenuIcon />
         </IconButton>
       </Grid>
@@ -199,7 +203,7 @@ function NavBar(props){
     rightSideNavBarContents = (
       <Grid container className={classes.navbarContainedRightItems}>
           <LightTooltip title={user.name}>
-            <IconButton onClick={handleClick} className={classes.iconButton}>
+            <IconButton disableRipple onClick={handleClick} className={classes.iconButton}>
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
           </LightTooltip>
@@ -306,7 +310,6 @@ function NavBar(props){
       </Drawer>
       )
     }
-
   else {
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
@@ -317,7 +320,7 @@ function NavBar(props){
             className={classes.schoolyLogo}
           />
         </a>
-        
+
       </Grid>
     )
     middleNavBarContents = null

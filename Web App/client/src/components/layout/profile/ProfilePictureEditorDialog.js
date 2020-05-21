@@ -4,7 +4,7 @@ import { Avatar, Button, Dialog, DialogTitle, DialogContent, DialogContentText,
    Grid, IconButton, Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,12 +17,18 @@ const useStyles = makeStyles((theme) => ({
     color: "#2196f3",
     backgroundColor: "#DCDCDC",
     "&:focus": {
-      backgroundColor: "white"
+      backgroundColor: "#DCDCDC"
+    },
+    "&:hover": {
+      backgroundColor: "#DCDCDC"
     },
   },
   uploadPhotoIconButton: {
     color: "#2196f3",
     "&:focus": {
+      backgroundColor: "transparent"
+    },
+    "&:hover": {
       backgroundColor: "transparent"
     },
   },
@@ -114,8 +120,8 @@ function ProfilePictureEditorDialog(props) {
         </Alert>
       </Snackbar>
       <LightTooltip title="Ganti Foto Profil">
-        <IconButton onClick={handleOpenDialog} className={classes.addPhotoIconButton}>
-          <AddAPhotoIcon
+        <IconButton disableRipple onClick={handleOpenDialog} className={classes.addPhotoIconButton}>
+          <CameraAltIcon
             style={{
               color: "#2196f3",
               height: "35px",
