@@ -1,28 +1,26 @@
 import React from "react"
 import { connect } from "react-redux";
+import { useHistory } from 'react-router-dom';
 import clsx from "clsx";
+import { logoutUser } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import PropTypes from "prop-types";
 import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Link,
    List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
-import {makeStyles, withStyles, useTheme} from "@material-ui/core/styles";
+import {makeStyles, withStyles } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import ClassIcon from "@material-ui/icons/Class";
-import CloseIcon from '@material-ui/icons/Close';
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
 import MenuIcon from "@material-ui/icons/Menu"
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SettingIcon from "@material-ui/icons/SettingsOutlined"
-import { useHistory } from 'react-router-dom';
-
-import { logoutUser } from "../../../actions/AuthActions";
 
 export const drawerWidth = 220;
 
@@ -155,10 +153,6 @@ function NavBar(props){
     props.logoutUser(history);
   }
 
-  const toProfilePage = (e) => {
-    e.preventDefault();
-    history.push("/profile")
-  }
   //Drawer
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
@@ -189,7 +183,7 @@ function NavBar(props){
       </Grid>
     )
     middleNavBarContents = (
-      <Link to="/dashboard">
+      <Link href="/dashboard">
         <img
           alt="SchoolyLogoNavBar"
           src={schoolyLogo}

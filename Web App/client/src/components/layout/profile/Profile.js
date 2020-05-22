@@ -21,10 +21,6 @@ import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import WorkIcon from "@material-ui/icons/Work";
 import MuiAlert from "@material-ui/lab/Alert";
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "750px",
@@ -58,6 +54,10 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function ProfileDataItem(props) {
   return(
     <ListItem>
@@ -81,22 +81,19 @@ function ProfileDataItem(props) {
 }
 
 function Profile(props) {
-
   const classes = useStyles();
 
   const { user } = props.auth;
   const updateUser = props.updateUser;
-  const [openAlert, setOpenAlert] = React.useState(false);
 
+  const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
   }
-
   const handleCloseAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpenAlert(false);
   }
 
@@ -109,11 +106,10 @@ function Profile(props) {
         onClose={handleCloseAlert}
         anchorOrigin={{vertical : "top", horizontal: "center"}}
       >
-        <Alert onClose={handleCloseAlert} severity="success">
+        <Alert onClose={handleCloseAlert} severity="success" >
           Foto profil berhasil diganti!
         </Alert>
       </Snackbar>
-
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar && user.avatar != undefined ?
