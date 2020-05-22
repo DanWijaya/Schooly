@@ -128,7 +128,22 @@ router.get('/image-upload', (req,res) => {
     // return res.json("Success")
   })
 
-  router.get('/filetugas/', (req, res) => {
+  router.get('/tugas/:filename', (req,res) => {
+
+  })
+  router.get('/download/:id', (req,res) => {
+    tugasModel.find({_id:req.params.id}, (err,data) => {
+      if(err){
+        console.log(err)
+      }
+      else { 
+        var path= __dirname+'/public'+data[0].tugasPath;
+        res.download(path);
+      }
+    })
+  })
+
+  router.get('/filetugas', (req, res) => {
     gfs2.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
@@ -161,7 +176,7 @@ router.get('/image-upload', (req,res) => {
   // @route GET /files/:filename
   // @desc  Display single file object
   router.get('/files/:filename', (req, res) => {
-    gfs.files.find({ filename: req.params.filename }, (err, file) => {
+    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
       if (!file || file.length === 0) {
         return res.status(404).json({
@@ -178,20 +193,20 @@ router.get('/image-upload', (req,res) => {
   // @route GET /files/:filename
   // @desc  Display single file object
 
-  router.get('/tugas/:filename', (req,res) => {
-    gfs2.files.findOne({ filename: req.params.filename}, (err, file) => {
-      // Check if tugas exist or not.
+  router.get('/tugass/:filename', (req,res) => {
+    gfs2.files.findOne({filename: req.params.filename}, (err, file) => {
+      // Check if files
       if (!file || file.length === 0) {
         return res.status(404).json({
-          err: 'Belum ada tugas yang terupload'
+          err: 'Tugas tidak ada'
         });
       }
 
-      else{
-        res.download(req.params.filename)
-      }
-    })
-  })
+      // Files exist
+      const readStream = gfs2.createReadStream(file.filename);
+      readStream.pipe(res)
+    });
+    });
   
   router.get('/image/:filename', (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
@@ -229,4 +244,13 @@ router.delete('/image/:name', (req,res) => {
   });
 })
 
+// router.get('/download/tugas/:id', (req,res) => {
+//   gfs2.find({filename:req.params.filename}, (err,data)=> {
+//     if(err)
+//       console.log(err)
+//     else{
+//       var 
+//     }
+//   })
+// })
 module.exports = {router, upload, upload2};
