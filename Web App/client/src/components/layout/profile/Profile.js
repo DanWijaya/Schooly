@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { updateUser } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog"
-import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography } from "@material-ui/core";
+import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography, Snackbar  } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -18,6 +18,11 @@ import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import WorkIcon from "@material-ui/icons/Work";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,15 +85,40 @@ function Profile(props) {
 
   const { user } = props.auth;
   const updateUser = props.updateUser;
+  const [openAlert, setOpenAlert] = React.useState(false);
+
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  }
+
+  const handleCloseAlert = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenAlert(false);
+  }
+
   document.title=`Schooly | ${user.name}`
   return(
     <div className={classes.root}>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{vertical : "top", horizontal: "center"}}
+      >
+        <Alert onClose={handleCloseAlert} severity="success">
+          Foto profil berhasil diganti!
+        </Alert>
+      </Snackbar>
+
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar ?
             <StyledBadge
               badgeContent={
-                <ProfilePictureEditorDialog user={user} updateUser={updateUser}/>
+                <ProfilePictureEditorDialog user={user} updateUser={updateUser} handleOpenAlert={handleOpenAlert}/>
               }
             >
               <Avatar

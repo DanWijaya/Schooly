@@ -8,6 +8,9 @@ import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "10px",
+  },
   avatar: {
     width: theme.spacing(20),
     height: theme.spacing(20),
@@ -34,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -53,17 +55,17 @@ function ProfilePictureEditorDialog(props) {
     setOpenDialog(false);
   };
 
-  const handleOpenAlert = () => {
-    setOpenAlert(true);
-  }
+  // const handleOpenAlert = () => {
+  //   setOpenAlert(true);
+  // }
 
-  const handleCloseAlert = (e, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
+  // const handleCloseAlert = (e, reason) => {
+  //   if (reason === "clickaway") {
+  //     return;
+  //   }
 
-    setOpenAlert(false);
-  }
+  //   setOpenAlert(false);
+  // }
 
   var uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
@@ -71,6 +73,7 @@ function ProfilePictureEditorDialog(props) {
 
   const {user} = props;
   const {updateUser} = props;
+  // const {handleOpenAlert} = props;
 
   const handleImageUpload = e => {
     const [file] = e.target.files;
@@ -84,7 +87,6 @@ function ProfilePictureEditorDialog(props) {
       };
       reader.readAsDataURL(file);
     }
-
   };
 
   const clear = () => {
@@ -104,21 +106,13 @@ function ProfilePictureEditorDialog(props) {
 
     updateUser(userData, userId, formData)
     setProfileImg(null)
-    handleOpenAlert()
+    props.handleOpenAlert()
+    
   }
 
   return (
-    <div>
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
-      >
-        <Alert onClose={handleCloseAlert} severity="success">
-          Foto profil berhasil diganti!
-        </Alert>
-      </Snackbar>
+    <div className={classes.root}>
+
       <LightTooltip title="Ganti Foto Profil">
         <IconButton disableRipple onClick={handleOpenDialog} className={classes.addPhotoIconButton}>
           <CameraAltIcon
