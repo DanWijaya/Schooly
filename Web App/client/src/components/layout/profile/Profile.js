@@ -98,7 +98,13 @@ function Profile(props) {
               />
             </StyledBadge>
             :
-            <Avatar src={defaultAvatar} className={classes.avatar} />
+            <StyledBadge
+              badgeContent={
+                <ProfilePictureEditorDialog user={user} updateUser={updateUser}/>
+              }
+            >
+              <Avatar src={defaultAvatar} className={classes.avatar} />
+            </StyledBadge>
           }
           <Typography variant="subtitle2">
             <h3>{user.name}</h3>

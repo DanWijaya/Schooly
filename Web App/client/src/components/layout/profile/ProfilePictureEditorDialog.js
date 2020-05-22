@@ -1,10 +1,12 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip"
-import { Avatar, Button, Dialog, DialogTitle, DialogContent, DialogContentText,
-   Grid, IconButton, Snackbar } from "@material-ui/core";
+import { Avatar, Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText,
+   Grid, IconButton, Snackbar, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
+import CloseIcon from '@material-ui/icons/Close';
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const useStyles = makeStyles((theme) => ({
@@ -12,27 +14,33 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   avatar: {
-    width: theme.spacing(20),
-    height: theme.spacing(20),
+    width: theme.spacing(25),
+    height: theme.spacing(25),
     margin: "auto"
   },
   addPhotoIconButton: {
     color: "#2196f3",
     backgroundColor: "#DCDCDC",
     "&:focus": {
-      backgroundColor: "#DCDCDC"
+      backgroundColor: "#DCDCDC",
     },
     "&:hover": {
-      backgroundColor: "#DCDCDC"
+      backgroundColor: "#C0C0C0",
+    },
+  },
+  closeIconButton: {
+    backgroundColor: "transparent",
+    "&:focus": {
+      backgroundColor: "transparent",
     },
   },
   uploadPhotoIconButton: {
     color: "#2196f3",
     "&:focus": {
-      backgroundColor: "transparent"
+      backgroundColor: "transparent",
     },
     "&:hover": {
-      backgroundColor: "transparent"
+      backgroundColor: "transparent",
     },
   },
 }));
@@ -44,21 +52,11 @@ function Alert(props) {
 function ProfilePictureEditorDialog(props) {
   const classes = useStyles();
 
-  const [openDialog, setOpenDialog] = React.useState(false);
+  //Snackbar
   const [openAlert, setOpenAlert] = React.useState(false);
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
   const handleOpenAlert = () => {
     setOpenAlert(true);
   }
-
   const handleCloseAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
@@ -67,6 +65,16 @@ function ProfilePictureEditorDialog(props) {
     setOpenAlert(false);
   }
 
+  //Dialog
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  //Image Upload
   var uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const [profileImg, setProfileImg] = React.useState(null);
@@ -109,7 +117,7 @@ function ProfilePictureEditorDialog(props) {
   }
 
   return (
-    <div className={classes.root}>
+    <div>
       <Snackbar
         open={openAlert}
         autoHideDuration={4000}
@@ -121,7 +129,11 @@ function ProfilePictureEditorDialog(props) {
         </Alert>
       </Snackbar>
       <LightTooltip title="Ganti Foto Profil">
-        <IconButton disableRipple onClick={handleOpenDialog} className={classes.addPhotoIconButton}>
+        <IconButton
+          disableRipple
+          onClick={handleOpenDialog}
+          className={classes.addPhotoIconButton}
+        >
           <CameraAltIcon
             style={{
               color: "#2196f3",
@@ -131,76 +143,99 @@ function ProfilePictureEditorDialog(props) {
           />
         </IconButton>
       </LightTooltip>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        className={classes.root}
+      >
         <DialogTitle>
-          Unggah Foto Profil
+          <Grid
+            container
+            justify="flex-end"
+            alignItems="flex-start"
+            style={{width:"300px", marginBottom: "10px"}}
+          >
+            <IconButton
+              edge="end"
+              size="small"
+              disableRipple
+              onClick={handleCloseDialog}
+              className={classes.closeIconButton}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+          <Grid container justify="center">
+            <Typography variant="h5">
+              <b>Perbarui Foto Profil</b>
+            </Typography>
+          </Grid>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            "Mungkin mau nambahin sesuatu disini"
-          </DialogContentText>
-        </DialogContent>
-          <form onSubmit={onSubmitForm}>
-            <input
-              accept="image/*"
-              type="file"
-              name="avatar"
-              onChange={handleImageUpload}
-              ref={imageUploader}
-              style={{
-                display: "none"
-              }}
-            />
-            {!profileImg ?
-              <Avatar className={classes.avatar}>
-                <img src={`/api/uploads/image/${user.avatar}`}
-                ref={uploadedImage}
-                className={classes.avatar}/>
-              </Avatar>
-              :
-              <Avatar className={classes.avatar}>
-                <img ref={uploadedImage}
-                className={classes.avatar}/>
-              </Avatar>
-            }
-            <Grid container direction="column" justify="center" alignItems="center">
-              <Grid item>
-                <LightTooltip title="Pilih Foto Profil">
-                  <IconButton className={classes.uploadPhotoIconButton}>
-                    <CloudUploadIcon
-                      onClick={() => {imageUploader.current.click()}}
-                      style={{
-                        color: "#2196f3",
-                        height: "35px",
-                        width: "35px",
-                      }}
-                    />
-                  </IconButton>
-                </LightTooltip>
+          <Grid style={{padding: "20px"}}>
+            <form onSubmit={onSubmitForm}>
+              <input
+                accept="image/*"
+                type="file"
+                name="avatar"
+                onChange={handleImageUpload}
+                ref={imageUploader}
+                style={{
+                  display: "none"
+                }}
+              />
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item style={{marginBottom: "30px"}}>
+                  {!profileImg ?
+                    <Avatar className={classes.avatar}>
+                      <img src={`/api/uploads/image/${user.avatar}`}
+                        ref={uploadedImage}
+                        className={classes.avatar}
+                      />
+                    </Avatar>
+                    :
+                    <Avatar className={classes.avatar}>
+                      <img ref={uploadedImage} className={classes.avatar} />
+                    </Avatar>
+                  }
+                </Grid>
+                <Grid item>
+                  <Button
+                    startIcon={<AddAPhotoIcon />}
+                    onClick={() => {imageUploader.current.click()}}
+                    style={{
+                      backgroundColor: "#2196f3",
+                      color: "white",
+                      width: "150px",
+                    }}
+                  >
+                    Unggah Foto
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    type="submit"
+                    startIcon={<CloudUploadIcon />}
+                    onClick={handleCloseDialog}
+                    style={{
+                      backgroundColor: "#61bd4f",
+                      color: "white",
+                      width: "150px",
+                    }}
+                  >
+                    Simpan
+                  </Button>
+                </Grid>
               </Grid>
-              <Button
-                type="submit"
-                style={{
-                  backgroundColor: "#2196f3",
-                  color: "white",
-                  width: "100px",
-                }}
-              >
-                Simpan
-              </Button>
-              <Button
-                type="button"
-                onClick={clear}
-                style={{
-                  backgroundColor: "black",
-                  color: "white",
-                  width: "100px",
-                }}
-              >
-                Buang
-              </Button>
-            </Grid>
-          </form>
+            </form>
+          </Grid>
+        </DialogContent>
       </Dialog>
     </div>
   )
