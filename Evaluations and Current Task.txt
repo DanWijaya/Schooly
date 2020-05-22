@@ -42,3 +42,6 @@ To be Fixed:
 Page List Done:
 - Navbar (Masih ke halang mini drawernya)
 - Profile (Kurang dikasi gambar-gambar, mungkin background image)
+
+Optional:
+- Terms and Policies
