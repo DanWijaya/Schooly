@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ProfilePictureEditorDialog(props) {
   const classes = useStyles();
+  const theme = useTheme();
 
   //Dialog
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -169,14 +170,18 @@ function ProfilePictureEditorDialog(props) {
                 <Grid item style={{marginBottom: "30px"}}>
                   {!profileImg ?
                     <Avatar className={classes.avatar}>
-                      <img src={`/api/uploads/image/${user.avatar}`}
+                      <img
+                        src={`/api/uploads/image/${user.avatar}`}
                         ref={uploadedImage}
                         className={classes.avatar}
                       />
                     </Avatar>
                     :
                     <Avatar className={classes.avatar}>
-                      <img ref={uploadedImage} className={classes.avatar} />
+                      <img
+                        ref={uploadedImage}
+                        className={classes.avatar}
+                      />
                     </Avatar>
                   }
                 </Grid>
