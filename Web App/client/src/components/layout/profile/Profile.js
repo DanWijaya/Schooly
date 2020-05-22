@@ -139,15 +139,18 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class 
+            Class
           </Typography>
           <ProfileDataEditorDialog />
         </Grid>
         <Grid item container spacing={4}>
           <Grid item>
             <Paper className={classes.paperBox}>
-                <Typography variant="subtitle2" gutterBottom>
+                <Typography variant="subtitle2">
                   <h4>Informasi Pribadi</h4>
+                </Typography>
+                <Typography variant="subtitle1" gutterBottom>
+                  Beberapa data profil dapat dilihat oleh orang lain menggunakan layanan Schooly.
                 </Typography>
                 <List>
                   <ProfileDataItem
@@ -163,11 +166,6 @@ function Profile(props) {
                   <ProfileDataItem
                     profile_data_icon={<WcIcon />}
                     profile_data_category="Jenis Kelamin"
-                    profile_data_info="Nigga"
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<LockIcon />}
-                    profile_data_category="Kata Sandi"
                     profile_data_info="Nigga"
                   />
                 </List>
