@@ -45,25 +45,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 function ProfilePictureEditorDialog(props) {
   const classes = useStyles();
-
-  //Snackbar
-  const [openAlert, setOpenAlert] = React.useState(false);
-  const handleOpenAlert = () => {
-    setOpenAlert(true);
-  }
-  const handleCloseAlert = (e, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenAlert(false);
-  }
 
   //Dialog
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -81,6 +64,7 @@ function ProfilePictureEditorDialog(props) {
 
   const {user} = props;
   const {updateUser} = props;
+  // const {handleOpenAlert} = props;
 
   const handleImageUpload = e => {
     const [file] = e.target.files;
@@ -113,21 +97,12 @@ function ProfilePictureEditorDialog(props) {
 
     updateUser(userData, userId, formData)
     setProfileImg(null)
-    handleOpenAlert()
+    props.handleOpenAlert()
+
   }
 
   return (
-    <div>
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
-      >
-        <Alert onClose={handleCloseAlert} severity="success">
-          Foto profil berhasil diganti!
-        </Alert>
-      </Snackbar>
+    <div className={classes.root}>
       <LightTooltip title="Ganti Foto Profil">
         <IconButton
           disableRipple

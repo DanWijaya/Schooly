@@ -28,9 +28,9 @@ class Dashboard extends Component {
     document.title="Dashboard | Schooly"
     return (
       <div>
-          <div style={{ height: "75vh"}} className="container valign-wrapper">
+          <div style={{ height: "75vh", display: 'flex', justifyContent: 'center'}} className="container valign-wrapper">
 
-            <div className="landing-copy col s12 center-align">
+            <div className="landing-copy col s12 center-align" >
               <h4>
                 <b>Hey there {user.role} </b> {user.name.split(" ")[0]}
                 <p className="flow-text grey-text text-darken-1">
