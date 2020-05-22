@@ -116,7 +116,7 @@ function Profile(props) {
 
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
-          {user.avatar ?
+          {user.avatar && user.avatar != undefined ?
             <StyledBadge
               badgeContent={
                 <ProfilePictureEditorDialog user={user} updateUser={updateUser} handleOpenAlert={handleOpenAlert}/>
@@ -128,7 +128,13 @@ function Profile(props) {
               />
             </StyledBadge>
             :
+            <StyledBadge
+              badgeContent={
+                <ProfilePictureEditorDialog user={user} updateUser={updateUser} handleOpenAlert={handleOpenAlert}/>
+              }
+            >
             <Avatar src={defaultAvatar} className={classes.avatar} />
+            </StyledBadge>
           }
           <Typography variant="subtitle2">
             <h3>{user.name}</h3>
@@ -137,7 +143,7 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class {user.kelas.name}
+            Class 
           </Typography>
           <ProfileDataEditorDialog />
         </Grid>
