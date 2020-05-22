@@ -35,13 +35,13 @@ function ProfileDataEditorDialog() {
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          adasdasdas
+          Perbarui Profil
         </DialogTitle>
         <DialogContent>
          <form>
          <input     style={{
                width: "100%",
-               padding: "12px 20px",
+               padding: "10px 10px",
                margin: "8px 0",
                display: "inline-block",
                border: "1px solid #ccc",
