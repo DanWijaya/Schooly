@@ -20,6 +20,9 @@ import HelpIcon from '@material-ui/icons/Help';
 import MenuIcon from "@material-ui/icons/Menu"
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SettingIcon from "@material-ui/icons/SettingsOutlined"
+import { useHistory } from 'react-router-dom';
+
+import { logoutUser } from "../../../actions/AuthActions";
 
 export const drawerWidth = 220;
 
@@ -135,6 +138,7 @@ function DrawerItemList(props) {
 function NavBar(props){
   var classes = useStyles();
   const { user } = props.auth;
+  const history = useHistory()
 
   //Profile Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -145,6 +149,16 @@ function NavBar(props){
     setAnchorEl(null);
   };
 
+  const onLogoutClick = (e) => {
+    e.preventDefault();
+    handleClose()
+    props.logoutUser(history);
+  }
+
+  const toProfilePage = (e) => {
+    e.preventDefault();
+    history.push("/profile")
+  }
   //Drawer
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
@@ -202,7 +216,7 @@ function NavBar(props){
               </ListItemIcon>
               <ListItemText primary="Profil Saya" />
             </StyledMenuItem>
-            <StyledMenuItem>
+            <StyledMenuItem onClick={onLogoutClick}>
               <ListItemIcon>
                 <ExitToAppIcon fontSize="medium" />
               </ListItemIcon>
@@ -364,12 +378,13 @@ function NavBar(props){
 
 NavBar.propTypes = {
    auth: PropTypes.object.isRequired,
+   logoutUser: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({
-   auth: state.auth
+   auth: state.auth,
  });
 
 export default connect(
-   mapStateToProps
+   mapStateToProps, { logoutUser }
  ) (NavBar);

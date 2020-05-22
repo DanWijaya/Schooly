@@ -100,8 +100,6 @@ class App extends Component {
             <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
             <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
             <Route exact path="/newlogin" component={NewLogin} /> {/*prototypetest*/}
-            <Route exact path="/profile/:id" component={Profile} /> {/*Delete later, enable private routing*/}
-            <Route exact path="/profile" component={Profile} />
             <Route exact path="/notifications" component={Notifications}/>
             {/* <Route exact path="/setting" component={Setting}/> */}
 
@@ -121,6 +119,8 @@ class App extends Component {
               <PrivateRoute exact path="/viewtask" component={ViewTask}/>
               <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
               <PrivateRoute exact path="/task/:id" component={EditTask}/>
+
+              <Route exact path="/profile" component={Profile} />
             </Switch>
           </div>
         </Router>
