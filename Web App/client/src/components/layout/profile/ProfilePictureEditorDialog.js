@@ -112,7 +112,6 @@ function ProfilePictureEditorDialog(props) {
 
   return (
     <div className={classes.root}>
-
       <LightTooltip title="Ganti Foto Profil">
         <IconButton disableRipple onClick={handleOpenDialog} className={classes.addPhotoIconButton}>
           <CameraAltIcon
