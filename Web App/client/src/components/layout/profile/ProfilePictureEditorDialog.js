@@ -8,6 +8,9 @@ import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "10px",
+  },
   avatar: {
     width: theme.spacing(20),
     height: theme.spacing(20),
@@ -33,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -84,7 +86,6 @@ function ProfilePictureEditorDialog(props) {
       };
       reader.readAsDataURL(file);
     }
-
   };
 
   const clear = () => {
@@ -108,7 +109,7 @@ function ProfilePictureEditorDialog(props) {
   }
 
   return (
-    <div>
+    <div className={classes.root}>
       <Snackbar
         open={openAlert}
         autoHideDuration={4000}

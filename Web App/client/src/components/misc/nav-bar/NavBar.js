@@ -1,12 +1,11 @@
 import React from "react"
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import PropTypes from "prop-types";
-import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, List, ListItem,
-  ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
+import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Link,
+   List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
 import {makeStyles, withStyles, useTheme} from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -119,16 +118,15 @@ const StyledMenu = withStyles({
   />
 ));
 
-const StyledMenuItem = withStyles((theme) => ({
+const StyledMenuItem = withStyles({
   root: {
-    '&:focus': {
+    "&:hover": {
       backgroundColor: "#2196f3",
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
     },
   },
-}))(MenuItem);
+})((props) => (
+  <MenuItem button component="a" {...props} />
+));
 
 function DrawerItemList(props) {
   return <ListItem button component="a" {...props} />;
@@ -167,7 +165,6 @@ function NavBar(props){
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
         <IconButton
-          disableRipple
           color="inherit"
           edge="start"
           className={classes.iconButton}
@@ -199,13 +196,11 @@ function NavBar(props){
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem>
-            <Link to="/profile" style={{ display: "flex", direction: "column"}}>
+            <StyledMenuItem href="/profile">
               <ListItemIcon>
                 <AccountCircleIcon fontSize="medium" />
               </ListItemIcon>
               <ListItemText primary="Profil Saya" />
-              </Link>
             </StyledMenuItem>
             <StyledMenuItem>
               <ListItemIcon>
@@ -303,7 +298,6 @@ function NavBar(props){
             className={classes.schoolyLogo}
           />
         </a>
-
       </Grid>
     )
     middleNavBarContents = null

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateUser } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
+import ProfileDataEditorDialog from "./ProfileDataEditorDialog"
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog"
 import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -101,14 +102,15 @@ function Profile(props) {
             <Avatar src={defaultAvatar} className={classes.avatar} />
           }
           <Typography variant="subtitle2">
-            <h2>{user.name}</h2>
+            <h3>{user.name}</h3>
           </Typography>
           <Typography>
             "School Name" High School {user.role}
           </Typography>
-          <Typography>
-            Class XA
+          <Typography style={{marginBottom:"25px"}}>
+            Class {user.kelas.name}
           </Typography>
+          <ProfileDataEditorDialog />
         </Grid>
         <Grid item container spacing={4}>
           <Grid item>

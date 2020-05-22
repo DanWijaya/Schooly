@@ -37,3 +37,8 @@ To be Fixed:
 - Profile avatar pas preview, rationya jelek
 - Coba pakai withstyles buat yang iconbutton hijau-hijau (Done)
 - Setting Navbar untuk kalau udah login aja (Done)
+- Implemen cropping for profile pictire (https://www.kurzor.net/blog/uploading-and-resizing-images-part1)
+
+Page List Done:
+- Navbar (Masih ke halang mini drawernya)
+- Profile (Kurang dikasi gambar-gambar, mungkin background image)
