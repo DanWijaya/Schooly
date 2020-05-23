@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateUser } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
-import ProfileDataEditorDialog from "./ProfileDataEditorDialog"
-import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog"
+import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
+import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
+import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
 import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography, Snackbar  } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import BookIcon from "@material-ui/icons/Book";
@@ -115,9 +116,12 @@ function Profile(props) {
           {user.avatar && user.avatar != undefined ?
             <StyledBadge
               badgeContent={
-                <ProfilePictureEditorDialog user={user} updateUser={updateUser} handleOpenAlert={handleOpenAlert}/>
-              }
-            >
+                <ProfilePictureEditorDialog
+                  user={user}
+                  updateUser={updateUser}
+                  handleOpenAlert={handleOpenAlert}
+                />
+            }>
               <Avatar
                 src={`/api/uploads/image/${user.avatar}`}
                 className={classes.avatar}
@@ -126,10 +130,13 @@ function Profile(props) {
             :
             <StyledBadge
               badgeContent={
-                <ProfilePictureEditorDialog user={user} updateUser={updateUser} handleOpenAlert={handleOpenAlert}/>
-              }
-            >
-            <Avatar src={defaultAvatar} className={classes.avatar} />
+                <ProfilePictureEditorDialog
+                  user={user}
+                  updateUser={updateUser}
+                  handleOpenAlert={handleOpenAlert}
+                />
+            }>
+              <Avatar src={defaultAvatar} className={classes.avatar} />
             </StyledBadge>
           }
           <Typography variant="subtitle2">
@@ -142,6 +149,7 @@ function Profile(props) {
             Class
           </Typography>
           <ProfileDataEditorDialog />
+          <ProfilePasswordEditorDialog />
         </Grid>
         <Grid item container spacing={4}>
           <Grid item>

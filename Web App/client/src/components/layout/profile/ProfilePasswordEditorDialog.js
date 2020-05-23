@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import EditIcon from '@material-ui/icons/Edit';
+import LockIcon from '@material-ui/icons/Lock';
 
 const useStyles = makeStyles((theme) => ({
   test: {
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function ProfileDataEditorDialog() {
+function ProfilePasswordEditorDialog() {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -25,15 +25,14 @@ function ProfileDataEditorDialog() {
       <Button
         variant="contained"
         onClick={handleClickOpen}
-        startIcon={<EditIcon />}
+        startIcon={<LockIcon />}
         style={{
-          backgroundColor: "#2196f3",
-          color: "white",
-          marginBottom: "10px",
+          backgroundColor: "#DCDCDC",
+          color: "black",
           width: "200px",
         }}
       >
-        Sunting Profil
+        Ganti Kata Sandi
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
@@ -41,17 +40,6 @@ function ProfileDataEditorDialog() {
         </DialogTitle>
         <DialogContent>
          <form>
-         <input     style={{
-               width: "100%",
-               padding: "12px 20px",
-               margin: "8px 0",
-               display: "inline-block",
-               border: "1px solid #ccc",
-               borderRadius: "4px",
-               boxSizing: "border-box",
-             }}
-/>
-
          </form>
         </DialogContent>
       </Dialog>
@@ -59,4 +47,4 @@ function ProfileDataEditorDialog() {
   )
 }
 
-export default ProfileDataEditorDialog;
+export default ProfilePasswordEditorDialog;
