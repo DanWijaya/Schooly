@@ -79,7 +79,7 @@ function ProfilePasswordEditorDialog() {
             </IconButton>
           </Grid>
           <Grid item style={{marginBottom: "10px"}}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom style={{textAlign: "center"}}>
               <b>Ganti Kata Sandi</b>
             </Typography>
             <Typography variant="subtitle2" className={classes.changePasswordCaution}>

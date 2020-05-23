@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
-import schoolyLogo from "../../images/SchoolyLogo.png";
+import schoolyLogoAlt from "../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../misc/text-field/OutlinedTextField";
 import { Button, Divider, Grid, Link, Paper, Typography } from "@material-ui/core";
 import { withStyles, useTheme } from "@material-ui/core/styles";
@@ -91,13 +91,12 @@ class Login extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogo} className={classes.schoolyLogo} />
+        <img src={schoolyLogoAlt} className={classes.schoolyLogo} />
         <Paper>
           <Grid
             container
             direction="column"
             alignItems="center"
-            justify="space-between"
             spacing={5}
             className={classes.mainGrid}
           >
@@ -153,7 +152,7 @@ class Login extends Component {
                 </Button>
               </form>
             </Grid>
-            <Divider variant="middle"/>
+            <Divider style={{width: "300px"}}/>
             <Grid item>
               <Link href="/forgotpassword">
                 Forgot Password?

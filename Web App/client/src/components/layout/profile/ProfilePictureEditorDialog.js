@@ -17,6 +17,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(25),
     margin: "auto"
   },
+  avatarImg: {
+    width: theme.spacing(25),
+    margin: "auto"
+  },
   dialogRoot: {
     width: "350px",
     padding: "10px",
@@ -180,14 +184,14 @@ function ProfilePictureEditorDialog(props) {
                       <img
                         src={`/api/uploads/image/${user.avatar}`}
                         ref={uploadedImage}
-                        className={classes.avatar}
+                        className={classes.avatarImg}
                       />
                     </Avatar>
                     :
                     <Avatar className={classes.avatar}>
                       <img
                         ref={uploadedImage}
-                        className={classes.avatar}
+                        className={classes.avatarImg}
                       />
                     </Avatar>
                   }

@@ -2,8 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
-   Paper, Tab, Tabs, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+   Tab, Tabs, Typography } from "@material-ui/core";
+import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from '@material-ui/styles';
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -44,14 +45,27 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
-  tabList: {
+  tabContentList: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     width:"500px",
     height: "300px",
   },
+  tabInfo: {
+    "&:focus": {
+      backgroundColor: "transparent",
+    },
+  },
 }));
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#2196f3"
+    },
+  },
+});
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -152,6 +166,7 @@ function ProfileDataEditorDialog() {
             </Typography>
           </Grid>
           <form>
+            <ThemeProvider theme={theme}>
             <Tabs
               value={value}
               onChange={handleChange}
@@ -159,12 +174,13 @@ function ProfileDataEditorDialog() {
               indicatorColor="primary"
               textColor="primary"
             >
-              <Tab icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
-              <Tab icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
-              <Tab icon={<EmojiPeopleIcon />} label="Karier" {...TabIndex(0)} />
+              <Tab disableRipple className={classes.tabInfo} icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
+              <Tab disableRipple className={classes.tabInfo} icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
+              <Tab disableRipple className={classes.tabInfo} icon={<EmojiPeopleIcon />} label="Karier" {...TabIndex(0)} />
             </Tabs>
+            </ThemeProvider>
             <TabPanel value={value} index={0}>
-              <List className={classes.tabList}>
+              <List className={classes.tabContentList}>
                 <ProfileDataItemEdit
                   profile_data_icon={<PersonIcon />}
                   profile_data_category="Nama"
@@ -184,7 +200,7 @@ function ProfileDataEditorDialog() {
               </List>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <List className={classes.tabList}>
+              <List className={classes.tabContentList}>
                 <ProfileDataItemEdit
                   profile_data_icon={<EmailIcon />}
                   profile_data_category="Email"
@@ -204,7 +220,7 @@ function ProfileDataEditorDialog() {
               </List>
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <List className={classes.tabList}>
+              <List className={classes.tabContentList}>
                 <ProfileDataItemEdit
                   profile_data_icon={<GamesIcon />}
                   profile_data_category="Hobi dan Minat"
