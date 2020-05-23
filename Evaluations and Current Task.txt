@@ -13,7 +13,7 @@ Botak:
 13. RAPIKAN SEMUANYA
 14. Icon tab
 15. Mobile view
-16. Constantkan outlined text field 
+16. Constantkan outlined text field
 
 Daniel:
 1. Class Page
@@ -42,6 +42,7 @@ To be Fixed:
 Page List Done:
 - Navbar (Masih ke halang mini drawernya)
 - Profile (Kurang dikasi gambar-gambar, mungkin background image), styling masih kurang, belum tambahin snackbar buat edit profile dan edit password
+- Login (Divider nda mau muncul, masih jelek)
 
 Optional:
 - Terms and Policies
