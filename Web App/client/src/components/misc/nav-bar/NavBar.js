@@ -75,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
+  lightListItemIcon: {
+
+  },
   navbarContainer: {
     display: "flex",
     justifyContent: "space-between",
@@ -123,10 +126,14 @@ const StyledMenuItem = withStyles({
   root: {
     "&:hover": {
       backgroundColor: "#2196f3",
+      
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: "white",
     },
   },
+},
 })((props) => (
-  <MenuItem button component="a" {...props} />
+  <MenuItem button component="a" {...props}/>
 ));
 
 function DrawerItemList(props) {
@@ -205,13 +212,13 @@ function NavBar(props){
             onClose={handleClose}
           >
             <StyledMenuItem href="/profile">
-              <ListItemIcon>
-                <AccountCircleIcon fontSize="medium" />
+              <ListItemIcon >
+                <AccountCircleIcon fontSize="medium"/>
               </ListItemIcon>
               <ListItemText primary="Profil Saya" />
             </StyledMenuItem>
             <StyledMenuItem onClick={onLogoutClick}>
-              <ListItemIcon>
+              <ListItemIcon className={classes.lightListItemIcon}>
                 <ExitToAppIcon fontSize="medium" />
               </ListItemIcon>
               <ListItemText primary="Keluar" />

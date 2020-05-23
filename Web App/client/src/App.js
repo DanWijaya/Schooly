@@ -120,7 +120,7 @@ class App extends Component {
               <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
               <PrivateRoute exact path="/task/:id" component={EditTask}/>
 
-              <Route exact path="/profile" component={Profile} />
+              <PrivateRoute exact path="/profile" component={Profile} />
             </Switch>
           </div>
         </Router>
