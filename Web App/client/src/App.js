@@ -14,7 +14,6 @@ import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/layout/dashboard/Dashboard.js";
 import NavBar from "./components/misc/nav-bar/NavBar";
-import Backdrop from "../src/components/misc/back-drop/Backdrop";
 import CreateClass from "./components/objects/classes/CreateClass"
 import CreateTask from "./components/objects/tasks/CreateTask";
 import ViewClass from "./components/objects/classes/ViewClass";
@@ -63,22 +62,11 @@ class App extends Component {
     this.setState({ loggedIn : dataFromChild})
   }
 
-  //38:55
-  backdropClickHandler = () => {
-    this.setState({sideDrawerOpen: false});
-  }
-
   render() {
     console.log(drawerWidth)
     // let sideDrawer;
     console.log(this.state.sideDrawerOpen)
-    let backdrop;
     let translateXValue
-
-    if(this.state.sideDrawerOpen){
-      // sideDrawer = <SideDrawer/>
-      backdrop = <Backdrop click={this.backdropClickHandler}/>
-    }
 
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
@@ -101,12 +89,10 @@ class App extends Component {
             <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
             <Route exact path="/newlogin" component={NewLogin} /> {/*prototypetest*/}
             <Route exact path="/notifications" component={Notifications}/>
-            {/* <Route exact path="/setting" component={Setting}/> */}
-
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/image-upload" component={UploadImageTest}/>
-              {/*<PrivateRoute exact path="/profile" component={Profile} />*/}
+              <PrivateRoute exact path="/profile" component={Profile} />
 
               {/* Route Class */}
               <PrivateRoute exact path="/createclass" component={CreateClass}/>
@@ -119,13 +105,10 @@ class App extends Component {
               <PrivateRoute exact path="/viewtask" component={ViewTask}/>
               <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
               <PrivateRoute exact path="/task/:id" component={EditTask}/>
-
-              <PrivateRoute exact path="/profile" component={Profile} />
             </Switch>
           </div>
         </Router>
       </Provider>
-        {backdrop}
       </div>
     );
   }

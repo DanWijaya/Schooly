@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
    Paper, Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -97,20 +98,7 @@ function ProfileDataItemEdit(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <input
-              style={{
-                 width: "100%",
-                 padding: "10px 10px",
-                 margin: "8px 0",
-                 display: "inline-block",
-                 border: "1px solid #ccc",
-                 borderRadius: "4px",
-                 boxSizing: "border-box",
-                 "&:focus": {
-                   backgroundColor: "#2196f3",
-                 },
-              }}
-            />
+            <OutlinedTextField />
           </Grid>
         </Grid>
     </ListItem>

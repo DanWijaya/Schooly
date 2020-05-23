@@ -1,4 +1,5 @@
 import React from "react";
+import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Dialog, Grid, IconButton, List, ListItem, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
@@ -22,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EditPasswordField(props) {
+  const classes = useStyles();
+
   return(
     <ListItem>
         <Grid container alignItems="center">
@@ -31,20 +34,7 @@ function EditPasswordField(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <input
-              style={{
-                 width: "100%",
-                 padding: "10px 10px",
-                 margin: "8px 0",
-                 display: "inline-block",
-                 border: "1px solid #ccc",
-                 borderRadius: "4px",
-                 boxSizing: "border-box",
-                 "&:focus": {
-                   backgroundColor: "#2196f3",
-                 },
-              }}
-            />
+            <OutlinedTextField />
           </Grid>
         </Grid>
     </ListItem>
@@ -88,7 +78,7 @@ function ProfilePasswordEditorDialog() {
                 <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item style={{marginBottom: "30px"}}>
+          <Grid item style={{marginBottom: "10px"}}>
             <Typography variant="h6" gutterBottom>
               <b>Ganti Kata Sandi</b>
             </Typography>

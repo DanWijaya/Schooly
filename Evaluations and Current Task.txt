@@ -1,12 +1,10 @@
 Current Task
 Botak:
 1. Rapiin login.js dan register.js (mau belajar withstyles)
-2. Bikin profile jadi editable text
-3. Betulin navbar lagi buat (export props themenya, Icon only navbar masih nda centered)
-4. Create togglebutton buat mobile
+2. Bikin profile jadi editable text (Done)
+3. Betulin navbar lagi buat (Done)
 5. Betulin hijau2 pas klik iconbuttons (Done)
 6. Task List Page
-7. Comments Section
 8. Kalau udah selesai semua - Tes zoom in dan zoom out per Page
 9. Bikin gambar-gambar yang diperlukan (belajar AI)
 10. Bikin page createclassform, createtask form
@@ -14,6 +12,8 @@ Botak:
 12. Implemen Customized Tooltip (Done = LightTooltip)
 13. RAPIKAN SEMUANYA
 14. Icon tab
+15. Mobile view
+16. Constantkan outlined text field 
 
 Daniel:
 1. Class Page
@@ -41,7 +41,10 @@ To be Fixed:
 
 Page List Done:
 - Navbar (Masih ke halang mini drawernya)
-- Profile (Kurang dikasi gambar-gambar, mungkin background image)
+- Profile (Kurang dikasi gambar-gambar, mungkin background image), styling masih kurang, belum tambahin snackbar buat edit profile dan edit password
 
 Optional:
 - Terms and Policies
+
+Drafter:
+- Comments

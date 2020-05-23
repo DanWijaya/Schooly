@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
-import { withStyles, useTheme } from "@material-ui/core/styles";
+import OutlinedTextField from "../misc/text-field/OutlinedTextField";
 import { Button, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import { withStyles, useTheme } from "@material-ui/core/styles";
 import RemoveRedEyeIcon from "@material-ui/icons/RemoveRedEye";
 
 const styles = (theme) => ({
@@ -83,16 +84,8 @@ class NewLogin extends Component {
             Masuk ke Schooly
           </Typography>
           <form noValidate onSubmit={this.onSubmit}>
-            <input     style={{
-                  width: "100%",
-                  padding: "12px 20px",
-                  margin: "8px 0",
-                  display: "inline-block",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  boxSizing: "border-box",
-                }}
- />
+            <OutlinedTextField />
+            <OutlinedTextField />
           </form>
         </Paper>
       </div>
