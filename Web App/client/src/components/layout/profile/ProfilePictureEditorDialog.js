@@ -1,11 +1,11 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip"
-import { Avatar, Button, Dialog, Grid, IconButton, Snackbar, Typography } from "@material-ui/core";
+import { Avatar, Button, Dialog, Grid, IconButton, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,23 +26,26 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     textAlign: "center",
   },
-  addPhotoIconButton: {
+  iconButtonAddPhoto: {
     color: "#2196f3",
     backgroundColor: "#DCDCDC",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     "&:focus": {
       backgroundColor: "#DCDCDC",
     },
     "&:hover": {
-      backgroundColor: "#C0C0C0",
+      backgroundColor: "#DCDCDC",
+      boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
     },
   },
-  closeIconButton: {
+  iconButtonClose: {
     backgroundColor: "transparent",
     "&:focus": {
       backgroundColor: "transparent",
     },
   },
-  uploadPhotoIconButton: {
+  iconButtonUploadPhoto: {
     color: "#2196f3",
     "&:focus": {
       backgroundColor: "transparent",
@@ -115,7 +118,7 @@ function ProfilePictureEditorDialog(props) {
         <IconButton
           disableRipple
           onClick={handleOpenDialog}
-          className={classes.addPhotoIconButton}
+          className={classes.iconButtonAddPhoto}
         >
           <CameraAltIcon
             style={{
@@ -142,7 +145,7 @@ function ProfilePictureEditorDialog(props) {
               size="small"
               disableRipple
               onClick={handleCloseDialog}
-              className={classes.closeIconButton}
+              className={classes.iconButtonClose}
             >
               <CloseIcon />
             </IconButton>

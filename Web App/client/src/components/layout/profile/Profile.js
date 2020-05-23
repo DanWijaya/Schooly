@@ -8,6 +8,7 @@ import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
 import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography, Snackbar  } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
 import EmailIcon from "@material-ui/icons/Email";
@@ -107,7 +108,7 @@ function Profile(props) {
         onClose={handleCloseAlert}
         anchorOrigin={{vertical : "top", horizontal: "center"}}
       >
-        <Alert onClose={handleCloseAlert} severity="success" >
+        <Alert onClose={handleCloseAlert} severity="info" >
           Foto profil berhasil diganti!
         </Alert>
       </Snackbar>
@@ -176,6 +177,11 @@ function Profile(props) {
                     profile_data_category="Jenis Kelamin"
                     profile_data_info="Nigga"
                   />
+                  <ProfileDataItem
+                    profile_data_icon={<SchoolIcon />}
+                    profile_data_category="Sekolah"
+                    profile_data_info="Nigga"
+                  />
                 </List>
             </Paper>
           </Grid>
@@ -211,7 +217,7 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2" gutterBottom>
-                  <h4>Informasi Lainnya</h4>
+                  <h4>Karier</h4>
                 </Typography>
                 <List>
                   <ProfileDataItem
@@ -230,7 +236,7 @@ function Profile(props) {
                     profile_data_info="fucker"
                   />
                   <ProfileDataItem
-                    profile_data_icon={<SchoolIcon />}
+                    profile_data_icon={<AccountBalanceIcon />}
                     profile_data_category="Perguruan Tinggi Impian"
                     profile_data_info="fucker university"
                   />
