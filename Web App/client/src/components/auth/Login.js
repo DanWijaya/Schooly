@@ -1,12 +1,34 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
-import { makeStyles } from "@material-ui/core/styles";
-import { Button, InputLabel, MenuItem, Paper, Select } from "@material-ui/core";
+import schoolyLogo from "../../images/SchoolyLogo.png";
+import OutlinedTextField from "../misc/text-field/OutlinedTextField";
+import { Button, Divider, Grid, Link, Paper, Typography } from "@material-ui/core";
+import { withStyles, useTheme } from "@material-ui/core/styles";
 import RemoveRedEyeIcon from "@material-ui/icons/RemoveRedEye";
+
+const styles = (theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    maxWidth: "750px",
+    margin: "auto",
+  },
+  mainGrid: {
+    width: "400px",
+    padding: "40px",
+  },
+  schoolyLogo: {
+    width: "30%",
+    height: "30%",
+    marginBottom: "50px",
+  }
+});
 
 class Login extends Component {
   constructor() {
@@ -62,70 +84,83 @@ class Login extends Component {
 
   render() {
     document.title="Masuk ke Schooly"
+    const { classes } = this.props;
+
     const { errors } = this.state;
     const { passwordIsMasked } = this.state;
+
     return (
-      <div className="container">
-          <div className="col s8 offset-s2">
-            <Link to="/" className="btn-flat waves-effect" style={{zIndex: 0}}>
-              <i className="material-icons left">keyboard_backspace</i> Back to
-              home
-            </Link>
-            <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-              <h4>
-                <b>Login to Schooly</b>
-              </h4>
-            </div>
-            <form noValidate onSubmit={this.onSubmit}>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
+      <div className={classes.root}>
+        <img src={schoolyLogo} className={classes.schoolyLogo} />
+        <Paper>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="space-between"
+            spacing={5}
+            className={classes.mainGrid}
+          >
+            <Grid item>
+              <Typography variant="h6">
+                <b>Masuk ke Schooly</b>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <form noValidate onSubmit={this.onSubmit}>
+                <OutlinedTextField
+                  on_change={this.onChange}
                   value={this.state.email}
                   error={errors.email}
                   id="email"
                   type="email"
-                  className={classnames("", {
+                  classname={classnames("", {
                     invalid: errors.email || errors.emailnotfound
                   })}
                 />
-                <label htmlFor="email">Email</label>
-                <span className="red-text">
-                  {errors.email}
-                  {errors.emailnotfound}
-                </span>
-              </div>
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
+                  <label htmlFor="email">Email</label>
+                  <span className="red-text">
+                    {errors.email}
+                    {errors.emailnotfound}
+                  </span>
+                <OutlinedTextField
+                  on_change={this.onChange}
                   value={this.state.password}
                   error={errors.password}
                   id="password"
                   type={passwordIsMasked ? "password" : "text"}
-                  className={classnames("", {
-                    invalid: errors.password || errors.passwordincorrect
+                  classname={classnames("", {
+                    invalid: errors.email || errors.emailnotfound
                   })}
                 />
-                <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
-                Toggle" type="button"/>
-                {this.state.passwordIsMasked ? "Show" : "Hide"}
-                <label htmlFor="password">Password</label>
-                <span className="red-text">
-                  {errors.password}
-                  {errors.passwordincorrect}
-                </span>
-              </div>
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                  <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
+                  Toggle" type="button"/>
+                  {this.state.passwordIsMasked ? "Show" : "Hide"}
+                  <label htmlFor="password">Password</label>
+                  <span className="red-text">
+                    {errors.password}
+                    {errors.passwordincorrect}
+                  </span>
                 <Button
                   type="submit"
-                  variant="contained"
-                  size="large"
-                  style={{backgroundColor: "#2196f3"}}
+                  style={{
+                    backgroundColor: "#61bd4f",
+                    color: "white",
+                    width: "100%",
+                  }}
                 >
-                  Login
+                  Masuk
                 </Button>
-              </div>
-            </form>
-          </div>
+              </form>
+            </Grid>
+            <Divider variant="middle"/>
+            <Grid item>
+              <Link href="/forgotpassword">
+                Forgot Password?
+              </Link>
+            </Grid>
+          </Grid>
+        </Paper>
       </div>
     );
   }
@@ -142,10 +177,7 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { loginUser }
-)(Login);
-
-// Format untuk pakai withStyles juga
-// export default withRouter(connect()(withStyles(styles)(FirstPage)))
+export default withRouter(
+  connect(mapStateToProps, { loginUser })
+  (withStyles(styles)(Login))
+  )

@@ -24,7 +24,6 @@ import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
 import UploadImageTest from './prototypes/UploadImageTest';
 import Notifications from './prototypes/Notifications';
-import NewLogin from './components/auth/NewLogin';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -87,7 +86,6 @@ class App extends Component {
             <Route exact path="/about-schooly" component={About} />
             <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
             <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
-            <Route exact path="/newlogin" component={NewLogin} /> {/*prototypetest*/}
             <Route exact path="/notifications" component={Notifications}/>
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
