@@ -116,12 +116,12 @@ class Login extends Component {
                   classname={classnames("", {
                     invalid: errors.email || errors.emailnotfound
                   })}
+                  html_for="email"
+                  labelname="Email"
+                  span_classname="red-text"
+                  error1={errors.email}
+                  error2={errors.emailnotfound}
                 />
-                  <label htmlFor="email">Email</label>
-                  <span className="red-text">
-                    {errors.email}
-                    {errors.emailnotfound}
-                  </span>
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.password}
@@ -131,15 +131,15 @@ class Login extends Component {
                   classname={classnames("", {
                     invalid: errors.email || errors.emailnotfound
                   })}
+                  html_for="password"
+                  labelname="Password"
+                  span_classname="red-text"
+                  error1={errors.password}
+                  error2={errors.passwordincorrect}
                 />
                   <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
                   Toggle" type="button"/>
                   {this.state.passwordIsMasked ? "Show" : "Hide"}
-                  <label htmlFor="password">Password</label>
-                  <span className="red-text">
-                    {errors.password}
-                    {errors.passwordincorrect}
-                  </span>
                 <Button
                   type="submit"
                   style={{

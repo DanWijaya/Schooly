@@ -112,7 +112,7 @@ function ProfileDataItemEdit(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <OutlinedTextField />
+            <OutlinedTextField value={props.value} />
           </Grid>
         </Grid>
     </ListItem>
@@ -184,18 +184,22 @@ function ProfileDataEditorDialog() {
                 <ProfileDataItemEdit
                   profile_data_icon={<PersonIcon />}
                   profile_data_category="Nama"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
+                  value="test"
                 />
               </List>
             </TabPanel>
@@ -204,18 +208,22 @@ function ProfileDataEditorDialog() {
                 <ProfileDataItemEdit
                   profile_data_icon={<EmailIcon />}
                   profile_data_category="Email"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<PhoneIcon />}
                   profile_data_category="Nomor Telepon"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<SupervisorAccountIcon />}
                   profile_data_category="Nomor Telepon Darurat"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<HomeIcon />}
                   profile_data_category="Alamat"
+                  value="test"
                 />
               </List>
             </TabPanel>
@@ -224,18 +232,22 @@ function ProfileDataEditorDialog() {
                 <ProfileDataItemEdit
                   profile_data_icon={<GamesIcon />}
                   profile_data_category="Hobi dan Minat"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<BookIcon />}
                   profile_data_category="Kemampuan Ekstrakurikuler"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WorkIcon />}
                   profile_data_category="Cita-Cita"
+                  value="test"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<AccountBalanceIcon />}
                   profile_data_category="Perguruan Tinggi Impian"
+                  value="test"
                 />
               </List>
             </TabPanel>
