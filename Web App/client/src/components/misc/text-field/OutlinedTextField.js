@@ -1,20 +1,6 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles((theme) => ({
-  floatingLabel: {
-    fontZize: "13px",
-    color: "#cccccc",
-    position: "absolute",
-    pointerEvents: "none",
-    top: "9px",
-    left: "12px",
-    transition: "all 0.1s ease",
-  },
-}));
 
 const OutlinedTextField = (props) => {
-  const classes = useStyles();
 
   const [borderStyle, setBorderStyle] = React.useState("1px solid #ccc")
 
@@ -28,7 +14,10 @@ const OutlinedTextField = (props) => {
 
   return (
     <div>
+      <label htmlFor={props.html_for}>{props.labelname}</label>
       <input
+        autofocus required
+        class="form-control"
         onChange={props.on_change}
         value={props.value}
         error={props.error}
@@ -42,6 +31,9 @@ const OutlinedTextField = (props) => {
           display: "inline-block",
           border: `${borderStyle}`,
           borderRadius: "4px",
+          margin: "8px 0",
+          outline: "none",
+          padding: "8px",
           boxSizing: "border-box",
           boxShadow: "none",
           backgroundColor: "#FFFFFF",
@@ -49,7 +41,6 @@ const OutlinedTextField = (props) => {
           onFocus={onFocus}
           onBlur={onBlur}
       />
-      <label htmlFor={props.html_for} className={classes.floatingLabel}>{props.labelname}</label>
       <span className={props.span_classname}>
         {props.error1}
         {props.error2}

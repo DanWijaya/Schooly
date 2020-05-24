@@ -23,10 +23,14 @@ const styles = (theme) => ({
     width: "400px",
     padding: "40px",
   },
-  schoolyLogo: {
+  schoolyLogoAlt: {
     width: "30%",
     height: "30%",
-    marginBottom: "50px",
+    marginBottom: "30px",
+  },
+  spanClass: {
+    color: "red",
+    fontSize: "10px"
   }
 });
 
@@ -91,12 +95,13 @@ class Login extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogoAlt} className={classes.schoolyLogo} />
+        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} />
         <Paper>
           <Grid
             container
             direction="column"
             alignItems="center"
+            justify="center"
             spacing={5}
             className={classes.mainGrid}
           >
@@ -105,10 +110,10 @@ class Login extends Component {
                 <b>Masuk ke Schooly</b>
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid item style={{ width:"300px"}} >
               <form noValidate onSubmit={this.onSubmit}>
-                <label htmlFor="email">Email</label>
                 <OutlinedTextField
+                // width="300px"
                   on_change={this.onChange}
                   value={this.state.email}
                   error={errors.email}
@@ -119,29 +124,26 @@ class Login extends Component {
                   })}
                   html_for="email"
                   labelname="Email"
-                  span_classname="red-text"
+                  span_classname={classes.spanClass}
                   error1={errors.email}
                   error2={errors.emailnotfound}
                 />
-                  
-                  <br/>
-                <label htmlFor="password">Password</label>
                 <OutlinedTextField
+                // width="300px"
                   on_change={this.onChange}
                   value={this.state.password}
                   error={errors.password}
                   id="password"
                   type={passwordIsMasked ? "password" : "text"}
                   classname={classnames("", {
-                    invalid: errors.email || errors.emailnotfound
+                    invalid: errors.password || errors.passwordincorrect
                   })}
                   html_for="password"
                   labelname="Password"
-                  span_classname="red-text"
+                  span_classname={classes.spanClass}
                   error1={errors.password}
                   error2={errors.passwordincorrect}
                 />
-                  <br/>
                   <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
                   Toggle" type="button"/>
                   {this.state.passwordIsMasked ? "Show Password" : "Hide Password"}
@@ -158,7 +160,8 @@ class Login extends Component {
                 </Button>
               </form>
             </Grid>
-            <Divider style={{width: "300px"}}/>
+            <Divider style={{width: '300px'}}
+            />
             <Grid item>
               <Link href="/forgotpassword">
                 Forgot Password?

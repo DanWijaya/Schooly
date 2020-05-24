@@ -142,7 +142,7 @@ class Register extends Component {
             </Typography>
           </Grid>
           
-           <Grid item>
+           <Grid item style={{ width: '400px'}}>
            <form noValidate onSubmit={this.onSubmit}>
            <InputLabel>Register As</InputLabel>
               <Select
