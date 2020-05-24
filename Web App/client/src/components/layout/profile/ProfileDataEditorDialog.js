@@ -67,6 +67,13 @@ const theme = createMuiTheme({
   },
 });
 
+const onChange = (e) => {
+  if(e.target.id)
+    this.setState({ [e.target.id]: e.target.value });
+  else
+    this.setState({role: e.target.value});
+};
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -98,6 +105,17 @@ function TabIndex(index) {
 }
 
 function ProfileDataItemEdit(props) {
+
+  // Informasi Pribadi 
+  const [informasiPribadi, setInformasiPribadi] = React.useState({ 
+                                                      nama: null, 
+                                                      tanggalLahir: null, 
+                                                      jenisKelamin: null,
+                                                      sekolah: null
+                                                    });
+  const [kontak, setKontak] = React.useState({email: null, nomorTelp: null, nomorTelpDarurat: null, alamat: null})
+  const [karir, setKarir] = React.useState({hobi_minat: null, ekstrakulikuler: null, cita_cita: null, perguruan_impian: null})
+  
   return(
     <ListItem>
         <ListItemAvatar>
@@ -112,7 +130,7 @@ function ProfileDataItemEdit(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <OutlinedTextField value={props.value} />
+            <OutlinedTextField value={props.value} id={props.id}/>
           </Grid>
         </Grid>
     </ListItem>
@@ -144,6 +162,9 @@ function ProfileDataEditorDialog(props) {
     handleClose()
   }
 
+  const onChangeInformasiPribadi = (e) => {
+
+  }
   return (
     <div>
       <Button
@@ -182,7 +203,7 @@ function ProfileDataEditorDialog(props) {
             >
               <Tab disableRipple className={classes.tabInfo} icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
               <Tab disableRipple className={classes.tabInfo} icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
-              <Tab disableRipple className={classes.tabInfo} icon={<EmojiPeopleIcon />} label="Karier" {...TabIndex(0)} />
+              <Tab disableRipple className={classes.tabInfo} icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(0)} />
             </Tabs>
             </ThemeProvider>
             <TabPanel value={value} index={0}>
@@ -190,22 +211,27 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<PersonIcon />}
                   profile_data_category="Nama"
+                  onChange={onChangeInformasiPribadi}
                   value="test"
+                  id="nama"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
                   value="test"
+                  id="tanggal_lahir"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
                   value="test"
+                  id="jenis_kelamin"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
                   value="test"
+                  id="sekolah"
                 />
               </List>
             </TabPanel>
@@ -215,21 +241,25 @@ function ProfileDataEditorDialog(props) {
                   profile_data_icon={<EmailIcon />}
                   profile_data_category="Email"
                   value="test"
+                  id="email"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<PhoneIcon />}
                   profile_data_category="Nomor Telepon"
                   value="test"
+                  id="no_telp"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<SupervisorAccountIcon />}
                   profile_data_category="Nomor Telepon Darurat"
                   value="test"
+                  id="no_telp_darurat"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<HomeIcon />}
                   profile_data_category="Alamat"
                   value="test"
+                  id="alamat"
                 />
               </List>
             </TabPanel>
@@ -239,21 +269,25 @@ function ProfileDataEditorDialog(props) {
                   profile_data_icon={<GamesIcon />}
                   profile_data_category="Hobi dan Minat"
                   value="test"
+                  id="hobi_minat"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<BookIcon />}
-                  profile_data_category="Kemampuan Ekstrakurikuler"
+                  profile_data_category="Keterampilan non-teknis"
                   value="test"
+                  id="ket_non_teknis"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WorkIcon />}
                   profile_data_category="Cita-Cita"
                   value="test"
+                  id="cita_cita"
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<AccountBalanceIcon />}
-                  profile_data_category="Perguruan Tinggi Impian"
+                  profile_data_category="Universitas Impian"
                   value="test"
+                  id="uni_impian"
                 />
               </List>
             </TabPanel>
