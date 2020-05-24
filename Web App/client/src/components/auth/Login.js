@@ -29,7 +29,7 @@ const styles = (theme) => ({
     height: "30%",
     marginBottom: "30px",
   },
-  spanClass: {
+  errorInfo: {
     color: "red",
     fontSize: "10px"
   }
@@ -86,16 +86,11 @@ class Login extends Component {
   togglePasswordVisibility = () => {
     this.setState(prevState =>
       ({
-        passwordIsMasked: !(prevState.passwordIsMasked), 
+        passwordIsMasked: !(prevState.passwordIsMasked),
         icon: !(prevState.icon
           )}
     ));
   }
-
-  // togglePasswordMaskIcon = e => {
-  //     const { icon } = this.state
-  //     this.setState({ icon: !icon })
-  // }
 
   render() {
     document.title="Masuk ke Schooly"
@@ -124,22 +119,24 @@ class Login extends Component {
               </Typography>
             </Grid>
             <Grid item style={{width:"300px"}} >
-              <form noValidate onSubmit={this.onSubmit}>
-                <OutlinedTextField
-                  on_change={this.onChange}
-                  value={this.state.email}
-                  error={errors.email}
-                  id="email"
-                  type="email"
-                  classname={classnames("", {
-                    invalid: errors.email || errors.emailnotfound
-                  })}
-                  html_for="email"
-                  labelname="Email"
-                  span_classname={classes.spanClass}
-                  error1={errors.email}
-                  error2={errors.emailnotfound}
-                />
+              <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
+                <div style={{marginBottom: "15px"}}>
+                  <OutlinedTextField
+                    on_change={this.onChange}
+                    value={this.state.email}
+                    error={errors.email}
+                    id="email"
+                    type="email"
+                    classname={classnames("", {
+                      invalid: errors.email || errors.emailnotfound
+                    })}
+                    html_for="email"
+                    labelname="Email"
+                    span_classname={classes.errorInfo}
+                    error1={errors.email}
+                    error2={errors.emailnotfound}
+                  />
+                </div>
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.password}
@@ -150,20 +147,20 @@ class Login extends Component {
                     invalid: errors.password || errors.passwordincorrect
                   })}
                   html_for="password"
-                  labelname="Password"
-                  span_classname={classes.spanClass}
+                  labelname="Kata Sandi"
+                  span_classname={classes.errorInfo}
                   error1={errors.password}
                   error2={errors.passwordincorrect}
                 />
                 <Button
-                  startIcon={icon ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  startIcon={icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
                   onClick={this.togglePasswordVisibility}
                   disableRipple
                   style={{
                     backgroundColor: 'transparent',
-                  textTransform: 'none',
-                  fontSize: 12,
-                }}
+                    textTransform: 'none',
+                    fontSize: "12px",
+                  }}
                 >
                   {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
                 </Button>

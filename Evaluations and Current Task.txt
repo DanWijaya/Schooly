@@ -30,20 +30,15 @@ Daniel:
 14. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
 15. betulin null (0px) logged out drawer (Done) (https://stackoverflow.com/questions/53048037/react-showing-0-instead-of-nothing-with-short-circuit-conditional-component)
 
-To be Fixed:
-- Profile picturenya belum bisa skalian hapus dan upload (Done)
-- Profile avatar pas preview, rationya jelek
-- Coba pakai withstyles buat yang iconbutton hijau-hijau (Done)
-- Setting Navbar untuk kalau udah login aja (Done)
-- Implemen cropping for profile pictire (https://www.kurzor.net/blog/uploading-and-resizing-images-part1)
-
 Page List Done:
 - Navbar (Masih ke halang mini drawernya)
 - Profile (Kurang dikasi gambar-gambar, mungkin background image, belum tambahin snackbar buat edit profile dan edit password)
-- Login (Divider nda mau muncul, masih jelek)
+- Login (Masih nda bisa masukkin icon info buat error)
+- Register (Belum implemen stepper nggak bisa call function, Rapiin multiselect sama select, widthnya masih nda bisa diatur)
 
 Optional:
 - Terms and Policies
 
-Drafter:
+Drafted:
 - Comments
+- Implemen cropping for profile pictire (https://www.kurzor.net/blog/uploading-and-resizing-images-part1)
