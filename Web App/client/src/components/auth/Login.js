@@ -42,7 +42,8 @@ class Login extends Component {
       email: "",
       password: "",
       errors: {},
-      passwordIsMasked: true,
+      passwordIsMasked: true, // true kalau dimask
+      icon: true // true kalau keliatan
     };
   }
 
@@ -81,17 +82,20 @@ class Login extends Component {
     this.props.loginUser(userData);
   };
 
-  togglePasswordMask = () => {
-    this.setState(prevState =>
-      ({passwordIsMasked: !(prevState.passwordIsMasked)
-    }));
-  };
 
-  state = { icon: true }
-  togglePasswordMaskIcon = e => {
-      const { icon } = this.state
-      this.setState({ icon: !icon })
+  togglePasswordVisibility = () => {
+    this.setState(prevState =>
+      ({
+        passwordIsMasked: !(prevState.passwordIsMasked), 
+        icon: !(prevState.icon
+          )}
+    ));
   }
+
+  // togglePasswordMaskIcon = e => {
+  //     const { icon } = this.state
+  //     this.setState({ icon: !icon })
+  // }
 
   render() {
     document.title="Masuk ke Schooly"
@@ -153,8 +157,13 @@ class Login extends Component {
                 />
                 <Button
                   startIcon={icon ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  onClick={this.togglePasswordMask}
-                  style={{fontFamily: "Arial"}}
+                  onClick={this.togglePasswordVisibility}
+                  disableRipple
+                  style={{
+                    backgroundColor: 'transparent',
+                  textTransform: 'none',
+                  fontSize: 12,
+                }}
                 >
                   {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
                 </Button>
