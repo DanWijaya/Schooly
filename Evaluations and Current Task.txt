@@ -40,7 +40,8 @@ To be Fixed:
 Page List Done:
 - Navbar (Masih ke halang mini drawernya)
 - Profile (Kurang dikasi gambar-gambar, mungkin background image, belum tambahin snackbar buat edit profile dan edit password)
-- Login (Divider nda mau muncul, masih jelek)
+- Login (Hapus Logo? cari cara lain biar nda plain)
+- Register (Belum implemen stepper nggak bisa call function, Hapus Logo? cari cara lain biar nda plain)
 
 Optional:
 - Terms and Policies
