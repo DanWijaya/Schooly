@@ -67,12 +67,6 @@ const theme = createMuiTheme({
   },
 });
 
-const onChange = (e) => {
-  if(e.target.id)
-    this.setState({ [e.target.id]: e.target.value });
-  else
-    this.setState({role: e.target.value});
-};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
