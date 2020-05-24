@@ -105,16 +105,6 @@ function TabIndex(index) {
 }
 
 function ProfileDataItemEdit(props) {
-
-  // Informasi Pribadi 
-  const [informasiPribadi, setInformasiPribadi] = React.useState({ 
-                                                      nama: null, 
-                                                      tanggalLahir: null, 
-                                                      jenisKelamin: null,
-                                                      sekolah: null
-                                                    });
-  const [kontak, setKontak] = React.useState({email: null, nomorTelp: null, nomorTelpDarurat: null, alamat: null})
-  const [karir, setKarir] = React.useState({hobi_minat: null, ekstrakulikuler: null, cita_cita: null, perguruan_impian: null})
   
   return(
     <ListItem>
@@ -130,7 +120,7 @@ function ProfileDataItemEdit(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <OutlinedTextField value={props.value} id={props.id}/>
+            <OutlinedTextField value={props.value} id={props.id} on_change={props.on_change}/>
           </Grid>
         </Grid>
     </ListItem>
@@ -139,32 +129,72 @@ function ProfileDataItemEdit(props) {
 
 function ProfileDataEditorDialog(props) {
   const classes = useStyles();
-
+  const { userData } = props
   //Dialog
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => {
+  const handleClose = (simpan) => {
+    console.log(simpan)
+    if(simpan !== "simpan")
+      setDataProfil(defaultUserData)
+
     setOpen(false);
+    
   };
 
   //Tabs
   const [value, setValue] = React.useState(0);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+   // Informasi Pribadi 
+   const [informasiPribadi, setInformasiPribadi] = React.useState({ nama: null, tanggal_lahir: null, jenis_kelamin: null, sekolah: null});
+  // Kontak
+  const [kontak, setKontak] = React.useState({email: null, nomorTelp: null, nomorTelpDarurat: null, alamat: null})
+  // Karir
+  const [karir, setKarir] = React.useState({hobi_minat: null, ekstrakulikuler: null, cita_cita: null, perguruan_impian: null})
+
+  const defaultUserData = { 
+    // Informasi Pribadi
+    nama: userData.name, 
+    tanggal_lahir: userData.tanggal_lahir, 
+    jenis_kelamin: userData.jenis_kelamin, 
+    sekolah: userData.sekolah,
+
+    //Kontak
+    email: userData.email, 
+    no_telp: userData.phone, 
+    no_telp_darurat: userData.emergency_phone, 
+    alamat: userData.address,
+
+    //Karir
+    hobi_minat: userData.hobi_minat, 
+    ket_non_teknis: userData.ket_non_teknis, 
+    cita_cita: userData.cita_cita, 
+    uni_impian: userData.uni_impian
+  }
+
+  const [dataProfil, setDataProfil] = React.useState(defaultUserData)
 
   //pas submit formnya
   const onSubmit = (e) => {
     e.preventDefault()
     props.handleOpenAlert()
-    handleClose()
+    handleClose("simpan")
   }
 
-  const onChangeInformasiPribadi = (e) => {
-
+  const handleChangeDataProfil = (e) => {
+    let { id , value} = e.target
+    setDataProfil((prev) => ({
+      ...prev, 
+      [id] : value
+    }))
   }
+
   return (
     <div>
       <Button
@@ -211,27 +241,30 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<PersonIcon />}
                   profile_data_category="Nama"
-                  onChange={onChangeInformasiPribadi}
-                  value="test"
+                  value={dataProfil.nama}
                   id="nama"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
-                  value="test"
+                  value={dataProfil.tanggal_lahir}
                   id="tanggal_lahir"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
-                  value="test"
+                  value={dataProfil.jenis_kelamin}
                   id="jenis_kelamin"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
-                  value="test"
+                  value={dataProfil.sekolah}
                   id="sekolah"
+                  on_change={handleChangeDataProfil}
                 />
               </List>
             </TabPanel>
@@ -240,26 +273,30 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<EmailIcon />}
                   profile_data_category="Email"
-                  value="test"
+                  value={dataProfil.email}
                   id="email"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<PhoneIcon />}
                   profile_data_category="Nomor Telepon"
-                  value="test"
+                  value={dataProfil.no_telp}
                   id="no_telp"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<SupervisorAccountIcon />}
                   profile_data_category="Nomor Telepon Darurat"
-                  value="test"
+                  value={dataProfil.no_telp_darurat}
                   id="no_telp_darurat"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<HomeIcon />}
                   profile_data_category="Alamat"
-                  value="test"
+                  value={dataProfil.alamat}
                   id="alamat"
+                  on_change={handleChangeDataProfil}
                 />
               </List>
             </TabPanel>
@@ -268,32 +305,37 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<GamesIcon />}
                   profile_data_category="Hobi dan Minat"
-                  value="test"
+                  value={dataProfil.hobi_minat}
                   id="hobi_minat"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<BookIcon />}
                   profile_data_category="Keterampilan non-teknis"
-                  value="test"
+                  value={dataProfil.ket_non_teknis}
                   id="ket_non_teknis"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WorkIcon />}
                   profile_data_category="Cita-Cita"
-                  value="test"
+                  value={dataProfil.cita_cita}
                   id="cita_cita"
+                  on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<AccountBalanceIcon />}
                   profile_data_category="Universitas Impian"
-                  value="test"
+                  value={dataProfil.uni_impian}
                   id="uni_impian"
+                  on_change={handleChangeDataProfil}
                 />
               </List>
             </TabPanel>
             <Grid container justify="center" style={{marginTop: "15px"}}>
               <Button
                 type="submit"
+                id="simpan"
                 style={{backgroundColor: "#2196f3", color: "white"}}
               >
                 Simpan

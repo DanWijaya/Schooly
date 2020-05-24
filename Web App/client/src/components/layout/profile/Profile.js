@@ -196,7 +196,7 @@ function Profile(props) {
           <Typography style={{marginBottom:"25px"}}>
             Class
           </Typography>
-          <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert}/>
+          <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
         </Grid>
         <Grid item container spacing={4}>
