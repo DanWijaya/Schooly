@@ -124,10 +124,6 @@ class Login extends Component {
                   error2={errors.emailnotfound}
                 />
                   
-                  <span className="red-text">
-                    {errors.email}
-                    {errors.emailnotfound}
-                  </span>
                   <br/>
                 <label htmlFor="password">Password</label>
                 <OutlinedTextField
@@ -145,10 +141,6 @@ class Login extends Component {
                   error1={errors.password}
                   error2={errors.passwordincorrect}
                 />
-                  <span className="red-text">
-                    {errors.password}
-                    {errors.passwordincorrect}
-                  </span>
                   <br/>
                   <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
                   Toggle" type="button"/>
