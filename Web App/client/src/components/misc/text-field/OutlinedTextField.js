@@ -1,6 +1,8 @@
 import React from "react";
+// Atau pakai 
+// const OutlinedTextField = (props) => { ... 
 
-const OutlinedTextField = (props) => {
+function OutlinedTextField (props) {
   return (
     <input
       onChange={props.on_change}

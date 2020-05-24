@@ -71,11 +71,13 @@ function ProfilePictureEditorDialog(props) {
   };
   const handleCloseDialog = () => {
     setOpenDialog(false);
+    setProfileImg(null)
   };
 
   //Image Upload
   var uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
+
   const [profileImg, setProfileImg] = React.useState(null);
 
   const {user} = props;
@@ -111,10 +113,11 @@ function ProfilePictureEditorDialog(props) {
     let userId = user.id;
 
     updateUser(userData, userId, formData)
-    setProfileImg(null)
-    props.handleOpenAlert()
+    props.handleOpenAlert() 
 
+    handleCloseDialog()
   }
+
 
   return (
     <div className={classes.root}>
@@ -210,10 +213,23 @@ function ProfilePictureEditorDialog(props) {
                   </Button>
                 </Grid>
                 <Grid item>
+                  {profileImg == null ? 
+                  <Button
+                  disabled
+                    type="submit"
+                    startIcon={<CloudUploadIcon />}
+                    style={{
+                      backgroundColor: "#61bd4f",
+                      color: "white",
+                      width: "150px",
+                      opacity: "50%"
+                    }}
+                  >
+                    Simpan
+                  </Button> : 
                   <Button
                     type="submit"
                     startIcon={<CloudUploadIcon />}
-                    onClick={handleCloseDialog}
                     style={{
                       backgroundColor: "#61bd4f",
                       color: "white",
@@ -222,6 +238,8 @@ function ProfilePictureEditorDialog(props) {
                   >
                     Simpan
                   </Button>
+                  }
+
                 </Grid>
               </Grid>
             </form>

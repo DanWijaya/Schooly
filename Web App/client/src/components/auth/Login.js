@@ -107,6 +107,7 @@ class Login extends Component {
             </Grid>
             <Grid item>
               <form noValidate onSubmit={this.onSubmit}>
+                <label htmlFor="email">Email</label>
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.email}
@@ -117,11 +118,13 @@ class Login extends Component {
                     invalid: errors.email || errors.emailnotfound
                   })}
                 />
-                  <label htmlFor="email">Email</label>
+                  
                   <span className="red-text">
                     {errors.email}
                     {errors.emailnotfound}
                   </span>
+                  <br/>
+                <label htmlFor="password">Password</label>
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.password}
@@ -132,20 +135,21 @@ class Login extends Component {
                     invalid: errors.email || errors.emailnotfound
                   })}
                 />
-                  <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
-                  Toggle" type="button"/>
-                  {this.state.passwordIsMasked ? "Show" : "Hide"}
-                  <label htmlFor="password">Password</label>
                   <span className="red-text">
                     {errors.password}
                     {errors.passwordincorrect}
                   </span>
+                  <br/>
+                  <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
+                  Toggle" type="button"/>
+                  {this.state.passwordIsMasked ? "Show Password" : "Hide Password"}
                 <Button
                   type="submit"
                   style={{
                     backgroundColor: "#61bd4f",
                     color: "white",
                     width: "100%",
+                    marginTop: "20px"
                   }}
                 >
                   Masuk

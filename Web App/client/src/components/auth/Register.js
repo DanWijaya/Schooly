@@ -9,18 +9,27 @@ import { withStyles, useTheme } from "@material-ui/core/styles";
 import { registerUser } from "../../actions/AuthActions";
 import { viewClass } from "../../actions/ClassActions";
 import schoolySymbolLogo from "../../images/SchoolySymbolLogo.png";
-
+import schoolyLogoAlt from "../../images/SchoolyLogoAlt.png";
+import OutlinedTextField from "../misc/text-field/OutlinedTextField"
 const styles = (theme) => ({
-  signupBox: {
+  root: {
+    margin: "auto",
     display: "flex",
     justifyContent: "center",
-    maxWidth: "500px",
+    alignItems: "center",
+    maxWidth: "750px",
     margin: "auto",
+    flexDirection: "column"
   },
   schoolySymbolLogo: {
-    width: "20%",
-    height: "20%",
+    width: "30%",
+    height: "30%",
+    marginButtom: "50px"
   },
+  mainGrid: {
+    width: "600px",
+    padding: "40px"
+  }
 });
 
 class Register extends Component {
@@ -117,12 +126,179 @@ class Register extends Component {
     }
 
     return (
-      <div className={classes.signupBox}>
-        <Paper>
-          <img src={schoolySymbolLogo} className={classes.schoolySymbolLogo}/>
-          <Typography>
-            Daftarkan dirimu di Schooly
-          </Typography>
+      <div className={classes.root}>    
+          <img src={schoolyLogoAlt} className={classes.schoolySymbolLogo}/>
+          <Paper>
+          <Grid 
+            container
+            direction="column"
+            alignItems="center"
+            spacing={5}
+            className={classes.mainGrid}>
+
+          <Grid item>
+            <Typography variant="h6">
+              <b>Daftarkan dirimu di Schooly</b>
+            </Typography>
+          </Grid>
+          
+           <Grid item>
+           <form noValidate onSubmit={this.onSubmit}>
+           <InputLabel>Register As</InputLabel>
+              <Select
+                style={{ width: "200px"}}
+                labelId="demo-simple-select-label"
+                id="role"
+                name="role"
+                value={this.state.role}
+                onChange={this.onChange}>
+                  <MenuItem value={"Student"}>Student</MenuItem>
+                  <MenuItem value={"Teacher"}>Teacher</MenuItem>
+                  <MenuItem value={"Admin"}>Admin</MenuItem>
+              </Select>
+              <br/>
+              <label htmlFor="name">Name</label>
+              <OutlinedTextField
+                  on_change={this.onChange}
+                  value={this.state.name}
+                  error={errors.name}
+                  id="name"
+                  type="text"
+                  classname={classnames("", {
+                    invalid: errors.name
+                  })}
+                />
+              <span className="red-text">{errors.name}</span>
+              <br/>
+
+              {this.state.role === "Student" ?
+          <Grid>
+          <InputLabel id="class">Class</InputLabel>
+        <Multiselect id="class" options={options} onSelect={this.onSelect}
+        onRemove={this.onRemove} displayValue="name" error={errors.class_assigned} showCheckBox={true}
+        className={classnames("", {
+          invalid: errors.class
+        })}/>
+      </Grid>
+      :
+      this.state.role === "Teacher" ?
+        <Grid>
+          <label htmlFor="subject_teached">Subject Teached</label>
+          <OutlinedTextField
+            on_change={this.onChange}
+            value={this.state.subject_teached}
+            error={errors.subject_teached}
+            id="subject_teached"
+            type="text"
+            className={classnames("", {
+              invalid: errors.subject_teached
+            })}
+          />
+          <span className="red-text">{errors.subject_teached}</span>
+        </Grid> : null}
+
+              <label htmlFor="email">Email</label>
+              <OutlinedTextField
+                  on_change={this.onChange}
+                  value={this.state.email}
+                  error={errors.email}
+                  id="email"
+                  type="email"
+                  classname={classnames("", {
+                    invalid: errors.email
+                  })}
+                />
+              <span className="red-text">{errors.email}</span>
+              <br/>
+
+              <label htmlFor="phone">Phone Contact </label>
+              <OutlinedTextField
+                  on_change={this.onChange}
+                  value={this.state.phone}
+                  error={errors.phone}
+                  id="phone"
+                  type="text"
+                  classname={classnames("", {
+                    invalid: errors.phone
+                  })}
+                />
+              <span className="red-text">{errors.phone}</span>
+              <br/>
+
+              <label htmlFor="emergency_phone">Emergency Contact</label>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.emergency_phone}
+                error={errors.emergency_phone}
+                id="emergency_phone"
+                type="text"
+                className={classnames("", {
+                  invalid: errors.emergency_phone
+                })}
+              />
+              <span className="red-text">{errors.emergency_phone}</span>
+              <br/>
+
+              <label htmlFor="address">Address</label>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.address}
+                error={errors.address}
+                id="address"
+                type="text"
+                className={classnames("", {
+                  invalid: errors.address
+                })}
+              />
+              <span className="red-text">{errors.address}</span>
+              <br/>
+
+              <label htmlFor="password">Password</label>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.password}
+                error={errors.password}
+                id="password"
+                type="password"
+                className={classnames("", {
+                  invalid: errors.password
+                })}
+              />
+              <span className="red-text">{errors.password}</span>
+              <br/>
+
+              <label htmlFor="password2">Confirm Password</label>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.password2}
+                error={errors.password2}
+                id="password2"
+                type="password"
+                className={classnames("", {
+                  invalid: errors.password2
+                })}
+              />
+              <span className="red-text">{errors.password2}</span>
+
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                style={{
+                  backgroundColor: "#61bd4f",
+                  color: "white",
+                  width: "100%",
+                  marginTop: "20px"
+                }}
+              >
+                Daftar
+              </Button>
+             </form>
+            </Grid> 
+          </Grid>
+          </Paper>
+
+          {/*
           <form noValidate onSubmit={this.onSubmit}>
             <div className="col s12">
               <InputLabel>Register As</InputLabel>
@@ -276,7 +452,7 @@ class Register extends Component {
               </Button>
             </div>
           </form>
-        </Paper>
+              </Paper> */}
       </div>
     );
   }

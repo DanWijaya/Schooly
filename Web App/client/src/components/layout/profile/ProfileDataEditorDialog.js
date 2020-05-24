@@ -119,7 +119,7 @@ function ProfileDataItemEdit(props) {
   )
 }
 
-function ProfileDataEditorDialog() {
+function ProfileDataEditorDialog(props) {
   const classes = useStyles();
 
   //Dialog
@@ -137,6 +137,12 @@ function ProfileDataEditorDialog() {
     setValue(newValue);
   };
 
+  //pas submit formnya
+  const onSubmit = (e) => {
+    e.preventDefault()
+    props.handleOpenAlert()
+    handleClose()
+  }
 
   return (
     <div>
@@ -165,7 +171,7 @@ function ProfileDataEditorDialog() {
               <b>Sunting Profil</b>
             </Typography>
           </Grid>
-          <form>
+          <form onSubmit={onSubmit}>
             <ThemeProvider theme={theme}>
             <Tabs
               value={value}
@@ -239,16 +245,15 @@ function ProfileDataEditorDialog() {
                 />
               </List>
             </TabPanel>
-            <Grid container justify="flex-end" alignItems="center" style={{marginTop: "15px"}}>
+            <Grid container justify="center" style={{marginTop: "15px"}}>
               <Button
                 type="submit"
                 style={{backgroundColor: "#2196f3", color: "white"}}
-                onClick={handleClose}
               >
                 Simpan
               </Button>
             </Grid>
-          </form>
+          </form> 
         </Grid>
       </Dialog>
     </div>

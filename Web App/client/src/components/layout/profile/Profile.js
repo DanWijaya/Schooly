@@ -88,6 +88,7 @@ function Profile(props) {
   const { user } = props.auth;
   const updateUser = props.updateUser;
 
+  // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -99,9 +100,37 @@ function Profile(props) {
     setOpenAlert(false);
   }
 
+  // Alert control for ProfilePasswordEditorDialog
+  const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
+  const handleOpenDataEditorAlert = () => {
+    setOpenDataEditorAlert(true);
+  }
+
+  const handleCloseDataEditorAlert = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenDataEditorAlert(false);
+  }
+
+  // Alert control for ProfilePasswordEditorDialog
+  const [openPasswordEditorAlert, setOpenPasswordEditorAlert] = React.useState(false);
+  const handleOpenPasswordEditorAlert = () => {
+    setOpenPasswordEditorAlert(true);
+  }
+
+  const handleClosePasswordEditorAlert = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenPasswordEditorAlert(false);
+  }
+
   document.title=`Schooly | ${user.name}`
   return(
     <div className={classes.root}>
+
+      {/* ProfilePictureEditorDialog punya Snackbar */}
       <Snackbar
         open={openAlert}
         autoHideDuration={4000}
@@ -112,6 +141,31 @@ function Profile(props) {
           Foto profil berhasil diganti!
         </Alert>
       </Snackbar>
+
+      {/* ProfileDataEditorDialog punya Snackbar */}
+      <Snackbar
+        open={openDataEditorAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseDataEditorAlert}
+        anchorOrigin={{vertical : "top", horizontal: "center"}}
+      >
+        <Alert onClose={handleCloseDataEditorAlert} severity="info" >
+          Data profil berhasil diganti!
+        </Alert>
+      </Snackbar>
+
+      {/* ProfilePasswordEditorDialog punya Snackbar */}
+      <Snackbar
+        open={openPasswordEditorAlert}
+        autoHideDuration={4000}
+        onClose={handleClosePasswordEditorAlert}
+        anchorOrigin={{vertical : "top", horizontal: "center"}}
+      >
+        <Alert onClose={handleClosePasswordEditorAlert} severity="info" >
+          Foto profil berhasil diganti!
+        </Alert>
+      </Snackbar>
+
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar && user.avatar != undefined ?
@@ -141,7 +195,7 @@ function Profile(props) {
             </StyledBadge>
           }
           <Typography variant="subtitle2">
-            <h3>{user.name}</h3>
+            <h3>{user.name}</h3>  
           </Typography>
           <Typography>
             "School Name" High School {user.role}
@@ -149,8 +203,8 @@ function Profile(props) {
           <Typography style={{marginBottom:"25px"}}>
             Class
           </Typography>
-          <ProfileDataEditorDialog />
-          <ProfilePasswordEditorDialog />
+          <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert}/>
+          <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
         </Grid>
         <Grid item container spacing={4}>
           <Grid item>

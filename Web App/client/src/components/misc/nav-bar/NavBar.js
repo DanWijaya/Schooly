@@ -126,7 +126,6 @@ const StyledMenuItem = withStyles({
   root: {
     "&:hover": {
       backgroundColor: "#2196f3",
-      
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
         color: "white",
     },

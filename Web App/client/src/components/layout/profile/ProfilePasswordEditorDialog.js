@@ -34,14 +34,14 @@ function EditPasswordField(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <OutlinedTextField />
+            <OutlinedTextField type="password"/>
           </Grid>
         </Grid>
     </ListItem>
   )
 }
 
-function ProfilePasswordEditorDialog() {
+function ProfilePasswordEditorDialog(props) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -51,6 +51,12 @@ function ProfilePasswordEditorDialog() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    handleClose()
+    props.handleOpenAlert()
+  }
 
   return (
     <div>
@@ -86,9 +92,9 @@ function ProfilePasswordEditorDialog() {
                Kata sandi adalah informasi pribadi yang tidak boleh diketahui oleh orang lain.
             </Typography>
           </Grid>
-          <form>
+          <form onSubmit={onSubmit}>
             <List>
-              <EditPasswordField
+              <EditPasswordField 
                 edit_password_requirement="Masukkan Kata Sandi Lama"
               />
               <EditPasswordField
@@ -98,11 +104,10 @@ function ProfilePasswordEditorDialog() {
                 edit_password_requirement="Konfirmasi Kata Sandi Baru"
               />
             </List>
-            <Grid container justify="flex-end" alignItems="center" style={{marginTop: "15px"}}>
+            <Grid container justify="center" style={{marginTop: "15px"}}>
               <Button
                 type="submit"
                 style={{backgroundColor: "#2196f3", color: "white"}}
-                onClick={handleClose}
               >
                 Simpan
               </Button>
