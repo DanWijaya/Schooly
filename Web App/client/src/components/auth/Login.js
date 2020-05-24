@@ -117,6 +117,11 @@ class Login extends Component {
                   classname={classnames("", {
                     invalid: errors.email || errors.emailnotfound
                   })}
+                  html_for="email"
+                  labelname="Email"
+                  span_classname="red-text"
+                  error1={errors.email}
+                  error2={errors.emailnotfound}
                 />
                   
                   <span className="red-text">
@@ -134,6 +139,11 @@ class Login extends Component {
                   classname={classnames("", {
                     invalid: errors.email || errors.emailnotfound
                   })}
+                  html_for="password"
+                  labelname="Password"
+                  span_classname="red-text"
+                  error1={errors.password}
+                  error2={errors.passwordincorrect}
                 />
                   <span className="red-text">
                     {errors.password}
