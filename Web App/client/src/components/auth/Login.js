@@ -6,9 +6,10 @@ import { connect } from "react-redux";
 import { loginUser } from "../../actions/AuthActions";
 import schoolyLogoAlt from "../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../misc/text-field/OutlinedTextField";
-import { Button, Divider, Grid, Link, Paper, Typography } from "@material-ui/core";
-import { withStyles, useTheme } from "@material-ui/core/styles";
-import RemoveRedEyeIcon from "@material-ui/icons/RemoveRedEye";
+import { Button, Divider, Grid, InputAdornment, Link, Paper, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 const styles = (theme) => ({
   root: {
@@ -82,9 +83,15 @@ class Login extends Component {
 
   togglePasswordMask = () => {
     this.setState(prevState =>
-    ({passwordIsMasked: !(prevState.passwordIsMasked)
-  }));
-};
+      ({passwordIsMasked: !(prevState.passwordIsMasked)
+    }));
+  };
+
+  state = { icon: true }
+  togglePasswordMaskIcon = e => {
+      const { icon } = this.state
+      this.setState({ icon: !icon })
+  }
 
   render() {
     document.title="Masuk ke Schooly"
@@ -92,6 +99,8 @@ class Login extends Component {
 
     const { errors } = this.state;
     const { passwordIsMasked } = this.state;
+
+    const { icon } = this.state
 
     return (
       <div className={classes.root}>
@@ -101,8 +110,8 @@ class Login extends Component {
             container
             direction="column"
             alignItems="center"
-            justify="center"
-            spacing={5}
+            justify="space-between"
+            spacing={3}
             className={classes.mainGrid}
           >
             <Grid item>
@@ -110,10 +119,9 @@ class Login extends Component {
                 <b>Masuk ke Schooly</b>
               </Typography>
             </Grid>
-            <Grid item style={{ width:"300px"}} >
+            <Grid item style={{width:"300px"}} >
               <form noValidate onSubmit={this.onSubmit}>
                 <OutlinedTextField
-                // width="300px"
                   on_change={this.onChange}
                   value={this.state.email}
                   error={errors.email}
@@ -129,7 +137,6 @@ class Login extends Component {
                   error2={errors.emailnotfound}
                 />
                 <OutlinedTextField
-                // width="300px"
                   on_change={this.onChange}
                   value={this.state.password}
                   error={errors.password}
@@ -144,9 +151,13 @@ class Login extends Component {
                   error1={errors.password}
                   error2={errors.passwordincorrect}
                 />
-                  <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
-                  Toggle" type="button"/>
-                  {this.state.passwordIsMasked ? "Show Password" : "Hide Password"}
+                <Button
+                  startIcon={icon ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  onClick={this.togglePasswordMask}
+                  style={{fontFamily: "Arial"}}
+                >
+                  {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
+                </Button>
                 <Button
                   type="submit"
                   style={{
@@ -160,11 +171,11 @@ class Login extends Component {
                 </Button>
               </form>
             </Grid>
-            <Divider style={{width: '300px'}}
+            <Divider style={{width: "300px"}}
             />
             <Grid item>
               <Link href="/forgotpassword">
-                Forgot Password?
+                Lupa Kata Sandi?
               </Link>
             </Grid>
           </Grid>
