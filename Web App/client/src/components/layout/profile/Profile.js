@@ -40,13 +40,6 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "17.5px",
     paddingRight: "17.5px",
   },
-  profilePictureBox: {
-    position: "absolute",
-    width: 400,
-    border: "2px solid #000",
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2, 4, 3),
-  },
 }));
 
 const StyledBadge = withStyles((theme) => ({
@@ -195,7 +188,7 @@ function Profile(props) {
             </StyledBadge>
           }
           <Typography variant="subtitle2">
-            <h3>{user.name}</h3>  
+            <h3>{user.name}</h3>
           </Typography>
           <Typography>
             "School Name" High School {user.role}

@@ -23,10 +23,10 @@ const styles = (theme) => ({
     width: "400px",
     padding: "40px",
   },
-  schoolyLogo: {
+  schoolyLogoAlt: {
     width: "30%",
     height: "30%",
-    marginBottom: "50px",
+    marginBottom: "30px",
   }
 });
 
@@ -91,7 +91,7 @@ class Login extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogoAlt} className={classes.schoolyLogo} />
+        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} />
         <Paper>
           <Grid
             container
@@ -107,7 +107,6 @@ class Login extends Component {
             </Grid>
             <Grid item>
               <form noValidate onSubmit={this.onSubmit}>
-                <label htmlFor="email">Email</label>
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.email}
@@ -123,13 +122,6 @@ class Login extends Component {
                   error1={errors.email}
                   error2={errors.emailnotfound}
                 />
-                  
-                  <span className="red-text">
-                    {errors.email}
-                    {errors.emailnotfound}
-                  </span>
-                  <br/>
-                <label htmlFor="password">Password</label>
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.password}
@@ -137,7 +129,7 @@ class Login extends Component {
                   id="password"
                   type={passwordIsMasked ? "password" : "text"}
                   classname={classnames("", {
-                    invalid: errors.email || errors.emailnotfound
+                    invalid: errors.password || errors.passwordincorrect
                   })}
                   html_for="password"
                   labelname="Password"
@@ -145,11 +137,6 @@ class Login extends Component {
                   error1={errors.password}
                   error2={errors.passwordincorrect}
                 />
-                  <span className="red-text">
-                    {errors.password}
-                    {errors.passwordincorrect}
-                  </span>
-                  <br/>
                   <RemoveRedEyeIcon className="mask-btn" onClick={this.togglePasswordMask} value="
                   Toggle" type="button"/>
                   {this.state.passwordIsMasked ? "Show Password" : "Hide Password"}
