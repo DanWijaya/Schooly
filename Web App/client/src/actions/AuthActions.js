@@ -22,7 +22,7 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
-export const  updateUser = (userData, userId, formData) => dispatch => {
+export const updateUser = (userData, userId, formData) => dispatch => {
   if(userData.avatar != undefined) {
 
     axios.delete(`/api/uploads/image/${userData.avatar}`)

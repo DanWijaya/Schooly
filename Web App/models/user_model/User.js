@@ -9,23 +9,35 @@ const options = {discriminatorKey: 'role'};
 // Create Schema (New way)
 
 const UserSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
   password: {
     type: String,
     required: true
   },
-  date: {
-    type: Date,
-    default: Date.now
-  }, 
-  address: {
+  avatar: {
+    type: String,
+    default: ""
+  },
+  
+  // Informasi Pribadi
+  name: {
+    type: String,
+    required: true
+  },
+  tanggal_lahir: {
+    type: String,
+    default: "Isi tanggal dengan format HH/BB/TTTT !"
+  },
+  jenis_kelamin: {
+    type: String,
+    default: "Isi pria atau wanita !"
+  },
+  sekolah: {
+    type: String, 
+    default: "Isi Sekolah mu !"
+  },
+
+  //Kontak
+  email: {
     type: String,
     required: true
   },
@@ -36,11 +48,28 @@ const UserSchema = new Schema({
   emergency_phone: {
     type: String,
     required: true
-    },
-  avatar: {
+  },
+  address: {
     type: String,
-    default: ""
-  }
+    required: true
+  },
+  
+  //Karir
+  hobi_minat: {
+    type: String,
+    required: false
+  },
+  ket_non_teknis: {
+    type: String, 
+    required: false
+  },
+  cita_cita: {type: String, 
+    required: false
+  },
+  uni_impian: { 
+    type: String, 
+    required: false
+  },
 }, options )
 
 const User = mongoose.model('users', UserSchema);

@@ -264,7 +264,7 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2" gutterBottom>
-                  <h4>Karier</h4>
+                  <h4>Karir</h4>
                 </Typography>
                 <List>
                   <ProfileDataItem
@@ -274,7 +274,7 @@ function Profile(props) {
                   />
                   <ProfileDataItem
                     profile_data_icon={<BookIcon />}
-                    profile_data_category="Kemampuan Extrakurikuler"
+                    profile_data_category="Keterampilan non-teknis"
                     profile_data_info="fuckin"
                   />
                   <ProfileDataItem
