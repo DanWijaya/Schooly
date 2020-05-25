@@ -15,7 +15,7 @@ import Login from "./components/auth/login/Login";
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
-import Notifications from "./components/layout/notifications/Notifications";
+import NotificationsList from "./components/layout/notifications/NotificationsList";
 import Profile from "./components/layout/profile/Profile";
 //Misc
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
@@ -31,6 +31,7 @@ import ViewTask from "./components/objects/tasks/ViewTask";
 //Prototypes
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
+import RegisterTest from "./components/auth/register/RegisterTest";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -86,24 +87,23 @@ class App extends Component {
         <ThemeProvider theme={colorPalette}>
           <Router>
             <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
-            <div className="App" style={{marginLeft: `${translateXValue}`, marginTop: "20px"}}>
+            <div style={{marginLeft: `${translateXValue}`, marginTop: "30px"}}>
               <Route exact path="/" component={Landing} />
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/about-schooly" component={About} />
+              <Route exact path="/daftar" component={Register} />
+              <Route exact path="/masuk" component={Login} />
+              <Route exact path="/tentang-schooly" component={About} />
               <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
               <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
-              <Route exact path="/notifications" component={Notifications}/>
+              <Route exact path="/register-test" component={RegisterTest} /> {/*prototypetest*/}
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <PrivateRoute exact path="/profile" component={Profile} />
-
+                <PrivateRoute exact path="/profil" component={Profile} />
+                <PrivateRoute exact path="/notifikasi" component={NotificationsList} />
                 {/* Route Class */}
                 <PrivateRoute exact path="/createclass" component={CreateClass}/>
                 <PrivateRoute exact path="/viewclass" component={ViewClass}/>
                 <PrivateRoute exact path="/class/:id" component={EditClass}/>
                 <PrivateRoute exact path="/deleteclass/:id" component={ViewClass}/>
-
                 {/* Route Task  */}
                 <PrivateRoute exact path="/createtask" component={CreateTask}/>
                 <PrivateRoute exact path="/viewtask" component={ViewTask}/>

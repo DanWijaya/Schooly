@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -38,23 +38,6 @@ const styles = (theme) => ({
     marginBottom: "30px",
   },
 });
-
-function getSteps() {
-  return ["Select master blaster campaign settings", "Create an ad group", "Create an ad"];
-}
-
-function getStepContent(stepIndex) {
-  switch (stepIndex) {
-    case 0:
-      return "Select campaign settings...";
-    case 1:
-      return "What is an ad group anyways?";
-    case 2:
-      return "This is the bit I really care about!";
-    default:
-      return "Unknown stepIndex";
-  }
-}
 
 class Register extends Component {
   constructor() {
@@ -334,7 +317,7 @@ class Register extends Component {
                           variant="contained"
                           size="large"
                           style={{
-                            backgroundColor: "secondary",
+                            backgroundColor: "#61bd4f",
                             color: "white",
                             width: "100%",
                             marginTop: "20px"

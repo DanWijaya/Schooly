@@ -210,7 +210,7 @@ function NavBar(props){
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <StyledMenuItem href="/profile">
+            <StyledMenuItem href="/profil">
               <ListItemIcon >
                 <AccountCircleIcon fontSize="medium"/>
               </ListItemIcon>
@@ -224,7 +224,7 @@ function NavBar(props){
             </StyledMenuItem>
           </StyledMenu>
           <LightTooltip title="Notifications">
-            <IconButton color="inherit" href="/notifications">
+            <IconButton color="inherit" href="/notifikasi">
               <Badge badgeContent={11} color="secondary">
                 <NotificationsIcon />
               </Badge>
@@ -286,7 +286,7 @@ function NavBar(props){
         </List>
         <Divider />
         <List>
-          <DrawerItemList href="/about-schooly">
+          <DrawerItemList href="/tentang-schooly">
               <ListItemIcon>
                 <AboutIcon />
               </ListItemIcon>
@@ -320,7 +320,7 @@ function NavBar(props){
           <Button
             variant="contained"
             size="medium"
-            href="/register"
+            href="/daftar"
             style={{
               backgroundColor: "#61bd4f",
               color: "white",
@@ -335,7 +335,7 @@ function NavBar(props){
           <Button
             variant="contained"
             size="medium"
-            href="/login"
+            href="/masuk"
             style={{
               backgroundColor: "white",
               color: "#2196f3",
