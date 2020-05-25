@@ -3,9 +3,9 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
-import { loginUser } from "../../actions/AuthActions";
-import schoolyLogoAlt from "../../images/SchoolyLogoAlt.png";
-import OutlinedTextField from "../misc/text-field/OutlinedTextField";
+import { loginUser } from "../../../actions/AuthActions";
+import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
+import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Divider, Grid, InputAdornment, Link, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -167,7 +167,7 @@ class Login extends Component {
                 <Button
                   type="submit"
                   style={{
-                    backgroundColor: "#61bd4f",
+                    backgroundColor: "secondary",
                     color: "white",
                     width: "100%",
                     marginTop: "20px"

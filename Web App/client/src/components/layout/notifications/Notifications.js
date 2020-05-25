@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import LightTooltip from "../components/misc/light-tooltip/LightTooltip"
-
+import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { Avatar, Checkbox, FormControlLabel, Grid, List, Icon, IconButton, ListItem, ListItemAvatar,
    Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
    TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core"

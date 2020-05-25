@@ -4,15 +4,12 @@ import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { registerUser } from "../../actions/AuthActions";
-import { viewClass } from "../../actions/ClassActions";
-import { colorPalette } from "../misc/color-palette/ColorPalette"
-import schoolyLogoAlt from "../../images/SchoolyLogoAlt.png";
-import OutlinedTextField from "../misc/text-field/OutlinedTextField"
-import { Button, FormControl, Grid, MenuItem, Paper, Select,
-   Step, StepLabel, Stepper, TextField, Typography } from "@material-ui/core";
+import { registerUser } from "../../../actions/AuthActions";
+import { viewClass } from "../../../actions/ClassActions";
+import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
+import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
+import { Button, FormControl, Grid, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
 
 const styles = (theme) => ({
   root: {
@@ -42,24 +39,22 @@ const styles = (theme) => ({
   },
 });
 
+function getSteps() {
+  return ["Select master blaster campaign settings", "Create an ad group", "Create an ad"];
+}
 
-//Stepper
-// function getSteps() {
-//   return ["Select master blaster campaign settings", "Create an ad group", "Create an ad"];
-// }
-//
-// function getStepContent(stepIndex) {
-//   switch (stepIndex) {
-//     case 0:
-//       return "Select campaign settings...";
-//     case 1:
-//       return "What is an ad group anyways?";
-//     case 2:
-//       return "This is the bit I really care about!";
-//     default:
-//       return "Unknown stepIndex";
-//   }
-// }
+function getStepContent(stepIndex) {
+  switch (stepIndex) {
+    case 0:
+      return "Select campaign settings...";
+    case 1:
+      return "What is an ad group anyways?";
+    case 2:
+      return "This is the bit I really care about!";
+    default:
+      return "Unknown stepIndex";
+  }
+}
 
 class Register extends Component {
   constructor() {
@@ -75,7 +70,7 @@ class Register extends Component {
       password2: "",
       errors: {},
       kelas: {}, //Student Data
-      subject_teached: "" //Teacher Data
+      subject_teached: "", //Teacher Data
     };
   }
 
@@ -139,11 +134,10 @@ class Register extends Component {
       selectedList.shift()
     this.setState({ kelas: selectedList[0]})
     console.log(selectedItem)
-  }
+  };
 
   render() {
     document.title="Daftar ke Schooly"
-
     const { classes } = this.props;
 
     const { errors } = this.state;
@@ -175,7 +169,6 @@ class Register extends Component {
                 <form noValidate onSubmit={this.onSubmit}>
                   <Grid container spacing={3}>
                       <Grid item className={classes.inputField}>
-                        <ThemeProvider theme={colorPalette}>
                         <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
                           <label>Daftar Sebagai</label>
                           <Select
@@ -187,7 +180,6 @@ class Register extends Component {
                             <MenuItem value={"Admin"}>Pengelola</MenuItem>
                           </Select>
                         </FormControl>
-                        </ThemeProvider>
                       </Grid>
                       <Grid item className={classes.inputField}>
                         <OutlinedTextField
@@ -342,7 +334,7 @@ class Register extends Component {
                           variant="contained"
                           size="large"
                           style={{
-                            backgroundColor: "#61bd4f",
+                            backgroundColor: "secondary",
                             color: "white",
                             width: "100%",
                             marginTop: "20px"
