@@ -2,12 +2,12 @@ import React from "react";
 
 const OutlinedTextField = (props) => {
   const [borderStyle, setBorderStyle] = React.useState("1px solid #ccc")
-  
+
   const onBlur = () => {
     setBorderStyle("1px solid #CCC")
   }
   const onFocus = () => {
-    setBorderStyle("1.5px solid #2196f3")
+    setBorderStyle("2px solid #2196f3")
   }
 
   return (

@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { updateUserData } from "../../../actions/AuthActions"
 
+import { colorPalette } from "../../misc/color-palette/ColorPalette"
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
    Tab, Tabs, Typography } from "@material-ui/core";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from '@material-ui/styles';
+import { makeStyles } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -62,15 +63,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#2196f3"
-    },
-  },
-});
-
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -102,7 +94,7 @@ function TabIndex(index) {
 }
 
 function ProfileDataItemEdit(props) {
-  
+
   return(
     <ListItem>
         <ListItemAvatar>
@@ -139,7 +131,7 @@ function ProfileDataEditorDialog(props) {
       setDataProfil(defaultUserData)
 
     setOpen(false);
-    
+
   };
 
   //Tabs
@@ -204,7 +196,7 @@ function ProfileDataEditorDialog(props) {
   const handleChangeDataProfil = (e) => {
     let { id , value} = e.target
     setDataProfil((prev) => ({
-      ...prev, 
+      ...prev,
       [id] : value
     }))
   }
@@ -237,18 +229,18 @@ function ProfileDataEditorDialog(props) {
             </Typography>
           </Grid>
           <form onSubmit={onSubmit}>
-            <ThemeProvider theme={theme}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              variant="fullWidth"
-              indicatorColor="primary"
-              textColor="primary"
-            >
-              <Tab disableRipple className={classes.tabInfo} icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
-              <Tab disableRipple className={classes.tabInfo} icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
-              <Tab disableRipple className={classes.tabInfo} icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(0)} />
-            </Tabs>
+            <ThemeProvider theme={colorPalette}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="fullWidth"
+                indicatorColor="primary"
+                textColor="primary"
+              >
+                <Tab disableRipple className={classes.tabInfo} icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
+                <Tab disableRipple className={classes.tabInfo} icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
+                <Tab disableRipple className={classes.tabInfo} icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(0)} />
+              </Tabs>
             </ThemeProvider>
             <TabPanel value={value} index={0}>
               <List className={classes.tabContentList}>
@@ -355,7 +347,7 @@ function ProfileDataEditorDialog(props) {
                 Simpan
               </Button>
             </Grid>
-          </form> 
+          </form>
         </Grid>
       </Dialog>
     </div>

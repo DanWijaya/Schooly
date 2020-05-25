@@ -4,14 +4,15 @@ import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { Button, FormControl, Grid, MenuItem, Paper, Select,
-   Step, StepLabel, Stepper, TextField, Typography } from "@material-ui/core";
-import { withStyles, useTheme } from "@material-ui/core/styles";
 import { registerUser } from "../../actions/AuthActions";
 import { viewClass } from "../../actions/ClassActions";
-import schoolySymbolLogo from "../../images/SchoolySymbolLogo.png";
+import { colorPalette } from "../misc/color-palette/ColorPalette"
 import schoolyLogoAlt from "../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../misc/text-field/OutlinedTextField"
+import { Button, FormControl, Grid, MenuItem, Paper, Select,
+   Step, StepLabel, Stepper, TextField, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 
 const styles = (theme) => ({
   root: {
@@ -28,10 +29,10 @@ const styles = (theme) => ({
     fontSize: "10px"
   },
   inputField: {
-    width: "400px",
+    width: "300px",
   },
   mainGrid: {
-    width: "600px",
+    width: "400px",
     padding: "40px",
   },
   schoolyLogoAlt: {
@@ -167,25 +168,26 @@ class Register extends Component {
             >
               <Grid item>
                 <Typography variant="h6">
-                  <b>Daftarkan dirimu di Schooly</b>
+                  <b>Daftar ke Schooly</b>
                 </Typography>
               </Grid>
               <Grid item>
                 <form noValidate onSubmit={this.onSubmit}>
-                  <Grid container spacing={3} className={classes.inputField}>
-                      <Grid item>
-                        <FormControl variant="outlined">
+                  <Grid container spacing={3}>
+                      <Grid item className={classes.inputField}>
+                        <ThemeProvider theme={colorPalette}>
+                        <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
                           <label>Daftar Sebagai</label>
                           <Select
                             value={this.state.role}
                             onChange={this.onChange}
-                            className={classes.inputField}
                           >
                             <MenuItem value={"Student"}>Murid</MenuItem>
                             <MenuItem value={"Teacher"}>Guru</MenuItem>
                             <MenuItem value={"Admin"}>Pengelola</MenuItem>
                           </Select>
                         </FormControl>
+                        </ThemeProvider>
                       </Grid>
                       <Grid item className={classes.inputField}>
                         <OutlinedTextField

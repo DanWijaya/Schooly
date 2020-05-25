@@ -5,7 +5,7 @@ import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/AuthActions";
 import { Provider } from "react-redux"; //provide state from Store to the component
 import store from "./Store";
-import {drawerWidth}  from "./components/misc/nav-bar/NavBar";
+import { drawerWidth } from "./components/misc/nav-bar/NavBar";
 import Profile from "./components/layout/profile/Profile";
 import About from "./components/layout/about/About";
 import Landing from "./components/layout/landing/Landing";
@@ -22,7 +22,6 @@ import EditTask from "./components/objects/tasks/EditTask";
 import EditClass from "./components/objects/classes/EditClass";
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
-import UploadImageTest from './prototypes/UploadImageTest';
 import Notifications from './prototypes/Notifications';
 
 // Check for token to keep user logged in
@@ -89,7 +88,6 @@ class App extends Component {
             <Route exact path="/notifications" component={Notifications}/>
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
-              <PrivateRoute exact path="/image-upload" component={UploadImageTest}/>
               <PrivateRoute exact path="/profile" component={Profile} />
 
               {/* Route Class */}
