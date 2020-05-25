@@ -194,7 +194,7 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class 
+            Class {user.kelas.name}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>

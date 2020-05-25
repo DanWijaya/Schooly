@@ -10,6 +10,9 @@ import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import { Button, FormControl, Grid, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import Stepper from '@material-ui/core/Stepper'
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 
 const styles = (theme) => ({
   root: {
@@ -37,24 +40,15 @@ const styles = (theme) => ({
     height: "30%",
     marginBottom: "30px",
   },
+  // Edit
+  backButton: {
+    marginRight: theme.spacing(1),
+  },
+  instructions: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
 });
-
-function getSteps() {
-  return ["Select master blaster campaign settings", "Create an ad group", "Create an ad"];
-}
-
-function getStepContent(stepIndex) {
-  switch (stepIndex) {
-    case 0:
-      return "Select campaign settings...";
-    case 1:
-      return "What is an ad group anyways?";
-    case 2:
-      return "This is the bit I really care about!";
-    default:
-      return "Unknown stepIndex";
-  }
-}
 
 class Register extends Component {
   constructor() {
@@ -71,6 +65,8 @@ class Register extends Component {
       errors: {},
       kelas: {}, //Student Data
       subject_teached: "", //Teacher Data
+
+      activeStep: 0,
     };
   }
 
@@ -97,9 +93,18 @@ class Register extends Component {
       this.setState({role: e.target.value});
   };
 
+
+  onSelect = (selectedList, selectedItem) => {
+    if(selectedList.length > 1)
+      selectedList.shift()
+    this.setState({ kelas: selectedList[0]})
+    console.log(selectedItem)
+  };
+
   onSubmit = e => {
     e.preventDefault();
-    var newUser
+    var newUser;
+    
     const role = this.state.role;
     if(role == "Student") {
       newUser = {
@@ -126,17 +131,200 @@ class Register extends Component {
         subject_teached: this.state.subject_teached, //Teacher Data
       };
     }
-    this.props.registerUser(newUser, this.props.history);
+    console.log(e)
+      this.props.registerUser(newUser, this.props.history);
   };
-
-  onSelect = (selectedList, selectedItem) => {
-    if(selectedList.length > 1)
-      selectedList.shift()
-    this.setState({ kelas: selectedList[0]})
-    console.log(selectedItem)
-  };
-
   render() {
+
+    const getSteps = () => {
+      return ["Pilih peran", "Masukkan informasi", "Masukkan email dan kata sandi"];
+    }
+    
+    const getStepContent = (stepIndex) => {
+      switch (stepIndex) {
+        case 0:
+          return (
+            <Grid>
+              <Grid item className={classes.inputField}>
+                <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
+                <label>Daftar Sebagai</label>
+                <Select
+                  value={this.state.role}
+                  onChange={this.onChange}
+                >
+                  <MenuItem value={"Student"}>Murid</MenuItem>
+                  <MenuItem value={"Teacher"}>Guru</MenuItem>
+                  <MenuItem value={"Admin"}>Pengelola</MenuItem>
+                </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          )
+        case 1:
+          return (
+            <Grid>
+              <Grid item className={classes.inputField}>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.name}
+                error={errors.name}
+                id="name"
+                type="text"
+                classname={classnames("", {
+                  invalid: errors.name
+                })}
+                html_for="name"
+                labelname="Nama"
+                span_classname={classes.errorInfo}
+                error1={errors.name}
+              />
+
+            </Grid>
+            {this.state.role === "Student" ?
+            <Grid item className={classes.inputField}>
+              <label id="class">Class</label>
+              <Multiselect
+                id="class"
+                options={options}
+                onSelect={this.onSelect}
+                onRemove={this.onRemove}
+                displayValue="name"
+                error={errors.class_assigned}
+                showCheckBox={true}
+                className={classnames("", {
+                  invalid: errors.class
+                })}
+              />
+            </Grid>
+          :
+          this.state.role === "Teacher" ?
+            <Grid item className={classes.inputField}>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.subject_teached}
+                error={errors.subject_teached}
+                id="subject_teached"
+                type="text"
+                className={classnames("", {
+                  invalid: errors.subject_teached
+                })}
+                html_for="subject_teached"
+                labelname="Mata Pelajaran"
+                span_classname={classes.errorInfo}
+                error1={errors.subject_teached}
+              />
+            </Grid>
+          : null}
+
+            <Grid item className={classes.inputField}>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.phone}
+                error={errors.phone}
+                id="phone"
+                type="text"
+                className={classnames("", {
+                  invalid: errors.phone
+                })}
+                html_for="phone"
+                labelname="Nomor Telepon"
+                span_classname={classes.errorInfo}
+                error1={errors.phone}
+              />
+            </Grid>
+            <Grid item className={classes.inputField}>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.emergency_phone}
+                error={errors.emergency_phone}
+                id="emergency_phone"
+                type="text"
+                className={classnames("", {
+                  invalid: errors.emergency_phone
+                })}
+                html_for="emergency_phone"
+                labelname="Nomor Telepon Darurat"
+                span_classname={classes.errorInfo}
+                error1={errors.emergency_phone}
+              />
+            </Grid>
+            <Grid item className={classes.inputField}>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.address}
+                error={errors.address}
+                id="address"
+                type="text"
+                className={classnames("", {
+                  invalid: errors.address
+                })}
+                html_for="address"
+                labelname="Alamat"
+                span_classname={classes.errorInfo}
+                error1={errors.address}
+              />
+            </Grid>
+          </Grid>
+        )
+        case 2:
+          return (
+          <Grid>
+            <Grid item className={classes.inputField}>
+              <OutlinedTextField
+                on_change={this.onChange}
+                value={this.state.email}
+                error={errors.email}
+                id="email"
+                type="email"
+                className={classnames("", {
+                  invalid: errors.email
+                })}
+                html_for="email"
+                labelname="Email"
+                span_classname={classes.errorInfo}
+                error1={errors.email}
+              />
+            </Grid>
+
+            <Grid item className={classes.inputField}>
+            <OutlinedTextField
+              on_change={this.onChange}
+              value={this.state.password}
+              error={errors.password}
+              id="password"
+              type="password"
+              className={classnames("", {
+                invalid: errors.password
+              })}
+              html_for="password"
+              labelname="Kata Sandi"
+              span_classname={classes.errorInfo}
+              error1={errors.password}
+            />
+          </Grid>
+          <Grid item className={classes.inputField}>
+            <OutlinedTextField
+              on_change={this.onChange}
+              value={this.state.password2}
+              error={errors.password2}
+              id="password2"
+              type="password"
+              className={classnames("", {
+                invalid: errors.password2
+              })}
+              html_for="password2"
+              labelname="Konfirmasi Kata Sandi"
+              span_classname={classes.errorInfo}
+              error1={errors.password2}
+            />
+          </Grid>
+        </Grid>
+          );
+        default:
+          return "Unknown stepIndex";
+      }
+    }
+
     document.title="Daftar ke Schooly"
     const { classes } = this.props;
 
@@ -145,9 +333,32 @@ class Register extends Component {
     console.log(this.state.role)
     const classesCollection = this.props.classesCollection;
     var options = []
+
     if(Object.keys(classesCollection).length != 0){
       options = classesCollection
     }
+
+    const steps = getSteps();
+
+    const handleNext = () => {
+      this.setState(prevState => ({
+        activeStep: prevState.activeStep + 1
+        })
+      )
+    };
+
+    const handleBack = () => {
+      this.setState(prevState => ({
+        activeStep: prevState.activeStep - 1
+        })
+      )
+    }
+
+    const handleReset = () => {
+      this.setState({ activeStep : 0 })
+    };
+
+  
 
     return (
       <div className={classes.root}>
@@ -160,192 +371,67 @@ class Register extends Component {
               spacing={5}
               className={classes.mainGrid}
             >
+
               <Grid item>
                 <Typography variant="h6">
                   <b>Daftar ke Schooly</b>
                 </Typography>
               </Grid>
+
+              <Stepper activeStep={this.state.activeStep} alternativeLabel>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+
               <Grid item>
                 <form noValidate onSubmit={this.onSubmit}>
-                  <Grid container spacing={3}>
-                      <Grid item className={classes.inputField}>
-                        <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
-                          <label>Daftar Sebagai</label>
-                          <Select
-                            value={this.state.role}
-                            onChange={this.onChange}
-                          >
-                            <MenuItem value={"Student"}>Murid</MenuItem>
-                            <MenuItem value={"Teacher"}>Guru</MenuItem>
-                            <MenuItem value={"Admin"}>Pengelola</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item className={classes.inputField}>
-                        <OutlinedTextField
-                          on_change={this.onChange}
-                          value={this.state.name}
-                          error={errors.name}
-                          id="name"
-                          type="text"
-                          classname={classnames("", {
-                            invalid: errors.name
-                          })}
-                          html_for="name"
-                          labelname="Nama"
-                          span_classname={classes.errorInfo}
-                          error1={errors.name}
-                        />
-                      </Grid>
-                      {this.state.role === "Student" ?
-                        <Grid item className={classes.inputField}>
-                          <label id="class">Class</label>
-                          <Multiselect
-                            id="class"
-                            options={options}
-                            onSelect={this.onSelect}
-                            onRemove={this.onRemove}
-                            displayValue="name"
-                            error={errors.class_assigned}
-                            showCheckBox={true}
-                            className={classnames("", {
-                              invalid: errors.class
-                            })}
-                          />
-                        </Grid>
-                      :
-                      this.state.role === "Teacher" ?
-                        <Grid item className={classes.inputField}>
-                          <OutlinedTextField
-                            on_change={this.onChange}
-                            value={this.state.subject_teached}
-                            error={errors.subject_teached}
-                            id="subject_teached"
-                            type="text"
-                            className={classnames("", {
-                              invalid: errors.subject_teached
-                            })}
-                            html_for="subject_teached"
-                            labelname="Mata Pelajaran"
-                            span_classname={classes.errorInfo}
-                            error1={errors.subject_teached}
-                          />
-                        </Grid>
-                      : null}
-                      <Grid item className={classes.inputField}>
-                        <OutlinedTextField
-                          on_change={this.onChange}
-                          value={this.state.email}
-                          error={errors.email}
-                          id="email"
-                          type="email"
-                          className={classnames("", {
-                            invalid: errors.email
-                          })}
-                          html_for="email"
-                          labelname="Email"
-                          span_classname={classes.errorInfo}
-                          error1={errors.email}
-                        />
-                      </Grid>
-                      <Grid item className={classes.inputField}>
-                        <OutlinedTextField
-                          on_change={this.onChange}
-                          value={this.state.phone}
-                          error={errors.phone}
-                          id="phone"
-                          type="text"
-                          className={classnames("", {
-                            invalid: errors.phone
-                          })}
-                          html_for="phone"
-                          labelname="Nomor Telepon"
-                          span_classname={classes.errorInfo}
-                          error1={errors.phone}
-                        />
-                      </Grid>
-                      <Grid item className={classes.inputField}>
-                        <OutlinedTextField
-                          on_change={this.onChange}
-                          value={this.state.emergency_phone}
-                          error={errors.emergency_phone}
-                          id="emergency_phone"
-                          type="text"
-                          className={classnames("", {
-                            invalid: errors.emergency_phone
-                          })}
-                          html_for="emergency_phone"
-                          labelname="Nomor Telepon Darurat"
-                          span_classname={classes.errorInfo}
-                          error1={errors.emergency_phone}
-                        />
-                      </Grid>
-                      <Grid item className={classes.inputField}>
-                        <OutlinedTextField
-                          on_change={this.onChange}
-                          value={this.state.address}
-                          error={errors.address}
-                          id="address"
-                          type="text"
-                          className={classnames("", {
-                            invalid: errors.address
-                          })}
-                          html_for="address"
-                          labelname="Alamat"
-                          span_classname={classes.errorInfo}
-                          error1={errors.address}
-                        />
-                      </Grid>
-                      <Grid item className={classes.inputField}>
-                        <OutlinedTextField
-                          on_change={this.onChange}
-                          value={this.state.password}
-                          error={errors.password}
-                          id="password"
-                          type="password"
-                          className={classnames("", {
-                            invalid: errors.password
-                          })}
-                          html_for="password"
-                          labelname="Kata Sandi"
-                          span_classname={classes.errorInfo}
-                          error1={errors.password}
-                        />
-                      </Grid>
-                      <Grid item className={classes.inputField}>
-                        <OutlinedTextField
-                          on_change={this.onChange}
-                          value={this.state.password2}
-                          error={errors.password2}
-                          id="password2"
-                          type="password"
-                          className={classnames("", {
-                            invalid: errors.password2
-                          })}
-                          html_for="password2"
-                          labelname="Konfirmasi Kata Sandi"
-                          span_classname={classes.errorInfo}
-                          error1={errors.password2}
-                        />
-                      </Grid>
-                      <Grid item className={classes.inputField}>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          size="large"
-                          style={{
-                            backgroundColor: "secondary",
-                            color: "white",
-                            width: "100%",
-                            marginTop: "20px"
-                          }}
-                        >
-                          Daftar
-                        </Button>
-                      </Grid>
+                  <Grid container spacing={3} justify="space-between">
+                    {getStepContent(this.state.activeStep)}
+
+            <Grid item >
+              <Button
+                disabled={this.state.activeStep === 0}
+                onClick={handleBack}
+                className={classes.backButton}
+              >
+                Kembali
+              </Button>
+              </Grid>
+
+                <Grid item >
+                {this.state.activeStep === steps.length - 1 ?
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="medium"
+                    style={{
+                      backgroundColor: "#2196f3",
+                      color: "white",
+                      // width: "100%",
+                      // marginTop: "20px"
+                    }}
+                  >
+                    Daftar
+                  </Button>
+                
+                : 
+                <Button variant="contained" type="button" color="primary" onClick={handleNext}>
+                Lanjut
+              </Button>
+                }
+                </Grid>
+
                   </Grid>
                 </form>
               </Grid>
+
+              {/* <Grid item> */}
+          
+      {/* </Grid> */}
+ 
             </Grid>
           </Paper>
       </div>
