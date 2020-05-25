@@ -57,18 +57,19 @@ const UserSchema = new Schema({
   //Karir
   hobi_minat: {
     type: String,
-    required: false
+    default: "Isi hobimu"
   },
   ket_non_teknis: {
     type: String, 
-    required: false
+    default: "Isi"
   },
-  cita_cita: {type: String, 
-    required: false
+  cita_cita: {
+    type: String, 
+    default: "Isi"
   },
   uni_impian: { 
     type: String, 
-    required: false
+    default: "Isi"
   },
 }, options )
 
