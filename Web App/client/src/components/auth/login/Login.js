@@ -8,8 +8,9 @@ import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Divider, Grid, InputAdornment, Link, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import InfoIcon from "@material-ui/icons/Info";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const styles = (theme) => ({
   root: {
@@ -157,8 +158,8 @@ class Login extends Component {
                   onClick={this.togglePasswordVisibility}
                   disableRipple
                   style={{
-                    backgroundColor: 'transparent',
-                    textTransform: 'none',
+                    backgroundColor: "transparent",
+                    textTransform: "none",
                     fontSize: "12px",
                   }}
                 >
@@ -167,7 +168,7 @@ class Login extends Component {
                 <Button
                   type="submit"
                   style={{
-                    backgroundColor: "secondary",
+                    backgroundColor: "#61bd4f",
                     color: "white",
                     width: "100%",
                     marginTop: "20px"

@@ -1,17 +1,11 @@
 Current Task
 Botak:
-1. Rapiin login.js dan register.js (mau belajar withstyles) (https://codepen.io/uncommonjoe/pen/wxvXXZ https://codepen.io/Sohail05/pen/yOpeBm?__cf_chl_jschl_tk__=21c41039155be2f59587aaf119803b62df617abe-1590237798-0-AXAKr5OLxoaBbuQUKjuaf6QrbqVRL4I5qR8CQEXYMQ_6swbSnDw7wvwj7W0WgecGClpHN6d_nxbOify_GejiAWnCn-YNs_IMKa0uysAdKR1uzP-mKJaLBz_eBhagnm8LYOzvuDli4Ujq9vfCpHZ3XPPIyW5oxORtQFqNo8_z0RAwA93DUvMWgQoHECeagkWiviv4GfVQ5VY_AFIZGLmo1d5GOUPArLVzKTQ1EUdSDMrzUBpoD6deelgGRS4hqm-BTIkahP2gcyvWEMo5cPF3ow-Yr4MQsttij87PmEK7ozrP-qE5Rla2sZt8kLTuGncjmcxtkO3soKu7iUd_Ty8wCyedzP5pcdorzhf8twRFKA_x)
-2. Bikin profile jadi editable text (Done)
-3. Betulin navbar lagi buat (Done)
-5. Betulin hijau2 pas klik iconbuttons (Done)
 6. Task List Page
 9. Bikin gambar-gambar yang diperlukan (belajar AI)
 10. Bikin page createclassform, createtask form
 11. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/) ?
-12. Implemen Customized Tooltip (Done = LightTooltip)
 13. RAPIKAN SEMUANYA
 15. Mobile view/Kalau udah selesai semua - Tes zoom in dan zoom out per Page
-16. Constantkan outlined text field
 
 Daniel:
 1. Class Page
@@ -34,10 +28,18 @@ Page List Done:
 - Navbar (Masih ke halang mini drawernya)
 - Profile (Kurang dikasi gambar-gambar, mungkin background image, belum tambahin snackbar buat edit profile dan edit password)
 - Login (Masih nda bisa masukkin icon info buat error)
-- Register (Belum implemen stepper nggak bisa call function, Rapiin multiselect sama select, widthnya masih nda bisa diatur)
+- Register (Belum implemen stepper, Rapiin multiselect sama select, Masih nda bisa masukkin icon info buat error)
 
-Optional:
-- Terms and Policies
+Page List On Work (Not completed/Not created yet):
+- All Class page (approx 5 pages)
+- All Task page (approx 5)
+- Admin Dashboards (approx 2)
+- Notifications/Announcements (3)
+- About
+- Landing
+- Dashboard
+- Help/Terms and policies
+- Quiz (Optional Important) (Approx 5)
 
 Drafted:
 - Comments

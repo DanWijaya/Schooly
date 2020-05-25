@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -408,7 +408,7 @@ class Register extends Component {
                     variant="contained"
                     size="medium"
                     style={{
-                      backgroundColor: "#2196f3",
+                      backgroundColor: "#61bd4f",
                       color: "white",
                       // width: "100%",
                       // marginTop: "20px"

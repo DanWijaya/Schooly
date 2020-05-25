@@ -19,7 +19,7 @@ class Landing extends Component {
         <h4>Schooly makes school work easy!</h4>
           <br/><br/>
 
-        <Link to="/register">
+        <Link to="/daftar">
           <Button
             variant="contained"
             size="large"
@@ -35,7 +35,7 @@ class Landing extends Component {
           </Button>
         </Link>
           <br/><br/>
-        <Link to="/login">
+        <Link to="/masuk">
           <Button
             variant="contained"
             size="large"

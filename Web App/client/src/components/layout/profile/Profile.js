@@ -155,7 +155,7 @@ function Profile(props) {
         anchorOrigin={{vertical : "top", horizontal: "center"}}
       >
         <Alert onClose={handleClosePasswordEditorAlert} severity="info" >
-          Foto profil berhasil diganti! 
+          Foto profil berhasil diganti!
         </Alert>
       </Snackbar>
 
@@ -194,7 +194,7 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class {user.kelas.name}
+            Class
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
