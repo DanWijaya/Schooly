@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { updateUser } from "../../../actions/AuthActions"
+import { updateAvatar } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
@@ -79,7 +79,7 @@ function Profile(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const updateUser = props.updateUser;
+  const updateAvatar = props.updateAvatar;
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -155,7 +155,7 @@ function Profile(props) {
         anchorOrigin={{vertical : "top", horizontal: "center"}}
       >
         <Alert onClose={handleClosePasswordEditorAlert} severity="info" >
-          Foto profil berhasil diganti!
+          Foto profil berhasil diganti! 
         </Alert>
       </Snackbar>
 
@@ -166,7 +166,7 @@ function Profile(props) {
               badgeContent={
                 <ProfilePictureEditorDialog
                   user={user}
-                  updateUser={updateUser}
+                  updateAvatar={updateAvatar}
                   handleOpenAlert={handleOpenAlert}
                 />
             }>
@@ -180,7 +180,7 @@ function Profile(props) {
               badgeContent={
                 <ProfilePictureEditorDialog
                   user={user}
-                  updateUser={updateUser}
+                  updateAvatar={updateAvatar}
                   handleOpenAlert={handleOpenAlert}
                 />
             }>
@@ -194,7 +194,7 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class
+            Class 
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
@@ -298,7 +298,7 @@ function Profile(props) {
 
 Profile.propTypes = {
     auth: PropTypes.object.isRequired,
-    updateUser: PropTypes.func.isRequired
+    updateAvatar: PropTypes.func.isRequired
   }
 
 const mapStateToProps = (state) => ({
@@ -306,5 +306,5 @@ const mapStateToProps = (state) => ({
   });
 
 export default connect(
-    mapStateToProps, {updateUser}
+    mapStateToProps, {updateAvatar}
   ) (Profile);

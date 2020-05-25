@@ -22,7 +22,33 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
-export const updateUser = (userData, userId, formData) => dispatch => {
+export const updateUserData = (userData, userId, history) => dispatch => {
+  axios
+      .post("/api/users/update/data/" + userId, userData)
+      .then(res => {
+
+        const { token } = res.data;
+
+        console.log("Updating User Data");
+        localStorage.setItem("jwtToken", token);
+        console.log("Foto udah diganti")
+        // Set token to Auth header
+        setAuthToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current user
+        dispatch(setCurrentUser(decoded));
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      })
+}
+
+export const updateAvatar = (userData, userId, formData) => dispatch => {
   if(userData.avatar != undefined) {
 
     axios.delete(`/api/uploads/image/${userData.avatar}`)
@@ -35,7 +61,7 @@ export const updateUser = (userData, userId, formData) => dispatch => {
   }
 
   axios
-      .post("/api/users/update/" + userId, formData, userData)
+      .post("/api/users/update/avatar/" + userId, formData, userData)
       .then(res => {
         
           // Set token to localStorage

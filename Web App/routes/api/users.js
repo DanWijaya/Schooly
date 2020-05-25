@@ -9,6 +9,7 @@ const keys = require("../../config/keys");
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
+// const validateUserDataInput = require("../../validation/UserData")
 
 // Load User model
 const User= require("../../models/user_model/User");
@@ -109,34 +110,36 @@ router.post("/login", (req, res) => {
         // User matched
         // Create JWT Payload
 
-        var payload;
+        var payload = {
+          id: user.id,
+          role: user.role,
+          avatar: user.avatar,
+          
+          //Informasi Pribadi
+          name: user.name,
+          tanggal_lahir: user.tanggal_lahir,
+          jenis_kelamin: user.jenis_kelamin,
+          sekolah: user.sekolah,
+
+          //Kontak
+          email: user.email,
+          phone: user.phone,
+          emergency_phone: user.emergency_phone,
+          address: user.address,
+
+          //Kontak
+          hobi_minat: user.hobi_minat,
+          ket_non_teknis: user.ket_non_teknis,
+          cita_cita: user.cita_cita,
+          uni_impian: user.uni_impian
+
+        };
         if(user.role == "Student") {
-          payload = {
-            id: user.id,
-            role: user.role,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            emergency_phone: user.emergency_phone,
-            address: user.address,
-            avatar: user.avatar,
-            // Student specific data
-            kelas: user.kelas // Don't include password because don't want to make it visible by accessing token..
-          };
+          payload.kelas = user.kelas
         }
+
         else if(user.role == "Teacher") {
-          payload = {
-            id: user.id,
-            role: user.role,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            emergency_phone: user.emergency_phone,
-            address: user.address,
-            avatar: user.avatar,
-            // Teacher specific data
-            subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token..
-          };
+          payload.subject_teached = user.subject_teached
         }
         // Sign token
         jwt.sign(
@@ -161,7 +164,42 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.post("/update/:id", avatar.upload.single('avatar'), (req,res) => {
+router.post("/update/data/:id", (req,res) => {
+  let id = req.params.id
+
+  User.findById(id)
+      .then(user => {
+        if(!user){
+          return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
+        }
+        else {
+          // Informasi Pribadi
+          user.name = req.body.name;
+          user.tanggal_lahir = req.body.tanggal_lahir;
+          user.jenis_kelamin = req.body.jenis_kelamin;
+          user.sekolah = req.body.sekolah;
+
+          //Kontak
+          user.email = req.body.email;
+          user.phone = req.body.phone;
+          user.emergency_phone = req.body.emergency_phone;
+          user.address = req.body.address;
+
+          //Karir
+          user.hobi_minat = req.body.hobi_minat;
+          user.ket_non_teknis = req.body.ket_non_teknis;
+          user.cita_cita = req.body.cita_cita;
+          user.uni_impian = req.body.uni_impian;
+
+          user
+              .save()
+              .then(user => res.json("Perbarui data telah berhasil."))
+              .catch(err => res.status(400).send("Tidak dapat perbarui data di Database"))
+        }
+      })
+})
+
+router.post("/update/avatar/:id", avatar.upload.single('avatar'), (req,res) => {
   console.log(req)
   let id = req.params.id;
 
@@ -190,33 +228,10 @@ router.post("/update/:id", avatar.upload.single('avatar'), (req,res) => {
 
       if(user.role == "Student") {
         payload.kelas = user.kelas
-        // payload = {
-        //   id: user.id,
-        //   role: user.role,
-        //   name: user.name,
-        //   email: user.email,
-        //   phone: user.phone,
-        //   emergency_phone: user.emergency_phone,
-        //   address: user.address,
-        //   avatar: user.avatar,
-        //   // Student specific data
-        //   kelas: user.kelas // Don't include password because don't want to make it visible by accessing token..
-        // };
       }
+
       else if(user.role == "Teacher") {
         payload.subject_teached = user.subject_teached
-        // payload = {
-        //   id: user.id,
-        //   role: user.role,
-        //   name: user.name,
-        //   email: user.email,
-        //   phone: user.phone,
-        //   emergency_phone: user.emergency_phone,
-        //   address: user.address,
-        //   avatar: user.avatar,
-        //   // Teacher specific data
-        //   subject_teached: user.subject_teached // Don't include password because don't want to make it visible by accessing token..
-        // };
       }
       // Sign token
       jwt.sign(

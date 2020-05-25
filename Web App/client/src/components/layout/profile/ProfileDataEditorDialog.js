@@ -1,5 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { updateUserData } from "../../../actions/AuthActions"
+
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
    Tab, Tabs, Typography } from "@material-ui/core";
@@ -123,7 +126,8 @@ function ProfileDataItemEdit(props) {
 
 function ProfileDataEditorDialog(props) {
   const classes = useStyles();
-  const { userData } = props
+  const { user } = props.auth;
+  const { updateUserData } = props;
   //Dialog
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -145,31 +149,24 @@ function ProfileDataEditorDialog(props) {
     setValue(newValue);
   };
 
-   // Informasi Pribadi 
-   const [informasiPribadi, setInformasiPribadi] = React.useState({ nama: null, tanggal_lahir: null, jenis_kelamin: null, sekolah: null});
-  // Kontak
-  const [kontak, setKontak] = React.useState({email: null, nomorTelp: null, nomorTelpDarurat: null, alamat: null})
-  // Karir
-  const [karir, setKarir] = React.useState({hobi_minat: null, ekstrakulikuler: null, cita_cita: null, perguruan_impian: null})
-
   const defaultUserData = { 
     // Informasi Pribadi
-    nama: userData.name, 
-    tanggal_lahir: userData.tanggal_lahir, 
-    jenis_kelamin: userData.jenis_kelamin, 
-    sekolah: userData.sekolah,
+    nama: user.name, 
+    tanggal_lahir: user.tanggal_lahir, 
+    jenis_kelamin: user.jenis_kelamin, 
+    sekolah: user.sekolah,
 
     //Kontak
-    email: userData.email, 
-    no_telp: userData.phone, 
-    no_telp_darurat: userData.emergency_phone, 
-    alamat: userData.address,
+    email: user.email, 
+    no_telp: user.phone, 
+    no_telp_darurat: user.emergency_phone, 
+    alamat: user.address,
 
     //Karir
-    hobi_minat: userData.hobi_minat, 
-    ket_non_teknis: userData.ket_non_teknis, 
-    cita_cita: userData.cita_cita, 
-    uni_impian: userData.uni_impian
+    hobi_minat: user.hobi_minat, 
+    ket_non_teknis: user.ket_non_teknis, 
+    cita_cita: user.cita_cita, 
+    uni_impian: user.uni_impian
   }
 
   const [dataProfil, setDataProfil] = React.useState(defaultUserData)
@@ -179,6 +176,29 @@ function ProfileDataEditorDialog(props) {
     e.preventDefault()
     props.handleOpenAlert()
     handleClose("simpan")
+
+    let userId = user.id;
+
+    let userData = {
+      nama: dataProfil.name, 
+      tanggal_lahir: dataProfil.tanggal_lahir, 
+      jenis_kelamin: dataProfil.jenis_kelamin, 
+      sekolah: dataProfil.sekolah,
+
+      //Kontak
+      email: dataProfil.email, 
+      no_telp: dataProfil.phone, 
+      no_telp_darurat: dataProfil.emergency_phone, 
+      alamat: dataProfil.address,
+
+      //Karir
+      hobi_minat: dataProfil.hobi_minat, 
+      ket_non_teknis: dataProfil.ket_non_teknis, 
+      cita_cita: dataProfil.cita_cita, 
+      uni_impian: dataProfil.uni_impian
+    }
+
+    updateUserData(userData, userId, props.history)
   }
 
   const handleChangeDataProfil = (e) => {
@@ -342,4 +362,15 @@ function ProfileDataEditorDialog(props) {
   )
 }
 
-export default ProfileDataEditorDialog;
+ProfileDataEditorDialog.propTypes = {
+  auth: PropTypes.object.isRequired,
+  updateUserData: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps, {updateUserData} 
+)(ProfileDataEditorDialog);

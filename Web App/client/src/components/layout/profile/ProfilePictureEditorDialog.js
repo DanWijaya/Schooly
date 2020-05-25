@@ -81,7 +81,7 @@ function ProfilePictureEditorDialog(props) {
   const [profileImg, setProfileImg] = React.useState(null);
 
   const {user} = props;
-  const {updateUser} = props;
+  const {updateAvatar} = props;
 
   const handleImageUpload = e => {
     const [file] = e.target.files;
@@ -112,7 +112,7 @@ function ProfilePictureEditorDialog(props) {
     let userData = user
     let userId = user.id;
 
-    updateUser(userData, userId, formData)
+    updateAvatar(userData, userId, formData)
     props.handleOpenAlert() 
 
     handleCloseDialog()

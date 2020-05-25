@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { updateUser } from '../actions/AuthActions';
+import { updateAvatar } from '../actions/AuthActions';
 import { Avatar } from '@material-ui/core';
 import defaultAvatar from '../components/layout/profile/DefaultAvatar.jpg'
 import { makeStyles } from '@material-ui/core/styles'
@@ -47,7 +47,7 @@ function ImageUpload(props) {
     let userData = user
     let userId = user.id;
     
-    props.updateUser(userData, userId, formData, props.history)
+    props.updateAvatar(userData, userId, formData, props.history)
 
   } 
 
@@ -106,7 +106,7 @@ function ImageUpload(props) {
 
 ImageUpload.propTypes = {
   auth: PropTypes.object.isRequired,
-  updateUser : PropTypes.func.isRequired
+  updateAvatar : PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -114,5 +114,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-    mapStateToProps, {updateUser}
+    mapStateToProps, {updateAvatar}
 ) (ImageUpload);
