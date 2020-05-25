@@ -1,17 +1,11 @@
 Current Task
 Botak:
-1. Rapiin login.js dan register.js (Done)
-2. Bikin profile jadi editable text (Done)
-3. Betulin navbar lagi buat (Done)
-5. Betulin hijau2 pas klik iconbuttons (Done)
 6. Task List Page
 9. Bikin gambar-gambar yang diperlukan (belajar AI)
 10. Bikin page createclassform, createtask form
 11. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/) ?
-12. Implemen Customized Tooltip (Done = LightTooltip)
 13. RAPIKAN SEMUANYA
 15. Mobile view/Kalau udah selesai semua - Tes zoom in dan zoom out per Page
-16. Constantkan outlined text field (Done)
 
 Daniel:
 1. Class Page
@@ -34,10 +28,18 @@ Page List Done:
 - Navbar (Masih ke halang mini drawernya)
 - Profile (Kurang dikasi gambar-gambar, mungkin background image, belum tambahin snackbar buat edit profile dan edit password)
 - Login (Masih nda bisa masukkin icon info buat error)
-- Register (Belum implemen stepper nggak bisa call function, Rapiin multiselect sama select, widthnya masih nda bisa diatur)
+- Register (Belum implemen stepper, Rapiin multiselect sama select, Masih nda bisa masukkin icon info buat error)
 
-Optional:
-- Terms and Policies
+Page List On Work (Not completed/Not created yet):
+- All Class page (approx 5 pages)
+- All Task page (approx 5)
+- Admin Dashboards (approx 2)
+- Notifications/Announcements (3)
+- About
+- Landing
+- Dashboard
+- Help/Terms and policies
+- Quiz (Optional Important) (Approx 5)
 
 Drafted:
 - Comments
