@@ -217,17 +217,17 @@ function Profile(props) {
                   <ProfileDataItem
                     profile_data_icon={<CakeIcon />}
                     profile_data_category="Tanggal Lahir"
-                    profile_data_info="fucker"
+                    profile_data_info={user.tanggal_lahir}
                   />
                   <ProfileDataItem
                     profile_data_icon={<WcIcon />}
                     profile_data_category="Jenis Kelamin"
-                    profile_data_info="Nigga"
+                    profile_data_info={user.jenis_kelamin}
                   />
                   <ProfileDataItem
                     profile_data_icon={<SchoolIcon />}
                     profile_data_category="Sekolah"
-                    profile_data_info="Nigga"
+                    profile_data_info={user.sekolah}
                   />
                 </List>
             </Paper>
@@ -270,22 +270,22 @@ function Profile(props) {
                   <ProfileDataItem
                     profile_data_icon={<GamesIcon />}
                     profile_data_category="Hobi dan Minat"
-                    profile_data_info="Killin, fuckin, and rapin"
+                    profile_data_info={user.hobi_minat}
                   />
                   <ProfileDataItem
                     profile_data_icon={<BookIcon />}
                     profile_data_category="Keterampilan non-teknis"
-                    profile_data_info="fuckin"
+                    profile_data_info={user.ket_non_teknis}
                   />
                   <ProfileDataItem
                     profile_data_icon={<WorkIcon />}
                     profile_data_category="Cita-Cita"
-                    profile_data_info="fucker"
+                    profile_data_info={user.cita_cita}
                   />
                   <ProfileDataItem
                     profile_data_icon={<AccountBalanceIcon />}
                     profile_data_category="Perguruan Tinggi Impian"
-                    profile_data_info="fucker university"
+                    profile_data_info={user.uni_impian}
                   />
                 </List>
             </Paper>

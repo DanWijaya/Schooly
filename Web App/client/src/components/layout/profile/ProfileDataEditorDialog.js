@@ -172,16 +172,16 @@ function ProfileDataEditorDialog(props) {
     let userId = user.id;
 
     let userData = {
-      nama: dataProfil.name, 
+      nama: dataProfil.nama, 
       tanggal_lahir: dataProfil.tanggal_lahir, 
       jenis_kelamin: dataProfil.jenis_kelamin, 
       sekolah: dataProfil.sekolah,
 
       //Kontak
       email: dataProfil.email, 
-      no_telp: dataProfil.phone, 
-      no_telp_darurat: dataProfil.emergency_phone, 
-      alamat: dataProfil.address,
+      no_telp: dataProfil.no_telp, 
+      no_telp_darurat: dataProfil.no_telp_darurat, 
+      alamat: dataProfil.alamat,
 
       //Karir
       hobi_minat: dataProfil.hobi_minat, 

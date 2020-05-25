@@ -28,8 +28,8 @@ export const updateUserData = (userData, userId, history) => dispatch => {
       .then(res => {
 
         const { token } = res.data;
-
         console.log("Updating User Data");
+        
         localStorage.setItem("jwtToken", token);
         console.log("Foto udah diganti")
         // Set token to Auth header
@@ -38,8 +38,10 @@ export const updateUserData = (userData, userId, history) => dispatch => {
         const decoded = jwt_decode(token);
         // Set current user
         dispatch(setCurrentUser(decoded));
-      })
+        }
+      )
       .catch(err => {
+        console.log("jancuk la")
         console.log(err);
         dispatch({
           type: GET_ERRORS,

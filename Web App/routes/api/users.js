@@ -114,7 +114,7 @@ router.post("/login", (req, res) => {
           id: user.id,
           role: user.role,
           avatar: user.avatar,
-          
+
           //Informasi Pribadi
           name: user.name,
           tanggal_lahir: user.tanggal_lahir,
@@ -166,24 +166,26 @@ router.post("/login", (req, res) => {
 
 router.post("/update/data/:id", (req,res) => {
   let id = req.params.id
-
-  User.findById(id)
-      .then(user => {
+  
+  User.findById(id, (err, user) => {
         if(!user){
           return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
         }
         else {
+          console.log("Before update")
+          console.log(user)
+
           // Informasi Pribadi
-          user.name = req.body.name;
+          user.name = req.body.nama;
           user.tanggal_lahir = req.body.tanggal_lahir;
           user.jenis_kelamin = req.body.jenis_kelamin;
           user.sekolah = req.body.sekolah;
 
           //Kontak
           user.email = req.body.email;
-          user.phone = req.body.phone;
-          user.emergency_phone = req.body.emergency_phone;
-          user.address = req.body.address;
+          user.phone = req.body.no_telp;
+          user.emergency_phone = req.body.no_telp_darurat;
+          user.address = req.body.alamat;
 
           //Karir
           user.hobi_minat = req.body.hobi_minat;
@@ -191,13 +193,54 @@ router.post("/update/data/:id", (req,res) => {
           user.cita_cita = req.body.cita_cita;
           user.uni_impian = req.body.uni_impian;
 
+          console.log("After update")
+          console.log(user)
           user
               .save()
-              .then(user => res.json("Perbarui data telah berhasil."))
-              .catch(err => res.status(400).send("Tidak dapat perbarui data di Database"))
+              .then(console.log("Done with updating user data"))
+              .catch(err => console.log(err))
+          
+          var payload = {
+            id: user.id,
+            role: user.role,
+            avatar: user.avatar,
+
+            // Informasi Pribadi
+            name : user.name,
+            tanggal_lahir : user.tanggal_lahir,
+            jenis_kelamin : user.jenis_kelamin,
+            sekolah : user.sekolah,
+
+            //Kontak
+            email : user.email,
+            phone : user.phone,
+            emergency_phone : user.emergency_phone,
+            address : user.address,
+
+            //Karir
+            hobi_minat : user.hobi_minat,
+            ket_non_teknis : user.ket_non_teknis,
+            cita_cita : user.cita_cita,
+            uni_impian : user.uni_impian
+          }
+
+          jwt.sign(
+            payload,
+            keys.secretOrKey,
+            {
+              expiresIn: 31556926 // 1 year in seconds
+            },
+            (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token
+              });
+            }
+          );
+
         }
-      })
-})
+      });
+});
 
 router.post("/update/avatar/:id", avatar.upload.single('avatar'), (req,res) => {
   console.log(req)
@@ -214,8 +257,7 @@ router.post("/update/avatar/:id", avatar.upload.single('avatar'), (req,res) => {
           .then()
           .catch(err => res.status(400).send("Unable to update user"))
 
-      var payload;
-      payload = {
+      var payload = {
         id: user.id,
           role: user.role,
           name: user.name,
