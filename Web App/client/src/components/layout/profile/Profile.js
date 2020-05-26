@@ -6,7 +6,7 @@ import defaultAvatar from "./DefaultAvatar.jpg";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
-import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography, Snackbar  } from "@material-ui/core";
+import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import BookIcon from "@material-ui/icons/Book";

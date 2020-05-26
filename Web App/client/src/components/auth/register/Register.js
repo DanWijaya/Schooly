@@ -89,7 +89,6 @@ class Register extends Component {
       this.setState({role: e.target.value});
   };
 
-
   onSelect = (selectedList, selectedItem) => {
     if(selectedList.length > 1)
       selectedList.shift()
