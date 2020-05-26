@@ -104,7 +104,7 @@ class Register extends Component {
   onSubmit = e => {
     e.preventDefault();
     var newUser;
-    
+
     const role = this.state.role;
     if(role == "Student") {
       newUser = {
@@ -139,7 +139,7 @@ class Register extends Component {
     const getSteps = () => {
       return ["Pilih peran", "Masukkan informasi", "Masukkan email dan kata sandi"];
     }
-    
+
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
         case 0:
@@ -147,15 +147,15 @@ class Register extends Component {
             <Grid>
               <Grid item className={classes.inputField}>
                 <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
-                <label>Daftar Sebagai</label>
-                <Select
-                  value={this.state.role}
-                  onChange={this.onChange}
-                >
-                  <MenuItem value={"Student"}>Murid</MenuItem>
-                  <MenuItem value={"Teacher"}>Guru</MenuItem>
-                  <MenuItem value={"Admin"}>Pengelola</MenuItem>
-                </Select>
+                  <label>Daftar Sebagai</label>
+                  <Select
+                    value={this.state.role}
+                    onChange={this.onChange}
+                  >
+                    <MenuItem value={"Student"}>Murid</MenuItem>
+                    <MenuItem value={"Teacher"}>Guru</MenuItem>
+                    <MenuItem value={"Admin"}>Pengelola</MenuItem>
+                  </Select>
                 </FormControl>
               </Grid>
             </Grid>
@@ -178,7 +178,6 @@ class Register extends Component {
                 span_classname={classes.errorInfo}
                 error1={errors.name}
               />
-
             </Grid>
             {this.state.role === "Student" ?
             <Grid item className={classes.inputField}>
@@ -358,8 +357,6 @@ class Register extends Component {
       this.setState({ activeStep : 0 })
     };
 
-  
-
     return (
       <div className={classes.root}>
         <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt}/>
@@ -416,8 +413,8 @@ class Register extends Component {
                   >
                     Daftar
                   </Button>
-                
-                : 
+
+                :
                 <Button variant="contained" type="button" color="primary" onClick={handleNext}>
                 Lanjut
               </Button>
@@ -429,9 +426,9 @@ class Register extends Component {
               </Grid>
 
               {/* <Grid item> */}
-          
+
       {/* </Grid> */}
- 
+
             </Grid>
           </Paper>
       </div>

@@ -20,7 +20,6 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
 import MenuIcon from "@material-ui/icons/Menu"
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import SettingIcon from "@material-ui/icons/SettingsOutlined"
 
 export const drawerWidth = 220;
 
@@ -291,12 +290,6 @@ function NavBar(props){
                 <AboutIcon />
               </ListItemIcon>
               <ListItemText primary="About Schooly" />
-          </DrawerItemList>
-          <DrawerItemList href="/settings">
-              <ListItemIcon>
-                <SettingIcon />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
           </DrawerItemList>
         </List>
       </Drawer>

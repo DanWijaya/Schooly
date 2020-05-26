@@ -34,12 +34,13 @@ Page List On Work (Not completed/Not created yet):
 - All Class page (approx 5 pages)
 - All Task page (approx 5)
 - Admin Dashboards (approx 2)
-- Notifications/Announcements (3)
+- Notification
 - About
 - Landing
 - Dashboard
 - Help/Terms and policies
 - Quiz (Optional Important) (Approx 5)
+- Announcement (Optional) (Approx 3)
 
 Drafted:
 - Comments

@@ -17,6 +17,7 @@ import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import NotificationsList from "./components/layout/notifications/NotificationsList";
 import Profile from "./components/layout/profile/Profile";
+import ProfileView from "./components/layout/profile/ProfileView";
 //Misc
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
 import { colorPalette } from "./components/misc/color-palette/ColorPalette";
@@ -31,7 +32,6 @@ import ViewTask from "./components/objects/tasks/ViewTask";
 //Prototypes
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
-import RegisterTest from "./components/auth/register/RegisterTest";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -78,7 +78,7 @@ class App extends Component {
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
     } else{
-      translateXValue = "0px"
+      translateXValue = "60px"
     }
 
     return (
@@ -94,10 +94,10 @@ class App extends Component {
               <Route exact path="/tentang-schooly" component={About} />
               <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
               <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
-              <Route exact path="/register-test" component={RegisterTest} /> {/*prototypetest*/}
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute exact path="/profil" component={Profile} />
+                <PrivateRoute exact path="/profile-view" component={ProfileView} />
                 <PrivateRoute exact path="/notifikasi" component={NotificationsList} />
                 {/* Route Class */}
                 <PrivateRoute exact path="/createclass" component={CreateClass}/>

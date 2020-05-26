@@ -1,5 +1,6 @@
 import React from "react";
-import { Avatar, Divider, Grid, IconButton, Link, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core"
+import StandardTextField from "../../misc/text-field/StandardTextField"
+import { Avatar, Divider, Grid, IconButton, Link, List, ListItem, Paper, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
@@ -10,58 +11,42 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
   },
   paperBox: {
-    padding: "15px"
+    padding: "20px"
   },
-  notificationLink: {
-    textTransform: "none",
+  notificationListItem: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  searchButton: {
     "&:focus": {
       backgroundColor: "transparent",
     },
-  }
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+  },
 }));
-
-function NotificationSearchBar() {
-  return(
-    <Grid container direction="row">
-      <Grid item>
-        <input />
-      </Grid>
-      <Grid item>
-        <IconButton>
-          <SearchIcon />
-        </IconButton>
-      </Grid>
-    </Grid>
-  )
-}
 
 function NotificationItemList(props) {
   const classes = useStyles();
 
   return (
-    <ListItem>
-      <Grid container direction="row" alignItems="center">
-        <Grid item xs={3} container justify="flex-start" alignItems="center">
-          <ListItemAvatar>
-            <Avatar>
-              {props.sender_avatar}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={props.sender_name}/>
-        </Grid>
-        <Grid item xs={8}>
-          <Typography>
-            <Link href={props.notification_link} className={classes.notificationLink}>
-              {props.notification_title}
-            </Link>
-          </Typography>
-        </Grid>
-        <Grid item xs={1} container justify="flex-end">
-          <Typography variant="subtitle" style={{color: "grey"}}>
-            {props.time}
-          </Typography>
-        </Grid>
-      </Grid>
+    <ListItem className={classes.notificationListItem}>
+      <Avatar>
+        {props.sender_avatar}
+      </Avatar>
+      <Typography style={{width: "15%"}}>
+        {props.sender_name}
+      </Typography>
+      <Typography style={{width: "60%"}}>
+        <Link href={props.notification_link}>
+          {props.notification_title}
+        </Link>
+      </Typography>
+      <Typography variant="subtitle" style={{color: "grey", width: "10%"}}>
+        {props.time}
+      </Typography>
     </ListItem>
   )
 }
@@ -72,46 +57,34 @@ function NotificationsList(props) {
   return(
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
-        <Grid
-          container
-          direction="column"
-          justify="space-between"
-        >
-          <Grid item
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-          >
-            <Grid item>
-              <Typography variant="subtitle2">
-                <h5>Notifikasi</h5>
-              </Typography>
-            </Grid>
-            <Grid item>
-              <NotificationSearchBar />
-            </Grid>
-          </Grid>
+          <div style={{display: "flex", justifyContent: "space-between"}}>
+            <Typography variant="subtitle2">
+              <h5>Notifikasi</h5>
+            </Typography>
+            <div style={{display: "flex", width: "30%"}}>
+              <StandardTextField />
+              <IconButton className={classes.searchButton}>
+                <SearchIcon />
+              </IconButton>
+            </div>
+          </div>
           <Divider />
-          <Grid item>
-            <List>
-              <NotificationItemList
-                sender_icon={<AccountCircleIcon />}
-                sender_name="Pak Peler"
-                notification_title="Ujian Kimia Besok"
-                notification_link="/test"
-                time={"20m ago"}
-              />
-              <NotificationItemList
-                sender_icon={<AccountCircleIcon />}
-                sender_name="My Nigga"
-                notification_title="Ujian Biologi Lusa"
-                notification_link="/test"
-                time={"20m ago"}
-              />
-            </List>
-          </Grid>
-        </Grid>
+          <List>
+            <NotificationItemList
+              sender_icon={<AccountCircleIcon />}
+              sender_name="Pak Peler"
+              notification_title="Ujian Kimia Besok"
+              notification_link="/test"
+              time={"20m ago"}
+            />
+            <NotificationItemList
+              sender_icon={<AccountCircleIcon />}
+              sender_name="My Nigga"
+              notification_title="Ujian Biologi Lusa"
+              notification_link="/test"
+              time={"20m ago"}
+            />
+          </List>
       </Paper>
     </div>
   )

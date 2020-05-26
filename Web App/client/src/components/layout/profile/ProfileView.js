@@ -3,9 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateAvatar } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
-import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
-import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
-import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
 import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography, Snackbar  } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
@@ -75,7 +72,7 @@ function ProfileDataItem(props) {
   )
 }
 
-function Profile(props) {
+function ProfileView(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
@@ -122,72 +119,15 @@ function Profile(props) {
   document.title=`Schooly | ${user.name}`
   return(
     <div className={classes.root}>
-
-      {/* ProfilePictureEditorDialog punya Snackbar */}
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
-      >
-        <Alert onClose={handleCloseAlert} severity="info" >
-          Foto profil berhasil diganti!
-        </Alert>
-      </Snackbar>
-
-      {/* ProfileDataEditorDialog punya Snackbar */}
-      <Snackbar
-        open={openDataEditorAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseDataEditorAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
-      >
-        <Alert onClose={handleCloseDataEditorAlert} severity="info" >
-          Data profil berhasil diganti!
-        </Alert>
-      </Snackbar>
-
-      {/* ProfilePasswordEditorDialog punya Snackbar */}
-      <Snackbar
-        open={openPasswordEditorAlert}
-        autoHideDuration={4000}
-        onClose={handleClosePasswordEditorAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
-      >
-        <Alert onClose={handleClosePasswordEditorAlert} severity="info" >
-          Foto profil berhasil diganti!
-        </Alert>
-      </Snackbar>
-
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar && user.avatar != undefined ?
-            <StyledBadge
-              badgeContent={
-                <ProfilePictureEditorDialog
-                  user={user}
-                  updateAvatar={updateAvatar}
-                  handleOpenAlert={handleOpenAlert}
-                />
-              }
-            >
-              <Avatar
-                src={`/api/uploads/image/${user.avatar}`}
-                className={classes.avatar}
-              />
-            </StyledBadge>
+            <Avatar
+              src={`/api/uploads/image/${user.avatar}`}
+              className={classes.avatar}
+            />
             :
-            <StyledBadge
-              badgeContent={
-                <ProfilePictureEditorDialog
-                  user={user}
-                  updateAvatar={updateAvatar}
-                  handleOpenAlert={handleOpenAlert}
-                />
-              }
-            >
-              <Avatar src={defaultAvatar} className={classes.avatar} />
-            </StyledBadge>
+            <Avatar src={defaultAvatar} className={classes.avatar} />
           }
           <Typography variant="subtitle2">
             <h3>{user.name}</h3>
@@ -198,17 +138,12 @@ function Profile(props) {
           <Typography style={{marginBottom:"25px"}}>
             Class
           </Typography>
-          <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
-          <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
         </Grid>
         <Grid item container spacing={4}>
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2">
                   <h4>Informasi Pribadi</h4>
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                  Beberapa data profil dapat dilihat oleh orang lain menggunakan layanan Schooly.
                 </Typography>
                 <List>
                   <ProfileDataItem
@@ -298,7 +233,7 @@ function Profile(props) {
   )
 }
 
-Profile.propTypes = {
+ProfileView.propTypes = {
     auth: PropTypes.object.isRequired,
     updateAvatar: PropTypes.func.isRequired
   }
@@ -309,4 +244,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
     mapStateToProps, {updateAvatar}
-  ) (Profile);
+  ) (ProfileView);
