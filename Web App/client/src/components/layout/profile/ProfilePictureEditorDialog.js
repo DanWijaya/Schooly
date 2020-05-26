@@ -17,8 +17,12 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(25),
     margin: "auto"
   },
-  avatarImg: {
+  avatarImg1: {
     width: theme.spacing(25),
+    margin: "auto"
+  },
+  avatarImg2: {
+    height: theme.spacing(25),
     margin: "auto"
   },
   dialogRoot: {
@@ -64,8 +68,14 @@ function ProfilePictureEditorDialog(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-  //Dialog
+  //Function Hooks and Ref Declaration
+  const uploadedImage = React.useRef(null);
+  const imageUploader = React.useRef(null);
+  const [profileImg, setProfileImg] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [avatarDimensions, setAvatarDimensions] = React.useState({height: null , width: null})
+
+  //Dialog
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -74,11 +84,7 @@ function ProfilePictureEditorDialog(props) {
     setProfileImg(null)
   };
 
-  //Image Upload
-  var uploadedImage = React.useRef(null);
-  const imageUploader = React.useRef(null);
-
-  const [profileImg, setProfileImg] = React.useState(null);
+  
 
   const {user} = props;
   const {updateAvatar} = props;
@@ -97,16 +103,11 @@ function ProfilePictureEditorDialog(props) {
     }
   };
 
-  const clear = () => {
-     setProfileImg(false)
-  }
-
   const onSubmitForm = (e) => {
     e.preventDefault()
     console.log("AAA")
     let formData = new FormData()
     console.log(profileImg)
-
     formData.append("avatar", profileImg)
 
     let userData = user
@@ -118,6 +119,43 @@ function ProfilePictureEditorDialog(props) {
     handleCloseDialog()
   }
 
+  function onImgLoad({target:img}) {
+    setAvatarDimensions({ height:img.offsetHeight, width:img.offsetWidth})
+    }
+  
+  console.log("width is smaller", avatarDimensions.width < avatarDimensions.height)
+  console.log("height is smaller", avatarDimensions.height < avatarDimensions.width)
+
+  const imageUploadPreview = () => {
+    let avatarImgClass;
+
+    if(avatarDimensions.width < avatarDimensions.height){
+      avatarImgClass = classes.avatarImg1
+    } else{
+      avatarImgClass = classes.avatarImg2
+    }
+
+    if(!profileImg){
+      return (
+      <Avatar className={classes.avatar}>
+        <img
+          onLoad={onImgLoad}
+          src={`/api/uploads/image/${user.avatar}`}
+          ref={uploadedImage}
+          className={avatarImgClass}
+        />
+        </Avatar>)
+    } else {
+      return (
+      <Avatar className={classes.avatar}>
+        <img
+          onLoad={onImgLoad}
+          ref={uploadedImage}
+          className={avatarImgClass}
+        />
+      </Avatar>)
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -182,22 +220,7 @@ function ProfilePictureEditorDialog(props) {
                 spacing={2}
               >
                 <Grid item style={{marginBottom: "20px"}}>
-                  {!profileImg ?
-                    <Avatar className={classes.avatar}>
-                      <img
-                        src={`/api/uploads/image/${user.avatar}`}
-                        ref={uploadedImage}
-                        className={classes.avatarImg}
-                      />
-                    </Avatar>
-                    :
-                    <Avatar className={classes.avatar}>
-                      <img
-                        ref={uploadedImage}
-                        className={classes.avatarImg}
-                      />
-                    </Avatar>
-                  }
+                {imageUploadPreview()}
                 </Grid>
                 <Grid item>
                   <Button

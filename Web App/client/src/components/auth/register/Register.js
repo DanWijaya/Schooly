@@ -62,7 +62,7 @@ class Register extends Component {
       kelas: {}, //Student Data
       subject_teached: "", //Teacher Data
       activeStep: 0,
-      redirect: false,
+      submitButtonClicked: false,
     };
   }
 
@@ -99,37 +99,33 @@ class Register extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    var newUser;
+    var newUser = {
+      name: this.state.name,
+      role: this.state.role,
+      email: this.state.email,
+      phone: this.state.phone,
+      emergency_phone: this.state.emergency_phone,
+      address: this.state.address,
+      password: this.state.password,
+      password2: this.state.password2,
+    };
 
     const role = this.state.role;
 
     if(role == "Student") {
       newUser = {
-        name: this.state.name,
-        role: this.state.role,
-        email: this.state.email,
-        phone: this.state.phone,
-        emergency_phone: this.state.emergency_phone,
-        address: this.state.address,
-        password: this.state.password,
-        password2: this.state.password2,
         kelas: this.state.kelas, //Student Data
       };
     } else if (role == "Teacher") {
       newUser = {
-        name: this.state.name,
-        role: this.state.role,
-        email: this.state.email,
-        phone: this.state.phone,
-        emergency_phone: this.state.emergency_phone,
-        address: this.state.address,
-        password: this.state.password,
-        password2: this.state.password2,
         subject_teached: this.state.subject_teached, //Teacher Data
       };
     }
 
-    console.log(e)
+    if(this.state.activeStep == 1)
+        this.setState({submitButtonClicked: true})
+
+    if(this.state.submitButtonClicked)
       this.props.registerUser(newUser, this.props.history);
   };
 
@@ -143,7 +139,7 @@ class Register extends Component {
 
   render() {
     const getSteps = () => {
-      return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi dan Selesai"];
+      return ["Kredensial Masuk", "Informasi Pribadi"];
     }
 
     const getStepContent = (stepIndex) => {
@@ -329,23 +325,20 @@ class Register extends Component {
               </Grid>
             </Grid>
           );
-        case 2:
-          return (
-            this.state.redirect ?
-              <Redirect to="/test" />
-            :
-              <div>
-                <Typography style={{textAlign: "center", marginBottom: "20px"}}>
-                  Akun anda berhasil di daftarkan. Silahkan lengkapi informasi pribadi anda pada halaman profil.
-                </Typography>
-                <Link href="/test" style={{display: "flex", justifyContent: "center"}}>
-                  Klik di Sini
-                </Link>
-                <Typography style={{textAlign: "center", fontSize: "12px", color: "#A9A9A9"}}>
-                  Jika anda tidak dialihkan ke beranda segera.
-                </Typography>
-              </div>
-          );
+        // case 2:
+        //   return (
+        //       <div>
+        //         <Typography style={{textAlign: "center", marginBottom: "20px"}}>
+        //           Akun anda berhasil di daftarkan. Silahkan lengkapi informasi pribadi anda pada halaman profil.
+        //         </Typography>
+        //         <Link href="/masuk" style={{display: "flex", justifyContent: "center"}}>
+        //           Klik untuk Masuk
+        //         </Link>
+        //         <Typography style={{textAlign: "center", fontSize: "12px", color: "#A9A9A9"}}>
+        //           Jika anda tidak dialihkan ke beranda segera.
+        //         </Typography>
+        //       </div>
+        //   );
         default:
           return "Unknown stepIndex";
       }
@@ -353,9 +346,7 @@ class Register extends Component {
 
     document.title="Daftar ke Schooly"
     const { classes } = this.props;
-
     const { errors } = this.state;
-
     console.log(this.state.role)
     const classesCollection = this.props.classesCollection;
     var options = []
@@ -367,15 +358,17 @@ class Register extends Component {
     const steps = getSteps();
 
     const handleNext = () => {
-      this.setState(prevState => ({
-        activeStep: prevState.activeStep + 1
-        })
+      if(this.state.activeStep != 1 || this.state.errors == null)
+        this.setState(prevState => ({
+          activeStep: prevState.activeStep + 1,
+          submitButtonClicked: false
+          })
       )
     };
 
     const handleBack = () => {
       this.setState(prevState => ({
-        activeStep: prevState.activeStep - 1
+        activeStep: prevState.activeStep - 1,
         })
       )
     }
@@ -426,13 +419,12 @@ class Register extends Component {
                         Kembali
                       </Button>
                     }
-                    {this.state.activeStep === steps.length - 2 ?
-                      <Grid justify="flex-end">
+                    {this.state.activeStep === steps.length - 1 ?
+                      <Grid container justify="flex-end">
                         <Button
                           type="submit"
                           variant="contained"
                           size="medium"
-                          onClick={handleNext}
                           style={{
                             backgroundColor: "#61bd4f",
                             color: "white",

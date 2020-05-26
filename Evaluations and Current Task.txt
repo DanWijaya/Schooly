@@ -28,7 +28,7 @@ Page List Done:
 - Navbar (Masih ke halang mini drawernya)
 - Profile (Kurang dikasi gambar-gambar, mungkin background image, belum tambahin snackbar buat edit profile dan edit password)
 - Login (Masih nda bisa masukkin icon info buat error)
-- Register (Belum implemen stepper, Rapiin multiselect sama select, Masih nda bisa masukkin icon info buat error)
+- Register (Udah implement stepper, Rapiin multiselect sama select, Masih nda bisa masukkin icon info buat error, buat register page langsung direct ke Login)
 
 Page List On Work (Not completed/Not created yet):
 - All Class page (approx 5 pages)

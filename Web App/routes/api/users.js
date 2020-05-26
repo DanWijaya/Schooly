@@ -101,7 +101,7 @@ router.post("/login", (req, res) => {
   User.findOne({ email }).then(user => {
     // Check if user exists
     if (!user) {
-      return res.status(404).json({ emailnotfound: "Email not found" });
+      return res.status(404).json({ emailnotfound: "Email tidak ditemukan" });
     }
 
     // Check password
@@ -158,7 +158,7 @@ router.post("/login", (req, res) => {
       } else {
         return res
           .status(400)
-          .json({ passwordincorrect: "Password incorrect" });
+          .json({ passwordincorrect: "Kata sandi tidak benar" });
       }
     });
   });
@@ -259,13 +259,26 @@ router.post("/update/avatar/:id", avatar.upload.single('avatar'), (req,res) => {
 
       var payload = {
         id: user.id,
-          role: user.role,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          emergency_phone: user.emergency_phone,
-          address: user.address,
-          avatar: user.avatar,
+            role: user.role,
+            avatar: user.avatar,
+
+            // Informasi Pribadi
+            name : user.name,
+            tanggal_lahir : user.tanggal_lahir,
+            jenis_kelamin : user.jenis_kelamin,
+            sekolah : user.sekolah,
+
+            //Kontak
+            email : user.email,
+            phone : user.phone,
+            emergency_phone : user.emergency_phone,
+            address : user.address,
+
+            //Karir
+            hobi_minat : user.hobi_minat,
+            ket_non_teknis : user.ket_non_teknis,
+            cita_cita : user.cita_cita,
+            uni_impian : user.uni_impian
       }
 
       if(user.role == "Student") {

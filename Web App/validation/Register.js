@@ -15,46 +15,46 @@ module.exports = function validateRegisterInput(data) {
 
   // Name checks
   if (Validator.isEmpty(data.name)) {
-    errors.name = "Name field is required";
+    errors.name = "Nama belum diisi";
   }
 
   // Email checks
   if (Validator.isEmpty(data.email)) {
-    errors.email = "Email field is required";
+    errors.email = "Email belum diisi";
   } else if (!Validator.isEmail(data.email)) {
-    errors.email = "Email is invalid";
+    errors.email = "Email tidak benar";
   }
 
   // Phone checks
   if (Validator.isEmpty(data.phone)) {
-    errors.phone = "Phone contact number field is required"
+    errors.phone = "Nomor telepon belum diisi"
   }
 
   // Emergency phone checks
   if (Validator.isEmpty(data.emergency_phone)) {
-    errors.phone = "Emergency contact number field is required"
+    errors.phone = "Nomor telepon darurat belum diisi"
   }
 
   // Emergency phone checks
   if (Validator.isEmpty(data.address)) {
-    errors.address = "Address field is required"
+    errors.address = "Alamat belum diisi"
   }
 
   // Password checks
   if (Validator.isEmpty(data.password)) {
-    errors.password = "Password field is required";
+    errors.password = "Kata sandi belum diisi";
   }
 
   if (Validator.isEmpty(data.password2)) {
-    errors.password2 = "Confirm password field is required";
+    errors.password2 = "Konfirmasi kata sandi belum diisi";
   }
 
-  if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
-    errors.password = "Password must be at least 6 characters";
+  if (!Validator.isEmpty(data.password) && !Validator.isLength(data.password, { min: 8, max: 30 })) {
+      errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
   }
 
   if (!Validator.equals(data.password, data.password2)) {
-    errors.password2 = "Passwords must match";
+    errors.password2 = "Kata sandi harus sama";
   }
 
   return {

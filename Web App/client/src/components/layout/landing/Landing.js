@@ -31,7 +31,7 @@ class Landing extends Component {
               height: "40px",
             }}
           >
-            Register
+            Daftar
           </Button>
         </Link>
           <br/><br/>
@@ -46,7 +46,7 @@ class Landing extends Component {
               height: "40px",
             }}
           >
-            Log In
+            Masuk
           </Button>
         </Link>
 
