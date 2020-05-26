@@ -12,7 +12,7 @@ export const registerUser = (userData, history) => dispatch => {
     .post("/api/users/register", userData)
     .then(res => {
       alert("New User is registered successfully")
-      history.push("/login")
+      history.push("/masuk")
     })
     .catch(err =>
       dispatch({
@@ -29,7 +29,7 @@ export const updateUserData = (userData, userId, history) => dispatch => {
 
         const { token } = res.data;
         console.log("Updating User Data");
-        
+
         localStorage.setItem("jwtToken", token);
         console.log("Foto udah diganti")
         // Set token to Auth header
@@ -65,7 +65,7 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
   axios
       .post("/api/users/update/avatar/" + userId, formData, userData)
       .then(res => {
-        
+
           // Set token to localStorage
         const { token } = res.data;
         localStorage.setItem("jwtToken", token);
@@ -76,7 +76,7 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
         const decoded = jwt_decode(token);
         // Set current user
         dispatch(setCurrentUser(decoded));
-        
+
       })
       .catch(err => {
         dispatch({
@@ -87,7 +87,7 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
 
 }
 
-// to initiate a dispatch, pass the result to the dispatch() function. 
+// to initiate a dispatch, pass the result to the dispatch() function.
 // Login - get user token
 export const loginUser = (userData) => dispatch => {
   axios
@@ -105,13 +105,13 @@ export const loginUser = (userData) => dispatch => {
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
-      
+
     })
     .catch(err => {
       console.log("error")
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data 
+        payload: err.response.data
       })
     }
     );
@@ -123,7 +123,7 @@ export const setCurrentUser = decoded => {
   return {
     type: SET_CURRENT_USER,
     payload: decoded
-    
+
   };
 };
 
@@ -173,5 +173,5 @@ export const logoutUser = (history=undefined) => dispatch => {
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
   if(history != undefined)
-    history.push("/login")
+    history.push("/masuk")
 };

@@ -51,13 +51,13 @@ function NotificationItemList(props) {
   )
 }
 
-function NotificationsList(props) {
+function Notifications(props) {
   const classes = useStyles();
 
   return(
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
-          <div style={{display: "flex", justifyContent: "space-between"}}>
+          <div style={{display: "flex", justifyContent: "space-between", height: "60px"}}>
             <Typography variant="subtitle2">
               <h5>Notifikasi</h5>
             </Typography>
@@ -90,4 +90,4 @@ function NotificationsList(props) {
   )
 }
 
-export default NotificationsList;
+export default Notifications;

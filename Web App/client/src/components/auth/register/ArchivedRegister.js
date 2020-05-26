@@ -1,5 +1,3 @@
-// Sementara keep ini dulu buat Jaga jaga, takut ada error dari yg ak implement wkwk. 
-
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { Multiselect } from "multiselect-react-dropdown";

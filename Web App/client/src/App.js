@@ -15,7 +15,7 @@ import Login from "./components/auth/login/Login";
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
-import NotificationsList from "./components/layout/notifications/NotificationsList";
+import Notifications from "./components/layout/notifications/Notifications";
 import Profile from "./components/layout/profile/Profile";
 import ProfileView from "./components/layout/profile/ProfileView";
 //Misc
@@ -49,7 +49,7 @@ if (localStorage.jwtToken) {
     store.dispatch(logoutUser());
 
     // Redirect to login
-    window.location.href = "./login";
+    window.location.href = "./masuk";
   }
 }
 class App extends Component {
@@ -78,42 +78,42 @@ class App extends Component {
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
     } else{
-      translateXValue = "60px"
+      translateXValue = "0px"
     }
 
     return (
       <div>
-       <Provider store={store}>
-        <ThemeProvider theme={colorPalette}>
-          <Router>
-            <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
-            <div style={{marginLeft: `${translateXValue}`, marginTop: "30px"}}>
-              <Route exact path="/" component={Landing} />
-              <Route exact path="/daftar" component={Register} />
-              <Route exact path="/masuk" component={Login} />
-              <Route exact path="/tentang-schooly" component={About} />
-              <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
-              <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
-              <Switch>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <PrivateRoute exact path="/profil" component={Profile} />
-                <PrivateRoute exact path="/profile-view" component={ProfileView} />
-                <PrivateRoute exact path="/notifikasi" component={NotificationsList} />
-                {/* Route Class */}
-                <PrivateRoute exact path="/createclass" component={CreateClass}/>
-                <PrivateRoute exact path="/viewclass" component={ViewClass}/>
-                <PrivateRoute exact path="/class/:id" component={EditClass}/>
-                <PrivateRoute exact path="/deleteclass/:id" component={ViewClass}/>
-                {/* Route Task  */}
-                <PrivateRoute exact path="/createtask" component={CreateTask}/>
-                <PrivateRoute exact path="/viewtask" component={ViewTask}/>
-                <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
-                <PrivateRoute exact path="/task/:id" component={EditTask}/>
-              </Switch>
-            </div>
-          </Router>
-        </ThemeProvider>
-      </Provider>
+        <Provider store={store}>
+          <ThemeProvider theme={colorPalette}>
+            <Router>
+              <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
+              <div style={{marginLeft: `${translateXValue}`, marginTop: "30px"}}>
+                <Route exact path="/" component={Landing} />
+                <Route exact path="/daftar" component={Register} />
+                <Route exact path="/masuk" component={Login} />
+                <Route exact path="/tentang-schooly" component={About} />
+                <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
+                <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
+                <Switch>
+                  <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                  <PrivateRoute exact path="/profil" component={Profile} />
+                  <PrivateRoute exact path="/profile-view" component={ProfileView} />
+                  <PrivateRoute exact path="/notifikasi" component={Notifications} />
+                  {/* Route Class */}
+                  <PrivateRoute exact path="/createclass" component={CreateClass}/>
+                  <PrivateRoute exact path="/viewclass" component={ViewClass}/>
+                  <PrivateRoute exact path="/class/:id" component={EditClass}/>
+                  <PrivateRoute exact path="/deleteclass/:id" component={ViewClass}/>
+                  {/* Route Task  */}
+                  <PrivateRoute exact path="/createtask" component={CreateTask}/>
+                  <PrivateRoute exact path="/viewtask" component={ViewTask}/>
+                  <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
+                  <PrivateRoute exact path="/task/:id" component={EditTask}/>
+                </Switch>
+              </div>
+            </Router>
+          </ThemeProvider>
+        </Provider>
       </div>
     );
   }

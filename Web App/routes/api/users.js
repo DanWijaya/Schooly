@@ -84,7 +84,7 @@ router.post("/register", (req, res) => {
 // @route POST api/users/login
 // @desc Login user and return JWT token
 // @access Public
-router.post("/login", (req, res) => {
+router.post("/masuk", (req, res) => {
   // Form validation
 
   const { errors, isValid } = validateLoginInput(req.body);
@@ -166,7 +166,7 @@ router.post("/login", (req, res) => {
 
 router.post("/update/data/:id", (req,res) => {
   let id = req.params.id
-  
+
   User.findById(id, (err, user) => {
         if(!user){
           return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
@@ -199,7 +199,7 @@ router.post("/update/data/:id", (req,res) => {
               .save()
               .then(console.log("Done with updating user data"))
               .catch(err => console.log(err))
-          
+
           var payload = {
             id: user.id,
             role: user.role,
