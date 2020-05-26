@@ -14,6 +14,24 @@ const styles = (theme) => ({
   },
 });
 
+function WorkItemList(props) {
+  return (
+    <ListItem style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+      <Typography style={{width: "60%"}}>
+        <Link href={props.work_link} style={{color: "#2196f3"}}>
+          {props.work_title}
+        </Link>
+      </Typography>
+      <Typography style={{width: "30%"}}>
+        {props.work_subject}
+      </Typography>
+      <Typography variant="subtitle" style={{color: "grey", width: "10%"}}>
+        {props.work_duetime}
+      </Typography>
+    </ListItem>
+  )
+}
+
 function NotificationItemList(props) {
   return (
     <ListItem style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
@@ -80,7 +98,7 @@ class Dashboard extends Component {
         </Typography>
         <Paper style={{marginBottom: "50px"}}>
           <Typography variant="h5">
-            Notifikasi Terkini
+            Notifikasi Terkini Anda
           </Typography>
           <Divider />
           <List>
@@ -105,6 +123,20 @@ class Dashboard extends Component {
             Pekerjaan Anda
           </Typography>
           <Divider />
+          <List>
+            <WorkItemList
+              work_title="Tugas 1"
+              work_link="/test"
+              work_subject="Fisika"
+              work_duetime="5 jam lagi"
+            />
+            <WorkItemList
+              work_title="Tugas 2: hisap peler"
+              work_link="/test"
+              work_subject="Biologi"
+              work_duetime="1 jam lagi"
+            />
+          </List>
         </Paper>
       </div>
     )
