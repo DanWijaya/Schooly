@@ -1,64 +1,117 @@
 import React, { Component } from "react";
-// For working with Reducers
-import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { logoutUser } from "../../../actions/AuthActions";
+import PropTypes from "prop-types";
+import { Avatar, Divider, Grid, Link, List, ListItem, Paper, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-// import NavBar from "../../misc/nav-bar/NavBar";
-// import SideDrawer from "../../misc/side-drawer/SideDrawer";
+const styles = (theme) => ({
+  root: {
+    margin: "auto",
+    maxWidth: "1000px",
+    textAlign: "center",
+  },
+});
+
+function NotificationItemList(props) {
+  return (
+    <ListItem style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+      <Avatar>
+        {props.sender_avatar}
+      </Avatar>
+      <Typography style={{width: "15%"}}>
+        {props.sender_name}
+      </Typography>
+      <Typography style={{width: "60%"}}>
+        <Link href={props.notification_link} style={{color: "#2196f3"}}>
+          {props.notification_title}
+        </Link>
+      </Typography>
+      <Typography variant="subtitle" style={{color: "grey", width: "10%"}}>
+        {props.time}
+      </Typography>
+    </ListItem>
+  )
+}
 
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: new Date().toLocaleString()
+    };
+  }
 
-    constructor(props) {
-      super(props);
-      this.state = {
-          sidebarOpen: true
-      };
-    }
+  componentDidMount() {
+    this.intervalID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
 
-  onLogoutClick = e => {
-    e.preventDefault();
-    this.props.logoutUser();
-  };
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
+
+  tick() {
+    this.setState({
+      time: new Date().toLocaleString()
+    });
+  }
 
   render() {
-    const { user } = this.props.auth;
-    document.body.style.background = "white"
-    
     document.title="Dashboard | Schooly"
-    return (
-      <div>
-          <div style={{ height: "75vh", display: 'flex', justifyContent: 'center'}} className="container valign-wrapper">
+    document.body.style.background = "white"
 
-            <div className="landing-copy col s12 center-align" >
-              <h4>
-                <b>Hey there {user.role} </b> {user.name.split(" ")[0]}
-                <p className="flow-text grey-text text-darken-1">
-                  You are logged into our Schooly Web app 👏! {" "}
-                  {/* <span style={{ fontFamily: "monospace" }}>MERN</span> app 👏 */}
-                </p>
-              </h4>
-              <button
-                style={{
-                  width: "150px",
-                  borderRadius: "3px",
-                  letterSpacing: "1.5px",
-                  marginTop: "1rem"
-                }}
-                onClick={this.onLogoutClick}
-                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-              >
-                Logout
-              </button>
-            </div>
-          {/* </div> */}
-          </div>
-          </div>
+    const { classes } = this.props;
+    const { user } = this.props.auth;
+
+    return (
+      <div className={classes.root}>
+        <Typography variant="h2">
+          <b>Selamat Datang {user.name.split(" ")[0]}</b>
+        </Typography>
+        <Typography variant="h3" style={{marginBottom: "40px"}}>
+          Sekarang tanggal {this.state.time}
+        </Typography>
+        <Typography variant="h4" style={{marginBottom: "60px"}}>
+          Apa yang ingin kamu lakukan hari ini?
+        </Typography>
+        <Paper style={{marginBottom: "50px"}}>
+          <Typography variant="h5">
+            Notifikasi Terkini
+          </Typography>
+          <Divider />
+          <List>
+            <NotificationItemList
+              sender_icon={<AccountCircleIcon />}
+              sender_name="Pak Peler"
+              notification_title="Ujian Kimia Besok"
+              notification_link="/test"
+              time={"20m ago"}
+            />
+            <NotificationItemList
+              sender_icon={<AccountCircleIcon />}
+              sender_name="My Nigga"
+              notification_title="Ujian Biologi Lusa"
+              notification_link="/test"
+              time={"20m ago"}
+            />
+          </List>
+        </Paper>
+        <Paper>
+          <Typography variant="h5">
+            Pekerjaan Anda
+          </Typography>
+          <Divider />
+        </Paper>
+      </div>
     )
   };
 }
+
 Dashboard.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -66,7 +119,7 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { logoutUser }
-)(Dashboard);
+export default withRouter(
+  connect(mapStateToProps)
+  (withStyles(styles)(Dashboard))
+  )
