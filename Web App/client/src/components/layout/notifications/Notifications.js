@@ -40,7 +40,7 @@ function NotificationItemList(props) {
         {props.sender_name}
       </Typography>
       <Typography style={{width: "60%"}}>
-        <Link href={props.notification_link}>
+        <Link href={props.notification_link} style={{color: "#DCDCDC"}}>
           {props.notification_title}
         </Link>
       </Typography>
