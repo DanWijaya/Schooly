@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -8,7 +8,7 @@ import { registerUser } from "../../../actions/AuthActions";
 import { viewClass } from "../../../actions/ClassActions";
 import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
-import { Button, FormControl, Grid, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import { Button, FormControl, Grid, Link, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step';
@@ -61,8 +61,8 @@ class Register extends Component {
       errors: {},
       kelas: {}, //Student Data
       subject_teached: "", //Teacher Data
-
       activeStep: 0,
+      redirect: false,
     };
   }
 
@@ -102,6 +102,7 @@ class Register extends Component {
     var newUser;
 
     const role = this.state.role;
+
     if(role == "Student") {
       newUser = {
         name: this.state.name,
@@ -127,11 +128,20 @@ class Register extends Component {
         subject_teached: this.state.subject_teached, //Teacher Data
       };
     }
+
     console.log(e)
       this.props.registerUser(newUser, this.props.history);
   };
-  render() {
 
+  componentDidMount() {
+    this.id = setTimeout(() => this.setState({ redirect: true }), 1000)
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.id)
+  }
+
+  render() {
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi dan Selesai"];
     }
@@ -321,11 +331,20 @@ class Register extends Component {
           );
         case 2:
           return (
-            <div>
-            <Typography style={{textAlign: "center"}}>
-              Akun anda berhasil di daftarkan. Silahkan lengkapi informasi pribadi anda pada halaman profil.
-            </Typography>
-            </div>
+            this.state.redirect ?
+              <Redirect to="/test" />
+            :
+              <div>
+                <Typography style={{textAlign: "center", marginBottom: "20px"}}>
+                  Akun anda berhasil di daftarkan. Silahkan lengkapi informasi pribadi anda pada halaman profil.
+                </Typography>
+                <Link href="/test" style={{display: "flex", justifyContent: "center"}}>
+                  Klik di Sini
+                </Link>
+                <Typography style={{textAlign: "center", fontSize: "12px", color: "#A9A9A9"}}>
+                  Jika anda tidak dialihkan ke beranda segera.
+                </Typography>
+              </div>
           );
         default:
           return "Unknown stepIndex";
@@ -407,33 +426,37 @@ class Register extends Component {
                         Kembali
                       </Button>
                     }
-                    {this.state.activeStep === steps.length - 1 ?
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        size="medium"
-                        style={{
-                          backgroundColor: "#61bd4f",
-                          color: "white",
-                          width: "90px",
-                        }}
-                      >
-                        Daftar
-                      </Button>
+                    {this.state.activeStep === steps.length - 2 ?
+                      <Grid justify="flex-end">
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          size="medium"
+                          onClick={handleNext}
+                          style={{
+                            backgroundColor: "#61bd4f",
+                            color: "white",
+                            width: "90px",
+                          }}
+                        >
+                          Daftar
+                        </Button>
+                      </Grid>
                       :
-                      <Button
-                        variant="contained"
-                        type="button"
-                        variant="contained"
-                        onClick={handleNext}
-                        style={{
-                          backgroundColor: "#2196f3",
-                          color: "white",
-                          width: "90px",
-                        }}
-                      >
-                        Lanjut
-                      </Button>
+                      <Grid container justify="flex-end">
+                        <Button
+                          variant="contained"
+                          type="button"
+                          variant="contained"
+                          onClick={handleNext}
+                          style={{
+                            backgroundColor: "#2196f3",
+                            color: "white",
+                          }}
+                        >
+                          Lanjut
+                        </Button>
+                      </Grid>
                     }
                   </div>
               </form>
