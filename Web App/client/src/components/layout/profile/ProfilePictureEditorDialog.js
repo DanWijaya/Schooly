@@ -17,11 +17,11 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(25),
     margin: "auto"
   },
-  avatarImg1: {
+  avatarImg1: { // Kalau width lebi kecil dari height
     width: theme.spacing(25),
     margin: "auto"
   },
-  avatarImg2: {
+  avatarImg2: { //Kalau width lebi kecil dari height
     height: theme.spacing(25),
     margin: "auto"
   },
