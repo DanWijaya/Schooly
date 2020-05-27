@@ -2,13 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { updateUserData } from "../../../actions/AuthActions"
-
 import { colorPalette } from "../../misc/color-palette/ColorPalette"
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
    Tab, Tabs, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -94,7 +92,6 @@ function TabIndex(index) {
 }
 
 function ProfileDataItemEdit(props) {
-
   return(
     <ListItem>
         <ListItemAvatar>
@@ -129,35 +126,31 @@ function ProfileDataEditorDialog(props) {
     console.log(simpan)
     if(simpan !== "simpan")
       setDataProfil(defaultUserData)
-
     setOpen(false);
-
   };
-
   //Tabs
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const defaultUserData = { 
+  const defaultUserData = {
     // Informasi Pribadi
-    nama: user.name, 
-    tanggal_lahir: user.tanggal_lahir, 
-    jenis_kelamin: user.jenis_kelamin, 
+    nama: user.name,
+    tanggal_lahir: user.tanggal_lahir,
+    jenis_kelamin: user.jenis_kelamin,
     sekolah: user.sekolah,
 
     //Kontak
-    email: user.email, 
-    no_telp: user.phone, 
-    no_telp_darurat: user.emergency_phone, 
+    email: user.email,
+    no_telp: user.phone,
+    no_telp_darurat: user.emergency_phone,
     alamat: user.address,
 
     //Karir
-    hobi_minat: user.hobi_minat, 
-    ket_non_teknis: user.ket_non_teknis, 
-    cita_cita: user.cita_cita, 
+    hobi_minat: user.hobi_minat,
+    ket_non_teknis: user.ket_non_teknis,
+    cita_cita: user.cita_cita,
     uni_impian: user.uni_impian
   }
 
@@ -172,21 +165,21 @@ function ProfileDataEditorDialog(props) {
     let userId = user.id;
 
     let userData = {
-      nama: dataProfil.nama, 
-      tanggal_lahir: dataProfil.tanggal_lahir, 
-      jenis_kelamin: dataProfil.jenis_kelamin, 
+      nama: dataProfil.nama,
+      tanggal_lahir: dataProfil.tanggal_lahir,
+      jenis_kelamin: dataProfil.jenis_kelamin,
       sekolah: dataProfil.sekolah,
 
       //Kontak
-      email: dataProfil.email, 
-      no_telp: dataProfil.no_telp, 
-      no_telp_darurat: dataProfil.no_telp_darurat, 
+      email: dataProfil.email,
+      no_telp: dataProfil.no_telp,
+      no_telp_darurat: dataProfil.no_telp_darurat,
       alamat: dataProfil.alamat,
 
       //Karir
-      hobi_minat: dataProfil.hobi_minat, 
-      ket_non_teknis: dataProfil.ket_non_teknis, 
-      cita_cita: dataProfil.cita_cita, 
+      hobi_minat: dataProfil.hobi_minat,
+      ket_non_teknis: dataProfil.ket_non_teknis,
+      cita_cita: dataProfil.cita_cita,
       uni_impian: dataProfil.uni_impian
     }
 
@@ -364,5 +357,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, {updateUserData} 
+  mapStateToProps, {updateUserData}
 )(ProfileDataEditorDialog);

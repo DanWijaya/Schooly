@@ -30,6 +30,12 @@ Page List Done:
 - Login (Masih nda bisa masukkin icon info buat error)
 - Register (Udah implement stepper, Rapiin multiselect sama select, Masih nda bisa masukkin icon info buat error, buat register page langsung direct ke Login)
 
+Error:
+- Masih bisa akses register dan landing pas udah login
+
+Fixed error:
+- Smallest picture ratio (Masih rumit solusinya)
+
 Page List On Work (Not completed/Not created yet):
 - All Class page (approx 5 pages)
 - All Task page (approx 5)
@@ -39,7 +45,7 @@ Page List On Work (Not completed/Not created yet):
 - Landing
 - Dashboard
 - Help/Terms and policies
-- Quiz (Optional Important) (Approx 5)
+- Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
 - Announcement (Optional) (Approx 3)
 
 Drafted:
