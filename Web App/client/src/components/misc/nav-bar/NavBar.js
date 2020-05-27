@@ -74,9 +74,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
-  lightListItemIcon: {
-
-  },
   navbarContainer: {
     display: "flex",
     justifyContent: "space-between",
@@ -216,7 +213,7 @@ function NavBar(props){
               <ListItemText primary="Profil Saya" />
             </StyledMenuItem>
             <StyledMenuItem onClick={onLogoutClick}>
-              <ListItemIcon className={classes.lightListItemIcon}>
+              <ListItemIcon>
                 <ExitToAppIcon fontSize="medium" />
               </ListItemIcon>
               <ListItemText primary="Keluar" />

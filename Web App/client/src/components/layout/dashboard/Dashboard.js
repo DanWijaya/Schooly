@@ -2,52 +2,121 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Avatar, Divider, Grid, Link, List, ListItem, Paper, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip"
+import { Avatar, Divider, Grid, IconButton, Link, List, ListItem, Paper, Typography } from "@material-ui/core";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "800px",
     textAlign: "center",
+  },
+  paperTitle: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "60px"
+  },
+  iconButton: {
+    "&:focus": {
+      backgroundColor: "transparent",
+    },
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+  },
+  notificationPaper: {
+    marginBottom: "50px",
+    padding: "20px",
+  },
+  workPaper: {
+    padding: "20px",
   },
 });
 
-function WorkItemList(props) {
+const useStyles = makeStyles((theme) => ({
+  notificationSenderAvatar: {
+    display: "flex",
+    justifyContent: "flex-start",
+    width: "7.5%"
+  },
+  notificationSender: {
+    display: "flex",
+    justifyContent: "flex-start",
+    width: "17.5%"
+  },
+  notificationTitle: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "65%",
+  },
+  notificationTime: {
+    display: "flex",
+    justifyContent: "flex-end",
+    color: "grey",
+    width: "10%"
+  },
+  workTitle: {
+    display: "flex",
+    justifyContent: "flex-start",
+    width: "60%",
+  },
+  workCategory: {
+    display: "flex",
+    justifyContent: "center",
+    width: "30%"
+  },
+  workDueTime: {
+    display: "flex",
+    justifyContent: "flex-end",
+    color: "grey",
+    width: "10%",
+  }
+}));
+
+function NotificationItemList(props) {
+  const classes = useStyles();
+
   return (
-    <ListItem style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-      <Typography style={{width: "60%"}}>
-        <Link href={props.work_link} style={{color: "#2196f3"}}>
-          {props.work_title}
+    <ListItem>
+      <div className={classes.notificationSenderAvatar}>
+        <Avatar>
+          {props.sender_avatar}
+        </Avatar>
+      </div>
+      <Typography className={classes.notificationSender}>
+        {props.sender_name}
+      </Typography>
+      <Typography className={classes.notificationTitle}>
+        <Link href={props.notification_link}>
+          {props.notification_title}
         </Link>
       </Typography>
-      <Typography style={{width: "30%"}}>
-        {props.work_subject}
-      </Typography>
-      <Typography variant="subtitle" style={{color: "grey", width: "10%"}}>
-        {props.work_duetime}
+      <Typography variant="subtitle" className={classes.notificationTime}>
+        {props.time}
       </Typography>
     </ListItem>
   )
 }
 
-function NotificationItemList(props) {
+function WorkItemList(props) {
+  const classes = useStyles();
+
   return (
-    <ListItem style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-      <Avatar>
-        {props.sender_avatar}
-      </Avatar>
-      <Typography style={{width: "15%"}}>
-        {props.sender_name}
-      </Typography>
-      <Typography style={{width: "60%"}}>
-        <Link href={props.notification_link} style={{color: "#2196f3"}}>
-          {props.notification_title}
+    <ListItem>
+      <Typography className={classes.workTitle}>
+        <Link href={props.work_link}>
+          {props.work_title}
         </Link>
       </Typography>
-      <Typography variant="subtitle" style={{color: "grey", width: "10%"}}>
-        {props.time}
+      <Typography className={classes.workCategory}>
+        {props.work_category}
+      </Typography>
+      <Typography variant="subtitle" className={classes.workDueTime}>
+        {props.work_duetime}
       </Typography>
     </ListItem>
   )
@@ -80,26 +149,33 @@ class Dashboard extends Component {
 
   render() {
     document.title="Dashboard | Schooly"
-    document.body.style.background = "white"
+    document.body.style.background = "#DCDCDC"
 
     const { classes } = this.props;
     const { user } = this.props.auth;
 
     return (
       <div className={classes.root}>
-        <Typography variant="h2">
+        <Typography variant="h3">
           <b>Selamat Datang {user.name.split(" ")[0]}</b>
         </Typography>
-        <Typography variant="h3" style={{marginBottom: "40px"}}>
+        <Typography variant="h4" style={{marginBottom: "40px"}}>
           Sekarang tanggal {this.state.time}
         </Typography>
-        <Typography variant="h4" style={{marginBottom: "60px"}}>
+        <Typography variant="h5" style={{marginBottom: "60px"}}>
           Apa yang ingin kamu lakukan hari ini?
         </Typography>
-        <Paper style={{marginBottom: "50px"}}>
-          <Typography variant="h5">
-            Notifikasi Terkini Anda
-          </Typography>
+        <Paper className={classes.notificationPaper}>
+          <div className={classes.paperTitle}>
+            <Typography variant="h5">
+              Notifikasi Terkini Anda
+            </Typography>
+            <LightTooltip title="Semua Notifikasi" placement="right">
+              <IconButton className={classes.iconButton}>
+                <ChevronRightIcon />
+              </IconButton>
+            </LightTooltip>
+          </div>
           <Divider />
           <List>
             <NotificationItemList
@@ -118,22 +194,29 @@ class Dashboard extends Component {
             />
           </List>
         </Paper>
-        <Paper>
-          <Typography variant="h5">
-            Pekerjaan Anda
-          </Typography>
+        <Paper className={classes.workPaper}>
+          <div className={classes.paperTitle}>
+            <Typography variant="h5">
+              Pekerjaan Anda
+            </Typography>
+            <LightTooltip title="Semua Pekerjaan" placement="right">
+              <IconButton className={classes.iconButton}>
+                <ChevronRightIcon />
+              </IconButton>
+            </LightTooltip>
+          </div>
           <Divider />
           <List>
             <WorkItemList
               work_title="Tugas 1"
               work_link="/test"
-              work_subject="Fisika"
+              work_category="Fisika"
               work_duetime="5 jam lagi"
             />
             <WorkItemList
               work_title="Tugas 2: hisap peler"
               work_link="/test"
-              work_subject="Biologi"
+              work_category="Biologi"
               work_duetime="1 jam lagi"
             />
           </List>
