@@ -2,11 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
+const speakeasy = require("speakeasy");
 
 const users = require("./routes/api/Users");
 const tasks = require("./routes/api/Tasks");
 const classes = require("./routes/api/Classes");
 const uploads = require('./routes/api/uploads');
+const otps = require('./routes/api/otps');
 
 const app = express();
 
@@ -45,15 +47,13 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 console.log("Check routes");
 
-// Below are testing to implement the Image upload
-
-
 // Routes
 
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
 app.use("/api/uploads", uploads.router)
+app.use("/api/otps", otps)
 
 // Always put this in the end
 const port = process.env.PORT || 5000;

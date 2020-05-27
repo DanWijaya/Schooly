@@ -90,7 +90,8 @@ class Dashboard extends Component {
         <Typography variant="h2">
           <b>Selamat Datang {user.name.split(" ")[0]}</b>
         </Typography>
-        <Typography variant="h3" style={{marginBottom: "40px"}}>
+        <br/>
+        <Typography variant="h5" style={{marginBottom: "40px"}}>
           Sekarang tanggal {this.state.time}
         </Typography>
         <Typography variant="h4" style={{marginBottom: "60px"}}>
