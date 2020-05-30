@@ -34,6 +34,7 @@ import ViewTask from "./components/objects/tasks/ViewTask";
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
 import NewViewClass from "./components/objects/classes/NewViewClass";
+import Tester from "./prototypes/Tester";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -89,7 +90,7 @@ class App extends Component {
           <ThemeProvider theme={colorPalette}>
             <Router>
               <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
-              <div style={{marginLeft: `${translateXValue}`}}>
+              <div style={{marginTop: "20px", marginLeft: `${translateXValue}`}}>
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/daftar" component={Register} />
                 <Route exact path="/masuk" component={Login} />
@@ -97,6 +98,7 @@ class App extends Component {
                 <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
                 <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
                 <Route exact path="/new-view-class" component={NewViewClass} /> {/*prototypetest*/}
+                <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />
