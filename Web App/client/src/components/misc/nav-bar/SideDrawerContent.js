@@ -12,7 +12,8 @@ import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import ClassIcon from "@material-ui/icons/Class";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 
-import {useStyles} from "./NavBar"
+import { useStyles } from "./NavBar"
+
 function DrawerItemList(props) {
     return <ListItem button component="a" {...props} />;
   }
@@ -21,14 +22,11 @@ function SideDrawerContent(props) {
     
     const classes = useStyles();
     const theme = useTheme();
-    const { mobileOpen } = props
-    const { handleDrawerToggle } = props
-    const { desktopOpen } = props;
-    const { window } = props;
+    const { mobileOpen , handleDrawerToggle ,
+      desktopOpen , window, userLoggedIn  } = props
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
-    const { userLoggedIn } = props
     if(userLoggedIn != undefined) {
         return (
         <div className={classes.drawerX}>
