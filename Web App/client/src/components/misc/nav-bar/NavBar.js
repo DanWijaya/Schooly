@@ -219,14 +219,14 @@ function NavBar(props){
               <ListItemText primary="Keluar" />
             </StyledMenuItem>
           </StyledMenu>
-          <LightTooltip title="Notifications">
+          <LightTooltip title="Notifikasi">
             <IconButton color="inherit" href="/notifikasi">
               <Badge badgeContent={11} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Help and Support">
+          <LightTooltip title="Bantuan">
             <IconButton color="inherit" href="/support">
               <HelpIcon />
             </IconButton>
@@ -253,31 +253,31 @@ function NavBar(props){
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
-              <ListItemText primary="Dashboard" />
+              <ListItemText primary="Beranda" />
           </DrawerItemList>
           <DrawerItemList href="/viewclass">
               <ListItemIcon>
                 <ClassIcon />
               </ListItemIcon>
-              <ListItemText primary="Classes" />
+              <ListItemText primary="Kelas" />
           </DrawerItemList>
           <DrawerItemList href="/announcements">
               <ListItemIcon>
                 <AnnouncementIcon />
               </ListItemIcon>
-              <ListItemText primary="Announcements" />
+              <ListItemText primary="Pengumuman" />
           </DrawerItemList>
           <DrawerItemList href="/viewtask">
               <ListItemIcon>
                 <AssignmentIcon />
               </ListItemIcon>
-              <ListItemText primary="Tasks" />
+              <ListItemText primary="Tugas" />
           </DrawerItemList>
           <DrawerItemList href="/assessments" disabled>
               <ListItemIcon>
                 <AssessmentIcon />
               </ListItemIcon>
-              <ListItemText primary="Assessments" />
+              <ListItemText primary="Kuis dan Ujian" />
           </DrawerItemList>
         </List>
         <Divider />
@@ -286,7 +286,7 @@ function NavBar(props){
               <ListItemIcon>
                 <AboutIcon />
               </ListItemIcon>
-              <ListItemText primary="About Schooly" />
+              <ListItemText primary="Tentang Schooly" />
           </DrawerItemList>
         </List>
       </Drawer>

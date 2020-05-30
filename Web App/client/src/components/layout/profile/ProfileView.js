@@ -3,22 +3,20 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateAvatar } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
-import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Typography, Snackbar  } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { Avatar, Grid, List, ListItem, ListItemAvatar, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
 import EmailIcon from "@material-ui/icons/Email";
 import GamesIcon from "@material-ui/icons/Games";
 import HomeIcon from "@material-ui/icons/Home";
-import LockIcon from "@material-ui/icons/Lock";
 import PersonIcon from "@material-ui/icons/Person";
 import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import WorkIcon from "@material-ui/icons/Work";
-import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,17 +36,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: "17.5px",
   },
 }));
-
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    right: theme.spacing(2),
-    top: theme.spacing(16),
-  },
-}))(Badge);
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 function ProfileDataItem(props) {
   return(
@@ -121,7 +108,7 @@ function ProfileView(props) {
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
-          {user.avatar && user.avatar != undefined ?
+          {user.avatar && user.avatar !== undefined ?
             <Avatar
               src={`/api/uploads/image/${user.avatar}`}
               className={classes.avatar}

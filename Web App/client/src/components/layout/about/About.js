@@ -4,9 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    flex: "1",
+    justifyContent: "center",
     textAlign: "center",
     maxWidth: "1000px"
   }
@@ -16,7 +15,8 @@ function About() {
   const classes = useStyles();
 
   return(
-    <div className={classes.root}>
+    <Grid container direction="column" alignItems="center" justify="center">
+      <Grid item>
       <Typography variant="h4">
         Apa itu Schooly?
       </Typography>
@@ -24,7 +24,9 @@ function About() {
         Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
         Di Schooly, Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien.
       </Typography>
+      </Grid>
 
+      <Grid item>
       <Typography variant="h4" gutterBottom>
         Visi dan Misi Schooly
       </Typography>
@@ -34,7 +36,9 @@ function About() {
       <Typography variant="body1">
         Misi kami adalah
       </Typography>
+      </Grid>
 
+      <Grid item>
       <Typography>
         Apa saja fitur-fitur Schooly?
       </Typography>
@@ -64,7 +68,9 @@ function About() {
           </Paper>
         </Grid>
       </Grid>
+      </Grid>
 
+      <Grid item>
       <Typography>
         Fitur-fitur yang akan datang:
       </Typography>
@@ -94,7 +100,8 @@ function About() {
           </Paper>
         </Grid>
       </Grid>
-    </div>
+      </Grid>
+    </Grid>
   )
 };
 

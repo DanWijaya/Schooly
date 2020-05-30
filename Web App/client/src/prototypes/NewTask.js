@@ -6,7 +6,6 @@ import { Avatar, Button, Divider, Grid, List, ListItem, ListItemAvatar, ListItem
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import AddIcon from "@material-ui/icons/Add";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from "@material-ui/icons/Publish";
@@ -41,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
 const listWorkFile = (tasks=null) => {
   // tasks itu nanti lists, bakal di pass.
   var tasksContents = [];
@@ -68,10 +66,10 @@ function WorkFile(props) {
       <ListItemAvatar>
         <Avatar src={props.file_type_icon} className={classes.profilePicture} />
       </ListItemAvatar>
-      <ListItemText
-        primary={props.file_name}
-        secondary={props.file_type}
-      />
+        <ListItemText
+          primary={props.file_name}
+          secondary={props.file_type}
+        />
     </ListItem>
   )
 }
@@ -270,7 +268,6 @@ function NewTask(props) {
           >
             <Grid item>
               <div className={classes.workResultSection}>
-                <AssignmentIcon style={{marginRight: "10px"}}/>
                 <Typography variant="h5">
                   Hasil Pekerjaan
                 </Typography>

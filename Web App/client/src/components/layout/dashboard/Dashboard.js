@@ -2,21 +2,13 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import morningPicture from "./morning.jpg";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Divider, Grid, IconButton, Link, List, ListItem, Paper, Typography } from "@material-ui/core";
+import { Avatar, Divider, IconButton, Link, List, ListItem, Paper, Typography } from "@material-ui/core";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const styles = (theme) => ({
-  root: {
-    backgroundImage: `url(${morningPicture})`,
-    height: "100%",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-  },
   mainContainer: {
     margin: "auto",
     maxWidth: "800px",
@@ -157,82 +149,79 @@ class Dashboard extends Component {
 
   render() {
     document.title="Dashboard | Schooly"
-    document.body.style.background = "#DCDCDC"
 
     const { classes } = this.props;
     const { user } = this.props.auth;
 
     return (
-      <div className={classes.root}>
-        <div className={classes.mainContainer}>
-          <Typography variant="h3">
-            <b>Selamat Datang {user.name.split(" ")[0]}</b>
-          </Typography>
-          <Typography variant="h4" style={{marginBottom: "40px"}}>
-            Sekarang tanggal {this.state.time}
-          </Typography>
-          <Typography variant="h5" style={{marginBottom: "60px"}}>
-            Apa yang ingin kamu lakukan hari ini?
-          </Typography>
-          <Paper className={classes.notificationPaper}>
-            <div className={classes.paperTitle}>
-              <Typography variant="h5">
-                Notifikasi Terkini Anda
-              </Typography>
-              <LightTooltip title="Semua Notifikasi" placement="right">
-                <IconButton className={classes.iconButton}>
-                  <ChevronRightIcon />
-                </IconButton>
-              </LightTooltip>
+      <div className={classes.mainContainer}>
+        <Typography variant="h3">
+          <b>Selamat Datang {user.name.split(" ")[0]}</b>
+        </Typography>
+        <Typography variant="h4" style={{marginBottom: "40px"}}>
+          Sekarang tanggal {this.state.time}
+        </Typography>
+        <Typography variant="h5" style={{marginBottom: "60px"}}>
+          Apa yang ingin kamu lakukan hari ini?
+        </Typography>
+        <Paper className={classes.notificationPaper}>
+          <div className={classes.paperTitle}>
+            <Typography variant="h5">
+              Notifikasi Terkini Anda
+            </Typography>
+            <LightTooltip title="Semua Notifikasi" placement="right">
+              <IconButton className={classes.iconButton}>
+                <ChevronRightIcon />
+              </IconButton>
+            </LightTooltip>
+          </div>
+          <Divider />
+          <List>
+            <NotificationItemList
+              sender_icon={<AccountCircleIcon />}
+              sender_name="Pak Peler"
+              notification_title="Ujian Kimia Besok"
+              notification_link="/test"
+              time={"20m ago"}
+            />
+            <NotificationItemList
+              sender_icon={<AccountCircleIcon />}
+              sender_name="My Nigga"
+              notification_title="Ujian Biologi Lusa"
+              notification_link="/test"
+              time={"20m ago"}
+            />
+          </List>
+        </Paper>
+        <Paper className={classes.workPaper}>
+          <div className={classes.paperTitle}>
+            <Typography variant="h5">
+              Pekerjaan Anda
+            </Typography>
+            <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <LightTooltip title="Semua Pekerjaan" placement="right">
+              <IconButton className={classes.iconButton}>
+                <ChevronRightIcon />
+              </IconButton>
+            </LightTooltip>
             </div>
-            <Divider />
-            <List>
-              <NotificationItemList
-                sender_icon={<AccountCircleIcon />}
-                sender_name="Pak Peler"
-                notification_title="Ujian Kimia Besok"
-                notification_link="/test"
-                time={"20m ago"}
-              />
-              <NotificationItemList
-                sender_icon={<AccountCircleIcon />}
-                sender_name="My Nigga"
-                notification_title="Ujian Biologi Lusa"
-                notification_link="/test"
-                time={"20m ago"}
-              />
-            </List>
-          </Paper>
-          <Paper className={classes.workPaper}>
-            <div className={classes.paperTitle}>
-              <Typography variant="h5">
-                Pekerjaan Anda
-              </Typography>
-              <div style={{display: "flex", justifyContent: "flex-end"}}>
-              <LightTooltip title="Semua Pekerjaan" placement="right">
-                <IconButton className={classes.iconButton}>
-                  <ChevronRightIcon />
-                </IconButton>
-              </LightTooltip>
-              </div>
-            </div>
-            <Divider />
-            <List>
-              <WorkItemList
-                work_title="Tugas 1"
-                work_link="/test"
-                work_category="Fisika"
-                work_duetime="5 jam lagi"
-              />
-              <WorkItemList
-                work_title="Tugas 2: hisap peler"
-                work_link="/test"
-                work_category="Biologi"
-                work_duetime="1 jam lagi"
-              />
-            </List>
-          </Paper>
-        </div>
+          </div>
+          <Divider />
+          <List>
+            <WorkItemList
+              work_title="Tugas 1"
+              work_link="/test"
+              work_category="Fisika"
+              work_duetime="5 jam lagi"
+            />
+            <WorkItemList
+              work_title="Tugas 2: hisap peler"
+              work_link="/test"
+              work_category="Biologi"
+              work_duetime="1 jam lagi"
+            />
+          </List>
+        </Paper>
       </div>
     )
   };

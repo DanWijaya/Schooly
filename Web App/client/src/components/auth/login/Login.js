@@ -6,9 +6,8 @@ import { connect } from "react-redux";
 import { loginUser } from "../../../actions/AuthActions";
 import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Divider, Grid, InputAdornment, Link, Paper, Typography } from "@material-ui/core";
+import { Button, Divider, Grid, Link, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import InfoIcon from "@material-ui/icons/Info";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 

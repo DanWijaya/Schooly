@@ -26,12 +26,14 @@ import NavBar from "./components/misc/nav-bar/NavBar";
 import CreateClass from "./components/objects/classes/CreateClass"
 import EditClass from "./components/objects/classes/EditClass";
 import ViewClass from "./components/objects/classes/ViewClass";
+//Task
 import CreateTask from "./components/objects/tasks/CreateTask";
 import EditTask from "./components/objects/tasks/EditTask";
 import ViewTask from "./components/objects/tasks/ViewTask";
 //Prototypes
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
+import NewViewClass from "./components/objects/classes/NewViewClass";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -52,8 +54,8 @@ if (localStorage.jwtToken) {
     window.location.href = "./masuk";
   }
 }
-class App extends Component {
 
+class App extends Component {
   state = {
     sideDrawerOpen: false,
     loggedIn: false,
@@ -94,6 +96,7 @@ class App extends Component {
                 <Route exact path="/tentang-schooly" component={About} />
                 <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
                 <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
+                <Route exact path="/new-view-class" component={NewViewClass} /> {/*prototypetest*/}
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />

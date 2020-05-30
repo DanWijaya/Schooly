@@ -1,8 +1,7 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { Avatar, Button, Dialog, Grid, IconButton, Typography } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloseIcon from "@material-ui/icons/Close";
@@ -66,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
 
 function ProfilePictureEditorDialog(props) {
   const classes = useStyles();
-  const theme = useTheme();
 
   //Function Hooks and Ref Declaration
   const uploadedImage = React.useRef(null);
@@ -83,8 +81,6 @@ function ProfilePictureEditorDialog(props) {
     setOpenDialog(false);
     setProfileImg(null)
   };
-
-  
 
   const {user} = props;
   const {updateAvatar} = props;
@@ -114,7 +110,7 @@ function ProfilePictureEditorDialog(props) {
     let userId = user.id;
 
     updateAvatar(userData, userId, formData)
-    props.handleOpenAlert() 
+    props.handleOpenAlert()
 
     handleCloseDialog()
   }
@@ -122,7 +118,7 @@ function ProfilePictureEditorDialog(props) {
   function onImgLoad({target:img}) {
     setAvatarDimensions({ height:img.offsetHeight, width:img.offsetWidth})
     }
-  
+
   console.log("width is smaller", avatarDimensions.width < avatarDimensions.height)
   console.log("height is smaller", avatarDimensions.height < avatarDimensions.width)
 
@@ -139,6 +135,7 @@ function ProfilePictureEditorDialog(props) {
       return (
       <Avatar className={classes.avatar}>
         <img
+          alt="profile picture"
           onLoad={onImgLoad}
           src={`/api/uploads/image/${user.avatar}`}
           ref={uploadedImage}
@@ -149,6 +146,7 @@ function ProfilePictureEditorDialog(props) {
       return (
       <Avatar className={classes.avatar}>
         <img
+          alt="default profile picture"
           onLoad={onImgLoad}
           ref={uploadedImage}
           className={avatarImgClass}
@@ -236,7 +234,7 @@ function ProfilePictureEditorDialog(props) {
                   </Button>
                 </Grid>
                 <Grid item>
-                  {profileImg == null ? 
+                  {profileImg == null ?
                   <Button
                   disabled
                     type="submit"
@@ -249,7 +247,7 @@ function ProfilePictureEditorDialog(props) {
                     }}
                   >
                     Simpan
-                  </Button> : 
+                  </Button> :
                   <Button
                     type="submit"
                     startIcon={<CloudUploadIcon />}

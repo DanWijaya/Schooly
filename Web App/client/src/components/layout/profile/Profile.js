@@ -7,6 +7,7 @@ import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
 import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Snackbar, Typography } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import BookIcon from "@material-ui/icons/Book";
@@ -14,14 +15,12 @@ import CakeIcon from "@material-ui/icons/Cake";
 import EmailIcon from "@material-ui/icons/Email";
 import GamesIcon from "@material-ui/icons/Games";
 import HomeIcon from "@material-ui/icons/Home";
-import LockIcon from "@material-ui/icons/Lock";
 import PersonIcon from "@material-ui/icons/Person";
 import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import WorkIcon from "@material-ui/icons/Work";
-import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,7 +160,7 @@ function Profile(props) {
 
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
-          {user.avatar && user.avatar != undefined ?
+          {user.avatar && user.avatar !== undefined ?
             <StyledBadge
               badgeContent={
                 <ProfilePictureEditorDialog
@@ -208,7 +207,7 @@ function Profile(props) {
                   <h4>Informasi Pribadi</h4>
                 </Typography>
                 <Typography variant="subtitle1" gutterBottom>
-                  Beberapa data profil dapat dilihat oleh orang lain menggunakan layanan Schooly.
+                  Beberapa informasi profil dapat dilihat oleh orang lain yang juga menggunakan layanan Schooly.
                 </Typography>
                 <List>
                   <ProfileDataItem
