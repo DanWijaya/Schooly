@@ -19,8 +19,9 @@ import ClassIcon from "@material-ui/icons/Class";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
-import MenuIcon from "@material-ui/icons/Menu"
+import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export const drawerWidth = 220;
 
@@ -153,6 +154,7 @@ function NavBar(props){
   const { window } = props;
   const container = window !== undefined ? () => window().document.body : undefined;
 
+  
   const history = useHistory()
 
   //Mobile View
@@ -160,6 +162,7 @@ function NavBar(props){
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const mobileView = useMediaQuery('(max-width:600px)');
 
   //Profile Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -196,7 +199,10 @@ function NavBar(props){
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
         <DrawerMenuButton
-          mobileOpen={mobileOpen}
+          mobileView={mobileView}
+          handleDrawerOpen={handleDrawerOpen}
+          handleDrawerToggle={handleDrawerToggle}
+          iconButtonClass = {classes.iconButton}
         />
       </Grid>
     )
