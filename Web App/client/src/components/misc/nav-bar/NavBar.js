@@ -1,25 +1,24 @@
 import React from "react"
 import { connect } from "react-redux";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 import clsx from "clsx";
 import { logoutUser } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
-import DrawerMenuButton from "./DrawerMenuButton";
-import SideDrawerContent from "./SideDrawerContent";
-import PropTypes from "prop-types";
-import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, Hidden, IconButton, Link,
-   List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
+import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
+import NavBarDrawerContent from "./NavBarDrawerContent";
+import { AppBar, Avatar, Badge, Button, CssBaseline, Grid, IconButton, Link,
+   ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, useMediaQuery } from "@material-ui/core";
 import {makeStyles, withStyles } from "@material-ui/core/styles";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import HelpIcon from '@material-ui/icons/Help';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import HelpIcon from "@material-ui/icons/Help";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export const drawerWidth = 220;
 
-export const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: "1",
   },
@@ -38,38 +37,6 @@ export const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-  },
-  drawerX: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: "nowrap",
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: "hidden",
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
-    },
   },
   iconButton: {
     "&:focus": {
@@ -105,19 +72,19 @@ export const useStyles = makeStyles((theme) => ({
 
 const StyledMenu = withStyles({
   paper: {
-    border: '1px solid #d3d4d5',
+    border: "1px solid #d3d4d5",
   },
 })((props) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
     anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
+      vertical: "bottom",
+      horizontal: "center",
     }}
     transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
+      vertical: "top",
+      horizontal: "center",
     }}
     {...props}
   />
@@ -127,7 +94,7 @@ const StyledMenuItem = withStyles({
   root: {
     "&:hover": {
       backgroundColor: "#2196f3",
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
     },
   },
@@ -138,9 +105,9 @@ const StyledMenuItem = withStyles({
 
 function NavBar(props){
   const classes = useStyles();
-  const { user } = props.auth;
   const { window } = props;
-  
+
+  const { user } = props.auth;
   const history = useHistory()
 
   //Drawer at Mobile View Hooks
@@ -148,8 +115,7 @@ function NavBar(props){
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const mobileView = useMediaQuery('(max-width:600px)');
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const mobileView = useMediaQuery("(max-width:600px)");
 
   //Drawer at Desktop View Hooks
   const [desktopOpen, setOpen] = React.useState(false);
@@ -169,13 +135,11 @@ function NavBar(props){
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const onLogoutClick = (e) => {
     e.preventDefault();
     handleClose()
     props.logoutUser(history);
   }
-
 
   //NavBar Contents
   let leftSideNavBarContents;
@@ -185,7 +149,7 @@ function NavBar(props){
   if(user.name !== undefined) {
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
-        <DrawerMenuButton
+        <NavBarDrawerMenuButton
           mobileView={mobileView}
           handleDrawerOpen={handleDrawerOpen}
           handleDrawerToggle={handleDrawerToggle}
@@ -205,7 +169,7 @@ function NavBar(props){
     rightSideNavBarContents = (
       <Grid container className={classes.navbarContainedRightItems}>
           <LightTooltip title={user.name}>
-            <IconButton disableRipple onClick={handleClick} className={classes.iconButton}>
+            <IconButton onClick={handleClick} className={classes.iconButton}>
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
           </LightTooltip>
@@ -240,10 +204,9 @@ function NavBar(props){
               <HelpIcon />
             </IconButton>
           </LightTooltip>
-        </Grid>
+      </Grid>
     )
-
-    }
+  }
   else {
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
@@ -292,14 +255,6 @@ function NavBar(props){
     )
   }
 
-  var navBarContents = (
-    <Toolbar className={classes.navbarContainer}>
-      {leftSideNavBarContents}
-      {middleNavBarContents}
-      {rightSideNavBarContents}
-    </Toolbar>
-  )
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -309,14 +264,18 @@ function NavBar(props){
           [classes.appBarShift]: desktopOpen,
         })}
       >
-         {navBarContents}
+        <Toolbar className={classes.navbarContainer}>
+          {leftSideNavBarContents}
+          {middleNavBarContents}
+          {rightSideNavBarContents}
+        </Toolbar>
       </AppBar>
       <Toolbar />
-      <SideDrawerContent 
-      userLoggedIn={user.name}
-      mobileOpen={mobileOpen}
-      handleDrawerToggle={handleDrawerToggle}
-      desktopOpen={desktopOpen}
+      <NavBarDrawerContent
+        userLoggedIn={user.name}
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+        desktopOpen={desktopOpen}
       />
     </div>
   )
