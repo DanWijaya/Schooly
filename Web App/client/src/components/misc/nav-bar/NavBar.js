@@ -6,26 +6,20 @@ import { logoutUser } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import DrawerMenuButton from "./DrawerMenuButton";
+import SideDrawerContent from "./SideDrawerContent";
 import PropTypes from "prop-types";
 import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, Hidden, IconButton, Link,
    List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
-import {makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import AboutIcon from "@material-ui/icons/Info";
+import {makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
-import ClassIcon from "@material-ui/icons/Class";
-import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
-import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export const drawerWidth = 220;
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: "1",
   },
@@ -142,27 +136,30 @@ const StyledMenuItem = withStyles({
   <MenuItem button component="a" {...props}/>
 ));
 
-function DrawerItemList(props) {
-  return <ListItem button component="a" {...props} />;
-}
-
 function NavBar(props){
   const classes = useStyles();
-   const theme = useTheme();
-
   const { user } = props.auth;
   const { window } = props;
-  const container = window !== undefined ? () => window().document.body : undefined;
-
   
   const history = useHistory()
 
-  //Mobile View
+  //Drawer at Mobile View Hooks
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   const mobileView = useMediaQuery('(max-width:600px)');
+  const container = window !== undefined ? () => window().document.body : undefined;
+
+  //Drawer at Desktop View Hooks
+  const [desktopOpen, setOpen] = React.useState(false);
+  const handleDrawerOpen = () => {
+    props.callbackFromParent(!desktopOpen)
+    if(!desktopOpen)
+      setOpen(true);
+    else
+      setOpen(false)
+  };
 
   //Profile Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -179,21 +176,11 @@ function NavBar(props){
     props.logoutUser(history);
   }
 
-  //Drawer
-  const [open, setOpen] = React.useState(false);
-  const handleDrawerOpen = () => {
-    props.callbackFromParent(!open)
-    if(!open)
-      setOpen(true);
-    else
-      setOpen(false)
-  };
 
   //NavBar Contents
   let leftSideNavBarContents;
   let middleNavBarContents;
   let rightSideNavBarContents;
-  let loggedInSideDrawerContents;
 
   if(user.name !== undefined) {
     leftSideNavBarContents = (
@@ -255,126 +242,7 @@ function NavBar(props){
           </LightTooltip>
         </Grid>
     )
-    loggedInSideDrawerContents = (
-      <div className={classes.drawerX}>
-      <Hidden smUp implementation="css">
-        <Drawer
-          container={container}
-          variant="temporary"
-          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-        >
-        <Toolbar />
-        <List>
-          <DrawerItemList href="/dashboard">
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Beranda" />
-          </DrawerItemList>
-          <DrawerItemList href="/viewclass">
-              <ListItemIcon>
-                <ClassIcon />
-              </ListItemIcon>
-              <ListItemText primary="Kelas" />
-          </DrawerItemList>
-          <DrawerItemList href="/announcements">
-              <ListItemIcon>
-                <AnnouncementIcon />
-              </ListItemIcon>
-              <ListItemText primary="Pengumuman" />
-          </DrawerItemList>
-          <DrawerItemList href="/viewtask">
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Tugas" />
-          </DrawerItemList>
-          <DrawerItemList href="/assessments" disabled>
-              <ListItemIcon>
-                <AssessmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Kuis dan Ujian" />
-          </DrawerItemList>
-        </List>
-        <Divider />
-        <List>
-          <DrawerItemList href="/tentang-schooly">
-              <ListItemIcon>
-                <AboutIcon />
-              </ListItemIcon>
-              <ListItemText primary="Tentang Schooly" />
-          </DrawerItemList>
-        </List>
-        </Drawer>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Drawer
-          variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          })}
-          classes={{
-            paper: clsx({
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open,
-            }),
-          }}
-        >
-          <Toolbar />
-          <List>
-            <DrawerItemList href="/dashboard">
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Beranda" />
-            </DrawerItemList>
-            <DrawerItemList href="/viewclass">
-                <ListItemIcon>
-                  <ClassIcon />
-                </ListItemIcon>
-                <ListItemText primary="Kelas" />
-            </DrawerItemList>
-            <DrawerItemList href="/announcements">
-                <ListItemIcon>
-                  <AnnouncementIcon />
-                </ListItemIcon>
-                <ListItemText primary="Pengumuman" />
-            </DrawerItemList>
-            <DrawerItemList href="/viewtask">
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Tugas" />
-            </DrawerItemList>
-            <DrawerItemList href="/assessments" disabled>
-                <ListItemIcon>
-                  <AssessmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Kuis dan Ujian" />
-            </DrawerItemList>
-          </List>
-          <Divider />
-          <List>
-            <DrawerItemList href="/tentang-schooly">
-                <ListItemIcon>
-                  <AboutIcon />
-                </ListItemIcon>
-                <ListItemText primary="Tentang Schooly" />
-            </DrawerItemList>
-          </List>
-        </Drawer>
-      </Hidden>
-      </div>
-      )
+
     }
   else {
     leftSideNavBarContents = (
@@ -422,7 +290,6 @@ function NavBar(props){
           </Button>
       </Grid>
     )
-    loggedInSideDrawerContents = <div style={{display: 'none'}}></div>
   }
 
   var navBarContents = (
@@ -439,13 +306,18 @@ function NavBar(props){
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
+          [classes.appBarShift]: desktopOpen,
         })}
       >
          {navBarContents}
       </AppBar>
       <Toolbar />
-      {loggedInSideDrawerContents}
+      <SideDrawerContent 
+      userLoggedIn={user.name}
+      mobileOpen={mobileOpen}
+      handleDrawerToggle={handleDrawerToggle}
+      desktopOpen={desktopOpen}
+      />
     </div>
   )
 }
