@@ -97,7 +97,7 @@ function NavBarDrawerContent(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { desktopOpen, mobileOpen, handleDrawerToggle, userLoggedIn, window } = props
+  const { desktopOpen, mobileOpen, handleDrawerMobile, userLoggedIn, window } = props
   const container = window !== undefined ? () => window().document.body : undefined;
 
   if(userLoggedIn !== undefined) {
@@ -109,7 +109,7 @@ function NavBarDrawerContent(props) {
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={mobileOpen}
-            onClose={handleDrawerToggle}
+            onClose={handleDrawerMobile}
             classes={{
               paper: classes.drawerPaper,
             }}
@@ -117,7 +117,7 @@ function NavBarDrawerContent(props) {
               keepMounted: true,
             }}
           >
-            <Toolbar />
+            {/* <Toolbar /> */}
             <DrawerContent />
           </Drawer>
         </Hidden>

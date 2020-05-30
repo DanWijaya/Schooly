@@ -3,18 +3,16 @@ import { IconButton } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
 function NavBarDrawerMenuButton(props){
-  const { mobileView } = props;
-  const { handleDrawerOpen } = props;
-  const { handleDrawerToggle } = props;
-  const { iconButtonClass } = props;
+  const { mobileView , handleDrawerDesktop, 
+    handleDrawerMobile, iconButtonClass } = props;
 
   if(mobileView){
     return(
       <IconButton
-        color="inherit"
         edge="start"
+        color="inherit"
         className={iconButtonClass}
-        onClick={handleDrawerToggle}
+        onClick={handleDrawerMobile}
       >
         <MenuIcon />
       </IconButton>
@@ -23,10 +21,10 @@ function NavBarDrawerMenuButton(props){
   else{
     return(
       <IconButton
-        color="inherit"
         edge="start"
+        color="inherit"
         className={iconButtonClass}
-        onClick={handleDrawerOpen}
+        onClick={handleDrawerDesktop}
       >
         <MenuIcon />
       </IconButton>

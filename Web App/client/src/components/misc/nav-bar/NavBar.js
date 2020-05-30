@@ -112,14 +112,14 @@ function NavBar(props){
 
   //Drawer at Mobile View Hooks
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleDrawerToggle = () => {
+  const handleDrawerMobile = () => {
     setMobileOpen(!mobileOpen);
   };
   const mobileView = useMediaQuery("(max-width:600px)");
 
   //Drawer at Desktop View Hooks
   const [desktopOpen, setOpen] = React.useState(false);
-  const handleDrawerOpen = () => {
+  const handleDrawerDesktop = () => {
     props.callbackFromParent(!desktopOpen)
     if(!desktopOpen)
       setOpen(true);
@@ -151,8 +151,8 @@ function NavBar(props){
       <Grid className={classes.navbarContainedLeftItems}>
         <NavBarDrawerMenuButton
           mobileView={mobileView}
-          handleDrawerOpen={handleDrawerOpen}
-          handleDrawerToggle={handleDrawerToggle}
+          handleDrawerDesktop={handleDrawerDesktop}
+          handleDrawerMobile={handleDrawerMobile}
           iconButtonClass = {classes.iconButton}
         />
       </Grid>
@@ -274,7 +274,7 @@ function NavBar(props){
       <NavBarDrawerContent
         userLoggedIn={user.name}
         mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
+        handleDrawerMobile={handleDrawerMobile}
         desktopOpen={desktopOpen}
       />
     </div>
