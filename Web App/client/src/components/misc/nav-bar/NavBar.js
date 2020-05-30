@@ -10,7 +10,7 @@ import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
 import NavBarDrawerContent from "./NavBarDrawerContent";
 import { AppBar, Avatar, Badge, Button, CssBaseline, Grid, IconButton, Link,
    ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, useMediaQuery } from "@material-ui/core";
-import {makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HelpIcon from "@material-ui/icons/Help";
@@ -46,6 +46,14 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
+  profileMenuItem: {
+    "&:hover": {
+      backgroundColor: "#2196f3",
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
+    },
+  },
   navbarContainer: {
     display: "flex",
     justifyContent: "space-between",
@@ -69,39 +77,6 @@ const useStyles = makeStyles((theme) => ({
     height: "50px",
   },
 }));
-
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5",
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles({
-  root: {
-    "&:hover": {
-      backgroundColor: "#2196f3",
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-    },
-  },
-},
-})((props) => (
-  <MenuItem button component="a" {...props}/>
-));
 
 function NavBar(props){
   const classes = useStyles();
@@ -173,25 +148,34 @@ function NavBar(props){
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </IconButton>
           </LightTooltip>
-          <StyledMenu
+          <Menu
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
           >
-            <StyledMenuItem href="/profil">
+            <MenuItem className={classes.profileMenuItem} button component="a" href="/profil">
               <ListItemIcon >
                 <AccountCircleIcon fontSize="medium"/>
               </ListItemIcon>
               <ListItemText primary="Profil Saya" />
-            </StyledMenuItem>
-            <StyledMenuItem onClick={onLogoutClick}>
+            </MenuItem>
+            <MenuItem className={classes.profileMenuItem} onClick={onLogoutClick}>
               <ListItemIcon>
                 <ExitToAppIcon fontSize="medium" />
               </ListItemIcon>
               <ListItemText primary="Keluar" />
-            </StyledMenuItem>
-          </StyledMenu>
+            </MenuItem>
+          </Menu>
           <LightTooltip title="Notifikasi">
             <IconButton color="inherit" href="/notifikasi">
               <Badge badgeContent={11} color="secondary">
