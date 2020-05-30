@@ -6,9 +6,9 @@ import { logoutUser } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import PropTypes from "prop-types";
-import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Link,
+import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, Hidden, IconButton, Link,
    List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
-import {makeStyles, withStyles } from "@material-ui/core/styles";
+import {makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: "nowrap",
+  },
+  drawerPaper: {
+    width: drawerWidth,
   },
   drawerOpen: {
     width: drawerWidth,
@@ -136,9 +139,20 @@ function DrawerItemList(props) {
 }
 
 function NavBar(props){
-  var classes = useStyles();
+  const classes = useStyles();
+   const theme = useTheme();
+
   const { user } = props.auth;
+  const { window } = props;
+  const container = window !== undefined ? () => window().document.body : undefined;
+
   const history = useHistory()
+
+  //Mobile View
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   //Profile Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -234,19 +248,21 @@ function NavBar(props){
         </Grid>
     )
     loggedInSideDrawerContents = (
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          }),
-        }}
-      >
+      <div>
+      <Hidden smUp implementation="css">
+        <Drawer
+          container={container}
+          variant="temporary"
+          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
         <Toolbar />
         <List>
           <DrawerItemList href="/dashboard">
@@ -289,7 +305,67 @@ function NavBar(props){
               <ListItemText primary="Tentang Schooly" />
           </DrawerItemList>
         </List>
-      </Drawer>
+        </Drawer>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+        >
+          <Toolbar />
+          <List>
+            <DrawerItemList href="/dashboard">
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Beranda" />
+            </DrawerItemList>
+            <DrawerItemList href="/viewclass">
+                <ListItemIcon>
+                  <ClassIcon />
+                </ListItemIcon>
+                <ListItemText primary="Kelas" />
+            </DrawerItemList>
+            <DrawerItemList href="/announcements">
+                <ListItemIcon>
+                  <AnnouncementIcon />
+                </ListItemIcon>
+                <ListItemText primary="Pengumuman" />
+            </DrawerItemList>
+            <DrawerItemList href="/viewtask">
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Tugas" />
+            </DrawerItemList>
+            <DrawerItemList href="/assessments" disabled>
+                <ListItemIcon>
+                  <AssessmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Kuis dan Ujian" />
+            </DrawerItemList>
+          </List>
+          <Divider />
+          <List>
+            <DrawerItemList href="/tentang-schooly">
+                <ListItemIcon>
+                  <AboutIcon />
+                </ListItemIcon>
+                <ListItemText primary="Tentang Schooly" />
+            </DrawerItemList>
+          </List>
+        </Drawer>
+      </Hidden>
+      </div>
       )
     }
   else {
