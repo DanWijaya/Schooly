@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { logoutUser } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
+import DrawerMenuButton from "./DrawerMenuButton";
 import PropTypes from "prop-types";
 import { AppBar, Avatar, Badge, Button, CssBaseline, Divider, Drawer, Grid, Hidden, IconButton, Link,
    List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar } from "@material-ui/core";
@@ -42,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  },
+  drawerX: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
   },
   drawer: {
     width: drawerWidth,
@@ -188,14 +195,9 @@ function NavBar(props){
   if(user.name !== undefined) {
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
-        <IconButton
-          color="inherit"
-          edge="start"
-          className={classes.iconButton}
-          onClick={handleDrawerOpen}
-        >
-          <MenuIcon />
-        </IconButton>
+        <DrawerMenuButton
+          mobileOpen={mobileOpen}
+        />
       </Grid>
     )
     middleNavBarContents = (
@@ -248,7 +250,7 @@ function NavBar(props){
         </Grid>
     )
     loggedInSideDrawerContents = (
-      <div>
+      <div className={classes.drawerX}>
       <Hidden smUp implementation="css">
         <Drawer
           container={container}
