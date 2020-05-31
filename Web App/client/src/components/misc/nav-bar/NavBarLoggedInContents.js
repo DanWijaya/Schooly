@@ -73,37 +73,6 @@ function NavBarLoggedInContents(props) {
     logoutUser(history);
   };
 
-  const renderProfileMenu = (
-      <Menu
-      anchorEl={profileAnchorEl}
-      keepMounted
-      open={Boolean(profileAnchorEl)}
-      onClose={handleProfileMenuClose}
-      getContentAnchorEl={null}
-      anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-      }}
-      transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-      }}
-      >
-      <MenuItem className={classes.menuItem} button component="a" href="/profil">
-          <ListItemIcon >
-          <AccountCircleIcon fontSize="medium"/>
-          </ListItemIcon>
-          <ListItemText primary="Profil Saya" />
-      </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={onLogoutClick}>
-          <ListItemIcon>
-          <ExitToAppIcon fontSize="medium" />
-          </ListItemIcon>
-          <ListItemText primary="Keluar" />
-      </MenuItem>
-      </Menu>
-  )
-
   // Desktop Menu (will rendered when in desktop mode / width >= 600px)
   const renderDesktopMenu = (
     <Grid container className={classes.navbarContainedRightItems}>
@@ -128,8 +97,8 @@ function NavBarLoggedInContents(props) {
         }}
       >
           <MenuItem className={classes.menuItem} button component="a" href="/profil">
-            <ListItemIcon >
-              <AccountCircleIcon fontSize="medium"/>
+            <ListItemIcon>
+              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </ListItemIcon>
             <ListItemText primary="Profil Saya" />
           </MenuItem>
@@ -174,13 +143,13 @@ function NavBarLoggedInContents(props) {
         onClose={handleMobileMenuClose}
       >
           <MenuItem className={classes.menuItem} button component="a" href="/profil">
-            <ListItemIcon >
+            <ListItemIcon>
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </ListItemIcon>
-            <ListItemText primary={user.name} />
+            <ListItemText primary="Profil Saya" />
           </MenuItem>
           <MenuItem className={classes.menuItem} button component="a" href="/notifikasi">
-            <ListItemIcon >
+            <ListItemIcon>
               <Badge badgeContent={11} color="secondary">
                 <NotificationsIcon fontSize="medium" />
               </Badge>
@@ -188,7 +157,7 @@ function NavBarLoggedInContents(props) {
             <ListItemText primary="Notifikasi" />
           </MenuItem>
           <MenuItem className={classes.menuItem} button component="a" href="/support">
-            <ListItemIcon >
+            <ListItemIcon>
                 <HelpIcon fontSize="medium" />
             </ListItemIcon>
             <ListItemText primary="Bantuan" />
