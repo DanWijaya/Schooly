@@ -89,6 +89,7 @@ class Register extends Component {
       this.setState({role: e.target.value});
   };
 
+
   onSelect = (selectedList, selectedItem) => {
     if(selectedList.length > 1)
       selectedList.shift()
@@ -112,29 +113,18 @@ class Register extends Component {
     const role = this.state.role;
 
     if(role == "Student") {
-      newUser = {
-        kelas: this.state.kelas, //Student Data
-      };
+      newUser.kelas = this.state.kelas;
     } else if (role == "Teacher") {
-      newUser = {
-        subject_teached: this.state.subject_teached, //Teacher Data
-      };
+      newUser.subject_teached = this.state.subject_teached;
     }
 
     if(this.state.activeStep == 1)
         this.setState({submitButtonClicked: true})
 
+    console.log(newUser)
     if(this.state.submitButtonClicked)
       this.props.registerUser(newUser, this.props.history);
   };
-
-  componentDidMount() {
-    this.id = setTimeout(() => this.setState({ redirect: true }), 1000)
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.id)
-  }
 
   render() {
     const getSteps = () => {
@@ -346,7 +336,7 @@ class Register extends Component {
     document.title="Daftar ke Schooly"
     const { classes } = this.props;
     const { errors } = this.state;
-    console.log(this.state.role)
+
     const classesCollection = this.props.classesCollection;
     var options = []
 

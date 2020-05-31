@@ -32,7 +32,7 @@ module.exports = function validateRegisterInput(data) {
 
   // Emergency phone checks
   if (Validator.isEmpty(data.emergency_phone)) {
-    errors.emergency_phone = "Nomor telepon darurat belum diisi"
+    errors.phone = "Nomor telepon darurat belum diisi"
   }
 
   // Emergency phone checks

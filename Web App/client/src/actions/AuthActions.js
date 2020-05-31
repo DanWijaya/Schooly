@@ -14,12 +14,15 @@ export const registerUser = (userData, history) => dispatch => {
       alert("New User is registered successfully")
       history.push("/masuk")
     })
-    .catch(err =>
+    .catch(err => {
+
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
       })
+    }
     );
+    
 };
 
 export const updateUserData = (userData, userId, history) => dispatch => {
