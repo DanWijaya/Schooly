@@ -5,20 +5,14 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { logoutUser } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import LightTooltip from "../light-tooltip/LightTooltip";
-import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
 import NavBarDrawerContent from "./NavBarDrawerContent";
-import { AppBar, Avatar, Badge, Button, CssBaseline, Grid, IconButton, Link,
-   ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, useMediaQuery } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import HelpIcon from "@material-ui/icons/Help";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import MoreIcon from '@material-ui/icons/MoreVert';
-import RightNavBarContents from './RightNavBarContents';
+import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
+import NavBarLoggedInContents from "./NavBarLoggedInContents";
+import { AppBar, Button, CssBaseline, Grid, Link, Toolbar, useMediaQuery } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 export const drawerWidth = 220;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: "1",
@@ -129,7 +123,7 @@ function NavBar(props){
       </Link>
     )
     rightSideNavBarContents = (
-      <RightNavBarContents isMobileView={isMobileView}/>
+      <NavBarLoggedInContents isMobileView={isMobileView}/>
     )
   }
 
