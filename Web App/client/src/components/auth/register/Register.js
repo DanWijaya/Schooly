@@ -88,7 +88,6 @@ class Register extends Component {
       this.setState({role: e.target.value});
   };
 
-
   onSelect = (selectedList, selectedItem) => {
     if(selectedList.length > 1)
       selectedList.shift()
@@ -229,7 +228,22 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item className={classes.inputField}>
-                  <label id="class">Class</label>
+                  <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
+                    <label id="class">Kelas</label>
+                    <Select
+                      value={this.state.kelas}
+                      onChange={this.onChange}
+                    >
+                      <MenuItem value={"Student"}>Murid</MenuItem>
+                      <MenuItem value={"Teacher"}>Guru</MenuItem>
+                      <MenuItem value={"Admin"}>Pengelola</MenuItem>
+        //               {this.props.items.map(item =>
+        //   <MenuItem key={item.value} {...item} />
+        // )}
+                    </Select>
+                  </FormControl>
+
+                  <label id="class">Kelas</label>
                   <Multiselect
                     id="class"
                     options={options}
