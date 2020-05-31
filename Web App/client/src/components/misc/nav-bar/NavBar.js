@@ -15,6 +15,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HelpIcon from "@material-ui/icons/Help";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import MoreIcon from '@material-ui/icons/MoreVert';
 
 export const drawerWidth = 220;
 
@@ -81,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 function NavBar(props){
   const classes = useStyles();
   const { window } = props;
+  const isMobileView = useMediaQuery("(max-width:600px)");
 
   const { user } = props.auth;
   const history = useHistory()
@@ -90,7 +92,6 @@ function NavBar(props){
   const handleDrawerMobile = () => {
     setMobileOpen(!mobileOpen);
   };
-  const mobileView = useMediaQuery("(max-width:600px)");
 
   //Drawer at Desktop View Hooks
   const [desktopOpen, setOpen] = React.useState(false);
@@ -102,19 +103,138 @@ function NavBar(props){
       setOpen(false)
   };
 
-  //Profile Menu
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  // Menu items in Mobile
+  const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
+  const handleMobileMenuClose = () => {
+    setMobileAnchorEl(null);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleMobileMenuOpen = (event) => {
+    setMobileAnchorEl(event.currentTarget);
+  }
+
+  const handleMenuClose = () => {
+    setProfileAnchorEl(null);
+    handleMobileMenuClose();
+  };
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+
+  //Profile Menu
+  const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
+  const handleProfileMenu = (event) => {
+    setProfileAnchorEl(event.currentTarget);
+  };
+  const handleProfileMenuClose = () => {
+    setProfileAnchorEl(null);
   };
   const onLogoutClick = (e) => {
     e.preventDefault();
-    handleClose()
+    handleProfileMenuClose()
     props.logoutUser(history);
   }
+
+  const renderProfileMenu = (
+    <Menu
+      anchorEl={profileAnchorEl}
+      keepMounted
+      open={Boolean(profileAnchorEl)}
+      onClose={handleProfileMenuClose}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+    >
+      <MenuItem className={classes.profileMenuItem} button component="a" href="/profil">
+        <ListItemIcon >
+          <AccountCircleIcon fontSize="medium"/>
+        </ListItemIcon>
+        <ListItemText primary="Profil Saya" />
+      </MenuItem>
+      <MenuItem className={classes.profileMenuItem} onClick={onLogoutClick}>
+        <ListItemIcon>
+          <ExitToAppIcon fontSize="medium" />
+        </ListItemIcon>
+        <ListItemText primary="Keluar" />
+      </MenuItem>
+    </Menu>
+  )
+
+  // Desktop Menu (will rendered when in desktop mode / width >= 600px)
+  const renderDesktopMenu = (
+    <Grid container className={classes.navbarContainedRightItems}>
+    <LightTooltip title={user.name}>
+      <IconButton onClick={handleProfileMenu} className={classes.iconButton}>
+        <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+      </IconButton>
+    </LightTooltip>
+   {renderProfileMenu}
+    <LightTooltip title="Notifikasi">
+      <IconButton color="inherit" href="/notifikasi">
+        <Badge badgeContent={11} color="secondary">
+          <NotificationsIcon />
+        </Badge>
+      </IconButton>
+    </LightTooltip>
+    <LightTooltip title="Bantuan">
+      <IconButton color="inherit" href="/support">
+        <HelpIcon />
+      </IconButton>
+    </LightTooltip>
+</Grid>
+  )
+
+  // Mobile menu (will rendered when in mobile mode / width < 600px)
+
+  const renderMobileMenu = (
+    <Grid container className={classes.navbarContainedRightItems}>
+      <IconButton
+        aria-label="show more"
+        aria-controls={mobileMenuId}
+        aria-haspopup="true"
+        onClick={handleMobileMenuOpen}
+        color="inherit"
+      >
+        <MoreIcon />
+      </IconButton>
+    <Menu
+      anchorEl={mobileAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={Boolean(mobileAnchorEl)}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem button  component="a" href="/notifikasi">
+        <IconButton color="inherit">
+          <Badge badgeContent={11} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <p>Notifikasi</p>
+      </MenuItem>
+
+      <MenuItem button  component="a" href="/support">
+        <IconButton color="inherit">
+          <HelpIcon />
+        </IconButton>
+        <p>Bantuan</p>
+      </MenuItem>
+
+      <MenuItem onClick={handleProfileMenu}>
+        <IconButton className={classes.iconButton}>
+          <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+        </IconButton>
+        <p>Akun saya</p>
+      </MenuItem>
+    </Menu>
+    {renderProfileMenu}
+    </Grid>
+  )
 
   //NavBar Contents
   let leftSideNavBarContents;
@@ -125,7 +245,7 @@ function NavBar(props){
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
         <NavBarDrawerMenuButton
-          mobileView={mobileView}
+          mobileView={isMobileView}
           handleDrawerDesktop={handleDrawerDesktop}
           handleDrawerMobile={handleDrawerMobile}
           iconButtonClass = {classes.iconButton}
@@ -141,56 +261,17 @@ function NavBar(props){
         />
       </Link>
     )
-    rightSideNavBarContents = (
-      <Grid container className={classes.navbarContainedRightItems}>
-          <LightTooltip title={user.name}>
-            <IconButton onClick={handleClick} className={classes.iconButton}>
-              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
-            </IconButton>
-          </LightTooltip>
-          <Menu
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            getContentAnchorEl={null}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            <MenuItem className={classes.profileMenuItem} button component="a" href="/profil">
-              <ListItemIcon >
-                <AccountCircleIcon fontSize="medium"/>
-              </ListItemIcon>
-              <ListItemText primary="Profil Saya" />
-            </MenuItem>
-            <MenuItem className={classes.profileMenuItem} onClick={onLogoutClick}>
-              <ListItemIcon>
-                <ExitToAppIcon fontSize="medium" />
-              </ListItemIcon>
-              <ListItemText primary="Keluar" />
-            </MenuItem>
-          </Menu>
-          <LightTooltip title="Notifikasi">
-            <IconButton color="inherit" href="/notifikasi">
-              <Badge badgeContent={11} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </LightTooltip>
-          <LightTooltip title="Bantuan">
-            <IconButton color="inherit" href="/support">
-              <HelpIcon />
-            </IconButton>
-          </LightTooltip>
-      </Grid>
-    )
+
+    if(isMobileView)
+      rightSideNavBarContents = (
+        renderMobileMenu
+      )
+    else 
+      rightSideNavBarContents = (
+        renderDesktopMenu
+      )
   }
+
   else {
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
