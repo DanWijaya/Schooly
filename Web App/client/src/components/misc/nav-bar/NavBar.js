@@ -128,6 +128,9 @@ function NavBar(props){
         />
       </Link>
     )
+    rightSideNavBarContents = (
+      <RightNavBarContents isMobileView={isMobileView}/>
+    )
   }
 
   else {
@@ -143,6 +146,39 @@ function NavBar(props){
       </Grid>
     )
     middleNavBarContents = null
+    rightSideNavBarContents = (
+      <Grid container className={classes.navbarContainedRightItems}>
+          <Button
+            variant="contained"
+            size="medium"
+            href="/daftar"
+            style={{
+              backgroundColor: "#61bd4f",
+              color: "white",
+              fontSize: "6",
+              width: "90px",
+              height: "30px",
+              marginRight: "15px"
+            }}
+          >
+            Daftar
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            href="/masuk"
+            style={{
+              backgroundColor: "white",
+              color: "#2196f3",
+              fontSize: "6",
+              width: "90px",
+              height: "30px",
+            }}
+          >
+            Masuk
+          </Button>
+      </Grid>
+    )
   }
 
   return (
@@ -157,7 +193,7 @@ function NavBar(props){
         <Toolbar className={classes.navbarContainer}>
           {leftSideNavBarContents}
           {middleNavBarContents}
-          <RightNavBarContents isMobileView={isMobileView}/>
+          {rightSideNavBarContents}
         </Toolbar>
       </AppBar>
       <Toolbar />
