@@ -6,7 +6,6 @@ import { logoutUser } from "../../../actions/AuthActions";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import { Avatar, Badge, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HelpIcon from "@material-ui/icons/Help";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -53,10 +52,6 @@ function NavBarLoggedInContents(props) {
   };
   const handleMobileMenuOpen = (event) => {
     setMobileAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = () => {
-    setProfileAnchorEl(null);
-    handleMobileMenuClose();
   };
 
   //Profile Menu

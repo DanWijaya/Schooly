@@ -4,10 +4,16 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flex: "1",
-    justifyContent: "center",
+    margin: "auto",
+    maxWidth: "1000px",
     textAlign: "center",
-    maxWidth: "1000px"
+  },
+  paragraph: {
+    marginBottom: "40px",
+  },
+  paragraphTitle: {
+    fontFamily: "Helvetica Neue",
+    color: "#2196f3",
   }
 }));
 
@@ -15,93 +21,108 @@ function About() {
   const classes = useStyles();
 
   return(
-    <Grid container direction="column" alignItems="center" justify="center">
-      <Grid item>
-      <Typography variant="h4">
-        Apa itu Schooly?
-      </Typography>
-      <Typography variant="body1">
-        Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
-        Di Schooly, Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien.
-      </Typography>
-      </Grid>
+    <div className={classes.root}>
+      <div className={classes.paragraph}>
+        <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
+          Apa itu Schooly?
+        </Typography>
+        <Typography variant="body1">
+          Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
+          Di Schooly, Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien.
+        </Typography>
+      </div>
 
-      <Grid item>
-      <Typography variant="h4" gutterBottom>
-        Visi dan Misi Schooly
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Visi kami adalah
-      </Typography>
-      <Typography variant="body1">
-        Misi kami adalah
-      </Typography>
-      </Grid>
+      <div className={classes.paragraph}>
+        <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
+          Visi dan Misi <br /> Schooly
+        </Typography>
+        <Grid container justify="center">
+          <Grid item xs>
+            <Typography variant="h5" gutterBottom>
+              Visi
+            </Typography>
+            <Typography variant="body1">
+              Visi kami adalah menerapkan inovasi dan teknologi terhadap sistem persekolahan yang ada di Indonesia.
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography variant="h5" gutterBottom>
+              Misi
+            </Typography>
+            <Typography variant="body1">
+              Misi kami adalah: <br />
+              1. Menyediakan sistem persekolahan berbasis komputer bagi sekolah-sekolah yang ada. <br />
+              2. Memudahkan sistem belajar-mengajar yang ada dengan fitur-fitur Schooly. <br />
+              3. Memberikan prasarana komunikasi jarak jauh yang lebih baik antara murid, guru, dan sekolah.
+            </Typography>
+          </Grid>
+        </Grid>
+      </div>
 
-      <Grid item>
-      <Typography>
-        Apa saja fitur-fitur Schooly?
-      </Typography>
-      <Grid container justify="center">
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Fitur 1
-          </Paper>
+      <div className={classes.paragraph}>
+        <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
+          Apa saja fitur-fitur Schooly?
+        </Typography>
+        <Grid container justify="center">
+          <Grid item xs={6}>
+            <Paper>
+              <img />
+              Sistem kelas dan mata pelajaran per kelas.
+            </Paper>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper>
+              <img />
+              Sarana pengumpulan tugas.
+            </Paper>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper>
+              <img />
+              Pengumuman dari sekolah dan Guru.
+            </Paper>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper>
+              <img />
+                Kuis dan Ujian Berbasis Web.
+            </Paper>
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Fitur 2
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Fitur 3
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Fitur 4
-          </Paper>
-        </Grid>
-      </Grid>
-      </Grid>
+      </div>
 
-      <Grid item>
-      <Typography>
+      <div className={classes.paragraph}>
+      <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
         Fitur-fitur yang akan datang:
       </Typography>
       <Grid container justify="center">
         <Grid item xs={6}>
           <Paper>
             <img />
-            Fitur 1
+            Pengunci Browser
           </Paper>
         </Grid>
         <Grid item xs={6}>
           <Paper>
             <img />
-            Fitur 2
+            Pengecek Kuis dan Ujian Otomatis untuk Berbagai Jenis Soal (Pilihan Ganda, Isilah, dan Essay)
           </Paper>
         </Grid>
         <Grid item xs={6}>
           <Paper>
             <img />
-            Fitur 3
+            Chat grup kelas, murid ke guru baik secara pribadi maupun dalam tugas spesifik.
           </Paper>
         </Grid>
         <Grid item xs={6}>
           <Paper>
             <img />
-            Fitur 4
+            Sistem absen sekolah (tatap muka).
           </Paper>
         </Grid>
       </Grid>
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   )
 };
 

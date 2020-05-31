@@ -75,11 +75,8 @@ const useStyles = makeStyles((theme) => ({
 
 function NavBar(props){
   const classes = useStyles();
-  const { window , logoutUser} = props;
-  const isMobileView = useMediaQuery("(max-width:600px)");
-
   const { user } = props.auth;
-  const history = useHistory()
+  const isMobileView = useMediaQuery("(max-width:600px)");
 
   //Drawer at Mobile View Hooks
   const [mobileOpen, setMobileOpen] = React.useState(false);

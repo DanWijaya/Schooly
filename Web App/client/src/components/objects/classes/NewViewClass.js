@@ -96,7 +96,7 @@ function NewViewClass(props) {
       <TabPanel value={value} index={0}>
         Item One
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={1} style={{maxWidth: "1000px", margin: "auto"}}>
         <List style={{display: "flex", flexDirection: "column", alignItems: "center", width: "1000px"}}>
           <PersonListItem
             person_avatar=""
