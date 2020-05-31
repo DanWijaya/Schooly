@@ -147,8 +147,7 @@ function NavBar(props){
               backgroundColor: "#61bd4f",
               color: "white",
               fontSize: "6",
-              width: "90px",
-              height: "30px",
+              width: "75px",
               marginRight: "15px"
             }}
           >
@@ -161,9 +160,8 @@ function NavBar(props){
             style={{
               backgroundColor: "white",
               color: "#2196f3",
+              width: "75px",
               fontSize: "6",
-              width: "90px",
-              height: "30px",
             }}
           >
             Masuk

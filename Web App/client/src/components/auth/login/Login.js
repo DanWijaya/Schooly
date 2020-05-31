@@ -21,7 +21,7 @@ const styles = (theme) => ({
     margin: "auto",
   },
   mainGrid: {
-    width: "400px",
+    maxWidth: "400px",
     padding: "40px",
   },
   schoolyLogoAlt: {

@@ -18,11 +18,10 @@ const styles = (theme) => ({
   root: {
     margin: "auto",
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     maxWidth: "750px",
-    margin: "auto",
-    flexDirection: "column"
   },
   errorInfo: {
     color: "red",
@@ -159,35 +158,35 @@ class Register extends Component {
               </Grid>
               <Grid item className={classes.inputField}>
                 <OutlinedTextField
-                on_change={this.onChange}
-                value={this.state.password}
-                error={errors.password}
-                id="password"
-                type="password"
-                className={classnames("", {
-                  invalid: errors.password
-                })}
-                html_for="password"
-                labelname="Kata Sandi"
-                span_classname={classes.errorInfo}
-                error1={errors.password}
-              />
+                  on_change={this.onChange}
+                  value={this.state.password}
+                  error={errors.password}
+                  id="password"
+                  type="password"
+                  className={classnames("", {
+                    invalid: errors.password
+                  })}
+                  html_for="password"
+                  labelname="Kata Sandi"
+                  span_classname={classes.errorInfo}
+                  error1={errors.password}
+                />
               </Grid>
               <Grid item className={classes.inputField}>
                 <OutlinedTextField
-                on_change={this.onChange}
-                value={this.state.password2}
-                error={errors.password2}
-                id="password2"
-                type="password"
-                className={classnames("", {
-                  invalid: errors.password2
-                })}
-                html_for="password2"
-                labelname="Konfirmasi Kata Sandi"
-                span_classname={classes.errorInfo}
-                error1={errors.password2}
-              />
+                  on_change={this.onChange}
+                  value={this.state.password2}
+                  error={errors.password2}
+                  id="password2"
+                  type="password"
+                  className={classnames("", {
+                    invalid: errors.password2
+                  })}
+                  html_for="password2"
+                  labelname="Konfirmasi Kata Sandi"
+                  span_classname={classes.errorInfo}
+                  error1={errors.password2}
+                />
               </Grid>
             </Grid>
           );
@@ -214,19 +213,19 @@ class Register extends Component {
               </Grid>
               <Grid item className={classes.inputField}>
                 <OutlinedTextField
-                on_change={this.onChange}
-                value={this.state.name}
-                error={errors.name}
-                id="name"
-                type="text"
-                classname={classnames("", {
-                  invalid: errors.name
-                })}
-                html_for="name"
-                labelname="Nama"
-                span_classname={classes.errorInfo}
-                error1={errors.name}
-              />
+                  on_change={this.onChange}
+                  value={this.state.name}
+                  error={errors.name}
+                  id="name"
+                  type="text"
+                  classname={classnames("", {
+                    invalid: errors.name
+                  })}
+                  html_for="name"
+                  labelname="Nama"
+                  span_classname={classes.errorInfo}
+                  error1={errors.name}
+                />
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item className={classes.inputField}>
@@ -314,20 +313,6 @@ class Register extends Component {
               </Grid>
             </Grid>
           );
-        // case 2:
-        //   return (
-        //       <div>
-        //         <Typography style={{textAlign: "center", marginBottom: "20px"}}>
-        //           Akun anda berhasil di daftarkan. Silahkan lengkapi informasi pribadi anda pada halaman profil.
-        //         </Typography>
-        //         <Link href="/masuk" style={{display: "flex", justifyContent: "center"}}>
-        //           Klik untuk Masuk
-        //         </Link>
-        //         <Typography style={{textAlign: "center", fontSize: "12px", color: "#A9A9A9"}}>
-        //           Jika anda tidak dialihkan ke beranda segera.
-        //         </Typography>
-        //       </div>
-        //   );
         default:
           return "Unknown stepIndex";
       }
