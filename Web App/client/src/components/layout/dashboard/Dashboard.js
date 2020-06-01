@@ -20,14 +20,6 @@ const styles = (theme) => ({
     alignItems: "center",
     height: "60px"
   },
-  iconButton: {
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
-  },
   notificationPaper: {
     marginBottom: "50px",
     padding: "20px",
@@ -130,7 +122,7 @@ class Dashboard extends Component {
               Notifikasi Terkini Anda
             </Typography>
             <LightTooltip title="Semua Notifikasi" placement="right">
-              <IconButton className={classes.iconButton} href="/notifikasi">
+              <IconButton href="/notifikasi">
                 <ChevronRightIcon />
               </IconButton>
             </LightTooltip>
@@ -160,7 +152,7 @@ class Dashboard extends Component {
             </Typography>
             <div style={{display: "flex", justifyContent: "flex-end"}}>
             <LightTooltip title="Semua Pekerjaan" placement="right">
-              <IconButton className={classes.iconButton}>
+              <IconButton>
                 <ChevronRightIcon />
               </IconButton>
             </LightTooltip>

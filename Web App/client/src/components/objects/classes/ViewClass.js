@@ -1,179 +1,227 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
 import PropTypes from "prop-types";
-import classnames from "classnames";
-import { connect } from "react-redux";
-import { viewClass, deleteClass } from "../../../actions/ClassActions"
-import { Modal, Button } from 'react-bootstrap';
-import './ViewClass.css'
+import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
+   Grid, Paper, Link, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
+   Tabs, Tab, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import BallotIcon from "@material-ui/icons/Ballot";
+import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 
-function ClassDataView(props) {
-  return(
-    <tr>
-      <td style={{textAlign: "center"}}>
-        {props.obj.name}
-      </td>
-      <td style={{textAlign: "center"}}>
-        {props.obj.walikelas.name}
-      </td>
-      <td style={{textAlign: "center"}}>
-        {props.obj.ukuran}
-      </td>
-      <td style={{textAlign: "center"}}>
-        {props.obj.nihil.toString()}
-      </td>
-      <td style={{textAlign: "center"}}>
-        <Link
-          to={{
-            pathname: `/class/${props.obj._id}`,
-            state:{ classId : props.obj._id}
-          }}
-          className="btn btn-primary"
-        >
-          Edit
-        </Link>
-      </td>
-      <td style={{textAlign: "center"}}>
-        <Link
-          to={{
-            pathname: `/deleteclass/${props.obj._id}`,
-            state:{classId : props.obj._id}
-          }}
-          className="btn btn-danger"
-        >
-          Delete
-        </Link>
-      </td>
-    </tr>
+const useStyles = makeStyles({
+  root: {
+    margin: "auto",
+    maxWidth: "750px",
+  },
+  categoryTitle: {
+    color: "#2196f3"
+  },
+  expansionPanelList: {
+    marginLeft: "20px",
+    marginRight: "15px",
+    marginBottom: "10px",
+  },
+  personList: {
+    marginBottom: "40px"
+  }
+});
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function TabIndex(index) {
+  return {
+    id: `simple-tab-${index}`,
+  };
+}
+
+function WorkListItem(props) {
+  return (
+    <ListItem button component="a" href={props.work_link}>
+      <ListItemAvatar>
+        <Avatar>
+          {props.work_category_avatar}
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography variant="h6">
+            {props.work_title}
+          </Typography>
+        }
+        secondary={props.work_sender}
+      />
+      <ListItemSecondaryAction>
+        <Typography>
+          {props.work_status}
+        </Typography>
+      </ListItemSecondaryAction>
+    </ListItem>
   )
 }
 
-class ViewClass extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      classesCollection: [],
-      show: false,
-      isDelete: false
-    }
-  }
-
-  showModal(){
-    this.setState({ show: true})
-  }
-
-  closeModal(){
-    this.setState({ show: false, isDelete: false})
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps, nextState) {
-    if(nextProps.location.state){
-      if(!this.state.isDelete)
-          this.showModal()
-      else{
-          const { classId } = nextProps.location.state;
-          this.props.deleteClass(classId, nextProps.history)
-          this.props.viewClass()
-      }
-    }
-    if(this.props.classesCollection.length - nextProps.classesCollection.length === 1)
-        this.closeModal()
-    if(nextProps.classesCollection)
-        this.setState({ classesCollection: nextProps.classesCollection})
-  }
-
-  deletePopWindow = () => {
-    return (
-      <Modal style={{marginTop: '200px'}} show={this.state.show} onHide={() => {this.closeModal()}}>
-        <Modal.Header>Deleting Class {this.props.classesCollection.name}
-          <Link to="/viewclass" class="close" onClick={() => {this.closeModal()}}>
-            <span aria-hidden="true">x</span>
-            <span class="sr-only">Close</span>
-          </Link>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete the class?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button className="btn btn-danger" onClick={() => {
-              this.setState({isDelete: true, show:false})
-              this.props.viewClass()}
-          }>
-            Yes, Delete
-          </Button>
-          <Link to="/viewclass" className="btn btn-primary" onClick={() => { this.closeModal()}}>
-            No, Cancel
-          </Link>
-        </Modal.Footer>
-      </Modal>
-      )
-    }
-
-  dataTable() {
-    const { classesCollection } = this.state;
-    if(classesCollection.length == 0)
-        this.props.viewClass();
-
-    console.log(this.state.classesCollection)
-    return this.state.classesCollection.map((data, i) => {
-        return <ClassDataView obj={data} key={i}/>;
-    });
-  }
-
-  render() {
-    const { user } = this.props.auth;
-
-    if( user.role == "Teacher") {
-      return(
-        <div className="wrapper-classesCollection">
-            {this.deletePopWindow()}
-          <div className="container">
-            <h3 align="center">List of Classes</h3>
-            <table className="table table-striped table-dark" style={{ marginTop: 20}}>
-              <thead className="thead-dark">
-                <tr>
-                  <th style={{textAlign: "center"}}>Name</th>
-                  <th style={{textAlign: "center"}}>Walikelas</th>
-                  <th style={{textAlign: "center"}}>Ukuran</th>
-                  <th style={{textAlign: "center"}}>Nihil</th>
-                  <th colSpan="2" style={{textAlign: "center"}}>
-                      Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.dataTable()}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        )}
-    else if (user.role =="Student") {
-      return(
-        <div style={{ marginLeft: '250px'}}>
-          <h1 style={{ alignItems : 'center'}}> Your class is <b>{user.kelas.name}</b></h1>
-        </div>
-      )}
-  }
+function PersonListItem(props) {
+  return (
+    <ListItem button component="a" href={props.person_profile_link}>
+      <ListItemAvatar>
+        <Avatar>
+          {props.person_avatar}
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography variant="h6">
+            {props.person_name}
+          </Typography>
+        }
+      />
+      <ListItemSecondaryAction>
+        <Typography>
+          {props.person_role}
+        </Typography>
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
 }
 
-ViewClass.propTypes = {
-    viewClass: PropTypes.func.isRequired,
-    classesCollection: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired,
-    deleteClass: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired,
-}
+function ViewClass(props) {
+  const classes = useStyles();
 
-// If your mapStateToProps function is declared as taking one parameter,
-// it will be called whenever the store state changes, and given the store state as the only parameter.
-const mapStateToProps = state => ({
-    errors: state.errors,
-    classesCollection: state.classesCollection,
-    auth: state.auth
-})
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-export default connect(
-    mapStateToProps,
-    { viewClass, deleteClass }
-) (ViewClass)
+  return(
+    <div className={classes.root}>
+      <Paper>
+        <Typography variant="h3" style={{textAlign: "center"}} gutterBottom>
+          Kelas XA
+        </Typography>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          centered
+        >
+          <Tab icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" {...TabIndex(0)} />
+          <Tab icon={<BallotIcon />} label="Mata Pelajaran" {...TabIndex(1)} />
+          <Tab icon={<SupervisorAccountIcon />} label="Peserta" {...TabIndex(2)} />
+        </Tabs>
+      </Paper>
+
+      <TabPanel value={value} index={0}>
+        <List>
+          <WorkListItem
+            work_title="Tugas Fisika"
+            work_category_avatar=""
+            work_sender="Mr Jenggot"
+            work_status="Telah Dikumpulkan"
+            work_link="/test"
+          />
+          <WorkListItem
+            work_title="Tugas Biologi"
+            work_category_avatar=""
+            work_sender="Mr Jenggot"
+            work_status="Belum Dikumpulkan"
+            work_link="/test"
+          />
+        </List>
+      </TabPanel>
+
+      <TabPanel value={value} index={1}>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h5" className={classes.categoryTitle}>
+              Fisika
+            </Typography>
+          </ExpansionPanelSummary>
+            <List className={classes.expansionPanelList}>
+              <WorkListItem
+                work_title="Tugas Fisika"
+                work_category_avatar=""
+                work_sender="Mr Jenggot"
+                work_status="Telah Dikumpulkan"
+                work_link="/test"
+              />
+              <WorkListItem
+                work_title="Tugas Biologi"
+                work_category_avatar=""
+                work_sender="Mr Jenggot"
+                work_status="Belum Dikumpulkan"
+                work_link="/test"
+              />
+            </List>
+        </ExpansionPanel>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
+        <div className={classes.personList}>
+          <Typography variant="h4" gutterBottom>
+            Murid
+          </Typography>
+          <Divider style={{backgroundColor: "#2196f3"}} />
+          <List className={classes.listContainer}>
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Fucker"
+              person_role="Student"
+            />
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Fucker"
+              person_role="Student"
+            />
+          </List>
+        </div>
+        <div className={classes.personList}>
+          <Typography variant="h4" gutterBottom>
+            Guru
+          </Typography>
+          <Divider style={{backgroundColor: "#2196f3"}} />
+          <List className={classes.listContainer}>
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Fucker"
+              person_role="Fucking Teacher"
+            />
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Nigga"
+              person_role="Racism Teacher"
+            />
+          </List>
+        </div>
+      </TabPanel>
+    </div>
+  )
+};
+
+export default ViewClass;

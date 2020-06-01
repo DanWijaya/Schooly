@@ -17,14 +17,6 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "1075px",
   },
-  iconButton: {
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
-  },
   profilePicture: {
     width: theme.spacing(5),
     height: theme.spacing(5),
@@ -80,7 +72,7 @@ function WorkFile(props) {
         secondary={props.file_type}
       />
       <ListItemSecondaryAction>
-        <IconButton className={classes.iconButton}>
+        <IconButton>
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>

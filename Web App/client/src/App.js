@@ -20,8 +20,8 @@ import Notifications from "./components/layout/notifications/Notifications";
 import Profile from "./components/layout/profile/Profile";
 import ProfileView from "./components/layout/profile/ProfileView";
 //Misc
+import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
-import { colorPalette } from "./components/misc/color-palette/ColorPalette";
 import NavBar from "./components/misc/nav-bar/NavBar";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass"
@@ -31,10 +31,12 @@ import ViewClass from "./components/objects/classes/ViewClass";
 import CreateTask from "./components/objects/tasks/CreateTask";
 import EditTask from "./components/objects/tasks/EditTask";
 import ViewTask from "./components/objects/tasks/ViewTask";
+//Admin Only
+import ClassList from "./components/objects/admin-only/ClassList";
 //Prototypes
 import NewTask from "./prototypes/NewTask";
 import ClassSubjectList from "./prototypes/ClassSubjectList";
-import NewViewClass from "./components/objects/classes/NewViewClass";
+import NewClassList from "./components/objects/admin-only/NewClassList";
 import Tester from "./prototypes/Tester";
 
 // Check for token to keep user logged in
@@ -88,7 +90,7 @@ class App extends Component {
     return (
       <div>
         <Provider store={store}>
-          <ThemeProvider theme={colorPalette}>
+          <ThemeProvider theme={globalStyles}>
             <Router>
               <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
               <div style={{marginTop: "30px", marginLeft: `${translateXValue}`}}>
@@ -98,7 +100,7 @@ class App extends Component {
                 <Route exact path="/tentang-schooly" component={About} />
                 <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
                 <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
-                <Route exact path="/new-view-class" component={NewViewClass} /> {/*prototypetest*/}
+                <Route exact path="/newclasslist" component={NewClassList} /> {/*prototypetest*/}
                 <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
@@ -106,15 +108,17 @@ class App extends Component {
                   <PrivateRoute exact path="/profile-view" component={ProfileView} />
                   <PrivateRoute exact path="/notifikasi" component={Notifications} />
                   {/* Route Class */}
-                  <PrivateRoute exact path="/createclass" component={CreateClass}/>
-                  <PrivateRoute exact path="/viewclass" component={ViewClass}/>
-                  <PrivateRoute exact path="/class/:id" component={EditClass}/>
-                  <PrivateRoute exact path="/deleteclass/:id" component={ViewClass}/>
+                  <PrivateRoute exact path="/createclass" component={CreateClass} />
+                  <PrivateRoute exact path="/viewclass" component={ViewClass} />
+                  <PrivateRoute exact path="/class/:id" component={EditClass} />
+                  <PrivateRoute exact path="/deleteclass/:id" component={ViewClass} />
                   {/* Route Task  */}
-                  <PrivateRoute exact path="/createtask" component={CreateTask}/>
-                  <PrivateRoute exact path="/viewtask" component={ViewTask}/>
-                  <PrivateRoute exact path="/deletetask/:id" component={ViewTask}/>
-                  <PrivateRoute exact path="/task/:id" component={EditTask}/>
+                  <PrivateRoute exact path="/createtask" component={CreateTask} />
+                  <PrivateRoute exact path="/viewtask" component={ViewTask} />
+                  <PrivateRoute exact path="/deletetask/:id" component={ViewTask} />
+                  <PrivateRoute exact path="/task/:id" component={EditTask} />
+                  {/* Route Task  */}
+                  <PrivateRoute exact path="/classlist" component={ClassList} />
                 </Switch>
               </div>
             </Router>
