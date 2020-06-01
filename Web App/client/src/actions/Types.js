@@ -12,6 +12,7 @@ export const CLASSES_LOADING = "CLASSES_LOADING";
 
 // TASK ACTION TYPES
 export const GET_TASKS = "GET_TASKS";
+export const GET_TASK_BY_USER = "GET_TASK_BY_USER";
 export const ADD_TASKS = "ADD_TASKS";
 export const TASKS_LOADING = "TASKS_LOADING";
 

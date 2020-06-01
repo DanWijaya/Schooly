@@ -11,6 +11,7 @@ const keys = require("../../config/keys")
 
 const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
+const Task = require("../../models/Task");
 
 // Create Mongo Connection F
 const conn = mongoose.createConnection(keys.mongoURI)
@@ -51,30 +52,30 @@ var avatar_storage = new GridFsStorage({
     }
   });
  
-  var tugas_storage = new GridFsStorage({
-    url: keys.mongoURI,
-    file: (req, file) => {
-      return new Promise((resolve, reject) => {
-        crypto.randomBytes(16, (err, buf) => {
-          if (err) {
-            return reject(err);
-          }
-          // const filename = buf.toString('hex') + path.extname(file.originalname);
-          const filename = file.originalname 
-          const fileInfo = {
-            filename: filename,
-            bucketName: 'tugas'
-          };
-          resolve(fileInfo);
-        });
+var tugas_storage = new GridFsStorage({
+  url: keys.mongoURI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        // const filename = buf.toString('hex') + path.extname(file.originalname);
+        const filename = file.originalname 
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'tugas'
+        };
+        resolve(fileInfo);
       });
-    }
-  });
+    });
+  }
+});
 
 
 // Create the middleware which facilitates file uploads
-const upload = multer({ storage: avatar_storage });
-const upload2 = multer({ storage: tugas_storage });
+const uploadAvatar = multer({ storage: avatar_storage });
+const uploadTugas = multer({ storage: tugas_storage });
 
 //Uploading for Avatar
 router.get('/image-upload', (req,res) => {
@@ -133,7 +134,7 @@ router.get('/image-upload', (req,res) => {
   
   // @route POST /upload  
   // @desc Upload files to DB
-  router.post('/upload/:id', upload.single('avatar'), (req,res) => {
+  router.post('/upload/:id', uploadAvatar.single('avatar'), (req,res) => {
 
     let id = req.params.id
     User.findById(id, (err, userData) => {
@@ -165,6 +166,7 @@ router.get('/image-upload', (req,res) => {
       // Check if Image
       if (file.contentType === 'image/jpeg' || file.contentType === 'image/png' || file.contentType === 'image/jpg') {
         // Show outputnya di browser kita
+
         const readStream = gfs.createReadStream(file.filename);
         readStream.pipe(res)
       } else {
@@ -192,12 +194,26 @@ router.delete('/image/:name', (req,res) => {
 
 
 // Upload Tugas
-  router.post('/uploadtugas', upload2.single('tugas'), (req,res) => {
-    console.log("test upload tugas")
-    console.log(req)
-    console.log("Tugas telah diupload")
-    
-    // return res.json("Success")
+  router.post('/uploadtugas/:user_id/', uploadTugas.single('tugas'), (req,res) => {
+    // To get the file details, use req.file
+    let id = req.params.user_id
+    User.findById(id, (err, user) => {
+      if(!user){
+        return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
+      }
+
+      else{
+        let taskId = req.file.id
+        let filename = req.file.filename
+
+        user.tugas.push({id: taskId, filename: filename})
+
+        user
+          .save()
+          .then(console.log("Done with updating task field on User"))
+          .catch(err => console.log(err))
+      }
+    })
   })
 
   router.get('/filetugas', (req, res) => {
@@ -218,21 +234,6 @@ router.delete('/image/:name', (req,res) => {
 
   // @route GET /files/:filename
   // @desc  Display single file object
-
-  router.get('/tugass/:filename', (req,res) => {
-    gfs2.files.findOne({filename: req.params.filename}, (err, file) => {
-      // Check if files
-      if (!file || file.length === 0) {
-        return res.status(404).json({
-          err: 'Tugas tidak ada'
-        });
-      }
-      console.log(file.filename)
-      // Files exist
-      const readStream = gfs2.createReadStream(file.filename);
-      readStream.pipe(res)
-    });
-    });
 
   router.get('/tugas/:id', (req,res) => {
     id = new mongoose.mongo.ObjectId(req.params.id)
@@ -256,4 +257,4 @@ router.delete('/image/:name', (req,res) => {
   
 
 
-module.exports = {router, upload, upload2};
+module.exports = {router, uploadAvatar, uploadTugas};

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_TASKS, GET_ERRORS, ADD_TASKS} from './Types';
+import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_TASK_BY_USER} from './Types';
 
 // Addtask
 export const createTask = (taskData, history) => dispatch => {
@@ -17,6 +17,25 @@ export const createTask = (taskData, history) => dispatch => {
         })
     );
 };
+
+export const getTaskByUser = (userId) => dispatch => {
+    axios
+      .get("/api/users/gettask/" + userId)
+      .then(res => {
+          console.log(res.data);
+          dispatch({ 
+            type: GET_TASK_BY_USER,
+            payload: res.data
+          })
+      })
+      .catch(err => {
+        console.log("Error in retrieving the user tasks");
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      })
+  }
 
 // View Task
 export const viewTask = () => dispatch => {

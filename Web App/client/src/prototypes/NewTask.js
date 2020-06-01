@@ -10,6 +10,8 @@ import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas } from "../actions/UploadActions"
+import { getTaskByUser } from "../actions/TaskActions"
+const path = require('path');
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,20 +41,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "20px",
   }
 }));
-
-const listWorkFile = (tasks=null) => {
-  // tasks itu nanti lists, bakal di pass.
-  var tasksContents = [];
-  for (let i = 0 ; i < 3; i++) {
-    tasksContents.push(
-    <WorkFile
-      file_type_icon={0}
-      file_name={`Tugas ${i} Kimia`}
-      file_type="PDF Document"/>
-      )
-  }
-  return tasksContents
-}
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -156,15 +144,61 @@ function CheckedWorkFilesButton() {
 function NewTask(props) {
   const { user } = props.auth;
   const classes = useStyles();
-
+  const [tasks, setTasks] = React.useState(null);
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
-
+  const [open, setOpen] = React.useState(false);
   const [fileTugas, setFileTugas] = React.useState(null);
 
-  const { uploadTugas } = props;
+  const { uploadTugas, getTaskByUser, tasksCollection } = props;
+  if(tasksCollection.length == undefined) // it means it is empty
+    getTaskByUser(user.id)
 
-  const [open, setOpen] = React.useState(false);
+  // console.log(tasksCollection.length)
+  
+  const fileType = (filename) => {
+    let ext_file = path.extname(filename)
+    switch(ext_file) {
+      case ".docx" : return "Word"
+      case ".xlsx" : 
+      case ".csv"  : return "Excel"
+
+      case ".png":
+      case ".jpg":
+      case ".jpeg" : return "Gambar"
+
+      case ".pdf" : return "PDF"
+
+      case ".txt" :
+      case ".rtf" : return "Teks"
+
+      case ".ppt" :
+      case ".pptx": return "Presentasi"
+
+      default: return "File lainnya"
+    }
+  }
+
+  const listWorkFile = () => {
+    // tasks itu nanti lists, bakal di pass.
+    var tasksContents = [];
+    if(tasksCollection.length == undefined)
+      tasksContents = <WorkFile
+          file_type_icon={0}
+          file_name="Silahkan Upload file"
+          file_type="Tipe file"/>
+
+    else  
+      for (let i = 0 ; i < tasksCollection.length; i++) {
+        tasksContents.push(
+        <WorkFile
+          file_type_icon={0}
+          file_name={tasksCollection[i].filename}
+          file_type={fileType(tasksCollection[i].filename)}/>
+          )
+      }
+    return tasksContents
+  }
 
   const handleClick = () => {
     setOpen(true);
@@ -200,7 +234,9 @@ function NewTask(props) {
     console.log(fileTugas)
     formData.append("tugas", fileTugas)
 
-    uploadTugas(formData)
+    uploadTugas(formData, user)
+    getTaskByUser(user.id)
+
     setFileTugas(null)
     handleClick()
   }
@@ -344,12 +380,16 @@ function NewTask(props) {
 NewTask.propTypes = {
    auth: PropTypes.object.isRequired,
    uploadTugas: PropTypes.func.isRequired,
+   updateUserData: PropTypes.func.isRequired,
+   getTaskByUser: PropTypes.func.isRequired,
+   tasksCollection: PropTypes.object.isRequired
  }
 
 const mapStateToProps = (state) => ({
-   auth: state.auth
+   auth: state.auth,
+   tasksCollection: state.tasksCollection
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas}
+   mapStateToProps, {uploadTugas, getTaskByUser}
  ) (NewTask);

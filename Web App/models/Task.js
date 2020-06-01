@@ -18,9 +18,12 @@ const TaskSchema = new Schema({
     class_assigned: [{
         type: Object,
         required: true
+    }],
+    filesubmitted: [{
+        type: Schema.Types.ObjectId,
+        default: null
     }]
-    
-   
+
 })
 
 module.exports = Task = mongoose.model("tasks", TaskSchema);

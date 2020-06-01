@@ -48,8 +48,6 @@ class ViewTask extends Component {
             this.setState({ tasksCollection: nextProps.tasksCollection})
         }
     }
-
-
     dataTable(){
 
         const { tasksCollection } = this.state;

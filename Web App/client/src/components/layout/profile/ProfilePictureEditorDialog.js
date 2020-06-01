@@ -6,6 +6,7 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import defaultAvatar from "./DefaultAvatar.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,12 +133,19 @@ function ProfilePictureEditorDialog(props) {
     }
 
     if(!profileImg){
+      let avatar_default
+
+      if(user.avatar == ""){
+        avatar_default = defaultAvatar
+      } else {
+        avatar_default = `/api/uploads/image/${user.avatar}`
+      }
+      
       return (
       <Avatar className={classes.avatar}>
         <img
-          alt="profile picture"
           onLoad={onImgLoad}
-          src={`/api/uploads/image/${user.avatar}`}
+          src={avatar_default}
           ref={uploadedImage}
           className={avatarImgClass}
         />

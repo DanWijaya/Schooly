@@ -16,7 +16,6 @@ const User= require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 
-
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -135,6 +134,7 @@ router.post("/login", (req, res) => {
         };
         if(user.role == "Student") {
           payload.kelas = user.kelas
+          payload.tugas = user.tugas
         }
 
         else if(user.role == "Teacher") {
@@ -175,6 +175,7 @@ router.post("/update/data/:id", (req,res) => {
           console.log(user)
 
           // Informasi Pribadi
+          // user.tugas = req.body.tugas
           user.name = req.body.nama;
           user.tanggal_lahir = req.body.tanggal_lahir;
           user.jenis_kelamin = req.body.jenis_kelamin;
@@ -223,6 +224,15 @@ router.post("/update/data/:id", (req,res) => {
             uni_impian : user.uni_impian
           }
 
+          if(user.role == "Student") {
+            payload.kelas = user.kelas
+            payload.tugas = user.tugas
+          }
+    
+          else if(user.role == "Teacher") {
+            payload.subject_teached = user.subject_teached
+          }
+
           jwt.sign(
             payload,
             keys.secretOrKey,
@@ -241,7 +251,18 @@ router.post("/update/data/:id", (req,res) => {
       });
 });
 
-router.post("/update/avatar/:id", avatar.upload.single('avatar'), (req,res) => {
+router.get("/gettask/:id", (req, res) => {
+  let id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if(!user)
+      res.status(404).send("User data is not found");
+    else {
+      res.json(user.tugas)
+    }
+  } )
+})
+router.post("/update/avatar/:id", avatar.uploadAvatar.single('avatar'), (req,res) => {
   console.log(req)
   let id = req.params.id;
 

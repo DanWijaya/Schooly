@@ -26,6 +26,7 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 export const updateUserData = (userData, userId, history) => dispatch => {
+  console.log("update user data is runned")
   axios
     .post("/api/users/update/data/" + userId, userData)
     .then(res => {
