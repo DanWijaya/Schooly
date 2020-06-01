@@ -1,17 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Avatar, Box, Grid, Paper, Link, List, ListItem, Tabs, Tab, Typography } from "@material-ui/core";
+import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
+   Grid, Paper, Link, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
+   Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import BallotIcon from "@material-ui/icons/Ballot";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
-import PersonIcon from "@material-ui/icons/Person";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 
 const useStyles = makeStyles({
+  root: {
+    margin: "auto",
+    maxWidth: "750px",
+  },
+  categoryTitle: {
+    color: "#2196f3"
+  },
+  expansionPanelList: {
+    marginLeft: "20px",
+    marginRight: "15px",
+    marginBottom: "10px",
+  },
   tabInfo: {
     "&:focus": {
       backgroundColor: "transparent",
     },
   },
+  personList: {
+    marginBottom: "40px"
+  }
 });
 
 function TabPanel(props) {
@@ -44,26 +62,52 @@ function TabIndex(index) {
   };
 }
 
-function PersonListItem(props) {
-  const classes = useStyles();
-
+function WorkListItem(props) {
   return (
-    <ListItem>
-      <div>
+    <ListItem button component="a" href={props.work_link}>
+      <ListItemAvatar>
+        <Avatar>
+          {props.work_category_avatar}
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography variant="h6">
+            {props.work_title}
+          </Typography>
+        }
+        secondary={props.work_sender}
+      />
+      <ListItemSecondaryAction>
+        <Typography>
+          {props.work_status}
+        </Typography>
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
+}
+
+function PersonListItem(props) {
+  return (
+    <ListItem button component="a" href={props.person_profile_link}>
+      <ListItemAvatar>
         <Avatar>
           {props.person_avatar}
         </Avatar>
-      </div>
-      <Typography>
-        <Link href={props.person_profile_link}>
-          {props.person_name}
-        </Link>
-      </Typography>
-      <Typography>
-        {props.person_role}
-      </Typography>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography variant="h6">
+            {props.person_name}
+          </Typography>
+        }
+      />
+      <ListItemSecondaryAction>
+        <Typography>
+          {props.person_role}
+        </Typography>
+      </ListItemSecondaryAction>
     </ListItem>
-
   )
 }
 
@@ -76,9 +120,9 @@ function NewViewClass(props) {
   };
 
   return(
-    <div>
+    <div className={classes.root}>
       <Paper>
-        <Typography variant="h2" style={{textAlign: "center"}} gutterBottom>
+        <Typography variant="h3" style={{textAlign: "center"}} gutterBottom>
           Kelas XA
         </Typography>
         <Tabs
@@ -89,31 +133,97 @@ function NewViewClass(props) {
           centered
         >
           <Tab disableRipple className={classes.tabInfo} icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" {...TabIndex(0)} />
-          <Tab disableRipple className={classes.tabInfo} icon={<PersonIcon />} label="Guru" {...TabIndex(1)} />
+          <Tab disableRipple className={classes.tabInfo} icon={<BallotIcon />} label="Mata Pelajaran" {...TabIndex(1)} />
           <Tab disableRipple className={classes.tabInfo} icon={<SupervisorAccountIcon />} label="Peserta" {...TabIndex(2)} />
         </Tabs>
       </Paper>
+
       <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1} style={{maxWidth: "1000px", margin: "auto"}}>
-        <List style={{display: "flex", flexDirection: "column", alignItems: "center", width: "1000px"}}>
-          <PersonListItem
-            person_avatar=""
-            person_profile_link="/test"
-            person_name="Mr Fucker"
-            person_role="student"
+        <List>
+          <WorkListItem
+            work_title="Tugas Fisika"
+            work_category_avatar=""
+            work_sender="Mr Jenggot"
+            work_status="Telah Dikumpulkan"
+            work_link="/test"
           />
-          <PersonListItem
-            person_avatar=""
-            person_profile_link="/test"
-            person_name="Mr Fucker"
-            person_role="student"
+          <WorkListItem
+            work_title="Tugas Biologi"
+            work_category_avatar=""
+            work_sender="Mr Jenggot"
+            work_status="Belum Dikumpulkan"
+            work_link="/test"
           />
         </List>
       </TabPanel>
+
+      <TabPanel value={value} index={1}>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h5" className={classes.categoryTitle}>
+              Fisika
+            </Typography>
+          </ExpansionPanelSummary>
+            <List className={classes.expansionPanelList}>
+              <WorkListItem
+                work_title="Tugas Fisika"
+                work_category_avatar=""
+                work_sender="Mr Jenggot"
+                work_status="Telah Dikumpulkan"
+                work_link="/test"
+              />
+              <WorkListItem
+                work_title="Tugas Biologi"
+                work_category_avatar=""
+                work_sender="Mr Jenggot"
+                work_status="Belum Dikumpulkan"
+                work_link="/test"
+              />
+            </List>
+        </ExpansionPanel>
+      </TabPanel>
+
       <TabPanel value={value} index={2}>
-        Item Three
+        <div className={classes.personList}>
+          <Typography variant="h4" gutterBottom>
+            Murid
+          </Typography>
+          <Divider style={{backgroundColor: "#2196f3"}} />
+          <List className={classes.listContainer}>
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Fucker"
+              person_role="Student"
+            />
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Fucker"
+              person_role="Student"
+            />
+          </List>
+        </div>
+        <div className={classes.personList}>
+          <Typography variant="h4" gutterBottom>
+            Guru
+          </Typography>
+          <Divider style={{backgroundColor: "#2196f3"}} />
+          <List className={classes.listContainer}>
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Fucker"
+              person_role="Fucking Teacher"
+            />
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Nigga"
+              person_role="Racism Teacher"
+            />
+          </List>
+        </div>
       </TabPanel>
     </div>
   )

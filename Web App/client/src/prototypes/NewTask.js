@@ -2,12 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Avatar, Button, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+import { Avatar, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
-import MuiAlert from '@material-ui/lab/Alert';
+import MuiAlert from "@material-ui/lab/Alert";
 import AddIcon from "@material-ui/icons/Add";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import DeleteIcon from "@material-ui/icons/Delete";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas } from "../actions/UploadActions"
 
@@ -15,6 +16,14 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1075px",
+  },
+  iconButton: {
+    "&:focus": {
+      backgroundColor: "transparent",
+    },
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
   },
   profilePicture: {
     width: theme.spacing(5),
@@ -66,10 +75,15 @@ function WorkFile(props) {
       <ListItemAvatar>
         <Avatar src={props.file_type_icon} className={classes.profilePicture} />
       </ListItemAvatar>
-        <ListItemText
-          primary={props.file_name}
-          secondary={props.file_type}
-        />
+      <ListItemText
+        primary={props.file_name}
+        secondary={props.file_type}
+      />
+      <ListItemSecondaryAction>
+        <IconButton className={classes.iconButton}>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
@@ -77,19 +91,19 @@ function WorkFile(props) {
 function CheckedWorkFilesButton() {
   const StyledMenu = withStyles({
     paper: {
-      border: '1px solid #d3d4d5',
+      border: "1px solid #d3d4d5",
     },
   })((props) => (
     <Menu
       elevation={0}
       getContentAnchorEl={null}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
+        vertical: "bottom",
+        horizontal: "center",
       }}
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
+        vertical: "top",
+        horizontal: "center",
       }}
       {...props}
     />
@@ -97,9 +111,9 @@ function CheckedWorkFilesButton() {
 
   const StyledMenuItem = withStyles((theme) => ({
     root: {
-      '&:focus': {
+      "&:focus": {
         backgroundColor: "#2196f3",
-        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
           color: theme.palette.common.white,
         },
       },
@@ -171,7 +185,7 @@ function NewTask(props) {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 

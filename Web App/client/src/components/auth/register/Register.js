@@ -228,21 +228,6 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item className={classes.inputField}>
-                  <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
-                    <label id="class">Kelas</label>
-                    <Select
-                      value={this.state.kelas}
-                      onChange={this.onChange}
-                    >
-                      <MenuItem value={"Student"}>Murid</MenuItem>
-                      <MenuItem value={"Teacher"}>Guru</MenuItem>
-                      <MenuItem value={"Admin"}>Pengelola</MenuItem>
-        //               {this.props.items.map(item =>
-          <MenuItem key={item.value} {...item} />
-        )}
-                    </Select>
-                  </FormControl>
-
                   <label id="class">Kelas</label>
                   <Multiselect
                     id="class"
