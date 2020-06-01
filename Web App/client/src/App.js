@@ -12,6 +12,7 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
 //Layout
+// Hel
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";

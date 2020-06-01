@@ -59,7 +59,8 @@ var avatar_storage = new GridFsStorage({
           if (err) {
             return reject(err);
           }
-          const filename = buf.toString('hex') + path.extname(file.originalname);
+          // const filename = buf.toString('hex') + path.extname(file.originalname);
+          const filename = file.originalname 
           const fileInfo = {
             filename: filename,
             bucketName: 'tugas'
@@ -75,6 +76,7 @@ var avatar_storage = new GridFsStorage({
 const upload = multer({ storage: avatar_storage });
 const upload2 = multer({ storage: tugas_storage });
 
+//Uploading for Avatar
 router.get('/image-upload', (req,res) => {
     console.log("AA")
     gfs.files.find().toArray((err, files) => {
@@ -97,66 +99,6 @@ router.get('/image-upload', (req,res) => {
       return res.json(files);
     });
   })
-  // @route POST /upload  
-  // @desc Upload files to DB
-  router.post('/upload/:id', upload.single('avatar'), (req,res) => {
-    // res.json({ file: req.file});
-    let id = req.params.id
-    User.findById(id, (err, userData) => {
-      if(!userData)
-        res.status(404).send("User data is not found");
-      else{
-        userData.avatar = req.file.filename;
-
-        userData
-              .save()
-              .then()
-              .catch(err => res.status(400).send("Unable to update user"))
-      }
-    })
-
-    res.redirect('/image-upload');
-    console.log(req.params)
-    console.log(req.file.filename)
-  });
-
-  router.post('/uploadtugas', upload2.single('tugas'), (req,res) => {
-    console.log("test upload tugas")
-    console.log(req)
-    console.log("Tugas telah diupload")
-    
-    // return res.json("Success")
-  })
-
-  router.get('/tugas/:filename', (req,res) => {
-
-  })
-  router.get('/download/:id', (req,res) => {
-    tugasModel.find({_id:req.params.id}, (err,data) => {
-      if(err){
-        console.log(err)
-      }
-      else { 
-        var path= __dirname+'/public'+data[0].tugasPath;
-        res.download(path);
-      }
-    })
-  })
-
-  router.get('/filetugas', (req, res) => {
-    gfs2.files.find().toArray((err, files) => {
-      // Check if files
-      if (!files || files.length === 0) {
-        return res.status(404).json({
-          err: 'Tugas belum ada'
-        });
-      }
-
-      // Files exist
-      return res.json(files);
-    });
-  });
-
   // @route GET /files
   // @desc Display all files in JSON
   router.get('/files/', (req, res) => {
@@ -188,26 +130,30 @@ router.get('/image-upload', (req,res) => {
     });
   });
 
-  //pakai read stream utk display imagenya di browser
-
-  // @route GET /files/:filename
-  // @desc  Display single file object
-
-  router.get('/tugass/:filename', (req,res) => {
-    gfs2.files.findOne({filename: req.params.filename}, (err, file) => {
-      // Check if files
-      if (!file || file.length === 0) {
-        return res.status(404).json({
-          err: 'Tugas tidak ada'
-        });
-      }
-
-      // Files exist
-      const readStream = gfs2.createReadStream(file.filename);
-      readStream.pipe(res)
-    });
-    });
   
+  // @route POST /upload  
+  // @desc Upload files to DB
+  router.post('/upload/:id', upload.single('avatar'), (req,res) => {
+
+    let id = req.params.id
+    User.findById(id, (err, userData) => {
+      if(!userData)
+        res.status(404).send("User data is not found");
+      else{
+        userData.avatar = req.file.filename;
+
+        userData
+              .save()
+              .then()
+              .catch(err => res.status(400).send("Unable to update user"))
+      }
+    })
+
+    res.redirect('/image-upload');
+    console.log(req.params)
+    console.log(req.file.filename)
+  });
+
   router.get('/image/:filename', (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
@@ -240,17 +186,74 @@ router.delete('/image/:name', (req,res) => {
     else{
      return res.json("Successful")
     }
-    // res.redirect('/');
+
   });
 })
 
-// router.get('/download/tugas/:id', (req,res) => {
-//   gfs2.find({filename:req.params.filename}, (err,data)=> {
-//     if(err)
-//       console.log(err)
-//     else{
-//       var 
-//     }
-//   })
-// })
+
+// Upload Tugas
+  router.post('/uploadtugas', upload2.single('tugas'), (req,res) => {
+    console.log("test upload tugas")
+    console.log(req)
+    console.log("Tugas telah diupload")
+    
+    // return res.json("Success")
+  })
+
+  router.get('/filetugas', (req, res) => {
+    gfs2.files.find().toArray((err, files) => {
+      // Check if files
+      if (!files || files.length === 0) {
+        return res.status(404).json({
+          err: 'Tugas belum ada'
+        });
+      }
+
+      // Files exist
+      return res.json(files);
+    });
+  });
+
+  //pakai read stream utk display imagenya di browser
+
+  // @route GET /files/:filename
+  // @desc  Display single file object
+
+  router.get('/tugass/:filename', (req,res) => {
+    gfs2.files.findOne({filename: req.params.filename}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: 'Tugas tidak ada'
+        });
+      }
+      console.log(file.filename)
+      // Files exist
+      const readStream = gfs2.createReadStream(file.filename);
+      readStream.pipe(res)
+    });
+    });
+
+  router.get('/tugas/:id', (req,res) => {
+    id = new mongoose.mongo.ObjectId(req.params.id)
+    gfs2.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: 'Tugas tidak ada'
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set('Content-Type', type);
+      res.set('Content-Disposition', "inline;filename=" + filename)
+
+      // Files exist
+      const readStream = gfs2.createReadStream(filename);
+      readStream.pipe(res)
+    });
+    });
+  
+
+
 module.exports = {router, upload, upload2};

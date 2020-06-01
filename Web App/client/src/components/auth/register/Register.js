@@ -238,8 +238,8 @@ class Register extends Component {
                       <MenuItem value={"Teacher"}>Guru</MenuItem>
                       <MenuItem value={"Admin"}>Pengelola</MenuItem>
         //               {this.props.items.map(item =>
-        //   <MenuItem key={item.value} {...item} />
-        // )}
+          <MenuItem key={item.value} {...item} />
+        )}
                     </Select>
                   </FormControl>
 

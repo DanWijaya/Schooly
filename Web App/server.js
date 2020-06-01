@@ -47,7 +47,6 @@ require("./config/passport")(passport);
 console.log("Check routes");
 
 // Routes
-
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
