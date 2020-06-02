@@ -9,7 +9,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const styles = (theme) => ({
-  mainContainer: {
+  root: {
     margin: "auto",
     maxWidth: "800px",
     textAlign: "center",
@@ -100,13 +100,13 @@ class Dashboard extends Component {
   }
 
   render() {
-    document.title="Dashboard | Schooly"
+    document.title="Schooly | Dashboard"
 
     const { classes } = this.props;
     const { user } = this.props.auth;
 
     return (
-      <div className={classes.mainContainer}>
+      <div className={classes.root}>
         <Typography variant="h3">
           <b>Selamat Datang {user.name.split(" ")[0]}</b>
         </Typography>

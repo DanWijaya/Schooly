@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
-import { Button, Checkbox, IconButton, FormControlLabel, Paper, Switch,
-   Table, TableBody, TableCell, TableContainer, TableHead,
-   TablePagination, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
+import { Checkbox, IconButton, FormControlLabel, Paper, Switch, Table,
+   TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
 function createData(classroom, homeroomTeacher, size, absent, action) {
@@ -13,9 +13,9 @@ function createData(classroom, homeroomTeacher, size, absent, action) {
 }
 
 const rows = [
-  createData("XA", "Mr Jenggot", 40, "Nihil", <Button>test</Button>),
-  createData("XB", "Mr Peler", 35, "Nihil", <Button>test</Button>),
-  createData("XC", "Mr Nigga", 36, "Nihil", <Button>test</Button>),
+  createData("XA", "Mr Jenggot", 40, "Nihil", <IconButton><EditIcon /></IconButton>),
+  createData("XB", "Mr Peler", 35, "Nihil", <IconButton><EditIcon /></IconButton>),
+  createData("XC", "Mr Nigga", 36, "Nihil", <IconButton><EditIcon /></IconButton>),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -59,19 +59,21 @@ function ClassListHead(props) {
   };
 
   return (
-    <TableHead>
+    <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
+            color="secondary"
           />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
+            align="center"
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align="center"
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -80,7 +82,7 @@ function ClassListHead(props) {
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              <b>{headCell.label}</b>
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -112,12 +114,12 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.primary.main,
-          backgroundColor: lighten(theme.palette.primary.light, 0.85),
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
         }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.primary.dark,
+          color: theme.palette.text.secondary,
+          backgroundColor: theme.palette.secondary.dark,
         },
   title: {
     flex: "1 1 100%",
@@ -136,11 +138,11 @@ const ClassListToolbar = (props) => {
     >
       {numSelected > 0 ? (
         <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected} selected
+          {numSelected} Kelas Dipilih
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          Daftar Kelas
+        <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
+          <b>Daftar Kelas</b>
         </Typography>
       )}
 
@@ -268,15 +270,17 @@ export default function NewClassList() {
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
+                          color="secondary"
+                          style={{display: "flex", justifyContent: "center"}}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
                         {row.classroom}
                       </TableCell>
-                      <TableCell align="right">{row.homeroomTeacher}</TableCell>
-                      <TableCell align="right">{row.size}</TableCell>
-                      <TableCell align="right">{row.absent}</TableCell>
-                      <TableCell align="right">{row.action}</TableCell>
+                      <TableCell align="center">{row.homeroomTeacher}</TableCell>
+                      <TableCell align="center">{row.size}</TableCell>
+                      <TableCell align="center">{row.absent}</TableCell>
+                      <TableCell align="center">{row.action}</TableCell>
                     </TableRow>
                   );
                 })}

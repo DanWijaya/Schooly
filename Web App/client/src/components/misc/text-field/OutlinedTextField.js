@@ -12,7 +12,11 @@ const OutlinedTextField = (props) => {
 
   return (
     <div>
-      <label htmlFor={props.html_for}>{props.labelname}</label>
+      <label htmlFor={props.html_for}>
+        <div className={props.label_classname}>
+          {props.labelname}
+        </div>
+      </label>
       <input
         onChange={props.on_change}
         value={props.value}

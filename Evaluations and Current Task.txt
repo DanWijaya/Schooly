@@ -6,6 +6,11 @@ Botak:
 3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
 4. Globalize "primary" color for makestyles
 5. Mobile view
+6. Ubah multiselect jadi select
+7. Masukin icon info buat error di OutlinedTextField
+8. Rename yang belum bahasa indo
+9. Rename Page Title
+10. Pakai Date Picker buat tanggal lahir
 
 Daniel:
 1. Class Page
@@ -18,19 +23,20 @@ Daniel:
 8. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
 
 Page List Done:
-- Navbar (Masih ke halang mini drawernya)
-- Profile (Kurang dikasi gambar-gambar, mungkin background image)
-- Login (Masih nda bisa masukkin icon info buat error)
-- Register (Ganti icon stepper, Rapiin multiselect sama select, Masih nda bisa masukkin icon info buat error)
-
-Page List On Work (Not completed/Not created yet):
-- All Class page (approx 5 pages)
-- All Task page (approx 5)
-- Admin Dashboards (approx 2)
+- Navbar
+- Profile
+- Login
+- Register
 - Notification
 - About
 - Landing
 - Dashboard
+- All Class Page (Select all di class list masih error)
+
+Page List On Work (Not completed/Not created yet):
+- All Task page (approx 5)
+- Admin Dashboard
+- Not found
 - Help/Terms and policies
 - Announcement (Optional) (Approx 3)
 

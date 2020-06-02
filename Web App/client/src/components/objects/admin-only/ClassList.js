@@ -158,22 +158,22 @@ class ClassList extends Component {
 }
 
 ClassList.propTypes = {
-    viewClass: PropTypes.func.isRequired,
-    classesCollection: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired,
-    deleteClass: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired,
+  viewClass: PropTypes.func.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  deleteClass: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
 }
 
 // If your mapStateToProps function is declared as taking one parameter,
 // it will be called whenever the store state changes, and given the store state as the only parameter.
 const mapStateToProps = state => ({
-    errors: state.errors,
-    classesCollection: state.classesCollection,
-    auth: state.auth
+  errors: state.errors,
+  classesCollection: state.classesCollection,
+  auth: state.auth
 })
 
 export default connect(
-    mapStateToProps,
-    { viewClass, deleteClass }
+  mapStateToProps,
+  { viewClass, deleteClass }
 ) (ClassList)

@@ -68,11 +68,11 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Kelas' },
+  { id: 'calories', numeric: true, disablePadding: false, label: 'Wali Kelas' },
+  { id: 'fat', numeric: true, disablePadding: false, label: 'Jumlah Murid' },
+  { id: 'carbs', numeric: true, disablePadding: false, label: 'Absen' },
+  { id: 'protein', numeric: true, disablePadding: false, label: 'Tindakan' },
 ];
 
 function EnhancedTableHead(props) {
