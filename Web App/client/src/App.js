@@ -12,7 +12,6 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
 //Layout
-// Hel
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
@@ -27,6 +26,7 @@ import NavBar from "./components/misc/nav-bar/NavBar";
 import CreateClass from "./components/objects/classes/CreateClass"
 import EditClass from "./components/objects/classes/EditClass";
 import ViewClass from "./components/objects/classes/ViewClass";
+import ViewSubject from "./components/objects/classes/ViewSubject";
 //Task
 import CreateTask from "./components/objects/tasks/CreateTask";
 import EditTask from "./components/objects/tasks/EditTask";
@@ -35,7 +35,6 @@ import ViewTask from "./components/objects/tasks/ViewTask";
 import ClassList from "./components/objects/admin-only/ClassList";
 //Prototypes
 import NewTask from "./prototypes/NewTask";
-import ClassSubjectList from "./prototypes/ClassSubjectList";
 import NewClassList from "./components/objects/admin-only/NewClassList";
 import Tester from "./prototypes/Tester";
 
@@ -99,7 +98,6 @@ class App extends Component {
                 <Route exact path="/masuk" component={Login} />
                 <Route exact path="/tentang-schooly" component={About} />
                 <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
-                <Route exact path="/class-subject-list" component={ClassSubjectList} /> {/*prototypetest*/}
                 <Route exact path="/newclasslist" component={NewClassList} /> {/*prototypetest*/}
                 <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
                 <Switch>
@@ -112,6 +110,7 @@ class App extends Component {
                   <PrivateRoute exact path="/viewclass" component={ViewClass} />
                   <PrivateRoute exact path="/class/:id" component={EditClass} />
                   <PrivateRoute exact path="/deleteclass/:id" component={ViewClass} />
+                  <PrivateRoute exact path="/viewsubject" component={ViewSubject} />
                   {/* Route Task  */}
                   <PrivateRoute exact path="/createtask" component={CreateTask} />
                   <PrivateRoute exact path="/viewtask" component={ViewTask} />

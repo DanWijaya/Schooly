@@ -6,12 +6,11 @@ const Student = User.discriminator('Student', new mongoose.Schema({
     kelas: { type: Object, ref: "classes"},
     tugas: [
         {
-            id:
-                { type : String, default: null}
-            , 
-            filename: 
-                {type: String, default: null}
-                
+          id:
+              { type : String, default: null}
+          ,
+          filename:
+              {type: String, default: null}
         }
         ]
     })

@@ -9,7 +9,7 @@ export const createClass = (classData, history) => dispatch => {
     .then(res => {
         console.log(res.data)
         alert("Class is created")
-        history.push("/viewclass")
+        history.push("/classlist")
     })
     .catch(err =>
         dispatch({
@@ -69,7 +69,7 @@ export const updateClass = (classData, classId, history) => dispatch => {
     .then(res => {
         console.log("Class updated to be : ", res.data);
         alert("Class is updated successfully")
-        history.push("/viewclass")
+        history.push("/classlist")
     })
     .catch(err => {
         dispatch({
@@ -85,7 +85,7 @@ export const deleteClass = (classId, history) => dispatch => {
     .then(res => {
         console.log(res.data)
         alert("Class Deleted")
-        history.push("/viewclass")
+        history.push("/classlist")
     })
     .catch(err => {
         console.log(err);

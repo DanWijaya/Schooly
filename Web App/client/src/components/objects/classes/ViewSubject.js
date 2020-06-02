@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ClassSubjectList() {
+function ViewSubject() {
   const classes = useStyles();
 
   return(
@@ -85,10 +85,10 @@ function ClassSubjectList() {
           marginTop: "30px",
         }}
       >
-        Add A New Class
+        Create a New Task
       </Button>
     </div>
   )
 }
 
-export default ClassSubjectList;
+export default ViewSubject;

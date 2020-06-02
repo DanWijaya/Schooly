@@ -8,6 +8,8 @@ import { registerUser } from "../../../actions/AuthActions";
 import { viewClass } from "../../../actions/ClassActions";
 import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
+import RegisterStepIcon from "./RegisterStepIcon";
+import RegisterStepConnector from "./RegisterStepConnector";
 import { Button, FormControl, Grid, Link, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from '@material-ui/core/Stepper'
@@ -366,10 +368,10 @@ class Register extends Component {
                 <b>Daftar ke Schooly</b>
               </Typography>
             </Grid>
-            <Stepper activeStep={this.state.activeStep} alternativeLabel>
+            <Stepper alternativeLabel activeStep={this.state.activeStep} connector={<RegisterStepConnector />}>
               {steps.map((label) => (
                 <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
+                  <StepLabel StepIconComponent={RegisterStepIcon}>{label}</StepLabel>
                 </Step>
               ))}
             </Stepper>
