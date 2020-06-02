@@ -64,7 +64,7 @@ router.post("/view", (req, res) => {
 });
 
 //Define View classes route
-router.get('/viewall', (req, res) => {
+router.get("/viewall", (req, res) => {
     Task.find({}).then((tasks, err) => {
         if(!tasks)
             return res.status(400).json("Tasks are not found");
@@ -74,7 +74,7 @@ router.get('/viewall', (req, res) => {
 })
 
 //Define delete routes
-router.delete('/delete/:id', (req, res) => {
+router.delete("/delete/:id", (req, res) => {
     Task.findByIdAndRemove(req.params.id)
         .then((tasks, err) => {
             if(!tasks) {
@@ -86,7 +86,7 @@ router.delete('/delete/:id', (req, res) => {
 })
 
 //Define Edit routes
-router.get('/edit/:id', (req, res) => {
+router.get("/edit/:id", (req, res) => {
     let id = req.params.id;
     Task.findById(id, (err, taskData) => {
         res.json(taskData);
@@ -94,7 +94,7 @@ router.get('/edit/:id', (req, res) => {
 })
 
 //Define update routes
-router.post('/update/:id', (req, res) => {
+router.post("/update/:id", (req, res) => {
     const { errors, isValid } = validateTaskInput(req.body)
 
     if(!isValid) { 

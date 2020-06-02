@@ -5,18 +5,18 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import MuiAlert from "@material-ui/lab/Alert";
 import AddIcon from "@material-ui/icons/Add";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import CancelIcon from '@material-ui/icons/Cancel';
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import CancelIcon from "@material-ui/icons/Cancel";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas , deleteTugas, downloadTugas} from "../actions/UploadActions"
 import { getTaskByUser } from "../actions/TaskActions"
-const path = require('path');
+const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +76,7 @@ function WorkFile(props) {
         secondary={props.file_type}
       />
       <ListItemSecondaryAction>
-        <IconButton className={classes.iconButton} 
+        <IconButton className={classes.iconButton}
         // onClick={() => {props.onDeleteTugas(props.file_id)}}
         onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
@@ -183,14 +183,14 @@ function NewTask(props) {
 
   const [openDownloadDialog, setOpenDownloadDialog] = React.useState(null);
 
-  if(tasksCollection.length == undefined) // it means it is empty
+  if(tasksCollection.length === undefined) // it means it is empty
     getTaskByUser(user.id)
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
     switch(ext_file) {
       case ".docx" : return "Word"
-      case ".xlsx" : 
+      case ".xlsx" :
       case ".csv"  : return "Excel"
 
       case ".png":
@@ -211,7 +211,7 @@ function NewTask(props) {
 
   const listWorkFile = () => {
     let temp = []
-    if(tasksCollection.length != undefined) {
+    if(tasksCollection.length !== undefined) {
       for (let i = 0 ; i < tasksCollection.length; i++) {
         temp.push(
         <WorkFile
@@ -224,7 +224,7 @@ function NewTask(props) {
           )
       }
     }
-    if(temp.length != tasksContents.length){
+    if(temp.length !== tasksContents.length){
       console.log("tasks added")
       setTaskContents(temp);
     }
@@ -297,7 +297,7 @@ function NewTask(props) {
     setOpenDeleteDialog(false);
   };
 
-  //Download Dialog box 
+  //Download Dialog box
   const handleOpenDownloadDialog = (fileid, filename) => {
     setOpenDownloadDialog(true);
     setSelectedFileId(fileid)

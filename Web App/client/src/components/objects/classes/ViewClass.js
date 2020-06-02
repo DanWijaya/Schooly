@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails,
-   Grid, Paper, Link, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
+import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
+   List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import BallotIcon from "@material-ui/icons/Ballot";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 
 const useStyles = makeStyles({

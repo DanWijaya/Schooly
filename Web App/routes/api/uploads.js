@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const crypto = require('crypto');
+const multer = require("multer");
+const path = require("path");
+const crypto = require("crypto");
 const GridFsStorage = require("multer-gridfs-storage")
 const GridFsStream = require("gridfs-stream");
 const methodOverride = require("method-override")
@@ -20,13 +20,13 @@ const conn = mongoose.createConnection(keys.mongoURI)
 let gfs;
 let gfs2;
 
-conn.once('open', () => {
+conn.once("open", () => {
   // Initialize Stream
   gfs = GridFsStream(conn.db, mongoose.mongo);
-  gfs.collection('avatar')
+  gfs.collection("avatar")
 
   gfs2 = GridFsStream(conn.db, mongoose.mongo);
-  gfs2.collection('tugas')
+  gfs2.collection("tugas")
 
   // all set!
 })
@@ -41,10 +41,10 @@ var avatar_storage = new GridFsStorage({
           if (err) {
             return reject(err);
           }
-          const filename = buf.toString('hex') + path.extname(file.originalname);
+          const filename = buf.toString("hex") + path.extname(file.originalname);
           const fileInfo = {
             filename: filename,
-            bucketName: 'avatar'
+            bucketName: "avatar"
           };
           resolve(fileInfo);
         });
@@ -60,11 +60,11 @@ var tugas_storage = new GridFsStorage({
         if (err) {
           return reject(err);
         }
-        // const filename = buf.toString('hex') + path.extname(file.originalname);
+        // const filename = buf.toString("hex") + path.extname(file.originalname);
         const filename = file.originalname 
         const fileInfo = {
           filename: filename,
-          bucketName: 'tugas'
+          bucketName: "tugas"
         };
         resolve(fileInfo);
       });
@@ -78,22 +78,22 @@ const uploadAvatar = multer({ storage: avatar_storage });
 const uploadTugas = multer({ storage: tugas_storage });
 
 //Uploading for Avatar
-router.get('/image-upload', (req,res) => {
+router.get("/image-upload", (req,res) => {
     console.log("AA")
     gfs.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
-        res.render('image-upload', {files: false})
+        res.render("image-upload", {files: false})
       } else {
         files.map(file => {
-          if(file.contentType === 'image/jpeg' || file.contentType === 'image/png' || file.contentType === 'image/jpg')
+          if(file.contentType === "image/jpeg" || file.contentType === "image/png" || file.contentType === "image/jpg")
           {
             file.isImage = true;
           } else {
             file.isImage = false;
           }
         });
-        res.render('image-upload', {files: files})
+        res.render("image-upload", {files: files})
       }
 
       // Files exist
@@ -102,12 +102,12 @@ router.get('/image-upload', (req,res) => {
   })
   // @route GET /files
   // @desc Display all files in JSON
-  router.get('/files/', (req, res) => {
+  router.get("/files/", (req, res) => {
     gfs.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
         return res.status(404).json({
-          err: 'No files exist'
+          err: "No files exist"
         });
       }
 
@@ -118,12 +118,12 @@ router.get('/image-upload', (req,res) => {
 
   // @route GET /files/:filename
   // @desc  Display single file object
-  router.get('/files/:filename', (req, res) => {
+  router.get("/files/:filename", (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
       if (!file || file.length === 0) {
         return res.status(404).json({
-          err: 'No file exists'
+          err: "No file exists"
         });
       }
       // File exists
@@ -134,7 +134,7 @@ router.get('/image-upload', (req,res) => {
   
   // @route POST /upload  
   // @desc Upload files to DB
-  router.post('/upload/:id', uploadAvatar.single('avatar'), (req,res) => {
+  router.post("/upload/:id", uploadAvatar.single("avatar"), (req,res) => {
 
     let id = req.params.id
     User.findById(id, (err, userData) => {
@@ -150,20 +150,20 @@ router.get('/image-upload', (req,res) => {
       }
     })
 
-    res.redirect('/image-upload');
+    res.redirect("/image-upload");
     console.log(req.file.filename)
   });
 
-  router.get('/image/:filename', (req, res) => {
+  router.get("/image/:filename", (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
       if (!file || file.length === 0) {
         return res.status(404).json({
-          err: 'No file exists'
+          err: "No file exists"
         });
       }
       // Check if Image
-      if (file.contentType === 'image/jpeg' || file.contentType === 'image/png' || file.contentType === 'image/jpg') {
+      if (file.contentType === "image/jpeg" || file.contentType === "image/png" || file.contentType === "image/jpg") {
         // Show outputnya di browser kita
 
         const readStream = gfs.createReadStream(file.filename);
@@ -178,11 +178,11 @@ router.get('/image-upload', (req,res) => {
 
 // // @route DELETE /files/:id
 // // @desc Delete File
-router.delete('/tugas/:userid/:tugasid/', (req,res) => {
+router.delete("/tugas/:userid/:tugasid/", (req,res) => {
   tugas_id = new mongoose.mongo.ObjectId(req.params.tugasid)
   user_id = req.params.userid;
 
-  gfs2.remove({ _id: tugas_id, root: 'tugas' }, (err, gridStore) => {
+  gfs2.remove({ _id: tugas_id, root: "tugas" }, (err, gridStore) => {
     if(err) {
       return res.status(404).json({err: err});
     } else{
@@ -212,8 +212,8 @@ router.delete('/tugas/:userid/:tugasid/', (req,res) => {
     }
   })
 })
-router.delete('/image/:name', (req,res) => {
-  gfs.remove({ filename: req.params.name, root: 'avatar' }, (err, gridStore) => {
+router.delete("/image/:name", (req,res) => {
+  gfs.remove({ filename: req.params.name, root: "avatar" }, (err, gridStore) => {
     if (err) {
       return res.status(404).json({ err: err });
     }
@@ -226,7 +226,7 @@ router.delete('/image/:name', (req,res) => {
 
 
 // Upload Tugas
-  router.post('/uploadtugas/:user_id/', uploadTugas.single('tugas'), (req,res) => {
+  router.post("/uploadtugas/:user_id/", uploadTugas.single("tugas"), (req,res) => {
     // To get the file details, use req.file
     let id = req.params.user_id
     console.log("Uploading the task file")
@@ -252,12 +252,12 @@ router.delete('/image/:name', (req,res) => {
     })
   })
 
-  router.get('/filetugas', (req, res) => {
+  router.get("/filetugas", (req, res) => {
     gfs2.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
         return res.status(404).json({
-          err: 'Tugas belum ada'
+          err: "Tugas belum ada"
         });
       }
 
@@ -271,19 +271,19 @@ router.delete('/image/:name', (req,res) => {
   // @route GET /files/:filename
   // @desc  Display single file object
 
-  router.get('/tugas/:id', (req,res) => {
+  router.get("/tugas/:id", (req,res) => {
     id = new mongoose.mongo.ObjectId(req.params.id)
     gfs2.files.findOne({_id: id}, (err, file) => {
       // Check if files
       if (!file || file.length === 0) {
         return res.status(404).json({
-          err: 'Tugas tidak ada'
+          err: "Tugas tidak ada"
         });
       }
       var type = file.contentType;
       var filename = file.filename;
-      res.set('Content-Type', type);
-      res.set('Content-Disposition', "inline;filename=" + filename)
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "inline;filename=" + filename)
 
       // Files exist
       const readStream = gfs2.createReadStream(filename);

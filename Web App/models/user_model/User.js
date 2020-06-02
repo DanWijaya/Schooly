@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 // Define a Schema
 const Schema = mongoose.Schema;
 
-const options = {discriminatorKey: 'role'};
+const options = {discriminatorKey: "role"};
 
 // Create Schema (New way)
 
@@ -73,6 +73,6 @@ const UserSchema = new Schema({
   },
 }, options )
 
-const User = mongoose.model('users', UserSchema);
+const User = mongoose.model("users", UserSchema);
 module.exports = User;
 

@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
-import { withStyles, useTheme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import PublishIcon from "@material-ui/icons/Publish";
 import SmsIcon from "@material-ui/icons/Sms";
-import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
   root: {

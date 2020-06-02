@@ -25,7 +25,7 @@ module.exports = {
           }
         },
         outro:
-          "Need help, or have questions? Just reply to this email, we'd love to help."
+          "Need help, or have questions? Just reply to this email, we"d love to help."
       }
     };
     email.body.name = visitoremail;

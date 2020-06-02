@@ -1,7 +1,7 @@
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
-import { Redirect } from 'react-router';
+import { Redirect } from "react-router";
 
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
    GET_USERS, GET_STUDENTS, GET_TEACHERS } from "./Types";
@@ -22,7 +22,7 @@ export const registerUser = (userData, history) => dispatch => {
       })
     }
     );
-    
+
 };
 
 export const updateUserData = (userData, userId, history) => dispatch => {
@@ -55,7 +55,7 @@ export const updateUserData = (userData, userId, history) => dispatch => {
 }
 
 export const updateAvatar = (userData, userId, formData) => dispatch => {
-  if(userData.avatar != undefined) {
+  if(userData.avatar !== undefined) {
     axios.delete(`/api/uploads/image/${userData.avatar}`)
       .then(res => {
         console.log("Old Profile picture is removed")
@@ -172,6 +172,6 @@ export const logoutUser = (history=undefined) => dispatch => {
   console.log("test")
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
-  if(history != undefined)
+  if(history !== undefined)
     history.push("/masuk")
 };
