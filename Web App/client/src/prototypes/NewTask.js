@@ -16,8 +16,6 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas , deleteTugas, downloadTugas} from "../actions/UploadActions"
 import { getTaskByUser } from "../actions/TaskActions"
-
-import { useHistory } from "react-router-dom";
 const path = require('path');
 
 const useStyles = makeStyles((theme) => ({
@@ -213,12 +211,6 @@ function NewTask(props) {
 
   const listWorkFile = () => {
     let temp = []
-    if(tasksContents.length != 0 && tasksCollection.length != tasksContents.length){
-      // window.location.reload()
-      console.log(tasksContents.length, tasksCollection.length )
-    } else {
-      console.log(tasksContents.length, tasksCollection.length )
-    }
 
     if(tasksCollection.length != undefined) {
       for (let i = 0 ; i < tasksCollection.length; i++) {
@@ -254,17 +246,13 @@ function NewTask(props) {
   };
 
   const handleTugasUpload = (e) => {
-    const [file] = e.target.files;
-    setFileTugas(e.target.files[0])
+    const files = e.target.files;
+    setFileTugas(files)
 
-    if (file) {
+    if (files) {
       const reader = new FileReader();
       const { current } = uploadedTugas;
-      current.file = file;
-      reader.onload = e => {
-        current.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      current.file = files;
     }
     console.log(fileTugas)
   }
@@ -273,22 +261,21 @@ function NewTask(props) {
     console.log("Submit tugas")
     e.preventDefault();
     let formData = new FormData()
-    console.log(fileTugas)
-    formData.append("tugas", fileTugas)
 
+    for (var i = 0; i < fileTugas.length; i++){
+      formData.append("tugas", fileTugas[i])
+    }
+    
     uploadTugas(formData, user)
-    getTaskByUser(user.id)
-
+    // getTaskByUser(user.id)
     setFileTugas(null)
     handleClick()
-    
-    // window.location.reload()
+  
   }
 
   const onDeleteTugas = (id) => {
     deleteTugas(id, user)
     setFileTugas(null)
-    // window.location.reload()
   }
 
   const onDownloadTugas = (id) => {
@@ -548,6 +535,7 @@ function NewTask(props) {
 
               <input
                 type="file"
+                multiple={true}
                 name="tugas"
                 onChange={handleTugasUpload}
                 ref={tugasUploader}
@@ -555,7 +543,7 @@ function NewTask(props) {
 
               />
 
-          <input type="file" name="file" id="file" ref={uploadedTugas} style={{
+          <input type="file" multiple={true} name="file" id="file" ref={uploadedTugas} style={{
                   display: "none"
                 }}/>
                 <Button

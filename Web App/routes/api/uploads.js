@@ -227,10 +227,11 @@ router.delete('/image/:name', (req,res) => {
 
 
 // Upload Tugas
-  router.post('/uploadtugas/:user_id/', uploadTugas.single('tugas'), (req,res) => {
+  router.post('/uploadtugas/:user_id/', uploadTugas.array('tugas', 5), (req,res) => {
     // To get the file details, use req.file
 
     let id = req.params.user_id
+    
     console.log("Uploading the task file")
     User.findById(id, (err, user) => {
       if(!user){
@@ -239,11 +240,10 @@ router.delete('/image/:name', (req,res) => {
       }
 
       else{
-        let taskId = req.file.id
-        let filename = req.file.filename
-        console.log(taskId)
-        console.log(filename)
-        user.tugas.push({id: taskId, filename: filename})
+        for(var i = 0; i < req.files.length; i++) {
+          // console.log(req.files[i].id, req.files[i].filename)
+          user.tugas.push({id: req.files[i].id, filename: req.files[i].filename})
+        }
 
         user
           .save()
