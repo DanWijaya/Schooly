@@ -245,17 +245,13 @@ function NewTask(props) {
   };
 
   const handleTugasUpload = (e) => {
-    const [file] = e.target.files;
-    setFileTugas(e.target.files[0])
+    const files = e.target.files;
+    setFileTugas(files)
 
-    if (file) {
+    if (files) {
       const reader = new FileReader();
       const { current } = uploadedTugas;
-      current.file = file;
-      reader.onload = e => {
-        current.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      current.file = files;
     }
     console.log(fileTugas)
   }
@@ -264,22 +260,21 @@ function NewTask(props) {
     console.log("Submit tugas")
     e.preventDefault();
     let formData = new FormData()
-    console.log(fileTugas)
-    formData.append("tugas", fileTugas)
+
+    for (var i = 0; i < fileTugas.length; i++){
+      formData.append("tugas", fileTugas[i])
+    }
 
     uploadTugas(formData, user)
     // getTaskByUser(user.id)
-
     setFileTugas(null)
     handleClick()
-    setTimeout(() => console.log("Delay for 1 seconds"), 1000)
-    window.location.reload()
+
   }
 
   const onDeleteTugas = (id) => {
     deleteTugas(id, user)
     setFileTugas(null)
-    window.location.reload()
   }
 
   const onDownloadTugas = (id) => {
@@ -539,6 +534,7 @@ function NewTask(props) {
 
               <input
                 type="file"
+                multiple={true}
                 name="tugas"
                 onChange={handleTugasUpload}
                 ref={tugasUploader}
@@ -546,7 +542,7 @@ function NewTask(props) {
 
               />
 
-          <input type="file" name="file" id="file" ref={uploadedTugas} style={{
+          <input type="file" multiple={true} name="file" id="file" ref={uploadedTugas} style={{
                   display: "none"
                 }}/>
                 <Button

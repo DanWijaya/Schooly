@@ -51,7 +51,7 @@ var avatar_storage = new GridFsStorage({
       });
     }
   });
- 
+
 var tugas_storage = new GridFsStorage({
   url: keys.mongoURI,
   file: (req, file) => {
@@ -61,7 +61,7 @@ var tugas_storage = new GridFsStorage({
           return reject(err);
         }
         // const filename = buf.toString("hex") + path.extname(file.originalname);
-        const filename = file.originalname 
+        const filename = file.originalname
         const fileInfo = {
           filename: filename,
           bucketName: "tugas"
@@ -131,8 +131,8 @@ router.get("/image-upload", (req,res) => {
     });
   });
 
-  
-  // @route POST /upload  
+
+  // @route POST /upload
   // @desc Upload files to DB
   router.post("/upload/:id", uploadAvatar.single("avatar"), (req,res) => {
 
@@ -197,13 +197,13 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 
     if(!user){
       return res.status(404).json({usernotfound: "User not found"});
-    } 
+    }
     else {
       for (var i = 0; i < user.tugas.length; i++){
         if(user.tugas[i].id == tugas_id)
           user.tugas.splice(i,1)
       }
-      
+
       user
           .save()
           .then(res.json("Successfully delete the task in user data"))
@@ -211,6 +211,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 
     }
   })
+  console.log("Delete file completed")
 })
 router.delete("/image/:name", (req,res) => {
   gfs.remove({ filename: req.params.name, root: "avatar" }, (err, gridStore) => {
@@ -226,9 +227,11 @@ router.delete("/image/:name", (req,res) => {
 
 
 // Upload Tugas
-  router.post("/uploadtugas/:user_id/", uploadTugas.single("tugas"), (req,res) => {
+  router.post("/uploadtugas/:user_id/", uploadTugas.array("tugas", 5), (req,res) => {
     // To get the file details, use req.file
+
     let id = req.params.user_id
+
     console.log("Uploading the task file")
     User.findById(id, (err, user) => {
       if(!user){
@@ -237,19 +240,18 @@ router.delete("/image/:name", (req,res) => {
       }
 
       else{
-        let taskId = req.file.id
-        let filename = req.file.filename
-        console.log(taskId)
-        console.log(filename)
-        user.tugas.push({id: taskId, filename: filename})
+        for(var i = 0; i < req.files.length; i++) {
+          // console.log(req.files[i].id, req.files[i].filename)
+          user.tugas.push({id: req.files[i].id, filename: req.files[i].filename})
+        }
 
         user
           .save()
-          .then(console.log("Done with updating task field on User"))
+          .then(console.log("Successfully upload the task in user data"))
           .catch(err => console.log(err))
-        
       }
     })
+    res.json("Upload file completed")
   })
 
   router.get("/filetugas", (req, res) => {
@@ -290,7 +292,7 @@ router.delete("/image/:name", (req,res) => {
       readStream.pipe(res)
     });
     });
-  
+
 
 
 module.exports = {router, uploadAvatar, uploadTugas};
