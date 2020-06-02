@@ -151,7 +151,6 @@ router.get('/image-upload', (req,res) => {
     })
 
     res.redirect('/image-upload');
-    console.log(req.params)
     console.log(req.file.filename)
   });
 
@@ -230,8 +229,10 @@ router.delete('/image/:name', (req,res) => {
   router.post('/uploadtugas/:user_id/', uploadTugas.single('tugas'), (req,res) => {
     // To get the file details, use req.file
     let id = req.params.user_id
+    console.log("Uploading the task file")
     User.findById(id, (err, user) => {
       if(!user){
+        console.log("User not found")
         return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
       }
 
@@ -246,6 +247,7 @@ router.delete('/image/:name', (req,res) => {
           .save()
           .then(console.log("Done with updating task field on User"))
           .catch(err => console.log(err))
+        
       }
     })
   })

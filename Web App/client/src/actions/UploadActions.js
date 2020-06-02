@@ -11,7 +11,7 @@ export const uploadTugas = (tugas, userData) => dispatch => {
             console.log("Tugas berhasil di unggah")
         })
         .catch(err => {
-            console.log("Ada error")
+            console.log("error in uploading")
             console.log(err);
         })
     }
@@ -28,8 +28,23 @@ export const deleteTugas = (tugas_id, userData) => {
                 console.log("Tugas berhasil dibuang")
             })
             .catch(err => {
-                console.log("Ada Error")
+                console.log("Error in deleting")
                 console.log(err)
             })
     }
+}
+
+export const downloadTugas = (tugas_id, userData) => {
+    console.log("Downloading Tugas")
+
+    axios
+        .get(`/api/uploads/tugas/${tugas_id}`) 
+        .then(res => {
+            console.log(res);
+            console.log("Tugas berhasil diunduh")
+        })
+        .catch(err => {
+            console.log("Error in downloading")
+            console.log(err)
+        })
 }

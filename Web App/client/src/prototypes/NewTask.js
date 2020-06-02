@@ -5,6 +5,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import MuiAlert from "@material-ui/lab/Alert";
 import AddIcon from "@material-ui/icons/Add";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
@@ -13,7 +14,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CancelIcon from '@material-ui/icons/Cancel';
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
-import { uploadTugas , deleteTugas} from "../actions/UploadActions"
+import { uploadTugas , deleteTugas, downloadTugas} from "../actions/UploadActions"
 import { getTaskByUser } from "../actions/TaskActions"
 const path = require('path');
 
@@ -66,7 +67,7 @@ function WorkFile(props) {
   const classes = useStyles();
 
   return(
-    <ListItem>
+    <ListItem button onClick={() => {props.handleOpenDownloadDialog(props.file_id, props.file_name)}}>
       <ListItemAvatar>
         <Avatar src={props.file_type_icon} className={classes.profilePicture} />
       </ListItemAvatar>
@@ -77,7 +78,7 @@ function WorkFile(props) {
       <ListItemSecondaryAction>
         <IconButton className={classes.iconButton} 
         // onClick={() => {props.onDeleteTugas(props.file_id)}}
-        onClick={() => {props.handleOpenDialog(props.file_id, props.file_name)}}
+        onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
           <DeleteIcon />
         </IconButton>
@@ -167,6 +168,8 @@ function CheckedWorkFilesButton() {
 
 function NewTask(props) {
   const { user } = props.auth;
+  const { uploadTugas, getTaskByUser, tasksCollection } = props;
+
   const classes = useStyles();
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -174,10 +177,11 @@ function NewTask(props) {
   const [fileTugas, setFileTugas] = React.useState(null);
   const [tasksContents, setTaskContents] = React.useState([]);
 
-  const { uploadTugas, getTaskByUser, tasksCollection } = props;
-  const [openDialog, setOpenDialog] = React.useState(null);
-  const [toDeleteFileName, setToDeleteFileName] = React.useState(null);
-  const [toDeleteFileId, setToDeleteFileId] = React.useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [selectedFileName, setSelectedFileName] = React.useState(null);
+  const [selectedFileId, setSelectedFileId] = React.useState(null);
+
+  const [openDownloadDialog, setOpenDownloadDialog] = React.useState(null);
 
   if(tasksCollection.length == undefined) // it means it is empty
     getTaskByUser(user.id)
@@ -211,7 +215,8 @@ function NewTask(props) {
       for (let i = 0 ; i < tasksCollection.length; i++) {
         temp.push(
         <WorkFile
-          handleOpenDialog = {handleOpenDialog}
+          handleOpenDeleteDialog = {handleOpenDeleteDialog}
+          handleOpenDownloadDialog = {handleOpenDownloadDialog}
           file_type_icon={0}
           file_name={tasksCollection[i].filename}
           file_id={tasksCollection[i].id}
@@ -256,6 +261,7 @@ function NewTask(props) {
   }
 
   const onSubmitTugas = (e) => {
+    console.log("Submit tugas")
     e.preventDefault();
     let formData = new FormData()
     console.log(fileTugas)
@@ -266,6 +272,7 @@ function NewTask(props) {
 
     setFileTugas(null)
     handleClick()
+    setTimeout(() => console.log("Delay for 1 seconds"), 1000)
     window.location.reload()
   }
 
@@ -275,23 +282,37 @@ function NewTask(props) {
     window.location.reload()
   }
 
+  const onDownloadTugas = (id) => {
+    downloadTugas(id)
+  }
+
   //Delete Dialog box
-  const handleOpenDialog = (fileid, filename) => {
-    setOpenDialog(true);
-    setToDeleteFileId(fileid)
-    setToDeleteFileName(filename)
+  const handleOpenDeleteDialog = (fileid, filename) => {
+    setOpenDeleteDialog(true);
+    setSelectedFileId(fileid)
+    setSelectedFileName(filename)
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setToDeleteFileName(null)
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
   };
 
-  return(
-    <div className={classes.root}>
+  //Download Dialog box 
+  const handleOpenDownloadDialog = (fileid, filename) => {
+    setOpenDownloadDialog(true);
+    setSelectedFileId(fileid)
+    setSelectedFileName(filename)
+  }
+
+  const handleCloseDownloadDialog = () => {
+    setOpenDownloadDialog(false)
+  }
+
+  function DeleteDialog(){
+    return (
       <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
         className={classes.root}
       >
         <Grid container justify="center" className={classes.dialogRoot}>
@@ -304,7 +325,7 @@ function NewTask(props) {
             <IconButton
               size="small"
               disableRipple
-              onClick={handleCloseDialog}
+              onClick={handleCloseDeleteDialog}
               className={classes.iconButtonClose}
             >
               <CloseIcon />
@@ -317,7 +338,7 @@ function NewTask(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h6" gutterBottom>
-              <b>{toDeleteFileName}</b>
+              <b>{selectedFileName}</b>
             </Typography>
           </Grid>
           <Grid
@@ -330,7 +351,7 @@ function NewTask(props) {
               >
             <Grid item>
             <Button
-              onClick={() => { onDeleteTugas(toDeleteFileId)}}
+              onClick={() => { onDeleteTugas(selectedFileId)}}
               startIcon={<DeleteOutlineIcon />}
               style={{
                 backgroundColor: "#B22222",
@@ -344,7 +365,7 @@ function NewTask(props) {
 
             <Grid item>
                   <Button
-                  onClick={handleCloseDialog}
+                  onClick={handleCloseDeleteDialog}
                     startIcon={< CancelIcon/>}
                     style={{
                       backgroundColor: "#2196f3",
@@ -358,6 +379,87 @@ function NewTask(props) {
           </Grid>
           </Grid>
       </Dialog>
+    )
+  }
+
+  function DownloadDialog() {
+    return (
+      <Dialog
+        open={openDownloadDialog}
+        onClose={handleCloseDownloadDialog}
+        className={classes.root}
+      >
+        <Grid container justify="center" className={classes.dialogRoot}>
+          <Grid item
+            container
+            justify="flex-end"
+            alignItems="flex-start"
+            style={{marginBottom: "10px"}}
+          >
+            <IconButton
+              size="small"
+              disableRipple
+              onClick={handleCloseDownloadDialog}
+              className={classes.iconButtonClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h5" gutterBottom>
+              Unduh file berikut?
+            </Typography>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h6" gutterBottom>
+              <b>{selectedFileName}</b>
+            </Typography>
+          </Grid>
+          <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={2}
+                style={{marginBottom: "20px"}}
+              >
+            <Grid item>
+            <Button
+              onClick={() => { onDownloadTugas(selectedFileId)}}
+              startIcon={<CloudDownloadIcon />}
+              style={{
+                backgroundColor: "#61bd4f",
+                color: "white",
+                width: "150px",
+              }}
+            >
+              Unduh
+            </Button>
+            </Grid>
+
+            <Grid item>
+                  <Button
+                  onClick={handleCloseDownloadDialog}
+                    startIcon={< CancelIcon/>}
+                    style={{
+                      backgroundColor: "#2196f3",
+                      color: "white",
+                      width: "150px",
+                    }}
+                  >
+                    Batalkan
+                  </Button>
+            </Grid>
+          </Grid>
+          </Grid>
+      </Dialog>
+    )
+  }
+
+  return(
+    <div className={classes.root}>
+      {DeleteDialog()}
+      {DownloadDialog()}
       <Grid container
         spacing={2}
         justify="space-between"
@@ -465,7 +567,6 @@ function NewTask(props) {
                   style={{color: "white", backgroundColor: "#2196f3"}}
                   type="submit"
                   disabled={fileTugas == null}
-                  
                 >
                   Kumpul Tugas
                 </Button>
@@ -498,6 +599,7 @@ NewTask.propTypes = {
    auth: PropTypes.object.isRequired,
    uploadTugas: PropTypes.func.isRequired,
    deleteTugas: PropTypes.func.isRequired,
+   downloadTugas: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
    getTaskByUser: PropTypes.func.isRequired,
    tasksCollection: PropTypes.object.isRequired
@@ -509,5 +611,5 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, getTaskByUser, deleteTugas}
+   mapStateToProps, {uploadTugas, getTaskByUser, deleteTugas, downloadTugas}
  ) (NewTask);
