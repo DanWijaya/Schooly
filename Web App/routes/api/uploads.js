@@ -211,6 +211,7 @@ router.delete('/tugas/:userid/:tugasid/', (req,res) => {
 
     }
   })
+  console.log("Delete file completed")
 })
 router.delete('/image/:name', (req,res) => {
   gfs.remove({ filename: req.params.name, root: 'avatar' }, (err, gridStore) => {
@@ -228,6 +229,7 @@ router.delete('/image/:name', (req,res) => {
 // Upload Tugas
   router.post('/uploadtugas/:user_id/', uploadTugas.single('tugas'), (req,res) => {
     // To get the file details, use req.file
+
     let id = req.params.user_id
     console.log("Uploading the task file")
     User.findById(id, (err, user) => {
@@ -245,11 +247,11 @@ router.delete('/image/:name', (req,res) => {
 
         user
           .save()
-          .then(console.log("Done with updating task field on User"))
+          .then(console.log("Successfully upload the task in user data"))
           .catch(err => console.log(err))
-        
       }
     })
+    res.json("Upload file completed")
   })
 
   router.get('/filetugas', (req, res) => {

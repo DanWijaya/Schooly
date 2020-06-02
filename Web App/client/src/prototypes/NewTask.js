@@ -16,6 +16,8 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas , deleteTugas, downloadTugas} from "../actions/UploadActions"
 import { getTaskByUser } from "../actions/TaskActions"
+
+import { useHistory } from "react-router-dom";
 const path = require('path');
 
 const useStyles = makeStyles((theme) => ({
@@ -182,8 +184,8 @@ function NewTask(props) {
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
   const [openDownloadDialog, setOpenDownloadDialog] = React.useState(null);
-
-  if(tasksCollection.length == undefined) // it means it is empty
+  // const history = useHistory();
+  if(tasksCollection.length == undefined ) // it means it is empty
     getTaskByUser(user.id)
 
   const fileType = (filename) => {
@@ -211,6 +213,13 @@ function NewTask(props) {
 
   const listWorkFile = () => {
     let temp = []
+    if(tasksContents.length != 0 && tasksCollection.length != tasksContents.length){
+      // window.location.reload()
+      console.log(tasksContents.length, tasksCollection.length )
+    } else {
+      console.log(tasksContents.length, tasksCollection.length )
+    }
+
     if(tasksCollection.length != undefined) {
       for (let i = 0 ; i < tasksCollection.length; i++) {
         temp.push(
@@ -268,18 +277,18 @@ function NewTask(props) {
     formData.append("tugas", fileTugas)
 
     uploadTugas(formData, user)
-    // getTaskByUser(user.id)
+    getTaskByUser(user.id)
 
     setFileTugas(null)
     handleClick()
-    setTimeout(() => console.log("Delay for 1 seconds"), 1000)
-    window.location.reload()
+    
+    // window.location.reload()
   }
 
   const onDeleteTugas = (id) => {
     deleteTugas(id, user)
     setFileTugas(null)
-    window.location.reload()
+    // window.location.reload()
   }
 
   const onDownloadTugas = (id) => {
