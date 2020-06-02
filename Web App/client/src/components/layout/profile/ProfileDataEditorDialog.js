@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { updateUserData } from "../../../actions/AuthActions"
-import { colorPalette } from "../../misc/color-palette/ColorPalette"
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
    Tab, Tabs, Typography } from "@material-ui/core";
@@ -41,23 +40,12 @@ const useStyles = makeStyles((theme) => ({
   dialogRoot: {
     padding: "15px",
   },
-  iconButtonClose: {
-    backgroundColor: "transparent",
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-  },
   tabContentList: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     width:"500px",
     height: "300px",
-  },
-  tabInfo: {
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
   },
 }));
 
@@ -211,7 +199,6 @@ function ProfileDataEditorDialog(props) {
               size="small"
               disableRipple
               onClick={handleClose}
-              className={classes.iconButtonClose}
             >
                 <CloseIcon />
             </IconButton>
@@ -222,19 +209,17 @@ function ProfileDataEditorDialog(props) {
             </Typography>
           </Grid>
           <form onSubmit={onSubmit}>
-            <ThemeProvider theme={colorPalette}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                variant="fullWidth"
-                indicatorColor="primary"
-                textColor="primary"
-              >
-                <Tab disableRipple className={classes.tabInfo} icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
-                <Tab disableRipple className={classes.tabInfo} icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
-                <Tab disableRipple className={classes.tabInfo} icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(0)} />
-              </Tabs>
-            </ThemeProvider>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              variant="fullWidth"
+              indicatorColor="primary"
+              textColor="primary"
+            >
+              <Tab icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
+              <Tab icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
+              <Tab icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(0)} />
+            </Tabs>
             <TabPanel value={value} index={0}>
               <List className={classes.tabContentList}>
                 <ProfileDataItemEdit

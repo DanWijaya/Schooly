@@ -33,14 +33,6 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  iconButton: {
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
-  },
   profileMenuItem: {
     "&:hover": {
       backgroundColor: "#2196f3",
@@ -106,7 +98,6 @@ function NavBar(props){
           mobileView={isMobileView}
           handleDrawerDesktop={handleDrawerDesktop}
           handleDrawerMobile={handleDrawerMobile}
-          iconButtonClass = {classes.iconButton}
         />
       </Grid>
     )

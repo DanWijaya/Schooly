@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     textAlign: "center",
   },
-  iconButtonAddPhoto: {
+  addPhotoIconButton: {
     color: "#2196f3",
     backgroundColor: "#DCDCDC",
     boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
@@ -45,21 +45,6 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "#DCDCDC",
       boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
-    },
-  },
-  iconButtonClose: {
-    backgroundColor: "transparent",
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-  },
-  iconButtonUploadPhoto: {
-    color: "#2196f3",
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
     },
   },
 }));
@@ -169,7 +154,7 @@ function ProfilePictureEditorDialog(props) {
         <IconButton
           disableRipple
           onClick={handleOpenDialog}
-          className={classes.iconButtonAddPhoto}
+          className={classes.addPhotoIconButton}
         >
           <CameraAltIcon
             style={{
@@ -196,7 +181,6 @@ function ProfilePictureEditorDialog(props) {
               size="small"
               disableRipple
               onClick={handleCloseDialog}
-              className={classes.iconButtonClose}
             >
               <CloseIcon />
             </IconButton>

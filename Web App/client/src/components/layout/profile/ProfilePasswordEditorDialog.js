@@ -14,12 +14,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     textAlign: "center",
   },
-  iconButtonClose: {
-    backgroundColor: "transparent",
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-  },
 }));
 
 function EditPasswordField(props) {
@@ -79,7 +73,6 @@ function ProfilePasswordEditorDialog(props) {
               size="small"
               disableRipple
               onClick={handleClose}
-              className={classes.iconButtonClose}
             >
                 <CloseIcon />
             </IconButton>
@@ -94,7 +87,7 @@ function ProfilePasswordEditorDialog(props) {
           </Grid>
           <form onSubmit={onSubmit}>
             <List>
-              <EditPasswordField 
+              <EditPasswordField
                 edit_password_requirement="Masukkan Kata Sandi Lama"
               />
               <EditPasswordField

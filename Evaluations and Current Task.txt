@@ -1,12 +1,11 @@
 Current Task
 
 Botak:
-1. Task List Page
+1. Classes and Task Pages
 2. Bikin gambar-gambar yang diperlukan (belajar AI)
-3. Bikin page createclassform, createtask form
-4. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/) ?
-5. RAPIKAN SEMUANYA
-6. Mobile view (React-Responsive)
+3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
+4. Globalize "primary" color for makestyles
+5. Mobile view
 
 Daniel:
 1. Class Page
@@ -23,13 +22,6 @@ Page List Done:
 - Profile (Kurang dikasi gambar-gambar, mungkin background image)
 - Login (Masih nda bisa masukkin icon info buat error)
 - Register (Ganti icon stepper, Rapiin multiselect sama select, Masih nda bisa masukkin icon info buat error)
-
-Error:
-- Masih bisa akses register dan landing pas udah login
-
-Fixed error:
-- Smallest picture ratio (Masih rumit solusinya)
-- Kadang styling masi rumit terutama di penggunaan grid dan div
 
 Page List On Work (Not completed/Not created yet):
 - All Class page (approx 5 pages)

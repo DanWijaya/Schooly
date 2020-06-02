@@ -12,14 +12,6 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme) => ({
-  iconButton: {
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
-  },
   menuItem: {
     "&:hover": {
       backgroundColor: "#2196f3",
@@ -72,7 +64,7 @@ function NavBarLoggedInContents(props) {
   const renderDesktopMenu = (
     <Grid container className={classes.navbarContainedRightItems}>
       <LightTooltip title={user.name}>
-        <IconButton onClick={handleProfileMenu} className={classes.iconButton}>
+        <IconButton onClick={handleProfileMenu}>
             <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
         </IconButton>
       </LightTooltip>
@@ -105,14 +97,14 @@ function NavBarLoggedInContents(props) {
           </MenuItem>
       </Menu>
       <LightTooltip title="Notifikasi">
-        <IconButton color="inherit" href="/notifikasi" className={classes.iconButton}>
+        <IconButton color="inherit" href="/notifikasi">
           <Badge badgeContent={11} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
       </LightTooltip>
       <LightTooltip title="Bantuan">
-        <IconButton color="inherit" href="/support" className={classes.iconButton}>
+        <IconButton color="inherit" href="/support">
             <HelpIcon />
         </IconButton>
       </LightTooltip>
@@ -125,7 +117,6 @@ function NavBarLoggedInContents(props) {
       <IconButton
           onClick={handleMobileMenuOpen}
           color="inherit"
-          className={classes.iconButton}
       >
         <MoreIcon />
       </IconButton>
