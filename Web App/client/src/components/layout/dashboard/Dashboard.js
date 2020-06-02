@@ -3,8 +3,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Divider, IconButton, Link, List, ListItem, Paper, Typography } from "@material-ui/core";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { Avatar, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
@@ -37,87 +37,47 @@ const styles = (theme) => ({
   },
 });
 
-const useStyles = makeStyles((theme) => ({
-  notificationSenderAvatar: {
-    display: "flex",
-    justifyContent: "flex-start",
-    width: "7.5%"
-  },
-  notificationSender: {
-    display: "flex",
-    justifyContent: "flex-start",
-    width: "17.5%"
-  },
-  notificationTitle: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "65%",
-  },
-  notificationTime: {
-    display: "flex",
-    justifyContent: "flex-end",
-    color: "grey",
-    width: "10%"
-  },
-  workTitle: {
-    display: "flex",
-    justifyContent: "flex-start",
-    width: "60%",
-  },
-  workCategory: {
-    display: "flex",
-    justifyContent: "center",
-    width: "30%"
-  },
-  workDueTime: {
-    display: "flex",
-    justifyContent: "flex-end",
-    color: "grey",
-    width: "10%",
-  }
-}));
-
 function NotificationItemList(props) {
-  const classes = useStyles();
-
   return (
-    <ListItem>
-      <div className={classes.notificationSenderAvatar}>
+    <ListItem button component="a" href={props.notification_link}>
+      <ListItemAvatar>
         <Avatar>
           {props.sender_avatar}
         </Avatar>
-      </div>
-      <Typography className={classes.notificationSender}>
-        {props.sender_name}
-      </Typography>
-      <Typography className={classes.notificationTitle}>
-        <Link href={props.notification_link}>
-          {props.notification_title}
-        </Link>
-      </Typography>
-      <Typography variant="subtitle" className={classes.notificationTime}>
-        {props.time}
-      </Typography>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography style={{color: "#2196f3"}}>
+            {props.notification_title}
+          </Typography>
+        }
+        secondary={props.sender_name}
+      />
+      <ListItemSecondaryAction>
+        <Typography variant="subtitle" style={{color: "grey"}}>
+          {props.time}
+        </Typography>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
 
 function WorkItemList(props) {
-  const classes = useStyles();
-
   return (
-    <ListItem>
-      <Typography className={classes.workTitle}>
-        <Link href={props.work_link}>
-          {props.work_title}
-        </Link>
-      </Typography>
-      <Typography className={classes.workCategory}>
-        {props.work_category}
-      </Typography>
-      <Typography variant="subtitle" className={classes.workDueTime}>
-        {props.work_duetime}
-      </Typography>
+    <ListItem button component="a" href={props.work_link}>
+      <ListItemText
+        primary={
+          <Typography style={{color: "#2196f3"}}>
+            {props.work_title}
+          </Typography>
+        }
+        secondary={props.work_category}
+      />
+      <ListItemSecondaryAction>
+        <Typography variant="subtitle" style={{color: "grey"}}>
+          {props.work_duetime}
+        </Typography>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
@@ -170,7 +130,7 @@ class Dashboard extends Component {
               Notifikasi Terkini Anda
             </Typography>
             <LightTooltip title="Semua Notifikasi" placement="right">
-              <IconButton className={classes.iconButton}>
+              <IconButton className={classes.iconButton} href="/notifikasi">
                 <ChevronRightIcon />
               </IconButton>
             </LightTooltip>

@@ -228,7 +228,6 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item className={classes.inputField}>
-
                   <label id="class">Kelas</label>
                   <Multiselect
                     id="class"

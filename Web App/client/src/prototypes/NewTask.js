@@ -2,14 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Avatar, Button, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
-import MuiAlert from '@material-ui/lab/Alert';
+import CloseIcon from "@material-ui/icons/Close";
+import MuiAlert from "@material-ui/lab/Alert";
 import AddIcon from "@material-ui/icons/Add";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
+import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
-import { uploadTugas } from "../actions/UploadActions"
+import { uploadTugas , deleteTugas} from "../actions/UploadActions"
 import { getTaskByUser } from "../actions/TaskActions"
 const path = require('path');
 
@@ -17,6 +21,18 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1075px",
+  },
+  dialogRoot: {
+    width: "350px",
+    padding: "10px",
+  },
+  iconButton: {
+    "&:focus": {
+      backgroundColor: "transparent",
+    },
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
   },
   profilePicture: {
     width: theme.spacing(5),
@@ -54,10 +70,18 @@ function WorkFile(props) {
       <ListItemAvatar>
         <Avatar src={props.file_type_icon} className={classes.profilePicture} />
       </ListItemAvatar>
-        <ListItemText
-          primary={props.file_name}
-          secondary={props.file_type}
-        />
+      <ListItemText
+        primary={props.file_name}
+        secondary={props.file_type}
+      />
+      <ListItemSecondaryAction>
+        <IconButton className={classes.iconButton} 
+        // onClick={() => {props.onDeleteTugas(props.file_id)}}
+        onClick={() => {props.handleOpenDialog(props.file_id, props.file_name)}}
+         >
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
@@ -65,19 +89,19 @@ function WorkFile(props) {
 function CheckedWorkFilesButton() {
   const StyledMenu = withStyles({
     paper: {
-      border: '1px solid #d3d4d5',
+      border: "1px solid #d3d4d5",
     },
   })((props) => (
     <Menu
       elevation={0}
       getContentAnchorEl={null}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
+        vertical: "bottom",
+        horizontal: "center",
       }}
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
+        vertical: "top",
+        horizontal: "center",
       }}
       {...props}
     />
@@ -85,9 +109,9 @@ function CheckedWorkFilesButton() {
 
   const StyledMenuItem = withStyles((theme) => ({
     root: {
-      '&:focus': {
+      "&:focus": {
         backgroundColor: "#2196f3",
-        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
           color: theme.palette.common.white,
         },
       },
@@ -144,18 +168,20 @@ function CheckedWorkFilesButton() {
 function NewTask(props) {
   const { user } = props.auth;
   const classes = useStyles();
-  const [tasks, setTasks] = React.useState(null);
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const [fileTugas, setFileTugas] = React.useState(null);
+  const [tasksContents, setTaskContents] = React.useState([]);
 
   const { uploadTugas, getTaskByUser, tasksCollection } = props;
+  const [openDialog, setOpenDialog] = React.useState(null);
+  const [toDeleteFileName, setToDeleteFileName] = React.useState(null);
+  const [toDeleteFileId, setToDeleteFileId] = React.useState(null);
+
   if(tasksCollection.length == undefined) // it means it is empty
     getTaskByUser(user.id)
 
-  // console.log(tasksCollection.length)
-  
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
     switch(ext_file) {
@@ -180,23 +206,24 @@ function NewTask(props) {
   }
 
   const listWorkFile = () => {
-    // tasks itu nanti lists, bakal di pass.
-    var tasksContents = [];
-    if(tasksCollection.length == undefined)
-      tasksContents = <WorkFile
-          file_type_icon={0}
-          file_name="Silahkan Upload file"
-          file_type="Tipe file"/>
-
-    else  
+    let temp = []
+    if(tasksCollection.length != undefined) {
       for (let i = 0 ; i < tasksCollection.length; i++) {
-        tasksContents.push(
+        temp.push(
         <WorkFile
+          handleOpenDialog = {handleOpenDialog}
           file_type_icon={0}
           file_name={tasksCollection[i].filename}
+          file_id={tasksCollection[i].id}
           file_type={fileType(tasksCollection[i].filename)}/>
           )
       }
+    }
+    if(temp.length != tasksContents.length){
+      console.log("tasks added")
+      setTaskContents(temp);
+    }
+
     return tasksContents
   }
 
@@ -205,7 +232,7 @@ function NewTask(props) {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -235,14 +262,102 @@ function NewTask(props) {
     formData.append("tugas", fileTugas)
 
     uploadTugas(formData, user)
-    getTaskByUser(user.id)
+    // getTaskByUser(user.id)
 
     setFileTugas(null)
     handleClick()
+    window.location.reload()
   }
+
+  const onDeleteTugas = (id) => {
+    deleteTugas(id, user)
+    setFileTugas(null)
+    window.location.reload()
+  }
+
+  //Delete Dialog box
+  const handleOpenDialog = (fileid, filename) => {
+    setOpenDialog(true);
+    setToDeleteFileId(fileid)
+    setToDeleteFileName(filename)
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setToDeleteFileName(null)
+  };
 
   return(
     <div className={classes.root}>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        className={classes.root}
+      >
+        <Grid container justify="center" className={classes.dialogRoot}>
+          <Grid item
+            container
+            justify="flex-end"
+            alignItems="flex-start"
+            style={{marginBottom: "10px"}}
+          >
+            <IconButton
+              size="small"
+              disableRipple
+              onClick={handleCloseDialog}
+              className={classes.iconButtonClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h5" gutterBottom>
+              Hapus file berikut?
+            </Typography>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h6" gutterBottom>
+              <b>{toDeleteFileName}</b>
+            </Typography>
+          </Grid>
+          <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={2}
+                style={{marginBottom: "20px"}}
+              >
+            <Grid item>
+            <Button
+              onClick={() => { onDeleteTugas(toDeleteFileId)}}
+              startIcon={<DeleteOutlineIcon />}
+              style={{
+                backgroundColor: "#B22222",
+                color: "white",
+                width: "150px",
+              }}
+            >
+              Hapus
+            </Button>
+            </Grid>
+
+            <Grid item>
+                  <Button
+                  onClick={handleCloseDialog}
+                    startIcon={< CancelIcon/>}
+                    style={{
+                      backgroundColor: "#2196f3",
+                      color: "white",
+                      width: "150px",
+                    }}
+                  >
+                    Batalkan
+                  </Button>
+            </Grid>
+          </Grid>
+          </Grid>
+      </Dialog>
       <Grid container
         spacing={2}
         justify="space-between"
@@ -349,6 +464,8 @@ function NewTask(props) {
                   className={classes.workButton}
                   style={{color: "white", backgroundColor: "#2196f3"}}
                   type="submit"
+                  disabled={fileTugas == null}
+                  
                 >
                   Kumpul Tugas
                 </Button>
@@ -380,6 +497,7 @@ function NewTask(props) {
 NewTask.propTypes = {
    auth: PropTypes.object.isRequired,
    uploadTugas: PropTypes.func.isRequired,
+   deleteTugas: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
    getTaskByUser: PropTypes.func.isRequired,
    tasksCollection: PropTypes.object.isRequired
@@ -391,5 +509,5 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, getTaskByUser}
+   mapStateToProps, {uploadTugas, getTaskByUser, deleteTugas}
  ) (NewTask);

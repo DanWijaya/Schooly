@@ -179,7 +179,40 @@ router.get('/image-upload', (req,res) => {
 
 // // @route DELETE /files/:id
 // // @desc Delete File
+router.delete('/tugas/:userid/:tugasid/', (req,res) => {
+  tugas_id = new mongoose.mongo.ObjectId(req.params.tugasid)
+  user_id = req.params.userid;
 
+  gfs2.remove({ _id: tugas_id, root: 'tugas' }, (err, gridStore) => {
+    if(err) {
+      return res.status(404).json({err: err});
+    } else{
+      console.log("Successful")
+      // return res.json("Successful")
+     }
+
+  })
+
+  User.findById(user_id, (err, user) => {
+    let tugas_id = req.params.tugasid;
+
+    if(!user){
+      return res.status(404).json({usernotfound: "User not found"});
+    } 
+    else {
+      for (var i = 0; i < user.tugas.length; i++){
+        if(user.tugas[i].id == tugas_id)
+          user.tugas.splice(i,1)
+      }
+      
+      user
+          .save()
+          .then(res.json("Successfully delete the task in user data"))
+          .catch(err => res.status(400).send("Unable to update user"))
+
+    }
+  })
+})
 router.delete('/image/:name', (req,res) => {
   gfs.remove({ filename: req.params.name, root: 'avatar' }, (err, gridStore) => {
     if (err) {
@@ -205,7 +238,8 @@ router.delete('/image/:name', (req,res) => {
       else{
         let taskId = req.file.id
         let filename = req.file.filename
-
+        console.log(taskId)
+        console.log(filename)
         user.tugas.push({id: taskId, filename: filename})
 
         user

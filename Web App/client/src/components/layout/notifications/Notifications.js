@@ -1,6 +1,6 @@
 import React from "react";
 import StandardTextField from "../../misc/text-field/StandardTextField"
-import { Avatar, Divider, Grid, IconButton, Link, List, ListItem, Paper, Typography } from "@material-ui/core"
+import { Avatar, Divider, Grid, IconButton, Link, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
@@ -12,11 +12,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBox: {
     padding: "20px"
-  },
-  notificationListItem: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between"
   },
   searchButton: {
     "&:focus": {
@@ -32,21 +27,25 @@ function NotificationItemList(props) {
   const classes = useStyles();
 
   return (
-    <ListItem className={classes.notificationListItem}>
-      <Avatar>
-        {props.sender_avatar}
-      </Avatar>
-      <Typography style={{width: "15%"}}>
-        {props.sender_name}
-      </Typography>
-      <Typography style={{width: "60%"}}>
-        <Link href={props.notification_link} style={{color: "#2196f3"}}>
-          {props.notification_title}
-        </Link>
-      </Typography>
-      <Typography variant="subtitle" style={{color: "grey", width: "10%"}}>
-        {props.time}
-      </Typography>
+    <ListItem button component="a" href={props.notification_link}>
+      <ListItemAvatar>
+        <Avatar>
+          {props.sender_avatar}
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography style={{color: "#2196f3"}}>
+            {props.notification_title}
+          </Typography>
+        }
+        secondary={props.sender_name}
+      />
+      <ListItemSecondaryAction>
+        <Typography variant="subtitle" style={{color: "grey"}}>
+          {props.time}
+        </Typography>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }

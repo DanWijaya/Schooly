@@ -262,6 +262,8 @@ router.get("/gettask/:id", (req, res) => {
     }
   } )
 })
+
+
 router.post("/update/avatar/:id", avatar.uploadAvatar.single('avatar'), (req,res) => {
   console.log(req)
   let id = req.params.id;
