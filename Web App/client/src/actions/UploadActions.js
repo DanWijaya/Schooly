@@ -1,10 +1,9 @@
 import { UPLOAD_TUGAS } from "./Types";
-import axios from 'axios';
+import axios from "axios";
 
 export const uploadTugas = (tugas, userData) => dispatch => {
 
-  if(userData.role == "Student") {
-
+  if(userData.role === "Student") {
     axios
         .post(`/api/uploads/uploadtugas/${userData.id}`, tugas)
         .then(res => {
@@ -21,7 +20,7 @@ export const uploadTugas = (tugas, userData) => dispatch => {
 export const deleteTugas = (tugas_id, userData) => {
     console.log("delete tugas is runned")
 
-    if(userData.role == "Student") {
+    if(userData.role === "Student") {
         axios
             .delete(`/api/uploads/tugas/${userData.id}/${tugas_id}/`)
             .then(res => {
@@ -39,7 +38,7 @@ export const downloadTugas = (tugas_id, userData) => {
     console.log("Downloading Tugas")
 
     axios
-        .get(`/api/uploads/tugas/${tugas_id}`) 
+        .get(`/api/uploads/tugas/${tugas_id}`)
         .then(res => {
             console.log(res);
             console.log("Tugas berhasil diunduh")

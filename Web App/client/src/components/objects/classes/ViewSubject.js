@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import AddBoxIcon from "@material-ui/icons/AddBox";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,14 +12,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "30px", //Should be deleted after theme passing from navbar worked
     maxWidth: "1000px",
   },
-  classCardPaper: {
+  subjectCardPaper: {
     padding: "15px",
   },
-  classWallpaper: {
-    width: "50%",
-    height: "50%",
-  },
-  classInfo: {
+  subjectInfo: {
     display: "flex",
     alignItems: "center",
   },
@@ -30,11 +26,8 @@ function ViewSubject() {
 
   return(
     <div className={classes.root}>
-      <Paper className={classes.classCardPaper}>
+      <Paper className={classes.subjectCardPaper}>
         <Grid container spacing={2}>
-          <Grid item>
-              <img src="" className={classes.classWallpaper} />
-          </Grid>
           <Grid item xs={6} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
@@ -49,7 +42,7 @@ function ViewSubject() {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body2" style={{ cursor: 'pointer' }}>
+                <Typography variant="body2" style={{ cursor: "pointer" }}>
                   <IconButton>
                     <Badge badgeContent={5} color="secondary">
                       <AnnouncementIcon />
@@ -68,7 +61,7 @@ function ViewSubject() {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item className={classes.classInfo}>
+            <Grid item className={classes.subjectInfo}>
               <Typography variant="subtitle1">
                 Hooray, there is no work assigned!
               </Typography>

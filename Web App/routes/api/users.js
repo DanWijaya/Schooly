@@ -1,4 +1,4 @@
-const avatar = require('./uploads');
+const avatar = require("./uploads");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -264,7 +264,7 @@ router.get("/gettask/:id", (req, res) => {
 })
 
 
-router.post("/update/avatar/:id", avatar.uploadAvatar.single('avatar'), (req,res) => {
+router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res) => {
   console.log(req)
   let id = req.params.id;
 
@@ -330,7 +330,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single('avatar'), (req,res
 })
 
 router.get("/getteachers", (req, res) => {
-  User.find({ role: 'Teacher' }).then((users, err) => {
+  User.find({ role: "Teacher" }).then((users, err) => {
     if(!users)
       console.log("No teachers yet in Schooly System")
     else
@@ -339,7 +339,7 @@ router.get("/getteachers", (req, res) => {
 })
 
 router.get("/getstudents", (req,res) => {
-  User.find({ role: 'Student'}).then((users, err) => {
+  User.find({ role: "Student"}).then((users, err) => {
     if(!users)
       console.log("No students yet in Schooly System")
 

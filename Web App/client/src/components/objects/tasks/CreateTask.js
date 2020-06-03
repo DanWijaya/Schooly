@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
@@ -7,19 +7,19 @@ import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
 
 import moment from "moment";
-import { SingleDatePicker } from 'react-dates';
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
-import { Multiselect } from 'multiselect-react-dropdown';
-import { InputLabel } from '@material-ui/core';
+import { SingleDatePicker } from "react-dates";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+import { Multiselect } from "multiselect-react-dropdown";
+import { InputLabel } from "@material-ui/core";
 
 class CreateTask extends Component {
     constructor() {
         super();
 
         this.state = {
-            name: '',
-            subject: '',
+            name: "",
+            subject: "",
             deadline: moment(),
             focused: false,
             // submitted: false,
@@ -47,7 +47,7 @@ class CreateTask extends Component {
         };
 
         this.props.createTask(taskObject, this.props.history);
-        this.setState({name: '', subject: ''})
+        this.setState({name: "", subject: ""})
 
     }
 

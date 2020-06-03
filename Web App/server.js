@@ -6,8 +6,8 @@ const passport = require("passport");
 const users = require("./routes/api/Users");
 const tasks = require("./routes/api/Tasks");
 const classes = require("./routes/api/Classes");
-const uploads = require('./routes/api/uploads');
-const otps = require('./routes/api/otps');
+const uploads = require("./routes/api/uploads");
+const otps = require("./routes/api/otps");
 
 const app = express();
 
@@ -36,7 +36,7 @@ mongoose
 
 
 // Mutler Middleware
-app.use(express.static('public'))
+app.use(express.static("public"))
 
 
 // Passport middleware

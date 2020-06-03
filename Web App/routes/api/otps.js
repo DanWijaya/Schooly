@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const keys = require("../../config/keys");
-const shortid = require('shortid')
+const shortid = require("shortid")
 
 const mailSender = require("../../mail/mailSender")
 const OTP = require("../../models/OTP")

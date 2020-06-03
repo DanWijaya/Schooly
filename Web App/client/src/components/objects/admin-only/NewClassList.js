@@ -2,11 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
-import { Checkbox, IconButton, FormControlLabel, Paper, Switch, Table,
-   TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
+import { Checkbox, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
+   TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import FilterListIcon from "@material-ui/icons/FilterList";
 
 function createData(classroom, homeroomTeacher, size, absent, action) {
   return { classroom, homeroomTeacher, size, absent, action };
@@ -71,7 +70,6 @@ function ClassListHead(props) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-            align="center"
             key={headCell.id}
             align="center"
             padding={headCell.disablePadding ? "none" : "default"}

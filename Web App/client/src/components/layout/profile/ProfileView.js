@@ -5,7 +5,7 @@ import { updateAvatar } from "../../../actions/AuthActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
 import { Avatar, Grid, List, ListItem, ListItemAvatar, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
 import EmailIcon from "@material-ui/icons/Email";

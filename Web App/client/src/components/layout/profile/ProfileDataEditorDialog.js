@@ -5,7 +5,7 @@ import { updateUserData } from "../../../actions/AuthActions"
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
    Tab, Tabs, Typography } from "@material-ui/core";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";

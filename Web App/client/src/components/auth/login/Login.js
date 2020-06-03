@@ -49,7 +49,7 @@ class Login extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Login page, should redirect them to dashboard
-    console.log('AA')
+    console.log("AA")
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
@@ -104,7 +104,7 @@ class Login extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} />
+        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} alt="schooly logo alt" />
         <Paper>
           <Grid
             container

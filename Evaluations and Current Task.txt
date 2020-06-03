@@ -1,7 +1,7 @@
 Current Task
 
 Botak:
-1. Classes and Task Pages
+1. PageNotFound, Help, Forgot Password, Admin Dashboard, Terms and Policies, About
 2. Bikin gambar-gambar yang diperlukan (belajar AI)
 3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
 4. Globalize "primary" color for makestyles
@@ -11,6 +11,9 @@ Botak:
 8. Rename yang belum bahasa indo
 9. Rename Page Title
 10. Pakai Date Picker buat tanggal lahir
+11. Error Nomor Telepon Darurat
+12. Tambahkan step 3 register untuk konfirmasi terms and condition
+13. Tambahin show password pas register
 
 Daniel:
 1. Class Page
@@ -35,12 +38,9 @@ Page List Done:
 
 Page List On Work (Not completed/Not created yet):
 - All Task page (approx 5)
-- Admin Dashboard
-- Not found
-- Help/Terms and policies
 - Announcement (Optional) (Approx 3)
 
-Possibly will implement these feature:
+Possibly will implement these features:
 - Send OTP pas user register.
 - Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
 - Mungkin buat page utk si Admin utk bisa manage users

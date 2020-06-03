@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -7,7 +7,7 @@ import { getTeachers } from "../../../actions/AuthActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { Multiselect } from 'multiselect-react-dropdown';
+import { Multiselect } from "multiselect-react-dropdown";
 
 const styles = (theme) => ({
   root: {
@@ -45,13 +45,13 @@ class CreateClass extends Component {
   constructor() {
     super();
     this.state = {
-      name: '',
+      name: "",
       nihil: true,
       walikelas: {},
       ukuran: 0,
       // ketua_kelas: {},
-      // sekretaris: '',
-      // bendahara: '',
+      // sekretaris: "",
+      // bendahara: "",
       errors: {}
     };
   }
@@ -73,7 +73,7 @@ class CreateClass extends Component {
       errors: {}
     };
     this.props.createClass(classObject, this.props.history);
-    this.setState({name: '', nihil: true, walikelas: '', ukuran: 0})
+    this.setState({name: "", nihil: true, walikelas: "", ukuran: 0})
   }
 
   onSelect = (selectedList, selectedItem) => {
@@ -94,7 +94,7 @@ class CreateClass extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     // if(nextProps.success) {
-    //     this.props.history.push('/viewclass');
+    //     this.props.history.push("/viewclass");
     // }
     if(nextProps.errors) {
         this.setState({

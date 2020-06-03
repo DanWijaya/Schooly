@@ -1,6 +1,6 @@
 import React from "react";
 import StandardTextField from "../../misc/text-field/StandardTextField"
-import { Avatar, Divider, Grid, IconButton, Link, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core"
+import { Avatar, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
@@ -24,8 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NotificationItemList(props) {
-  const classes = useStyles();
-
   return (
     <ListItem button component="a" href={props.notification_link}>
       <ListItemAvatar>

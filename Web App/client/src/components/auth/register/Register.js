@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -10,11 +10,11 @@ import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, FormControl, Grid, Link, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import { Button, FormControl, Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import Stepper from '@material-ui/core/Stepper'
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
+import Stepper from "@material-ui/core/Stepper"
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
 
 const styles = (theme) => ({
   root: {
@@ -112,13 +112,13 @@ class Register extends Component {
 
     const role = this.state.role;
 
-    if(role == "Student") {
+    if(role === "Student") {
       newUser.kelas = this.state.kelas;
-    } else if (role == "Teacher") {
+    } else if (role === "Teacher") {
       newUser.subject_teached = this.state.subject_teached;
     }
 
-    if(this.state.activeStep == 1)
+    if(this.state.activeStep === 1)
         this.setState({submitButtonClicked: true})
 
     console.log(newUser)
@@ -326,14 +326,14 @@ class Register extends Component {
     const classesCollection = this.props.classesCollection;
     var options = []
 
-    if(Object.keys(classesCollection).length != 0){
+    if(Object.keys(classesCollection).length !== 0){
       options = classesCollection
     }
 
     const steps = getSteps();
 
     const handleNext = () => {
-      if(this.state.activeStep != 1 || this.state.errors == null)
+      if(this.state.activeStep !== 1 || this.state.errors === null)
         this.setState(prevState => ({
           activeStep: prevState.activeStep + 1,
           submitButtonClicked: false
@@ -348,13 +348,9 @@ class Register extends Component {
       )
     }
 
-    const handleReset = () => {
-      this.setState({ activeStep : 0 })
-    };
-
     return (
       <div className={classes.root}>
-        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt}/>
+        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} alt="schooly logo alt"/>
         <Paper>
           <Grid
             container
@@ -414,7 +410,6 @@ class Register extends Component {
                         <Button
                           variant="contained"
                           type="button"
-                          variant="contained"
                           onClick={handleNext}
                           style={{
                             backgroundColor: "#2196f3",
