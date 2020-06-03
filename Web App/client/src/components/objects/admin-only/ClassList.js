@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { connect } from "react-redux";
 import { viewClass, deleteClass } from "../../../actions/ClassActions"
-import { Modal, Button } from 'react-bootstrap';
-import './ClassList.css'
+import { Modal, Button } from "react-bootstrap";
+import "./ClassList.css"
 
 function ClassDataView(props) {
   return(
@@ -84,7 +83,7 @@ class ClassList extends Component {
 
   deletePopWindow = () => {
     return (
-      <Modal style={{marginTop: '200px'}} show={this.state.show} onHide={() => {this.closeModal()}}>
+      <Modal style={{marginTop: "200px"}} show={this.state.show} onHide={() => {this.closeModal()}}>
         <Modal.Header>Deleting Class {this.props.classesCollection.name}
           <Link to="/classdatatable" class="close" onClick={() => {this.closeModal()}}>
             <span aria-hidden="true">x</span>
@@ -111,7 +110,7 @@ class ClassList extends Component {
 
   dataTable() {
     const { classesCollection } = this.state;
-    if(classesCollection.length == 0)
+    if(classesCollection.length === 0)
         this.props.viewClass();
 
     console.log(this.state.classesCollection)
@@ -123,7 +122,7 @@ class ClassList extends Component {
   render() {
     const { user } = this.props.auth;
 
-    if( user.role == "Teacher") {
+    if( user.role === "Teacher") {
       return(
         <div className="wrapper-classesCollection">
             {this.deletePopWindow()}
@@ -148,10 +147,10 @@ class ClassList extends Component {
           </div>
         </div>
         )}
-    else if (user.role =="Student") {
+    else if (user.role === "Student") {
       return(
-        <div style={{ marginLeft: '250px'}}>
-          <h1 style={{ alignItems : 'center'}}> Your class is <b>{user.kelas.name}</b></h1>
+        <div style={{ marginLeft: "250px"}}>
+          <h1 style={{ alignItems : "center"}}> Your class is <b>{user.kelas.name}</b></h1>
         </div>
       )}
   }

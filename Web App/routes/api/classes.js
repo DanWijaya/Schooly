@@ -49,7 +49,7 @@ router.get("/view/:id", (req, res) => {
 });
 
 
-router.get('/viewall', (req, res) => {
+router.get("/viewall", (req, res) => {
     Class.find({ }).then((classes, err) => {
         if(!classes)
             res.status(400).json(err);
@@ -58,7 +58,7 @@ router.get('/viewall', (req, res) => {
     });
 });
 
-router.delete('/delete/:id', (req, res) => {
+router.delete("/delete/:id", (req, res) => {
     Class.findByIdAndRemove(req.params.id)
         .then((classes, err) => {
             if(!classes) {
@@ -69,7 +69,7 @@ router.delete('/delete/:id', (req, res) => {
         })
 })
 
-router.get('/edit/:id', (req, res) => {
+router.get("/edit/:id", (req, res) => {
     let id = req.params.id;
     console.log(id);
     Class.findById(id, (err, classData) => {
@@ -77,7 +77,7 @@ router.get('/edit/:id', (req, res) => {
     });
 })
 
-router.post('/update/:id', (req,res) => {
+router.post("/update/:id", (req,res) => {
     let id = req.params.id;
     Class.findById(id, (err, classData) => {
         if(!classData){

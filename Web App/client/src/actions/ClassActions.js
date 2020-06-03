@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { GET_ERRORS, GET_CLASSES } from './Types';
+import axios from "axios";
+import { GET_ERRORS, GET_CLASSES } from "./Types";
 
 // Add Class
 export const createClass = (classData, history) => dispatch => {

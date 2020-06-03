@@ -1,22 +1,21 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import moment from "moment";
-import { SingleDatePicker } from 'react-dates';
-import { editTask, updateTask } from '../../../actions/TaskActions';
-import { Multiselect } from 'multiselect-react-dropdown';
-import { InputLabel } from '@material-ui/core';
-// import { viewTask } from '../../../actions/TaskActions'
+import { SingleDatePicker } from "react-dates";
+import { editTask, updateTask } from "../../../actions/TaskActions";
+import { Multiselect } from "multiselect-react-dropdown";
+import { InputLabel } from "@material-ui/core";
+// import { viewTask } from "../../../actions/TaskActions"
 
 class EditTask extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { 
-            name: '',
-            subject: '',
+        this.state = {
+            name: "",
+            subject: "",
             deadline: moment(),
             tasksCollection: [],
             class_assigned: [],
@@ -53,8 +52,8 @@ class EditTask extends Component {
     onSelect = (selectedList, selectedItem) => {
         console.log(this.state.class_assigned)
         this.setState({ class_assigned: selectedList})
-      } 
-  
+      }
+
       onRemove = (selectedList, selectedItem) => {
         this.setState({ class_assigned: selectedList})
       }
@@ -84,32 +83,32 @@ class EditTask extends Component {
 
         const options = [
             {
-              name: 'X A',
-              id: 'X A'
+              name: "X A",
+              id: "X A"
             },
             {
-              name: 'X B',
-              id: 'X B'
+              name: "X B",
+              id: "X B"
             },
             {
-              name: 'XI A',
-              id: 'XI A'
+              name: "XI A",
+              id: "XI A"
             },
             {
-              name: 'XI B',
-              id: 'XI B'
+              name: "XI B",
+              id: "XI B"
             },
             {
-              name: 'XII A',
-              id: 'XII A'
+              name: "XII A",
+              id: "XII A"
             },
             {
-              name: 'XII B',
-              id: 'XII B'
+              name: "XII B",
+              id: "XII B"
             },
-            
+
           ]
-        return ( 
+        return (
             <div className="container">
                 <div className="col s8 offset-s2">
                     <div className="col s12" style={{ paddingLeft: "11.250px"}}>
@@ -119,7 +118,7 @@ class EditTask extends Component {
                     </div>
                     <form noValidate onSubmit={this.onSubmit}>
                     <div className="input-field col s12">
-                        <input  
+                        <input
                             onChange={this.onChange}
                             value={this.state.name}
                             error={errors.name}
@@ -131,12 +130,12 @@ class EditTask extends Component {
                         />
                         {/* <label htmlFor="name" class="active">Name</label> */}
                         {/* This is another solution */}
-                        {this.state.name === "" ? 
+                        {this.state.name === "" ?
                     <label htmlFor="name">Name</label> :
                     <label htmlFor="name" class="active">Name</label>}
                         <span className="red-text">{errors.name}</span>
                     </div>
-                    
+
 
                     <div className="input-field col s12">
                       Deadline <SingleDatePicker
@@ -146,7 +145,7 @@ class EditTask extends Component {
                         focused={this.state.focused}
                         onFocusChange={({focused}) => this.setState({ focused})}
                         />
-                  
+
                     {/* <label htmlFor="deadline">Deadline</label> */}
                     <span className="red-text">{errors.deadline}</span>
                     </div>
@@ -165,7 +164,7 @@ class EditTask extends Component {
                     />
                     {/* <label htmlFor="subject" class="active">Subject</label> */}
                    {/* This is another solution, might not an elegant solution...  */}
-                   {this.state.subject === "" ? 
+                   {this.state.subject === "" ?
                     <label htmlFor="subject">Subject</label> :
                     <label htmlFor="subject" class="active">Subject</label>}
                     <span className="red-text">{errors.subject}</span>
@@ -173,7 +172,7 @@ class EditTask extends Component {
 
                     <div className=" col s12">
                         <InputLabel id="class-assigned">Classes assigned</InputLabel>
-                        <Multiselect id="class_assigned" options={options} selectedValues={this.state.class_assigned} onSelect={this.onSelect} 
+                        <Multiselect id="class_assigned" options={options} selectedValues={this.state.class_assigned} onSelect={this.onSelect}
                         onRemove={this.onRemove} value displayValue="name" error={errors.class_assigned} showCheckBox={true}
                         className={classnames("", {
                             invalid: errors.class_assigned

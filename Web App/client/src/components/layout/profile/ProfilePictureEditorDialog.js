@@ -120,15 +120,16 @@ function ProfilePictureEditorDialog(props) {
     if(!profileImg){
       let avatar_default
 
-      if(user.avatar == ""){
+      if(user.avatar === ""){
         avatar_default = defaultAvatar
       } else {
         avatar_default = `/api/uploads/image/${user.avatar}`
       }
-      
+
       return (
       <Avatar className={classes.avatar}>
         <img
+          alt="profile"
           onLoad={onImgLoad}
           src={avatar_default}
           ref={uploadedImage}
@@ -139,7 +140,7 @@ function ProfilePictureEditorDialog(props) {
       return (
       <Avatar className={classes.avatar}>
         <img
-          alt="default profile picture"
+          alt="default profile"
           onLoad={onImgLoad}
           ref={uploadedImage}
           className={avatarImgClass}

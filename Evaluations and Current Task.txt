@@ -13,7 +13,11 @@ Botak:
 10. Pakai Date Picker buat tanggal lahir
 11. Error Nomor Telepon Darurat
 12. Tambahkan step 3 register untuk konfirmasi terms and condition
+<<<<<<< HEAD
 13. Tambahin show password pas register (step 3)
+=======
+13. Tambahin show password pas register
+>>>>>>> b4a04b118403cc1c2b7d7885e42b811df2822fa5
 
 Daniel:
 1. Class Page

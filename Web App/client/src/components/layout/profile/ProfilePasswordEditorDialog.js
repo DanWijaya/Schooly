@@ -17,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EditPasswordField(props) {
-  const classes = useStyles();
-
   return(
     <ListItem>
         <Grid container alignItems="center">

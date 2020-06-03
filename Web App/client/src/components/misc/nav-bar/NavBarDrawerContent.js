@@ -107,7 +107,7 @@ function NavBarDrawerContent(props) {
           <Drawer
             container={container}
             variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            anchor={theme.direction === "rtl" ? "right" : "left"}
             open={mobileOpen}
             onClose={handleDrawerMobile}
             classes={{
@@ -144,7 +144,7 @@ function NavBarDrawerContent(props) {
   }
   else {
     return (
-      <div style={{display: 'none'}} />
+      <div style={{display: "none"}} />
     )
   }
 }

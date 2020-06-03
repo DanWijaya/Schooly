@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import TaskDataTable from './TaskDataTable';
-import { viewTask, deleteTask } from '../../../actions/TaskActions'
-import { Modal, Button } from 'react-bootstrap'
-import './ViewTask.css'
+import TaskDataTable from "./TaskDataTable";
+import { viewTask, deleteTask } from "../../../actions/TaskActions"
+import { Modal, Button } from "react-bootstrap"
+import "./ViewTask.css"
 import {Typography} from "@material-ui/core";
 
 class ViewTask extends Component {
@@ -61,7 +60,7 @@ class ViewTask extends Component {
 
     deletePopWindow = () => {
         return(
-        <Modal style={{marginTop: '200px'}} show={this.state.show} onHide={() => {this.closeModal()}}>
+        <Modal style={{marginTop: "200px"}} show={this.state.show} onHide={() => {this.closeModal()}}>
             <Modal.Header>Deleting Task <Link to="/viewtask" class="close" onClick={() => {this.closeModal()}}>
                 <span aria-hidden="true">x</span>
                 <span class="sr-only">Close</span>
@@ -116,7 +115,7 @@ class ViewTask extends Component {
         } else if (user.role === "Student"){
             return (
                 <div className="wrapper-taskCollection">
-                    <Typography variant="h4" style={{ display: 'flex' , justifyContent : 'center'}}> Here is your due task</Typography>
+                    <Typography variant="h4" style={{ display: "flex" , justifyContent : "center"}}> Here is your due task</Typography>
                     {this.dataTable()}
                 </div>
             )
