@@ -4,8 +4,7 @@ let mailGenerator = new Mailgen({
   theme: "default",
   product: {
     name: "mailgun-impelementation-boilerplate",
-    link:
-      "https://timedotcom.files.wordpress.com/2018/04/japanese-forest-bathing.jpg",
+    link: "https://timedotcom.files.wordpress.com/2018/04/japanese-forest-bathing.jpg",
     logo: process.env.MAIL_LOGO_FOR_VISITOR
   }
 });

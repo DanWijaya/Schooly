@@ -32,7 +32,7 @@ const styles = (theme) => ({
 class TaskDataTable extends Component {
   render(){
       const { classes } = this.props;
-      return(
+      return (
           <div className={classes.root}>
             <Grid container spacing={2} style={{display: "flex", justifyContent: "space-between"}}>
               <Paper className={classes.paperBox}>

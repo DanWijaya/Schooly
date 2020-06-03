@@ -205,7 +205,7 @@ class EditClass extends Component {
       return items;
     }
 
-    return(
+    return (
       <div className={classes.root}>
         <Paper>
           <div className={classes.mainGrid}>

@@ -80,7 +80,7 @@ function TabIndex(index) {
 }
 
 function ProfileDataItemEdit(props) {
-  return(
+  return (
     <ListItem>
         <ListItemAvatar>
           <Avatar style={{backgroundColor: "#2196f3"}}>

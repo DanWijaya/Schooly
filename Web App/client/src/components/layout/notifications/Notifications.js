@@ -13,14 +13,6 @@ const useStyles = makeStyles((theme) => ({
   paperBox: {
     padding: "20px"
   },
-  searchButton: {
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
-  },
 }));
 
 function NotificationItemList(props) {
@@ -51,7 +43,7 @@ function NotificationItemList(props) {
 function Notifications(props) {
   const classes = useStyles();
 
-  return(
+  return (
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
           <div style={{display: "flex", justifyContent: "space-between", height: "60px"}}>

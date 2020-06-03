@@ -114,7 +114,7 @@ function ViewClass(props) {
     setValue(newValue);
   };
 
-  return(
+  return (
     <div className={classes.root}>
       <Paper>
         <Typography variant="h3" style={{textAlign: "center"}} gutterBottom>

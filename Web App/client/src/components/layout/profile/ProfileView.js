@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProfileDataItem(props) {
-  return(
+  return (
     <ListItem>
         <ListItemAvatar>
           <Avatar style={{backgroundColor: "#2196f3"}}>
@@ -104,7 +104,7 @@ function ProfileView(props) {
   }
 
   document.title=`Schooly | ${user.name}`
-  return(
+  return (
     <div className={classes.root}>
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">

@@ -121,7 +121,7 @@ class Login extends Component {
             </Grid>
             <Grid item style={{width:"300px"}} >
               <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
-                <div style={{marginBottom: "15px"}}>
+                <div style={{marginBottom: "20px"}}>
                   <OutlinedTextField
                     on_change={this.onChange}
                     value={this.state.email}
@@ -171,17 +171,16 @@ class Login extends Component {
                     backgroundColor: "#61bd4f",
                     color: "white",
                     width: "100%",
-                    marginTop: "20px"
+                    marginTop: "25px"
                   }}
                 >
                   Masuk
                 </Button>
               </form>
             </Grid>
-            <Divider style={{width: "300px"}}
-            />
+            <Divider style={{width: "300px"}} />
             <Grid item>
-              <Link href="/forgotpassword">
+              <Link href="/lupa-katasandi">
                 Lupa Kata Sandi?
               </Link>
             </Grid>
