@@ -92,20 +92,6 @@ class Register extends Component {
       this.setState({ [e.target.id]: e.target.value });
   };
 
-  onChangeKelas = (e) => {
-    this.setState({kelas: e.target.value});
-  }
-
-  onChangeRole = (e) => {
-    this.setState({ role: e.target.value})
-  }
-  onSelect = (selectedList, selectedItem) => {
-    if(selectedList.length > 1)
-      selectedList.shift()
-    this.setState({ kelas: selectedList[0]})
-    console.log(selectedItem)
-  };
-
   onSubmit = e => {
     e.preventDefault();
     var newUser = {
@@ -140,8 +126,7 @@ class Register extends Component {
     document.title="Daftar ke Schooly"
     const { classes, classesCollection } = this.props;
     const { errors } = this.state;
-    
-    console.log(classesCollection)
+
     var options = []
 
     if(Object.keys(classesCollection).length !== 0){
@@ -258,7 +243,7 @@ class Register extends Component {
                     onChange={(event) => {this.onChange(event, "kelas")}}
                   >
                     {options.map((kelas) => (
-                      <MenuItem value={kelas.name}>{kelas.name}</MenuItem>
+                      <MenuItem value={kelas}>{kelas.name}</MenuItem>
                     ))}
                   </Select>
                 

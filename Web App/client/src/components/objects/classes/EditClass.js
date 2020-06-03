@@ -5,7 +5,7 @@ import classnames from "classnames";
 import { getTeachers , getStudents} from "../../../actions/AuthActions";
 import { editClass, updateClass } from "../../../actions/ClassActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography, Menu } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Multiselect } from "multiselect-react-dropdown";
 
@@ -61,8 +61,25 @@ class EditClass extends Component {
     this.props.editClass(classId);
   }
 
-  onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value});
+  onChange = (e, otherfield) => {
+    switch(otherfield){
+      case "bendahara": 
+        this.setState({ bendahara: e.target.value})
+        break;
+
+      case "sekretaris":
+        console.log("set sekretaris")
+        console.log(e.target.value)
+        this.setState({ sekretaris: e.target.value})
+        break;  
+
+      case "ketua_kelas":
+        this.setState({ ketua_kelas: e.target.value})
+        break;
+
+      default:
+        this.setState({ [e.target.id]: e.target.value});
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -75,8 +92,9 @@ class EditClass extends Component {
     if(nextProps.classesCollection.ketua_kelas)
       next_ketua_kelas = nextProps.classesCollection.ketua_kelas
 
-    if(nextProps.classesCollection.sekretaris)
+    if(nextProps.classesCollection.sekretaris){
       next_sekretaris = nextProps.classesCollection.sekretaris
+    }
 
     if(nextProps.classesCollection.bendahara)
       next_bendahara = nextProps.classesCollection.bendahara
@@ -112,42 +130,41 @@ class EditClass extends Component {
     this.props.updateClass(classObject, classId, this.props.history);
   }
 
-  onSelectTeacher = (selectedList, selectedItem) => {
-    if(selectedList.length === 0)
-      selectedList.push(this.state.walikelas)
-    if(selectedList.length > 1)
-      selectedList.shift()
+  // onSelectTeacher = (selectedList, selectedItem) => {
+  //   if(selectedList.length === 0)
+  //     selectedList.push(this.state.walikelas)
+  //   if(selectedList.length > 1)
+  //     selectedList.shift()
 
-    this.setState({ walikelas: selectedList[0]})
-  }
+  //   this.setState({ walikelas: selectedList[0]})
+  // }
 
-  onSelectKetuaKelas = (selectedList, selectedItem) => {
-    if(selectedList.length === 0)
-      selectedList.push(this.state.ketua_kelas)
-    if(selectedList.length > 1)
-      selectedList.shift()
+  // onSelectKetuaKelas = (selectedList, selectedItem) => {
+  //   if(selectedList.length === 0)
+  //     selectedList.push(this.state.ketua_kelas)
+  //   if(selectedList.length > 1)
+  //     selectedList.shift()
 
-    this.setState({ ketua_kelas: selectedList[0]})
-  }
+  //   this.setState({ ketua_kelas: selectedList[0]})
+  // }
 
-  onSelectSekretaris = (selectedList, selectedItem) => {
-    if(selectedList.length === 0)
-      selectedList.push(this.state.sekretaris)
-    if(selectedList.length > 1)
-      selectedList.shift()
+  // onSelectSekretaris = (selectedList, selectedItem) => {
+  //   if(selectedList.length === 0)
+  //     selectedList.push(this.state.sekretaris)
+  //   if(selectedList.length > 1)
+  //     selectedList.shift()
 
-    this.setState({ sekretaris: selectedList[0]})
-  }
+  //   this.setState({ sekretaris: selectedList[0]})
+  // }
 
-  onSelectBendahara = (selectedList, selectedItem) => {
-    if(selectedList.length === 0)
-      selectedList.push(this.state.bendahara)
-    if(selectedList.length > 1)
-      selectedList.shift()
+  // onSelectBendahara = (selectedList, selectedItem) => {
+  //   if(selectedList.length === 0)
+  //     selectedList.push(this.state.bendahara)
+  //   if(selectedList.length > 1)
+  //     selectedList.shift()
 
-    this.setState({ bendahara: selectedList[0]})
-  }
-
+  //   this.setState({ bendahara: selectedList[0]})
+  // }
   componentDidMount() {
     this.props.getTeachers()
     this.props.getStudents()
@@ -160,12 +177,33 @@ class EditClass extends Component {
 
     const { all_teachers} = this.props.auth;
     const { all_students } = this.props.auth;
-
+    const { sekretaris } = this.state;
     var teacher_options = all_teachers
     var student_options = all_students
 
-    console.log(teacher_options)
-    console.log(this.state.walikelas)
+    const returnId = (student_id) => {
+      for (var i = 0; i < student_options.length; i++) {
+          // console.log(student_options[i]._id)
+          if(student_options[i]._id == student_id._id){
+            return student_id._id
+          }
+      }
+    }
+
+    const showValue = (options) => {
+      let items = []
+      options.map((student) => {
+        console.log(student, this.state.sekretaris)
+        items.push(
+        <MenuItem 
+        value={returnId(student)}
+        // value={student}
+        > 
+        {student.name}
+        </MenuItem>)
+      })
+      return items;
+    }
 
     return(
       <div className={classes.root}>
@@ -273,32 +311,40 @@ class EditClass extends Component {
                   })}/> : ""}
                 </Grid>
                 <Grid item className={classes.gridItem}>
-                  <label id="sekretaris">
-                    <div className={classes.inputLabel}>
-                      Sekretaris
-                    </div>
-                  </label>
-                    {this.state.sekretaris ? <Multiselect id="sekretaris" options={student_options} onSelect={this.onSelectSekretaris} selectedValues={[this.state.sekretaris]} onRemove={this.onRemove} displayValue="name" error={errors.sekretaris} showCheckBox={true}
-                  className={classnames("", {
-                      invalid: errors.sekretaris
-                  })}/> : ""}
+                <FormControl id="sekretaris" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <label id="sekretaris" className={classes.inputLabel}>Sekretaris</label>
+                    <Select
+                    value={sekretaris}
+                    displayEmpty
+                    onChange={(event) => {this.onChange(event, "sekretaris")}}
+                  >
+                    {showValue(student_options)}
+                  </Select>
+                
+                </FormControl>
                 </Grid>
+
                 <Grid item className={classes.gridItem}>
-                  <label id="">
-                    <div className={classes.inputLabel}>
-                      Bendahara
-                    </div>
-                  </label>
-                    {this.state.bendahara ? <Multiselect id="ketuakelas" options={student_options} onSelect={this.onSelectBendahara} selectedValues={[this.state.bendahara]} onRemove={this.onRemove} displayValue="name" error={errors.bendahara} showCheckBox={true}
-                  className={classnames("", {
-                      invalid: errors.bendahara
-                  })}/> : ""}
+                
+                <FormControl id="bendahara" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <label id="bendahara" className={classes.inputLabel}>Bendahara</label>
+                    <Select
+                    value={this.state.bendahara}
+                    onChange={(event) => {this.onChange(event, "bendahara")}}
+                  >
+                    {student_options.map((student) => (
+      <MenuItem value={student}>{student.name}</MenuItem>
+                    )
+    )}
+                  </Select>
+                
+                </FormControl>
                 </Grid>
                 <Grid item className={classes.gridItem}>
                   <Button
                     type="submit"
                     style={{
-                      backgroundColor: "#2196f3",
+                      backgroundColor: "#61bd4f",
                       color: "white",
                       width: "100%",
                       marginTop: "20px",

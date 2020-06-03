@@ -5,7 +5,7 @@ import classnames from "classnames";
 import { createClass } from "../../../actions/ClassActions"
 import { getTeachers } from "../../../actions/AuthActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, FormControl, Grid, MenuItem,Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Multiselect } from "multiselect-react-dropdown";
 
@@ -56,8 +56,11 @@ class CreateClass extends Component {
     };
   }
 
-  onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value});
+  onChange = (e, otherfield) => {
+    if(otherfield == "walikelas")
+      this.setState({ walikelas: e.target.value});
+    else
+      this.setState({ [e.target.id]: e.target.value});
   }
 
   onSubmit = (e) => {
@@ -93,9 +96,6 @@ class CreateClass extends Component {
   //  using this.setState() in this method.
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    // if(nextProps.success) {
-    //     this.props.history.push("/viewclass");
-    // }
     if(nextProps.errors) {
         this.setState({
             errors: nextProps.errors
@@ -110,11 +110,12 @@ class CreateClass extends Component {
   render() {
     document.title = "Schooly | Buat Kelas"
 
-    const { classes } = this.props;
+    const { classes, user } = this.props;
     const { all_teachers } = this.props.auth
     const { errors } = this.state;
 
     var options = all_teachers
+
     return (
       <div className={classes.root}>
         <Paper>
@@ -147,18 +148,18 @@ class CreateClass extends Component {
                   />
                 </Grid>
                 <Grid item className={classes.gridItem}>
-                  <div className=" col s12">
-                    <label htmlFor="walikelas">
-                      <div className={classes.inputLabel}>
-                        Wali Kelas
-                      </div>
-                    </label>
-                    <Multiselect id="walikelas" options={options} onSelect={this.onSelect}
-                    onRemove={this.onRemove} displayValue="name" error={errors.walikelas} showCheckBox={true}
-                    className={classnames("", {
-                        invalid: errors.walikelas
-                    })}/>
-                  </div>
+                <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
+                    <Select
+                    value={this.state.walikelas}
+                    onChange={(event) => {this.onChange(event, "walikelas")}}
+                  >
+                    {options.map((walikelas) => (
+                      <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
+                    ))}
+                  </Select>
+                
+                </FormControl>
                 </Grid>
                 <Grid item className={classes.gridItem}>
                   <OutlinedTextField

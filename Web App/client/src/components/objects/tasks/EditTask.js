@@ -80,7 +80,6 @@ class EditTask extends Component {
     render() {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
-
         const options = [
             {
               name: "X A",

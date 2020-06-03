@@ -7,6 +7,7 @@ const validateClassInput = require("../../validation/ClassData");
 
 //Load Class Model 
 const Class = require("../../models/Class");
+const User = require("../../models/user_model/User")
 
 router.post("/create", (req, res) => {
 
@@ -79,18 +80,23 @@ router.get("/edit/:id", (req, res) => {
 
 router.post("/update/:id", (req,res) => {
     let id = req.params.id;
+
     Class.findById(id, (err, classData) => {
         if(!classData){
             return res.status(400).json("Class to update not found");
         }
         else {
+
             classData.name = req.body.name;
             classData.walikelas = req.body.walikelas;
             classData.nihil = req.body.nihil;
             classData.ukuran = req.body.ukuran;
+
             classData.ketua_kelas = req.body.ketua_kelas;
-            classData.sekretaris = req.body.sekretaris;
             classData.bendahara = req.body.bendahara;
+            classData.sekretaris = req.body.sekretaris;
+
+            
             
             classData
                 .save()
