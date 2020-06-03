@@ -6,14 +6,22 @@ Botak:
 3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
 4. Globalize "primary" color for makestyles
 5. Mobile view
-6. Ubah multiselect jadi select
+6. Ubah multiselect jadi select https://stackoverflow.com/questions/31413053/how-to-use-an-array-as-option-for-react-select-component
 7. Masukin icon info buat error di OutlinedTextField
 8. Rename yang belum bahasa indo
 9. Rename Page Title
 10. Pakai Date Picker buat tanggal lahir
 11. Error Nomor Telepon Darurat
 12. Tambahkan step 3 register untuk konfirmasi terms and condition
+<<<<<<< HEAD
 13. Tambahin show password pas register
+=======
+<<<<<<< HEAD
+13. Tambahin show password pas register (step 3)
+=======
+13. Tambahin show password pas register
+>>>>>>> b4a04b118403cc1c2b7d7885e42b811df2822fa5
+>>>>>>> e21166b03c2ff8fd9b9ed91e8dbd257c8d0cd565
 
 Daniel:
 1. Class Page

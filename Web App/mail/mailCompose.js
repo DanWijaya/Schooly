@@ -15,7 +15,7 @@ module.exports = {
     this.code = code;
     this.email = visitoremail;
     let email = {
-      
+
       body: {
         intro:
           "This is your Code to view download the Tender document that you requested. Please copy and paste it back in the ap-port site",
