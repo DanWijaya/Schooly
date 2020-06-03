@@ -1,48 +1,34 @@
 Current Task
 
 Botak:
-1. PageNotFound, Help, Forgot Password, Admin Dashboard, Terms and Policies, About
+1. Landing, PageNotFound, Help, Forgot Password, Admin Dashboard, Terms and Policies, About, ProfileView
 2. Bikin gambar-gambar yang diperlukan (belajar AI)
 3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
 4. Globalize "primary" color for makestyles
 5. Mobile view
-6. Ubah multiselect jadi select https://stackoverflow.com/questions/31413053/how-to-use-an-array-as-option-for-react-select-component
 7. Masukin icon info buat error di OutlinedTextField
 8. Rename yang belum bahasa indo
 9. Rename Page Title
 10. Pakai Date Picker buat tanggal lahir
 11. Error Nomor Telepon Darurat
 12. Tambahkan step 3 register untuk konfirmasi terms and condition
-<<<<<<< HEAD
-13. Tambahin show password pas register
-=======
-<<<<<<< HEAD
 13. Tambahin show password pas register (step 3)
-=======
-13. Tambahin show password pas register
->>>>>>> b4a04b118403cc1c2b7d7885e42b811df2822fa5
->>>>>>> e21166b03c2ff8fd9b9ed91e8dbd257c8d0cd565
+14. AM/PM di dashboard diganti kalo bisa
 
 Daniel:
-1. Class Page
+1. Task Page
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
 3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 4. Notifications page dan listnya (previewnya muncul di Dashboard)
 5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-6. Rapikan interface pas uplaod file, Ganti jangan pakai yang Choose File gitu
+6. Rapikan interface pas upload file, Ganti jangan pakai yang Choose File gitu
 7. Tambahin tugas field di User.
 8. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
 
-Page List Done:
-- Navbar
-- Profile
-- Login
-- Register
-- Notification
-- About
-- Landing
-- Dashboard
-- All Class Page (Select all di class list masih error)
+Bingung:
+1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog
+2. Mau tambahin konfimrasi register dengan 1 page lagi, atau pake snackbar aja atau mungkin dialog
+3. Disable navbar pas login sama register, jadi cuma ada buat landing?, akan nda plain pas tambah background image sih
 
 Page List On Work (Not completed/Not created yet):
 - All Task page (approx 5)

@@ -97,7 +97,7 @@ class CreateTask extends Component {
         const { errors } = this.state;
 
         console.log(options)
-        return(
+        return (
 
         <div className="container">
           <div className="col s8 offset-s2">

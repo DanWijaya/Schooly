@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 function About() {
   const classes = useStyles();
 
-  return(
+  return (
     <div className={classes.root}>
       <div className={classes.paragraph}>
         <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>

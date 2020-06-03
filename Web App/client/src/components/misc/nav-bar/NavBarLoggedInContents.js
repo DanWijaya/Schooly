@@ -104,7 +104,7 @@ function NavBarLoggedInContents(props) {
         </IconButton>
       </LightTooltip>
       <LightTooltip title="Bantuan">
-        <IconButton color="inherit" href="/support">
+        <IconButton color="inherit" href="/bantuan">
             <HelpIcon />
         </IconButton>
       </LightTooltip>

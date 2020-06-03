@@ -11,11 +11,13 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 //Auth
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
+import LoginForgot from "./components/auth/login/LoginForgot";
 //Layout
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import Notifications from "./components/layout/notifications/Notifications";
+import Help from "./components/layout/help/Help";
 import Profile from "./components/layout/profile/Profile";
 import ProfileView from "./components/layout/profile/ProfileView";
 //Misc
@@ -96,7 +98,8 @@ class App extends Component {
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/daftar" component={Register} />
                 <Route exact path="/masuk" component={Login} />
-                <Route exact path="/tentang-schooly" component={About} />
+                <Route exact path="/lupa-katasandi" component={LoginForgot} />
+                <Route exact path="/bantuan" component={Help} />
                 <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
                 <Route exact path="/newclasslist" component={NewClassList} /> {/*prototypetest*/}
                 <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
@@ -105,6 +108,7 @@ class App extends Component {
                   <PrivateRoute exact path="/profil" component={Profile} />
                   <PrivateRoute exact path="/profile-view" component={ProfileView} />
                   <PrivateRoute exact path="/notifikasi" component={Notifications} />
+                  <PrivateRoute exact path="/tentang-schooly" component={About} />
                   {/* Route Class */}
                   <PrivateRoute exact path="/createclass" component={CreateClass} />
                   <PrivateRoute exact path="/viewclass" component={ViewClass} />

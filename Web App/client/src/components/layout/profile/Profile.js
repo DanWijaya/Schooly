@@ -53,7 +53,7 @@ function Alert(props) {
 }
 
 function ProfileDataItem(props) {
-  return(
+  return (
     <ListItem>
         <ListItemAvatar>
           <Avatar style={{backgroundColor: "#2196f3"}}>
@@ -119,7 +119,7 @@ function Profile(props) {
   }
 
   document.title=`Schooly | ${user.name}`
-  return(
+  return (
     <div className={classes.root}>
 
       {/* ProfilePictureEditorDialog punya Snackbar */}

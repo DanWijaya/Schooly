@@ -88,7 +88,7 @@ class Register extends Component {
       this.setState({kelas: e.target.value});
     else if(otherfield == "role")
       this.setState({ role: e.target.value})
-    else 
+    else
       this.setState({ [e.target.id]: e.target.value });
   };
 
@@ -99,6 +99,7 @@ class Register extends Component {
   onChangeRole = (e) => {
     this.setState({ role: e.target.value})
   }
+  
   onSelect = (selectedList, selectedItem) => {
     if(selectedList.length > 1)
       selectedList.shift()
@@ -140,7 +141,7 @@ class Register extends Component {
     document.title="Daftar ke Schooly"
     const { classes, classesCollection } = this.props;
     const { errors } = this.state;
-    
+
     console.log(classesCollection)
     var options = []
 
@@ -261,9 +262,9 @@ class Register extends Component {
                       <MenuItem value={kelas.name}>{kelas.name}</MenuItem>
                     ))}
                   </Select>
-                
+
                 </FormControl>
-                </Grid>  
+                </Grid>
               :
               this.state.role === "Teacher" ?
                 <Grid item className={classes.inputField}>

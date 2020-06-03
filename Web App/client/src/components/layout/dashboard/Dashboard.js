@@ -7,12 +7,20 @@ import { Avatar, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSe
 import { withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import wallpaper from "./456182.jpg"
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
     maxWidth: "800px",
     textAlign: "center",
+  },
+  bgImg: {
+    backgroundImage: `url(${wallpaper})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    height: "1356px"
   },
   paperTitle: {
     display: "flex",
@@ -100,12 +108,13 @@ class Dashboard extends Component {
   }
 
   render() {
-    document.title="Schooly | Dashboard"
+    document.title="Schooly | Dashboard";
 
     const { classes } = this.props;
     const { user } = this.props.auth;
 
     return (
+      <div className={classes.bgImg}>
       <div className={classes.root}>
         <Typography variant="h3">
           <b>Selamat Datang {user.name.split(" ")[0]}</b>
@@ -174,6 +183,7 @@ class Dashboard extends Component {
             />
           </List>
         </Paper>
+      </div>
       </div>
     )
   };

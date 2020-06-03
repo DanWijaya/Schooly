@@ -6,7 +6,7 @@ function NavBarDrawerMenuButton(props){
   const { mobileView , handleDrawerDesktop, handleDrawerMobile } = props;
 
   if(mobileView){
-    return(
+    return (
       <IconButton
         edge="start"
         color="inherit"
@@ -17,7 +17,7 @@ function NavBarDrawerMenuButton(props){
     )
   }
   else{
-    return(
+    return (
       <IconButton
         edge="start"
         color="inherit"

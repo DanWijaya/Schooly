@@ -59,7 +59,7 @@ class ViewTask extends Component {
     }
 
     deletePopWindow = () => {
-        return(
+        return (
         <Modal style={{marginTop: "200px"}} show={this.state.show} onHide={() => {this.closeModal()}}>
             <Modal.Header>Deleting Task <Link to="/viewtask" class="close" onClick={() => {this.closeModal()}}>
                 <span aria-hidden="true">x</span>
@@ -87,7 +87,7 @@ class ViewTask extends Component {
         const { user } = this.props.auth
         if( user.role === "Teacher") {
 
-            return(
+            return (
                 <div className="wrapper-taskCollection">
                     {this.deletePopWindow()}
                 <div className="container">

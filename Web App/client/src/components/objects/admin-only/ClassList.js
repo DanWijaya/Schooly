@@ -7,7 +7,7 @@ import { Modal, Button } from "react-bootstrap";
 import "./ClassList.css"
 
 function ClassDataView(props) {
-  return(
+  return (
     <tr>
       <td style={{textAlign: "center"}}>
         {props.obj.name}
@@ -123,7 +123,7 @@ class ClassList extends Component {
     const { user } = this.props.auth;
 
     if( user.role === "Teacher") {
-      return(
+      return (
         <div className="wrapper-classesCollection">
             {this.deletePopWindow()}
           <div className="container">
@@ -148,7 +148,7 @@ class ClassList extends Component {
         </div>
         )}
     else if (user.role === "Student") {
-      return(
+      return (
         <div style={{ marginLeft: "250px"}}>
           <h1 style={{ alignItems : "center"}}> Your class is <b>{user.kelas.name}</b></h1>
         </div>

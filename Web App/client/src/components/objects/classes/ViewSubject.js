@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 function ViewSubject() {
   const classes = useStyles();
 
-  return(
+  return (
     <div className={classes.root}>
       <Paper className={classes.subjectCardPaper}>
         <Grid container spacing={2}>

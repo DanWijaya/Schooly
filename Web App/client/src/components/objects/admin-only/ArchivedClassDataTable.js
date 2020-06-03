@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 class ClassDataTable extends Component {
 
     render(){
-        return(
+        return (
             <tr>
                 <td style={{textAlign: "center"}}>
                     {this.props.obj.name}

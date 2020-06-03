@@ -27,14 +27,6 @@ const useStyles = makeStyles((theme) => ({
     width: "350px",
     padding: "10px",
   },
-  iconButton: {
-    "&:focus": {
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
-  },
   profilePicture: {
     width: theme.spacing(5),
     height: theme.spacing(5),
@@ -66,7 +58,7 @@ function Alert(props) {
 function WorkFile(props) {
   const classes = useStyles();
 
-  return(
+  return (
     <ListItem button onClick={() => {props.handleOpenDownloadDialog(props.file_id, props.file_name)}}>
       <ListItemAvatar>
         <Avatar src={props.file_type_icon} className={classes.profilePicture} />
@@ -451,7 +443,7 @@ function NewTask(props) {
     )
   }
 
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       {DownloadDialog()}

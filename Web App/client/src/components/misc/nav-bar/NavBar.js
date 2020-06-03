@@ -4,11 +4,13 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { logoutUser } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
+import LightTooltip from "../light-tooltip/LightTooltip";
 import NavBarDrawerContent from "./NavBarDrawerContent";
 import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
-import { AppBar, Button, CssBaseline, Grid, Link, Toolbar, useMediaQuery } from "@material-ui/core";
+import { AppBar, Button, CssBaseline, Grid, IconButton, Link, Toolbar, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import HelpIcon from "@material-ui/icons/Help";
 
 export const drawerWidth = 220;
 
@@ -156,6 +158,11 @@ function NavBar(props){
           >
             Masuk
           </Button>
+          <LightTooltip title="Bantuan">
+            <IconButton color="inherit" edge="end" href="/bantuan">
+                <HelpIcon />
+            </IconButton>
+          </LightTooltip>
       </Grid>
     )
   }

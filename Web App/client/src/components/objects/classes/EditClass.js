@@ -167,7 +167,7 @@ class EditClass extends Component {
     console.log(teacher_options)
     console.log(this.state.walikelas)
 
-    return(
+    return (
       <div className={classes.root}>
         <Paper>
           <div className={classes.mainGrid}>
