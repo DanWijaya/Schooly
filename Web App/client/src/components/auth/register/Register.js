@@ -60,7 +60,7 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
-      kelas: {}, //Student Data
+      kelas: "", //Student Data
       subject_teached: "", //Teacher Data
       activeStep: 0,
       submitButtonClicked: false,
@@ -83,13 +83,22 @@ class Register extends Component {
     }
   }
 
-  onChange = e => {
-    if(e.target.id)
+  onChange = (e, otherfield) => {
+    if(otherfield == "kelas")
+      this.setState({kelas: e.target.value});
+    else if(otherfield == "role")
+      this.setState({ role: e.target.value})
+    else 
       this.setState({ [e.target.id]: e.target.value });
-    else
-      this.setState({role: e.target.value});
   };
 
+  onChangeKelas = (e) => {
+    this.setState({kelas: e.target.value});
+  }
+
+  onChangeRole = (e) => {
+    this.setState({ role: e.target.value})
+  }
   onSelect = (selectedList, selectedItem) => {
     if(selectedList.length > 1)
       selectedList.shift()
@@ -127,6 +136,18 @@ class Register extends Component {
   };
 
   render() {
+
+    document.title="Daftar ke Schooly"
+    const { classes, classesCollection } = this.props;
+    const { errors } = this.state;
+    
+    console.log(classesCollection)
+    var options = []
+
+    if(Object.keys(classesCollection).length !== 0){
+      options = classesCollection
+    }
+
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi"];
     }
@@ -200,11 +221,11 @@ class Register extends Component {
               alignItems="center"
             >
               <Grid item className={classes.inputField}>
-                <FormControl variant="outlined" color="primary" style={{width: "100%"}}>
-                  <label>Daftar Sebagai</label>
+                <FormControl id="role" variant="outlined" color="primary" style={{width: "100%"}}>
+                  <label id="role">Daftar Sebagai</label>
                   <Select
                     value={this.state.role}
-                    onChange={this.onChange}
+                    onChange={(event) => {this.onChange(event, "role")}}
                   >
                     <MenuItem value={"Student"}>Murid</MenuItem>
                     <MenuItem value={"Teacher"}>Guru</MenuItem>
@@ -230,20 +251,19 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item className={classes.inputField}>
-                  <label id="class">Kelas</label>
-                  <Multiselect
-                    id="class"
-                    options={options}
-                    onSelect={this.onSelect}
-                    onRemove={this.onRemove}
-                    displayValue="name"
-                    error={errors.class_assigned}
-                    showCheckBox={true}
-                    className={classnames("", {
-                      invalid: errors.class
-                    })}
-                  />
-                </Grid>
+                  <FormControl id="kelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <label id="kelas">Kelas</label>
+                    <Select
+                    value={this.state.kelas}
+                    onChange={(event) => {this.onChange(event, "kelas")}}
+                  >
+                    {options.map((kelas) => (
+                      <MenuItem value={kelas.name}>{kelas.name}</MenuItem>
+                    ))}
+                  </Select>
+                
+                </FormControl>
+                </Grid>  
               :
               this.state.role === "Teacher" ?
                 <Grid item className={classes.inputField}>
@@ -317,17 +337,6 @@ class Register extends Component {
         default:
           return "Unknown stepIndex";
       }
-    }
-
-    document.title="Daftar ke Schooly"
-    const { classes } = this.props;
-    const { errors } = this.state;
-
-    const classesCollection = this.props.classesCollection;
-    var options = []
-
-    if(Object.keys(classesCollection).length !== 0){
-      options = classesCollection
     }
 
     const steps = getSteps();
