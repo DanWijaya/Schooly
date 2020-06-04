@@ -1,8 +1,9 @@
 import React from "react";
-import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Paper, Typography } from "@material-ui/core";
+import { Divider, ExpansionPanel, Button, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Paper, Typography,ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
+import ContactSupportIcon from '@material-ui/icons/ContactSupport';
+import EmailIcon from '@material-ui/icons/Email';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "1000px",
@@ -188,10 +189,24 @@ function Help(props) {
       </Grid>
 
       <Paper className={classes.helpTitlePaper}>
+        
+        
         <Typography className={classes.helpTitle}>
           Butuh bantuan lebih lanjut? Silahkan hubungi kami: 911
         </Typography>
-      </Paper>
+        </Paper>
+
+        <Grid item container justify="center">
+              <Button startIcon={<EmailIcon style={{ color:"#61bd4f"}}/>} key="Email" size="large" component="a" href="mailto:schoolysystem@email.com">
+              <Grid item direction="column" container alignItems="center">
+                <Typography variant="h6" >
+                Kirim Keluhan melalui email ke schoolysystem@gmail.com
+                </Typography>
+                </Grid>
+              </Button>
+              </Grid>
+       
+     
     </div>
   )
 }

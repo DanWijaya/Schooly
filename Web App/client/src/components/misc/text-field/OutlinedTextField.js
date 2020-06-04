@@ -1,4 +1,6 @@
 import React from "react";
+import WarningIcon from '@material-ui/icons/Warning';
+import { Typography } from "@material-ui/core";
 
 const OutlinedTextField = (props) => {
   const [borderStyle, setBorderStyle] = React.useState("1px solid #ccc")
@@ -9,6 +11,7 @@ const OutlinedTextField = (props) => {
   const onFocus = () => {
     setBorderStyle("2px solid #2196f3")
   }
+
 
   return (
     <div>
@@ -38,8 +41,13 @@ const OutlinedTextField = (props) => {
         onBlur={onBlur}
       />
       <span className={props.span_classname}>
-        {props.error1}
-        {props.error2}
+        <div style={{ display:"flex",alignItems: "center"}}>
+        {props.error1 || props.error2 ? <WarningIcon fontSize="small" style={{ height: "5%", width:"5%"}}/> : null}
+        <Typography variant="h8" style={{marginLeft: "4px"}}>
+          {props.error1}
+          {props.error2}
+        </Typography>
+        </div>
       </span>
     </div>
   )

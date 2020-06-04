@@ -31,6 +31,7 @@ const styles = (theme) => ({
   },
   errorInfo: {
     color: "red",
+    // alignItems: "center",
     fontSize: "10px"
   }
 });

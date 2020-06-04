@@ -21,7 +21,7 @@ const path = require("path");
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1075px",
+    maxWidth: "1175px", // before that was 1075px
   },
   dialogRoot: {
     width: "350px",
@@ -55,11 +55,16 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+// function truncate(text) {
+//   if(text.length > 25) {
+//     return text[:25]
+//   }
+// }
 function WorkFile(props) {
   const classes = useStyles();
 
   return (
-    <ListItem button onClick={() => {props.handleOpenDownloadDialog(props.file_id, props.file_name)}}>
+    <ListItem>
       <ListItemAvatar>
         <Avatar src={props.file_type_icon} className={classes.profilePicture} />
       </ListItemAvatar>
@@ -67,6 +72,15 @@ function WorkFile(props) {
         primary={props.file_name}
         secondary={props.file_type}
       />
+      <ListItemIcon>
+        <IconButton className={classes.iconButton}
+        // onClick={() => {props.onDeleteTugas(props.file_id)}}
+        onClick={() => {props.handleOpenDownloadDialog(props.file_id, props.file_name)}}
+         >
+          <CloudDownloadIcon />
+        </IconButton>
+      </ListItemIcon>
+
       <ListItemSecondaryAction>
         <IconButton className={classes.iconButton}
         // onClick={() => {props.onDeleteTugas(props.file_id)}}
@@ -504,7 +518,7 @@ function NewTask(props) {
             container
             direction="column"
             justify="space-evenly"
-            style={{width: "250px"}}
+            style={{width: "350px"}}
           >
             <Grid item>
               <div className={classes.workResultSection}>

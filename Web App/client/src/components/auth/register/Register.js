@@ -10,11 +10,12 @@ import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, FormControl, Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, FormControl, Grid, MenuItem, Paper, Select, Typography, IconButton } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper"
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
+import InfoIcon from '@material-ui/icons/Info';
 
 const styles = (theme) => ({
   root: {
@@ -127,6 +128,7 @@ class Register extends Component {
     const { classes, classesCollection } = this.props;
     const { errors } = this.state;
 
+    const error_message = (<IconButton/> + errors.email)
     var options = []
 
     if(Object.keys(classesCollection).length !== 0){
@@ -151,7 +153,7 @@ class Register extends Component {
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.email}
-                  error={errors.email}
+                  error={error_message}
                   id="email"
                   type="email"
                   className={classnames("", {
@@ -273,7 +275,6 @@ class Register extends Component {
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.phone}
-                  error={errors.phone}
                   id="phone"
                   type="text"
                   className={classnames("", {
