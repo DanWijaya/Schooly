@@ -93,51 +93,44 @@ router.post("/update/:id", (req,res) => {
         classData.ukuran = req.body.ukuran;
         console.log(req.body.walikelas)
 
-        User.findById(req.body.walikelas,(err, user) => {
-            if(!user){
-                res.json("User not found")
-            } else {
-                classData.walikelas = user;
-                console.log("User is found")
-                console.log(classData.walikelas, "user updated")
-            }
-        })
+        // Pipeline on how to create a Async functions to be Synchronous function call
+        //Step 1: declare promise
+        var myPromise = (id) => {
+            return new Promise((resolve, reject) => {
+                User.findById(id, (err, user) => {
+                    if(!user){
+                        reject(err)
+                    } else {
+                        resolve(user);
+                    }
+                })
+            })
+        }
 
-        User.findById(req.body.sekretaris,(err, user) => {
-            if(!user){
-                res.json("User not found")
-            } else {
-                classData.sekretaris = user;
-                console.log("User is found")
-                console.log(classData.sekretaris, "user updated")
-            }
-        })
-        
-        User.findById(req.body.bendahara,(err, user) => {
-            if(!user){
-                res.json("User not found")
-            } else {
-                classData.bendahara = user;
-                console.log("User is found")
-                console.log(classData.bendahara, "user updated")
-            }
-        }) 
+        //Step 2: async promise handler
+        var callMyPromise = async () => {
+            var walikelas_data = await(myPromise(req.body.walikelas));
+            var sekretaris_data = await(myPromise(req.body.sekretaris));
+            var bendahara_data = await(myPromise(req.body.bendahara));
+            var ketua_kelas_data = await(myPromise(req.body.ketua_kelas));
 
-        User.findById(req.body.ketua_kelas,(err, user) => {
-            if(!user){
-                res.json("User not found")
-            } else {
-                classData.ketua_kelas = user;
-                console.log("User is found")
-                console.log(classData.ketua_kelas, "user updated")
-            }
-        }).then(() => {classData.save()
-                            .then(() => {res.json("Done") 
-                            console.log("Update class completed")}
-                            )
-                            .catch(console.log("Unable to update class Database"))
-                            } 
-    )
+            classData.walikelas = walikelas_data
+            classData.sekretaris = sekretaris_data
+            classData.bendahara = bendahara_data
+            classData.ketua_kelas = ketua_kelas_data
+
+            // classData.save()
+            return classData;
+        }
+
+        //Step 3 : Make the call
+        callMyPromise().then(function(classData) {
+
+            classData.save()
+            res.json("Done")
+         });
+
+
 })
 })
 
