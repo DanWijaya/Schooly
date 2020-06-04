@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const keys = require("../../config/keys");
+const mongoose = require("mongoose");
 
 //Load input validation 
 const validateClassInput = require("../../validation/ClassData");
@@ -80,30 +81,64 @@ router.get("/edit/:id", (req, res) => {
 
 router.post("/update/:id", (req,res) => {
     let id = req.params.id;
-
     Class.findById(id, (err, classData) => {
+
         if(!classData){
             return res.status(400).json("Class to update not found");
         }
-        else {
+// Initially there is else block
+        classData.name = req.body.name;
+        classData.walikelas = req.body.walikelas;
+        classData.nihil = req.body.nihil;
+        classData.ukuran = req.body.ukuran;
+        console.log(req.body.walikelas)
 
-            classData.name = req.body.name;
-            classData.walikelas = req.body.walikelas;
-            classData.nihil = req.body.nihil;
-            classData.ukuran = req.body.ukuran;
+        User.findById(req.body.walikelas,(err, user) => {
+            if(!user){
+                res.json("User not found")
+            } else {
+                classData.walikelas = user;
+                console.log("User is found")
+                console.log(classData.walikelas, "user updated")
+            }
+        })
 
-            classData.ketua_kelas = req.body.ketua_kelas;
-            classData.bendahara = req.body.bendahara;
-            classData.sekretaris = req.body.sekretaris;
+        User.findById(req.body.sekretaris,(err, user) => {
+            if(!user){
+                res.json("User not found")
+            } else {
+                classData.sekretaris = user;
+                console.log("User is found")
+                console.log(classData.sekretaris, "user updated")
+            }
+        })
+        
+        User.findById(req.body.bendahara,(err, user) => {
+            if(!user){
+                res.json("User not found")
+            } else {
+                classData.bendahara = user;
+                console.log("User is found")
+                console.log(classData.bendahara, "user updated")
+            }
+        }) 
 
-            
-            
-            classData
-                .save()
-                .then(() => res.json("Update class completed"))
-                .catch(err => res.status(400).send("Unable to update class Database"));
-        }      
-    })
+        User.findById(req.body.ketua_kelas,(err, user) => {
+            if(!user){
+                res.json("User not found")
+            } else {
+                classData.ketua_kelas = user;
+                console.log("User is found")
+                console.log(classData.ketua_kelas, "user updated")
+            }
+        }).then(() => {classData.save()
+                            .then(() => {res.json("Done") 
+                            console.log("Update class completed")}
+                            )
+                            .catch(console.log("Unable to update class Database"))
+                            } 
+    )
+})
 })
 
 module.exports = router;

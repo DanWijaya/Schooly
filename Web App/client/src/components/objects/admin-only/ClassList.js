@@ -13,7 +13,7 @@ function ClassDataView(props) {
         {props.obj.name}
       </td>
       <td style={{textAlign: "center"}}>
-        {props.obj.walikelas.name}
+        {props.obj.walikelas.name == undefined ? props.obj.walikelas : props.obj.walikelas.name}
       </td>
       <td style={{textAlign: "center"}}>
         {props.obj.ukuran}

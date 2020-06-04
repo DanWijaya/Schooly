@@ -77,6 +77,10 @@ class EditClass extends Component {
         this.setState({ ketua_kelas: e.target.value})
         break;
 
+      case "walikelas":
+        this.setState({ walikelas: e.target.value})
+        break;
+
       default:
         this.setState({ [e.target.id]: e.target.value});
     }
@@ -85,25 +89,29 @@ class EditClass extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Class props is received")
     const { name } = this.state;
-    var next_ketua_kelas = {"name" : "Not selected"}
-    var next_bendahara = {"name" : "Not selected"}
-    var next_sekretaris = {"name" : "Not selected"}
+    var next_ketua_kelas = {}
+    var next_bendahara = {}
+    var next_sekretaris = {}
+    var next_walikelas = {}
 
     if(nextProps.classesCollection.ketua_kelas)
-      next_ketua_kelas = nextProps.classesCollection.ketua_kelas
+      next_ketua_kelas = nextProps.classesCollection.ketua_kelas._id
 
     if(nextProps.classesCollection.sekretaris){
-      next_sekretaris = nextProps.classesCollection.sekretaris
+      next_sekretaris = nextProps.classesCollection.sekretaris._id
     }
 
     if(nextProps.classesCollection.bendahara)
-      next_bendahara = nextProps.classesCollection.bendahara
+      next_bendahara = nextProps.classesCollection.bendahara._id
 
+    if(nextProps.classesCollection.walikelas)
+      next_walikelas = nextProps.classesCollection.walikelas._id
+    
     if(!name){
       this.setState({
         name: nextProps.classesCollection.name,
         nihil: nextProps.classesCollection.nihil,
-        walikelas: nextProps.classesCollection.walikelas,
+        walikelas: next_walikelas,
         ukuran: nextProps.classesCollection.ukuran,
         ketua_kelas: next_ketua_kelas,
         sekretaris: next_sekretaris,
@@ -177,26 +185,35 @@ class EditClass extends Component {
 
     const { all_teachers} = this.props.auth;
     const { all_students } = this.props.auth;
-    const { sekretaris } = this.state;
+    const { sekretaris , bendahara, ketua_kelas, walikelas} = this.state;
     var teacher_options = all_teachers
     var student_options = all_students
 
-    const returnId = (student_id) => {
-      for (var i = 0; i < student_options.length; i++) {
-          // console.log(student_options[i]._id)
-          if(student_options[i]._id == student_id._id){
-            return student_id._id
-          }
-      }
+    const returnId = (user_id, arr) => {
+      if(arr == "student"){
+        for (var i = 0; i < student_options.length; i++) {
+            // console.log(student_options[i]._id)
+            if(student_options[i]._id == user_id._id){
+              return user_id._id
+            }
+        }
+    } else {
+      for (var i = 0; i < teacher_options.length; i++) {
+        // console.log(student_options[i]._id)
+        if(teacher_options[i]._id == user_id._id){
+          return user_id._id
+        }
+    }
+    }
     }
 
-    const showValue = (options) => {
+    const showValue = (options, arr) => {
       let items = []
       options.map((student) => {
         console.log(student, this.state.sekretaris)
         items.push(
         <MenuItem 
-        value={returnId(student)}
+        value={returnId(student, arr)}
         // value={student}
         > 
         {student.name}
@@ -246,21 +263,6 @@ class EditClass extends Component {
                     error1={errors.name}
                   />
                 </Grid>
-                {/* <div className="input-field col s12">
-                    <input
-                        onChange={this.onChange}
-                        value={this.state.nihil}
-                        error={errors.nihil}
-                        id="nihil"
-                        type="radio"
-                        className={classnames("", {
-                            invalid: errors.nihil
-                        })}
-                    />
-                    <label htmlFor="nihil">Nihil</label>
-                    <span className="red-text">{errors.nihil}</span>
-
-                </div> */}
                 <Grid item className={classes.gridItem}>
                   {this.state.name === "" ?
                     <label htmlFor="ukuran">
@@ -289,26 +291,32 @@ class EditClass extends Component {
                   />
                 </Grid>
                 <Grid item className={classes.gridItem}>
-                  <label id="walikelas">
-                    <div className={classes.inputLabel}>
-                      Wali Kelas
-                    </div>
-                  </label>
-                   {this.state.walikelas ? <Multiselect id="walikelas" options={teacher_options} onSelect={this.onSelectTeacher} selectedValues={[this.state.walikelas]} onRemove={this.onRemove} displayValue="name" error={errors.walikelas} showCheckBox={true}
-                  className={classnames("", {
-                      invalid: errors.walikelas
-                  })}/> : ""}
+                
+                <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
+                    <Select
+                    value={walikelas}
+                    displayEmpty
+                    onChange={(event) => {this.onChange(event, "walikelas")}}
+                  >
+                    {showValue(teacher_options, "teacher")}
+                  </Select>
+                
+                </FormControl>
                 </Grid>
                 <Grid item className={classes.gridItem}>
-                  <label id="ketuakelas">
-                    <div className={classes.inputLabel}>
-                      Ketua Kelas
-                    </div>
-                  </label>
-                    {this.state.ketua_kelas ? <Multiselect id="ketuakelas" options={student_options} onSelect={this.onSelectKetuaKelas} selectedValues={[this.state.ketua_kelas]} onRemove={this.onRemove} displayValue="name" error={errors.ketua_kelas} showCheckBox={true}
-                  className={classnames("", {
-                      invalid: errors.ketuakelas
-                  })}/> : ""}
+                
+                <FormControl id="ketua_kelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <label id="ketua_kelas" className={classes.inputLabel}>Ketua Kelas</label>
+                    <Select
+                    value={ketua_kelas}
+                    displayEmpty
+                    onChange={(event) => {this.onChange(event, "ketua_kelas")}}
+                  >
+                    {showValue(student_options, "student")}
+                  </Select>
+                
+                </FormControl>
                 </Grid>
                 <Grid item className={classes.gridItem}>
                 <FormControl id="sekretaris" variant="outlined" color="primary" style={{width: "100%"}}>
@@ -318,7 +326,7 @@ class EditClass extends Component {
                     displayEmpty
                     onChange={(event) => {this.onChange(event, "sekretaris")}}
                   >
-                    {showValue(student_options)}
+                    {showValue(student_options, "student")}
                   </Select>
                 
                 </FormControl>
@@ -327,15 +335,13 @@ class EditClass extends Component {
                 <Grid item className={classes.gridItem}>
                 
                 <FormControl id="bendahara" variant="outlined" color="primary" style={{width: "100%"}}>
-                    <label id="bendahara" className={classes.inputLabel}>Bendahara</label>
+                    <label id="bendahara" className={classes.inputLabel}>bendahara</label>
                     <Select
-                    value={this.state.bendahara}
+                    value={bendahara}
+                    displayEmpty
                     onChange={(event) => {this.onChange(event, "bendahara")}}
                   >
-                    {student_options.map((student) => (
-      <MenuItem value={student}>{student.name}</MenuItem>
-                    )
-    )}
+                    {showValue(student_options, "student")}
                   </Select>
                 
                 </FormControl>
