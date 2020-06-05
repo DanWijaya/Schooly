@@ -1,19 +1,19 @@
 Current Task
 
 Botak:
-1. Landing, PageNotFound, Help, Forgot Password, Admin Dashboard, Terms and Policies, About, ProfileView
+1. Landing, PageNotFound, Help,  Admin Dashboard, Terms and Policies, About
 2. Bikin gambar-gambar yang diperlukan (belajar AI)
 3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
 4. Globalize "primary" color for makestyles
 5. Mobile view
-7. Masukin icon info buat error di OutlinedTextField
 8. Rename yang belum bahasa indo
 9. Rename Page Title
 10. Pakai Date Picker buat tanggal lahir
-11. Error Nomor Telepon Darurat
 12. Tambahkan step 3 register untuk konfirmasi terms and condition
 13. Tambahin show password pas register (step 3)
 14. AM/PM di dashboard diganti kalo bisa
+15. background color di button, ripple color, hover active color.
+16. icon class, quiz, dkk
 
 Daniel:
 1. Task Page
@@ -24,6 +24,7 @@ Daniel:
 6. Rapikan interface pas upload file, Ganti jangan pakai yang Choose File gitu
 7. Tambahin tugas field di User.
 8. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
+9. Loading bar
 
 Bingung:
 1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog

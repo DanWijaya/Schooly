@@ -12,7 +12,6 @@ const OutlinedTextField = (props) => {
     setBorderStyle("2px solid #2196f3")
   }
 
-
   return (
     <div>
       <label htmlFor={props.html_for}>
@@ -41,8 +40,8 @@ const OutlinedTextField = (props) => {
         onBlur={onBlur}
       />
       <span className={props.span_classname}>
-        <div style={{ display:"flex",alignItems: "center"}}>
-        {props.error1 || props.error2 ? <WarningIcon fontSize="small" style={{ height: "5%", width:"5%"}}/> : null}
+        <div style={{ display:"flex", alignItems: "center"}}>
+        {props.error1 || props.error2 ? <WarningIcon style={{ height: "5%", width:"5%"}} /> : null}
         <Typography variant="h8" style={{marginLeft: "4px"}}>
           {props.error1}
           {props.error2}

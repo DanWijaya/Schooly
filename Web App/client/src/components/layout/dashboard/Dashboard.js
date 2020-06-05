@@ -20,7 +20,6 @@ const styles = (theme) => ({
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    height: "1356px"
   },
   paperTitle: {
     display: "flex",

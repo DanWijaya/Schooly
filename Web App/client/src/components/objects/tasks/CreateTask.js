@@ -8,7 +8,7 @@ import moment from "moment";
 import { SingleDatePicker } from "react-dates";
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
-import { Button, Chip, FormControl, Grid,Input,InputLabel, MenuItem, Paper, Select, Typography, withStyles, withTheme } from "@material-ui/core";
+import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
 // import { Multiselect } from "multiselect-react-dropdown";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 
@@ -65,7 +65,7 @@ class CreateTask extends Component {
         };
     }
 
-    
+
     onChange = (e, otherfield) => {
       if(otherfield == "kelas"){
 
@@ -121,7 +121,7 @@ class CreateTask extends Component {
 
     render() {
       const {classesCollection,  classes, viewClass} = this.props;
-      
+
         if(classesCollection)
             viewClass()
 
@@ -153,9 +153,9 @@ class CreateTask extends Component {
               <b>Tambahkan keterangan tugas untuk membuat tugas</b>
             </Typography>
             <form noValidate onSubmit={this.onSubmit}>
-              <Grid 
-              container 
-              direction="column" 
+              <Grid
+              container
+              direction="column"
               alignItems="center"
                spacing={4}>
                 <Grid item className={classes.gridItem}>
@@ -239,7 +239,7 @@ class CreateTask extends Component {
           </Paper>
           </div>
 
-               
+
                   );
     }
 }
@@ -284,7 +284,7 @@ export default connect(
 //                   onFocusChange={({focused}) => this.setState({ focused})}
 //                   />
 
-//                 <label htmlFor="deadline">Deadline</label> 
+//                 <label htmlFor="deadline">Deadline</label>
 //                 <span className="red-text">{errors.deadline}</span>
 //               </div>
 
