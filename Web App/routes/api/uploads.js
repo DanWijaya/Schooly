@@ -8,7 +8,7 @@ const GridFsStream = require("gridfs-stream");
 const methodOverride = require("method-override")
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys")
-
+const http = require('http');
 const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
 const Task = require("../../models/Task");
@@ -285,13 +285,35 @@ router.delete("/image/:name", (req,res) => {
       var type = file.contentType;
       var filename = file.filename;
       res.set("Content-Type", type);
-      res.set("Content-Disposition", "inline;filename=" + filename)
+      res.set("Content-Disposition", "application;filename=" + filename)
 
       // Files exist
       const readStream = gfs2.createReadStream(filename);
       readStream.pipe(res)
+
     });
     });
+  
+    router.get("/previewtugas/:id", (req,res) => {
+      id = new mongoose.mongo.ObjectId(req.params.id)
+      gfs2.files.findOne({_id: id}, (err, file) => {
+        // Check if files
+        if (!file || file.length === 0) {
+          return res.status(404).json({
+            err: "Tugas tidak ada"
+          });
+        }
+        var type = file.contentType;
+        var filename = file.filename;
+        res.set("Content-Type", type);
+        res.set("Content-Disposition", "inline;filename=" + filename)
+
+        // Files exist
+        const readStream = gfs2.createReadStream(filename);
+        readStream.pipe(res)
+
+    });
+    })
 
 
 

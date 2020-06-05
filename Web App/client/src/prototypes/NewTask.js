@@ -14,7 +14,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CancelIcon from "@material-ui/icons/Cancel";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
-import { uploadTugas , deleteTugas, downloadTugas} from "../actions/UploadActions"
+import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../actions/UploadActions"
 import { getTaskByUser } from "../actions/TaskActions"
 const path = require("path");
 
@@ -64,7 +64,7 @@ function WorkFile(props) {
   const classes = useStyles();
 
   return (
-    <ListItem>
+    <ListItem button disableRipple onClick={() => {props.onPreviewTugas(props.file_id)}}>
       <ListItemAvatar>
         <Avatar src={props.file_type_icon} className={classes.profilePicture} />
       </ListItemAvatar>
@@ -72,10 +72,9 @@ function WorkFile(props) {
         primary={props.file_name}
         secondary={props.file_type}
       />
-      <ListItemIcon>
+      <ListItemIcon button onClick={() => {props.onDownloadTugas(props.file_id)}}>
         <IconButton className={classes.iconButton}
         // onClick={() => {props.onDeleteTugas(props.file_id)}}
-        onClick={() => {props.handleOpenDownloadDialog(props.file_id, props.file_name)}}
          >
           <CloudDownloadIcon />
         </IconButton>
@@ -174,7 +173,7 @@ function CheckedWorkFilesButton() {
 
 function NewTask(props) {
   const { user } = props.auth;
-  const { uploadTugas, getTaskByUser, tasksCollection } = props;
+  const { uploadTugas, getTaskByUser, tasksCollection, downloadTugas, previewTugas } = props;
 
   const classes = useStyles();
   const tugasUploader = React.useRef(null);
@@ -222,7 +221,8 @@ function NewTask(props) {
         temp.push(
         <WorkFile
           handleOpenDeleteDialog = {handleOpenDeleteDialog}
-          handleOpenDownloadDialog = {handleOpenDownloadDialog}
+          onDownloadTugas = {onDownloadTugas}
+          onPreviewTugas = {onPreviewTugas}
           file_type_icon={0}
           file_name={tasksCollection[i].filename}
           file_id={tasksCollection[i].id}
@@ -282,10 +282,8 @@ function NewTask(props) {
     deleteTugas(id, user)
     setFileTugas(null)
   }
-
-  const onDownloadTugas = (id) => {
-    downloadTugas(id)
-  }
+  const onDownloadTugas = (id) => {downloadTugas(id)}
+  const onPreviewTugas = (id) => {previewTugas(id)}
 
   //Delete Dialog box
   const handleOpenDeleteDialog = (fileid, filename) => {
@@ -602,6 +600,7 @@ NewTask.propTypes = {
    uploadTugas: PropTypes.func.isRequired,
    deleteTugas: PropTypes.func.isRequired,
    downloadTugas: PropTypes.func.isRequired,
+   previewTugas: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
    getTaskByUser: PropTypes.func.isRequired,
    tasksCollection: PropTypes.object.isRequired
@@ -613,5 +612,5 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, getTaskByUser, deleteTugas, downloadTugas}
+   mapStateToProps, {uploadTugas, getTaskByUser, deleteTugas, downloadTugas, previewTugas}
  ) (NewTask);

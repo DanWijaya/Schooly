@@ -197,7 +197,7 @@ function Help(props) {
         </Paper>
 
         <Grid item container justify="center">
-              <Button startIcon={<EmailIcon style={{ color:"#61bd4f"}}/>} key="Email" size="large" component="a" href="mailto:schoolysystem@email.com">
+              <Button startIcon={<EmailIcon style={{ color:"#61bd4f"}}/>} key="Email" size="large" component="a" href="mailto:schoolysystem@gmail.com">
               <Grid item direction="column" container alignItems="center">
                 <Typography variant="h6" >
                 Kirim Keluhan melalui email ke schoolysystem@gmail.com

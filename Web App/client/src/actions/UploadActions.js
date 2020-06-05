@@ -1,4 +1,4 @@
-import { UPLOAD_TUGAS } from "./Types";
+import { UPLOAD_TUGAS, GET_TUGAS } from "./Types";
 import axios from "axios";
 
 export const uploadTugas = (tugas, userData) => dispatch => {
@@ -34,14 +34,37 @@ export const deleteTugas = (tugas_id, userData) => {
     }
 }
 
-export const downloadTugas = (tugas_id, userData) => {
+export const downloadTugas = (tugas_id, userData) => dispatch =>{
     console.log("Downloading Tugas")
 
     axios
         .get(`/api/uploads/tugas/${tugas_id}`)
         .then(res => {
-            console.log(res);
             console.log("Tugas berhasil diunduh")
+            window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}`, "_blank")
+            dispatch({
+                type: GET_TUGAS,
+                payload: res.data
+            })
+        })
+        .catch(err => {
+            console.log("Error in downloading")
+            console.log(err)
+        })
+}
+
+export const previewTugas = (tugas_id) => dispatch => {
+    console.log("Previewing Tugas")
+
+    axios
+        .get(`/api/uploads/previewtugas/${tugas_id}`)
+        .then(res => {
+            console.log("Tugas berhasil di preview")
+            window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`, "_blank")
+            dispatch({
+                type: GET_TUGAS,
+                payload: res.data
+            })
         })
         .catch(err => {
             console.log("Error in downloading")

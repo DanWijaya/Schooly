@@ -24,6 +24,7 @@ Daniel:
 6. Rapikan interface pas upload file, Ganti jangan pakai yang Choose File gitu
 7. Tambahin tugas field di User.
 8. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
+9. Buat button download pas click, lalu download pagenya.
 
 Bingung:
 1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog
