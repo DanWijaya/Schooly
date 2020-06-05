@@ -21,3 +21,4 @@ export const GET_ERRORS = "GET_ERRORS";
 
 //UPLOAD ACTION TYPES 
 export const UPLOAD_TUGAS = "UPLOAD_TUGAS"
+export const GET_TUGAS = "GET_TUGAS"
