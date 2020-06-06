@@ -4,13 +4,17 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
-import moment from "moment";
-import { SingleDatePicker } from "react-dates";
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
 import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
 // import { Multiselect } from "multiselect-react-dropdown";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import 'date-fns';
+import lokal from "date-fns/locale/id";
 
 const styles = (theme) => ({
   root: {
@@ -41,6 +45,11 @@ const styles = (theme) => ({
     color: "red",
     fontSize: "10px"
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  },
   chips: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -57,7 +66,7 @@ class CreateTask extends Component {
         this.state = {
             name: "",
             subject: "",
-            deadline: moment(),
+            deadline: new Date(),
             focused: false,
             // submitted: false,
             class_assigned: [],
@@ -67,11 +76,20 @@ class CreateTask extends Component {
 
 
     onChange = (e, otherfield) => {
+      console.log(this.state.deadline)
       if(otherfield == "kelas"){
-
         this.setState({ class_assigned: e.target.value})
       }
+      else if(otherfield == "deadline"){
+        this.setState({ deadline: e}) // e is the date value itself.
+      }
+      else
         this.setState({ [e.target.id]: e.target.value});
+    }
+
+    onDateChange = (date) => {
+      console.log(date)
+      this.setState({ deadline: date})
     }
 
     onSubmit = (e) => {
@@ -122,9 +140,6 @@ class CreateTask extends Component {
     render() {
       const {classesCollection,  classes, viewClass} = this.props;
 
-        if(classesCollection)
-            viewClass()
-
         var options = []
         if(Object.keys(classesCollection).length !== 0) {
           options = classesCollection
@@ -133,6 +148,7 @@ class CreateTask extends Component {
         document.title = "Schooly - Create Task"
         const { errors } = this.state;
 
+        console.log(options)
         const ITEM_HEIGHT = 48;
         const ITEM_PADDING_TOP = 8;
         const MenuProps = {
@@ -145,7 +161,6 @@ class CreateTask extends Component {
         };
 
         return(
-
         <div className={classes.root}>
           <Paper>
           <div className={classes.mainGrid}>
@@ -160,7 +175,7 @@ class CreateTask extends Component {
                spacing={4}>
                 <Grid item className={classes.gridItem}>
                 <OutlinedTextField
-                    onChange={this.onChange}
+                    on_change={this.onChange}
                     value={this.state.name}
                     error={errors.name}
                     id="name"
@@ -179,7 +194,7 @@ class CreateTask extends Component {
 
                   <Grid item className={classes.gridItem}>
                   <OutlinedTextField
-                      onChange={this.onChange}
+                      on_change={(e) => {this.onChange(e)}}
                       value={this.state.subject}
                       error={errors.subject}
                       id="subject"
@@ -203,7 +218,6 @@ class CreateTask extends Component {
           multiple
           value={this.state.class_assigned}
           onChange={(event) => {this.onChange(event, "kelas")}}
-          input={<Input id="select-multiple-chip" />}
           renderValue={(selected) => (
             <div className={classes.chips}>
               {selected.map((kelas) => (
@@ -218,7 +232,32 @@ class CreateTask extends Component {
           ))}
         </Select>
       </FormControl>
-                </Grid>
+      </Grid>
+      <Grid item className={classes.gridItem}>
+      <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+        <Grid container>
+        <KeyboardDatePicker
+          disablePast
+          // disableToolbar
+          format="dd/MM/yyyy"
+          margin="normal"
+          okLabel="Simpan"
+          cancelLabel="Batal"
+          id="date-picker-inline"
+          label="Deadline"
+          value={this.state.deadline}
+          // onChange={(date) => this.onChange(date, "deadline")}
+          onChange={(date) => this.onDateChange(date)}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+          InputProps={{
+            disableUnderline: true
+          }}
+        />
+        </Grid>
+      </MuiPickersUtilsProvider>
+      </Grid>
 
                 <Grid item className={classes.gridItem}>
                  <Button
@@ -258,73 +297,3 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps, { createTask, viewClass }
 ) (withStyles(styles )(CreateTask))
-
-// <form noValidate onSubmit={this.onSubmit}>
-//               <div className="input-field col s12">
-//                 <input
-//                   onChange={this.onChange}
-//                   value={this.state.name}
-//                   error={errors.name}
-//                   id="name"
-//                   type="text"
-//                   className={classnames("", {
-//                     invalid: errors.name
-//                   })}
-//                 />
-//                 <label htmlFor="name">Name</label>
-//                 <span className="red-text">{errors.name}</span>
-//               </div>
-
-//               <div className="input-field col s12">
-//                 Deadline <SingleDatePicker
-//                   id="deadline"
-//                   date={this.state.deadline}
-//                   onDateChange={(date) => this.setState({ deadline : date})}
-//                   focused={this.state.focused}
-//                   onFocusChange={({focused}) => this.setState({ focused})}
-//                   />
-
-//                 <label htmlFor="deadline">Deadline</label>
-//                 <span className="red-text">{errors.deadline}</span>
-//               </div>
-
-//               <div className="input-field col s12">
-//                 <input
-//                   onChange={this.onChange}
-//                   value={this.state.subject}
-//                   error={errors.subject}
-//                   id="subject"
-//                   type="text"
-//                   className={classnames("", {
-//                     invalid: errors.subject
-//                   })}
-//                 />
-//                 <label htmlFor="subject">Subject</label>
-//                 <span className="red-text">{errors.subject}</span>
-//               </div>
-
-//               <div className=" col s12">
-//                 <InputLabel id="class-assigned">Classes assigned</InputLabel>
-//               <Multiselect id="class_assigned" options={options} onSelect={this.onSelect}
-//               onRemove={this.onRemove} displayValue="name" error={errors.class_assigned} showCheckBox={true}
-//               className={classnames("", {
-//                 invalid: errors.class_assigned
-//               })}/>
-//             </div>
-
-//               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-//                 <button
-//                   style={{
-//                     width: "150px",
-//                     borderRadius: "3px",
-//                     letterSpacing: "1.5px",
-//                     marginTop: "1rem",
-//                     zIndex: 0
-//                   }}
-//                   type="submit"
-//                   className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-//                 >
-//                   Add Task
-//                 </button>
-//               </div>
-//             </form>

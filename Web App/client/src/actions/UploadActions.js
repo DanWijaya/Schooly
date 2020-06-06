@@ -41,7 +41,7 @@ export const downloadTugas = (tugas_id, userData) => dispatch =>{
         .get(`/api/uploads/tugas/${tugas_id}`)
         .then(res => {
             console.log("Tugas berhasil diunduh")
-            window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}`)
+            window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}` , "_blank")
             dispatch({
                 type: GET_TUGAS,
                 payload: res.data
@@ -60,7 +60,7 @@ export const previewTugas = (tugas_id) => dispatch => {
         .get(`/api/uploads/previewtugas/${tugas_id}`)
         .then(res => {
             console.log("Tugas berhasil di preview")
-            window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`) // previously has "_blank"
+            window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
             dispatch({
                 type: GET_TUGAS,
                 payload: res.data

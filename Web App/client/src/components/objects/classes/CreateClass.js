@@ -49,9 +49,6 @@ class CreateClass extends Component {
       nihil: true,
       walikelas: {},
       ukuran: 0,
-      // ketua_kelas: {},
-      // sekretaris: "",
-      // bendahara: "",
       errors: {}
     };
   }

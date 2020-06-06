@@ -61,7 +61,7 @@ function WorkFile(props) {
   let displayedName = ""
 
   file_name.length >= 25 ? 
-  displayedName = `${file_name.slice(0,19)}..${path.extname(file_name)}` 
+  displayedName = `${file_name.slice(0,17)}..${path.extname(file_name)}` 
   : displayedName = file_name
 
   return (
@@ -73,9 +73,9 @@ function WorkFile(props) {
         primary={displayedName}
         secondary={file_type}
       />
-      <ListItemIcon button onClick={() => {onDownloadTugas(file_id)}}>
+      <ListItemIcon>
         <IconButton className={classes.iconButton}
-        // onClick={() => {props.onDeleteTugas(props.file_id)}}
+        onClick={() => {props.onDownloadTugas(file_id)}}
          >
           <CloudDownloadIcon />
         </IconButton>
