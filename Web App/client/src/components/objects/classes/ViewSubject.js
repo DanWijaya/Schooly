@@ -84,7 +84,7 @@ function ViewSubject() {
           </Grid>
           <Grid item>
             <LightTooltip title="Tugas">
-              <IconButton>
+              <IconButton disableRipple style={{cursor: "default"}}>
                 <Badge badgeContent={5} color="secondary">
                   <AssignmentIcon />
                 </Badge>
