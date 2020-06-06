@@ -19,7 +19,6 @@ import Landing from "./components/layout/landing/Landing";
 import Notifications from "./components/layout/notifications/Notifications";
 import Help from "./components/layout/help/Help";
 import Profile from "./components/layout/profile/Profile";
-import ProfileView from "./components/layout/profile/ProfileView";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
@@ -93,7 +92,7 @@ class App extends Component {
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
             <Router>
-              <NavBar callbackFromParent={(data) => this.myCallback(data)}/>
+              <NavBar callbackFromParent={(data) => this.myCallback(data)} />
               <div style={{marginTop: "30px", marginLeft: `${translateXValue}`}}>
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/daftar" component={Register} />
@@ -106,7 +105,6 @@ class App extends Component {
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />
-                  <PrivateRoute exact path="/profile-view" component={ProfileView} />
                   <PrivateRoute exact path="/notifikasi" component={Notifications} />
                   <PrivateRoute exact path="/tentang-schooly" component={About} />
                   {/* Route Class */}

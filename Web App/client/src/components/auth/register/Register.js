@@ -128,7 +128,7 @@ class Register extends Component {
     const { classes, classesCollection } = this.props;
     const { errors } = this.state;
 
-    const error_message = (<IconButton/> + errors.email)
+    const error_message = (<IconButton /> + errors.email)
     var options = []
 
     if(Object.keys(classesCollection).length !== 0){

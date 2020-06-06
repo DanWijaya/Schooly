@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
+import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import BallotIcon from "@material-ui/icons/Ballot";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
@@ -22,9 +23,14 @@ const useStyles = makeStyles({
     marginRight: "15px",
     marginBottom: "10px",
   },
-  personList: {
-    marginBottom: "40px"
-  }
+  paperBox: {
+    padding: "20px",
+  },
+  lookAllButtonContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    padding: "5px",
+  },
 });
 
 function TabPanel(props) {
@@ -134,22 +140,24 @@ function ViewClass(props) {
       </Paper>
 
       <TabPanel value={value} index={0}>
-        <List>
-          <WorkListItem
-            work_title="Tugas Fisika"
-            work_category_avatar=""
-            work_sender="Mr Jenggot"
-            work_status="Telah Dikumpulkan"
-            work_link="/test"
-          />
-          <WorkListItem
-            work_title="Tugas Biologi"
-            work_category_avatar=""
-            work_sender="Mr Jenggot"
-            work_status="Belum Dikumpulkan"
-            work_link="/test"
-          />
-        </List>
+        <Paper className={classes.paperBox} style={{marginBottom: "40px"}}>
+          <List>
+            <WorkListItem
+              work_title="Tugas Fisika"
+              work_category_avatar=""
+              work_sender="Mr Jenggot"
+              work_status="Telah Dikumpulkan"
+              work_link="/test"
+            />
+            <WorkListItem
+              work_title="Tugas Biologi"
+              work_category_avatar=""
+              work_sender="Mr Jenggot"
+              work_status="Belum Dikumpulkan"
+              work_link="/test"
+            />
+          </List>
+        </Paper>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
@@ -159,27 +167,33 @@ function ViewClass(props) {
               Fisika
             </Typography>
           </ExpansionPanelSummary>
-            <List className={classes.expansionPanelList}>
-              <WorkListItem
-                work_title="Tugas Fisika"
-                work_category_avatar=""
-                work_sender="Mr Jenggot"
-                work_status="Telah Dikumpulkan"
-                work_link="/test"
-              />
-              <WorkListItem
-                work_title="Tugas Biologi"
-                work_category_avatar=""
-                work_sender="Mr Jenggot"
-                work_status="Belum Dikumpulkan"
-                work_link="/test"
-              />
-            </List>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            <WorkListItem
+              work_title="Tugas Fisika"
+              work_category_avatar=""
+              work_sender="Mr Jenggot"
+              work_status="Telah Dikumpulkan"
+              work_link="/test"
+            />
+            <WorkListItem
+              work_title="Tugas Biologi"
+              work_category_avatar=""
+              work_sender="Mr Jenggot"
+              work_status="Belum Dikumpulkan"
+              work_link="/test"
+            />
+          </List>
+          <div className={classes.lookAllButtonContainer}>
+            <Button endIcon={<ChevronRightIcon />} href="/viewsubject">
+              Lihat Semua
+            </Button>
+          </div>
         </ExpansionPanel>
       </TabPanel>
 
       <TabPanel value={value} index={2}>
-        <div className={classes.personList}>
+        <Paper className={classes.paperBox} style={{marginBottom: "40px"}}>
           <Typography variant="h4" gutterBottom>
             Murid
           </Typography>
@@ -198,8 +212,8 @@ function ViewClass(props) {
               person_role="Student"
             />
           </List>
-        </div>
-        <div className={classes.personList}>
+        </Paper>
+        <Paper className={classes.paperBox}>
           <Typography variant="h4" gutterBottom>
             Guru
           </Typography>
@@ -218,7 +232,7 @@ function ViewClass(props) {
               person_role="Racism Teacher"
             />
           </List>
-        </div>
+        </Paper>
       </TabPanel>
     </div>
   )

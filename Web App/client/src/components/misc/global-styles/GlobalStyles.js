@@ -17,6 +17,16 @@ export const globalStyles = createMuiTheme({
         },
       },
     },
+    MuiFab: {
+      root: {
+        "&:focus": {
+          backgroundColor: "#2196f3",
+        },
+        "&:hover": {
+          backgroundColor: "transparent",
+        },
+      }
+    },
     MuiIconButton: {
       root: {
         "&:focus": {
