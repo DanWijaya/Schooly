@@ -55,24 +55,25 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-// function truncate(text) {
-//   if(text.length > 25) {
-//     return text[:25]
-//   }
-// }
 function WorkFile(props) {
   const classes = useStyles();
+  const {file_type_icon, file_name, file_type, onDownloadTugas, file_id} = props;
+  let displayedName = ""
+
+  file_name.length >= 25 ? 
+  displayedName = `${file_name.slice(0,19)}..${path.extname(file_name)}` 
+  : displayedName = file_name
 
   return (
-    <ListItem button disableRipple onClick={() => {props.onPreviewTugas(props.file_id)}}>
+    <ListItem button disableRipple onClick={() => {props.onPreviewTugas(file_id)}}>
       <ListItemAvatar>
-        <Avatar src={props.file_type_icon} className={classes.profilePicture} />
+        <Avatar src={file_type_icon} className={classes.profilePicture} />
       </ListItemAvatar>
       <ListItemText
-        primary={props.file_name}
-        secondary={props.file_type}
+        primary={displayedName}
+        secondary={file_type}
       />
-      <ListItemIcon button onClick={() => {props.onDownloadTugas(props.file_id)}}>
+      <ListItemIcon button onClick={() => {onDownloadTugas(file_id)}}>
         <IconButton className={classes.iconButton}
         // onClick={() => {props.onDeleteTugas(props.file_id)}}
          >
@@ -140,8 +141,7 @@ function CheckedWorkFilesButton() {
         variant="contained"
         onClick={handleClick}
         startIcon={<AssignmentTurnedInIcon />}
-        style={{color: "white", backgroundColor: "#2196f3"}}
-      >
+        style={{color: "white", backgroundColor: "#2196f3"}}>
         Lihat Hasil Pengecekkan
       </Button>
       <StyledMenu
@@ -236,6 +236,22 @@ function NewTask(props) {
     }
 
     return tasksContents
+  }
+
+  // <Typography className={classes.workButton} style={{textAlign:'center'}}>{fileTugas ? (fileTugas.length == 1 ? fileTugas[0].name : `${fileTugas.length} files`) : "Kosong" }</Typography>
+  
+  const listFileChosen = () => {
+    let temp = []
+    if(!fileTugas) {
+      temp.push(<Typography className={classes.workButton} style={{textAlign:'center', color:'#2196f3'}}>Kosong</Typography> )
+    } else {
+      for (var i = 0; i < fileTugas.length; i++){
+        temp.push(<Typography className={classes.workButton} style={{textAlign:'center', color: '#2196f3'}}>{fileTugas[i].name.length < 27 ? 
+          fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}</Typography>)
+      }
+    }
+
+    return temp
   }
 
   const handleClick = () => {
@@ -335,7 +351,7 @@ function NewTask(props) {
               Hapus file berikut?
             </Typography>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          <Grid item container justify="center" style={{marginBottom: "20px", textAlign:'center'}}>
             <Typography variant="h6" gutterBottom>
               <b>{selectedFileName}</b>
             </Typography>
@@ -532,9 +548,16 @@ function NewTask(props) {
               </List>
             </Grid>
             <Divider />
+
+          <Grid container direction="column" alignItems="center">
+            
+            <Typography variant="h6"><b><u>File terpilih</u> </b></Typography>
+            {listFileChosen()}
+          </Grid>
+            <Divider/>
             <Grid item container direction="column" spacing={2} className={classes.workBox}>
             <form onSubmit={onSubmitTugas}>
-              <Grid item>
+              <Grid item style={{ marginBottom: "15px"}}>
 
               <input
                 type="file"
@@ -543,12 +566,13 @@ function NewTask(props) {
                 onChange={handleTugasUpload}
                 ref={tugasUploader}
                 accept="file/*"
-
+                style={{display: 'none'}}
               />
 
           <input type="file" multiple={true} name="file" id="file" ref={uploadedTugas} style={{
                   display: "none"
                 }}/>
+                
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
@@ -556,8 +580,9 @@ function NewTask(props) {
                   style={{color: "#2196f3", backgroundColor: "white"}}
                   onClick={() => {tugasUploader.current.click()}}
                 >
-                  Unggah Tugas
+                  Pilih File
                 </Button>
+
               </Grid>
               <Grid item>
                 <Button
