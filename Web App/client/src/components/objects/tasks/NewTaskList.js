@@ -7,15 +7,21 @@ import { Checkbox, IconButton, Paper, Table, TableBody, TableCell, TableContaine
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
+import { viewTask, deleteTask } from '../../../actions/TaskActions';
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
 function createData(tasktitle, subject, class_assigned, deadline, action) {
-  return { tasktitle, subject, class_assigned, deadline, action };
+  return { _id, tasktitle, subject, class_assigned, deadline, action };
 }
 
-const rows = [
-  createData("Rangkuman Bab 1 sdsdsdsdsd", "PKN", ["X A"," X B"], "Nihil", <IconButton><EditIcon /></IconButton>),
-  createData("XB", "Mr Peler", 35, "Nihil", <IconButton><EditIcon /></IconButton>),
-  createData("XC", "Mr Nigga", 36, "Nihil", <IconButton><EditIcon /></IconButton>),
-];
+var rows = []
+
+// const rows = [
+//   createData("Rangkuman Bab 1 sdsdsdsdsd", "PKN", ["X A"," X B"], "Nihil", <IconButton><EditIcon /></IconButton>),
+//   createData("XB", "Mr Peler", 35, "Nihil", <IconButton><EditIcon /></IconButton>),
+//   createData("XC", "Mr Nigga", 36, "Nihil", <IconButton><EditIcon /></IconButton>),
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -288,4 +294,9 @@ export default function NewClassList() {
       </Paper>
     </div>
   );
+}
+
+NewTaskList.propTypes = {
+  viewTask: PropTypes.func.isRequired,
+  
 }
