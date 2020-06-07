@@ -7,15 +7,15 @@ import { Checkbox, IconButton, Paper, Table, TableBody, TableCell, TableContaine
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
-import { viewClass, deleteClass } from '../../../actions/ClassActions';
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-
-function createData(_id, classroom, homeroomTeacher, size, absent, action) {
-  return { _id, classroom, homeroomTeacher, size, absent, action };
+function createData(tasktitle, subject, class_assigned, deadline, action) {
+  return { tasktitle, subject, class_assigned, deadline, action };
 }
 
-var rows=[];
+const rows = [
+  createData("Rangkuman Bab 1 sdsdsdsdsd", "PKN", ["X A"," X B"], "Nihil", <IconButton><EditIcon /></IconButton>),
+  createData("XB", "Mr Peler", 35, "Nihil", <IconButton><EditIcon /></IconButton>),
+  createData("XC", "Mr Nigga", 36, "Nihil", <IconButton><EditIcon /></IconButton>),
+];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -44,14 +44,14 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "classroom", numeric: false, disablePadding: true, label: "Kelas" },
-  { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
-  { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
-  { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
-  { id: "action", numeric: false, disablePadding: false, label: "Sunting" },
+  { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
+  { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
+  { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan pada" },
+  { id: "deadline", numeric: false, disablePadding: false, label: "Batas waktu" },
+  { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
 ];
 
-function ClassListHead(props) {
+function TaskListHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -63,9 +63,8 @@ function ClassListHead(props) {
         <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
-            // indeterminate={true}
             checked={rowCount > 0 && numSelected === rowCount}
-            onChange={(event, checked) => {onSelectAllClick(event, checked)}}
+            onChange={onSelectAllClick}
             color="secondary"
           />
         </TableCell>
@@ -95,7 +94,7 @@ function ClassListHead(props) {
   );
 }
 
-ClassListHead.propTypes = {
+TaskListHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
@@ -127,7 +126,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const ClassListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, item , deleteClass} = props;
+  const { numSelected } = props;
 
   return (
     <Toolbar
@@ -147,11 +146,9 @@ const ClassListToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={() =>{
-            deleteClass(item[0])}}>
+          <IconButton>
             <DeleteIcon />
           </IconButton>
-
         </Tooltip>
       ) : (
         null
@@ -189,43 +186,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NewClassList(props) {
+export default function NewClassList() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
   const [selected, setSelected] = React.useState([]);
-  const [classesList, setClassesList] = React.useState([]);
-  const { viewClass, deleteClass, classesCollection} = props;
-
-  const retrieveClasses = () => {
-    if(classesCollection.length == undefined){ 
-      viewClass();
-    } else {
-      rows = []
-      classesCollection.map((data) => {
-        rows.push(
-          createData(data._id, data.name, 
-            data.walikelas.name, 
-            data.ukuran, 
-            data.nihil ? "Nihil" : "Tidak Nihil",
-            <IconButton>
-              <Link
-          to={{
-            pathname: `/class/${data._id}`,
-            state:{ classId : data._id}
-          }}
-          // style = {{ color: 'grey'}}
-        >
-              <EditIcon />
-              </Link>
-            </IconButton>
-          )
-        )
-      })
-
-    }
-}
-  
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -233,23 +198,21 @@ function NewClassList(props) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event, checked) => {
-    // console.log(event.target.checked)
-    if (checked) {
-      const newSelected = rows.map((n) => n._id);
-      console.log(newSelected)
-      setSelected(newSelected);
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n.tasktitle);
+      setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, item) => { // get the id by item._id
-    const selectedIndex = selected.indexOf(item._id);
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, item._id);
+      newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -266,38 +229,35 @@ function NewClassList(props) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  retrieveClasses()
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <ClassListToolbar numSelected={selected.length} item={selected} deleteClass={deleteClass}/>
+        <ClassListToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
             aria-label="enhanced table"
           >
-            <ClassListHead
+            <TaskListHead
               classes={classes}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
+              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows != undefined ? 
-              rows.length : 0}
+              rowCount={rows.length}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row._id);
+                  const isItemSelected = isSelected(row.tasktitle);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row)}
+                      onClick={(event) => handleClick(event, row.tasktitle)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -313,11 +273,11 @@ function NewClassList(props) {
                         />
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
-                        {row.classroom}
+                        {row.tasktitle}
                       </TableCell>
-                      <TableCell align="center">{row.homeroomTeacher}</TableCell>
-                      <TableCell align="center">{row.size}</TableCell>
-                      <TableCell align="center">{row.absent}</TableCell>
+                      <TableCell align="center">{row.subject}</TableCell>
+                      <TableCell align="center">{row.class_assigned}</TableCell>
+                      <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{row.action}</TableCell>
                     </TableRow>
                   );
@@ -329,22 +289,3 @@ function NewClassList(props) {
     </div>
   );
 }
-
-NewClassList.propTypes = {
-  viewClass: PropTypes.func.isRequired,
-  classesCollection: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
-  deleteClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-  errors: state.errors,
-  classesCollection: state.classesCollection,
-  auth: state.auth
-})
-
-export default connect(
-  mapStateToProps, 
-  {viewClass, deleteClass } 
-)(NewClassList);

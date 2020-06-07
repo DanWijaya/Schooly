@@ -32,6 +32,7 @@ import ViewSubject from "./components/objects/classes/ViewSubject";
 import CreateTask from "./components/objects/tasks/CreateTask";
 import EditTask from "./components/objects/tasks/EditTask";
 import ViewTask from "./components/objects/tasks/ViewTask";
+import NewTaskList from "./components/objects/tasks/NewTaskList";
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
 //Prototypes
@@ -101,6 +102,7 @@ class App extends Component {
                 <Route exact path="/bantuan" component={Help} />
                 <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
                 <Route exact path="/newclasslist" component={NewClassList} /> {/*prototypetest*/}
+                <Route exact path="/newtasklist" component={NewTaskList}/> {/* prototypes */}
                 <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
