@@ -4,17 +4,22 @@ import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Fab, Gri
    IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Menu, MenuItem, Paper, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import NoteIcon from "@material-ui/icons/Note";
+import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     marginTop: "30px", //Should be deleted after theme passing from navbar worked
     maxWidth: "800px",
+  },
+  subjectIcons: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    color: "grey",
   },
   subjectCardPaper: {
     padding: "15px",
@@ -83,6 +88,13 @@ function ViewSubject() {
             </Typography>
           </Grid>
           <Grid item>
+            <LightTooltip title="Pengumuman">
+              <IconButton disabled>
+                <Badge badgeContent={0} color="secondary">
+                  <AnnouncementIcon />
+                </Badge>
+              </IconButton>
+            </LightTooltip>
             <LightTooltip title="Tugas">
               <IconButton disableRipple style={{cursor: "default"}}>
                 <Badge badgeContent={5} color="secondary">
@@ -93,14 +105,14 @@ function ViewSubject() {
             <LightTooltip title="Kuis">
               <IconButton disabled>
                 <Badge badgeContent={0} color="secondary">
-                  <NoteIcon />
+                  <GrNotes className={classes.subjectIcons} />
                 </Badge>
               </IconButton>
             </LightTooltip>
             <LightTooltip title="Ujian">
               <IconButton disabled>
                 <Badge badgeContent={0} color="secondary">
-                  <ChromeReaderModeIcon />
+                  <GrDocumentPerformance className={classes.subjectIcons} />
                 </Badge>
               </IconButton>
             </LightTooltip>

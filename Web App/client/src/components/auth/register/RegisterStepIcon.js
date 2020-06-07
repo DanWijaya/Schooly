@@ -6,7 +6,7 @@ import ContactMailIcon from "@material-ui/icons/ContactMail";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import StorageIcon from "@material-ui/icons/Storage";
 
-const useColorlibStepIconStyles = makeStyles({
+const useRegisterStepIconStyles = makeStyles({
   root: {
     backgroundColor: "#ccc",
     zIndex: 1,
@@ -30,7 +30,7 @@ const useColorlibStepIconStyles = makeStyles({
 });
 
 function RegisterStepIcon(props) {
-  const classes = useColorlibStepIconStyles();
+  const classes = useRegisterStepIconStyles();
   const { active, completed } = props;
 
   const icons = {

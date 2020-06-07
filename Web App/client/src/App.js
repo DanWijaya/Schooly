@@ -93,7 +93,7 @@ class App extends Component {
           <ThemeProvider theme={globalStyles}>
             <Router>
               <NavBar callbackFromParent={(data) => this.myCallback(data)} />
-              <div style={{marginTop: "30px", marginLeft: `${translateXValue}`}}>
+              <div style={{marginLeft: `${translateXValue}`}}>
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/daftar" component={Register} />
                 <Route exact path="/masuk" component={Login} />

@@ -10,16 +10,16 @@ import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Snackbar, T
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
+import ColorLensIcon from "@material-ui/icons/ColorLens";
+import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
 import EmailIcon from "@material-ui/icons/Email";
-import GamesIcon from "@material-ui/icons/Games";
 import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
@@ -250,7 +250,7 @@ function Profile(props) {
                     profile_data_info={user.phone}
                   />
                   <ProfileDataItem
-                    profile_data_icon={<SupervisorAccountIcon />}
+                    profile_data_icon={<ContactPhoneIcon />}
                     profile_data_category="Nomor Telepon Darurat"
                     profile_data_info={user.emergency_phone}
                   />
@@ -269,12 +269,12 @@ function Profile(props) {
                 </Typography>
                 <List>
                   <ProfileDataItem
-                    profile_data_icon={<GamesIcon />}
+                    profile_data_icon={<SportsEsportsIcon />}
                     profile_data_category="Hobi dan Minat"
                     profile_data_info={user.hobi_minat}
                   />
                   <ProfileDataItem
-                    profile_data_icon={<BookIcon />}
+                    profile_data_icon={<ColorLensIcon />}
                     profile_data_category="Keterampilan non-teknis"
                     profile_data_info={user.ket_non_teknis}
                   />

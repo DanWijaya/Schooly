@@ -1,7 +1,7 @@
 import React from "react"
 import clsx from "clsx";
 import { drawerWidth } from "./NavBar.js";
-import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar } from "@material-ui/core";
+import { Avatar, Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -9,6 +9,8 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import ClassIcon from "@material-ui/icons/Class";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
 const useStyles = makeStyles((theme) => ({
   drawerMobile: {
@@ -43,9 +45,15 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
+  drawerIcons: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+  }
 }));
 
 function DrawerContent(props) {
+  const classes = useStyles();
+
   return (
     <div>
       <List>
@@ -57,11 +65,11 @@ function DrawerContent(props) {
         </ListItem>
         <ListItem button component="a" href="/viewclass">
             <ListItemIcon>
-              <ClassIcon />
+              <FaChalkboardTeacher className={classes.drawerIcons} />
             </ListItemIcon>
             <ListItemText primary="Kelas" />
         </ListItem>
-        <ListItem button component="a" href="/announcements">
+        <ListItem button component="a" href="/announcements" disabled>
             <ListItemIcon>
               <AnnouncementIcon />
             </ListItemIcon>
@@ -73,12 +81,19 @@ function DrawerContent(props) {
             </ListItemIcon>
             <ListItemText primary="Tugas" />
         </ListItem>
-        <ListItem button component="a" href="/assessments" disabled>
+        <ListItem button component="a" href="/quiz" disabled>
             <ListItemIcon>
-              <AssessmentIcon />
+              <GrNotes className={classes.drawerIcons} />
             </ListItemIcon>
-            <ListItemText primary="Kuis dan Ujian" />
+            <ListItemText primary="Kuis" />
         </ListItem>
+        <ListItem button component="a" href="/exams" disabled>
+            <ListItemIcon>
+              <GrDocumentPerformance className={classes.drawerIcons} />
+            </ListItemIcon>
+            <ListItemText primary="Ujian" />
+        </ListItem>
+
       </List>
       <Divider />
       <List>

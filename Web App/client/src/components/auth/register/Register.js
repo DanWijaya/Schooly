@@ -15,7 +15,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper"
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import InfoIcon from '@material-ui/icons/Info';
 
 const styles = (theme) => ({
   root: {
@@ -128,7 +127,6 @@ class Register extends Component {
     const { classes, classesCollection } = this.props;
     const { errors } = this.state;
 
-    const error_message = (<IconButton /> + errors.email)
     var options = []
 
     if(Object.keys(classesCollection).length !== 0){
@@ -153,7 +151,7 @@ class Register extends Component {
                 <OutlinedTextField
                   on_change={this.onChange}
                   value={this.state.email}
-                  error={error_message}
+                  error={errors.email}
                   id="email"
                   type="email"
                   className={classnames("", {

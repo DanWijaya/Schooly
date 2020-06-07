@@ -7,20 +7,20 @@ import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItem
    Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import BookIcon from "@material-ui/icons/Book";
 import CakeIcon from "@material-ui/icons/Cake";
 import CloseIcon from "@material-ui/icons/Close";
+import ColorLensIcon from "@material-ui/icons/ColorLens";
 import ContactsIcon from "@material-ui/icons/Contacts";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
+import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
 import EditIcon from "@material-ui/icons/Edit";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import EmailIcon from "@material-ui/icons/Email";
-import GamesIcon from "@material-ui/icons/Games";
 import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 import PhoneIcon from "@material-ui/icons/Phone";
 import SchoolIcon from "@material-ui/icons/School";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
 
@@ -269,7 +269,7 @@ function ProfileDataEditorDialog(props) {
                   on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
-                  profile_data_icon={<SupervisorAccountIcon />}
+                  profile_data_icon={<ContactPhoneIcon />}
                   profile_data_category="Nomor Telepon Darurat"
                   value={dataProfil.no_telp_darurat}
                   id="no_telp_darurat"
@@ -287,14 +287,14 @@ function ProfileDataEditorDialog(props) {
             <TabPanel value={value} index={2}>
               <List className={classes.tabContentList}>
                 <ProfileDataItemEdit
-                  profile_data_icon={<GamesIcon />}
+                  profile_data_icon={<SportsEsportsIcon />}
                   profile_data_category="Hobi dan Minat"
                   value={dataProfil.hobi_minat}
                   id="hobi_minat"
                   on_change={handleChangeDataProfil}
                 />
                 <ProfileDataItemEdit
-                  profile_data_icon={<BookIcon />}
+                  profile_data_icon={<ColorLensIcon />}
                   profile_data_category="Keterampilan non-teknis"
                   value={dataProfil.ket_non_teknis}
                   id="ket_non_teknis"
