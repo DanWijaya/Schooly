@@ -6,22 +6,16 @@ import { Checkbox, IconButton, Paper, Table, TableBody, TableCell, TableContaine
    TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-
+import moment from 'moment';
 import { viewTask, deleteTask } from '../../../actions/TaskActions';
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import 'moment/locale/id'
 
-function createData(tasktitle, subject, class_assigned, deadline, action) {
+function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
   return { _id, tasktitle, subject, class_assigned, deadline, action };
 }
-
-var rows = []
-
-// const rows = [
-//   createData("Rangkuman Bab 1 sdsdsdsdsd", "PKN", ["X A"," X B"], "Nihil", <IconButton><EditIcon /></IconButton>),
-//   createData("XB", "Mr Peler", 35, "Nihil", <IconButton><EditIcon /></IconButton>),
-//   createData("XC", "Mr Nigga", 36, "Nihil", <IconButton><EditIcon /></IconButton>),
-// ];
+var rows = [];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -130,10 +124,10 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const ClassListToolbar = (props) => {
+const TaskListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
-
+  const { numSelected, deleteTask, item } = props;
+  // the item stores the id directly
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -152,7 +146,7 @@ const ClassListToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={() => deleteTask(item[0])}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -163,7 +157,7 @@ const ClassListToolbar = (props) => {
   );
 };
 
-ClassListToolbar.propTypes = {
+TaskListToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
@@ -192,12 +186,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewClassList() {
+function NewTaskList(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
   const [selected, setSelected] = React.useState([]);
 
+  const { tasksCollection, viewTask, deleteTask } = props;
+  const retrieveTasks = () => {
+    if(tasksCollection.length == undefined){
+      viewTask();
+    } else {
+      rows = []
+      tasksCollection.map((data) => {
+        console.log(data.deadline)
+        rows.push(
+          createData(data._id, data.name,
+            data.subject,
+            data.class_assigned,
+            data.deadline,
+            <IconButton>
+            <Link
+        to={{
+          pathname: `/task/${data._id}`,
+          state:{ classId : data._id}
+        }}
+        // style = {{ color: 'grey'}}
+      >
+            <EditIcon />
+            </Link>
+          </IconButton>
+            )
+        )
+      })
+    }
+  }
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -213,12 +236,12 @@ export default function NewClassList() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, item) => {
+    const selectedIndex = selected.indexOf(item._id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, item._id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -235,10 +258,14 @@ export default function NewClassList() {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
+  // call the function to get the tasks lists from DB
+  if(rows.length == 0)
+    retrieveTasks()
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <ClassListToolbar numSelected={selected.length} />
+        <TaskListToolbar numSelected={selected.length} item={selected} deleteTask={deleteTask}/>
         <TableContainer>
           <Table
             className={classes.table}
@@ -252,18 +279,19 @@ export default function NewClassList() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={rows != undefined ? 
+              rows.length: 0}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.tasktitle);
+                  const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.tasktitle)}
+                      onClick={(event) => handleClick(event, row)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -282,8 +310,8 @@ export default function NewClassList() {
                         {row.tasktitle}
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
-                      <TableCell align="center">{row.class_assigned}</TableCell>
-                      <TableCell align="center">{row.subject}</TableCell>
+                      <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
+                      <TableCell align="center">{moment(row.deadline).locale("id").format('DD-MMM-YYYY')}</TableCell>
                       <TableCell align="center">{row.action}</TableCell>
                     </TableRow>
                   );
@@ -298,5 +326,17 @@ export default function NewClassList() {
 
 NewTaskList.propTypes = {
   viewTask: PropTypes.func.isRequired,
-  
+  deleteTask: PropTypes.func.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
 }
+
+const mapStateToProps = (state) => ({
+  errors: state.errors,
+  tasksCollection: state.tasksCollection,
+})
+
+export default connect(
+  mapStateToProps, 
+  {viewTask, deleteTask}
+)(NewTaskList);

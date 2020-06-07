@@ -69,7 +69,7 @@ export const updateClass = (classData, classId, history) => dispatch => {
     .then(res => {
         console.log("Class updated to be : ", res.data);
         alert("Class is updated successfully")
-        history.push("/classlist")
+        history.push("/newclasslist")
     })
     .catch(err => {
         dispatch({

@@ -8,7 +8,7 @@ export const createTask = (taskData, history) => dispatch => {
     .then(res => {
         // history.push("/view")
         alert("Task is created")
-        history.push("/viewtask");
+        history.push("/newtasklist");
     })
     .catch(err =>
         dispatch({
@@ -85,7 +85,7 @@ export const updateTask = (taskData, taskId, history) => dispatch => {
     .then(res => {
         console.log("Task updated to be :", res.data);
         alert("Task is updated successfully");
-        history.push("/viewtask");
+        history.push("/newtasklist");
     })
     .catch(err => {
         console.log(err);
@@ -102,8 +102,9 @@ export const deleteTask = (taskId, history) => dispatch => {
     .then((res) => {
         console.log(res.data)
         alert("Task Deleted")
-        history.push("/viewtask")}
-        )
+        window.location.reload()
+        // history.push("/viewtask")
+    })
     .catch(err => {
         console.log(err);
         dispatch({

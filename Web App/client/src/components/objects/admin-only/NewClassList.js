@@ -194,7 +194,7 @@ function NewClassList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
   const [selected, setSelected] = React.useState([]);
-  const [classesList, setClassesList] = React.useState([]);
+  // const [classesList, setClassesList] = React.useState([]);
   const { viewClass, deleteClass, classesCollection} = props;
 
   const retrieveClasses = () => {
@@ -265,8 +265,10 @@ function NewClassList(props) {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  retrieveClasses()
+  
+  // call the function to get the classes from DB
+  if(rows.length == 0)
+    retrieveClasses()
 
   return (
     <div className={classes.root}>
@@ -335,13 +337,11 @@ NewClassList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   classesCollection: state.classesCollection,
-  auth: state.auth
 })
 
 export default connect(
