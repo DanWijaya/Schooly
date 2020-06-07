@@ -61,14 +61,19 @@ router.get("/viewall", (req, res) => {
 });
 
 router.delete("/delete/:id", (req, res) => {
+    console.log(req.params.id, " testing woi")
     Class.findByIdAndRemove(req.params.id)
         .then((classes, err) => {
             if(!classes) {
-                res.status(400).json(err);
+                return res.status(400).json(err);
             } else {
-                res.json(classes);
+                console.log(classes)
+                return res.json("Successfully deleted the class")
             }
         })
+        // .catch(res.json("Error happened"))
+    
+    
 })
 
 router.get("/edit/:id", (req, res) => {

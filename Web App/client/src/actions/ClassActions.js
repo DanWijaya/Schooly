@@ -9,7 +9,7 @@ export const createClass = (classData, history) => dispatch => {
     .then(res => {
         console.log(res.data)
         alert("Class is created")
-        history.push("/classlist")
+        history.push("/newclasslist")
     })
     .catch(err =>
         dispatch({
@@ -79,13 +79,14 @@ export const updateClass = (classData, classId, history) => dispatch => {
     })
 }
 
-export const deleteClass = (classId, history) => dispatch => {
+export const deleteClass = (classId) => dispatch => {
   axios
     .delete("/api/classes/delete/" + classId)
     .then(res => {
         console.log(res.data)
         alert("Class Deleted")
-        history.push("/classlist")
+        // history.push("/classlist")
+        window.location.reload()
     })
     .catch(err => {
         console.log(err);

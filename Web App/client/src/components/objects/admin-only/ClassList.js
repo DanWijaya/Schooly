@@ -113,7 +113,6 @@ class ClassList extends Component {
     if(classesCollection.length === 0)
         this.props.viewClass();
 
-    console.log(this.state.classesCollection)
     return this.state.classesCollection.map((data, i) => {
         return <ClassDataView obj={data} key={i}/>;
     });
