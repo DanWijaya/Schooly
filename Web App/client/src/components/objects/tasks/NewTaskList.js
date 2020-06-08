@@ -60,14 +60,14 @@ function TaskListHead(props) {
   return (
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             color="secondary"
           />
-        </TableCell>
+        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -140,14 +140,14 @@ const TaskListToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
-          <b>Daftar Kelas</b>
+          <b>Daftar Tugas</b>
         </Typography>
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton onClick={() => deleteTask(item[0])}>
-            <DeleteIcon />
+            <DeleteIcon/>
           </IconButton>
         </Tooltip>
       ) : (
@@ -164,7 +164,7 @@ TaskListToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "750px",
+    maxWidth: "1000px",
   },
   paper: {
     width: "100%",
@@ -205,6 +205,7 @@ function NewTaskList(props) {
             data.subject,
             data.class_assigned,
             data.deadline,
+            [
             <IconButton>
             <Link
         to={{
@@ -215,7 +216,15 @@ function NewTaskList(props) {
       >
             <EditIcon />
             </Link>
+          </IconButton>,
+          <Tooltip title="Delete">
+          <IconButton onClick={() =>{
+            deleteTask(data._id)}}>
+            <DeleteIcon style={{color: "#B22222"}} />
           </IconButton>
+
+        </Tooltip>
+            ]
             )
         )
       })
@@ -287,25 +296,27 @@ function NewTaskList(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  let viewpage = `/new-task/${row._id}`
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row)}
+                      // onClick={(event) => handleClick(event, row)}
+                      component="a"
+                      href={viewpage}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.classroom}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      {/* <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                           color="secondary"
                           style={{display: "flex", justifyContent: "center"}}
                         />
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
                         {row.tasktitle}
                       </TableCell>

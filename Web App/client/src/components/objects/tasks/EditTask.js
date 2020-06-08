@@ -83,8 +83,8 @@ class EditTask extends Component {
     }
 
     onChange = (e, otherfield) => {
-        console.log(this.state.deadline)
       if(otherfield == "kelas"){
+        console.log(this.state.class_assigned, e.target.value)
         this.setState({ class_assigned: e.target.value})
       }
       else if(otherfield == "deadline"){
@@ -234,7 +234,7 @@ class EditTask extends Component {
                         MenuProps={MenuProps}
                         >
                     {options.map((kelas) => (
-                        <MenuItem key={kelas} value={kelas}>{kelas.name}</MenuItem>
+                        <MenuItem value={kelas} selected>{kelas.name}</MenuItem>
                     ))}
                     </Select>
             </FormControl>

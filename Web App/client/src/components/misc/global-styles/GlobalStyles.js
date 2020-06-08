@@ -27,6 +27,16 @@ export const globalStyles = createMuiTheme({
         },
       }
     },
+    MuiPickersDay:{
+      daySelected: {
+        "&:focus": {
+          backgroundColor: "#2196f3",
+        },
+        "&:hover": {
+          backgroundColor: "transparent",
+        },
+      }
+    },
     MuiIconButton: {
       root: {
         "&:focus": {
