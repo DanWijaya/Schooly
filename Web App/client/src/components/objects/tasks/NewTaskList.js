@@ -209,7 +209,7 @@ function NewTaskList(props) {
             <Link
         to={{
           pathname: `/task/${data._id}`,
-          state:{ classId : data._id}
+          state:{ taskId : data._id}
         }}
         // style = {{ color: 'grey'}}
       >

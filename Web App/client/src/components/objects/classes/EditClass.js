@@ -138,41 +138,6 @@ class EditClass extends Component {
     this.props.updateClass(classObject, classId, this.props.history);
   }
 
-  // onSelectTeacher = (selectedList, selectedItem) => {
-  //   if(selectedList.length === 0)
-  //     selectedList.push(this.state.walikelas)
-  //   if(selectedList.length > 1)
-  //     selectedList.shift()
-
-  //   this.setState({ walikelas: selectedList[0]})
-  // }
-
-  // onSelectKetuaKelas = (selectedList, selectedItem) => {
-  //   if(selectedList.length === 0)
-  //     selectedList.push(this.state.ketua_kelas)
-  //   if(selectedList.length > 1)
-  //     selectedList.shift()
-
-  //   this.setState({ ketua_kelas: selectedList[0]})
-  // }
-
-  // onSelectSekretaris = (selectedList, selectedItem) => {
-  //   if(selectedList.length === 0)
-  //     selectedList.push(this.state.sekretaris)
-  //   if(selectedList.length > 1)
-  //     selectedList.shift()
-
-  //   this.setState({ sekretaris: selectedList[0]})
-  // }
-
-  // onSelectBendahara = (selectedList, selectedItem) => {
-  //   if(selectedList.length === 0)
-  //     selectedList.push(this.state.bendahara)
-  //   if(selectedList.length > 1)
-  //     selectedList.shift()
-
-  //   this.setState({ bendahara: selectedList[0]})
-  // }
   componentDidMount() {
     this.props.getTeachers()
     this.props.getStudents()
