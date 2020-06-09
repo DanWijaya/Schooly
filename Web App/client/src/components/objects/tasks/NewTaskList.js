@@ -231,7 +231,7 @@ function NewTaskList(props) {
 
         </Tooltip>
             ]
-            )
+          )
         )
       })
     }
@@ -383,7 +383,7 @@ function NewTaskList(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows != undefined ? 
+              rowCount={rows != undefined ?
               rows.length: 0}
             />
             <TableBody>
@@ -405,20 +405,12 @@ function NewTaskList(props) {
                       key={row.classroom}
                       selected={isItemSelected}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                          color="secondary"
-                          style={{display: "flex", justifyContent: "center"}}
-                        />
-                      </TableCell> */}
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
                         {row.tasktitle}
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
-                      <TableCell align="center">{moment(row.deadline).locale("id").format('DD-MMM-YYYY')}</TableCell>
+                      <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY")}</TableCell>
                       <TableCell align="center">{row.action}</TableCell>
                     </TableRow>
                   );
@@ -444,6 +436,6 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   {viewTask, deleteTask}
 )(NewTaskList);

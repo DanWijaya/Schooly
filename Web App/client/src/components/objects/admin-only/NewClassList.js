@@ -65,15 +65,6 @@ function ClassListHead(props) {
   return (
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            // indeterminate={true}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={(event, checked) => {onSelectAllClick(event, checked)}}
-            color="secondary"
-          />
-        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -212,15 +203,15 @@ function NewClassList(props) {
   const { viewClass, deleteClass, classesCollection} = props;
 
   const retrieveClasses = () => {
-    if(classesCollection.length == undefined){ 
+    if(classesCollection.length == undefined){
       viewClass();
     } else {
       rows = []
       classesCollection.map((data) => {
         rows.push(
-          createData(data._id, data.name, 
-            data.walikelas.name, 
-            data.ukuran, 
+          createData(data._id, data.name,
+            data.walikelas.name,
+            data.ukuran,
             data.nihil ? "Nihil" : "Tidak Nihil",
             [<IconButton onClick={(e) => { e.stopPropagation()
                 window.location.href = `/editclass/${data._id}`}
@@ -243,7 +234,7 @@ function NewClassList(props) {
 
     }
 }
-  
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -283,7 +274,7 @@ function NewClassList(props) {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  
+
   // call the function to get the classes from DB
   if(rows.length == 0)
     retrieveClasses()
@@ -395,7 +386,7 @@ function NewClassList(props) {
               orderBy={orderBy}
               onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
               onRequestSort={handleRequestSort}
-              rowCount={rows != undefined ? 
+              rowCount={rows != undefined ?
               rows.length : 0}
             />
             <TableBody>
@@ -415,14 +406,6 @@ function NewClassList(props) {
                       key={row.classroom}
                       selected={isItemSelected}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                          color="secondary"
-                          style={{display: "flex", justifyContent: "center"}}
-                        />
-                      </TableCell> */}
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
                         {row.classroom}
                       </TableCell>
@@ -454,6 +437,6 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, 
-  {viewClass, deleteClass } 
+  mapStateToProps,
+  {viewClass, deleteClass }
 )(NewClassList);

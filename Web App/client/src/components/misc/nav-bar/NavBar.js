@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: "1",
   },
   appBar: {
-    backgroundColor: "#2196f3",
+    backgroundColor: theme.palette.primary,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -133,13 +133,13 @@ function NavBar(props){
       <Grid container className={classes.navbarContainedRightItems}>
           <Button
             variant="contained"
-            size="medium"
+            size="small"
             href="/daftar"
             style={{
               backgroundColor: "#61bd4f",
               color: "white",
-              fontSize: "6",
               width: "75px",
+              height: "30px",
               marginRight: "15px"
             }}
           >
@@ -147,22 +147,17 @@ function NavBar(props){
           </Button>
           <Button
             variant="contained"
-            size="medium"
+            size="small"
             href="/masuk"
             style={{
               backgroundColor: "white",
               color: "#2196f3",
               width: "75px",
-              fontSize: "6",
+              height: "30px",
             }}
           >
             Masuk
           </Button>
-          <LightTooltip title="Bantuan">
-            <IconButton color="inherit" edge="end" href="/bantuan">
-                <HelpIcon />
-            </IconButton>
-          </LightTooltip>
       </Grid>
     )
   }
@@ -186,8 +181,8 @@ function NavBar(props){
       <NavBarDrawerContent
         userLoggedIn={user.name}
         mobileOpen={mobileOpen}
-        handleDrawerMobile={handleDrawerMobile}
         desktopOpen={desktopOpen}
+        handleDrawerMobile={handleDrawerMobile}
       />
     </div>
   )

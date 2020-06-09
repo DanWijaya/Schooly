@@ -48,6 +48,11 @@ const useStyles = makeStyles((theme) => ({
   drawerIcons: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
+  },
+  test: {
+    "&:hover": {
+      backgroundColor: "rgba(33, 150, 243, 0.2)",
+    },
   }
 }));
 
@@ -68,9 +73,9 @@ function DrawerContent(props) {
   return (
     <div>
       <List>
-        <ListItem button component="a" href="/dashboard">
+        <ListItem button component="a" href="/dashboard" className={classes.test}>
             <ListItemIcon>
-              <DashboardIcon />
+              <DashboardIcon className={classes.drawerIcons} />
             </ListItemIcon>
             <ListItemText primary="Beranda" />
         </ListItem>
@@ -82,13 +87,13 @@ function DrawerContent(props) {
         </ListItem>
         <ListItem button component="a" href="/announcements" disabled>
             <ListItemIcon>
-              <AnnouncementIcon />
+              <AnnouncementIcon className={classes.drawerIcons} />
             </ListItemIcon>
             <ListItemText primary="Pengumuman" />
         </ListItem>
         <ListItem button component="a" href="/viewtask">
             <ListItemIcon>
-              <AssignmentIcon />
+              <AssignmentIcon className={classes.drawerIcons} />
             </ListItemIcon>
             <ListItemText primary="Tugas" />
         </ListItem>
@@ -104,13 +109,12 @@ function DrawerContent(props) {
             </ListItemIcon>
             <ListItemText primary="Ujian" />
         </ListItem>
-
       </List>
       <Divider />
       <List>
         <ListItem button component="a" href="/tentang-schooly">
             <ListItemIcon>
-              <AboutIcon />
+              <AboutIcon className={classes.drawerIcons} />
             </ListItemIcon>
             <ListItemText primary="Tentang Schooly" />
         </ListItem>
@@ -143,7 +147,6 @@ function NavBarDrawerContent(props) {
               keepMounted: true,
             }}
           >
-            {/* <Toolbar /> */}
             <DrawerContent />
           </Drawer>
         </Hidden>
