@@ -263,20 +263,6 @@ router.get("/gettask/:id", (req, res) => {
   } )
 })
 
-router.get("/getstudentsbyclass/:class_id", (req, res) => {
-  let id = req.params.class_id;
-
-  Student.find().then((users, err) => {
-    let result = [];
-    users.map((user) => {
-      if(user.kelas._id == id){
-        result.push(user)
-      }
-    })
-    res.json(result)
-  })
-})
-
 router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res) => {
   console.log(req)
   let id = req.params.id;
@@ -353,6 +339,17 @@ router.get("/getteachers", (req, res) => {
 
 router.get("/getstudents", (req,res) => {
   User.find({ role: "Student"}).then((users, err) => {
+    if(!users)
+      console.log("No students yet in Schooly System")
+
+    else
+      return res.json(users)
+  })
+})
+
+router.get("/getstudentsbyclass/:id", (req,res) => {
+  let id = req.params.id
+  Student.find({ kelas: id}).then((users, err) => {
     if(!users)
       console.log("No students yet in Schooly System")
 

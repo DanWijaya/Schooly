@@ -55,10 +55,10 @@ class EditClass extends Component {
       sekretaris: null,
       bendahara: null
     }
-    const { classId } = this.props.location.state;
-    console.log(classId);
+    const { id } = this.props.match.params;
+    console.log(id);
     console.log("Aduh");
-    this.props.viewOneClass(classId);
+    this.props.viewOneClass(id);
   }
 
   onChange = (e, otherfield) => {
@@ -123,7 +123,7 @@ class EditClass extends Component {
   onSubmit = (e) => {
     e.preventDefault()
 
-    const { classId } = this.props.location.state;
+    const { id } = this.props.match.params;
     const classObject = {
       name: this.state.name,
       nihil: this.state.nihil,
@@ -135,7 +135,7 @@ class EditClass extends Component {
       errors: {}
     }
 
-    this.props.updateClass(classObject, classId, this.props.history);
+    this.props.updateClass(classObject, id, this.props.history);
   }
 
   componentDidMount() {

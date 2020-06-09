@@ -2,10 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
-import { Checkbox, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
+import { Button, Checkbox, Dialog, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import CloseIcon from "@material-ui/icons/Close";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 import { viewClass, deleteClass } from '../../../actions/ClassActions';
 import { connect } from "react-redux";
@@ -171,6 +174,10 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "750px",
   },
+  dialogBox: {
+    maxWidth: "450px",
+    margin: "auto"
+  },
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
@@ -197,6 +204,11 @@ function NewClassList(props) {
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
   const [selected, setSelected] = React.useState([]);
   // const [classesList, setClassesList] = React.useState([]);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [selectedClassId, setSelectedClassId] = React.useState(null)
+  const [selectedClassName, setSelectedClassName] = React.useState(null);
+
   const { viewClass, deleteClass, classesCollection} = props;
 
   const retrieveClasses = () => {
@@ -210,22 +222,16 @@ function NewClassList(props) {
             data.walikelas.name, 
             data.ukuran, 
             data.nihil ? "Nihil" : "Tidak Nihil",
-            [<IconButton>
-              <Link
-          to={{
-            pathname: `/editclass/${data._id}`,
-            state:{ classId : data._id}
-          }}
-          // style = {{ color: 'grey'}}
-        >
-              <EditIcon />
-              </Link>
-            </IconButton>, 
+            [<IconButton onClick={(e) => { e.stopPropagation()
+                window.location.href = `/editclass/${data._id}`}
+            }>
+              <EditIcon style={{color: "#2196f3" }}/>
+            </IconButton> , 
             <IconButton>
               <Tooltip title="Delete">
               <IconButton 
-                onClick={() =>{
-                deleteClass(data._id)}}>
+                onClick={(e) =>{
+                  handleOpenDeleteDialog(e, data._id, data.name)}}>
                 <DeleteIcon style={{color: "#B22222"}}/>
               </IconButton>
               </Tooltip>
@@ -282,8 +288,98 @@ function NewClassList(props) {
   if(rows.length == 0)
     retrieveClasses()
 
+    const onDeleteClass = (id) => {
+      deleteClass(id)
+    }
+
+    //Delete Dialog box
+  const handleOpenDeleteDialog = (e, id, name) => {
+    e.stopPropagation();
+    setOpenDeleteDialog(true);
+    setSelectedClassId(id)
+    setSelectedClassName(name)
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+    function DeleteDialog(){
+      return (
+        <Dialog
+          open={openDeleteDialog}
+          onClose={handleCloseDeleteDialog}
+          className={classes.dialogBox}
+        >
+          <Grid container justify="center" className={classes.dialogRoot}>
+            <Grid item
+              container
+              justify="flex-end"
+              alignItems="flex-start"
+              style={{marginBottom: "10px"}}
+            >
+              <IconButton
+                size="small"
+                disableRipple
+                onClick={handleCloseDeleteDialog}
+                className={classes.iconButtonClose}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+            <Grid item container justify="center" style={{marginBottom: "20px"}}>
+              <Typography variant="h5" gutterBottom>
+                Hapus Tugas berikut?
+              </Typography>
+            </Grid>
+            <Grid item container justify="center" style={{marginBottom: "20px", textAlign:'center'}}>
+              <Typography variant="h6" gutterBottom>
+                <b>{selectedClassName}</b>
+              </Typography>
+            </Grid>
+            <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={2}
+                  style={{marginBottom: "20px"}}
+                >
+              <Grid item>
+              <Button
+                onClick={() => { onDeleteClass(selectedClassId)}}
+                startIcon={<DeleteOutlineIcon />}
+                style={{
+                  backgroundColor: "#B22222",
+                  color: "white",
+                  width: "150px",
+                }}
+              >
+                Hapus
+              </Button>
+              </Grid>
+  
+              <Grid item>
+                    <Button
+                    onClick={handleCloseDeleteDialog}
+                      startIcon={< CancelIcon/>}
+                      style={{
+                        backgroundColor: "#2196f3",
+                        color: "white",
+                        width: "150px",
+                      }}
+                    >
+                      Batalkan
+                    </Button>
+              </Grid>
+            </Grid>
+            </Grid>
+        </Dialog>
+      )
+    }
   return (
     <div className={classes.root}>
+      {DeleteDialog()}
       <Paper className={classes.paper}>
         <ClassListToolbar numSelected={selected.length} item={selected} deleteClass={deleteClass}/>
         <TableContainer>
@@ -312,8 +408,7 @@ function NewClassList(props) {
                     <TableRow
                       hover
                       // onClick={(event) => handleClick(event, row)}
-                      component="a"
-                      href={viewpage}
+                      onClick={() => window.location.href = viewpage}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

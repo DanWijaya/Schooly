@@ -186,7 +186,6 @@ function NewTask(props) {
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
-  const [openDownloadDialog, setOpenDownloadDialog] = React.useState(null);
 
   if(tasksCollection.length === undefined) // it means it is empty
     getTaskByUser(user.id)
@@ -312,17 +311,6 @@ function NewTask(props) {
     setOpenDeleteDialog(false);
   };
 
-  //Download Dialog box
-  const handleOpenDownloadDialog = (fileid, filename) => {
-    setOpenDownloadDialog(true);
-    setSelectedFileId(fileid)
-    setSelectedFileName(filename)
-  }
-
-  const handleCloseDownloadDialog = () => {
-    setOpenDownloadDialog(false)
-  }
-
   function DeleteDialog(){
     return (
       <Dialog
@@ -397,84 +385,9 @@ function NewTask(props) {
     )
   }
 
-  function DownloadDialog() {
-    return (
-      <Dialog
-        open={openDownloadDialog}
-        onClose={handleCloseDownloadDialog}
-        className={classes.root}
-      >
-        <Grid container justify="center" className={classes.dialogRoot}>
-          <Grid item
-            container
-            justify="flex-end"
-            alignItems="flex-start"
-            style={{marginBottom: "10px"}}
-          >
-            <IconButton
-              size="small"
-              disableRipple
-              onClick={handleCloseDownloadDialog}
-              className={classes.iconButtonClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Unduh file berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" gutterBottom>
-              <b>{selectedFileName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                spacing={2}
-                style={{marginBottom: "20px"}}
-              >
-            <Grid item>
-            <Button
-              onClick={() => { onDownloadTugas(selectedFileId)}}
-              startIcon={<CloudDownloadIcon />}
-              style={{
-                backgroundColor: "#61bd4f",
-                color: "white",
-                width: "150px",
-              }}
-            >
-              Unduh
-            </Button>
-            </Grid>
-
-            <Grid item>
-                  <Button
-                  onClick={handleCloseDownloadDialog}
-                    startIcon={< CancelIcon/>}
-                    style={{
-                      backgroundColor: "#2196f3",
-                      color: "white",
-                      width: "150px",
-                    }}
-                  >
-                    Batalkan
-                  </Button>
-            </Grid>
-          </Grid>
-          </Grid>
-      </Dialog>
-    )
-  }
-
   return (
     <div className={classes.root}>
       {DeleteDialog()}
-      {DownloadDialog()}
       <Grid container
         spacing={2}
         justify="space-between"

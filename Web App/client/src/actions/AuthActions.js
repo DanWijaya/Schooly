@@ -163,10 +163,20 @@ export const getTeachers = () => dispatch => {
     })
 }
 
-// export const getStudentByClass = (classId) => dispatch => {
-//   axios
-//       .get("/api/users/get")
-// }
+export const getStudentsByClass = (classId) => dispatch => {
+  axios
+      .get("/api/users/getstudentsbyclass/" + classId)
+      .then(res => {
+        console.log(res.data)
+        dispatch({
+          type: GET_STUDENTS,
+          payload: res.data
+        })
+      })
+      .catch(err => {
+        console.log("Error in getting Students by class");
+      })
+}
 
 // Log user out
 export const logoutUser = (history=undefined) => dispatch => {

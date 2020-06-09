@@ -77,9 +77,9 @@ class EditTask extends Component {
         // this.nameInput = React.createRef();
         // this.subjectInput = React.createRef();
 
-        const { taskId } = this.props.location.state;
-        console.log(taskId)
-        this.props.editTask(taskId)
+        const { id } = this.props.match.params;
+        console.log(id)
+        this.props.editTask(id)
     }
 
     onChange = (e, otherfield) => {
@@ -130,7 +130,7 @@ class EditTask extends Component {
     onSubmit = (e) => {
         e.preventDefault();
 
-        const { taskId } = this.props.location.state;
+        const { id } = this.props.match.params;
         const taskObject = {
             name: this.state.name,
             deadline: this.state.deadline,
@@ -139,7 +139,7 @@ class EditTask extends Component {
             errors: {}
         }
 
-        this.props.updateTask(taskObject, taskId, this.props.history);
+        this.props.updateTask(taskObject, id, this.props.history);
     }
 
     // focus = () =>{
@@ -150,6 +150,7 @@ class EditTask extends Component {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
         const {classes, classesCollection} = this.props;
+        console.log(classesCollection)
         const ITEM_HEIGHT = 48;
         const ITEM_PADDING_TOP = 8;
         const MenuProps = {
@@ -219,24 +220,28 @@ class EditTask extends Component {
                     <Grid item className={classes.gridItem}>
                     <FormControl className={classes.formControl}>
                     <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
+                    {this.state.class_assigned == undefined ? null : 
                         <Select
                         id="class_assigned"
                         multiple
                         value={this.state.class_assigned}
                         onChange={(event) => {this.onChange(event, "kelas")}}
-                        renderValue={(selected) => (
+                        renderValue={(selected) => {
+                          console.log(selected)
+                          return (
                             <div className={classes.chips}>
                             {selected.map((kelas) => (
                                 <Chip key={kelas} label={kelas.name} className={classes.chip} />
                             ))}
                             </div>
-                        )}
+                        )}}
                         MenuProps={MenuProps}
                         >
                     {options.map((kelas) => (
                         <MenuItem value={kelas} selected>{kelas.name}</MenuItem>
                     ))}
                     </Select>
+                  }
             </FormControl>
           </Grid>
           <Grid item className={classes.gridItem}>
@@ -275,7 +280,7 @@ class EditTask extends Component {
                           marginTop: "20px",
                       }}
                     >
-                      Add Task
+                      Edit Task
                     </Button>
                   </Grid>
                   </Grid>

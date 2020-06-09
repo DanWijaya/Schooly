@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { viewOneClass } from "../../../actions/ClassActions"
+import { getStudentsByClass } from "../../../actions/AuthActions"
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
@@ -94,9 +95,9 @@ function PersonListItem(props) {
   return (
     <ListItem button component="a" href={props.person_profile_link}>
       <ListItemAvatar>
-        <Avatar>
-          {props.person_avatar}
-        </Avatar>
+        <Avatar src={props.person_avatar}/>
+          {/* {props.person_avatar} */}
+        {/* </Avatar> */}
       </ListItemAvatar>
       <ListItemText
         primary={
@@ -116,13 +117,17 @@ function PersonListItem(props) {
 
 function ViewClass(props) {
   const classes = useStyles();
-  const { viewOneClass, classesCollection } = props;
+  const { viewOneClass, classesCollection, getStudentsByClass} = props;
+  const {all_students} = props.auth;
 
   if(classesCollection.name == undefined){
     viewOneClass(props.match.params.id)
-    console.log("A")
   }
 
+  if(all_students.length == 0){
+    getStudentsByClass(props.match.params.id)
+  }
+  console.log(all_students)
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -208,16 +213,11 @@ function ViewClass(props) {
           <Divider style={{backgroundColor: "#2196f3"}} />
           <List className={classes.listContainer}>
             <PersonListItem
-              person_avatar=""
+              person_avatar={classesCollection.walikelas ? 
+                `/api/uploads/image/${classesCollection.walikelas.avatar}` : null}
               person_profile_link="/test"
               person_name={classesCollection.walikelas ? classesCollection.walikelas.name : null}
               person_role={classesCollection.walikelas ? classesCollection.walikelas.subject_teached : null}
-            />
-            <PersonListItem
-              person_avatar=""
-              person_profile_link="/test"
-              person_name="Mr Nigga"
-              person_role="Racism Teacher"
             />
           </List>
         </Paper>
@@ -228,18 +228,14 @@ function ViewClass(props) {
           </Typography>
           <Divider style={{backgroundColor: "#2196f3"}} />
           <List className={classes.listContainer}>
-            <PersonListItem
-              person_avatar=""
-              person_profile_link="/test"
-              person_name="Mr Fucker"
-              person_role="Student"
-            />
-            <PersonListItem
-              person_avatar=""
-              person_profile_link="/test"
-              person_name="Mr Fucker"
-              person_role="Student"
-            />
+            {all_students.map((student) => (
+              <PersonListItem
+              person_avatar={`/api/uploads/image/${student.avatar}`}
+              person_profile_link="/viewprofile"
+              person_name={student.name}
+              person_role={student.role}
+              />
+            ))}
           </List>
         </Paper>
       </TabPanel>
@@ -249,15 +245,17 @@ function ViewClass(props) {
 
 ViewClass.propTypes = {
   classesCollection: PropTypes.object.isRequired,
+  getStudentsByClass: PropTypes.object.isRequired,
   viewOneClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  getStudentsByClass: PropTypes.func.isRequired,
   classesCollection: state.classesCollection
 });
 
 export default connect(
-  mapStateToProps, {viewOneClass} 
+  mapStateToProps, {viewOneClass, getStudentsByClass} 
 ) (ViewClass);

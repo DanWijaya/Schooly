@@ -24,8 +24,6 @@ export const viewClass = () => dispatch => {
   axios
     .get("/api/classes/viewall")
     .then(res => {
-        console.log(res.data)
-
         console.log("Data should be here")
         dispatch({
             type: GET_CLASSES,
@@ -34,11 +32,11 @@ export const viewClass = () => dispatch => {
     })
 
     .catch(err => {
-        // console.log("Data should be here")
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-        })
+        console.log("Data should be here")
+        // dispatch({
+        //     type: GET_ERRORS,
+        //     payload: err.response.data
+        // })
     })
 }
 

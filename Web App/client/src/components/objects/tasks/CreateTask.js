@@ -219,13 +219,17 @@ class CreateTask extends Component {
           multiple
           value={class_assigned}
           onChange={(event) => {this.onChange(event, "kelas")}}
-          renderValue={(selected) => (
+          renderValue={(selected) => {
+            console.log(selected)
+
+            return (
             <div className={classes.chips}>
               {selected.map((kelas) => (
                 <Chip key={kelas} label={kelas.name} className={classes.chip} />
               ))}
             </div>
-          )}
+              
+          )}}
           MenuProps={MenuProps}
         >
           {options.map((kelas) => (

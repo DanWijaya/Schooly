@@ -2,15 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
-import { Checkbox, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
+import { Button, Checkbox, IconButton, Dialog, Grid, Paper, ListItemSecondaryAction, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import moment from 'moment';
+import CloseIcon from "@material-ui/icons/Close";
 import { viewTask, deleteTask } from '../../../actions/TaskActions';
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import CancelIcon from "@material-ui/icons/Cancel";
 import 'moment/locale/id'
+
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
   return { _id, tasktitle, subject, class_assigned, deadline, action };
@@ -146,7 +150,7 @@ const TaskListToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={() => deleteTask(item[0])}>
+          <IconButton onClick={() => props.handleOpenDeleteDialog(item[0])}>
             <DeleteIcon/>
           </IconButton>
         </Tooltip>
@@ -165,6 +169,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
+  },
+  dialogBox: {
+    maxWidth: "450px",
+    margin: "auto"
   },
   paper: {
     width: "100%",
@@ -192,6 +200,10 @@ function NewTaskList(props) {
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
   const [selected, setSelected] = React.useState([]);
 
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [selectedTaskId, setSelectedTaskId] = React.useState(null)
+  const [selectedTaskName, setSelectedTaskName] = React.useState(null);
+
   const { tasksCollection, viewTask, deleteTask } = props;
   const retrieveTasks = () => {
     if(tasksCollection.length == undefined){
@@ -199,27 +211,21 @@ function NewTaskList(props) {
     } else {
       rows = []
       tasksCollection.map((data) => {
-        console.log(data.deadline)
         rows.push(
           createData(data._id, data.name,
             data.subject,
             data.class_assigned,
             data.deadline,
             [
-            <IconButton>
-            <Link
-        to={{
-          pathname: `/task/${data._id}`,
-          state:{ taskId : data._id}
-        }}
-        // style = {{ color: 'grey'}}
-      >
-            <EditIcon />
-            </Link>
+            <IconButton 
+            onClick={(e) => { e.stopPropagation()
+              window.location.href =`./task/${data._id}`}}>
+            <EditIcon style={{color: "#2196f3"}}/>
           </IconButton>,
           <Tooltip title="Delete">
-          <IconButton onClick={() =>{
-            deleteTask(data._id)}}>
+          <IconButton 
+          onClick={(e) =>{
+              handleOpenDeleteDialog(e, data._id, data.name)}}  >
             <DeleteIcon style={{color: "#B22222"}} />
           </IconButton>
 
@@ -261,7 +267,6 @@ function NewTaskList(props) {
         selected.slice(selectedIndex + 1),
       );
     }
-
     setSelected(newSelected);
   };
 
@@ -271,10 +276,100 @@ function NewTaskList(props) {
   if(rows.length == 0)
     retrieveTasks()
 
+  const onDeleteTask = (id) => {
+    deleteTask(id)
+  }
+    //Delete Dialog box
+  const handleOpenDeleteDialog = (e, id, name) => {
+    e.stopPropagation();
+    setOpenDeleteDialog(true);
+    setSelectedTaskId(id)
+    setSelectedTaskName(name)
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+    function DeleteDialog(){
+      return (
+        <Dialog
+          open={openDeleteDialog}
+          onClose={handleCloseDeleteDialog}
+          className={classes.dialogBox}
+        >
+          <Grid container justify="center" className={classes.dialogRoot}>
+            <Grid item
+              container
+              justify="flex-end"
+              alignItems="flex-start"
+              style={{marginBottom: "10px"}}
+            >
+              <IconButton
+                size="small"
+                disableRipple
+                onClick={handleCloseDeleteDialog}
+                className={classes.iconButtonClose}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+            <Grid item container justify="center" style={{marginBottom: "20px"}}>
+              <Typography variant="h5" gutterBottom>
+                Hapus Tugas berikut?
+              </Typography>
+            </Grid>
+            <Grid item container justify="center" style={{marginBottom: "20px", textAlign:'center'}}>
+              <Typography variant="h6" gutterBottom>
+                <b>{selectedTaskName}</b>
+              </Typography>
+            </Grid>
+            <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={2}
+                  style={{marginBottom: "20px"}}
+                >
+              <Grid item>
+              <Button
+                onClick={() => { onDeleteTask(selectedTaskId)}}
+                startIcon={<DeleteOutlineIcon />}
+                style={{
+                  backgroundColor: "#B22222",
+                  color: "white",
+                  width: "150px",
+                }}
+              >
+                Hapus
+              </Button>
+              </Grid>
+  
+              <Grid item>
+                    <Button
+                    onClick={handleCloseDeleteDialog}
+                      startIcon={< CancelIcon/>}
+                      style={{
+                        backgroundColor: "#2196f3",
+                        color: "white",
+                        width: "150px",
+                      }}
+                    >
+                      Batalkan
+                    </Button>
+              </Grid>
+            </Grid>
+            </Grid>
+        </Dialog>
+      )
+    }
+
   return (
     <div className={classes.root}>
+      {DeleteDialog()}
       <Paper className={classes.paper}>
-        <TaskListToolbar numSelected={selected.length} item={selected} deleteTask={deleteTask}/>
+        <TaskListToolbar numSelected={selected.length} item={selected} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog}/>
         <TableContainer>
           <Table
             className={classes.table}
@@ -301,8 +396,9 @@ function NewTaskList(props) {
                     <TableRow
                       hover
                       // onClick={(event) => handleClick(event, row)}
-                      component="a"
-                      href={viewpage}
+                      onClick={() =>window.location.href = viewpage}
+                      // component="a"
+                      // href={viewpage}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

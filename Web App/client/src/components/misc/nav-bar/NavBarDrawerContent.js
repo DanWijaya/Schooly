@@ -51,6 +51,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const generateList = (linkto, icon) => {
+  return (
+    <ListItem button component="a" href={linkto} >
+      <ListItemIcon>
+        {icon}
+      </ListItemIcon>
+      <ListItemText primary="Beranda" />
+    </ListItem>
+  )
+}
+
 function DrawerContent(props) {
   const classes = useStyles();
 
