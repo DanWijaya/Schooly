@@ -188,9 +188,13 @@ class Login extends Component {
                 </form>
               </Grid>
               <Divider style={{width: "300px"}} />
-              <Grid item>
+              <Grid item container justify="space-around">
                 <Link href="/lupa-katasandi">
                   Lupa Kata Sandi?
+                </Link>
+                |
+                <Link href="/daftar">
+                  Belum Ada Akun?
                 </Link>
               </Grid>
             </Grid>
