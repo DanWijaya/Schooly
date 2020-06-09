@@ -28,7 +28,7 @@ Daniel:
 8. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
 9. Buat button download pas click, lalu download pagenya.
 10.Ganti Kata Sandi functionality
-11. 
+11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya. 
 
 Bingung:
 1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog

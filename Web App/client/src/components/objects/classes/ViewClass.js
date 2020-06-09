@@ -116,6 +116,12 @@ function PersonListItem(props) {
 
 function ViewClass(props) {
   const classes = useStyles();
+  const { viewOneClass, classesCollection } = props;
+
+  if(classesCollection.name == undefined){
+    viewOneClass(props.match.params.id)
+    console.log("A")
+  }
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -126,7 +132,7 @@ function ViewClass(props) {
     <div className={classes.root}>
       <Paper>
         <Typography variant="h3" style={{textAlign: "center"}} gutterBottom>
-          Kelas XA
+          Kelas {classesCollection.name}
         </Typography>
         <Tabs
           value={value}
@@ -195,7 +201,28 @@ function ViewClass(props) {
       </TabPanel>
 
       <TabPanel value={value} index={2}>
-        <Paper className={classes.paperBox} style={{marginBottom: "40px"}}>
+      <Paper className={classes.paperBox} style={{marginBottom: "40px"}}>
+          <Typography variant="h4" gutterBottom>
+            Walikelas
+          </Typography>
+          <Divider style={{backgroundColor: "#2196f3"}} />
+          <List className={classes.listContainer}>
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name={classesCollection.walikelas ? classesCollection.walikelas.name : null}
+              person_role={classesCollection.walikelas ? classesCollection.walikelas.subject_teached : null}
+            />
+            <PersonListItem
+              person_avatar=""
+              person_profile_link="/test"
+              person_name="Mr Nigga"
+              person_role="Racism Teacher"
+            />
+          </List>
+        </Paper>
+
+        <Paper className={classes.paperBox}>
           <Typography variant="h4" gutterBottom>
             Murid
           </Typography>
@@ -212,26 +239,6 @@ function ViewClass(props) {
               person_profile_link="/test"
               person_name="Mr Fucker"
               person_role="Student"
-            />
-          </List>
-        </Paper>
-        <Paper className={classes.paperBox}>
-          <Typography variant="h4" gutterBottom>
-            Guru
-          </Typography>
-          <Divider style={{backgroundColor: "#2196f3"}} />
-          <List className={classes.listContainer}>
-            <PersonListItem
-              person_avatar=""
-              person_profile_link="/test"
-              person_name="Mr Fucker"
-              person_role="Fucking Teacher"
-            />
-            <PersonListItem
-              person_avatar=""
-              person_profile_link="/test"
-              person_name="Mr Nigga"
-              person_role="Racism Teacher"
             />
           </List>
         </Paper>

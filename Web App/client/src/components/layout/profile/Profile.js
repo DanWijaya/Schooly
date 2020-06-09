@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateAvatar } from "../../../actions/AuthActions"
+import { viewOneClass} from "../../../actions/ClassActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
@@ -78,7 +79,7 @@ function Profile(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const updateAvatar = props.updateAvatar;
+  const {updateAvatar, viewOneClass, classesCollection} = props;
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -119,6 +120,11 @@ function Profile(props) {
   }
 
   document.title=`Schooly | ${user.name}`
+
+  if(classesCollection.name == undefined){
+    viewOneClass(user.kelas)
+  }
+  console.log(classesCollection)
   return (
     <div className={classes.root}>
 
@@ -195,7 +201,8 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class
+            Class {classesCollection.name == undefined ?
+             null : classesCollection.name}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
@@ -299,13 +306,16 @@ function Profile(props) {
 
 Profile.propTypes = {
     auth: PropTypes.object.isRequired,
-    updateAvatar: PropTypes.func.isRequired
+    classesCollection: PropTypes.object.isRequired,
+    updateAvatar: PropTypes.func.isRequired,
+    viewOneClass: PropTypes.func.isRequired
   }
 
 const mapStateToProps = (state) => ({
-    auth: state.auth
+    auth: state.auth,
+    classesCollection: state.classesCollection
   });
 
 export default connect(
-    mapStateToProps, {updateAvatar}
+    mapStateToProps, {updateAvatar, viewOneClass}
   ) (Profile);
