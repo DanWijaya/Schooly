@@ -15,7 +15,7 @@ const validateLoginInput = require("../../validation/login");
 const User= require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
-
+const Class = require("../../models/Class")
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -263,6 +263,19 @@ router.get("/gettask/:id", (req, res) => {
   } )
 })
 
+router.get("/getstudentsbyclass/:class_id", (req, res) => {
+  let id = req.params.class_id;
+
+  Student.find().then((users, err) => {
+    let result = [];
+    users.map((user) => {
+      if(user.kelas._id == id){
+        result.push(user)
+      }
+    })
+    res.json(result)
+  })
+})
 
 router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res) => {
   console.log(req)

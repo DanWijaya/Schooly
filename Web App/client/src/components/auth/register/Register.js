@@ -239,11 +239,11 @@ class Register extends Component {
                   <FormControl fullWidth id="kelas" variant="outlined" color="primary">
                     <label id="kelas">Kelas</label>
                     <Select
-                    value={this.state.kelas}
+                    value={this.state.kelas._id}
                     onChange={(event) => {this.onChange(event, "kelas")}}
                   >
                     {options.map((kelas) => (
-                      <MenuItem value={kelas}>{kelas.name}</MenuItem>
+                      <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                     ))}
                   </Select>
 

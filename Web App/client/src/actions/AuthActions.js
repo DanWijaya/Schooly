@@ -163,6 +163,11 @@ export const getTeachers = () => dispatch => {
     })
 }
 
+// export const getStudentByClass = (classId) => dispatch => {
+//   axios
+//       .get("/api/users/get")
+// }
+
 // Log user out
 export const logoutUser = (history=undefined) => dispatch => {
   // Remove token from local storage
