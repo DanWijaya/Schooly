@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getTeachers , getStudents} from "../../../actions/AuthActions";
-import { editClass, updateClass } from "../../../actions/ClassActions";
+import { viewOneClass, updateClass } from "../../../actions/ClassActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography, Menu } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -58,7 +58,7 @@ class EditClass extends Component {
     const { classId } = this.props.location.state;
     console.log(classId);
     console.log("Aduh");
-    this.props.editClass(classId);
+    this.props.viewOneClass(classId);
   }
 
   onChange = (e, otherfield) => {
@@ -334,7 +334,7 @@ class EditClass extends Component {
 }
 
 EditClass.propTypes = {
-    editClass: PropTypes.func.isRequired,
+    viewOneClass: PropTypes.func.isRequired,
     updateClass: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     getTeachers: PropTypes.func.isRequired,
@@ -349,5 +349,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { editClass, updateClass , getTeachers, getStudents}
+    mapStateToProps, { viewOneClass, updateClass , getTeachers, getStudents}
 ) (withStyles(styles)(EditClass))

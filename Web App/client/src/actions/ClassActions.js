@@ -42,9 +42,9 @@ export const viewClass = () => dispatch => {
     })
 }
 
-export const editClass = (classId) => dispatch => {
+export const viewOneClass = (classId) => dispatch => {
   axios
-    .get("/api/classes/edit/" + classId)
+    .get("/api/classes/viewOneClass/" + classId)
     .then(res => {
         console.log("Class to be edited");
         dispatch({

@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { viewOneClass } from "../../../actions/ClassActions"
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
@@ -238,4 +240,17 @@ function ViewClass(props) {
   )
 };
 
-export default ViewClass;
+ViewClass.propTypes = {
+  classesCollection: PropTypes.object.isRequired,
+  viewOneClass: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  classesCollection: state.classesCollection
+});
+
+export default connect(
+  mapStateToProps, {viewOneClass} 
+) (ViewClass);

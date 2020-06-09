@@ -76,7 +76,7 @@ router.delete("/delete/:id", (req, res) => {
     
 })
 
-router.get("/edit/:id", (req, res) => {
+router.get("/viewOneClass/:id", (req, res) => {
     let id = req.params.id;
     console.log(id);
     Class.findById(id, (err, classData) => {
