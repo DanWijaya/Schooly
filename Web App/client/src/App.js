@@ -100,7 +100,7 @@ class App extends Component {
                 <Route exact path="/masuk" component={Login} />
                 <Route exact path="/lupa-katasandi" component={LoginForgot} />
                 <Route exact path="/bantuan" component={Help} />
-                <Route exact path="/new-task" component={NewTask} /> {/*prototypetest*/}
+                <Route exact path="/new-task/:id" component={NewTask} /> {/*prototypetest*/}
                 <Route exact path="/newclasslist" component={NewClassList} /> {/*prototypetest*/}
                 <Route exact path="/newtasklist" component={NewTaskList}/> {/* prototypes */}
                 <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
@@ -111,8 +111,8 @@ class App extends Component {
                   <PrivateRoute exact path="/tentang-schooly" component={About} />
                   {/* Route Class */}
                   <PrivateRoute exact path="/createclass" component={CreateClass} />
-                  <PrivateRoute exact path="/viewclass" component={ViewClass} />
-                  <PrivateRoute exact path="/class/:id" component={EditClass} />
+                  <PrivateRoute exact path="/viewclass/:id" component={ViewClass} />
+                  <PrivateRoute exact path="/editclass/:id" component={EditClass} />
                   <PrivateRoute exact path="/deleteclass/:id" component={ViewClass} />
                   <PrivateRoute exact path="/viewsubject" component={ViewSubject} />
                   {/* Route Task  */}

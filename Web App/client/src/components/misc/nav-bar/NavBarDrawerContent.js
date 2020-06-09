@@ -63,7 +63,7 @@ function DrawerContent(props) {
             </ListItemIcon>
             <ListItemText primary="Beranda" />
         </ListItem>
-        <ListItem button component="a" href="/viewclass">
+        <ListItem button component="a" href="/newclasslist">
             <ListItemIcon>
               <FaChalkboardTeacher className={classes.drawerIcons} />
             </ListItemIcon>

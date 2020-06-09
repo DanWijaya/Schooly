@@ -139,6 +139,7 @@ class CreateTask extends Component {
 
     render() {
       const {classesCollection,  classes, viewClass} = this.props;
+      const{ class_assigned} = this.state;
 
         var options = []
         if(Object.keys(classesCollection).length !== 0) {
@@ -216,7 +217,7 @@ class CreateTask extends Component {
         <Select
           id="class_assigned"
           multiple
-          value={this.state.class_assigned}
+          value={class_assigned}
           onChange={(event) => {this.onChange(event, "kelas")}}
           renderValue={(selected) => (
             <div className={classes.chips}>
@@ -228,7 +229,7 @@ class CreateTask extends Component {
           MenuProps={MenuProps}
         >
           {options.map((kelas) => (
-            <MenuItem key={kelas} value={kelas}>{kelas.name}</MenuItem>
+            <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
           ))}
         </Select>
       </FormControl>

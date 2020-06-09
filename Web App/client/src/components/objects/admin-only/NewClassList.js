@@ -11,6 +11,8 @@ import { viewClass, deleteClass } from '../../../actions/ClassActions';
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
+// Source of the tables codes are from here : https://material-ui.com/components/tables/
+
 function createData(_id, classroom, homeroomTeacher, size, absent, action) {
   return { _id, classroom, homeroomTeacher, size, absent, action };
 }
@@ -48,7 +50,7 @@ const headCells = [
   { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
   { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
   { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
-  { id: "action", numeric: false, disablePadding: false, label: "Sunting" },
+  { id: "action", numeric: false, disablePadding: false, label: "Sunting/Buang" },
 ];
 
 function ClassListHead(props) {
@@ -60,7 +62,7 @@ function ClassListHead(props) {
   return (
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             // indeterminate={true}
@@ -68,7 +70,7 @@ function ClassListHead(props) {
             onChange={(event, checked) => {onSelectAllClick(event, checked)}}
             color="secondary"
           />
-        </TableCell>
+        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -208,17 +210,27 @@ function NewClassList(props) {
             data.walikelas.name, 
             data.ukuran, 
             data.nihil ? "Nihil" : "Tidak Nihil",
-            <IconButton>
+            [<IconButton>
               <Link
           to={{
-            pathname: `/class/${data._id}`,
+            pathname: `/editclass/${data._id}`,
             state:{ classId : data._id}
           }}
           // style = {{ color: 'grey'}}
         >
               <EditIcon />
               </Link>
+            </IconButton>, 
+            <IconButton>
+              <Tooltip title="Delete">
+              <IconButton 
+                onClick={() =>{
+                deleteClass(data._id)}}>
+                <DeleteIcon style={{color: "#B22222"}}/>
+              </IconButton>
+              </Tooltip>
             </IconButton>
+            ]
           )
         )
       })
@@ -295,25 +307,27 @@ function NewClassList(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  let viewpage = `/viewclass/${row._id}`
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row)}
+                      // onClick={(event) => handleClick(event, row)}
+                      component="a"
+                      href={viewpage}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.classroom}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      {/* <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                           color="secondary"
                           style={{display: "flex", justifyContent: "center"}}
                         />
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
                         {row.classroom}
                       </TableCell>
