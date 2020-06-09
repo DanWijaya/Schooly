@@ -6,11 +6,11 @@ import { Checkbox, IconButton, Paper, Table, TableBody, TableCell, TableContaine
    TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import moment from 'moment';
-import { viewTask, deleteTask } from '../../../actions/TaskActions';
+import moment from "moment";
+import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import 'moment/locale/id'
+import "moment/locale/id"
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
   return { _id, tasktitle, subject, class_assigned, deadline, action };
@@ -206,26 +206,23 @@ function NewTaskList(props) {
             data.class_assigned,
             data.deadline,
             [
-            <IconButton>
-            <Link
-        to={{
-          pathname: `/task/${data._id}`,
-          state:{ taskId : data._id}
-        }}
-        // style = {{ color: 'grey'}}
-      >
-            <EditIcon />
-            </Link>
-          </IconButton>,
-          <Tooltip title="Delete">
-          <IconButton onClick={() =>{
-            deleteTask(data._id)}}>
-            <DeleteIcon style={{color: "#B22222"}} />
-          </IconButton>
-
-        </Tooltip>
+              <IconButton>
+                <Link
+                  to={{
+                    pathname: `/task/${data._id}`,
+                    state:{ taskId : data._id}
+                  }}
+                >
+                  <EditIcon />
+                </Link>
+              </IconButton>,
+              <Tooltip title="Delete">
+                <IconButton onClick={() =>{deleteTask(data._id)}}>
+                  <DeleteIcon style={{color: "#B22222"}} />
+                </IconButton>
+              </Tooltip>
             ]
-            )
+          )
         )
       })
     }
@@ -288,7 +285,7 @@ function NewTaskList(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows != undefined ? 
+              rowCount={rows != undefined ?
               rows.length: 0}
             />
             <TableBody>
@@ -309,20 +306,12 @@ function NewTaskList(props) {
                       key={row.classroom}
                       selected={isItemSelected}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                          color="secondary"
-                          style={{display: "flex", justifyContent: "center"}}
-                        />
-                      </TableCell> */}
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
                         {row.tasktitle}
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
-                      <TableCell align="center">{moment(row.deadline).locale("id").format('DD-MMM-YYYY')}</TableCell>
+                      <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY")}</TableCell>
                       <TableCell align="center">{row.action}</TableCell>
                     </TableRow>
                   );
@@ -348,6 +337,6 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   {viewTask, deleteTask}
 )(NewTaskList);

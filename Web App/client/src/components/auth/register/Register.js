@@ -236,7 +236,7 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item className={classes.inputField}>
-                  <FormControl id="kelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                  <FormControl fullWidth id="kelas" variant="outlined" color="primary">
                     <label id="kelas">Kelas</label>
                     <Select
                     value={this.state.kelas}

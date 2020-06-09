@@ -120,7 +120,7 @@ class App extends Component {
                   <PrivateRoute exact path="/viewtask" component={ViewTask} />
                   <PrivateRoute exact path="/deletetask/:id" component={ViewTask} />
                   <PrivateRoute exact path="/task/:id" component={EditTask} />
-                  {/* Route Task  */}
+                  {/* Route Admin-Only  */}
                   <PrivateRoute exact path="/classlist" component={ClassList} />
                 </Switch>
               </div>

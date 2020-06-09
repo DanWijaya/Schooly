@@ -40,6 +40,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexDirection: "row"
   },
+  workChosenFile: {
+    width: "200px",
+    textAlign:"center",
+    color:"#2196f3",
+  },
   workButton: {
     width: "200px",
   },
@@ -60,8 +65,8 @@ function WorkFile(props) {
   const {file_type_icon, file_name, file_type, onDownloadTugas, file_id} = props;
   let displayedName = ""
 
-  file_name.length >= 25 ? 
-  displayedName = `${file_name.slice(0,17)}..${path.extname(file_name)}` 
+  file_name.length >= 25 ?
+  displayedName = `${file_name.slice(0,17)}..${path.extname(file_name)}`
   : displayedName = file_name
 
   return (
@@ -75,7 +80,7 @@ function WorkFile(props) {
       />
       <ListItemIcon>
         <IconButton className={classes.iconButton}
-        onClick={() => {props.onDownloadTugas(file_id)}}
+          onClick={() => {props.onDownloadTugas(file_id)}}
          >
           <CloudDownloadIcon />
         </IconButton>
@@ -83,8 +88,8 @@ function WorkFile(props) {
 
       <ListItemSecondaryAction>
         <IconButton className={classes.iconButton}
-        // onClick={() => {props.onDeleteTugas(props.file_id)}}
-        onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
+          // onClick={() => {props.onDeleteTugas(props.file_id)}}
+          onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
           <DeleteIcon />
         </IconButton>
@@ -172,10 +177,10 @@ function CheckedWorkFilesButton() {
 }
 
 function NewTask(props) {
+  const classes = useStyles();
   const { user } = props.auth;
   const { uploadTugas, getTaskByUser, tasksCollection, downloadTugas, previewTugas } = props;
 
-  const classes = useStyles();
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
   const [open, setOpen] = React.useState(false);
@@ -219,38 +224,43 @@ function NewTask(props) {
     if(tasksCollection.length !== undefined) {
       for (let i = 0 ; i < tasksCollection.length; i++) {
         temp.push(
-        <WorkFile
-          handleOpenDeleteDialog = {handleOpenDeleteDialog}
-          onDownloadTugas = {onDownloadTugas}
-          onPreviewTugas = {onPreviewTugas}
-          file_type_icon={0}
-          file_name={tasksCollection[i].filename}
-          file_id={tasksCollection[i].id}
-          file_type={fileType(tasksCollection[i].filename)}/>
-          )
+          <WorkFile
+            handleOpenDeleteDialog = {handleOpenDeleteDialog}
+            onDownloadTugas = {onDownloadTugas}
+            onPreviewTugas = {onPreviewTugas}
+            file_type_icon={0}
+            file_name={tasksCollection[i].filename}
+            file_id={tasksCollection[i].id}
+            file_type={fileType(tasksCollection[i].filename)}
+        />
+        )
       }
     }
     if(temp.length !== tasksContents.length){
       console.log("tasks added")
       setTaskContents(temp);
     }
-
     return tasksContents
   }
 
-  // <Typography className={classes.workButton} style={{textAlign:'center'}}>{fileTugas ? (fileTugas.length == 1 ? fileTugas[0].name : `${fileTugas.length} files`) : "Kosong" }</Typography>
-  
   const listFileChosen = () => {
     let temp = []
     if(!fileTugas) {
-      temp.push(<Typography className={classes.workButton} style={{textAlign:'center', color:'#2196f3'}}>Kosong</Typography> )
-    } else {
+      temp.push(
+        <Typography className={classes.workChosenFile}>
+          Kosong
+        </Typography>
+      )
+    }
+    else {
       for (var i = 0; i < fileTugas.length; i++){
-        temp.push(<Typography className={classes.workButton} style={{textAlign:'center', color: '#2196f3'}}>{fileTugas[i].name.length < 27 ? 
-          fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}</Typography>)
+        temp.push(
+          <Typography className={classes.workChosenFile}>
+            {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
+          </Typography>
+        )
       }
     }
-
     return temp
   }
 
@@ -262,7 +272,6 @@ function NewTask(props) {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
 
@@ -282,16 +291,13 @@ function NewTask(props) {
     console.log("Submit tugas")
     e.preventDefault();
     let formData = new FormData()
-
     for (var i = 0; i < fileTugas.length; i++){
       formData.append("tugas", fileTugas[i])
     }
-
     uploadTugas(formData, user)
     // getTaskByUser(user.id)
     setFileTugas(null)
     handleClick()
-
   }
 
   const onDeleteTugas = (id) => {
@@ -351,45 +357,44 @@ function NewTask(props) {
               Hapus file berikut?
             </Typography>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px", textAlign:'center'}}>
+          <Grid item container justify="center" style={{marginBottom: "20px", textAlign:"center"}}>
             <Typography variant="h6" gutterBottom>
               <b>{selectedFileName}</b>
             </Typography>
           </Grid>
           <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                spacing={2}
-                style={{marginBottom: "20px"}}
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+            style={{marginBottom: "20px"}}
+          >
+            <Grid item>
+              <Button
+                onClick={() => { onDeleteTugas(selectedFileId)}}
+                startIcon={<DeleteOutlineIcon />}
+                style={{
+                  backgroundColor: "#B22222",
+                  color: "white",
+                  width: "150px",
+                }}
               >
-            <Grid item>
-            <Button
-              onClick={() => { onDeleteTugas(selectedFileId)}}
-              startIcon={<DeleteOutlineIcon />}
-              style={{
-                backgroundColor: "#B22222",
-                color: "white",
-                width: "150px",
-              }}
-            >
-              Hapus
-            </Button>
+                Hapus
+              </Button>
             </Grid>
-
             <Grid item>
-                  <Button
-                  onClick={handleCloseDeleteDialog}
-                    startIcon={< CancelIcon/>}
-                    style={{
-                      backgroundColor: "#2196f3",
-                      color: "white",
-                      width: "150px",
-                    }}
-                  >
-                    Batalkan
-                  </Button>
+              <Button
+                onClick={handleCloseDeleteDialog}
+                startIcon={< CancelIcon/>}
+                style={{
+                  backgroundColor: "#2196f3",
+                  color: "white",
+                  width: "150px",
+                }}
+              >
+                Batalkan
+              </Button>
             </Grid>
           </Grid>
           </Grid>
@@ -431,42 +436,41 @@ function NewTask(props) {
             </Typography>
           </Grid>
           <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                spacing={2}
-                style={{marginBottom: "20px"}}
-              >
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+            style={{marginBottom: "20px"}}
+          >
             <Grid item>
+              <Button
+                onClick={() => { onDownloadTugas(selectedFileId)}}
+                startIcon={<CloudDownloadIcon />}
+                style={{
+                  backgroundColor: "#61bd4f",
+                  color: "white",
+                  width: "150px",
+                }}
+              >
+              Unduh
+            </Button>
+          </Grid>
+          <Grid item>
             <Button
-              onClick={() => { onDownloadTugas(selectedFileId)}}
-              startIcon={<CloudDownloadIcon />}
+              onClick={handleCloseDownloadDialog}
+              startIcon={< CancelIcon/>}
               style={{
-                backgroundColor: "#61bd4f",
+                backgroundColor: "#2196f3",
                 color: "white",
                 width: "150px",
               }}
             >
-              Unduh
+              Batalkan
             </Button>
-            </Grid>
-
-            <Grid item>
-                  <Button
-                  onClick={handleCloseDownloadDialog}
-                    startIcon={< CancelIcon/>}
-                    style={{
-                      backgroundColor: "#2196f3",
-                      color: "white",
-                      width: "150px",
-                    }}
-                  >
-                    Batalkan
-                  </Button>
-            </Grid>
           </Grid>
-          </Grid>
+        </Grid>
+      </Grid>
       </Dialog>
     )
   }
@@ -548,31 +552,33 @@ function NewTask(props) {
               </List>
             </Grid>
             <Divider />
-
-          <Grid container direction="column" alignItems="center">
-            
-            <Typography variant="h6"><b><u>File terpilih</u> </b></Typography>
-            {listFileChosen()}
-          </Grid>
+            <Grid item container direction="column" alignItems="center">
+              <Typography variant="h6">
+                <b><u>File terpilih</u></b>
+              </Typography>
+              {listFileChosen()}
+            </Grid>
             <Divider/>
             <Grid item container direction="column" spacing={2} className={classes.workBox}>
             <form onSubmit={onSubmitTugas}>
               <Grid item style={{ marginBottom: "15px"}}>
-
-              <input
-                type="file"
-                multiple={true}
-                name="tugas"
-                onChange={handleTugasUpload}
-                ref={tugasUploader}
-                accept="file/*"
-                style={{display: 'none'}}
-              />
-
-          <input type="file" multiple={true} name="file" id="file" ref={uploadedTugas} style={{
-                  display: "none"
-                }}/>
-                
+                <input
+                  type="file"
+                  multiple={true}
+                  name="tugas"
+                  onChange={handleTugasUpload}
+                  ref={tugasUploader}
+                  accept="file/*"
+                  style={{display: "none"}}
+                />
+                <input
+                  type="file"
+                  multiple={true}
+                  name="file"
+                  id="file"
+                  ref={uploadedTugas}
+                  style={{display: "none"}}
+                />
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
@@ -582,7 +588,6 @@ function NewTask(props) {
                 >
                   Pilih File
                 </Button>
-
               </Grid>
               <Grid item>
                 <Button
