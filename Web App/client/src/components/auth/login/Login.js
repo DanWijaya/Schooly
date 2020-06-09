@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { loginUser } from "../../../actions/AuthActions";
-import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
+import authBackground from "../AuthBackground.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Divider, Grid, Link, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -20,11 +21,18 @@ const styles = (theme) => ({
     maxWidth: "750px",
     margin: "auto",
   },
+  bgImg: {
+    backgroundImage: `url(${authBackground})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    height: "750px",
+  },
   mainGrid: {
     maxWidth: "400px",
     padding: "40px",
   },
-  schoolyLogoAlt: {
+  schoolyLogo: {
     width: "30%",
     height: "30%",
     marginBottom: "30px",
@@ -103,89 +111,91 @@ class Login extends Component {
     const { icon } = this.state
 
     return (
-      <div className={classes.root}>
-        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} alt="schooly logo alt" />
-        <Paper>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="space-between"
-            spacing={3}
-            className={classes.mainGrid}
-          >
-            <Grid item>
-              <Typography variant="h6">
-                <b>Masuk ke Schooly</b>
-              </Typography>
-            </Grid>
-            <Grid item style={{width:"300px"}} >
-              <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
-                <div style={{marginBottom: "20px"}}>
+      <div className={classes.bgImg}>
+        <div className={classes.root}>
+          <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt" />
+          <Paper>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="space-between"
+              spacing={3}
+              className={classes.mainGrid}
+            >
+              <Grid item>
+                <Typography variant="h6">
+                  <b>Masuk ke Schooly</b>
+                </Typography>
+              </Grid>
+              <Grid item style={{width:"300px"}} >
+                <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
+                  <div style={{marginBottom: "20px"}}>
+                    <OutlinedTextField
+                      on_change={this.onChange}
+                      value={this.state.email}
+                      error={errors.email}
+                      id="email"
+                      type="email"
+                      classname={classnames("", {
+                        invalid: errors.email || errors.emailnotfound
+                      })}
+                      html_for="email"
+                      labelname="Email"
+                      span_classname={classes.errorInfo}
+                      error1={errors.email}
+                      error2={errors.emailnotfound}
+                    />
+                  </div>
                   <OutlinedTextField
                     on_change={this.onChange}
-                    value={this.state.email}
-                    error={errors.email}
-                    id="email"
-                    type="email"
+                    value={this.state.password}
+                    error={errors.password}
+                    id="password"
+                    type={passwordIsMasked ? "password" : "text"}
                     classname={classnames("", {
-                      invalid: errors.email || errors.emailnotfound
+                      invalid: errors.password || errors.passwordincorrect
                     })}
-                    html_for="email"
-                    labelname="Email"
+                    html_for="password"
+                    labelname="Kata Sandi"
                     span_classname={classes.errorInfo}
-                    error1={errors.email}
-                    error2={errors.emailnotfound}
+                    error1={errors.password}
+                    error2={errors.passwordincorrect}
                   />
-                </div>
-                <OutlinedTextField
-                  on_change={this.onChange}
-                  value={this.state.password}
-                  error={errors.password}
-                  id="password"
-                  type={passwordIsMasked ? "password" : "text"}
-                  classname={classnames("", {
-                    invalid: errors.password || errors.passwordincorrect
-                  })}
-                  html_for="password"
-                  labelname="Kata Sandi"
-                  span_classname={classes.errorInfo}
-                  error1={errors.password}
-                  error2={errors.passwordincorrect}
-                />
-                <Button
-                  startIcon={icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  onClick={this.togglePasswordVisibility}
-                  disableRipple
-                  style={{
-                    backgroundColor: "transparent",
-                    textTransform: "none",
-                    fontSize: "12px",
-                  }}
-                >
-                  {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
-                </Button>
-                <Button
-                  type="submit"
-                  style={{
-                    backgroundColor: "#61bd4f",
-                    color: "white",
-                    width: "100%",
-                    marginTop: "25px"
-                  }}
-                >
-                  Masuk
-                </Button>
-              </form>
+                  <Button
+                    startIcon={icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                    onClick={this.togglePasswordVisibility}
+                    disableRipple
+                    style={{
+                      backgroundColor: "transparent",
+                      textTransform: "none",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
+                  </Button>
+                  <Button
+                    type="submit"
+                    style={{
+                      backgroundColor: "#61bd4f",
+                      color: "white",
+                      width: "100%",
+                      marginTop: "25px"
+                    }}
+                  >
+                    Masuk
+                  </Button>
+                </form>
+              </Grid>
+              <Divider style={{width: "300px"}} />
+              <Grid item>
+                <Link href="/lupa-katasandi">
+                  Lupa Kata Sandi?
+                </Link>
+              </Grid>
             </Grid>
-            <Divider style={{width: "300px"}} />
-            <Grid item>
-              <Link href="/lupa-katasandi">
-                Lupa Kata Sandi?
-              </Link>
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </div>
       </div>
     );
   }

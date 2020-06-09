@@ -13,10 +13,9 @@ Botak:
 13. Tambahin show password pas register (step 3)
 14. AM/PM di dashboard diganti kalo bisa
 15. background color di button, ripple color, hover active color.
-16. icon class, quiz, dkk
-17. Menu di ViewSubject harus dibuat alignment right cuma ga tau gimana ?
 19. Cek link nya udah dalam indo semua belum
 20. Background: https://css-tricks.com/perfect-full-page-background-image/
+21. Betulin hijau2 datepicker dan select
 
 Daniel:
 1. Task Page
