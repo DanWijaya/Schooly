@@ -20,13 +20,10 @@ const styles = (theme) => ({
     alignItems: "center",
     maxWidth: "750px",
     margin: "auto",
-  },
-  bgImg: {
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    height: "750px",
+    backgroundSize: "contain",
   },
   mainGrid: {
     maxWidth: "400px",
@@ -102,104 +99,103 @@ class Login extends Component {
   }
 
   render() {
-    document.title="Masuk ke Schooly"
+    document.title="Masuk ke Schooly";
+    document.body.style = 'background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat';
+
     const { classes } = this.props;
 
     const { errors } = this.state;
     const { passwordIsMasked } = this.state;
-
     const { icon } = this.state
 
     return (
-      <div className={classes.bgImg}>
-        <div className={classes.root}>
-          <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt" />
-          <Paper>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="space-between"
-              spacing={3}
-              className={classes.mainGrid}
-            >
-              <Grid item>
-                <Typography variant="h6">
-                  <b>Masuk ke Schooly</b>
-                </Typography>
-              </Grid>
-              <Grid item style={{width:"300px"}} >
-                <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
-                  <div style={{marginBottom: "20px"}}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={this.state.email}
-                      error={errors.email}
-                      id="email"
-                      type="email"
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
-                      })}
-                      html_for="email"
-                      labelname="Email"
-                      span_classname={classes.errorInfo}
-                      error1={errors.email}
-                      error2={errors.emailnotfound}
-                    />
-                  </div>
+      <div className={classes.root}>
+        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt" />
+        <Paper>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="space-between"
+            spacing={3}
+            className={classes.mainGrid}
+          >
+            <Grid item>
+              <Typography variant="h6">
+                <b>Masuk ke Schooly</b>
+              </Typography>
+            </Grid>
+            <Grid item style={{width:"300px"}} >
+              <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
+                <div style={{marginBottom: "20px"}}>
                   <OutlinedTextField
                     on_change={this.onChange}
-                    value={this.state.password}
-                    error={errors.password}
-                    id="password"
-                    type={passwordIsMasked ? "password" : "text"}
+                    value={this.state.email}
+                    error={errors.email}
+                    id="email"
+                    type="email"
                     classname={classnames("", {
-                      invalid: errors.password || errors.passwordincorrect
+                      invalid: errors.email || errors.emailnotfound
                     })}
-                    html_for="password"
-                    labelname="Kata Sandi"
+                    html_for="email"
+                    labelname="Email"
                     span_classname={classes.errorInfo}
-                    error1={errors.password}
-                    error2={errors.passwordincorrect}
+                    error1={errors.email}
+                    error2={errors.emailnotfound}
                   />
-                  <Button
-                    startIcon={icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    onClick={this.togglePasswordVisibility}
-                    disableRipple
-                    style={{
-                      backgroundColor: "transparent",
-                      textTransform: "none",
-                      fontSize: "12px",
-                    }}
-                  >
-                    {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
-                  </Button>
-                  <Button
-                    type="submit"
-                    style={{
-                      backgroundColor: "#61bd4f",
-                      color: "white",
-                      width: "100%",
-                      marginTop: "25px"
-                    }}
-                  >
-                    Masuk
-                  </Button>
-                </form>
-              </Grid>
-              <Divider style={{width: "300px"}} />
-              <Grid item container justify="space-around">
-                <Link href="/lupa-katasandi">
-                  Lupa Kata Sandi?
-                </Link>
-                |
-                <Link href="/daftar">
-                  Belum Ada Akun?
-                </Link>
-              </Grid>
+                </div>
+                <OutlinedTextField
+                  on_change={this.onChange}
+                  value={this.state.password}
+                  error={errors.password}
+                  id="password"
+                  type={passwordIsMasked ? "password" : "text"}
+                  classname={classnames("", {
+                    invalid: errors.password || errors.passwordincorrect
+                  })}
+                  html_for="password"
+                  labelname="Kata Sandi"
+                  span_classname={classes.errorInfo}
+                  error1={errors.password}
+                  error2={errors.passwordincorrect}
+                />
+                <Button
+                  startIcon={icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  onClick={this.togglePasswordVisibility}
+                  disableRipple
+                  style={{
+                    backgroundColor: "transparent",
+                    textTransform: "none",
+                    fontSize: "12px",
+                  }}
+                >
+                  {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
+                </Button>
+                <Button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#61bd4f",
+                    color: "white",
+                    width: "100%",
+                    marginTop: "25px"
+                  }}
+                >
+                  Masuk
+                </Button>
+              </form>
             </Grid>
-          </Paper>
-        </div>
+            <Divider style={{width: "300px"}} />
+            <Grid item container justify="space-around" style={{width: "275px"}}>
+              <Link href="/lupa-katasandi">
+                Lupa Kata Sandi?
+              </Link>
+              |
+              <Link href="/daftar">
+                Belum Ada Akun?
+              </Link>
+            </Grid>
+          </Grid>
+        </Paper>
       </div>
     );
   }

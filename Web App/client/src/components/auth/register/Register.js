@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { registerUser } from "../../../actions/AuthActions";
 import { viewClass } from "../../../actions/ClassActions";
-import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
+import authBackground from "../AuthBackground.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
@@ -24,6 +25,10 @@ const styles = (theme) => ({
     justifyContent: "center",
     alignItems: "center",
     maxWidth: "750px",
+    backgroundImage: `url(${authBackground})`,
+    backgroundPosition: "fixed",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
   },
   errorInfo: {
     color: "red",
@@ -36,7 +41,7 @@ const styles = (theme) => ({
     width: "400px",
     padding: "40px",
   },
-  schoolyLogoAlt: {
+  schoolyLogo: {
     width: "30%",
     height: "30%",
     marginBottom: "30px",
@@ -123,7 +128,9 @@ class Register extends Component {
 
   render() {
 
-    document.title="Daftar ke Schooly"
+    document.title="Daftar ke Schooly";
+    document.body.style = 'background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat';
+
     const { classes, classesCollection } = this.props;
     const { errors } = this.state;
 
@@ -241,12 +248,11 @@ class Register extends Component {
                     <Select
                     value={this.state.kelas._id}
                     onChange={(event) => {this.onChange(event, "kelas")}}
-                  >
-                    {options.map((kelas) => (
-                      <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-                    ))}
+                    >
+                      {options.map((kelas) => (
+                        <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
+                      ))}
                   </Select>
-
                 </FormControl>
                 </Grid>
               :
@@ -343,7 +349,7 @@ class Register extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} alt="schooly logo alt"/>
+        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt"/>
         <Paper>
           <Grid
             container

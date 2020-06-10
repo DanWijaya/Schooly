@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import schoolyLogoAlt from "../../../images/SchoolyLogoAlt.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
+import authBackground from "../AuthBackground.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -12,6 +13,10 @@ const styles = (theme) => ({
     alignItems: "center",
     maxWidth: "750px",
     margin: "auto",
+    backgroundImage: `url(${authBackground})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
   },
   mainGrid: {
     maxWidth: "400px",
@@ -24,7 +29,7 @@ const styles = (theme) => ({
     color: "red",
     fontSize: "10px"
   },
-  schoolyLogoAlt: {
+  schoolyLogo: {
     width: "30%",
     height: "30%",
     marginBottom: "30px",
@@ -42,6 +47,8 @@ class LoginForgot extends Component {
 
   render() {
     document.title="Lupa Akun"
+    document.body.style = 'background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat';
+
     const { classes } = this.props;
 
     const getStepContent = (stepIndex) => {
@@ -238,7 +245,7 @@ class LoginForgot extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogoAlt} className={classes.schoolyLogoAlt} alt="schooly logo alt" />
+        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt" />
         <Paper>
           {getStepContent(this.state.activeStep)}
         </Paper>
