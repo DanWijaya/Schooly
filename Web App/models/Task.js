@@ -22,7 +22,15 @@ const TaskSchema = new Schema({
     filesubmitted: [{
         type: Schema.Types.ObjectId,
         default: null
-    }]
+    }],
+    person_in_charge_id: {
+        type: String,
+        default: ""
+    },
+    description: {
+        type: String,
+        default: "Silahkan tambahkan deskripsi"
+    }
 
 })
 
