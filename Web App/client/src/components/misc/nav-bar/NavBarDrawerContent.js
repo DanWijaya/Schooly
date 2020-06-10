@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
-  drawerIcons: {
+  drawerListItemIcons: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
@@ -66,28 +66,31 @@ const generateList = (linkto, icon, itemText, isDisabled) => {
     </ListItem>
   )
 }
+
 function DrawerContent(props) {
   const classes = useStyles();
+
   let ListItemContents = [
-  ["/dashboard", <DashboardIcon className={classes.drawerIcons} />, "Beranda", false], 
-  ["/newclasslist",<FaChalkboardTeacher className={classes.drawerIcons} />, "Kelas", false],
-  ["/announcements",<AnnouncementIcon className={classes.drawerIcons} />,"Pengumuman", true],
-  ["/viewtask", <AssignmentIcon className={classes.drawerIcons} />, "Tugas", false],
-  ["/quiz", <GrNotes className={classes.drawerIcons} />, "Kuis", true],
-  ["/exams", <GrDocumentPerformance className={classes.drawerIcons} />, "Ujian", true],
-  // After divider (Kalo lebih dari satu, baru nnti loop array nya juga, satu aja ndak usah)
-  ["/tentang-schooly", <AboutIcon className={classes.drawerIcons} />,  "Tentang Schooly", false]
-]
+    ["/dashboard", <DashboardIcon className={classes.drawerListItemIcons} />, "Beranda", false],
+    ["/newclasslist",<FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", false],
+    ["/announcements",<AnnouncementIcon className={classes.drawerListItemIcons} />,"Pengumuman", true],
+    ["/viewtask", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", false],
+    ["/quiz", <GrNotes className={classes.drawerListItemIcons} />, "Kuis", true],
+    ["/exams", <GrDocumentPerformance className={classes.drawerListItemIcons} />, "Ujian", true],
+    // After divider (Kalo lebih dari satu, baru nnti loop array nya juga, satu aja ndak usah)
+    // ["/tentang-schooly", <AboutIcon className={classes.drawerListItemIcons} />,  "Tentang Schooly", false]
+  ]
+
   return (
     <div>
       <List>
         {ListItemContents.map((item) => (
-        generateList(item[0],item[1],item[2],item[3]))
+          generateList(item[0],item[1],item[2],item[3]))
         )}
       </List>
       <Divider />
       <List>
-        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerIcons} />,  "Tentang Schooly", false)}
+        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemIcons} />,  "Tentang Schooly", false)}
       </List>
     </div>
   )
