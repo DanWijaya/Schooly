@@ -32,6 +32,8 @@ import ViewSubject from "./components/objects/classes/ViewSubject";
 import CreateTask from "./components/objects/tasks/CreateTask";
 import EditTask from "./components/objects/tasks/EditTask";
 import ViewTask from "./components/objects/tasks/ViewTask";
+import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
+import ViewTaskListTeacher from "./components/objects/tasks/ViewTaskListTeacher";
 import NewTaskList from "./components/objects/tasks/NewTaskList";
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
@@ -94,7 +96,7 @@ class App extends Component {
           <ThemeProvider theme={globalStyles}>
             <Router>
               <NavBar callbackFromParent={(data) => this.myCallback(data)} />
-              <div style={{marginLeft: `${translateXValue}`}}>
+              <div style={{marginTop: "20px", marginLeft: `${translateXValue}`}}>
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/daftar" component={Register} />
                 <Route exact path="/masuk" component={Login} />
@@ -103,6 +105,8 @@ class App extends Component {
                 <Route exact path="/new-task/:id" component={NewTask} /> {/*prototypetest*/}
                 <Route exact path="/newclasslist" component={NewClassList} /> {/*prototypetest*/}
                 <Route exact path="/newtasklist" component={NewTaskList}/> {/* prototypes */}
+                <Route exact path="/viewtasklistteacher" component={ViewTaskListTeacher}/> {/* prototypes */}
+                <Route exact path="/viewtaskteacher" component={ViewTaskTeacher}/> {/* prototypes */}
                 <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
