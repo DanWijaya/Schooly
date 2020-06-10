@@ -58,7 +58,6 @@ class CreateTask extends Component {
   constructor() {
     super();
 
-<<<<<<< HEAD
         this.state = {
             name: "",
             subject: "",
@@ -70,18 +69,6 @@ class CreateTask extends Component {
             errors: {}
         };
     }
-=======
-    this.state = {
-      name: "",
-      subject: "",
-      deadline: new Date(),
-      focused: false,
-      // submitted: false,
-      class_assigned: [],
-      errors: {}
-    };
-  }
->>>>>>> 0a34ddad8431333428ce9fe099d40759a552d6b6
 
 
     onChange = (e, otherfield) => {
