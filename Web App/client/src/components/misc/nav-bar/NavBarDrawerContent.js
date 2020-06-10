@@ -56,68 +56,38 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const generateList = (linkto, icon) => {
+const generateList = (linkto, icon, itemText, isDisabled) => {
   return (
-    <ListItem button component="a" href={linkto} >
+    <ListItem button component="a" href={linkto} disabled={isDisabled}>
       <ListItemIcon>
         {icon}
       </ListItemIcon>
-      <ListItemText primary="Beranda" />
+      <ListItemText primary={itemText} />
     </ListItem>
   )
 }
-
 function DrawerContent(props) {
   const classes = useStyles();
-
+  let ListItemContents = [
+  ["/dashboard", <DashboardIcon className={classes.drawerIcons} />, "Beranda", false], 
+  ["/newclasslist",<FaChalkboardTeacher className={classes.drawerIcons} />, "Kelas", false],
+  ["/announcements",<AnnouncementIcon className={classes.drawerIcons} />,"Pengumuman", true],
+  ["/viewtask", <AssignmentIcon className={classes.drawerIcons} />, "Tugas", false],
+  ["/quiz", <GrNotes className={classes.drawerIcons} />, "Kuis", true],
+  ["/exams", <GrDocumentPerformance className={classes.drawerIcons} />, "Ujian", true],
+  // After divider (Kalo lebih dari satu, baru nnti loop array nya juga, satu aja ndak usah)
+  ["/tentang-schooly", <AboutIcon className={classes.drawerIcons} />,  "Tentang Schooly", false]
+]
   return (
     <div>
       <List>
-        <ListItem button component="a" href="/dashboard" className={classes.test}>
-            <ListItemIcon>
-              <DashboardIcon className={classes.drawerIcons} />
-            </ListItemIcon>
-            <ListItemText primary="Beranda" />
-        </ListItem>
-        <ListItem button component="a" href="/newclasslist">
-            <ListItemIcon>
-              <FaChalkboardTeacher className={classes.drawerIcons} />
-            </ListItemIcon>
-            <ListItemText primary="Kelas" />
-        </ListItem>
-        <ListItem button component="a" href="/announcements" disabled>
-            <ListItemIcon>
-              <AnnouncementIcon className={classes.drawerIcons} />
-            </ListItemIcon>
-            <ListItemText primary="Pengumuman" />
-        </ListItem>
-        <ListItem button component="a" href="/viewtask">
-            <ListItemIcon>
-              <AssignmentIcon className={classes.drawerIcons} />
-            </ListItemIcon>
-            <ListItemText primary="Tugas" />
-        </ListItem>
-        <ListItem button component="a" href="/quiz" disabled>
-            <ListItemIcon>
-              <GrNotes className={classes.drawerIcons} />
-            </ListItemIcon>
-            <ListItemText primary="Kuis" />
-        </ListItem>
-        <ListItem button component="a" href="/exams" disabled>
-            <ListItemIcon>
-              <GrDocumentPerformance className={classes.drawerIcons} />
-            </ListItemIcon>
-            <ListItemText primary="Ujian" />
-        </ListItem>
+        {ListItemContents.map((item) => (
+        generateList(item[0],item[1],item[2],item[3]))
+        )}
       </List>
       <Divider />
       <List>
-        <ListItem button component="a" href="/tentang-schooly">
-            <ListItemIcon>
-              <AboutIcon className={classes.drawerIcons} />
-            </ListItemIcon>
-            <ListItemText primary="Tentang Schooly" />
-        </ListItem>
+        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerIcons} />,  "Tentang Schooly", false)}
       </List>
     </div>
   )
