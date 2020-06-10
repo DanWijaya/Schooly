@@ -25,7 +25,9 @@ router.post("/create", (req, res) => {
             name: req.body.name,
             deadline: req.body.deadline,
             subject: req.body.subject,
-            class_assigned: req.body.class_assigned
+            class_assigned: req.body.class_assigned,
+            description: req.body.description,
+            person_in_charge_id: req.body.person_in_charge_id
             // submitted: req.body.submitted
         });
         newTask

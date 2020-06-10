@@ -54,16 +54,17 @@ class CreateTask extends Component {
   constructor() {
     super();
 
-    this.state = {
-      name: "",
-      subject: "",
-      deadline: new Date(),
-      focused: false,
-      // submitted: false,
-      class_assigned: [],
-      errors: {}
-    };
-  }
+        this.state = {
+            name: "",
+            subject: "",
+            deadline: new Date(),
+            focused: false,
+            // submitted: false,
+            class_assigned: [],
+            description: "",
+            errors: {}
+        };
+    }
 
 
     onChange = (e, otherfield) => {
@@ -74,6 +75,9 @@ class CreateTask extends Component {
       else if(otherfield == "deadline"){
         this.setState({ deadline: e}) // e is the date value itself.
       }
+      else if(otherfield == "description"){
+        this.setState({ description: e.target.value})
+      }
       else
         this.setState({ [e.target.id]: e.target.value});
     }
@@ -83,7 +87,7 @@ class CreateTask extends Component {
       this.setState({ deadline: date})
     }
 
-    onSubmit = (e) => {
+    onSubmit = (e, id) => {
         e.preventDefault();
 
         const taskObject = {
@@ -91,6 +95,8 @@ class CreateTask extends Component {
             deadline: this.state.deadline,
             subject: this.state.subject,
             class_assigned: this.state.class_assigned,
+            person_in_charge_id: id,
+            // description: this.state.description,
             // submitted: this.state.submitted,
             errors: {}
         };
@@ -131,6 +137,7 @@ class CreateTask extends Component {
     render() {
       const {classesCollection,  classes, viewClass} = this.props;
       const{ class_assigned} = this.state;
+      const { user } = this.props.auth
 
         var options = []
         if(Object.keys(classesCollection).length !== 0) {
@@ -159,7 +166,7 @@ class CreateTask extends Component {
             <Typography variant="h5" className={classes.formTitle}>
               <b>Tambahkan keterangan tugas untuk membuat tugas</b>
             </Typography>
-            <form noValidate onSubmit={this.onSubmit}>
+            <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
               <Grid
               container
               direction="column"
@@ -186,7 +193,8 @@ class CreateTask extends Component {
 
                   <Grid item className={classes.gridItem}>
                   <OutlinedTextField
-                      on_change={(e) => {this.onChange(e)}}
+                      on_change={(e) => { console.log(e.target.value)
+                         this.onChange(e)}}
                       value={this.state.subject}
                       error={errors.subject}
                       id="subject"
@@ -225,6 +233,24 @@ class CreateTask extends Component {
           ))}
         </Select>
       </FormControl>
+      </Grid>
+      <Grid item className={classes.gridItem}>
+      <OutlinedTextField
+          on_change={this.onChange}
+          value={this.state.description}
+          // error={errors.subject}
+          id="descripton"
+          type="textarea"
+          className={classnames("", {
+            invalid: errors.name
+          })}
+          labelname="Deskripsi"
+          html_for="description"
+          label_classname={classes.inputLabel}
+          span_classname={classes.errorInfo}
+          multiline={true}
+          // error1={errors.subject}
+        />
       </Grid>
       <Grid item className={classes.gridItem}>
       <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
@@ -279,9 +305,11 @@ CreateTask.propTypes = {
     createTask: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     viewClass: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+  auth: state.auth,
   errors: state.errors,
   classesCollection: state.classesCollection
 })
