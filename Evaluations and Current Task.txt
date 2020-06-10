@@ -1,7 +1,7 @@
 Current Task
 
 Botak:
-1. Landing, PageNotFound, Help,  Admin Dashboard, Terms and Policies, About
+1. Landing, Admin Dashboard, Terms and Policies, About
 2. Bikin gambar-gambar yang diperlukan (belajar AI)
 3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
 4. Globalize "primary" color for makestyles
@@ -28,8 +28,8 @@ Daniel:
 8. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
 9. Buat button download pas click, lalu download pagenya.
 10.Ganti Kata Sandi functionality
-11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya. 
-12. Cari cara gimana kecilin size file avatar supaya cpt dirender di page. 
+11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
+12. Cari cara gimana kecilin size file avatar supaya cpt dirender di page.
 
 Bingung:
 1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog

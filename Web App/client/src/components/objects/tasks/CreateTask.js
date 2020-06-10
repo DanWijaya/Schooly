@@ -45,11 +45,6 @@ const styles = (theme) => ({
     color: "red",
     fontSize: "10px"
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-    maxWidth: 300,
-  },
   chips: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -60,19 +55,19 @@ const styles = (theme) => ({
 });
 
 class CreateTask extends Component {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.state = {
-            name: "",
-            subject: "",
-            deadline: new Date(),
-            focused: false,
-            // submitted: false,
-            class_assigned: [],
-            errors: {}
-        };
-    }
+    this.state = {
+      name: "",
+      subject: "",
+      deadline: new Date(),
+      focused: false,
+      // submitted: false,
+      class_assigned: [],
+      errors: {}
+    };
+  }
 
 
     onChange = (e, otherfield) => {
@@ -212,7 +207,7 @@ class CreateTask extends Component {
                   </Grid>
 
                 <Grid item className={classes.gridItem}>
-                <FormControl className={classes.formControl}>
+                <FormControl variant="outlined" fullWidth>
                 <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
         <Select
           id="class_assigned"
@@ -225,7 +220,7 @@ class CreateTask extends Component {
                 <Chip key={kelas} label={kelas.name} className={classes.chip} />
               ))}
             </div>
-              
+
           )}
           MenuProps={MenuProps}
         >
@@ -237,8 +232,9 @@ class CreateTask extends Component {
       </Grid>
       <Grid item className={classes.gridItem}>
       <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-        <Grid container>
+        <label id="class_assigned" className={classes.inputLabel}>Batas Waktu</label>
         <KeyboardDatePicker
+          fullWidth
           disablePast
           // disableToolbar
           format="dd/MM/yyyy"
@@ -246,7 +242,6 @@ class CreateTask extends Component {
           okLabel="Simpan"
           cancelLabel="Batal"
           id="date-picker-inline"
-          label="Deadline"
           value={this.state.deadline}
           // onChange={(date) => this.onChange(date, "deadline")}
           onChange={(date) => this.onDateChange(date)}
@@ -257,7 +252,6 @@ class CreateTask extends Component {
             disableUnderline: true
           }}
         />
-        </Grid>
       </MuiPickersUtilsProvider>
       </Grid>
 
