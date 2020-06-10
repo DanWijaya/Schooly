@@ -218,7 +218,7 @@ class EditTask extends Component {
                       </Grid>
     
                     <Grid item className={classes.gridItem}>
-                    <FormControl className={classes.formControl}>
+                    <FormControl variant="outlined" fullWidth>
                     <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
                     {this.state.class_assigned == undefined ? null : 
                         <Select
@@ -248,8 +248,8 @@ class EditTask extends Component {
           <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
             <Grid container>
             <KeyboardDatePicker
+              fullWidth
               disablePast
-              // disableToolbar
               format="dd/MM/yyyy"
               margin="normal"
               okLabel="Simpan"
