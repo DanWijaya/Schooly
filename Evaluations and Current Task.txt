@@ -18,18 +18,16 @@ Botak:
 21. Betulin hijau2 datepicker dan select
 
 Daniel:
-1. Task Page
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
 3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 4. Notifications page dan listnya (previewnya muncul di Dashboard)
 5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-6. Rapikan interface pas upload file, Ganti jangan pakai yang Choose File gitu
-7. Tambahin tugas field di User.
-8. Mulai connect user dengan tugasnya, lalu juga display tugasnya usernya.
-9. Buat button download pas click, lalu download pagenya.
 10.Ganti Kata Sandi functionality
 11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
-12. Cari cara gimana kecilin size file avatar supaya cpt dirender di page.
+13. Perlu fix Edit Task yang MenuItemnya ndak muncul dibold pas dibuka. Anjeng
+14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. 
+- Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
+Schema Notif dan explore cara handlenya? 
 
 Bingung:
 1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog

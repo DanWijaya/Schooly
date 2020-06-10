@@ -347,6 +347,16 @@ router.get("/getstudents", (req,res) => {
   })
 })
 
+router.get("/getOneUser/:id", (req,res) => {
+  let id = req.params.id;
+  User.findById(id, (err, user) => {
+    if(!user)
+      return res.status(404).json("No user is found in Database")
+    else 
+    return res.json(user)
+  })
+})
+
 router.get("/getstudentsbyclass/:id", (req,res) => {
   let id = req.params.id
   Student.find({ kelas: id}).then((users, err) => {

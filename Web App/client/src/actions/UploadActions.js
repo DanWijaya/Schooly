@@ -1,5 +1,6 @@
-import { UPLOAD_TUGAS, GET_TUGAS } from "./Types";
+import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ERRORS } from "./Types";
 import axios from "axios";
+
 
 export const uploadTugas = (tugas, userData) => dispatch => {
 
@@ -33,6 +34,26 @@ export const deleteTugas = (tugas_id, userData) => {
             })
     }
 }
+
+export const getTaskFilesByUser = (userId) => dispatch => {
+    console.log("getTaskFilesByUser is runned")
+    axios
+      .get("/api/users/gettask/" + userId)
+      .then(res => {
+          console.log(res.data);
+          dispatch({ 
+            type: GET_FILE_BY_USER,
+            payload: res.data
+          })
+      })
+      .catch(err => {
+        console.log("Error in retrieving the user tasks");
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      })
+  }
 
 export const downloadTugas = (tugas_id, userData) => dispatch =>{
     console.log("Downloading Tugas")

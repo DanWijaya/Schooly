@@ -14,8 +14,11 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CancelIcon from "@material-ui/icons/Cancel";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
-import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../actions/UploadActions"
-import { getTaskByUser } from "../actions/TaskActions"
+import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../../../actions/UploadActions"
+import { viewOneTask } from "../../../actions/TaskActions"
+import { getTaskFilesByUser } from "../../../actions/UploadActions"
+import { getOneUser } from "../../../actions/AuthActions"
+
 const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -80,7 +83,8 @@ function WorkFile(props) {
       />
       <ListItemIcon>
         <IconButton className={classes.iconButton}
-          onClick={() => {props.onDownloadTugas(file_id)}}
+          onClick={(e) => { e.stopPropagation()
+            props.onDownloadTugas(file_id)}}
          >
           <CloudDownloadIcon />
         </IconButton>
@@ -178,8 +182,8 @@ function CheckedWorkFilesButton() {
 
 function NewTask(props) {
   const classes = useStyles();
-  const { user } = props.auth;
-  const { uploadTugas, getTaskByUser, tasksCollection, downloadTugas, previewTugas } = props;
+  const { user, selectedUser } = props.auth;
+  const { uploadTugas, getTaskFilesByUser, tasksCollection, filesCollection, downloadTugas, previewTugas, viewOneTask, getOneUser } = props;
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -190,11 +194,21 @@ function NewTask(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
+  
+  if(filesCollection.files.length == 0){
+  console.log(filesCollection, "file collections")
+    getTaskFilesByUser(user.id)
+  }
 
+  // checking if the Object is empty or nah (instead of using undefined field). 
+  if(Object.keys(tasksCollection).length === 0){
+    viewOneTask(props.match.params.id)
+  }
 
-  if(tasksCollection.length === undefined) // it means it is empty
-    getTaskByUser(user.id)
-
+  // checking if the selectedUser (Person in charge) has already been retrieved or not. the id of the PIC is at tasksCollection.
+  if(Object.keys(selectedUser).length == 0 || selectedUser._id != tasksCollection.person_in_charge_id){
+    getOneUser(tasksCollection.person_in_charge_id)
+  }
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
     switch(ext_file) {
@@ -220,21 +234,21 @@ function NewTask(props) {
 
   const listWorkFile = () => {
     let temp = []
-    if(tasksCollection.length !== undefined) {
-      for (let i = 0 ; i < tasksCollection.length; i++) {
+      for (let i = 0 ; i < filesCollection.files.length; i++) {
+        console.log(filesCollection.files[i], i)
         temp.push(
           <WorkFile
             handleOpenDeleteDialog = {handleOpenDeleteDialog}
             onDownloadTugas = {onDownloadTugas}
             onPreviewTugas = {onPreviewTugas}
             file_type_icon={0}
-            file_name={tasksCollection[i].filename}
-            file_id={tasksCollection[i].id}
-            file_type={fileType(tasksCollection[i].filename)}
+            file_name={filesCollection.files[i].filename}
+            file_id={filesCollection.files[i].id}
+            file_type={fileType(filesCollection.files[i].filename)}
         />
         )
       }
-    }
+
     if(temp.length !== tasksContents.length){
       console.log("tasks added")
       setTaskContents(temp);
@@ -294,7 +308,6 @@ function NewTask(props) {
       formData.append("tugas", fileTugas[i])
     }
     uploadTugas(formData, user)
-    // getTaskByUser(user.id)
     setFileTugas(null)
     handleClick()
   }
@@ -407,13 +420,13 @@ function NewTask(props) {
           >
             <Grid item xs={6}>
               <Typography variant="h4" >
-                Task Title
+                {tasksCollection.name}
               </Typography>
               <Typography variant="caption" color="textSecondary">
-                <h6>Subject Name</h6>
+                <h6>{tasksCollection.subject}</h6>
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                Penanggung Jawab:
+                Penanggung Jawab: {selectedUser.name}
               </Typography>
             </Grid>
             <Grid item xs={6}
@@ -433,9 +446,7 @@ function NewTask(props) {
                 Deskripsi Tugas:
               </Typography>
               <Typography variant="paragraph" gutterBottom>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-                dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+                {tasksCollection.description}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -546,15 +557,19 @@ NewTask.propTypes = {
    downloadTugas: PropTypes.func.isRequired,
    previewTugas: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
-   getTaskByUser: PropTypes.func.isRequired,
-   tasksCollection: PropTypes.object.isRequired
+   viewOneTask: PropTypes.func.isRequired,
+   getTaskFilesByUser: PropTypes.func.isRequired,
+   getOneUser: PropTypes.func.isRequired,
+   tasksCollection: PropTypes.object.isRequired,
+   filesCollection: PropTypes.object.isRequired
  }
 
 const mapStateToProps = (state) => ({
    auth: state.auth,
-   tasksCollection: state.tasksCollection
+   tasksCollection: state.tasksCollection,
+   filesCollection: state.filesCollection
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, getTaskByUser, deleteTugas, downloadTugas, previewTugas}
+   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas, previewTugas, getTaskFilesByUser, getOneUser, viewOneTask}
  ) (NewTask);

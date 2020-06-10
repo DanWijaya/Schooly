@@ -29,7 +29,7 @@ const TaskSchema = new Schema({
     },
     description: {
         type: String,
-        default: "Silahkan tambahkan deskripsi"
+        required: true
     }
 
 })

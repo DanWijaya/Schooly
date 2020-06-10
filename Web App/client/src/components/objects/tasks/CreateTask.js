@@ -80,7 +80,7 @@ class CreateTask extends Component {
         this.setState({ deadline: e}) // e is the date value itself.
       }
       else if(otherfield == "description"){
-        this.setState({ description: e.target.value})
+        this.setState({ description : e.target.value})
       }
       else
         this.setState({ [e.target.id]: e.target.value});
@@ -100,7 +100,7 @@ class CreateTask extends Component {
             subject: this.state.subject,
             class_assigned: this.state.class_assigned,
             person_in_charge_id: id,
-            // description: this.state.description,
+            description: this.state.description,
             // submitted: this.state.submitted,
             errors: {}
         };
@@ -163,6 +163,7 @@ class CreateTask extends Component {
           },
         };
 
+        console.log(errors)
         return(
         <div className={classes.root}>
           <Paper>
@@ -240,20 +241,20 @@ class CreateTask extends Component {
       </Grid>
       <Grid item className={classes.gridItem}>
       <OutlinedTextField
-          on_change={this.onChange}
+          on_change={(e) => this.onChange(e, "description")}
           value={this.state.description}
-          // error={errors.subject}
+          error={errors.description}
           id="descripton"
           type="textarea"
           className={classnames("", {
-            invalid: errors.name
+            invalid: errors.description
           })}
           labelname="Deskripsi"
           html_for="description"
           label_classname={classes.inputLabel}
           span_classname={classes.errorInfo}
           multiline={true}
-          // error1={errors.subject}
+          error1={errors.description}
         />
       </Grid>
       <Grid item className={classes.gridItem}>
@@ -291,7 +292,7 @@ class CreateTask extends Component {
                       marginTop: "20px",
                   }}
                 >
-                  Add Task
+                  Tambahkan Tugas
                 </Button>
               </Grid>
               </Grid>

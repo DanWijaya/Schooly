@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router";
 
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
-   GET_USERS, GET_STUDENTS, GET_TEACHERS } from "./Types";
+   GET_USERS, GET_STUDENTS, GET_TEACHERS, GET_ONE_USER } from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -161,6 +161,21 @@ export const getTeachers = () => dispatch => {
     .catch(err => {
       console.log("Error in getting all Teachers");
     })
+}
+
+export const getOneUser = (userId) => dispatch => {
+  axios
+      .get("/api/users/getOneUser/" + userId)
+      .then(res => {
+        console.log(res.data)
+        dispatch({
+          type: GET_ONE_USER,
+          payload: res.data
+        })
+      })
+      .catch(err => {
+        console.log("Error in getting one user")
+      })
 }
 
 export const getStudentsByClass = (classId) => dispatch => {

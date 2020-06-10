@@ -9,6 +9,7 @@ const Task = require("../../models/Task");
 const Class = require("../../models/Class")
 //Define create route
 router.post("/create", (req, res) => {
+
     const { errors, isValid } = validateTaskInput(req.body)
     if(!isValid) { 
         console.log("Not Valid");
@@ -88,7 +89,7 @@ router.delete("/delete/:id", (req, res) => {
 })
 
 //Define Edit routes
-router.get("/edit/:id", (req, res) => {
+router.get("/viewOneTask/:id", (req, res) => {
     let id = req.params.id;
     Task.findById(id, (err, taskData) => {
         res.json(taskData);
@@ -114,6 +115,7 @@ router.post("/update/:id", (req, res) => {
             taskData.deadine = req.body.deadine;
             taskData.subject = req.body.subject;
             taskData.class_assigned = req.body.class_assigned;
+            taskData.description = req.body.description;
             // taskData.submitted = req.body.submitted;
         
             taskData

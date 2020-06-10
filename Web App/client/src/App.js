@@ -36,7 +36,7 @@ import NewTaskList from "./components/objects/tasks/NewTaskList";
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
 //Prototypes
-import NewTask from "./prototypes/NewTask";
+import NewTask from "./components/objects/tasks/NewTask";
 import NewClassList from "./components/objects/admin-only/NewClassList";
 import Tester from "./prototypes/Tester";
 

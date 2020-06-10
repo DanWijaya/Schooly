@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_TASK_BY_USER} from "./Types";
+import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER} from "./Types";
 
 // Addtask
 export const createTask = (taskData, history) => dispatch => {
@@ -18,24 +18,24 @@ export const createTask = (taskData, history) => dispatch => {
     );
 };
 
-export const getTaskByUser = (userId) => dispatch => {
-    axios
-      .get("/api/users/gettask/" + userId)
-      .then(res => {
-          console.log(res.data);
-          dispatch({ 
-            type: GET_TASK_BY_USER,
-            payload: res.data
-          })
-      })
-      .catch(err => {
-        console.log("Error in retrieving the user tasks");
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      })
-  }
+// export const getTaskByUser = (userId) => dispatch => {
+//     axios
+//       .get("/api/users/gettask/" + userId)
+//       .then(res => {
+//           console.log(res.data);
+//           dispatch({ 
+//             type: GET_FILE_BY_USER,
+//             payload: res.data
+//           })
+//       })
+//       .catch(err => {
+//         console.log("Error in retrieving the user tasks");
+//         dispatch({
+//           type: GET_ERRORS,
+//           payload: err.response.data
+//         })
+//       })
+//   }
 
 // View Task
 export const viewTask = () => dispatch => {
@@ -58,9 +58,9 @@ export const viewTask = () => dispatch => {
 }
 
 // View All Tasks
-export const editTask = (taskId) => dispatch => {
+export const viewOneTask = (taskId) => dispatch => {
   axios
-    .get("/api/tasks/edit/" + taskId)
+    .get("/api/tasks/viewOneTask/" + taskId)
     // .get("/api/tasks/edit/" + taskId)
     .then(res => {
         console.log("Task to be edited: ", res.data);

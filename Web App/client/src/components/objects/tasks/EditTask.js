@@ -5,7 +5,7 @@ import classnames from "classnames";
 import moment from "moment";
 import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
 import { viewClass } from "../../../actions/ClassActions";
-import { editTask, updateTask } from "../../../actions/TaskActions";
+import { viewOneTask, updateTask } from "../../../actions/TaskActions";
 import { Multiselect } from "multiselect-react-dropdown";
 
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
@@ -72,6 +72,7 @@ class EditTask extends Component {
             tasksCollection: [],
             class_assigned: [],
             focused: false,
+            description: "",
             errors: {},
         }
         // this.nameInput = React.createRef();
@@ -79,7 +80,7 @@ class EditTask extends Component {
 
         const { id } = this.props.match.params;
         console.log(id)
-        this.props.editTask(id)
+        this.props.viewOneTask(id)
     }
 
     onChange = (e, otherfield) => {
@@ -89,6 +90,9 @@ class EditTask extends Component {
       }
       else if(otherfield == "deadline"){
         this.setState({ deadline: e}) // e is the date value itself.
+      }
+      else if(otherfield == "description"){
+        this.setState({ description : e.target.value})
       }
       else
         this.setState({ [e.target.id]: e.target.value});
@@ -112,8 +116,8 @@ class EditTask extends Component {
                 name: nextProps.tasksCollection.name,
                 subject: nextProps.tasksCollection.subject,
                 deadline: nextProps.tasksCollection.deadline,
-                class_assigned: nextProps.tasksCollection.class_assigned
-
+                class_assigned: nextProps.tasksCollection.class_assigned,
+                description: nextProps.tasksCollection.description
             })
         }
     }
@@ -244,6 +248,25 @@ class EditTask extends Component {
                   }
             </FormControl>
           </Grid>
+
+          <Grid item className={classes.gridItem}>
+      <OutlinedTextField
+          on_change={(e) => this.onChange(e, "description")}
+          value={this.state.description}
+          // error={errors.subject}
+          id="descripton"
+          type="textarea"
+          className={classnames("", {
+            invalid: errors.name
+          })}
+          labelname="Deskripsi"
+          html_for="description"
+          label_classname={classes.inputLabel}
+          span_classname={classes.errorInfo}
+          multiline={true}
+          // error1={errors.subject}
+        />
+      </Grid>
           <Grid item className={classes.gridItem}>
           <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
             <Grid container>
@@ -280,7 +303,7 @@ class EditTask extends Component {
                           marginTop: "20px",
                       }}
                     >
-                      Edit Task
+                      Sunting Tugas
                     </Button>
                   </Grid>
                   </Grid>
@@ -387,7 +410,7 @@ class EditTask extends Component {
 
 EditTask.propTypes = {
     errors: PropTypes.object.isRequired,
-    editTask : PropTypes.func.isRequired,
+    viewOneTask : PropTypes.func.isRequired,
     updateTask: PropTypes.func.isRequired,
     tasksCollection: PropTypes.object.isRequired,
     viewClass: PropTypes.func.isRequired
@@ -403,5 +426,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-    mapStateToProps, { editTask, updateTask, viewClass}
+    mapStateToProps, { viewOneTask, updateTask, viewClass}
 ) (withStyles(styles)(EditTask))

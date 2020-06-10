@@ -11,7 +11,7 @@ module.exports = function validateClassInput(data) {
 
     // Name checks
     if (Validator.isEmpty(data.name)) {
-        errors.name = "Name field is required";
+        errors.name = "Name kelas belum diisi";
     }
 
     // Kedepannya, Walikelas harus pakai Object guru. 
@@ -19,8 +19,11 @@ module.exports = function validateClassInput(data) {
     //     errors.walikelas = "Waliklas field is required" 
     // } 
 
+    if(Object.keys(data.walikelas).length == 0){
+        errors.walikelas = "Waliklas field is required" 
+    }
     if(data.ukuran <= 0) {
-        errors.ukuran = "Class size must be positive"
+        errors.ukuran = "Jumlah murid harus bernilai positif"
     }
 
     return {

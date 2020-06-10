@@ -11,6 +11,8 @@ const Student = User.discriminator("Student", new mongoose.Schema({
           ,
           filename:
               {type: String, default: null}
+        ,
+          for_task_object: { type: String, default: null}
         }
         ]
     })
