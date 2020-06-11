@@ -2,11 +2,11 @@ import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ERRORS } from "./Types";
 import axios from "axios";
 
 
-export const uploadTugas = (tugas, userData) => dispatch => {
+export const uploadTugas = (tugas, userData, taskId) => dispatch => {
 
   if(userData.role === "Student") {
     axios
-        .post(`/api/uploads/uploadtugas/${userData.id}`, tugas)
+        .post(`/api/uploads/uploadtugas/${userData.id}/${taskId}`, tugas)
         .then(res => {
             console.log("Run woi")
             window.location.reload()
@@ -35,10 +35,10 @@ export const deleteTugas = (tugas_id, userData) => {
     }
 }
 
-export const getTaskFilesByUser = (userId) => dispatch => {
+export const getTaskFilesByUser = (userId, tugasId) => dispatch => {
     console.log("getTaskFilesByUser is runned")
     axios
-      .get("/api/users/gettask/" + userId)
+      .get(`/api/users/gettask/${userId}/${tugasId}`)
       .then(res => {
           console.log(res.data);
           dispatch({ 

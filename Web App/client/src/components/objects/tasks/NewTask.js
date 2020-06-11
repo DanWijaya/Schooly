@@ -191,18 +191,22 @@ function NewTask(props) {
   const [fileTugas, setFileTugas] = React.useState(null);
   const [tasksContents, setTaskContents] = React.useState([]);
 
+  const [isEmptyFileTugas, setIsEmpty] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
   
-  if(filesCollection.files.length == 0){
+  let tugasId = props.match.params.id;
+
+  if(filesCollection.files.length == 0 && !isEmptyFileTugas){
   console.log(filesCollection, "file collections")
-    getTaskFilesByUser(user.id)
+    getTaskFilesByUser(user.id, tugasId)
+    setIsEmpty(true)
   }
 
   // checking if the Object is empty or nah (instead of using undefined field). 
   if(Object.keys(tasksCollection).length === 0){
-    viewOneTask(props.match.params.id)
+    viewOneTask(tugasId)
   }
 
   // checking if the selectedUser (Person in charge) has already been retrieved or not. the id of the PIC is at tasksCollection.
@@ -307,7 +311,7 @@ function NewTask(props) {
     for (var i = 0; i < fileTugas.length; i++){
       formData.append("tugas", fileTugas[i])
     }
-    uploadTugas(formData, user)
+    uploadTugas(formData, user, tugasId)
     setFileTugas(null)
     handleClick()
   }

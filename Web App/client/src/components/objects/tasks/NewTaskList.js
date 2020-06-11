@@ -57,6 +57,7 @@ const headCells = [
 
 function TaskListHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -203,13 +204,17 @@ function NewTaskList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
-
+  
   const { tasksCollection, viewTask, deleteTask } = props;
+  const { user } = props.auth;
+
   const retrieveTasks = () => {
     if(tasksCollection.length == undefined){
       viewTask();
     } else {
       rows = []
+      console.log(tasksCollection)
+      console.log(user)
       tasksCollection.map((data) => {
         rows.push(
           createData(data._id, data.name,
@@ -428,10 +433,12 @@ NewTaskList.propTypes = {
   deleteTask: PropTypes.func.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
+  auth: state.auth,
   tasksCollection: state.tasksCollection,
 })
 
