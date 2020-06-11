@@ -25,9 +25,12 @@ const styles = (theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  mainGrid: {
+  loginGrid: {
     maxWidth: "400px",
     padding: "40px",
+  },
+  loginGridContent: {
+    width: "300px",
   },
   schoolyLogo: {
     width: "30%",
@@ -99,8 +102,8 @@ class Login extends Component {
   }
 
   render() {
-    document.title="Masuk ke Schooly";
-    document.body.style = 'background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat';
+    document.title = "Masuk ke Schooly";
+    document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
 
     const { classes } = this.props;
 
@@ -110,7 +113,7 @@ class Login extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt" />
+        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
         <Paper>
           <Grid
             container
@@ -118,14 +121,14 @@ class Login extends Component {
             alignItems="center"
             justify="space-between"
             spacing={3}
-            className={classes.mainGrid}
+            className={classes.loginGrid}
           >
             <Grid item>
               <Typography variant="h6">
                 <b>Masuk ke Schooly</b>
               </Typography>
             </Grid>
-            <Grid item style={{width:"300px"}} >
+            <Grid item className={classes.loginGridContent}>
               <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
                 <div style={{marginBottom: "20px"}}>
                   <OutlinedTextField
@@ -184,8 +187,8 @@ class Login extends Component {
                 </Button>
               </form>
             </Grid>
-            <Divider style={{width: "300px"}} />
-            <Grid item container justify="space-around" style={{width: "275px"}}>
+            <Divider className={classes.loginGridContent} />
+            <Grid item container justify="space-around">
               <Link href="/lupa-katasandi">
                 Lupa Kata Sandi?
               </Link>

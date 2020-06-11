@@ -115,8 +115,8 @@ function NavBarLoggedInContents(props) {
   const renderMobileMenu = (
     <Grid container className={classes.navbarContainedRightItems}>
       <IconButton
-          onClick={handleMobileMenuOpen}
-          color="inherit"
+        onClick={handleMobileMenuOpen}
+        color="inherit"
       >
         <MoreIcon />
       </IconButton>

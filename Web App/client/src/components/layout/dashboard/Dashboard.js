@@ -7,19 +7,12 @@ import { Avatar, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSe
 import { withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import wallpaper from "./456182.jpg"
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
     maxWidth: "800px",
     textAlign: "center",
-  },
-  bgImg: {
-    backgroundImage: `url(${wallpaper})`,
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
   },
   paperTitle: {
     display: "flex",
@@ -46,7 +39,7 @@ function NotificationItemList(props) {
       </ListItemAvatar>
       <ListItemText
         primary={
-          <Typography style={{color: "#2196f3"}}>
+          <Typography>
             {props.notification_title}
           </Typography>
         }
@@ -85,7 +78,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: new Date().toLocaleString()
+      time: new Date().toLocaleString("en-GB")
     };
   }
 
@@ -102,21 +95,21 @@ class Dashboard extends Component {
 
   tick() {
     this.setState({
-      time: new Date().toLocaleString()
+      time: new Date().toLocaleString("en-GB")
     });
   }
 
   render() {
-    document.title="Schooly | Dashboard";
+    document.title="Schooly | Beranda";
+    document.body.style = "background: #ffffff; background-repeat: no-repeat"
 
     const { classes } = this.props;
     const { user } = this.props.auth;
 
     return (
-      <div className={classes.bgImg}>
       <div className={classes.root}>
         <Typography variant="h3">
-          <b>Selamat Datang {user.name.split(" ")[0]}</b>
+          <b>Selamat Datang, {user.name}</b>
         </Typography>
         <Typography variant="h4" style={{marginBottom: "40px"}}>
           Sekarang tanggal {this.state.time}
@@ -182,7 +175,6 @@ class Dashboard extends Component {
             />
           </List>
         </Paper>
-      </div>
       </div>
     )
   };

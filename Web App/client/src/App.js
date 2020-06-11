@@ -23,6 +23,7 @@ import Profile from "./components/layout/profile/Profile";
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
 import NavBar from "./components/misc/nav-bar/NavBar";
+import Footer from "./components/misc/footer/Footer";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass"
 import EditClass from "./components/objects/classes/EditClass";
@@ -128,6 +129,7 @@ class App extends Component {
                   <PrivateRoute exact path="/classlist" component={ClassList} />
                 </Switch>
               </div>
+              <Footer />
             </Router>
           </ThemeProvider>
         </Provider>
