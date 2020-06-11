@@ -216,28 +216,58 @@ function NewTaskList(props) {
       console.log(tasksCollection)
       console.log(user)
       tasksCollection.map((data) => {
-        rows.push(
-          createData(data._id, data.name,
-            data.subject,
-            data.class_assigned,
-            data.deadline,
-            [
-            <IconButton 
-            onClick={(e) => { e.stopPropagation()
-              window.location.href =`./task/${data._id}`}}>
-            <EditIcon style={{color: "#2196f3"}}/>
-          </IconButton>,
-          <Tooltip title="Delete">
-          <IconButton 
-          onClick={(e) =>{
-              handleOpenDeleteDialog(e, data._id, data.name)}}  >
-            <DeleteIcon style={{color: "#B22222"}} />
-          </IconButton>
+        let class_assigned = data.class_assigned;
 
-        </Tooltip>
-            ]
+        if(user.role == "Teacher" || user.role=="Admin"){
+          rows.push(
+            createData(data._id, data.name,
+              data.subject,
+              data.class_assigned,
+              data.deadline,
+              [
+              <IconButton 
+              onClick={(e) => { e.stopPropagation()
+                window.location.href =`./task/${data._id}`}}>
+              <EditIcon style={{color: "#2196f3"}}/>
+            </IconButton>,
+            <Tooltip title="Delete">
+            <IconButton 
+            onClick={(e) =>{
+                handleOpenDeleteDialog(e, data._id, data.name)}}  >
+              <DeleteIcon style={{color: "#B22222"}} />
+            </IconButton>
+          </Tooltip>
+              ]
+            )
           )
-        )
+        } else {
+        for (var i = 0; i < class_assigned.length; i++){
+          if(class_assigned[i]._id == user.kelas){
+            rows.push(
+              createData(data._id, data.name,
+                data.subject,
+                data.class_assigned,
+                data.deadline,
+                [
+                <IconButton 
+                onClick={(e) => { e.stopPropagation()
+                  window.location.href =`./task/${data._id}`}}>
+                <EditIcon style={{color: "#2196f3"}}/>
+              </IconButton>,
+              <Tooltip title="Delete">
+              <IconButton 
+              onClick={(e) =>{
+                  handleOpenDeleteDialog(e, data._id, data.name)}}  >
+                <DeleteIcon style={{color: "#B22222"}} />
+              </IconButton>
+            </Tooltip>
+                ]
+              )
+            )
+            break;
+          } 
+        }
+      }
       })
     }
   }

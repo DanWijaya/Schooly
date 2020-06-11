@@ -79,6 +79,7 @@ class App extends Component {
   }
 
   render() {
+
     console.log(drawerWidth)
     // let sideDrawer;
     console.log(this.state.sideDrawerOpen)

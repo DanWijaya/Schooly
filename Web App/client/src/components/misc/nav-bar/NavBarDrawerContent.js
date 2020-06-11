@@ -74,7 +74,7 @@ function DrawerContent(props) {
     ["/dashboard", <DashboardIcon className={classes.drawerListItemIcons} />, "Beranda", false],
     ["/newclasslist",<FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", false],
     ["/announcements",<AnnouncementIcon className={classes.drawerListItemIcons} />,"Pengumuman", true],
-    ["/viewtask", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", false],
+    ["/newtasklist", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", false],
     ["/quiz", <GrNotes className={classes.drawerListItemIcons} />, "Kuis", true],
     ["/exams", <GrDocumentPerformance className={classes.drawerListItemIcons} />, "Ujian", true],
     // After divider (Kalo lebih dari satu, baru nnti loop array nya juga, satu aja ndak usah)
