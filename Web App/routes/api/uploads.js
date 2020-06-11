@@ -13,7 +13,7 @@ const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
 const Task = require("../../models/Task");
 
-// Create Mongo Connection F
+// Create Mongo Connection
 const conn = mongoose.createConnection(keys.mongoURI)
 
 // Initialize gfs
@@ -227,10 +227,11 @@ router.delete("/image/:name", (req,res) => {
 
 
 // Upload Tugas
-  router.post("/uploadtugas/:user_id/", uploadTugas.array("tugas", 5), (req,res) => {
+  router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (req,res) => {
     // To get the file details, use req.file
 
     let id = req.params.user_id
+    let task_id = req.params.task_id;
 
     console.log("Uploading the task file")
     User.findById(id, (err, user) => {
@@ -242,7 +243,9 @@ router.delete("/image/:name", (req,res) => {
       else{
         for(var i = 0; i < req.files.length; i++) {
           // console.log(req.files[i].id, req.files[i].filename)
-          user.tugas.push({id: req.files[i].id, filename: req.files[i].filename})
+          user.tugas.push({id: req.files[i].id,
+             filename: req.files[i].filename,
+             for_task_object: task_id})
         }
 
         user

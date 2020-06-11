@@ -15,7 +15,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../../../actions/UploadActions"
-import { getTaskByUser } from "../../../actions/TaskActions"
+
 const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -385,7 +385,6 @@ ViewTaskTeacher.propTypes = {
    downloadTugas: PropTypes.func.isRequired,
    previewTugas: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
-   getTaskByUser: PropTypes.func.isRequired,
    tasksCollection: PropTypes.object.isRequired
  }
 
@@ -395,5 +394,5 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, getTaskByUser, deleteTugas, downloadTugas, previewTugas}
+   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas, previewTugas}
  ) (ViewTaskTeacher);

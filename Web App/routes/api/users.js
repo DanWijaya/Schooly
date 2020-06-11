@@ -251,14 +251,24 @@ router.post("/update/data/:id", (req,res) => {
       });
 });
 
-router.get("/gettask/:id", (req, res) => {
+router.get("/gettask/:id/:task_id", (req, res) => {
   let id = req.params.id;
+  let tugasId = req.params.task_id;
 
   User.findById(id, (err, user) => {
     if(!user)
       res.status(404).send("User data is not found");
     else {
-      res.json(user.tugas)
+      let tugasList = []
+      user.tugas.map((item) => {
+      if(item.for_task_object == tugasId){
+        tugasList.push(item)
+      } else {
+        console.log("IDnya adalah:", item.for_task_object, tugasId)
+      }
+    }
+      )
+      res.json(tugasList)
     }
   } )
 })
