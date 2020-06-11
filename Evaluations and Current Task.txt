@@ -16,6 +16,7 @@ Botak:
 19. Cek link nya udah dalam indo semua belum
 20. Background: https://css-tricks.com/perfect-full-page-background-image/
 21. Betulin hijau2 datepicker dan select
+22. Fix auto hide drawer navbar (media query)
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
@@ -25,9 +26,13 @@ Daniel:
 10.Ganti Kata Sandi functionality
 11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
 13. Perlu fix Edit Task yang MenuItemnya ndak muncul dibold pas dibuka. Anjeng
+<<<<<<< HEAD
 14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. (DONE)
+=======
+14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja.
+>>>>>>> 3b608bbd31aeeed5cf806cf7a8b7b12d322f0318
 - Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
-Schema Notif dan explore cara handlenya? 
+Schema Notif dan explore cara handlenya?
 
 Bingung:
 1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog

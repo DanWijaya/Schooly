@@ -18,9 +18,14 @@ const styles = (theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  mainGrid: {
+  loginForgotGrid: {
     maxWidth: "400px",
     padding: "40px",
+  },
+  schoolyLogo: {
+    width: "30%",
+    height: "30%",
+    marginBottom: "30px",
   },
   infoTitle: {
     textAlign: "center",
@@ -28,11 +33,6 @@ const styles = (theme) => ({
   errorInfo: {
     color: "red",
     fontSize: "10px"
-  },
-  schoolyLogo: {
-    width: "30%",
-    height: "30%",
-    marginBottom: "30px",
   },
 });
 
@@ -46,8 +46,8 @@ class LoginForgot extends Component {
   }
 
   render() {
-    document.title="Lupa Akun"
-    document.body.style = 'background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat';
+    document.title = "Lupa Akun"
+    document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
 
     const { classes } = this.props;
 
@@ -61,7 +61,7 @@ class LoginForgot extends Component {
               alignItems="center"
               justify="space-between"
               spacing={3}
-              className={classes.mainGrid}
+              className={classes.loginForgotGrid}
             >
               <Grid item className={classes.infoTitle}>
                 <Typography variant="h6" gutterBottom>
@@ -125,7 +125,7 @@ class LoginForgot extends Component {
               alignItems="center"
               justify="space-between"
               spacing={3}
-              className={classes.mainGrid}
+              className={classes.loginForgotGrid}
             >
               <Grid item className={classes.infoTitle}>
                 <Typography variant="h6" gutterBottom>
@@ -177,7 +177,7 @@ class LoginForgot extends Component {
               alignItems="center"
               justify="space-between"
               spacing={3}
-              className={classes.mainGrid}
+              className={classes.loginForgotGrid}
             >
               <Grid item className={classes.infoTitle}>
                 <Typography variant="h6" gutterBottom>
@@ -245,7 +245,7 @@ class LoginForgot extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt" />
+        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
         <Paper>
           {getStepContent(this.state.activeStep)}
         </Paper>

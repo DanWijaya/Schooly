@@ -43,16 +43,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   navbarContainer: {
-    display: "flex",
+    flex: "auto",
     justifyContent: "space-between",
   },
   navbarContainedLeftItems: {
-    flex: "1",
+    flex: "auto",
     justifyContent: "flex-start",
     alignItems: "center",
   },
   navbarContainedRightItems: {
-    flex: "1",
+    display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -94,13 +94,13 @@ function NavBar(props){
 
   if(user.name !== undefined) {
     leftSideNavBarContents = (
-      <Grid className={classes.navbarContainedLeftItems}>
+      <div className={classes.navbarContainedLeftItems}>
         <NavBarDrawerMenuButton
           mobileView={isMobileView}
           handleDrawerDesktop={handleDrawerDesktop}
           handleDrawerMobile={handleDrawerMobile}
         />
-      </Grid>
+      </div>
     )
     middleNavBarContents = (
       <Link href="/dashboard">
@@ -130,35 +130,35 @@ function NavBar(props){
     )
     middleNavBarContents = null
     rightSideNavBarContents = (
-      <Grid container className={classes.navbarContainedRightItems}>
-          <Button
-            variant="contained"
-            size="small"
-            href="/daftar"
-            style={{
-              backgroundColor: "#61bd4f",
-              color: "white",
-              width: "75px",
-              height: "30px",
-              marginRight: "15px"
-            }}
-          >
-            Daftar
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            href="/masuk"
-            style={{
-              backgroundColor: "white",
-              color: "#2196f3",
-              width: "75px",
-              height: "30px",
-            }}
-          >
-            Masuk
-          </Button>
-      </Grid>
+      <div className={classes.navbarContainedRightItems}>
+        <Button
+          variant="contained"
+          size="small"
+          href="/daftar"
+          style={{
+            backgroundColor: "#61bd4f",
+            color: "white",
+            width: "75px",
+            height: "30px",
+            marginRight: "15px"
+          }}
+        >
+          Daftar
+        </Button>
+        <Button
+          variant="contained"
+          size="small"
+          href="/masuk"
+          style={{
+            backgroundColor: "white",
+            color: "#2196f3",
+            width: "75px",
+            height: "30px",
+          }}
+        >
+          Masuk
+        </Button>
+      </div>
     )
   }
 
