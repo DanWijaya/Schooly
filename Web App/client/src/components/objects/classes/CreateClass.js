@@ -107,12 +107,12 @@ class CreateClass extends Component {
   render() {
     document.title = "Schooly | Buat Kelas"
 
-    const { classes, user } = this.props;
-    const { all_teachers } = this.props.auth
+    const { classes } = this.props;
+    const { all_teachers, user } = this.props.auth
     const { errors } = this.state;
-
     var options = all_teachers
 
+    if(user.role == "Teacher" || user.role == "Admin"){
     return (
       <div className={classes.root}>
         <Paper>
@@ -194,6 +194,16 @@ class CreateClass extends Component {
         </Paper>
       </div>
     )
+  }
+  else {
+    return(
+      <div className={classes.root}>
+        <Typography variant="h5" className={classes.formTitle}>
+        <b>Anda tidak punya izin untuk membuat Kelas</b>
+      </Typography>
+      </div>
+    )
+  }
   }
 }
 

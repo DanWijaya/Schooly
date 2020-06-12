@@ -131,7 +131,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const TaskListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, deleteTask, item } = props;
+  const { numSelected, deleteTask, item , role} = props;
   // the item stores the id directly
   return (
     <Toolbar
@@ -145,7 +145,9 @@ const TaskListToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
-          <b>Daftar Tugas</b>
+          {role == "Teacher" ? <b>Daftar tugas yang anda berikan</b> : 
+          <b>Daftar tugas yang diberikan</b>}
+          {/* Nanti buat untuk yang admin juga */}
         </Typography>
       )}
 
@@ -208,6 +210,29 @@ function NewTaskList(props) {
   const { tasksCollection, viewTask, deleteTask } = props;
   const { user } = props.auth;
 
+  const taskRowItem = (data) => {
+    rows.push(
+      createData(data._id, data.name,
+        data.subject,
+        data.class_assigned,
+        data.deadline,
+        [
+        <IconButton 
+        onClick={(e) => { e.stopPropagation()
+          window.location.href =`./task/${data._id}`}}>
+        <EditIcon style={{color: "#2196f3"}}/>
+      </IconButton>,
+      <Tooltip title="Delete">
+      <IconButton 
+      onClick={(e) =>{
+          handleOpenDeleteDialog(e, data._id, data.name)}}  >
+        <DeleteIcon style={{color: "#B22222"}} />
+      </IconButton>
+    </Tooltip>
+        ]
+      )
+    )
+  }
   const retrieveTasks = () => {
     if(tasksCollection.length == undefined){
       viewTask();
@@ -215,62 +240,35 @@ function NewTaskList(props) {
       rows = []
       console.log(tasksCollection)
       console.log(user)
-      tasksCollection.map((data) => {
-        let class_assigned = data.class_assigned;
 
-        if(user.role == "Teacher" || user.role=="Admin"){
-          rows.push(
-            createData(data._id, data.name,
-              data.subject,
-              data.class_assigned,
-              data.deadline,
-              [
-              <IconButton 
-              onClick={(e) => { e.stopPropagation()
-                window.location.href =`./task/${data._id}`}}>
-              <EditIcon style={{color: "#2196f3"}}/>
-            </IconButton>,
-            <Tooltip title="Delete">
-            <IconButton 
-            onClick={(e) =>{
-                handleOpenDeleteDialog(e, data._id, data.name)}}  >
-              <DeleteIcon style={{color: "#B22222"}} />
-            </IconButton>
-          </Tooltip>
-              ]
-            )
-          )
-        } else {
-        for (var i = 0; i < class_assigned.length; i++){
-          if(class_assigned[i]._id == user.kelas){
-            rows.push(
-              createData(data._id, data.name,
-                data.subject,
-                data.class_assigned,
-                data.deadline,
-                [
-                <IconButton 
-                onClick={(e) => { e.stopPropagation()
-                  window.location.href =`./task/${data._id}`}}>
-                <EditIcon style={{color: "#2196f3"}}/>
-              </IconButton>,
-              <Tooltip title="Delete">
-              <IconButton 
-              onClick={(e) =>{
-                  handleOpenDeleteDialog(e, data._id, data.name)}}  >
-                <DeleteIcon style={{color: "#B22222"}} />
-              </IconButton>
-            </Tooltip>
-                ]
-              )
-            )
-            break;
-          } 
-        }
+      if(user.role == "Teacher"){
+      tasksCollection.map((data) => {
+        console.log(data.person_in_charge_id, user.id)
+        if(data.person_in_charge_id == user.id){
+          taskRowItem(data)
+          }
+        })
       }
+
+      else if (user.role == "Student"){
+          tasksCollection.map((data) => {
+          let class_assigned = data.class_assigned;
+          for (var i = 0; i < class_assigned.length; i++){
+            if(class_assigned[i]._id == user.kelas){
+              taskRowItem(data)
+              break;
+            } 
+        }
       })
+      }
+
+      else { // Untuk Admin 
+        tasksCollection.map((data) => {
+          taskRowItem(data)
+          })
     }
   }
+}
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -404,7 +402,7 @@ function NewTaskList(props) {
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
-        <TaskListToolbar numSelected={selected.length} item={selected} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog}/>
+        <TaskListToolbar role={user.role} numSelected={selected.length} item={selected} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog}/>
         <TableContainer>
           <Table
             className={classes.table}

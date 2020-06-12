@@ -147,7 +147,7 @@ class EditClass extends Component {
     document.title = "Schooly | Sunting Kelas"
     const { errors } = this.state;
     const { classes } = this.props;
-
+    const { user } = this.props.auth;
     const { all_teachers} = this.props.auth;
     const { all_students } = this.props.auth;
     const { sekretaris , bendahara, ketua_kelas, walikelas} = this.state;
@@ -187,6 +187,7 @@ class EditClass extends Component {
       return items;
     }
 
+    if(user.role == "Teacher" || user.role == "Admin"){
     return (
       <div className={classes.root}>
         <Paper>
@@ -331,6 +332,16 @@ class EditClass extends Component {
       </div>
     )
   }
+  else {
+    return(
+      <div className={classes.root}>
+        <Typography variant="h5" className={classes.formTitle}>
+        <b>Anda tidak punya izin untuk menyunting kelas</b>
+      </Typography>
+      </div>
+    )
+  }
+  }
 }
 
 EditClass.propTypes = {
@@ -339,6 +350,7 @@ EditClass.propTypes = {
     errors: PropTypes.object.isRequired,
     getTeachers: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
     classesCollection: PropTypes.object.isRequired
 };
 

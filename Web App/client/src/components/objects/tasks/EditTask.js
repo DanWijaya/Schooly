@@ -154,6 +154,8 @@ class EditTask extends Component {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
         const {classes, classesCollection} = this.props;
+        const { user } = this.props.auth;
+
         console.log(classesCollection)
         const ITEM_HEIGHT = 48;
         const ITEM_PADDING_TOP = 8;
@@ -171,6 +173,7 @@ class EditTask extends Component {
           options = classesCollection
         }
 
+        if(user.role == "Teacher" || user.role=="Admin"){
         return(
             <div className={classes.root}>
               <Paper>
@@ -314,6 +317,16 @@ class EditTask extends Component {
     
     
                       );
+        }
+        else {
+          return(
+            <div className={classes.root}>
+              <Typography variant="h5" className={classes.formTitle}>
+              <b>Anda tidak punya izin untuk menyunting Tugas</b>
+            </Typography>
+            </div>
+            );
+        }
         // return (
         //     <div className="container">
         //         <div className="col s8 offset-s2">
@@ -413,11 +426,13 @@ EditTask.propTypes = {
     viewOneTask : PropTypes.func.isRequired,
     updateTask: PropTypes.func.isRequired,
     tasksCollection: PropTypes.object.isRequired,
-    viewClass: PropTypes.func.isRequired
+    viewClass: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
     errors: state.errors,
+    auth: state.auth,
     tasksCollection: state.tasksCollection,
     classesCollection: state.classesCollection
     // name: state.name,
