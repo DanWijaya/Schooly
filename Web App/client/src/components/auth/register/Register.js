@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { registerUser } from "../../../actions/AuthActions";
 import { viewClass } from "../../../actions/ClassActions";
+import { getAllSubjects} from "../../../actions/SubjectActions"
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
@@ -75,6 +76,7 @@ class Register extends Component {
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
     this.props.viewClass()
+    this.props.getAllSubjects()
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
@@ -434,15 +436,17 @@ Register.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection
 });
 
 export default withRouter(
-  connect(mapStateToProps, { registerUser, viewClass })
+  connect(mapStateToProps, { registerUser, viewClass , getAllSubjects})
   (withStyles(styles)(Register))
   )

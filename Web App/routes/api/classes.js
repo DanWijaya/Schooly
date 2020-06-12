@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 //Load input validation 
 const validateClassInput = require("../../validation/ClassData");
 
-//Load Class Model 
+//Load the required Model 
 const Class = require("../../models/Class");
 const User = require("../../models/user_model/User")
 

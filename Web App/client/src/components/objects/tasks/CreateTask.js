@@ -160,6 +160,7 @@ class CreateTask extends Component {
         };
 
         console.log(errors)
+        if(user.role == "Teacher"){
         return(
         <div className={classes.root}>
           <Paper>
@@ -299,6 +300,16 @@ class CreateTask extends Component {
 
 
                   );
+                }
+        else {
+          return(
+            <div className={classes.root}>
+              <Typography variant="h5" className={classes.formTitle}>
+              <b>Anda tidak punya izin untuk membuat Tugas</b>
+            </Typography>
+            </div>
+          )
+        }
     }
 }
 
