@@ -4,6 +4,11 @@ export const globalStyles = createMuiTheme({
   palette: {
     primary: {
       main: "#2196f3",
+      light: "#64b5f6",
+      dark: "#1976d2",
+    },
+    action: {
+      hover: "#2196f3"
     },
   },
   overrides: {

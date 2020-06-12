@@ -9,6 +9,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
 import ClassIcon from "@material-ui/icons/Class";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
+import HelpIcon from "@material-ui/icons/Help";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
@@ -90,6 +91,7 @@ function DrawerContent(props) {
       </List>
       <Divider />
       <List>
+        {generateList("/bantuan", <HelpIcon className={classes.drawerListItemIcons} />,  "Bantuan", false)}
         {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemIcons} />,  "Tentang Schooly", false)}
       </List>
     </div>

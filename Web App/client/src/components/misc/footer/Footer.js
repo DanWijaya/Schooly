@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#CCC",
     position: "fixed",
     bottom: "0",
     width: "100%",
@@ -42,7 +41,8 @@ function Footer() {
   return(
     <div className={classes.root}>
       <div className={classes.content}>
-        <Divider style={{marginBottom: "10px"}} />
+      <Divider style={{marginBottom: "10px"}} />
+
         <div className={classes.footerContainer}>
           <Grid container spacing={2} justify="flex-start" className={classes.contentFont}>
             <Grid item style={{color: "grey"}}>
@@ -68,12 +68,12 @@ function Footer() {
             </Grid>
             <Grid item>
               <Link href="/tentang-schooly">
-                Kontak Kami
+                Hubungi Kami
               </Link>
             </Grid>
             <Grid item>
               <Link href="/tentang-schooly">
-                Instagram
+                Media Sosial
               </Link>
             </Grid>
           </Grid>

@@ -17,6 +17,9 @@ Botak:
 20. Background: https://css-tricks.com/perfect-full-page-background-image/
 21. Betulin hijau2 datepicker dan select
 22. Fix auto hide drawer navbar (media query)
+23. Starred notification
+24. habis login page colornya jadi ikut warna login juga
+25. footer masih masalah (mungkin harus media query)
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
@@ -33,11 +36,6 @@ Daniel:
 >>>>>>> 3b608bbd31aeeed5cf806cf7a8b7b12d322f0318
 - Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
 Schema Notif dan explore cara handlenya?
-
-Bingung:
-1. Mau tambah konfirmasi selesai forgot password (1 case lagi) atau tambahin snackbar atau mungkin dialog
-2. Mau tambahin konfimrasi register dengan 1 page lagi, atau pake snackbar aja atau mungkin dialog
-3. Disable navbar pas login sama register, jadi cuma ada buat landing?, akan nda plain pas tambah background image sih
 
 Page List On Work (Not completed/Not created yet):
 - All Task page (approx 5)
