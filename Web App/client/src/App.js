@@ -105,12 +105,7 @@ class App extends Component {
                 <Route exact path="/masuk" component={Login} />
                 <Route exact path="/lupa-katasandi" component={LoginForgot} />
                 <Route exact path="/bantuan" component={Help} />
-                <Route exact path="/new-task/:id" component={NewTask} /> {/*prototypetest*/}
-                <Route exact path="/newclasslist" component={NewClassList} /> {/*prototypetest*/}
-                <Route exact path="/newtasklist" component={NewTaskList}/> {/* prototypes */}
-                <Route exact path="/viewtasklistteacher" component={ViewTaskListTeacher}/> {/* prototypes */}
-                <Route exact path="/viewtaskteacher" component={ViewTaskTeacher}/> {/* prototypes */}
-                <Route exact path="/tester" component={Tester} /> {/*prototypetest*/}
+                <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />
@@ -125,10 +120,15 @@ class App extends Component {
                   {/* Route Task  */}
                   <PrivateRoute exact path="/createtask" component={CreateTask} />
                   <PrivateRoute exact path="/viewtask" component={ViewTask} />
+                  <PrivateRoute exact path="/viewtaskteacher" component={ViewTaskTeacher} /> {/*prototype*/}
+                  <PrivateRoute exact path="/viewtasklistteacher" component={ViewTaskListTeacher} /> {/*prototype*/}
                   <PrivateRoute exact path="/deletetask/:id" component={ViewTask} />
                   <PrivateRoute exact path="/task/:id" component={EditTask} />
+                  <PrivateRoute exact path="/new-task/:id" component={NewTask} /> {/*prototype*/}
+                  <PrivateRoute exact path="/newtasklist" component={NewTaskList} /> {/*prototype*/}
                   {/* Route Admin-Only  */}
-                  <PrivateRoute exact path="/classlist" component={ClassList} />
+                  <PrivateRoute exact path="/classlist" component={ClassList} /> {/*prototype*/}
+                  <PrivateRoute exact path="/newclasslist" component={NewClassList} /> {/*prototype*/}
                 </Switch>
               </div>
               <Footer />

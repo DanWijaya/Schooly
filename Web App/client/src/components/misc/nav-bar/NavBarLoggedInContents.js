@@ -7,7 +7,6 @@ import LightTooltip from "../light-tooltip/LightTooltip";
 import { Avatar, Badge, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import HelpIcon from "@material-ui/icons/Help";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 
@@ -103,11 +102,6 @@ function NavBarLoggedInContents(props) {
           </Badge>
         </IconButton>
       </LightTooltip>
-      <LightTooltip title="Bantuan">
-        <IconButton color="inherit" href="/bantuan">
-            <HelpIcon />
-        </IconButton>
-      </LightTooltip>
     </Grid>
   )
 
@@ -141,12 +135,6 @@ function NavBarLoggedInContents(props) {
               </Badge>
             </ListItemIcon>
             <ListItemText primary="Notifikasi" />
-          </MenuItem>
-          <MenuItem className={classes.menuItem} button component="a" href="/support">
-            <ListItemIcon>
-                <HelpIcon fontSize="medium" />
-            </ListItemIcon>
-            <ListItemText primary="Bantuan" />
           </MenuItem>
           <MenuItem className={classes.menuItem} onClick={onLogoutClick}>
             <ListItemIcon>
