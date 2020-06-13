@@ -148,6 +148,7 @@ class Register extends Component {
     if(Object.keys(subjectsCollection).length !== 0){
       subjectOptions = subjectsCollection.all_subjects
     }
+    
     console.log(subjectOptions)
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi"];
@@ -267,20 +268,6 @@ class Register extends Component {
               :
               this.state.role === "Teacher" ?
                 <Grid item className={classes.inputField}>
-                  {/* <OutlinedTextField
-                    on_change={this.onChange}
-                    value={this.state.subject_teached}
-                    error={errors.subject_teached}
-                    id="subject_teached"
-                    type="text"
-                    className={classnames("", {
-                      invalid: errors.subject_teached
-                    })}
-                    html_for="subject_teached"
-                    labelname="Mata Pelajaran"
-                    span_classname={classes.errorInfo}
-                    error1={errors.subject_teached}
-                  /> */}
                   <FormControl id="subject" variant="outlined" color="primary" fullWidth>
                     <label id="subject">Mata Pelajaran</label>
                     <Select

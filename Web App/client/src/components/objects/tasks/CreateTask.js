@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions"
 import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
 // import { Multiselect } from "multiselect-react-dropdown";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
@@ -71,14 +72,13 @@ class CreateTask extends Component {
       console.log(this.state.deadline)
       if(otherfield == "kelas"){
         this.setState({ class_assigned: e.target.value})
-      }
-      else if(otherfield == "deadline"){
+      } else if(otherfield == "deadline"){
         this.setState({ deadline: e}) // e is the date value itself.
-      }
-      else if(otherfield == "description"){
+      } else if(otherfield == "description"){
         this.setState({ description : e.target.value})
-      }
-      else
+      } else if(otherfield == "subject"){
+        this.setState({ subject: e.target.value})
+      } else
         this.setState({ [e.target.id]: e.target.value});
     }
 
@@ -103,16 +103,6 @@ class CreateTask extends Component {
 
         this.props.createTask(taskObject, this.props.history);
         this.setState({name: "", subject: ""})
-
-    }
-
-    onSelect = (selectedList, selectedItem) => {
-      console.log(this.state.class_assigned)
-      this.setState({ class_assigned: selectedList})
-    }
-
-    onRemove = (selectedList, selectedItem) => {
-      this.setState({ class_assigned: selectedList})
     }
 
     // UNSAFE_componentWillReceiveProps() is invoked before
@@ -131,23 +121,30 @@ class CreateTask extends Component {
 
     componentDidMount() {
       this.props.viewClass()
+      this.props.getAllSubjects()
       console.log("AAA")
     }
 
     render() {
-      const {classesCollection,  classes, viewClass} = this.props;
+      const {classesCollection,  classes, viewClass, subjectsCollection} = this.props;
       const{ class_assigned} = this.state;
       const { user } = this.props.auth
 
         var options = []
+        var subjectOptions = []
+
         if(Object.keys(classesCollection).length !== 0) {
           options = classesCollection
+        }
+
+        if(Object.keys(subjectsCollection).length !== 0){
+          subjectOptions = subjectsCollection.all_subjects
         }
 
         document.title = "Schooly - Create Task"
         const { errors } = this.state;
 
-        console.log(options)
+        console.log(options, subjectOptions)
         const ITEM_HEIGHT = 48;
         const ITEM_PADDING_TOP = 8;
         const MenuProps = {
@@ -159,7 +156,6 @@ class CreateTask extends Component {
           },
         };
 
-        console.log(errors)
         if(user.role == "Teacher"){
         return(
         <div className={classes.root}>
@@ -194,46 +190,47 @@ class CreateTask extends Component {
 
 
                   <Grid item className={classes.gridItem}>
-                  <OutlinedTextField
-                      on_change={(e) => { console.log(e.target.value)
-                         this.onChange(e)}}
-                      value={this.state.subject}
-                      error={errors.subject}
-                      id="subject"
-                      type="text"
-                      className={classnames("", {
-                        invalid: errors.name
-                      })}
-                      labelname="Mata Pelajaran"
-                      html_for="subject"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      error1={errors.subject}
-                    />
+                   <FormControl id="subject" variant="outlined" color="primary" fullWidth>
+                    <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
+                    <Select
+                    value={this.state.subject}
+                    onChange={(event) => {this.onChange(event, "subject")}}
+                    >
+                      {subjectOptions.map((subject) => (
+                        <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
                   </Grid>
 
                 <Grid item className={classes.gridItem}>
                 <FormControl variant="outlined" fullWidth>
                 <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
-        <Select
-          id="class_assigned"
-          multiple
-          value={class_assigned}
-          onChange={(event) => {this.onChange(event, "kelas")}}
-          renderValue={(selected) => (
-            <div className={classes.chips}>
-              {selected.map((kelas) => (
-                <Chip key={kelas} label={kelas.name} className={classes.chip} />
-              ))}
-            </div>
+                <Select
+                  id="class_assigned"
+                  multiple
+                  value={class_assigned}
+                  onChange={(event) => {this.onChange(event, "kelas")}}
+                  renderValue={(selected) => (
+                    <div className={classes.chips}>
+                      {selected.map((kelas) => {
+                        console.log(selected)
+                        console.log(kelas, class_assigned)
+                        return (
+                        <Chip key={kelas} label={kelas.name} className={classes.chip} />
+                      )}
+                      )}
+                    </div>
 
-          )}
-          MenuProps={MenuProps}
-        >
-          {options.map((kelas) => (
-            <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
-          ))}
-        </Select>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {options.map((kelas) => {
+                    console.log(kelas, class_assigned)
+                    return (
+                    <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
+                  )})}
+                </Select>
       </FormControl>
       </Grid>
       <Grid item className={classes.gridItem}>
@@ -317,15 +314,17 @@ CreateTask.propTypes = {
     createTask: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     viewClass: PropTypes.func.isRequired,
+    getAllSubjects: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection
 })
 
 export default connect(
-  mapStateToProps, { createTask, viewClass }
+  mapStateToProps, { createTask, viewClass, getAllSubjects }
 ) (withStyles(styles )(CreateTask))

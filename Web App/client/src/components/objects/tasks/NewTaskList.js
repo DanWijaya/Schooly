@@ -14,7 +14,8 @@ import { Link } from "react-router-dom";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CancelIcon from "@material-ui/icons/Cancel";
 import 'moment/locale/id'
-
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
   return { _id, tasktitle, subject, class_assigned, deadline, action };
@@ -127,6 +128,9 @@ const useToolbarStyles = makeStyles((theme) => ({
   title: {
     flex: "1 1 100%",
   },
+  addIcon: {
+
+  }
 }));
 
 const TaskListToolbar = (props) => {
@@ -160,6 +164,13 @@ const TaskListToolbar = (props) => {
       ) : (
         null
       )}
+      <Link to="/createtask">
+        <LightToolTip title="Buat tugas">
+        <IconButton>
+          <PostAddIcon/>
+        </IconButton>
+        </LightToolTip>
+      </Link>
     </Toolbar>
   );
 };
@@ -217,17 +228,18 @@ function NewTaskList(props) {
         data.class_assigned,
         data.deadline,
         [
-        <IconButton 
-        onClick={(e) => { e.stopPropagation()
-          window.location.href =`./task/${data._id}`}}>
-        <EditIcon style={{color: "#2196f3"}}/>
-      </IconButton>,
+          <Link to={`/task/${data._id}`}>
+        <IconButton onClick={(e)=> e.stopPropagation()}>
+        <EditIcon/>
+      </IconButton>
+      </Link>,
       <Tooltip title="Delete">
       <IconButton 
       onClick={(e) =>{
           handleOpenDeleteDialog(e, data._id, data.name)}}  >
         <DeleteIcon style={{color: "#B22222"}} />
       </IconButton>
+      
     </Tooltip>
         ]
       )
