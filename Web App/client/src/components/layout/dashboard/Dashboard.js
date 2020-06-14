@@ -11,14 +11,18 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 const styles = (theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "800px",
-    textAlign: "center",
+    maxWidth: "1000px",
   },
   paperTitle: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     height: "60px"
+  },
+  timePaper: {
+    height: "250px",
+    padding: "20px",
+    marginBottom: "60px",
   },
   notificationPaper: {
     marginBottom: "50px",
@@ -78,7 +82,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: new Date().toLocaleString("en-GB")
+      time: new Date()
     };
   }
 
@@ -95,7 +99,7 @@ class Dashboard extends Component {
 
   tick() {
     this.setState({
-      time: new Date().toLocaleString("en-GB")
+      time: new Date()
     });
   }
 
@@ -107,19 +111,21 @@ class Dashboard extends Component {
 
     return (
       <div className={classes.root}>
-        <Typography variant="h3">
-          <b>Selamat Datang, {user.name}</b>
-        </Typography>
-        <Typography variant="h4" style={{marginBottom: "40px"}}>
-          Sekarang tanggal {this.state.time}
-        </Typography>
-        <Typography variant="h5" style={{marginBottom: "60px"}}>
-          Apa yang ingin kamu lakukan hari ini?
-        </Typography>
+        <Paper variant="outlined" className={classes.timePaper}>
+          <Typography variant="h3">
+            <b>Selamat Datang, {user.name}</b>
+          </Typography>
+          <Typography variant="h4" style={{marginBottom: "40px"}}>
+            Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}
+          </Typography>
+          <Typography variant="h5">
+            Apa yang ingin kamu lakukan hari ini?
+          </Typography>
+        </Paper>
         <Paper className={classes.notificationPaper}>
           <div className={classes.paperTitle}>
             <Typography variant="h5">
-              Notifikasi Terkini Anda
+              Notifikasi Terkini
             </Typography>
             <LightTooltip title="Semua Notifikasi" placement="right">
               <IconButton href="/notifikasi">
@@ -148,7 +154,7 @@ class Dashboard extends Component {
         <Paper className={classes.workPaper}>
           <div className={classes.paperTitle}>
             <Typography variant="h5">
-              Pekerjaan Anda
+              Daftar Pekerjaan
             </Typography>
             <div style={{display: "flex", justifyContent: "flex-end"}}>
             <LightTooltip title="Semua Pekerjaan" placement="right">
