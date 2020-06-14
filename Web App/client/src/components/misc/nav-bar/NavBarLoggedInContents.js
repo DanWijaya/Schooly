@@ -147,8 +147,10 @@ function NavBarLoggedInContents(props) {
   )
 
   if(isMobileView){
+    console.log(isMobileView)
       return renderMobileMenu
   } else {
+    console.log(isMobileView)
       return renderDesktopMenu
   }
 }

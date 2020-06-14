@@ -9,6 +9,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import moment from 'moment';
 import CloseIcon from "@material-ui/icons/Close";
 import { viewTask, deleteTask } from '../../../actions/TaskActions';
+import { viewOneClass } from "../../../actions/ClassActions"
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
@@ -473,6 +474,7 @@ NewTaskList.propTypes = {
   deleteTask: PropTypes.func.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  viewOneClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 }
 
@@ -484,5 +486,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  {viewTask, deleteTask}
+  {viewTask, deleteTask, viewOneClass}
 )(NewTaskList);

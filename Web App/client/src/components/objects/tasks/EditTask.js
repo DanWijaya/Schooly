@@ -7,7 +7,7 @@ import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Se
 import { viewClass } from "../../../actions/ClassActions";
 import { viewOneTask, updateTask } from "../../../actions/TaskActions";
 import { Multiselect } from "multiselect-react-dropdown";
-
+import { getAllSubjects} from "../../../actions/SubjectActions"
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -68,16 +68,14 @@ class EditTask extends Component {
         this.state = {
             name: "",
             subject: "",
-            deadline: moment(),
+            deadline: new Date(),
             tasksCollection: [],
-            class_assigned: [],
+            class_assigned: null,
+            classChanged: false,
             focused: false,
             description: "",
             errors: {},
         }
-        // this.nameInput = React.createRef();
-        // this.subjectInput = React.createRef();
-
         const { id } = this.props.match.params;
         console.log(id)
         this.props.viewOneTask(id)
@@ -86,13 +84,17 @@ class EditTask extends Component {
     onChange = (e, otherfield) => {
       if(otherfield == "kelas"){
         console.log(this.state.class_assigned, e.target.value)
-        this.setState({ class_assigned: e.target.value})
+        this.setState({ class_assigned: e.target.value, classChanged: true})
       }
       else if(otherfield == "deadline"){
         this.setState({ deadline: e}) // e is the date value itself.
       }
       else if(otherfield == "description"){
         this.setState({ description : e.target.value})
+      }
+      else if(otherfield == "subject"){
+        console.log(e.target.value)
+        this.setState({subject: e.target.value })
       }
       else
         this.setState({ [e.target.id]: e.target.value});
@@ -104,13 +106,14 @@ class EditTask extends Component {
       }
     componentDidMount() {
         this.props.viewClass()
+        this.props.getAllSubjects()
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         console.log("Tasks props is received");
         const { name } = this.state;
         // console.log(nextProps.tasksCollection.deadline);
-        console.log(nextProps.tasksCollection);
+        console.log(nextProps.tasksCollection.class_assigned);
         if(!name){
             this.setState({
                 name: nextProps.tasksCollection.name,
@@ -122,27 +125,40 @@ class EditTask extends Component {
         }
     }
 
-    onSelect = (selectedList, selectedItem) => {
-        console.log(this.state.class_assigned)
-        this.setState({ class_assigned: selectedList})
-      }
-
-      onRemove = (selectedList, selectedItem) => {
-        this.setState({ class_assigned: selectedList})
-      }
-
-    onSubmit = (e) => {
+    onSubmit = (e, classesOptions) => {
         e.preventDefault();
 
         const { id } = this.props.match.params;
+        const { class_assigned, classChanged} = this.state;
+
+        let classesSelected = [];
+        console.log(class_assigned)
+
+        class_assigned.map((id) => {
+          for( var i = 0; i < classesOptions.length; i++){
+            console.log(classesOptions[i]._id, id, classesOptions[i]._id == id)
+          if(classesOptions[i]._id == id){
+            console.log("SAME")
+            classesSelected.push(classesOptions[i])
+            break;
+          }
+        }
+        })
+
         const taskObject = {
             name: this.state.name,
             deadline: this.state.deadline,
             subject: this.state.subject,
-            class_assigned: this.state.class_assigned,
+            // class_assigned: classesSelected,
+            description: this.state.description,
             errors: {}
         }
+        if(classChanged)
+          taskObject.class_assigned = classesSelected // when the classes is changed
+        else
+          taskObject.class_assigned = class_assigned // when it has no change
 
+        console.log(taskObject)
         this.props.updateTask(taskObject, id, this.props.history);
     }
 
@@ -150,13 +166,16 @@ class EditTask extends Component {
     //     this.nameInput.current.click();
     //     this.subjectInput.current.click()
     // }
+
     render() {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
-        const {classes, classesCollection} = this.props;
+        const {classes, classesCollection, subjectsCollection} = this.props;
         const { user } = this.props.auth;
 
         console.log(classesCollection)
+        console.log(this.state.class_assigned)
+        let classIds = []
         const ITEM_HEIGHT = 48;
         const ITEM_PADDING_TOP = 8;
         const MenuProps = {
@@ -168,11 +187,29 @@ class EditTask extends Component {
           },
         };
 
-        var options = []
-        if(Object.keys(classesCollection).length !== 0) {
-          options = classesCollection
+        var classesOptions = []
+        var selectedClasses = []
+        var subjectOptions = []
+        console.log(classesCollection.all_classes)
+        if(classesCollection.all_classes.length !== 0) {
+          classesOptions = classesCollection.all_classes
+          selectedClasses = classesCollection.selectedClasses
         }
 
+        if(Object.keys(subjectsCollection.all_subjects).length !== 0){
+          subjectOptions = subjectsCollection.all_subjects
+        }
+        console.log(this.state.class_assigned)
+        if(this.state.class_assigned != null) // when firstly received.
+          this.state.class_assigned.map((kelas) => {
+            if(kelas._id != undefined)
+              classIds.push(kelas._id)
+            else 
+              classIds.push(kelas)
+          }
+        )
+
+        console.log(classIds)
         if(user.role == "Teacher" || user.role=="Admin"){
         return(
             <div className={classes.root}>
@@ -181,7 +218,7 @@ class EditTask extends Component {
                 <Typography variant="h5" className={classes.formTitle}>
                   <b>Sunting Tugas</b>
                 </Typography>
-                <form noValidate onSubmit={this.onSubmit}>
+                <form noValidate onSubmit={(e) => {this.onSubmit(e, classesOptions)}}>
                   <Grid
                   container
                   direction="column"
@@ -207,48 +244,51 @@ class EditTask extends Component {
     
     
                       <Grid item className={classes.gridItem}>
-                      <OutlinedTextField
-                          on_change={(e) => {this.onChange(e)}}
-                          value={this.state.subject}
-                          error={errors.subject}
-                          id="subject"
-                          type="text"
-                          className={classnames("", {
-                            invalid: errors.name
-                          })}
-                          labelname="Mata Pelajaran"
-                          html_for="subject"
-                          label_classname={classes.inputLabel}
-                          span_classname={classes.errorInfo}
-                          error1={errors.subject}
-                        />
+                      <FormControl id="subject" variant="outlined" color="primary" fullWidth>
+                    <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
+                    <Select
+                    value={this.state.subject}
+                    onChange={(event) => {this.onChange(event, "subject")}}
+                    >
+                      {subjectOptions.map((subject) => (
+                        <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                      ))} 
+                  </Select>
+                </FormControl>
                       </Grid>
     
                     <Grid item className={classes.gridItem}>
                     <FormControl variant="outlined" fullWidth>
                     <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
-                    {this.state.class_assigned == undefined ? null : 
                         <Select
                         id="class_assigned"
                         multiple
-                        value={this.state.class_assigned}
+                        value={classIds}
                         onChange={(event) => {this.onChange(event, "kelas")}}
                         renderValue={(selected) => {
-                          console.log(selected)
+                          
                           return (
                             <div className={classes.chips}>
-                            {selected.map((kelas) => (
-                                <Chip key={kelas} label={kelas.name} className={classes.chip} />
-                            ))}
+                            {selected.map((id) => {
+                              let name
+                              for (var i in classesOptions){ // i is the index
+                                if(classesOptions[i]._id === id){
+                                  name = classesOptions[i].name
+                                  break;
+                                }
+                              }
+                              return (
+                                <Chip key={id} label={name} className={classes.chip} />
+                            ) 
+                          })}
                             </div>
                         )}}
                         MenuProps={MenuProps}
                         >
-                    {options.map((kelas) => (
-                        <MenuItem value={kelas} selected>{kelas.name}</MenuItem>
+                    {classesOptions.map((kelas) => (
+                        <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
                     ))}
                     </Select>
-                  }
             </FormControl>
           </Grid>
 
@@ -425,7 +465,10 @@ EditTask.propTypes = {
     errors: PropTypes.object.isRequired,
     viewOneTask : PropTypes.func.isRequired,
     updateTask: PropTypes.func.isRequired,
+    getAllSubjects: PropTypes.func.isRequired,
     tasksCollection: PropTypes.object.isRequired,
+    classesCollection: PropTypes.object.isRequired,
+    subjectsCollection: PropTypes.object.isRequired,
     viewClass: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 };
@@ -434,12 +477,13 @@ const mapStateToProps = (state) => ({
     errors: state.errors,
     auth: state.auth,
     tasksCollection: state.tasksCollection,
-    classesCollection: state.classesCollection
+    classesCollection: state.classesCollection,
+    subjectsCollection: state.subjectsCollection
     // name: state.name,
     // subject: state.subject,
     // deadline: state.deadline
 })
 
 export default connect(
-    mapStateToProps, { viewOneTask, updateTask, viewClass}
+    mapStateToProps, { viewOneTask, updateTask, viewClass, getAllSubjects }
 ) (withStyles(styles)(EditTask))

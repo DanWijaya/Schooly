@@ -10,11 +10,13 @@ export const GET_ONE_USER = "GET_ONE_USER";
 export const GET_CLASSES = "GET_CLASSES";
 export const ADDED_CLASSES = "ADDED_CLASSES";
 export const CLASSES_LOADING = "CLASSES_LOADING";
+export const GET_ALL_CLASSES = "GET_ALL_CLASSES";
 
 // TASK ACTION TYPES
 export const GET_TASKS = "GET_TASKS";
 export const ADD_TASKS = "ADD_TASKS";
 export const TASKS_LOADING = "TASKS_LOADING";
+export const TASKS = "GET_ALL_TASKS";
 
 //TASK_FILES ACTION TYPES
 export const GET_FILE_BY_USER = "GET_FILE_BY_USER";

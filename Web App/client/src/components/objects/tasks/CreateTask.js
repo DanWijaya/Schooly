@@ -134,7 +134,7 @@ class CreateTask extends Component {
         var subjectOptions = []
 
         if(Object.keys(classesCollection).length !== 0) {
-          options = classesCollection
+          options = classesCollection.all_classes
         }
 
         if(Object.keys(subjectsCollection).length !== 0){

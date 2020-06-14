@@ -23,7 +23,7 @@ import Profile from "./components/layout/profile/Profile";
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
 import NavBar from "./components/misc/nav-bar/NavBar";
-import Footer from "./components/misc/footer/Footer";
+import Footer, { footerHeight } from "./components/misc/footer/Footer";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass"
 import EditClass from "./components/objects/classes/EditClass";
@@ -65,6 +65,7 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
+
   state = {
     sideDrawerOpen: false,
     loggedIn: false,
@@ -82,15 +83,18 @@ class App extends Component {
 
   render() {
 
+    const { classes} = this.props;
+
     console.log(drawerWidth)
     // let sideDrawer;
+    console.log(this.state.sideDrawerOpen)
     console.log(this.state.sideDrawerOpen)
     let translateXValue
 
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
     } else{
-      translateXValue = "0px"
+      translateXValue = 0
     }
 
     return (
@@ -99,7 +103,7 @@ class App extends Component {
           <ThemeProvider theme={globalStyles}>
             <Router>
               <NavBar callbackFromParent={(data) => this.myCallback(data)} />
-              <div style={{marginTop: "20px", marginLeft: `${translateXValue}`}}>
+              <div style={{marginTop: "20px", marginLeft: `${translateXValue}px`}}>
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/daftar" component={Register} />
                 <Route exact path="/masuk" component={Login} />
@@ -130,9 +134,12 @@ class App extends Component {
                   <PrivateRoute exact path="/classlist" component={ClassList} /> {/*prototype*/}
                   <PrivateRoute exact path="/newclasslist" component={NewClassList} /> {/*prototype*/}
                 </Switch>
+                <Footer/>
               </div>
-              <Footer />
             </Router>
+            <div>
+                
+                </div>
           </ThemeProvider>
         </Provider>
       </div>

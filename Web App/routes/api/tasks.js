@@ -116,6 +116,7 @@ router.post("/update/:id", (req, res) => {
             taskData.subject = req.body.subject;
             taskData.class_assigned = req.body.class_assigned;
             taskData.description = req.body.description;
+            taskData.deadline = req.body.deadline;
             // taskData.submitted = req.body.submitted;
         
             taskData

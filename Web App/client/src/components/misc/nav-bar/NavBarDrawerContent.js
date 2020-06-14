@@ -107,15 +107,14 @@ function NavBarDrawerContent(props) {
   const theme = useTheme();
 
   const { desktopOpen, mobileOpen, handleDrawerMobile, userLoggedIn, window } = props
-  const container = window !== undefined ? () => window().document.body : undefined;
   const {user} = props.auth;
 
   if(userLoggedIn !== undefined) {
     return (
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">
+          {/* Untuk mobile punya, temporary */}
           <Drawer
-            container={container}
             variant="temporary"
             anchor={theme.direction === "rtl" ? "right" : "left"}
             open={mobileOpen}
@@ -130,7 +129,8 @@ function NavBarDrawerContent(props) {
             <DrawerContent role={user.role}/>
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation="css"> 
+        {/* Mini Variant */}
           <Drawer
             variant="permanent"
             className={clsx(classes.drawerDesktop, {

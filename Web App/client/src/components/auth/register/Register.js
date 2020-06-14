@@ -138,11 +138,13 @@ class Register extends Component {
     const { classes, classesCollection, subjectsCollection } = this.props;
     const { errors } = this.state;
 
-    var options = []
+    var classesOptions = []
+    // var selectedClasses = []
     var subjectOptions = []
 
     if(Object.keys(classesCollection).length !== 0){
-      options = classesCollection
+      classesOptions = classesCollection.all_classes
+      // selectedClasses = classesCollection.selectedClasses
     }
 
     if(Object.keys(subjectsCollection).length !== 0){
@@ -259,7 +261,7 @@ class Register extends Component {
                     value={this.state.kelas._id}
                     onChange={(event) => {this.onChange(event, "kelas")}}
                     >
-                      {options.map((kelas) => (
+                      {classesOptions.map((kelas) => (
                         <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                       ))}
                   </Select>

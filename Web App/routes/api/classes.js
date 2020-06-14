@@ -96,7 +96,6 @@ router.post("/update/:id", (req,res) => {
         classData.walikelas = req.body.walikelas;
         classData.nihil = req.body.nihil;
         classData.ukuran = req.body.ukuran;
-        console.log(req.body.walikelas)
 
         // Pipeline on how to create a Async functions to be Synchronous function call
         //Step 1: declare promise

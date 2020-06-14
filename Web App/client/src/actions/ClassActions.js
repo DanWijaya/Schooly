@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_CLASSES } from "./Types";
+import { GET_ERRORS, GET_ALL_CLASSES, GET_CLASSES } from "./Types";
 
 // Add Class
 export const createClass = (classData, history) => dispatch => {
@@ -26,7 +26,7 @@ export const viewClass = () => dispatch => {
     .then(res => {
         console.log("Data should be here")
         dispatch({
-            type: GET_CLASSES,
+            type: GET_ALL_CLASSES,
             payload: res.data
         })
     })

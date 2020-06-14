@@ -9,7 +9,7 @@ import NavBarDrawerContent from "./NavBarDrawerContent";
 import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
 import { AppBar, Button, CssBaseline, Grid, IconButton, Link, Toolbar, useMediaQuery } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import HelpIcon from "@material-ui/icons/Help";
 
 export const drawerWidth = 220;
@@ -67,9 +67,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NavBar(props){
+  const theme = useTheme()
   const classes = useStyles();
   const { user } = props.auth;
   const isMobileView = useMediaQuery("(max-width:600px)");
+  // const isMobileView = useMediaQuery(theme.breakpoints.up('sm'));
 
   //Drawer at Mobile View Hooks
   const [mobileOpen, setMobileOpen] = React.useState(false);
