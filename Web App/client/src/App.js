@@ -24,6 +24,7 @@ import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
 import NavBar from "./components/misc/nav-bar/NavBar";
 import Footer from "./components/misc/footer/Footer";
+import NotFound from "./components/misc/not-found/NotFound";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass"
 import EditClass from "./components/objects/classes/EditClass";
@@ -106,6 +107,7 @@ class App extends Component {
                 <Route exact path="/lupa-katasandi" component={LoginForgot} />
                 <Route exact path="/bantuan" component={Help} />
                 <Route exact path="/tester" component={Tester} /> {/*prototype*/}
+                <Route exact path="/error404" component={NotFound} /> {/*prototype*/}
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />

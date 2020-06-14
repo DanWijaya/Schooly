@@ -154,7 +154,7 @@ class Dashboard extends Component {
         <Paper className={classes.workPaper}>
           <div className={classes.paperTitle}>
             <Typography variant="h5">
-              Daftar Pekerjaan
+              Pekerjaan Mendatang
             </Typography>
             <div style={{display: "flex", justifyContent: "flex-end"}}>
             <LightTooltip title="Semua Pekerjaan" placement="right">
