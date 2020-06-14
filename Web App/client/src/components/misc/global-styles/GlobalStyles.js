@@ -7,8 +7,10 @@ export const globalStyles = createMuiTheme({
       light: "#64b5f6",
       dark: "#1976d2",
     },
-    action: {
-      hover: "#2196f3"
+    info: {
+      main: "#1976d2",
+      light: "#4791db",
+      dark: "#115293",
     },
   },
   overrides: {
