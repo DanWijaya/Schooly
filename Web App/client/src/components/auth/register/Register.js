@@ -95,6 +95,8 @@ class Register extends Component {
       this.setState({kelas: e.target.value});
     else if(otherfield == "role")
       this.setState({ role: e.target.value})
+    else if(otherfield == "subject")
+      this.setState({ subject_teached: e.target.value})
     else
       this.setState({ [e.target.id]: e.target.value });
   };
@@ -133,15 +135,21 @@ class Register extends Component {
     document.title="Daftar ke Schooly";
     document.body.style = 'background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat';
 
-    const { classes, classesCollection } = this.props;
+    const { classes, classesCollection, subjectsCollection } = this.props;
     const { errors } = this.state;
 
     var options = []
+    var subjectOptions = []
 
     if(Object.keys(classesCollection).length !== 0){
       options = classesCollection
     }
 
+    if(Object.keys(subjectsCollection).length !== 0){
+      subjectOptions = subjectsCollection.all_subjects
+    }
+    
+    console.log(subjectOptions)
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi"];
     }
@@ -260,20 +268,17 @@ class Register extends Component {
               :
               this.state.role === "Teacher" ?
                 <Grid item className={classes.inputField}>
-                  <OutlinedTextField
-                    on_change={this.onChange}
+                  <FormControl id="subject" variant="outlined" color="primary" fullWidth>
+                    <label id="subject">Mata Pelajaran</label>
+                    <Select
                     value={this.state.subject_teached}
-                    error={errors.subject_teached}
-                    id="subject_teached"
-                    type="text"
-                    className={classnames("", {
-                      invalid: errors.subject_teached
-                    })}
-                    html_for="subject_teached"
-                    labelname="Mata Pelajaran"
-                    span_classname={classes.errorInfo}
-                    error1={errors.subject_teached}
-                  />
+                    onChange={(event) => {this.onChange(event, "subject")}}
+                    >
+                      {subjectOptions.map((subject) => (
+                        <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
                 </Grid>
               : null
               }
@@ -435,6 +440,7 @@ Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
 };

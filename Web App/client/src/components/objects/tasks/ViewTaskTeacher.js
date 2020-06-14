@@ -118,8 +118,8 @@ function ViewTaskTeacher(props) {
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
 
-  if(tasksCollection.length === undefined) // it means it is empty
-    getTaskByUser(user.id)
+  // if(tasksCollection.length === undefined) // it means it is empty
+  //   getTaskByUser(user.id)
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)

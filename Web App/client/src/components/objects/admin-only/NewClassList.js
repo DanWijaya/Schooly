@@ -13,6 +13,8 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { viewClass, deleteClass } from '../../../actions/ClassActions';
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import PostAddIcon from '@material-ui/icons/PostAdd';
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 
@@ -142,16 +144,23 @@ const ClassListToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <LightToolTip title="Buat Kelas">
           <IconButton onClick={() =>{
             deleteClass(item[0])}}>
             <DeleteIcon />
           </IconButton>
 
-        </Tooltip>
+        </LightToolTip>
       ) : (
         null
       )}
+      <Link to="/createclass">
+      <LightToolTip title="Buat Kelas">
+        <IconButton>
+          <PostAddIcon/>
+        </IconButton>
+      </LightToolTip>
+      </Link>
     </Toolbar>
   );
 };
@@ -216,7 +225,7 @@ function NewClassList(props) {
             [<IconButton onClick={(e) => { e.stopPropagation()
                 window.location.href = `/editclass/${data._id}`}
             }>
-              <EditIcon style={{color: "#2196f3" }}/>
+              <EditIcon />
             </IconButton> , 
             <IconButton>
               <Tooltip title="Delete">

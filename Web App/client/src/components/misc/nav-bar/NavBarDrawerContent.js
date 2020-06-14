@@ -12,6 +12,8 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
+import { Link } from "react-router-dom"
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   drawerMobile: {
@@ -59,12 +61,14 @@ const useStyles = makeStyles((theme) => ({
 
 const generateList = (linkto, icon, itemText, isDisabled) => {
   return (
-    <ListItem button component="a" href={linkto} disabled={isDisabled}>
+    <Link to={linkto}>
+    <ListItem button  disabled={isDisabled}>
       <ListItemIcon>
         {icon}
       </ListItemIcon>
       <ListItemText primary={itemText} />
     </ListItem>
+    </Link>
   )
 }
 
@@ -104,6 +108,7 @@ function NavBarDrawerContent(props) {
 
   const { desktopOpen, mobileOpen, handleDrawerMobile, userLoggedIn, window } = props
   const container = window !== undefined ? () => window().document.body : undefined;
+  const {user} = props.auth;
 
   if(userLoggedIn !== undefined) {
     return (
@@ -122,7 +127,7 @@ function NavBarDrawerContent(props) {
               keepMounted: true,
             }}
           >
-            <DrawerContent />
+            <DrawerContent role={user.role}/>
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -153,4 +158,9 @@ function NavBarDrawerContent(props) {
   }
 }
 
-export default NavBarDrawerContent;
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+export default connect(
+  mapStateToProps) ( NavBarDrawerContent);

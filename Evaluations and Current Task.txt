@@ -30,8 +30,10 @@ Daniel:
 11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
 13. Perlu fix Edit Task yang MenuItemnya ndak muncul dibold pas dibuka. Anjeng
 14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. (DONE)
-- Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
+15. Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
 Schema Notif dan explore cara handlenya?
+16. Do auto complete field untuk subject punya
+17. Buat class pagenya munculin tasks, students, dll. 
 
 Page List On Work (Not completed/Not created yet):
 - All Task page (approx 5)
