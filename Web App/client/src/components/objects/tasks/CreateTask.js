@@ -5,6 +5,8 @@ import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
+import {getOneUser} from "../../../actions/AuthActions";
+
 import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
 // import { Multiselect } from "multiselect-react-dropdown";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
@@ -315,6 +317,7 @@ CreateTask.propTypes = {
     errors: PropTypes.object.isRequired,
     viewClass: PropTypes.func.isRequired,
     getAllSubjects: PropTypes.func.isRequired,
+    getOneUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 };
 
@@ -326,5 +329,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createTask, viewClass, getAllSubjects }
+  mapStateToProps, { createTask, viewClass, getAllSubjects, getOneUser }
 ) (withStyles(styles )(CreateTask))

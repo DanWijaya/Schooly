@@ -34,6 +34,7 @@ Daniel:
 Schema Notif dan explore cara handlenya?
 16. Do auto complete field untuk subject punya
 17. Buat class pagenya munculin tasks, students, dll. 
+18. Masih perlu perbaiki viewTask untuk si student (tablenya agak aneh)
 
 Page List On Work (Not completed/Not created yet):
 - All Task page (approx 5)

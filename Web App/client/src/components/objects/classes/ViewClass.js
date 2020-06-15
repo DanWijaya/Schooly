@@ -2,7 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { viewOneClass } from "../../../actions/ClassActions"
-import { getStudentsByClass } from "../../../actions/AuthActions"
+import { getStudentsByClass, getTeachers } from "../../../actions/AuthActions"
+import { getAllSubjects } from "../../../actions/SubjectActions"
+import { viewTask } from "../../../actions/TaskActions"
+import { getTaskFilesByUser } from "../../../actions/UploadActions"
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
@@ -12,11 +15,13 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-
+import moment from 'moment';
+import 'moment/locale/id'
+import { Link } from "react-router-dom";
 const useStyles = makeStyles({
   root: {
     margin: "auto",
-    maxWidth: "750px",
+    maxWidth: "1000px",
   },
   categoryTitle: {
     color: "#2196f3"
@@ -68,6 +73,7 @@ function TabIndex(index) {
 
 function WorkListItem(props) {
   return (
+    // <Link to={props.work_link}>
     <ListItem button component="a" href={props.work_link}>
       <ListItemAvatar>
         <Avatar>
@@ -82,12 +88,18 @@ function WorkListItem(props) {
         }
         secondary={props.work_sender}
       />
-      <ListItemSecondaryAction>
-        <Typography>
-          {props.work_status}
-        </Typography>
+      <ListItemSecondaryAction style={{textAlign: 'right'}}>
+      <ListItemText
+        primary={
+          <Typography variant="h6" style={{color: "#B22222"}}>
+            Batas waktu: {props.work_deadline}
+          </Typography>
+        }
+        secondary={props.work_status}
+      />
       </ListItemSecondaryAction>
     </ListItem>
+    // </Link>
   )
 }
 
@@ -117,19 +129,39 @@ function PersonListItem(props) {
 
 function ViewClass(props) {
   const classes = useStyles();
-  const { viewOneClass, getStudentsByClass} = props;
+  const { viewOneClass, getStudentsByClass, getAllSubjects,
+     tasksCollection, getTeachers, getTaskFilesByUser} = props;
+  const {all_subjects} = props.subjectsCollection
   const { selectedClasses} = props.classesCollection
-  const {all_students} = props.auth;
+  const {all_students, all_teachers, user} = props.auth;
+  const classId = props.match.params.id;
 
-  if(selectedClasses.length == 0){
-    viewOneClass(props.match.params.id)
-    console.log(selectedClasses)
+  let tasksByClass = []
+
+  // All actions to retrive datas from Database... 
+  if(tasksCollection.length == undefined){
+    props.viewTask()
+  }else{
+    tasksCollection.map((task) => {
+      let class_assigned = task.class_assigned
+      for (var i = 0; i < class_assigned.length; i++){
+        if(class_assigned[i]._id == classId)
+          tasksByClass.push(task)
+      }
+    })
   }
-
-  if(all_students.length == 0){
+  if(selectedClasses.length == 0)
+    viewOneClass(classId)
+  if(all_subjects.length == 0)
+    getAllSubjects()
+  if(all_students.length == 0)
     getStudentsByClass(props.match.params.id)
-  }
-  console.log(all_students)
+  if(all_teachers.length == 0)
+    getTeachers()
+////
+
+  console.log(tasksByClass)
+  
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -157,47 +189,52 @@ function ViewClass(props) {
       <TabPanel value={value} index={0}>
         <Paper className={classes.paperBox} style={{marginBottom: "40px"}}>
           <List>
+            {tasksByClass.map((task) => {
+              let workStatus = "Belum Dikumpulkan"
+              for(var i =0; i < user.tugas.length; i++){
+                console.log(user.tugas[i].for_task_object, task._id, user.tugas[i].for_task_object == task._id)
+                if(user.tugas[i].for_task_object == task._id){
+                  workStatus = "Telah Dikumpulkan"
+                  break;
+                }
+              }
+            return (
             <WorkListItem
-              work_title="Tugas Fisika"
+              work_title={task.name}
               work_category_avatar=""
-              work_sender="Mr Jenggot"
-              work_status="Telah Dikumpulkan"
-              work_link="/test"
+              work_sender={`Mata Pelajaran : ${task.subject}`}
+              work_status={workStatus}
+              work_deadline={moment(task.deadline).locale("id").format('DD-MM-YYYY')}
+              work_link={`/new-task/${task._id}`}
             />
-            <WorkListItem
-              work_title="Tugas Biologi"
-              work_category_avatar=""
-              work_sender="Mr Jenggot"
-              work_status="Belum Dikumpulkan"
-              work_link="/test"
-            />
+            )})
+          }
           </List>
         </Paper>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h5" className={classes.categoryTitle}>
-              Fisika
-            </Typography>
-          </ExpansionPanelSummary>
-          <Divider />
+      {all_subjects.length == 0 ? null : 
+            all_subjects.map((subject) => (
+              <ExpansionPanel>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h5" className={classes.categoryTitle}>
+                  {subject.name}
+                </Typography>
+                </ExpansionPanelSummary>
+
+                <Divider />
           <List className={classes.expansionPanelList}>
-            <WorkListItem
+          <Typography style={{textAlign: 'center'}} variant="h4" gutterBottom>
+            Belum ada tugas yang tersedia
+          </Typography>
+            {/* <WorkListItem
               work_title="Tugas Fisika"
               work_category_avatar=""
               work_sender="Mr Jenggot"
               work_status="Telah Dikumpulkan"
               work_link="/test"
-            />
-            <WorkListItem
-              work_title="Tugas Biologi"
-              work_category_avatar=""
-              work_sender="Mr Jenggot"
-              work_status="Belum Dikumpulkan"
-              work_link="/test"
-            />
+            /> */}
           </List>
           <div className={classes.lookAllButtonContainer}>
             <Button endIcon={<ChevronRightIcon />} href="/viewsubject">
@@ -205,6 +242,7 @@ function ViewClass(props) {
             </Button>
           </div>
         </ExpansionPanel>
+        ))}
       </TabPanel>
 
       <TabPanel value={value} index={2}>
@@ -248,16 +286,27 @@ function ViewClass(props) {
 ViewClass.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getStudentsByClass: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  filesCollection: PropTypes.object.isRequired,
+
   viewOneClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  getAllSubjects: PropTypes.func.isRequired,
+  viewTask: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
+  getTaskFilesByUser: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  getStudentsByClass: PropTypes.func.isRequired,
-  classesCollection: state.classesCollection
+  classesCollection: state.classesCollection, 
+  subjectsCollection: state.subjectsCollection,
+  tasksCollection: state.tasksCollection,
+  filesCollection: state.filesCollection
 });
 
 export default connect(
-  mapStateToProps, {viewOneClass, getStudentsByClass} 
+  mapStateToProps, {viewOneClass, getStudentsByClass, 
+    getAllSubjects, viewTask, getTeachers, getTaskFilesByUser} 
 ) (ViewClass);

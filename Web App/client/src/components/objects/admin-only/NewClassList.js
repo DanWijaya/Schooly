@@ -210,6 +210,7 @@ function NewClassList(props) {
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
   const { viewClass, deleteClass, classesCollection} = props;
+  const { user } = props.auth;
 
   const retrieveClasses = () => {
     if(classesCollection.all_classes.length == 0){
@@ -377,6 +378,15 @@ function NewClassList(props) {
         </Dialog>
       )
     }
+  if(user.role == "Student"){
+    return (
+      <div className={classes.root}>
+        <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
+          <b>Anda tidak punya izin untuk akses halaman ini</b>
+        </Typography>
+      </div>
+    )
+  }
   return (
     <div className={classes.root}>
       {DeleteDialog()}
@@ -438,10 +448,12 @@ NewClassList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
+  auth: state.auth,
   classesCollection: state.classesCollection,
 })
 
