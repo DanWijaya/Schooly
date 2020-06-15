@@ -94,25 +94,25 @@ class EditClass extends Component {
     var next_sekretaris = {}
     var next_walikelas = {}
 
-    if(nextProps.classesCollection.ketua_kelas)
-      next_ketua_kelas = nextProps.classesCollection.ketua_kelas._id
+    //classesCollection.selectedClasses itu kelasnya, kalau semua kelas .all_classes
+    if(nextProps.classesCollection.selectedClasses.ketua_kelas)
+      next_ketua_kelas = nextProps.classesCollection.selectedClasses.ketua_kelas._id
 
-    if(nextProps.classesCollection.sekretaris){
-      next_sekretaris = nextProps.classesCollection.sekretaris._id
-    }
+    if(nextProps.classesCollection.selectedClasses.sekretaris)
+      next_sekretaris = nextProps.classesCollection.selectedClasses.sekretaris._id
 
-    if(nextProps.classesCollection.bendahara)
-      next_bendahara = nextProps.classesCollection.bendahara._id
+    if(nextProps.classesCollection.selectedClasses.bendahara)
+      next_bendahara = nextProps.classesCollection.selectedClasses.bendahara._id
 
-    if(nextProps.classesCollection.walikelas)
-      next_walikelas = nextProps.classesCollection.walikelas._id
+    if(nextProps.classesCollection.selectedClasses.walikelas)
+      next_walikelas = nextProps.classesCollection.selectedClasses.walikelas._id
     
     if(!name){
       this.setState({
-        name: nextProps.classesCollection.name,
-        nihil: nextProps.classesCollection.nihil,
+        name: nextProps.classesCollection.selectedClasses.name,
+        nihil: nextProps.classesCollection.selectedClasses.nihil,
         walikelas: next_walikelas,
-        ukuran: nextProps.classesCollection.ukuran,
+        ukuran: nextProps.classesCollection.selectedClasses.ukuran,
         ketua_kelas: next_ketua_kelas,
         sekretaris: next_sekretaris,
         bendahara: next_bendahara
@@ -146,7 +146,7 @@ class EditClass extends Component {
   render() {
     document.title = "Schooly | Sunting Kelas"
     const { errors } = this.state;
-    const { classes } = this.props;
+    const { classes, classesCollection } = this.props;
     const { user } = this.props.auth;
     const { all_teachers} = this.props.auth;
     const { all_students } = this.props.auth;
@@ -154,6 +154,7 @@ class EditClass extends Component {
     var teacher_options = all_teachers
     var student_options = all_students
 
+    console.log(classesCollection.selectedClasses.walikelas)
     const returnId = (user_id, arr) => {
       if(arr == "student"){
         for (var i = 0; i < student_options.length; i++) {

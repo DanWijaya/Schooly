@@ -117,11 +117,13 @@ function PersonListItem(props) {
 
 function ViewClass(props) {
   const classes = useStyles();
-  const { viewOneClass, classesCollection, getStudentsByClass} = props;
+  const { viewOneClass, getStudentsByClass} = props;
+  const { selectedClasses} = props.classesCollection
   const {all_students} = props.auth;
 
-  if(classesCollection.name == undefined){
+  if(selectedClasses.length == 0){
     viewOneClass(props.match.params.id)
+    console.log(selectedClasses)
   }
 
   if(all_students.length == 0){
@@ -137,7 +139,7 @@ function ViewClass(props) {
     <div className={classes.root}>
       <Paper>
         <Typography variant="h3" style={{textAlign: "center"}} gutterBottom>
-          Kelas {classesCollection.name}
+          Kelas {selectedClasses.name}
         </Typography>
         <Tabs
           value={value}
@@ -213,11 +215,11 @@ function ViewClass(props) {
           <Divider style={{backgroundColor: "#2196f3"}} />
           <List className={classes.listContainer}>
             <PersonListItem
-              person_avatar={classesCollection.walikelas ? 
-                `/api/uploads/image/${classesCollection.walikelas.avatar}` : null}
+              person_avatar={selectedClasses.walikelas ? 
+                `/api/uploads/image/${selectedClasses.walikelas.avatar}` : null}
               person_profile_link="/test"
-              person_name={classesCollection.walikelas ? classesCollection.walikelas.name : null}
-              person_role={classesCollection.walikelas ? classesCollection.walikelas.subject_teached : null}
+              person_name={selectedClasses.walikelas ? selectedClasses.walikelas.name : null}
+              person_role={selectedClasses.walikelas ? selectedClasses.walikelas.subject_teached : null}
             />
           </List>
         </Paper>

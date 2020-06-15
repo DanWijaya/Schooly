@@ -212,11 +212,11 @@ function NewClassList(props) {
   const { viewClass, deleteClass, classesCollection} = props;
 
   const retrieveClasses = () => {
-    if(classesCollection.length == undefined){
+    if(classesCollection.all_classes.length == 0){
       viewClass();
     } else {
       rows = []
-      classesCollection.map((data) => {
+      classesCollection.all_classes.map((data) => {
         rows.push(
           createData(data._id, data.name,
             data.walikelas.name,

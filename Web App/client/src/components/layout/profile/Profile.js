@@ -121,7 +121,7 @@ function Profile(props) {
 
   document.title=`Schooly | ${user.name}`
 
-  if(classesCollection.name == undefined){
+  if(classesCollection.selectedClasses.name == undefined){
     viewOneClass(user.kelas)
   }
   console.log(classesCollection)
@@ -201,8 +201,8 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class {classesCollection.name == undefined ?
-             null : classesCollection.name}
+            Class {classesCollection.selectedClasses.name == undefined ?
+             null : classesCollection.selectedClasses.name}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>

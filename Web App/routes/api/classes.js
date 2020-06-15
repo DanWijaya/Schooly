@@ -78,7 +78,7 @@ router.delete("/delete/:id", (req, res) => {
 
 router.get("/viewOneClass/:id", (req, res) => {
     let id = req.params.id;
-    console.log(id);
+    console.log("viewOneClass is runned", id);
     Class.findById(id, (err, classData) => {
         res.json(classData)
     });

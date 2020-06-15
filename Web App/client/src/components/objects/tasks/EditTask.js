@@ -170,10 +170,10 @@ class EditTask extends Component {
     render() {
         document.title = "Schooly - Edit Task"
         const { errors } = this.state;
-        const {classes, classesCollection, subjectsCollection} = this.props;
+        const {classes, subjectsCollection} = this.props;
+        const { all_classes, selectedClasses} = this.props.classesCollection;
         const { user } = this.props.auth;
 
-        console.log(classesCollection)
         console.log(this.state.class_assigned)
         let classIds = []
         const ITEM_HEIGHT = 48;
@@ -188,12 +188,11 @@ class EditTask extends Component {
         };
 
         var classesOptions = []
-        var selectedClasses = []
+        var selectedClassOptions = []
         var subjectOptions = []
-        console.log(classesCollection.all_classes)
-        if(classesCollection.all_classes.length !== 0) {
-          classesOptions = classesCollection.all_classes
-          selectedClasses = classesCollection.selectedClasses
+        if(all_classes.length !== 0) {
+          classesOptions = all_classes
+          selectedClassOptions = selectedClasses
         }
 
         if(Object.keys(subjectsCollection.all_subjects).length !== 0){

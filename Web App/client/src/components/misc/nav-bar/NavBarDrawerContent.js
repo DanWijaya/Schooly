@@ -1,5 +1,6 @@
 import React from "react"
 import clsx from "clsx";
+import PropTypes from "prop-types";
 import { drawerWidth } from "./NavBar.js";
 import { Avatar, Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -74,10 +75,20 @@ const generateList = (linkto, icon, itemText, isDisabled) => {
 
 function DrawerContent(props) {
   const classes = useStyles();
+  const { user } = props;
+
+  let directedTo; // this is for the page that is directed when clicking the classIcon in NavBarContents
+
+  if(user != undefined){
+    if(user.role == "Student")
+      directedTo = `/viewclass/${user.kelas}`
+    else
+      directedTo = "/newtasklist"
+  }
 
   let ListItemContents = [
     ["/dashboard", <DashboardIcon className={classes.drawerListItemIcons} />, "Beranda", false],
-    ["/newclasslist",<FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", false],
+    [directedTo,<FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", false],
     // ["/announcements",<AnnouncementIcon className={classes.drawerListItemIcons} />,"Pengumuman", true],
     ["/newtasklist", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", false],
     // ["/quiz", <GrNotes className={classes.drawerListItemIcons} />, "Kuis", true],
@@ -108,7 +119,6 @@ function NavBarDrawerContent(props) {
 
   const { desktopOpen, mobileOpen, handleDrawerMobile, userLoggedIn, window } = props
   const {user} = props.auth;
-
   if(userLoggedIn !== undefined) {
     return (
       <div className={classes.drawerMobile}>
@@ -126,7 +136,7 @@ function NavBarDrawerContent(props) {
               keepMounted: true,
             }}
           >
-            <DrawerContent role={user.role}/>
+            <DrawerContent role="AA"/>
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css"> 
@@ -145,7 +155,7 @@ function NavBarDrawerContent(props) {
             }}
           >
             <Toolbar />
-            <DrawerContent />
+            <DrawerContent user={user}/>
           </Drawer>
         </Hidden>
       </div>
@@ -156,6 +166,10 @@ function NavBarDrawerContent(props) {
       <div style={{display: "none"}} />
     )
   }
+}
+
+NavBarDrawerContent.propTypes = {
+  auth: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
