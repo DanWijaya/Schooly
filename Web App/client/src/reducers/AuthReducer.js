@@ -37,7 +37,7 @@ export default function(state = initialState, action) {
       ...state,
       all_students: action.payload
     }
-    case GET_ONE_USER:
+    case GET_ONE_USER: //teacher or student or anyone lah. 
       return {
         ...state,
         selectedUser: action.payload

@@ -197,7 +197,9 @@ function NewTask(props) {
   const [selectedFileId, setSelectedFileId] = React.useState(null);
   
   let tugasId = props.match.params.id;
-
+  console.log(tugasId)
+  console.log(tasksCollection)
+  console.log(Object.keys(tasksCollection).length === 0)
   if(filesCollection.files.length == 0 && !isEmptyFileTugas){
   console.log(filesCollection, "file collections")
     getTaskFilesByUser(user.id, tugasId)
@@ -575,5 +577,7 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas, previewTugas, getTaskFilesByUser, getOneUser, viewOneTask}
+   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas,
+     previewTugas, getTaskFilesByUser, getOneUser,
+      viewOneTask}
  ) (NewTask);

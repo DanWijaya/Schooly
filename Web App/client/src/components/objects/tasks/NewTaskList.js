@@ -49,21 +49,34 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
-  { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-  { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan pada" },
-  { id: "deadline", numeric: false, disablePadding: false, label: "Batas waktu" },
-  { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
-];
+// const headCells = [
+//   { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
+//   { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
+//   { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan pada" },
+//   { id: "deadline", numeric: false, disablePadding: false, label: "Batas waktu" },
+//   { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
+// ];
 
 function TaskListHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, role } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
+  const headCells = [
+    { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
+    { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
+    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan pada" },
+    { id: "deadline", numeric: false, disablePadding: false, label: "Batas waktu" },
+    { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
+  ];
+
+  if(role == "Student"){
+    console.log("Run ")
+    headCells.pop()
+  }
+  console.log(headCells)
   return (
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
@@ -165,6 +178,7 @@ const TaskListToolbar = (props) => {
       ) : (
         null
       )}
+      {role == "Student" ? null : 
       <Link to="/createtask">
         <LightToolTip title="Buat tugas">
         <IconButton>
@@ -172,6 +186,7 @@ const TaskListToolbar = (props) => {
         </IconButton>
         </LightToolTip>
       </Link>
+      }
     </Toolbar>
   );
 };
@@ -222,12 +237,14 @@ function NewTaskList(props) {
   const { tasksCollection, viewTask, deleteTask } = props;
   const { user } = props.auth;
 
+
   const taskRowItem = (data) => {
     rows.push(
       createData(data._id, data.name,
         data.subject,
         data.class_assigned,
         data.deadline,
+        user.role == "Student" ? null :
         [
           <Link to={`/task/${data._id}`}>
         <IconButton onClick={(e)=> e.stopPropagation()}>
@@ -423,6 +440,7 @@ function NewTaskList(props) {
             aria-label="enhanced table"
           >
             <TaskListHead
+            role={user.role}
               classes={classes}
               numSelected={selected.length}
               order={order}

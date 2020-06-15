@@ -339,6 +339,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
 })
 
 router.get("/getteachers", (req, res) => {
+  console.log("GET teachers runned")
   User.find({ role: "Teacher" }).then((users, err) => {
     if(!users)
       console.log("No teachers yet in Schooly System")

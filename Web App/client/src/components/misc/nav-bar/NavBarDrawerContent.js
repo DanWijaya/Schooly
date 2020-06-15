@@ -77,8 +77,9 @@ function DrawerContent(props) {
   const classes = useStyles();
   const { user } = props;
 
-  let directedTo; // this is for the page that is directed when clicking the classIcon in NavBarContents
-
+  /* directedTo is for the page that is directed when 
+  clicking the classIcon in NavBarContents*/
+  let directedTo; 
   if(user != undefined){
     if(user.role == "Student")
       directedTo = `/viewclass/${user.kelas}`

@@ -211,6 +211,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 
     }
   })
+
   console.log("Delete file completed")
 })
 router.delete("/image/:name", (req,res) => {
@@ -225,7 +226,7 @@ router.delete("/image/:name", (req,res) => {
   });
 })
 
-
+  
 // Upload Tugas
   router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (req,res) => {
     // To get the file details, use req.file
@@ -254,6 +255,28 @@ router.delete("/image/:name", (req,res) => {
           .catch(err => console.log(err))
       }
     })
+
+    // Task.findById(req.params.tugasid, (err, task) => {
+    //   if(!task){
+    //     return res.status(404).json({tasknotfound: "Task not found"})
+    //   }
+    //   else {
+    //     console.log("Task object files are going to be added")
+    //     for(var i = 0; i < req.files.length; i++){
+    //       task.filesubmitted.push({
+    //         id: req.files[i].id,
+    //           filename: req.files[i].filename,
+    //           for_task_object: task_id}
+    //       )
+    //     }
+
+    //     task  
+    //         .save()
+    //         .then(console.log("Successfully upload the task in Task Object data"))
+    //         .catch(err => console.log(err))
+    //   }
+    // })
+
     res.json("Upload file completed")
   })
 
