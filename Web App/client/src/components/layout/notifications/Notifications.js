@@ -25,14 +25,14 @@ function NotificationItemList(props) {
       </ListItemAvatar>
       <ListItemText
         primary={
-          <Typography style={{color: "#2196f3"}}>
+          <Typography>
             {props.notification_title}
           </Typography>
         }
         secondary={props.sender_name}
       />
       <ListItemSecondaryAction>
-        <Typography variant="subtitle" style={{color: "grey"}}>
+        <Typography variant="subtitle" color="textSecondary">
           {props.time}
         </Typography>
       </ListItemSecondaryAction>

@@ -5,11 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    position: "sticky",
-    bottom: "0",
-    width: "100%",
-  },
-  content: {
     maxWidth: "1000px",
     margin: "auto",
   },
@@ -40,44 +35,42 @@ function Footer() {
 
   return(
     <div className={classes.root}>
-      <div className={classes.content}>
-      <Divider style={{marginBottom: "10px"}} />
+    <Divider style={{marginBottom: "10px"}} />
 
-        <div className={classes.footerContainer}>
-          <Grid container spacing={2} justify="flex-start" className={classes.contentFont}>
-            <Grid item style={{color: "grey"}}>
-              2020 Schooly System
-            </Grid>
-            <Grid item>
-              <Link href="/bantuan">
-                Bantuan
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/kebijakan-penggunaan">
-                Kebijakan Pengunaan
-              </Link>
-            </Grid>
+      <div className={classes.footerContainer}>
+        <Grid container spacing={2} justify="flex-start" className={classes.contentFont}>
+          <Grid item style={{color: "grey"}}>
+            2020 Schooly System
           </Grid>
-          <img src={schoolySymbolLogo} className={classes.schoolySymbol} />
-          <Grid container spacing={2} justify="flex-end" className={classes.contentFont}>
-            <Grid item>
-              <Link href="/tentang-schooly">
-                Tentang Schooly
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/tentang-schooly">
-                Hubungi Kami
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/tentang-schooly">
-                Media Sosial
-              </Link>
-            </Grid>
+          <Grid item>
+            <Link href="/bantuan">
+              Bantuan
+            </Link>
           </Grid>
-        </div>
+          <Grid item>
+            <Link href="/kebijakan-penggunaan">
+              Kebijakan Pengunaan
+            </Link>
+          </Grid>
+        </Grid>
+        <img src={schoolySymbolLogo} className={classes.schoolySymbol} />
+        <Grid container spacing={2} justify="flex-end" className={classes.contentFont}>
+          <Grid item>
+            <Link href="/tentang-schooly">
+              Tentang Schooly
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link href="/tentang-schooly">
+              Hubungi Kami
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link href="/tentang-schooly">
+              Media Sosial
+            </Link>
+          </Grid>
+        </Grid>
       </div>
     </div>
   )
