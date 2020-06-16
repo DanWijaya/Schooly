@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 export const globalStyles = createMuiTheme({
   palette: {
@@ -30,7 +30,7 @@ export const globalStyles = createMuiTheme({
           backgroundColor: "#2196f3",
         },
         "&:hover": {
-          backgroundColor: "transparent",
+          backgroundColor: "transparent"
         },
       }
     },
@@ -40,9 +40,9 @@ export const globalStyles = createMuiTheme({
           backgroundColor: "#2196f3",
         },
         "&:hover": {
-          backgroundColor: "transparent",
+          backgroundColor: "#2196f3",
         },
-      }
+      },
     },
     MuiIconButton: {
       root: {

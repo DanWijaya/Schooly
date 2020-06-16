@@ -221,4 +221,15 @@ function ViewSubject() {
   )
 }
 
+ViewSubject.propTypes = {
+  
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  classesCollection: state.classesCollection, 
+  subjectsCollection: state.subjectsCollection,
+  tasksCollection: state.tasksCollection,
+
+})
 export default ViewSubject;
