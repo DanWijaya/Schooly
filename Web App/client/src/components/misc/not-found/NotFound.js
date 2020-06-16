@@ -12,6 +12,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#0d2330",
   },
   notFoundContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
     margin: "auto",
     width: "1000px",
     height: "300px",
@@ -19,13 +24,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
   },
-  errorText: {
+  notFoundText: {
     color: "white",
   },
   buttonContainer: {
@@ -42,10 +42,10 @@ function NotFound() {
     <div className={classes.root}>
       <div className={classes.notFoundBackground}>
         <div className={classes.notFoundContainer}>
-          <Typography variant="h3" className={classes.errorText}>
+          <Typography variant="h3" className={classes.notFoundText}>
             ERROR 404
           </Typography>
-          <Typography variant="h4" className={classes.errorText}>
+          <Typography variant="h4" className={classes.notFoundText}>
             TIDAK DITEMUKAN
           </Typography>
         </div>

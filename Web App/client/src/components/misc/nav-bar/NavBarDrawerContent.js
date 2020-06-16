@@ -1,9 +1,12 @@
 import React from "react"
+import { Link } from "react-router-dom"
+import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { drawerWidth } from "./NavBar.js";
 import { Avatar, Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { fade } from '@material-ui/core/styles/colorManipulator'
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -13,8 +16,6 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
-import { Link } from "react-router-dom"
-import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   drawerMobile: {
@@ -49,28 +50,32 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
-  drawerListItem: {
-    "&:hover": {
-      backgroundColor: "rgba(33, 150, 243, 0.2)",
-    },
-  },
   drawerListItemIcons: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
 }));
 
-const generateList = (linkto, icon, itemText, isDisabled) => {
+const StyledListItem = withStyles((theme) => ({
+  root: {
+    "&:active, &:hover": {
+      backgroundColor: fade(theme.palette.primary.main, 0.2),
+    },
+  },
+}))(ListItem);
+
+const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
   return (
     <Link to={linkto}>
-      <ListItem disabled={isDisabled}>
+      <StyledListItem button disabled={isDisabled}>
         <ListItemIcon>
           {icon}
         </ListItemIcon>
         <ListItemText
-          primary={<Typography color="textPrimary">{itemText}</Typography>}
+          primary={<Typography color="textPrimary">{itemText1}</Typography>}
+          secondary={itemText2}
         />
-      </ListItem>
+      </StyledListItem>
     </Link>
   )
 }
@@ -79,9 +84,8 @@ function DrawerContent(props) {
   const classes = useStyles();
   const { user } = props;
 
-  /* directedTo is for the page that is directed when 
-  clicking the classIcon in NavBarContents*/
-  let directedTo; 
+  /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
+  let directedTo;
   if(user != undefined){
     if(user.role == "Student")
       directedTo = `/viewclass/${user.kelas}`
@@ -90,27 +94,25 @@ function DrawerContent(props) {
   }
 
   let ListItemContents = [
-    ["/dashboard", <DashboardIcon className={classes.drawerListItemIcons} />, "Beranda", false],
-    [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", false],
-    // ["/announcements",<AnnouncementIcon className={classes.drawerListItemIcons} />,"Pengumuman", true],
-    ["/newtasklist", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", false],
-    // ["/quiz", <GrNotes className={classes.drawerListItemIcons} />, "Kuis", true],
-    // ["/exams", <GrDocumentPerformance className={classes.drawerListItemIcons} />, "Ujian", true],
-    // After divider (Kalo lebih dari satu, baru nnti loop array nya juga, satu aja ndak usah)
-    // ["/tentang-schooly", <AboutIcon className={classes.drawerListItemIcons} />,  "Tentang Schooly", false]
+    ["/dashboard", <DashboardIcon className={classes.drawerListItemIcons} />, "Beranda", null, false],
+    [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", null, false],
+    [null, <AnnouncementIcon className={classes.drawerListItemIcons} />,"Pengumuman", "Coming Soon", true],
+    ["/newtasklist", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", null, false],
+    [null, <GrNotes className={classes.drawerListItemIcons} />, "Kuis", "Coming Soon", true],
+    [null, <GrDocumentPerformance className={classes.drawerListItemIcons} />, "Ujian", "Coming Soon", true],
   ]
 
   return (
     <div>
       <List>
         {ListItemContents.map((item) => (
-          generateList(item[0],item[1],item[2],item[3]))
+          generateList(item[0],item[1],item[2],item[3],item[4]))
         )}
       </List>
       <Divider />
       <List>
-        {generateList("/bantuan", <HelpIcon className={classes.drawerListItemIcons} />,  "Bantuan", false)}
-        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemIcons} />,  "Tentang Schooly", false)}
+        {generateList("/bantuan", <HelpIcon className={classes.drawerListItemIcons} />,  "Bantuan", null, false)}
+        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemIcons} />,  "Tentang Schooly", null, false)}
       </List>
     </div>
   )
