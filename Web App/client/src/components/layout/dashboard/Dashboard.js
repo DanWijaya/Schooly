@@ -135,7 +135,7 @@ class Dashboard extends Component {
             <Grid item xs={8}>
               <Paper className={classes.notificationPaper}>
                 <div className={classes.paperTitle}>
-                  <Typography variant="h5">
+                  <Typography variant="h5" color="primary">
                     Notifikasi Terkini
                   </Typography>
                   <LightTooltip title="Lihat Semua" placement="right">
@@ -166,7 +166,7 @@ class Dashboard extends Component {
             <Grid item xs={4}>
               <Paper className={classes.workPaper}>
                 <div className={classes.paperTitle}>
-                  <Typography variant="h5">
+                  <Typography variant="h5" color="primary">
                     Pekerjaan Mendatang
                   </Typography>
                   <div style={{display: "flex", justifyContent: "flex-end"}}>
