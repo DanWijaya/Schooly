@@ -95,7 +95,7 @@ class App extends Component {
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
     } else{
-      translateXValue = 0
+      translateXValue = 75
     }
 
     return (
@@ -136,12 +136,17 @@ class App extends Component {
                   <PrivateRoute exact path="/classlist" component={ClassList} /> {/*prototype*/}
                   <PrivateRoute exact path="/newclasslist" component={NewClassList} /> {/*prototype*/}
                 </Switch>
-                <Footer/>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    marginTop: "150px",
+                  }}
+                >
+                  <Footer/>
+                </div>
               </div>
             </Router>
-            <div>
-                
-                </div>
           </ThemeProvider>
         </Provider>
       </div>

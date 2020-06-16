@@ -2,7 +2,7 @@ import React from "react"
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { drawerWidth } from "./NavBar.js";
-import { Avatar, Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar } from "@material-ui/core";
+import { Avatar, Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -49,26 +49,28 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
+  drawerListItem: {
+    "&:hover": {
+      backgroundColor: "rgba(33, 150, 243, 0.2)",
+    },
+  },
   drawerListItemIcons: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
-  test: {
-    "&:hover": {
-      backgroundColor: "rgba(33, 150, 243, 0.2)",
-    },
-  }
 }));
 
 const generateList = (linkto, icon, itemText, isDisabled) => {
   return (
     <Link to={linkto}>
-    <ListItem button  disabled={isDisabled}>
-      <ListItemIcon>
-        {icon}
-      </ListItemIcon>
-      <ListItemText primary={itemText} />
-    </ListItem>
+      <ListItem disabled={isDisabled}>
+        <ListItemIcon>
+          {icon}
+        </ListItemIcon>
+        <ListItemText
+          primary={<Typography color="textPrimary">{itemText}</Typography>}
+        />
+      </ListItem>
     </Link>
   )
 }
@@ -89,7 +91,7 @@ function DrawerContent(props) {
 
   let ListItemContents = [
     ["/dashboard", <DashboardIcon className={classes.drawerListItemIcons} />, "Beranda", false],
-    [directedTo,<FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", false],
+    [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", false],
     // ["/announcements",<AnnouncementIcon className={classes.drawerListItemIcons} />,"Pengumuman", true],
     ["/newtasklist", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", false],
     // ["/quiz", <GrNotes className={classes.drawerListItemIcons} />, "Kuis", true],
@@ -118,13 +120,13 @@ function NavBarDrawerContent(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { desktopOpen, mobileOpen, handleDrawerMobile, userLoggedIn, window } = props
+  const { desktopOpen, mobileOpen, handleDrawerMobile, userLoggedIn } = props
   const {user} = props.auth;
   if(userLoggedIn !== undefined) {
     return (
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">
-          {/* Untuk mobile punya, temporary */}
+          {/* Mobile = Backdrop Drawer */}
           <Drawer
             variant="temporary"
             anchor={theme.direction === "rtl" ? "right" : "left"}
@@ -140,8 +142,8 @@ function NavBarDrawerContent(props) {
             <DrawerContent role="AA"/>
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css"> 
-        {/* Mini Variant */}
+        <Hidden xsDown implementation="css">
+        {/* Desktop = Mini Variant */}
           <Drawer
             variant="permanent"
             className={clsx(classes.drawerDesktop, {
