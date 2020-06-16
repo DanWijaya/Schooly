@@ -5,10 +5,70 @@ import PropTypes from "prop-types";
 import dashboardBackground from "./DashboardBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import EmailIcon from "@material-ui/icons/Email";
+
+const useStyles = makeStyles((theme) => ({
+  listItemPaper: {
+    marginBottom: "10px"
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: (theme.palette.primary, 1),
+    },
+  },
+}));
+
+function NotificationItemList(props) {
+  const classes = useStyles();
+
+  return (
+    <Paper variant="outlined" className={classes.listItemPaper}>
+      <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
+        <ListItemAvatar>
+          <Avatar>
+            {props.sender_avatar}
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={props.notification_title}
+          secondary={props.sender_name}
+        />
+        <ListItemSecondaryAction>
+          <Typography variant="subtitle" color="textSecondary">
+            {props.time}
+          </Typography>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Paper>
+  )
+}
+
+function WorkItemList(props) {
+  const classes = useStyles();
+
+  return (
+    <Paper variant="outlined" className={classes.listItemPaper}>
+      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+        <ListItemText
+          primary={
+            <Typography>
+              {props.work_title}
+            </Typography>
+          }
+          secondary={props.work_category}
+        />
+        <ListItemSecondaryAction>
+          <Typography variant="subtitle" color="textSecondary">
+            {props.work_duetime}
+          </Typography>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Paper>
+  )
+}
 
 const styles = (theme) => ({
   root: {
@@ -38,51 +98,6 @@ const styles = (theme) => ({
     padding: "20px",
   },
 });
-
-function NotificationItemList(props) {
-  return (
-    <ListItem button component="a" href={props.notification_link}>
-      <ListItemAvatar>
-        <Avatar>
-          {props.sender_avatar}
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Typography>
-            {props.notification_title}
-          </Typography>
-        }
-        secondary={props.sender_name}
-      />
-      <ListItemSecondaryAction>
-        <Typography variant="subtitle" color="textSecondary">
-          {props.time}
-        </Typography>
-      </ListItemSecondaryAction>
-    </ListItem>
-  )
-}
-
-function WorkItemList(props) {
-  return (
-    <ListItem button component="a" href={props.work_link}>
-      <ListItemText
-        primary={
-          <Typography>
-            {props.work_title}
-          </Typography>
-        }
-        secondary={props.work_category}
-      />
-      <ListItemSecondaryAction>
-        <Typography variant="subtitle" color="textSecondary">
-          {props.work_duetime}
-        </Typography>
-      </ListItemSecondaryAction>
-    </ListItem>
-  )
-}
 
 class Dashboard extends Component {
   constructor(props) {
@@ -138,13 +153,12 @@ class Dashboard extends Component {
                   <Typography variant="h5" color="primary">
                     Notifikasi Terkini
                   </Typography>
-                  <LightTooltip title="Lihat Semua" placement="right">
+                  <LightTooltip title="Lihat Semua" placement="top">
                     <IconButton href="/notifikasi">
                       <ChevronRightIcon />
                     </IconButton>
                   </LightTooltip>
                 </div>
-                <Divider />
                 <List>
                   <NotificationItemList
                     sender_icon={<AccountCircleIcon />}
@@ -170,14 +184,13 @@ class Dashboard extends Component {
                     Pekerjaan Mendatang
                   </Typography>
                   <div style={{display: "flex", justifyContent: "flex-end"}}>
-                  <LightTooltip title="Lihat Semua" placement="right">
+                  <LightTooltip title="Lihat Semua" placement="top">
                     <IconButton>
                       <ChevronRightIcon />
                     </IconButton>
                   </LightTooltip>
                   </div>
                 </div>
-                <Divider />
                 <List>
                   <WorkItemList
                     work_title="Tugas 1"
