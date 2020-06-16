@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "15px",
     paddingBottom: "40px",
   },
+  
   subjectPanel: {
     marginLeft: "50px",
   },
@@ -222,7 +223,7 @@ function ViewSubject() {
 }
 
 ViewSubject.propTypes = {
-  
+
 }
 
 const mapStateToProps = (state) => ({
