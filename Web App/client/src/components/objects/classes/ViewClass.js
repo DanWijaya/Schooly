@@ -5,7 +5,7 @@ import { viewOneClass } from "../../../actions/ClassActions"
 import { getStudentsByClass, getTeachers } from "../../../actions/AuthActions"
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { viewTask } from "../../../actions/TaskActions"
-import { getTaskFilesByUser } from "../../../actions/UploadActions"
+import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
@@ -130,7 +130,8 @@ function PersonListItem(props) {
 function ViewClass(props) {
   const classes = useStyles();
   const { viewOneClass, getStudentsByClass, getAllSubjects,
-     tasksCollection, getTeachers, getTaskFilesByUser} = props;
+     tasksCollection, getTeachers, getAllTaskFilesByUser} = props;
+  const { all_user_files} = props.filesCollection
   const {all_subjects} = props.subjectsCollection
   const { selectedClasses} = props.classesCollection
   const {all_students, all_teachers, user} = props.auth;
@@ -158,9 +159,11 @@ function ViewClass(props) {
     getStudentsByClass(props.match.params.id)
   if(all_teachers.length == 0)
     getTeachers()
-////
 
-  console.log(tasksByClass)
+if(all_user_files.length == 0){
+  getAllTaskFilesByUser(user.id)
+}
+////
   
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -191,9 +194,9 @@ function ViewClass(props) {
           <List>
             {tasksByClass.map((task) => {
               let workStatus = "Belum Dikumpulkan"
-              for(var i =0; i < user.tugas.length; i++){
-                console.log(user.tugas[i].for_task_object, task._id, user.tugas[i].for_task_object == task._id)
-                if(user.tugas[i].for_task_object == task._id){
+              for(var i =0; i < all_user_files.length; i++){
+                console.log(all_user_files[i].for_task_object, task._id, all_user_files[i].for_task_object == task._id)
+                if(all_user_files[i].for_task_object == task._id){
                   workStatus = "Telah Dikumpulkan"
                   break;
                 }
@@ -202,7 +205,7 @@ function ViewClass(props) {
             <WorkListItem
               work_title={task.name}
               work_category_avatar=""
-              work_sender={`Mata Pelajaran : ${task.subject}`}
+              work_sender={`Mata Pelajaran: ${task.subject}`}
               work_status={workStatus}
               work_deadline={moment(task.deadline).locale("id").format('DD-MM-YYYY')}
               work_link={`/new-task/${task._id}`}
@@ -228,13 +231,13 @@ function ViewClass(props) {
           <Typography style={{textAlign: 'center'}} variant="h4" gutterBottom>
             Belum ada tugas yang tersedia
           </Typography>
-            {/* <WorkListItem
+            <WorkListItem
               work_title="Tugas Fisika"
               work_category_avatar=""
               work_sender="Mr Jenggot"
               work_status="Telah Dikumpulkan"
               work_link="/test"
-            /> */}
+            />
           </List>
           <div className={classes.lookAllButtonContainer}>
             <Button endIcon={<ChevronRightIcon />} href="/viewsubject">
@@ -295,7 +298,7 @@ ViewClass.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  getTaskFilesByUser: PropTypes.func.isRequired
+  getAllTaskFilesByUser: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -308,5 +311,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, {viewOneClass, getStudentsByClass, 
-    getAllSubjects, viewTask, getTeachers, getTaskFilesByUser} 
+    getAllSubjects, viewTask, getTeachers, getAllTaskFilesByUser} 
 ) (ViewClass);

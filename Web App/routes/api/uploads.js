@@ -255,7 +255,6 @@ router.delete("/image/:name", (req,res) => {
           .catch(err => console.log(err))
       }
     })
-
     // Task.findById(req.params.tugasid, (err, task) => {
     //   if(!task){
     //     return res.status(404).json({tasknotfound: "Task not found"})

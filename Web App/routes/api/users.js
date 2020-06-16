@@ -273,6 +273,20 @@ router.get("/gettask/:id/:task_id", (req, res) => {
   } )
 })
 
+router.get("/getalltask/:user_id", (req,res) => {
+  let id = req.params.user_id;
+
+  User.findById(id, (err, user) => {
+    if(!user)
+      res.status(404).send("User data is not found");
+    else {
+      let allFilesList = []
+      user.tugas.map((item) => allFilesList.push(item))
+      res.json(allFilesList)
+    }
+  })
+})
+
 router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res) => {
   console.log(req)
   let id = req.params.id;
