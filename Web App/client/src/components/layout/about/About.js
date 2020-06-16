@@ -1,20 +1,33 @@
 import React from "react";
+import whatIsSchooly from "./WhatIsSchooly.png";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: "auto",
-    maxWidth: "900px",
-    textAlign: "center",
-  },
-  paragraph: {
-    marginBottom: "40px",
+    display: "flex",
+    flexDirection: "column",
   },
   paragraphTitle: {
-    fontFamily: "Helvetica Neue",
-    color: "#2196f3",
-  }
+    fontFamily: "Cambria",
+  },
+  whatIsSchoolyBackground: {
+    backgroundColor: theme.palette.primary.light,
+  },
+  whatIsSchooly: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    textAlign: "center",
+    margin: "auto",
+    width: "1000px",
+    height: "475px",
+    backgroundImage: `url(${whatIsSchooly})`,
+    backgroundPosition: "top",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+  },
 }));
 
 function About() {
@@ -22,16 +35,19 @@ function About() {
 
   return (
     <div className={classes.root}>
-      <div className={classes.paragraph}>
-        <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
-          Apa itu Schooly?
-        </Typography>
-        <Typography variant="body1">
-          Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
-          Di Schooly, Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien.
-        </Typography>
+      <div className={classes.whatIsSchoolyBackground}>
+        <div className={classes.whatIsSchooly}>
+          <Typography variant="h2" gutterBottom className={classes.paragraphTitle}>
+            Apa itu Schooly?
+          </Typography>
+          <Typography variant="h6" paragraph style={{width: "700px"}}>
+            Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
+          </Typography>
+          <Typography style={{paddingBottom: "40px"}}>
+            "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien."
+          </Typography>
+        </div>
       </div>
-
       <div className={classes.paragraph}>
         <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
           Visi dan Misi <br /> Schooly
