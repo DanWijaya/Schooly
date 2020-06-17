@@ -71,6 +71,7 @@ const UserSchema = new Schema({
     type: String, 
     default: "Isi"
   },
+  passwordReset: { type: String, select: false}
 }, options )
 
 const User = mongoose.model("users", UserSchema);

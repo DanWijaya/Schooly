@@ -5,7 +5,7 @@ import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
-import {getOneUser} from "../../../actions/AuthActions";
+import {getOneUser} from "../../../actions/UserActions";
 
 import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
 // import { Multiselect } from "multiselect-react-dropdown";

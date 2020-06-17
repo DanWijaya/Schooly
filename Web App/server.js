@@ -9,6 +9,7 @@ const classes = require("./routes/api/Classes");
 const uploads = require("./routes/api/uploads");
 const otps = require("./routes/api/otps");
 const subjects = require("./routes/api/subjects");
+const authentication = require('./routes/api/authentication');
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use("/api/classes", classes);
 app.use("/api/uploads", uploads.router)
 app.use("/api/otps", otps)
 app.use("/api/subjects", subjects);
+app.use("/api/authentication", authentication)
 
 // Always put this in the end
 const port = process.env.PORT || 5000;

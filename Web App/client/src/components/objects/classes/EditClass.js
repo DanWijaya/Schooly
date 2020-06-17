@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getTeachers , getStudents} from "../../../actions/AuthActions";
+import { getTeachers , getStudents} from "../../../actions/UserActions";
 import { viewOneClass, updateClass } from "../../../actions/ClassActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography, Menu } from "@material-ui/core";

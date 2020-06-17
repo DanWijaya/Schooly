@@ -4,7 +4,7 @@ import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { registerUser } from "../../../actions/AuthActions";
+import { registerUser } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects} from "../../../actions/SubjectActions"
 import schoolyLogo from "../../../images/SchoolyLogo.png";

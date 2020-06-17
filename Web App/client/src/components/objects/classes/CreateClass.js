@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createClass } from "../../../actions/ClassActions"
-import { getTeachers } from "../../../actions/AuthActions";
+import { getTeachers } from "../../../actions/UserActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, Grid, MenuItem,Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";

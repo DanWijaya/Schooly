@@ -3,205 +3,47 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router";
 
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
-   GET_USERS, GET_STUDENTS, GET_TEACHERS, GET_ONE_USER } from "./Types";
+import {PWD_RESET_HASH_CREATED, PWD_RESET_HASH_FAILURE} from "./Types"
 
-// Register User
-export const registerUser = (userData, history) => dispatch => {
-  axios
-    .post("/api/users/register", userData)
-    .then(res => {
-      alert("New User is registered successfully")
-      history.push("/masuk")
-    })
-    .catch(err => {
-
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
+// SEND EMAIL TO API FOR HASHING
+export const createHash = (email) => {
+    return async (dispatch) => {
+      //contact the API
+    
+      await fetch(
+        //where to contact
+        '/api/authentication/saveresethash',
+        // what to send
+        {
+          method: 'POST',
+          body: JSON.stringify({ email}),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'same-origin', //WTF IS THIS
+        },
+      )
+      .then((res) => {
+        if(res.status == 200) {
+          return res.json();
+        } else{
+          return null;
+        }
       })
-    }
-    );
-
-};
-
-export const updateUserData = (userData, userId, history) => dispatch => {
-  console.log("update user data is runned")
-  axios
-    .post("/api/users/update/data/" + userId, userData)
-    .then(res => {
-
-      const { token } = res.data;
-      console.log("Updating User Data");
-
-      localStorage.setItem("jwtToken", token);
-      console.log("Foto udah diganti")
-      // Set token to Auth header
-      setAuthToken(token);
-      // Decode token to get user data
-      const decoded = jwt_decode(token);
-      // Set current user
-      dispatch(setCurrentUser(decoded));
+      .then((json) => {
+        if( json.username) 
+          return dispatch({
+            type: PWD_RESET_HASH_CREATED,
+            payload: json
+          })
+        return dispatch({
+          type: PWD_RESET_HASH_FAILURE,
+          payload: new Error('Terjadi permasalahan teknis, coba lagi')
+        })
+      })
+      .catch(err => dispatch({
+        type: PWD_RESET_HASH_FAILURE,
+        payload: err
+      }));
       }
-    )
-    .catch(err => {
-      console.log("jancuk la")
-      console.log(err);
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    })
-}
-
-export const updateAvatar = (userData, userId, formData) => dispatch => {
-  if(userData.avatar !== undefined) {
-    axios.delete(`/api/uploads/image/${userData.avatar}`)
-      .then(res => {
-        console.log("Old Profile picture is removed")
-      })
-      .catch(err => {
-        console.log("No Profile picture set previously or error occured in removing old Profile picture")
-      })
-  }
-  axios
-    .post("/api/users/update/avatar/" + userId, formData, userData)
-    .then(res => {
-
-        // Set token to localStorage
-      const { token } = res.data;
-      localStorage.setItem("jwtToken", token);
-      console.log("Foto udah diganti")
-      // Set token to Auth header
-      setAuthToken(token);
-      // Decode token to get user data
-      const decoded = jwt_decode(token);
-      // Set current user
-      dispatch(setCurrentUser(decoded));
-
-    })
-    .catch(err => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    })
-}
-
-// to initiate a dispatch, pass the result to the dispatch() function.
-// Login - get user token
-export const loginUser = (userData) => dispatch => {
-  axios
-    .post("/api/users/login", userData)
-    .then(res => {
-      console.log("Berhasil login")
-      // Save to localStorage
-
-      // Set token to localStorage
-      const { token } = res.data;
-      localStorage.setItem("jwtToken", token);
-      // Set token to Auth header
-      setAuthToken(token);
-      // Decode token to get user data
-      const decoded = jwt_decode(token);
-      // Set current user
-      dispatch(setCurrentUser(decoded));
-
-    })
-    .catch(err => {
-      console.log("error")
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    })
-};
-
-// Set logged in user
-export const setCurrentUser = decoded => {
-  console.log(decoded)
-  return {
-    type: SET_CURRENT_USER,
-    payload: decoded
-  };
-};
-
-// User loading
-export const setUserLoading = () => {
-  return {
-    type: USER_LOADING
-  };
-};
-
-export const getStudents = () => dispatch => {
-  axios
-    .get("/api/users/getstudents")
-    .then(res => {
-      console.log(res.data)
-      dispatch({
-        type: GET_STUDENTS,
-        payload: res.data
-      })
-    })
-    .catch(err => {
-      console.log("Error in getting all Students");
-    })
-}
-
-export const getTeachers = () => dispatch => {
-  axios
-    .get("/api/users/getteachers")
-    .then(res => {
-      console.log(res.data)
-      dispatch({
-        type: GET_TEACHERS,
-        payload: res.data
-      })
-    })
-    .catch(err => {
-      console.log("Error in getting all Teachers");
-    })
-}
-
-export const getOneUser = (userId) => dispatch => {
-  axios
-      .get("/api/users/getOneUser/" + userId)
-      .then(res => {
-        console.log(res.data)
-        dispatch({
-          type: GET_ONE_USER,
-          payload: res.data
-        })
-      })
-      .catch(err => {
-        console.log("Error in getting one user")
-      })
-}
-
-export const getStudentsByClass = (classId) => dispatch => {
-  axios
-      .get("/api/users/getstudentsbyclass/" + classId)
-      .then(res => {
-        console.log(res.data)
-        dispatch({
-          type: GET_STUDENTS,
-          payload: res.data
-        })
-      })
-      .catch(err => {
-        console.log("Error in getting Students by class");
-      })
-}
-
-// Log user out
-export const logoutUser = (history=undefined) => dispatch => {
-  // Remove token from local storage
-  localStorage.removeItem("jwtToken");
-  // Remove auth header for future requests
-  setAuthToken(false);
-  console.log("test")
-  // Set current user to empty object {} which will set isAuthenticated to false
-  dispatch(setCurrentUser({}));
-  if(history !== undefined)
-    history.push("/masuk")
-};
+    }

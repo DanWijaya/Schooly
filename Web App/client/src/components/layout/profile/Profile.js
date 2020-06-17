@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { updateAvatar } from "../../../actions/AuthActions"
+import { updateAvatar } from "../../../actions/UserActions"
 import { viewOneClass} from "../../../actions/ClassActions"
 import defaultAvatar from "./DefaultAvatar.jpg";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";

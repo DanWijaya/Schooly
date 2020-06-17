@@ -6,7 +6,7 @@ import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
 import { ThemeProvider } from "@material-ui/core/styles";
 //Routing and Actions
-import { setCurrentUser, logoutUser } from "./actions/AuthActions";
+import { setCurrentUser, logoutUser } from "./actions/UserActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 //Auth
 import Register from "./components/auth/register/Register";

@@ -2,7 +2,7 @@ import React from "react"
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-import { logoutUser } from "../../../actions/AuthActions";
+import { logoutUser } from "../../../actions/UserActions";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import { Avatar, Badge, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";

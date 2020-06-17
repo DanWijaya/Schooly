@@ -2,7 +2,7 @@ import React from "react"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { logoutUser } from "../../../actions/AuthActions";
+import { logoutUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
 import NavBarDrawerContent from "./NavBarDrawerContent";

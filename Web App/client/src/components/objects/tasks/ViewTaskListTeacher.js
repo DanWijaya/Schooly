@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { viewOneClass } from "../../../actions/ClassActions"
-import { getStudentsByClass } from "../../../actions/AuthActions"
+import { getStudentsByClass } from "../../../actions/UserActions"
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";

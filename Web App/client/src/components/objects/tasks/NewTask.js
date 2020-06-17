@@ -17,7 +17,7 @@ import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../../../actions/UploadActions"
 import { viewOneTask } from "../../../actions/TaskActions"
 import { getTaskFilesByUser } from "../../../actions/UploadActions"
-import { getOneUser } from "../../../actions/AuthActions"
+import { getOneUser } from "../../../actions/UserActions"
 
 const path = require("path");
 

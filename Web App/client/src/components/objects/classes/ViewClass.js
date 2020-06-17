@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 //All redux actions
 import { viewOneClass } from "../../../actions/ClassActions"
-import { getStudentsByClass, getTeachers } from "../../../actions/AuthActions"
+import { getStudentsByClass, getTeachers } from "../../../actions/UserActions"
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { viewTask } from "../../../actions/TaskActions"
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
