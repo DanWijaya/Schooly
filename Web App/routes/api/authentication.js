@@ -8,7 +8,7 @@ const crypto = require('crypto');
 
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
-const validateLoginInput = require("../../validation/login");
+const validateForgotInput = require("../../validation/login");
 // const validateUserDataInput = require("../../validation/UserData")
 
 // Load User model
@@ -43,7 +43,6 @@ router.post('/saveresethash', async(req,res) => {
           });
     } catch (err) {
         // if the user doesn't exist, error out
-        console.log("User does not exist")
         result = res.send(JSON.stringify({ error: 'Something went wrong while attempting to reset your password. Please Try again' }));
       }
       return result;
