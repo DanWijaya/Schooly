@@ -34,7 +34,7 @@ export const globalStyles = createMuiTheme({
           backgroundColor: "#2196f3",
         },
         "&:hover": {
-          backgroundColor: "transparent",
+          backgroundColor: "transparent"
         },
       }
     },
@@ -44,9 +44,9 @@ export const globalStyles = createMuiTheme({
           backgroundColor: "#2196f3",
         },
         "&:hover": {
-          backgroundColor: "transparent",
+          backgroundColor: "#2196f3",
         },
-      }
+      },
     },
     MuiIconButton: {
       root: {

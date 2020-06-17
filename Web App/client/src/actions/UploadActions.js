@@ -1,4 +1,4 @@
-import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ERRORS } from "./Types";
+import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS } from "./Types";
 import axios from "axios";
 
 
@@ -55,6 +55,25 @@ export const getTaskFilesByUser = (userId, tugasId) => dispatch => {
       })
   }
 
+export const getAllTaskFilesByUser = (userId) => dispatch => {
+    console.log("getAllTaskFilesByUser is runned")
+    axios
+        .get(`/api/users/getalltask/${userId}`)
+        .then(res =>{
+            console.log(res.data);
+            dispatch({
+                type: GET_ALL_FILES_BY_USER,
+                payload: res.data
+            })
+        })
+        .catch(err => {
+            console.log("Error in retrieving all of the user tasks");
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })
+}
 export const downloadTugas = (tugas_id, userData) => dispatch =>{
     console.log("Downloading Tugas")
 

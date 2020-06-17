@@ -26,15 +26,20 @@ Daniel:
 3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 4. Notifications page dan listnya (previewnya muncul di Dashboard)
 5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-10.Ganti Kata Sandi functionality
+10.Reset Kata Sandi functionality
 11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
 13. Perlu fix Edit Task yang MenuItemnya ndak muncul dibold pas dibuka. Anjeng
 14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. (DONE)
 15. Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
-Schema Notif dan explore cara handlenya?
 16. Do auto complete field untuk subject punya
 17. Buat class pagenya munculin tasks, students, dll. 
 18. Masih perlu perbaiki viewTask untuk si student (tablenya agak aneh)
+19. Untuk pas udah kelogin, pas buka login pagenya dia ndak immediately ke Dashboard lol.
+
+Penting untuk diimplemen: 
+1. Guru bisa pasang attachment di TaskObjectnya -> Dan studentnya bisa download dan preview attachments itu. 
+2. Buat Notification functionality (Schema Notif dan explore cara handlenya?)
+3. Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
 
 Page List On Work (Not completed/Not created yet):
 - All Task page (approx 5)
