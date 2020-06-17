@@ -95,7 +95,7 @@ class App extends Component {
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
     } else{
-      translateXValue = 75
+      translateXValue = 72.5
     }
 
     return (
