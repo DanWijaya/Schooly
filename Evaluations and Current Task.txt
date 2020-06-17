@@ -34,6 +34,7 @@ Daniel:
 16. Do auto complete field untuk subject punya
 17. Buat class pagenya munculin tasks, students, dll. 
 18. Masih perlu perbaiki viewTask untuk si student (tablenya agak aneh)
+19. Untuk pas udah kelogin, pas buka login pagenya dia ndak immediately ke Dashboard lol.
 
 Penting untuk diimplemen: 
 1. Guru bisa pasang attachment di TaskObjectnya -> Dan studentnya bisa download dan preview attachments itu. 

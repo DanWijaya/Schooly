@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+//All redux actions
 import { viewOneClass } from "../../../actions/ClassActions"
 import { getStudentsByClass, getTeachers } from "../../../actions/AuthActions"
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { viewTask } from "../../../actions/TaskActions"
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
+///
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
@@ -139,7 +141,7 @@ function PersonListItem(props) {
 function ViewClass(props) {
   const classes = useStyles();
   const { viewOneClass, getStudentsByClass, getAllSubjects,
-     tasksCollection, getTeachers, getAllTaskFilesByUser} = props;
+     tasksCollection, getTeachers, getAllTaskFilesByUser, viewTask} = props;
   const { all_user_files} = props.filesCollection
   const {all_subjects} = props.subjectsCollection
   const { selectedClasses} = props.classesCollection
@@ -150,7 +152,7 @@ function ViewClass(props) {
 
   // All actions to retrive datas from Database... 
   if(tasksCollection.length == undefined){
-    props.viewTask()
+    viewTask()
   }else{
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
@@ -178,7 +180,7 @@ if(all_user_files.length == 0){
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  console.log(selectedClasses)
   return (
     <div className={classes.root}>
       <Paper>
@@ -285,7 +287,7 @@ if(all_user_files.length == 0){
             </Typography> : null}
           </List>
           <div className={classes.lookAllButtonContainer}>
-            <Button endIcon={<ChevronRightIcon />} href="/viewsubject">
+            <Button endIcon={<ChevronRightIcon />} href={`/viewsubject/${subject.name}`}>
               Lihat mata pelajaran
             </Button>
           </div>

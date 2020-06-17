@@ -66,6 +66,7 @@ const StyledListItem = withStyles((theme) => ({
 
 const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
   return (
+    !isDisabled ? 
     <Link to={linkto}>
       <StyledListItem button disabled={isDisabled}>
         <ListItemIcon>
@@ -76,7 +77,16 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
           secondary={itemText2}
         />
       </StyledListItem>
-    </Link>
+    </Link> : 
+    <StyledListItem button disabled={isDisabled}>
+      <ListItemIcon>
+        {icon}
+      </ListItemIcon>
+      <ListItemText
+        primary={<Typography color="textPrimary">{itemText1}</Typography>}
+        secondary={itemText2}
+      />
+    </StyledListItem>
   )
 }
 

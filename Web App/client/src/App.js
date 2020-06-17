@@ -122,7 +122,7 @@ class App extends Component {
                   <PrivateRoute exact path="/viewclass/:id" component={ViewClass} />
                   <PrivateRoute exact path="/editclass/:id" component={EditClass} />
                   <PrivateRoute exact path="/deleteclass/:id" component={ViewClass} />
-                  <PrivateRoute exact path="/viewsubject" component={ViewSubject} />
+                  <PrivateRoute exact path="/viewsubject/:subject_name" component={ViewSubject} />
                   {/* Route Task  */}
                   <PrivateRoute exact path="/createtask" component={CreateTask} />
                   <PrivateRoute exact path="/viewtask" component={ViewTask} />

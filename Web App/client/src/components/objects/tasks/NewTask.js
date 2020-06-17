@@ -432,7 +432,7 @@ function NewTask(props) {
                 <h6>{tasksCollection.subject}</h6>
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                Penanggung Jawab: {selectedUser.name}
+                Penanggung Jawab: <b>{selectedUser.name}</b>
               </Typography>
             </Grid>
             <Grid item xs={6}
