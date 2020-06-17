@@ -1,18 +1,25 @@
 import React from "react";
 import whatIsSchooly from "./WhatIsSchooly.png";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import schoolyFeature1 from "./SchoolyFeature1.png";
+import schoolyFeature2 from "./SchoolyFeature2.png";
+import schoolyFeature3 from "./SchoolyFeature3.png";
+import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
+import DescriptionIcon from "@material-ui/icons/Description";
+import EmailIcon from "@material-ui/icons/Email";
+import ForumIcon from "@material-ui/icons/Forum";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
   },
-  paragraphTitle: {
-    fontFamily: "Cambria",
-  },
   whatIsSchoolyBackground: {
     backgroundColor: theme.palette.primary.light,
+  },
+  whatIsSchoolyTitle: {
+    fontFamily: "Cambria",
   },
   whatIsSchooly: {
     display: "flex",
@@ -28,16 +35,76 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
+  schoolyFeatures: {
+    maxWidth: "1000px",
+    margin: "auto",
+  },
+  moreFeaturesBackground: {
+    backgroundColor: theme.palette.button.main,
+  },
+  moreFeaturesTitle: {
+    fontFamily: "Cambria",
+  },
+  moreFeatures: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    textAlign: "center",
+    margin: "auto",
+    marginTop: "30px",
+    maxWidth: "1000px",
+  },
+  featurePaper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: "350px",
+    padding: "20px",
+  },
+  featureAvatar: {
+    width: theme.spacing(17.5),
+    height: theme.spacing(17.5),
+    backgroundColor: theme.palette.primary.main,
+    marginBottom: "30px",
+  },
+  featureIcon: {
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+  },
+  supportSchooly: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    margin: "auto",
+    marginTop: "30px",
+    maxWidth: "1000px",
+  },
+  supportSchoolyButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  }
 }));
 
 function About() {
+  document.title="Schooly | Tentang Schooly";
+
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <div className={classes.whatIsSchoolyBackground}>
         <div className={classes.whatIsSchooly}>
-          <Typography variant="h2" gutterBottom className={classes.paragraphTitle}>
+          <Typography variant="h2" gutterBottom className={classes.whatIsSchoolyTitle}>
             Apa itu Schooly?
           </Typography>
           <Typography variant="h6" paragraph style={{width: "700px"}}>
@@ -48,95 +115,112 @@ function About() {
           </Typography>
         </div>
       </div>
-      <div className={classes.paragraph}>
-        <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
-          Visi dan Misi <br /> Schooly
-        </Typography>
-        <Grid container justify="center">
-          <Grid item xs>
-            <Typography variant="h5" gutterBottom>
-              Visi
-            </Typography>
-            <Typography variant="body1">
-              Visi kami adalah menerapkan inovasi dan teknologi terhadap sistem persekolahan yang ada di Indonesia.
-            </Typography>
+      <div className={classes.schoolyFeatures}>
+        <Grid container direction="column">
+          <Grid item container spacing={10} justify="center" alignItems="center">
+            <Grid item xs={6}>
+              <img src={schoolyFeature1} />
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="h4" color="primary" gutterBottom>
+               Semua kegiatan persekolahanmu ada di tanganmu
+              </Typography>
+              <Typography variant="h6">
+               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti tugas, kuis, hingga ujian.
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs>
-            <Typography variant="h5" gutterBottom>
-              Misi
-            </Typography>
-            <Typography variant="body1">
-              Misi kami adalah: <br />
-              1. Menyediakan sistem persekolahan berbasis komputer bagi sekolah-sekolah yang ada. <br />
-              2. Memudahkan sistem belajar-mengajar yang ada dengan fitur-fitur Schooly. <br />
-              3. Memberikan prasarana komunikasi jarak jauh yang lebih baik antara murid, guru, dan sekolah.
-            </Typography>
+          <Grid item container spacing={10} justify="center" alignItems="center">
+            <Grid item xs={6}>
+              <Typography variant="h4" color="primary" gutterBottom>
+               Akses dengan mudah
+              </Typography>
+              <Typography variant="h6">
+               Akses merupakan salah satu hal yang paling penting dalam sebuah aplikasi.
+               Schooly dibuat sebagai aplikasi web sehingga bisa diakses perangkat apa saja dengan mudah.
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <img src={schoolyFeature2} />
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-
-      <div className={classes.paragraph}>
-        <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
-          Apa saja fitur-fitur Schooly?
-        </Typography>
-        <Grid container justify="center">
-          <Grid item xs={6}>
-            <Paper>
-              <img />
-              Sistem kelas dan mata pelajaran per kelas.
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper>
-              <img />
-              Sarana pengumpulan tugas.
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper>
-              <img />
-              Pengumuman dari sekolah dan Guru.
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper>
-              <img />
-                Kuis dan Ujian Berbasis Web.
-            </Paper>
+          <Grid item container spacing={10} justify="center" alignItems="center">
+            <Grid item xs={6}>
+              <img src={schoolyFeature3} />
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="h4" color="primary" gutterBottom>
+               Media sosial persekolahan
+              </Typography>
+              <Typography variant="h6">
+               Temukan kontak orang-orang sepersekolahan dengan mudah di Schooly.
+               Anda juga tidak akan pernah lupa lagi akan tugas persekolahan anda dengan fitur pengingat baik untuk guru dan murid.
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </div>
-
-      <div className={classes.paragraph}>
-      <Typography variant="h4" gutterBottom className={classes.paragraphTitle}>
-        Fitur-fitur yang akan datang:
-      </Typography>
-      <Grid container justify="center">
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Pengunci Browser
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Pengecek Kuis dan Ujian Otomatis untuk Berbagai Jenis Soal (Pilihan Ganda, Isilah, dan Essay)
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Chat grup kelas, murid ke guru baik secara pribadi maupun dalam tugas spesifik.
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper>
-            <img />
-            Sistem absen sekolah (tatap muka).
-          </Paper>
-        </Grid>
-      </Grid>
+      <div className={classes.moreFeaturesBackground}>
+        <div className={classes.moreFeatures}>
+          <Typography variant="h4" gutterBottom className={classes.moreFeaturesTitle}>
+            Fitur-Fitur Schooly yang Akan Datang
+          </Typography>
+          <Typography variant="h6" style={{marginBottom: "50px"}}>
+            Masih banyak fitur-fitur yang bisa dinantikan dari Schooly seperti:
+          </Typography>
+          <Grid container spacing={3} style={{marginBottom: "20px"}}>
+            <Grid item xs={4}>
+              <Paper className={classes.featurePaper}>
+                <Avatar className={classes.featureAvatar}>
+                  <DescriptionIcon className={classes.featureIcon} />
+                </Avatar>
+                <Typography>
+                  Kuis dan Ujian dengan berbagai jenis pertanyaan dari pilihan ganda, isilah, dan jawaban panjang.
+                  Dilengkapi dengan pengecek otomatis dari jenis pertanyaan ini.
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={4}>
+              <Paper className={classes.featurePaper}>
+                <Avatar className={classes.featureAvatar}>
+                  <ForumIcon className={classes.featureIcon} />
+                </Avatar>
+                <Typography>
+                  Diskusi antar guru dan murid mengenai sebuah tugas hingga sistem chatting antar orang dalam suatu lingkup sekolah.
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={4}>
+              <Paper className={classes.featurePaper}>
+                <Avatar className={classes.featureAvatar}>
+                  <BusinessCenterIcon className={classes.featureIcon} />
+                </Avatar>
+                <Typography>
+                  Bertanya langsung dengan alumni sekolah anda mengenai universitas impian hingga karir masa depan.
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+          <Typography variant="h5" style={{marginBottom: "50px"}}>
+            dan masih banyak lagi.
+          </Typography>
+        </div>
+      </div>
+      <div className={classes.supportSchooly}>
+        <Typography variant="h4" color="primary" gutterBottom >
+          Sudah menggunakan Schooly tapi masih belum puas?
+        </Typography>
+        <Typography paragraph>
+          Bantu Schooly berkembang dengan pendapat anda. Saran maupun kritik anda sangat berarti bagi kami.
+        </Typography>
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={<EmailIcon />}
+          className={classes.supportSchoolyButton}
+        >
+          Kirim Pesan
+        </Button>
       </div>
     </div>
   )

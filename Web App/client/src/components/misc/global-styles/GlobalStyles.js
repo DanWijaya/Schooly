@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
+import { fade } from "@material-ui/core/styles/colorManipulator"
 
 export const globalStyles = createMuiTheme({
   palette: {
@@ -12,6 +13,9 @@ export const globalStyles = createMuiTheme({
       light: "#4791db",
       dark: "#115293",
     },
+    button: {
+      main: fade("#2196f3", 0.15),
+    }
   },
   overrides: {
     MuiButton: {

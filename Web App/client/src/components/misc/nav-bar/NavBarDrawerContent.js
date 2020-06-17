@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { drawerWidth } from "./NavBar.js";
 import { Avatar, Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import { fade } from '@material-ui/core/styles/colorManipulator'
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -59,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const StyledListItem = withStyles((theme) => ({
   root: {
     "&:active, &:hover": {
-      backgroundColor: fade(theme.palette.primary.main, 0.2),
+      backgroundColor: theme.palette.button.main,
     },
   },
 }))(ListItem);

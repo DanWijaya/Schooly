@@ -6,7 +6,7 @@ import dashboardBackground from "./DashboardBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { fade } from '@material-ui/core/styles/colorManipulator'
+import { fade } from "@material-ui/core/styles/colorManipulator"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import EmailIcon from "@material-ui/icons/Email";
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: fade(theme.palette.primary.main, 0.15),
+      backgroundColor: theme.palette.button.main,
     },
   },
 }));
