@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
   },
   moreFeaturesBackground: {
-    backgroundColor: theme.palette.button.main,
+    backgroundColor: theme.palette.componentbutton.main,
   },
   moreFeaturesTitle: {
     fontFamily: "Cambria",
@@ -119,7 +119,7 @@ function About() {
         <Grid container direction="column">
           <Grid item container spacing={10} justify="center" alignItems="center">
             <Grid item xs={6}>
-              <img src={schoolyFeature1} />
+              <img src={schoolyFeature1} alt="Schooly Feature 1" />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
@@ -141,12 +141,12 @@ function About() {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <img src={schoolyFeature2} />
+              <img src={schoolyFeature2} alt="Schooly Feature 2" />
             </Grid>
           </Grid>
           <Grid item container spacing={10} justify="center" alignItems="center">
             <Grid item xs={6}>
-              <img src={schoolyFeature3} />
+              <img src={schoolyFeature3} alt="Schooly Feature 3" />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
@@ -168,7 +168,7 @@ function About() {
           <Typography variant="h6" style={{marginBottom: "50px"}}>
             Masih banyak fitur-fitur yang bisa dinantikan dari Schooly seperti:
           </Typography>
-          <Grid container spacing={3} style={{marginBottom: "20px"}}>
+          <Grid container spacing={3} style={{marginBottom: "50px"}}>
             <Grid item xs={4}>
               <Paper className={classes.featurePaper}>
                 <Avatar className={classes.featureAvatar}>
@@ -201,9 +201,6 @@ function About() {
               </Paper>
             </Grid>
           </Grid>
-          <Typography variant="h5" style={{marginBottom: "50px"}}>
-            dan masih banyak lagi.
-          </Typography>
         </div>
       </div>
       <div className={classes.supportSchooly}>

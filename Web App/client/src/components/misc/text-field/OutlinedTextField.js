@@ -1,5 +1,5 @@
 import React from "react";
-import WarningIcon from '@material-ui/icons/Warning';
+import WarningIcon from "@material-ui/icons/Warning";
 import { Typography } from "@material-ui/core";
 
 const OutlinedTextField = (props) => {
@@ -12,7 +12,6 @@ const OutlinedTextField = (props) => {
     setBorderStyle("2px solid #2196f3")
   }
 
-
   return (
     <div>
       <label htmlFor={props.html_for}>
@@ -20,8 +19,10 @@ const OutlinedTextField = (props) => {
           {props.labelname}
         </div>
       </label>
-      {props.multiline == undefined ?
+      {props.multiline === undefined ?
       <input
+        onFocus={onFocus}
+        onBlur={onBlur}
         onChange={props.on_change}
         value={props.value}
         error={props.error}
@@ -38,10 +39,11 @@ const OutlinedTextField = (props) => {
           boxShadow: "none",
           backgroundColor: "#FFFFFF",
         }}
+      />
+      :
+      <textarea
         onFocus={onFocus}
         onBlur={onBlur}
-      /> :
-      <textarea
         onChange={props.on_change}
         value={props.value}
         error={props.error}
@@ -59,17 +61,15 @@ const OutlinedTextField = (props) => {
           outline: "none",
           backgroundColor: "#FFFFFF",
         }}
-        onFocus={onFocus}
-        onBlur={onBlur}
       />
       }
       <span className={props.span_classname}>
         <div style={{ display:"flex", alignItems: "center"}}>
-        {props.error1 || props.error2 ? <WarningIcon style={{ height: "5%", width:"5%"}} /> : null}
-        <Typography variant="h8" style={{marginLeft: "4px"}}>
-          {props.error1}
-          {props.error2}
-        </Typography>
+          {props.error1 || props.error2 ? <WarningIcon style={{ height: "5%", width:"5%"}} /> : null}
+          <Typography variant="h8" style={{marginLeft: "4px"}}>
+            {props.error1}
+            {props.error2}
+          </Typography>
         </div>
       </span>
     </div>

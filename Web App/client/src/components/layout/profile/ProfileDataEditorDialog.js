@@ -26,15 +26,15 @@ import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   buttonEditProfile: {
-    backgroundColor: "#2196f3",
+    backgroundColor: theme.palette.primary.main,
     color: "white",
     marginBottom: "10px",
     width: "200px",
     "&:focus": {
-      backgroundColor: "#2196f3",
+      backgroundColor: theme.palette.primary.main,
     },
     "&:hover": {
-      backgroundColor: "#2196f3",
+      backgroundColor: theme.palette.primary.main,
     },
   },
   dialogRoot: {
@@ -46,6 +46,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     width:"500px",
     height: "300px",
+  },
+  profileDataItemAvatar: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  saveButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
   },
 }));
 
@@ -80,10 +95,12 @@ function TabIndex(index) {
 }
 
 function ProfileDataItemEdit(props) {
+  const classes = useStyles();
+
   return (
     <ListItem>
         <ListItemAvatar>
-          <Avatar style={{backgroundColor: "#2196f3"}}>
+          <Avatar className={classes.profileDataItemAvatar}>
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
@@ -103,6 +120,7 @@ function ProfileDataItemEdit(props) {
 
 function ProfileDataEditorDialog(props) {
   const classes = useStyles();
+  
   const { user } = props.auth;
   const { updateUserData } = props;
   //Dialog
@@ -320,7 +338,7 @@ function ProfileDataEditorDialog(props) {
               <Button
                 type="submit"
                 id="simpan"
-                style={{backgroundColor: "#2196f3", color: "white"}}
+                className={classes.saveButton}
               >
                 Simpan
               </Button>

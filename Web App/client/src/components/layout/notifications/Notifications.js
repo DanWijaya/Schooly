@@ -1,6 +1,6 @@
 import React from "react";
 import StandardTextField from "../../misc/text-field/StandardTextField"
-import { Avatar, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core"
+import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
@@ -27,12 +27,14 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.componentbutton.main,
     },
   },
 }));
 
 function NotificationItemList(props) {
+  document.title="Schooly | Notifikasi";
+
   const classes = useStyles();
 
   return (

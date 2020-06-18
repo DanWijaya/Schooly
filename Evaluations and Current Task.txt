@@ -1,43 +1,33 @@
 Current Task
 
 Botak:
-1. Landing, Admin Dashboard, Terms and Policies, About
-2. Bikin gambar-gambar yang diperlukan (belajar AI)
-3. Custom fonts (http://skyentific.me/adding-fonts-to-create-react-app/)
-4. Globalize "primary" color for makestyles
-5. Mobile view
-8. Rename yang belum bahasa indo
-9. Rename Page Title
-10. Pakai Date Picker buat tanggal lahir
-12. Tambahkan step 3 register untuk konfirmasi terms and condition
-13. Tambahin show password pas register (step 3)
-14. AM/PM di dashboard diganti kalo bisa
-15. background color di button, ripple color, hover active color.
-19. Cek link nya udah dalam indo semua belum
-20. Background: https://css-tricks.com/perfect-full-page-background-image/
-21. Betulin hijau2 datepicker dan select
-22. Fix auto hide drawer navbar (media query)
-23. Starred notification
-24. habis login page colornya jadi ikut warna login juga
-25. footer masih masalah (mungkin harus media query)
+1. Admin Dashboard, Terms and Policies
+2. Mobile view
+3. Rename yang belum bahasa indo dan Cek link nya udah dalam indo semua belum
+4. Rename Page Title
+5. Tambahkan step 3 register untuk konfirmasi terms and condition
+6. Tambahin show password pas register (step 3)
+7. Starred notification
+8. footer masih masalah (mungkin harus media query)
+9. Misteri ripple berubah jadi biru pas apply di globalstyles
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
 3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 4. Notifications page dan listnya (previewnya muncul di Dashboard)
 5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-10.Reset Kata Sandi functionality
+10. Reset Kata Sandi functionality
 11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
 13. Perlu fix Edit Task yang MenuItemnya ndak muncul dibold pas dibuka. Anjeng
 14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. (DONE)
 15. Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
 16. Do auto complete field untuk subject punya
-17. Buat class pagenya munculin tasks, students, dll. 
+17. Buat class pagenya munculin tasks, students, dll.
 18. Masih perlu perbaiki viewTask untuk si student (tablenya agak aneh)
 19. Untuk pas udah kelogin, pas buka login pagenya dia ndak immediately ke Dashboard lol.
 
-Penting untuk diimplemen: 
-1. Guru bisa pasang attachment di TaskObjectnya -> Dan studentnya bisa download dan preview attachments itu. 
+Penting untuk diimplemen:
+1. Guru bisa pasang attachment di TaskObjectnya -> Dan studentnya bisa download dan preview attachments itu.
 2. Buat Notification functionality (Schema Notif dan explore cara handlenya?)
 3. Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
 

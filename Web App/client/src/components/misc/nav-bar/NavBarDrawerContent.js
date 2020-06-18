@@ -4,13 +4,11 @@ import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { drawerWidth } from "./NavBar.js";
-import { Avatar, Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
-import AssessmentIcon from "@material-ui/icons/AssessmentOutlined";
-import ClassIcon from "@material-ui/icons/Class";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
 import { FaChalkboardTeacher } from "react-icons/fa";
@@ -58,14 +56,14 @@ const useStyles = makeStyles((theme) => ({
 const StyledListItem = withStyles((theme) => ({
   root: {
     "&:active, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.componentbutton.main,
     },
   },
 }))(ListItem);
 
 const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
   return (
-    !isDisabled ? 
+    !isDisabled ?
     <Link to={linkto}>
       <StyledListItem button disabled={isDisabled}>
         <ListItemIcon>
@@ -76,7 +74,7 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
           secondary={itemText2}
         />
       </StyledListItem>
-    </Link> : 
+    </Link> :
     <StyledListItem button disabled={isDisabled}>
       <ListItemIcon>
         {icon}
@@ -91,12 +89,13 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
 
 function DrawerContent(props) {
   const classes = useStyles();
+
   const { user } = props;
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
-  if(user != undefined){
-    if(user.role == "Student")
+  if(user !== undefined){
+    if(user.role === "Student")
       directedTo = `/viewclass/${user.kelas}`
     else
       directedTo = "/newtasklist"

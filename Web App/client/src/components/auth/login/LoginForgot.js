@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
 import PropTypes from "prop-types";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { connect } from "react-redux";
-import { createHash , password} from "../../../actions/AuthActions";
+import { createHash, password} from "../../../actions/AuthActions";
 import classnames from "classnames";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -39,6 +39,20 @@ const styles = (theme) => ({
     color: "red",
     fontSize: "10px"
   },
+  containedButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    width: "100%",
+    marginTop: "30px",
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  }
 });
 
 class LoginForgot extends Component {
@@ -70,11 +84,12 @@ class LoginForgot extends Component {
     console.log(this.state.email)
     this.props.createHash(this.state.email)
   }
-  
+
   render() {
     console.log(this.state.email)
     document.title = "Lupa Akun"
     document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
+
     const { errors, email } = this.state;
     const { classes} = this.props;
     const { isPasswordReset} = this.props.passwordMatters
@@ -91,7 +106,7 @@ class LoginForgot extends Component {
               spacing={3}
               className={classes.loginForgotGrid}
             >
-                {!isPasswordReset ? 
+                {!isPasswordReset ?
                 <Grid item className={classes.infoTitle}>
                   <Typography variant="h6" gutterBottom>
                     <b>Lupa Kata Sandi?</b>
@@ -99,18 +114,18 @@ class LoginForgot extends Component {
                   <Typography variant="body1">
                     Masukkan email dan nomor telepon anda untuk melanjutkan.
                   </Typography>
-                </Grid> : 
+                </Grid> :
                 <Grid item className={classes.infoTitle}>
                   <Typography variant="h6" gutterBottom>
                   Sebuah email telah dikirimkan ke alamat email yang anda berikan.
                   </Typography>
                   <Typography variant="body1">
                     <b>Silahkan klik tautan itu untuk melanjutkan mengganti password</b>
-                  </Typography> 
+                  </Typography>
               </Grid>}
 
               <Grid item style={{width:"300px"}} >
-                {!isPasswordReset ? 
+                {!isPasswordReset ?
                 <form noValidate onSubmit={this.onSubmit}>
                   <div style={{marginBottom: "20px"}}>
                     <OutlinedTextField
@@ -129,27 +144,18 @@ class LoginForgot extends Component {
                   </div>
                   <Button
                     type="submit"
-                    style={{
-                      backgroundColor: "#2196f3",
-                      color: "white",
-                      width: "100%",
-                      marginTop: "30px"
-                    }}
+                    className={classes.containedButton}
                   >
                     Ubah Kata Sandi
                   </Button>
-                </form> :
+                </form>
+                :
                 <Button
-                onClick={() => window.location.reload()}
-                style={{
-                  backgroundColor: "#2196f3",
-                  color: "white",
-                  width: "100%",
-                  marginTop: "30px"
-                }}
-              >
-                Kirim email ulang
-              </Button>
+                  onClick={() => window.location.reload()}
+                  className={classes.containedButton}
+                >
+                  Kirim Ulang Email
+                </Button>
               }
               </Grid>
             </Grid>
