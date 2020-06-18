@@ -13,30 +13,51 @@ const useStyles = makeStyles((theme) => ({
   paperBox: {
     padding: "20px"
   },
+  notificationTitleContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    height: "60px",
+  },
+  notificationSearchBarContainer: {
+    display: "flex",
+    width: "30%",
+  },
+  listItemPaper: {
+    marginBottom: "10px"
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
+  },
 }));
 
 function NotificationItemList(props) {
+  const classes = useStyles();
+
   return (
-    <ListItem button component="a" href={props.notification_link}>
-      <ListItemAvatar>
-        <Avatar>
-          {props.sender_avatar}
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Typography>
-            {props.notification_title}
+    <Paper variant="outlined" className={classes.listItemPaper}>
+      <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
+        <ListItemAvatar>
+          <Avatar>
+            {props.sender_avatar}
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <Typography>
+              {props.notification_title}
+            </Typography>
+          }
+          secondary={props.sender_name}
+        />
+        <ListItemSecondaryAction>
+          <Typography variant="subtitle" color="textSecondary">
+            {props.time}
           </Typography>
-        }
-        secondary={props.sender_name}
-      />
-      <ListItemSecondaryAction>
-        <Typography variant="subtitle" color="textSecondary">
-          {props.time}
-        </Typography>
-      </ListItemSecondaryAction>
-    </ListItem>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Paper>
   )
 }
 
@@ -46,18 +67,17 @@ function Notifications(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
-          <div style={{display: "flex", justifyContent: "space-between", height: "60px"}}>
+          <div className={classes.notificationTitleContainer}>
             <Typography variant="subtitle2">
               <h5>Notifikasi</h5>
             </Typography>
-            <div style={{display: "flex", width: "30%"}}>
+            <div className={classes.notificationSearchBarContainer}>
               <StandardTextField />
               <IconButton className={classes.searchButton}>
                 <SearchIcon />
               </IconButton>
             </div>
           </div>
-          <Divider />
           <List>
             <NotificationItemList
               sender_icon={<AccountCircleIcon />}
