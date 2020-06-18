@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
 import PropTypes from "prop-types";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { connect } from "react-redux";
-import { createHash } from "../../../actions/AuthActions";
+import { createHash , password} from "../../../actions/AuthActions";
 import classnames from "classnames";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -54,6 +54,14 @@ class LoginForgot extends Component {
     this.setState({ [e.target.id]: e.target.value})
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   // resetPasswordFunction = (email) => {
   //   const { dispatch } = this.props;
   //   dispatch(createHash(email));
@@ -72,9 +80,10 @@ class LoginForgot extends Component {
     document.title = "Lupa Akun"
     document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
     const { errors, email } = this.state;
-    const { classes } = this.props;
-
-    console.log(this.props.dispatch)
+    const { classes} = this.props;
+    const { isPasswordReset} = this.props.passwordMatters
+    console.log(isPasswordReset)
+    console.log(errors)
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
         case 0:
@@ -282,21 +291,31 @@ class LoginForgot extends Component {
               spacing={3}
               className={classes.loginForgotGrid}
             >
-              <Grid item className={classes.infoTitle}>
-                <Typography variant="h6" gutterBottom>
-                  <b>Lupa Kata Sandi?</b>
-                </Typography>
-                <Typography variant="body1">
-                  Masukkan email dan nomor telepon anda untuk melanjutkan.
-                </Typography>
-              </Grid>
+                {!isPasswordReset ? 
+                <Grid item className={classes.infoTitle}>
+                  <Typography variant="h6" gutterBottom>
+                    <b>Lupa Kata Sandi?</b>
+                  </Typography>
+                  <Typography variant="body1">
+                    Masukkan email dan nomor telepon anda untuk melanjutkan.
+                  </Typography>
+                </Grid> : 
+                <Grid item className={classes.infoTitle}>
+                  <Typography variant="h6" gutterBottom>
+                  Sebuah email telah dikirimkan ke alamat email yang anda berikan.
+                  </Typography>
+                  <Typography variant="body1">
+                    <b>Silahkan klik tautan itu untuk melanjutkan mengganti password</b>
+                  </Typography> 
+              </Grid>}
+
               <Grid item style={{width:"300px"}} >
+                {!isPasswordReset ? 
                 <form noValidate onSubmit={this.onSubmit}>
                   <div style={{marginBottom: "20px"}}>
                     <OutlinedTextField
                       on_change={this.onChange}
                       value={email}
-                      // error=""
                       id="email"
                       type="email"
                       classname={classnames("", {
@@ -305,23 +324,9 @@ class LoginForgot extends Component {
                       html_for="email"
                       labelname="Email"
                       span_classname={classes.errorInfo}
-                      // error1={errors.password}
-                      // error2=""
+                      error1={errors.problem}
                     />
                   </div>
-                  {/* <OutlinedTextField
-                    on_change=""
-                    value=""
-                    error=""
-                    id=""
-                    type=""
-                    classname=""
-                    html_for=""
-                    labelname="Nomor Telepon"
-                    span_classname={classes.errorInfo}
-                    error1=""
-                    error2=""
-                  /> */}
                   <Button
                     type="submit"
                     style={{
@@ -333,7 +338,19 @@ class LoginForgot extends Component {
                   >
                     Ubah Kata Sandi
                   </Button>
-                </form>
+                </form> :
+                <Button
+                onClick={() => window.location.reload()}
+                style={{
+                  backgroundColor: "#2196f3",
+                  color: "white",
+                  width: "100%",
+                  marginTop: "30px"
+                }}
+              >
+                Kirim email ulang
+              </Button>
+              }
               </Grid>
             </Grid>
         </Paper>
@@ -345,12 +362,14 @@ class LoginForgot extends Component {
 LoginForgot.propTypes = {
   createHash: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  passwordMatters: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
   auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
-  errors: state.errors
+  errors: state.errors,
+  passwordMatters: state.passwordMatters
 });
 
 export default withRouter(

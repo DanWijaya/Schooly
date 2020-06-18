@@ -191,7 +191,7 @@ class Login extends Component {
             </Grid>
             <Divider className={classes.loginGridContent} />
             <Grid item container justify="space-around">
-              <Link href="/lupa-katasandi">
+              <Link href="/akun/lupa-katasandi">
                 Lupa Kata Sandi?
               </Link>
               |

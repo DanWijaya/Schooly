@@ -15,6 +15,7 @@ const validateLoginInput = require("../../validation/login");
 const User= require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
+const Admin = require("../../models/user_model/Admin");
 const Class = require("../../models/Class")
 // @route POST api/users/register
 // @desc Register user
@@ -33,8 +34,10 @@ router.post("/register", (req, res) => {
   var reg_user
   if(req.body.role == "Student")
     reg_user = Student
-  else
+  else if(req.body.role == "Teacher")
     reg_user = Teacher
+  else 
+    reg_user = Admin
 
   reg_user.findOne({ email: req.body.email }).then(user => {
     if (user) {
@@ -63,6 +66,16 @@ router.post("/register", (req, res) => {
             address: req.body.address,
             subject_teached: req.body.subject_teached
           });
+        else{
+          newUser = new Admin({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            phone: req.body.phone,
+            emergency_phone: req.body.emergency_phone,
+            address: req.body.address,
+          })
+        }
 
       // Hash password before saving in database
       bcrypt.genSalt(10, (err, salt) => {
@@ -91,6 +104,7 @@ router.post("/login", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
+  
 
   const email = req.body.email;
   const password = req.body.password;

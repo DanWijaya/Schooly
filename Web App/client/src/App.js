@@ -108,7 +108,7 @@ class App extends Component {
                 <Route exact path="/" component={Landing} />
                 <Route exact path="/daftar" component={Register} />
                 <Route exact path="/masuk" component={Login} />
-                <Route exact path="/lupa-katasandi" component={LoginForgot} />
+                <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                 <Route exact path="/bantuan" component={Help} />
                 <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                 <Route exact path="/error404" component={NotFound} /> {/*prototype*/}

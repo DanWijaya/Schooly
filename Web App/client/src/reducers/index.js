@@ -5,6 +5,7 @@ import TasksReducer from "./TaskReducer";
 import UploadReducer from "./UploadReducer";
 import SubjectReducer from "./SubjectReducer";
 import UserReducer from "./UserReducer";
+import AuthReducer from "./AuthReducer";
 
 export default combineReducers({
   auth: UserReducer,
@@ -13,4 +14,5 @@ export default combineReducers({
   tasksCollection: TasksReducer,
   filesCollection: UploadReducer,
   subjectsCollection: SubjectReducer,
+  passwordMatters: AuthReducer
 });

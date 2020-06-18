@@ -15,7 +15,7 @@ export const registerUser = (userData, history) => dispatch => {
       history.push("/masuk")
     })
     .catch(err => {
-
+      console.log(err)
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data

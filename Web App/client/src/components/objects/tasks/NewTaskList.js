@@ -19,7 +19,8 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
-  return { _id, tasktitle, subject, class_assigned, deadline, action };
+  return (action == null ? { _id, tasktitle, subject, class_assigned, deadline }
+    : { _id, tasktitle, subject, class_assigned, deadline, action});
 }
 var rows = [];
 
@@ -178,7 +179,7 @@ const TaskListToolbar = (props) => {
       ) : (
         null
       )}
-      {role == "Student" ? null : 
+      {role == "Student" ? <div style={{display: 'none'}}></div> : 
       <Link to="/createtask">
         <LightToolTip title="Buat tugas">
         <IconButton>
@@ -237,7 +238,7 @@ function NewTaskList(props) {
   const { tasksCollection, viewTask, deleteTask } = props;
   const { user } = props.auth;
 
-
+  
   const taskRowItem = (data) => {
     rows.push(
       createData(data._id, data.name,
@@ -475,7 +476,7 @@ function NewTaskList(props) {
                       <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
                       <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY")}</TableCell>
-                      <TableCell align="center">{row.action}</TableCell>
+                      {user.role == "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>
                   );
                 })}

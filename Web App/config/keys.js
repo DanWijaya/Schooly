@@ -1,4 +1,13 @@
 module.exports = {
   mongoURI: "mongodb+srv://Hello:Hello1234@schooly-46dtm.mongodb.net/test?retryWrites=true&w=majority",
-  secretOrKey: "secret"
+  secretOrKey: "secret",
+  mailGunService: { "apiKey": "9e91381d8c5088b2140f67f03315d628-7fba8a4e-31179542", 
+            "domain": 'sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org'
+          },
+  crypto: {
+    "secret": "sda46ufgh239d7fjhwi0sejhrgw4"
+  },
+  expressSession : {
+    "secret": "bmoe5r8hb98fhsbso93ikdfgbs0u"
+  },
 };
