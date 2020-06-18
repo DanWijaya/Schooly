@@ -19,12 +19,12 @@ import Landing from "./components/layout/landing/Landing";
 import Notifications from "./components/layout/notifications/Notifications";
 import Help from "./components/layout/help/Help";
 import Profile from "./components/layout/profile/Profile";
+import NotFound from "./components/layout/not-found/NotFound";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import { drawerWidth } from "./components/misc/nav-bar/NavBar";
 import NavBar from "./components/misc/nav-bar/NavBar";
 import Footer from "./components/misc/footer/Footer";
-import NotFound from "./components/misc/not-found/NotFound";
 //Class
 import CreateClass from "./components/objects/classes/CreateClass"
 import EditClass from "./components/objects/classes/EditClass";
@@ -83,8 +83,6 @@ class App extends Component {
   }
 
   render() {
-
-    const { classes} = this.props;
 
     console.log(drawerWidth)
     // let sideDrawer;

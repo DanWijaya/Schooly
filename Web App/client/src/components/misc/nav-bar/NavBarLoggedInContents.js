@@ -13,7 +13,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 const useStyles = makeStyles((theme) => ({
   menuItem: {
     "&:hover": {
-      backgroundColor: "#2196f3",
+      backgroundColor: theme.palette.primary.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
@@ -32,9 +32,10 @@ const useStyles = makeStyles((theme) => ({
 
 function NavBarLoggedInContents(props) {
   const classes = useStyles();
-  const { isMobileView, logoutUser} = props;
+
   const {user } = props.auth;
   const history = useHistory()
+  const { isMobileView, logoutUser} = props;
 
   // Menu items in Mobile
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);

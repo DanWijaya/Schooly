@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "17.5px",
     paddingRight: "17.5px",
   },
+  profileDataItemAvatar: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 const StyledBadge = withStyles((theme) => ({
@@ -54,10 +57,12 @@ function Alert(props) {
 }
 
 function ProfileDataItem(props) {
+  const classes = useStyles();
+
   return (
     <ListItem>
         <ListItemAvatar>
-          <Avatar style={{backgroundColor: "#2196f3"}}>
+          <Avatar className={classes.profileDataItemAvatar}>
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
@@ -76,6 +81,8 @@ function ProfileDataItem(props) {
 }
 
 function Profile(props) {
+  document.title="Schooly | Profil";
+
   const classes = useStyles();
 
   const { user } = props.auth;
@@ -121,14 +128,14 @@ function Profile(props) {
 
   document.title=`Schooly | ${user.name}`
 
-  if(classesCollection.selectedClasses.name == undefined){
+  if(classesCollection.selectedClasses.name === undefined){
     viewOneClass(user.kelas)
   }
   console.log(classesCollection)
   return (
     <div className={classes.root}>
 
-      {/* ProfilePictureEditorDialog punya Snackbar */}
+      {/* ProfilePictureEditorDialog Snackbar */}
       <Snackbar
         open={openAlert}
         autoHideDuration={4000}
@@ -140,7 +147,7 @@ function Profile(props) {
         </Alert>
       </Snackbar>
 
-      {/* ProfileDataEditorDialog punya Snackbar */}
+      {/* ProfileDataEditorDialog Snackbar */}
       <Snackbar
         open={openDataEditorAlert}
         autoHideDuration={4000}
@@ -152,7 +159,7 @@ function Profile(props) {
         </Alert>
       </Snackbar>
 
-      {/* ProfilePasswordEditorDialog punya Snackbar */}
+      {/* ProfilePasswordEditorDialog Snackbar */}
       <Snackbar
         open={openPasswordEditorAlert}
         autoHideDuration={4000}
@@ -201,7 +208,7 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class {classesCollection.selectedClasses.name == undefined ?
+            Class {classesCollection.selectedClasses.name === undefined ?
              null : classesCollection.selectedClasses.name}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>

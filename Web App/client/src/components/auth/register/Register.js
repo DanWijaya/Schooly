@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -12,7 +11,7 @@ import authBackground from "../AuthBackground.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, FormControl, Grid, MenuItem, Paper, Select, Typography, IconButton } from "@material-ui/core";
+import { Button, FormControl, Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper"
 import Step from "@material-ui/core/Step";
@@ -51,6 +50,33 @@ const styles = (theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  registerButton: {
+    backgroundColor: "#61bd4f",
+    color: "white",
+    width: "90px",
+    "&:focus": {
+      backgroundColor: "#61bd4f",
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: "#61bd4f",
+      color: "white",
+    },
+  },
+  continueButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    width: "90px",
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
+
 });
 
 class Register extends Component {
@@ -91,11 +117,11 @@ class Register extends Component {
   }
 
   onChange = (e, otherfield) => {
-    if(otherfield == "kelas")
+    if(otherfield === "kelas")
       this.setState({kelas: e.target.value});
-    else if(otherfield == "role")
+    else if(otherfield === "role")
       this.setState({ role: e.target.value})
-    else if(otherfield == "subject")
+    else if(otherfield === "subject")
       this.setState({ subject_teached: e.target.value})
     else
       this.setState({ [e.target.id]: e.target.value });
@@ -150,7 +176,7 @@ class Register extends Component {
     if(Object.keys(subjectsCollection).length !== 0){
       subjectOptions = subjectsCollection.all_subjects
     }
-    
+
     console.log(subjectOptions)
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi"];
@@ -404,11 +430,7 @@ class Register extends Component {
                           type="submit"
                           variant="contained"
                           size="medium"
-                          style={{
-                            backgroundColor: "#61bd4f",
-                            color: "white",
-                            width: "90px",
-                          }}
+                          className={classes.registerButton}
                         >
                           Daftar
                         </Button>
@@ -419,10 +441,7 @@ class Register extends Component {
                           variant="contained"
                           type="button"
                           onClick={handleNext}
-                          style={{
-                            backgroundColor: "#2196f3",
-                            color: "white",
-                          }}
+                          className={classes.continueButton}
                         >
                           Lanjut
                         </Button>

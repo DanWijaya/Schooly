@@ -13,7 +13,7 @@ export const globalStyles = createMuiTheme({
       light: "#4791db",
       dark: "#115293",
     },
-    button: {
+    componentbutton: {
       main: fade("#2196f3", 0.15),
     }
   },

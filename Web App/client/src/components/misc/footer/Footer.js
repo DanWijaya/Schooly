@@ -1,6 +1,6 @@
 import React from "react";
 import schoolySymbolLogo from "../../../images/SchoolySymbolLogo.png";
-import { Divider, Grid, Link, Typography } from "@material-ui/core";
+import { Divider, Grid, Link } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,14 +16,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
-  footerLeftContent: {
-    flex: "1",
-    justifyContent: "flex-start",
-  },
-  footerLeftContent: {
-    flex: "1",
-    justifyContent: "flex-end",
-  },
   contentFont: {
     fontSize: "13px",
   }
@@ -36,7 +28,6 @@ function Footer() {
   return(
     <div className={classes.root}>
     <Divider style={{marginBottom: "10px"}} />
-
       <div className={classes.footerContainer}>
         <Grid container spacing={2} justify="flex-start" className={classes.contentFont}>
           <Grid item style={{color: "grey"}}>
@@ -53,7 +44,7 @@ function Footer() {
             </Link>
           </Grid>
         </Grid>
-        <img src={schoolySymbolLogo} className={classes.schoolySymbol} />
+        <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbol} />
         <Grid container spacing={2} justify="flex-end" className={classes.contentFont}>
           <Grid item>
             <Link href="/tentang-schooly">

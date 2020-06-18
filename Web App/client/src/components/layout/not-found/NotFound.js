@@ -36,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NotFound() {
+  document.title="Schooly | Error 404: Tautan tidak Ditemukan";
+
   const classes = useStyles();
 
   return(

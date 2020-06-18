@@ -17,11 +17,11 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(25),
     margin: "auto"
   },
-  avatarImg1: { // Kalau width lebi kecil dari height
+  avatarImg1: { // If width is smaller than height
     width: theme.spacing(25),
     margin: "auto"
   },
-  avatarImg2: { //Kalau width lebi kecil dari height
+  avatarImg2: { //If height is smaller than width
     height: theme.spacing(25),
     margin: "auto"
   },
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   addPhotoIconButton: {
-    color: "#2196f3",
+    color: theme.palette.primary.main,
     backgroundColor: "#DCDCDC",
     boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
     transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
@@ -45,6 +45,19 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "#DCDCDC",
       boxShadow: "0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.15)",
+    },
+  },
+  uploadButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    width: "150px",
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
     },
   },
 }));
@@ -159,7 +172,6 @@ function ProfilePictureEditorDialog(props) {
         >
           <CameraAltIcon
             style={{
-              color: "#2196f3",
               height: "35px",
               width: "35px",
             }}
@@ -217,11 +229,7 @@ function ProfilePictureEditorDialog(props) {
                   <Button
                     startIcon={<AddAPhotoIcon />}
                     onClick={() => {imageUploader.current.click()}}
-                    style={{
-                      backgroundColor: "#2196f3",
-                      color: "white",
-                      width: "150px",
-                    }}
+                    className={classes.uploadButton}
                   >
                     Unggah Foto
                   </Button>

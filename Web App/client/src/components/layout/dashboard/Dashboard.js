@@ -4,12 +4,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import dashboardBackground from "./DashboardBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { fade } from "@material-ui/core/styles/colorManipulator"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import EmailIcon from "@material-ui/icons/Email";
 
 const useStyles = makeStyles((theme) => ({
   listItemPaper: {
@@ -17,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.componentbutton.main,
     },
   },
 }));

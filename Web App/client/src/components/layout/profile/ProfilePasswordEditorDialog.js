@@ -14,6 +14,18 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     textAlign: "center",
   },
+  saveButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
 }));
 
 function EditPasswordField(props) {
@@ -98,7 +110,7 @@ function ProfilePasswordEditorDialog(props) {
             <Grid container justify="center" style={{marginTop: "15px"}}>
               <Button
                 type="submit"
-                style={{backgroundColor: "#2196f3", color: "white"}}
+                className={classes.saveButton}
               >
                 Simpan
               </Button>

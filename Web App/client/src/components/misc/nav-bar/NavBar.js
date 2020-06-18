@@ -4,13 +4,11 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { logoutUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import LightTooltip from "../light-tooltip/LightTooltip";
 import NavBarDrawerContent from "./NavBarDrawerContent";
 import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
-import { AppBar, Button, CssBaseline, Grid, IconButton, Link, Toolbar, useMediaQuery } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import HelpIcon from "@material-ui/icons/Help";
+import { AppBar, Button, CssBaseline, Grid, Link, Toolbar, useMediaQuery } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 export const drawerWidth = 220;
 
@@ -36,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profileMenuItem: {
     "&:hover": {
-      backgroundColor: "#2196f3",
+      backgroundColor: theme.palette.primary.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
@@ -64,14 +62,43 @@ const useStyles = makeStyles((theme) => ({
     width: "100px",
     height: "50px",
   },
+  registerButton: {
+    backgroundColor: "#61bd4f",
+    color: "white",
+    width: "75px",
+    height: "30px",
+    marginRight: "15px",
+    "&:focus": {
+      backgroundColor: "#61bd4f",
+      color: "white",
+    },
+    "&:hover": {
+      backgroundColor: "#61bd4f",
+      color: "white",
+    },
+  },
+  loginButton: {
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    width: "75px",
+    height: "30px",
+    "&:focus": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+    "&:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
 }));
 
 function NavBar(props){
-  const theme = useTheme()
   const classes = useStyles();
+
   const { user } = props.auth;
   const isMobileView = useMediaQuery("(max-width:600px)");
-  // const isMobileView = useMediaQuery(theme.breakpoints.up('sm'));
+  // const isMobileView = useMediaQuery(theme.breakpoints.up("sm"));
 
   //Drawer at Mobile View Hooks
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -137,13 +164,7 @@ function NavBar(props){
           variant="contained"
           size="small"
           href="/daftar"
-          style={{
-            backgroundColor: "#61bd4f",
-            color: "white",
-            width: "75px",
-            height: "30px",
-            marginRight: "15px"
-          }}
+          className={classes.registerButton}
         >
           Daftar
         </Button>
@@ -151,12 +172,7 @@ function NavBar(props){
           variant="contained"
           size="small"
           href="/masuk"
-          style={{
-            backgroundColor: "white",
-            color: "#2196f3",
-            width: "75px",
-            height: "30px",
-          }}
+          className={classes.loginButton}
         >
           Masuk
         </Button>
