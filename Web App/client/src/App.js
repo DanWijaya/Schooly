@@ -12,6 +12,8 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
 import LoginForgot from "./components/auth/login/LoginForgot";
+import ResetPassword from "./components/auth/reset-password/ResetPassword";
+
 //Layout
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
@@ -112,6 +114,7 @@ class App extends Component {
                 <Route exact path="/bantuan" component={Help} />
                 <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                 <Route exact path="/error404" component={NotFound} /> {/*prototype*/}
+                <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />

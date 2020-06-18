@@ -5,7 +5,7 @@ import authBackground from "../AuthBackground.png";
 import PropTypes from "prop-types";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { connect } from "react-redux";
-import { createHash , password} from "../../../actions/AuthActions";
+import {savePassword} from "../../../actions/AuthActions";
 import classnames from "classnames";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -39,15 +39,18 @@ const styles = (theme) => ({
     color: "red",
     fontSize: "10px"
   },
+  inputField: {
+    width: "300px",
+  },
 });
 
-class LoginForgot extends Component {
+class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
       errors: {},
-      activeStep: 0,
-      email: "",
+      password: "",
+      password2: ""
     };
   }
   onChange = (e) => {
@@ -64,20 +67,27 @@ class LoginForgot extends Component {
 
 // dispatch is used as a callback which gets invoked once some async action is complete. 
 // In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
-  onSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted")
-    console.log(this.state.email)
-    this.props.createHash(this.state.email)
-  }
   
   render() {
-    console.log(this.state.email)
+    
     document.title = "Lupa Akun"
     document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
-    const { errors, email } = this.state;
-    const { classes} = this.props;
-    const { isPasswordReset} = this.props.passwordMatters
+    const { password, password2, errors } = this.state;
+    const { classes, savePassword} = this.props;
+    const { isPasswordReset, isPasswordUpdated } = this.props.passwordMatters
+    const { hash } = this.props.match.params;
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        console.log("Submitted")
+    
+        let passwordReset = {
+            password : password2,
+            hash: hash
+        }
+        console.log(hash)
+        savePassword(passwordReset)
+      }
 
     return (
       <div className={classes.root}>
@@ -88,45 +98,49 @@ class LoginForgot extends Component {
               direction="column"
               alignItems="center"
               justify="space-between"
-              spacing={3}
-              className={classes.loginForgotGrid}
-            >
-                {!isPasswordReset ? 
+              spacing={4}
+              className={classes.loginForgotGrid}>
                 <Grid item className={classes.infoTitle}>
                   <Typography variant="h6" gutterBottom>
-                    <b>Lupa Kata Sandi?</b>
+                    <b>Ubah Kata Sandi</b>
                   </Typography>
                   <Typography variant="body1">
-                    Masukkan email dan nomor telepon anda untuk melanjutkan.
+                    Masukkan Kata Sandi baru anda
                   </Typography>
-                </Grid> : 
-                <Grid item className={classes.infoTitle}>
-                  <Typography variant="h6" gutterBottom>
-                  Sebuah email telah dikirimkan ke alamat email yang anda berikan.
-                  </Typography>
-                  <Typography variant="body1">
-                    <b>Silahkan klik tautan itu untuk melanjutkan mengganti password</b>
-                  </Typography> 
-              </Grid>}
+                </Grid> 
 
-              <Grid item style={{width:"300px"}} >
-                {!isPasswordReset ? 
-                <form noValidate onSubmit={this.onSubmit}>
-                  <div style={{marginBottom: "20px"}}>
+              <Grid item >
+                <form noValidate onSubmit={onSubmit}>
+                <div style={{marginBottom: "20px"}}>
                     <OutlinedTextField
                       on_change={this.onChange}
-                      value={email}
-                      id="email"
-                      type="email"
+                      value={password}
+                      id="password"
+                      type="password"
                       classname={classnames("", {
                         invalid: errors.email || errors.emailnotfound
                       })}
-                      html_for="email"
-                      labelname="Email"
+                      html_for="password"
+                      labelname="Kata Sandi"
                       span_classname={classes.errorInfo}
-                      error1={errors.problem}
+                      error1={errors.reset_problem}
                     />
-                  </div>
+                </div>
+
+                    <OutlinedTextField
+                      on_change={this.onChange}
+                      value={password2}
+                      id="password2"
+                      type="password"
+                      classname={classnames("", {
+                        invalid: errors.email || errors.emailnotfound
+                      })}
+                      html_for="password2"
+                      labelname="Konfirmasi Kata Sandi"
+                      span_classname={classes.errorInfo}
+                      error1={errors.reset_problem}
+                    />
+
                   <Button
                     type="submit"
                     style={{
@@ -138,19 +152,7 @@ class LoginForgot extends Component {
                   >
                     Ubah Kata Sandi
                   </Button>
-                </form> :
-                <Button
-                onClick={() => window.location.reload()}
-                style={{
-                  backgroundColor: "#2196f3",
-                  color: "white",
-                  width: "100%",
-                  marginTop: "30px"
-                }}
-              >
-                Kirim email ulang
-              </Button>
-              }
+                </form> 
               </Grid>
             </Grid>
         </Paper>
@@ -159,8 +161,8 @@ class LoginForgot extends Component {
   }
 }
 
-LoginForgot.propTypes = {
-  createHash: PropTypes.func.isRequired,
+ResetPassword.propTypes = {
+  savePassword: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   passwordMatters: PropTypes.object.isRequired
@@ -173,5 +175,5 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { createHash })
-  (withStyles(styles)(LoginForgot)));
+  connect(mapStateToProps, { savePassword })
+  (withStyles(styles)(ResetPassword)));

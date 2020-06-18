@@ -3,7 +3,7 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router";
 
-import {PWD_RESET_HASH_CREATED, PWD_RESET_HASH_FAILURE, GET_ERRORS} from "./Types"
+import {PWD_RESET_HASH_CREATED, GET_ERRORS, PWD_SAVE_SUCCESS } from "./Types"
 
 // SEND EMAIL TO API FOR HASHING
 export const createHash = (email) => {
@@ -55,3 +55,54 @@ export const createHash = (email) => {
       );
       }
     }
+
+// Save a user's password
+export function savePassword(data) {
+  return async (dispatch) => {
+
+    // contact the API
+    await fetch(
+      // where to contact
+      '/api/authentication/savepassword',
+      // what to send
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      },
+    )
+    .then((res) => {
+      if (res.status === 200) {
+        return res.json();
+      }
+      return null;
+    })
+    .then(async (json) => {
+      if (json && json.success) {
+        alert("Done with updating password")
+        return dispatch({
+          type: PWD_SAVE_SUCCESS,
+          payload: json
+        })
+      } else {
+        console.log("Error in saving the new password")
+        return dispatch({
+          type: GET_ERRORS,
+          payload: json
+        })
+      }
+    })
+    .catch((err) => {
+        console.log("Mailgun has error in sending email")
+        console.log(err, "Errornya ini")
+        dispatch({
+        type: GET_ERRORS,
+        payload: err
+      })
+    });
+
+  };
+}

@@ -1,8 +1,9 @@
-import { PWD_RESET_CLEAR, PWD_RESET_HASH_CREATED, PWD_RESET_HASH_FAILURE} from "../actions/Types"
+import { PWD_RESET_CLEAR, PWD_RESET_HASH_CREATED, PWD_RESET_HASH_FAILURE, PWD_SAVE_FAILURE, PWD_SAVE_SUCCESS} from "../actions/Types"
 
 const isEmpty = require("is-empty");
 const initialState = {
     isPasswordReset: false,
+    isPasswordUpdated: false,
     email: ""
 };
 
@@ -19,6 +20,18 @@ export default function(state=initialState, action) {
             return{
                 ...state,
                 isPasswordReset: true
+            }
+        }
+        case PWD_SAVE_FAILURE: {
+            return{
+                ...state,
+                isPasswordUpdated: false
+            }
+        }
+        case PWD_SAVE_SUCCESS: {
+            return{
+                ...state,
+                isPasswordUpdated: true
             }
         }
         default:

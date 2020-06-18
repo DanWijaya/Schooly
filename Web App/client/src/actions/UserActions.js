@@ -194,7 +194,7 @@ export const getStudentsByClass = (classId) => dispatch => {
 }
 
 // Log user out
-export const logoutUser = (history=undefined) => dispatch => {
+export const logoutUser = () => dispatch => {
   // Remove token from local storage
   localStorage.removeItem("jwtToken");
   // Remove auth header for future requests
@@ -202,6 +202,7 @@ export const logoutUser = (history=undefined) => dispatch => {
   console.log("test")
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
-  if(history !== undefined)
-    history.push("/masuk")
+  // if(history !== undefined)
+  //   history.push("/masuk")
+  window.location.href ="./masuk"
 };
