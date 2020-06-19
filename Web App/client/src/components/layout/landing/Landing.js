@@ -234,6 +234,7 @@ function Landing() {
           <Button
             variant="contained"
             size="large"
+            href="mailto:schoolysystem@gmail.com"
             startIcon={<ContactMailIcon />}
             className={classes.sendMessageButton}
           >

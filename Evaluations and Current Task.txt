@@ -10,6 +10,11 @@ Botak:
 7. Starred notification
 8. footer masih masalah (mungkin harus media query)
 9. Misteri ripple berubah jadi biru pas apply di globalstyles
+10. Apply not found page
+11. Test klik semua button
+12. Disable navbar untuk login dan register
+13. Buang margin top untuk landing, notfound, about, help
+14. Disable landing pas udah login
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
