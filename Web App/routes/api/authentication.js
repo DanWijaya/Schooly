@@ -10,7 +10,6 @@ const mailgun = require("mailgun-js")({
   domain: keys.mailGunService.domain,
 })
 const passport = require("passport");
-import moment from "moment";
 
 // this is not secure at all to put the apiKey. 
 
@@ -41,18 +40,23 @@ router.post('/saveresethash', async(req,res) => {
         const hash = crypto.createHmac('sha256', secret)
                             .update(hashString)
                             .digest('hex')
-                            
-        foundUser.passwordReset = hash;
+
+        let currentDate = new Date().toLocaleString("id-ID", {timeZone: "Asia/Bangkok"})
+        let passwordResetData = { 
+          time_requested: new Date(currentDate), 
+          hash: hash
+        }
+        foundUser.passwordReset = passwordResetData;
         console.log(hash)
+        // nanti buatnya taruh di User pas request, lalu nnti pas reset passwordnya, check yg di save differencenya bverapa.. 
+
         foundUser.save((err) => {
-            let date = new Date()
             // Put together the email
             const emailData = {
               from: `Schoolysystem-no-reply <postmaster@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>`,
               to: foundUser.email,
-              subject: `Mengubah Kata Sandi`,
+              subject: `Mengubah Kata Sandi pada pukul ${currentDate}`,
               html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Jika ini benar anda, silahkan klik tautan dibawah ini.  Jika ini bukan anda, Silahkan abaikan email ini. <br/><br/> <a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`,
-              // html: `<a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`
             };
 
             // Send it
