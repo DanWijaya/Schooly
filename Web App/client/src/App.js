@@ -71,7 +71,6 @@ class App extends Component {
 
   state = {
     sideDrawerOpen: false,
-    marginTopExist: true,
     marginTopValue: 20,
     loggedIn: false,
     posts: []
@@ -91,13 +90,7 @@ class App extends Component {
   }
 
   render() {
-
-    console.log(drawerWidth)
-    // let sideDrawer;
-    console.log(this.state.sideDrawerOpen)
-    console.log(this.state.sideDrawerOpen)
     let translateXValue
-    // let appMarginTop = 0
 
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
@@ -105,10 +98,6 @@ class App extends Component {
     else{
       translateXValue = 72.5
     }
-
-    // if(this.state.marginTopExist) {
-    //   appMarginTop = 20
-    // }
 
     return (
       <div>
