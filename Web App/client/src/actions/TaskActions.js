@@ -6,7 +6,8 @@ export const createTask = (taskData, history) => dispatch => {
   axios
     .post("/api/tasks/create", taskData)
     .then(res => {
-        // history.push("/view")
+        history.push("/view")
+        // window.location.href = "./view"
         alert("Task is created")
         history.push("/newtasklist");
     })
@@ -101,7 +102,6 @@ export const deleteTask = (taskId, history) => dispatch => {
     .delete("/api/tasks/delete/" + taskId)
     .then((res) => {
         console.log(res.data)
-        alert("Task Deleted")
         window.location.reload()
         // history.push("/viewtask")
     })

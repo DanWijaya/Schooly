@@ -74,7 +74,7 @@ class ResetPassword extends Component {
     document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
     const { password, password2, errors } = this.state;
     const { classes, savePassword} = this.props;
-    const { isPasswordReset, isPasswordUpdated } = this.props.passwordMatters
+    // const { isPasswordReset, isPasswordUpdated } = this.props.passwordMatters
     const { hash } = this.props.match.params;
 
     const onSubmit = (e) => {
@@ -82,13 +82,12 @@ class ResetPassword extends Component {
         console.log("Submitted")
     
         let passwordReset = {
-            password : password2,
+            password : password,
+            password2: password2,
             hash: hash
         }
-        console.log(hash)
         savePassword(passwordReset)
       }
-
     return (
       <div className={classes.root}>
         <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
@@ -109,7 +108,7 @@ class ResetPassword extends Component {
                   </Typography>
                 </Grid> 
 
-              <Grid item >
+              <Grid item className={classes.inputField}>
                 <form noValidate onSubmit={onSubmit}>
                 <div style={{marginBottom: "20px"}}>
                     <OutlinedTextField
@@ -123,13 +122,14 @@ class ResetPassword extends Component {
                       html_for="password"
                       labelname="Kata Sandi"
                       span_classname={classes.errorInfo}
-                      error1={errors.reset_problem}
+                      error1={errors.password_entry}
                     />
                 </div>
 
                     <OutlinedTextField
                       on_change={this.onChange}
                       value={password2}
+                      error={errors.password_match}
                       id="password2"
                       type="password"
                       classname={classnames("", {
@@ -138,7 +138,8 @@ class ResetPassword extends Component {
                       html_for="password2"
                       labelname="Konfirmasi Kata Sandi"
                       span_classname={classes.errorInfo}
-                      error1={errors.reset_problem}
+                      error1={errors.password_match}
+                      error2={errors.reset_problem}
                     />
 
                   <Button
