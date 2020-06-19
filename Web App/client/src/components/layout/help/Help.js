@@ -43,6 +43,13 @@ function Help(props) {
 
   const classes = useStyles();
 
+  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
+  const { handleMarginTopValue } = props;
+  if(!isFirsttimeRendered) {
+    handleMarginTopValue(0);
+    setFirstTime(true);
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.helpTopicsBackground}>

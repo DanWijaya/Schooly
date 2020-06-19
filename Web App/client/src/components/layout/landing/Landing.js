@@ -115,10 +115,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Landing() {
+function Landing(props) {
   document.title="Selamat Datang di Schooly";
 
   const classes = useStyles();
+
+  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
+  const { handleMarginTopValue } = props;
+  if(!isFirsttimeRendered) {
+    handleMarginTopValue(0);
+    setFirstTime(true);
+  }
 
   return (
     <div className={classes.root}>

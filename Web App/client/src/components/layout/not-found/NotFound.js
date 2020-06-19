@@ -48,10 +48,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NotFound() {
+function NotFound(props) {
   document.title="Schooly | Error 404: Tautan tidak Ditemukan";
 
   const classes = useStyles();
+
+  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
+  const { handleMarginTopValue } = props;
+  if(!isFirsttimeRendered) {
+    handleMarginTopValue(0);
+    setFirstTime(true);
+  }
 
   return(
     <div className={classes.root}>
