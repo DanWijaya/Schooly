@@ -11,7 +11,7 @@ const mailgun = require("mailgun-js")({
 })
 const passport = require("passport");
 
-// this is not secure at all to put the apiKey. 
+// this is not secure at all to put the apiKey.
 
 // Load input validation
 
@@ -35,7 +35,7 @@ router.post('/saveresethash', async(req,res) => {
         const timeInMs = Date.now();
         const hashString = `${req.body.email}${timeInMs}`;
         const secret = keys.crypto.secret;
-        // the secret key should not be stored here in the code.. 
+        // the secret key should not be stored here in the code..
 
         const hash = crypto.createHmac('sha256', secret)
                             .update(hashString)
