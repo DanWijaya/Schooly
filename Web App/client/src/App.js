@@ -71,6 +71,7 @@ class App extends Component {
 
   state = {
     sideDrawerOpen: false,
+    marginTopValue: 20,
     loggedIn: false,
     posts: []
   };
@@ -79,22 +80,22 @@ class App extends Component {
     this.setState({ sideDrawerOpen: dataFromChild, firstTimeRendered: false})
   }
 
+  handleMarginTopValue = (dataFromChild) => {
+    this.setState({ marginTopValue: dataFromChild })
+  }
+
   // Bascically run this whenever user logs in or logs out.
   setLoggedIn = (dataFromChild) => {
     this.setState({ loggedIn : dataFromChild})
   }
   
   render() {
-
-    console.log(drawerWidth)
-    // let sideDrawer;
-    console.log(this.state.sideDrawerOpen)
-    console.log(this.state.sideDrawerOpen)
     let translateXValue
 
     if(this.state.sideDrawerOpen) {
       translateXValue = drawerWidth
-    } else{
+    }
+    else{
       translateXValue = 72.5
     }
 
@@ -102,22 +103,40 @@ class App extends Component {
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
+            <NavBar callbackFromParent={(data) => this.myCallback(data)} />
             <Router>
-              <NavBar callbackFromParent={(data) => this.myCallback(data)} />
-              <div style={{marginTop: "20px", marginLeft: `${translateXValue}px`}}>
-                <Route exact path="/" component={Landing} />
-                <Route exact path="/daftar" component={Register} />
-                <Route exact path="/masuk" component={Login} />
-                <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
-                <Route exact path="/bantuan" component={Help} />
-                <Route exact path="/tester" component={Tester} /> {/*prototype*/}
-                <Route exact path="/error404" component={NotFound} /> {/*prototype*/}
-                <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
+              <div style={{marginTop: `${this.state.marginTopValue}px`, marginLeft: `${translateXValue}px`}}>
+                <Switch>
+                  <Route exact path="/"
+                    render={(props) => (
+                      <Landing {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
+                    )}
+                  />
+                  <Route exact path="/bantuan"
+                    render={(props) => (
+                      <Help {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
+                    )}
+                   />
+                  <Route
+                    render={(props) => (
+                      <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
+                    )}
+                  />
+                  <Route exact path="/daftar" component={Register} />
+                  <Route exact path="/masuk" component={Login} />
+                  <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
+                  <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
+                  <Route exact path="/tester" component={Tester} /> {/*prototype*/}
+                </Switch>
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />
                   <PrivateRoute exact path="/notifikasi" component={Notifications} />
-                  <PrivateRoute exact path="/tentang-schooly" component={About} />
+                  <PrivateRoute exact path="/tentang-schooly"
+                    render={(props) => (
+                      <About {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
+                    )}
+                  />
                   {/* Route Class */}
                   <PrivateRoute exact path="/createclass" component={CreateClass} />
                   <PrivateRoute exact path="/viewclass/:id" component={ViewClass} />

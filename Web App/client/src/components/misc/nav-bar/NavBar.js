@@ -122,7 +122,7 @@ function NavBar(props){
   else {
     leftSideNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
-        <a href="/dashboard">
+        <a href="/">
           <img
             alt="SchoolyLogoNavBar"
             src={schoolyLogo}

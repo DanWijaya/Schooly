@@ -95,10 +95,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function About() {
+function About(props) {
   document.title="Schooly | Tentang Schooly";
 
   const classes = useStyles();
+
+  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
+  const { handleMarginTopValue } = props;
+  if(!isFirsttimeRendered) {
+    handleMarginTopValue(0);
+    setFirstTime(true);
+  }
 
   return (
     <div className={classes.root}>
