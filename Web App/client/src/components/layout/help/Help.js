@@ -1,5 +1,6 @@
 import React from "react";
 import helpTopics from "./HelpTopics.png";
+import moreHelpBackground from "./MoreHelpBackground.png";
 import { Button, Drawer, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Paper, Typography, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -35,6 +36,21 @@ const useStyles = makeStyles((theme) => ({
   content: {
     maxWidth: "1000px",
     margin: "auto",
+    marginTop: "50px",
+  },
+  moreHelp: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    maxWidth: "1000px",
+    height: "200px",
+    fontFamily: "Cambria",
+    backgroundImage: `url(${moreHelpBackground})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
   }
 }));
 
@@ -64,10 +80,10 @@ function Help(props) {
       </div>
       <div className={classes.content}>
         <div style={{marginBottom: "100px"}}>
-          <ExpansionPanel>
+          <ExpansionPanel variant="outlined" defaultExpanded>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>
-                Apa yang saya lakukan jika saya lupa email akun saya?
+              <Typography variant="h5" color="primary">
+                Akun
               </Typography>
             </ExpansionPanelSummary>
             <Divider />
@@ -78,16 +94,14 @@ function Help(props) {
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
-        <Paper className={classes.helpTitlePaper} style={{marginBottom: "30px"}}>
-          <Grid container direction="column" alignItems="center" className={classes.helpTitle}>
-            <Typography variant="h4" gutterBottom>
-              Ada yang bisa kami bantu?
-            </Typography>
-            <Typography variant="h6">
-              Silahkan hubungi:
-            </Typography>
-          </Grid>
-        </Paper>
+        <div className={classes.moreHelp}>
+          <Typography variant="h4" gutterBottom>
+            Ada yang bisa kami bantu?
+          </Typography>
+          <Typography variant="h6">
+            Masih belum menemukan solusi dari permasalahan anda? Silahkan hubungi kami.
+          </Typography>
+        </div>
         <Grid container justify="space-around">
           <Paper style={{padding: "20px"}} component="button" component="a" href="mailto:schoolysystem@gmail.com">
             <Grid item xs={6} container direction="column" alignItems="center">

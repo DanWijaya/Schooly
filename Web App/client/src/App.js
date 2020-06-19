@@ -103,8 +103,8 @@ class App extends Component {
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
-            <NavBar callbackFromParent={(data) => this.myCallback(data)} />
             <Router>
+              <NavBar callbackFromParent={(data) => this.myCallback(data)} />
               <div style={{marginTop: `${this.state.marginTopValue}px`, marginLeft: `${translateXValue}px`}}>
                 <Switch>
                   <Route exact path="/"
@@ -117,26 +117,19 @@ class App extends Component {
                       <Help {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
                     )}
                    />
-                  <Route
-                    render={(props) => (
-                      <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
-                    )}
-                  />
+                   <Route exact path="/tentang-schooly"
+                     render={(props) => (
+                       <About {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
+                     )}
+                   />
                   <Route exact path="/daftar" component={Register} />
                   <Route exact path="/masuk" component={Login} />
                   <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                   <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                   <Route exact path="/tester" component={Tester} /> {/*prototype*/}
-                </Switch>
-                <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />
                   <PrivateRoute exact path="/notifikasi" component={Notifications} />
-                  <PrivateRoute exact path="/tentang-schooly"
-                    render={(props) => (
-                      <About {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
-                    )}
-                  />
                   {/* Route Class */}
                   <PrivateRoute exact path="/createclass" component={CreateClass} />
                   <PrivateRoute exact path="/viewclass/:id" component={ViewClass} />
@@ -155,6 +148,11 @@ class App extends Component {
                   {/* Route Admin-Only  */}
                   <PrivateRoute exact path="/classlist" component={ClassList} /> {/*prototype*/}
                   <PrivateRoute exact path="/newclasslist" component={NewClassList} /> {/*prototype*/}
+                  <Route
+                    render={(props) => (
+                      <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
+                    )}
+                  />
                 </Switch>
                 <div
                   style={{
