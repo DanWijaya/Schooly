@@ -17,7 +17,6 @@ const passport = require("passport");
 // this is not secure at all to put the apiKey.
 
 // Load input validation
-
 // Load User model
 const User= require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
@@ -53,7 +52,7 @@ router.post('/saveresethash', async(req,res) => {
               from: `Schoolysystem-no-reply <postmaster@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>`,
               to: foundUser.email,
               subject: `Permohonan Mengubah Kata Sandi di saat ${time_in_string}`,
-              html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali. <br/><br/> <a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`,
+              html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. <b>Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali.</b> <br/><br/> <a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`,
               // html: `<a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`
             };
 
@@ -77,7 +76,6 @@ router.post('/saveresethash', async(req,res) => {
 // POST to savepassword
 router.post('/savepassword', async (req, res) => {
   let result;
-  
   try {
     // look up user in the DB based on reset hash
     const query = User.findOne({ passwordReset: req.body.hash });
@@ -96,16 +94,14 @@ router.post('/savepassword', async (req, res) => {
       result = res.send(JSON.stringify({ password_entry: 'Kata sandi baru belum diisi' }))
     } 
     else if(!Validator.isLength(req.body.password, { min: 8, max: 30 })){
-      result = res.send(JSON.stringify({ password_entry: 'Kata sandi harus terdiri dari 8 dan 30 karakter' }))
+      result = res.send(JSON.stringify({ password_entry: 'Kata sandi harus terdiri dari 8 hingga 30 karakter' }))
     } 
     else if(!Validator.equals(req.body.password, req.body.password2)){
       result = res.send(JSON.stringify({ password_match: 'Konfirmasi kata sandi harus sama' }))
     }
     else if(minute_difference > 5){
       console.log("Link has expired (exceed 5 mins)")
-      // result = res.send(JSON.stringify({ reset_problem: 'Tautan ini sudah tidak berlaku setelah 5 menit' }))
-      alert("Tautan ini sudah tidak berlaku setelah 5 menit, silahkan memohon untuk mengubah kata sandi lagi")
-      window.location.href = "./akun/lupa-katasandi"
+      result = res.send(JSON.stringify({ reset_problem: 'Tautan ini sudah tidak berlaku setelah 5 menit' , expired: "yes"}))
     } else {
       
       // Hash password before saving in database
@@ -124,7 +120,7 @@ router.post('/savepassword', async (req, res) => {
   } catch (err) {
     console.log("There is an error")
     // if the hash didn't bring up a user, error out
-    result = res.send(JSON.stringify({ reset_problem: 'Terjadi kesalahan teknis' }));
+    result = res.send(JSON.stringify({ reset_problem: 'Tautan sudah dipakai sebelumnya, silahkan memohon untuk mengubah kata sandi lagi', expired: "yes" }));
   }
   return result;
 });

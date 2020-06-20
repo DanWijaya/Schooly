@@ -83,21 +83,24 @@ export function savePassword(data) {
     .then(async (json) => {
       if (json && json.success) {
         alert("Done with updating password")
-        window.location.href = "./masuk"
-        return dispatch({
-          type: PWD_SAVE_SUCCESS,
-          payload: json
-        })
-      } else {
-        console.log("Error in saving the new password")
-        return dispatch({
-          type: GET_ERRORS,
-          payload: json
-        })
+        window.location.href = "/masuk"
+        // return dispatch({
+        //   type: PWD_SAVE_SUCCESS,
+        //   payload: json
+        // })
+      }
+        else {
+          if(json.expired == "yes"){
+            alert("Tautan ini sudah tidak berlaku, silahkan memohon ulang")
+            window.location.href = '/akun/lupa-katasandi'
+          }
+          return dispatch({
+            type: GET_ERRORS,
+            payload: json
+          })
       }
     })
     .catch((err) => {
-        console.log("Mailgun has error in sending email")
         console.log(err, "Errornya ini")
         dispatch({
         type: GET_ERRORS,
