@@ -52,13 +52,13 @@ function Footer() {
             </Link>
           </Grid>
           <Grid item>
-            <Link href="/tentang-schooly">
+            <Link href="mailto:schoolysystem@gmail.com">
               Hubungi Kami
             </Link>
           </Grid>
           <Grid item>
-            <Link href="/tentang-schooly">
-              Media Sosial
+            <Link href="http://www.instagram.com">
+              Instagram
             </Link>
           </Grid>
         </Grid>

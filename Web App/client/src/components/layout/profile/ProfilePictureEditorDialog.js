@@ -236,32 +236,32 @@ function ProfilePictureEditorDialog(props) {
                 </Grid>
                 <Grid item>
                   {profileImg == null ?
-                  <Button
-                  disabled
-                    type="submit"
-                    startIcon={<CloudUploadIcon />}
-                    style={{
-                      backgroundColor: "#61bd4f",
-                      color: "white",
-                      width: "150px",
-                      opacity: "50%"
-                    }}
-                  >
-                    Simpan
-                  </Button> :
-                  <Button
-                    type="submit"
-                    startIcon={<CloudUploadIcon />}
-                    style={{
-                      backgroundColor: "#61bd4f",
-                      color: "white",
-                      width: "150px",
-                    }}
-                  >
-                    Simpan
-                  </Button>
+                    <Button
+                      disabled
+                      type="submit"
+                      startIcon={<CloudUploadIcon />}
+                      style={{
+                        backgroundColor: "#61bd4f",
+                        color: "white",
+                        width: "150px",
+                        opacity: "50%"
+                      }}
+                    >
+                      Simpan
+                    </Button>
+                    :
+                    <Button
+                      type="submit"
+                      startIcon={<CloudUploadIcon />}
+                      style={{
+                        backgroundColor: "#61bd4f",
+                        color: "white",
+                        width: "150px",
+                      }}
+                    >
+                      Simpan
+                    </Button>
                   }
-
                 </Grid>
               </Grid>
             </form>

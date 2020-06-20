@@ -96,7 +96,7 @@ class App extends Component {
       translateXValue = drawerWidth
     }
     else{
-      translateXValue = 72.5
+      translateXValue = 0
     }
 
     return (

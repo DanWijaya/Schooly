@@ -196,7 +196,7 @@ class Login extends Component {
               </Link>
               |
               <Link href="/daftar">
-                Belum Ada Akun?
+                Belum ada Akun?
               </Link>
             </Grid>
           </Grid>
