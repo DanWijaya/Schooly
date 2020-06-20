@@ -107,6 +107,21 @@ export function savePassword(data) {
         payload: err
       })
     });
-
   };
+}
+
+export const changePassword = (userData, history) => dispatch => {
+  axios
+      .post("/api/authentication/changepassword", userData)
+      .then(res => {
+        alert("Kata sandi telah berhasil diganti")
+        history.push("/profil")
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      })
 }

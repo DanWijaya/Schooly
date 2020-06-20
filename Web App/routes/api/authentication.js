@@ -21,7 +21,8 @@ const passport = require("passport");
 const User= require("../../models/user_model/User");
 const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
-const Class = require("../../models/Class")
+const Class = require("../../models/Class");
+const { isMaster } = require("cluster");
 
 // POST to saveresethash
 router.post('/saveresethash', async(req,res) => {
@@ -123,6 +124,37 @@ router.post('/savepassword', async (req, res) => {
     result = res.send(JSON.stringify({ reset_problem: 'Tautan sudah dipakai sebelumnya, silahkan memohon untuk mengubah kata sandi lagi', expired: "yes" }));
   }
   return result;
+});
+
+router.post("/changepassword", (req,res) => {
+  const email = req.body.email;
+  const old_password = req.body.old_password;
+  const new_password = req.body.new_password;
+
+  User.findOne({ email }).then(user => {
+    
+    if(!user) {
+      return res.status(404).json({ emailnotfound: "Pengguna dengan email ini tidak ditemukan"});
+    }
+
+    // Check password
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        // User matched, then hash the new password before saving to Database.
+        
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(new_password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => res.json(user))
+              .catch(err => console.log(err));
+          });
+        });
+    }
+  })
+})
 });
 
 module.exports = router
