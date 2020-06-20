@@ -83,6 +83,7 @@ export function savePassword(data) {
     .then(async (json) => {
       if (json && json.success) {
         alert("Done with updating password")
+        window.location.href = "./masuk"
         return dispatch({
           type: PWD_SAVE_SUCCESS,
           payload: json

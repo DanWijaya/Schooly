@@ -1,3 +1,6 @@
+const Validator = require("validator");
+const isEmpty = require("is-empty");
+
 const avatar = require("./uploads");
 const express = require("express");
 const router = express.Router();
@@ -40,17 +43,17 @@ router.post('/saveresethash', async(req,res) => {
         const hash = crypto.createHmac('sha256', secret)
                             .update(hashString)
                             .digest('hex')
-
+        let current_time = new Date()
         foundUser.passwordReset = hash;
-        console.log(hash)
+        foundUser.passwordResetTime = current_time;
+        let time_in_string = current_time.toLocaleString("id-ID", {timeZone: "Asia/Bangkok"})
         foundUser.save((err) => {
-            let date = new Date()
             // Put together the email
             const emailData = {
               from: `Schoolysystem-no-reply <postmaster@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>`,
               to: foundUser.email,
-              subject: `Mengubah Kata Sandi`,
-              html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Jika ini benar anda, silahkan klik tautan dibawah ini.  Jika ini bukan anda, Silahkan abaikan email ini. <br/><br/> <a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`,
+              subject: `Permohonan Mengubah Kata Sandi di saat ${time_in_string}`,
+              html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali. <br/><br/> <a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`,
               // html: `<a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`
             };
 
@@ -74,20 +77,43 @@ router.post('/saveresethash', async(req,res) => {
 // POST to savepassword
 router.post('/savepassword', async (req, res) => {
   let result;
+  
   try {
     // look up user in the DB based on reset hash
     const query = User.findOne({ passwordReset: req.body.hash });
     const foundUser = await query.exec();
     console.log(foundUser.email)
-    // If the user exists save their new password
-    if (foundUser) {
-      // user passport's built-in password set method
+    console.log("This is the found User: " , foundUser)
+    let current_time = new Date();
+    let diff = (current_time.getTime() - foundUser.passwordResetTime.getTime()) / 1000; // in seconds
+    let minute_difference = diff /= 60;
 
+    // If the user exists save their new password
+    console.log(req.body.password, "PAssword")
+    console.log(req.body)
+    if(Validator.isEmpty(req.body.password)){
+      
+      result = res.send(JSON.stringify({ password_entry: 'Kata sandi baru belum diisi' }))
+    } 
+    else if(!Validator.isLength(req.body.password, { min: 8, max: 30 })){
+      result = res.send(JSON.stringify({ password_entry: 'Kata sandi harus terdiri dari 8 dan 30 karakter' }))
+    } 
+    else if(!Validator.equals(req.body.password, req.body.password2)){
+      result = res.send(JSON.stringify({ password_match: 'Konfirmasi kata sandi harus sama' }))
+    }
+    else if(minute_difference > 5){
+      console.log("Link has expired (exceed 5 mins)")
+      // result = res.send(JSON.stringify({ reset_problem: 'Tautan ini sudah tidak berlaku setelah 5 menit' }))
+      alert("Tautan ini sudah tidak berlaku setelah 5 menit, silahkan memohon untuk mengubah kata sandi lagi")
+      window.location.href = "./akun/lupa-katasandi"
+    } else {
+      
       // Hash password before saving in database
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(req.body.password, salt, (err, hash) => {
           if (err) throw err;
           foundUser.password = hash;
+          foundUser.passwordReset = "Already used"
           foundUser
             .save()
             .then(() => result = res.send(JSON.stringify({ success: true })))
@@ -96,8 +122,9 @@ router.post('/savepassword', async (req, res) => {
       });
     }
   } catch (err) {
+    console.log("There is an error")
     // if the hash didn't bring up a user, error out
-    result = res.send(JSON.stringify({ error: 'Reset hash not found in database' }));
+    result = res.send(JSON.stringify({ reset_problem: 'Terjadi kesalahan teknis' }));
   }
   return result;
 });

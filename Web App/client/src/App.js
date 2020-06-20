@@ -88,7 +88,7 @@ class App extends Component {
   setLoggedIn = (dataFromChild) => {
     this.setState({ loggedIn : dataFromChild})
   }
-
+  
   render() {
     let translateXValue
 

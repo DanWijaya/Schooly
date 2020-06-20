@@ -131,7 +131,7 @@ function Profile(props) {
   if(user.role == "Student" && classesCollection.selectedClasses.name === undefined){
     viewOneClass(user.kelas)
   }
-  console.log(classesCollection)
+
   return (
     <div className={classes.root}>
 
