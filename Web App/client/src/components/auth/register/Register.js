@@ -11,7 +11,7 @@ import authBackground from "../AuthBackground.png";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, FormControl, Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, FormControl, Grid, Link, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper"
 import Step from "@material-ui/core/Step";
@@ -450,6 +450,9 @@ class Register extends Component {
                   </div>
               </form>
             </Grid>
+            <Link href="/masuk" style={{marginTop: "20px"}}>
+              Sudah ada Akun?
+            </Link>
           </Grid>
         </Paper>
       </div>
