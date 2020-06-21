@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
-   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
+   Menu, MenuItem, Paper, Snackbar, Tabs, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import MuiAlert from "@material-ui/lab/Alert";
@@ -56,11 +56,35 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: "20px",
+  },
+  attachedFileContainer: {
+    display: "flex",
+    flexDirection: "row",
+    padding: "0px",
   }
 }));
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function AttachedFile(props) {
+  return(
+    <ListItem style={{width: "250px"}}>
+      <ListItemAvatar>
+        <Avatar /> //Icon File
+      </ListItemAvatar>
+      <ListItemText
+        primary="NamaFile"
+        secondary="Jenis File"
+      />
+      <ListItemSecondaryAction>
+        <IconButton>
+          <CloudDownloadIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
 }
 
 function WorkFile(props) {
@@ -89,7 +113,6 @@ function WorkFile(props) {
           <CloudDownloadIcon />
         </IconButton>
       </ListItemIcon>
-
       <ListItemSecondaryAction>
         <IconButton className={classes.iconButton}
           // onClick={() => {props.onDeleteTugas(props.file_id)}}
@@ -195,7 +218,7 @@ function NewTask(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
-  
+
   let tugasId = props.match.params.id;
   console.log(tugasId)
   console.log(tasksCollection)
@@ -206,7 +229,7 @@ function NewTask(props) {
     setIsEmpty(true)
   }
 
-  // checking if the Object is empty or nah (instead of using undefined field). 
+  // checking if the Object is empty or nah (instead of using undefined field).
   if(Object.keys(tasksCollection).length === 0){
     viewOneTask(tugasId)
   }
@@ -459,6 +482,12 @@ function NewTask(props) {
               <Typography>
                 Berkas yang Terlampir:
               </Typography>
+              <Tabs variant="scrollable" className={classes.attachedFileContainer}>
+                <AttachedFile />
+                <AttachedFile />
+                <AttachedFile />
+                <AttachedFile />
+              </Tabs>
             </Grid>
           </Grid>
         </Paper>
