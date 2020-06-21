@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
-   Menu, MenuItem, Paper, Snackbar, Tabs, Typography } from "@material-ui/core";
+   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import MuiAlert from "@material-ui/lab/Alert";
@@ -59,11 +59,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     marginBottom: "20px",
   },
-  attachedFileContainer: {
-    display: "flex",
-    flexDirection: "row",
-    padding: "0px",
-  }
+  listItemPaper: {
+    marginBottom: "10px"
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.custombutton.main,
+    },
+  },
 }));
 
 function Alert(props) {
@@ -71,21 +74,27 @@ function Alert(props) {
 }
 
 function AttachedFile(props) {
+  const classes = useStyles();
+
   return(
-    <ListItem style={{width: "250px"}}>
-      <ListItemAvatar>
-        <Avatar /> 
-      </ListItemAvatar>
-      <ListItemText
-        primary="NamaFile"
-        secondary="Jenis File"
-      />
-      <ListItemSecondaryAction>
-        <IconButton>
-          <CloudDownloadIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+    <Grid item xs={6}>
+      <Paper variant="outlined" className={classes.listItemPaper}>
+        <ListItem className={classes.listItem}>
+          <ListItemAvatar>
+            <Avatar />
+          </ListItemAvatar>
+          <ListItemText
+            primary="NamaFile"
+            secondary="Jenis File"
+          />
+          <ListItemIcon>
+            <IconButton>
+              <CloudDownloadIcon />
+            </IconButton>
+          </ListItemIcon>
+        </ListItem>
+      </Paper>
+    </Grid>
   )
 }
 
@@ -498,12 +507,12 @@ function NewTask(props) {
               <Typography>
                 Berkas yang Terlampir:
               </Typography>
-              <Tabs variant="scrollable" className={classes.attachedFileContainer}>
-                A<AttachedFile />
-                A<AttachedFile />
-                A<AttachedFile />
-                A<AttachedFile />
-              </Tabs>
+              <Grid container spacing={1}>
+                <AttachedFile />
+                <AttachedFile />
+                <AttachedFile />
+                <AttachedFile />
+              </Grid>
             </Grid>
           </Grid>
         </Paper>
