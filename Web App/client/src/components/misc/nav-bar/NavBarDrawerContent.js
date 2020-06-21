@@ -74,7 +74,8 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
           secondary={itemText2}
         />
       </StyledListItem>
-    </Link> :
+    </Link>
+    :
     <StyledListItem button disabled={isDisabled}>
       <ListItemIcon>
         {icon}
