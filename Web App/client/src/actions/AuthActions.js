@@ -2,7 +2,7 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router";
-
+import { logoutUser } from "./UserActions"
 import {PWD_RESET_HASH_CREATED, GET_ERRORS, PWD_SAVE_SUCCESS } from "./Types"
 
 // SEND EMAIL TO API FOR HASHING
@@ -84,10 +84,6 @@ export function savePassword(data) {
       if (json && json.success) {
         alert("Done with updating password")
         window.location.href = "/masuk"
-        // return dispatch({
-        //   type: PWD_SAVE_SUCCESS,
-        //   payload: json
-        // })
       }
         else {
           if(json.expired == "yes"){
@@ -110,12 +106,12 @@ export function savePassword(data) {
   };
 }
 
-export const changePassword = (userData, history) => dispatch => {
+export const changePassword = (passwordData, history) => dispatch => {
   axios
-      .post("/api/authentication/changepassword", userData)
+      .post("/api/authentication/changepassword", passwordData)
       .then(res => {
-        alert("Kata sandi telah berhasil diganti")
-        history.push("/profil")
+        alert("Kata sandi telah berhasil diganti, silahkan diingat kata sandi baru anda.")
+        window.location.reload()
       })
       .catch(err => {
         console.log(err);

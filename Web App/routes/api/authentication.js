@@ -15,7 +15,6 @@ const mailgun = require("mailgun-js")({
 const passport = require("passport");
 
 // this is not secure at all to put the apiKey.
-
 // Load input validation
 // Load User model
 const User= require("../../models/user_model/User");
@@ -130,6 +129,20 @@ router.post("/changepassword", (req,res) => {
   const email = req.body.email;
   const old_password = req.body.old_password;
   const new_password = req.body.new_password;
+  const new_password2 = req.body.new_password2;
+  console.log(email)
+  if(Validator.isEmpty(req.body.new_password)){
+    if(Validator.isEmpty(req.body.old_password))
+      return res.status(404).json({ new_password: 'Kata sandi baru belum diisi',
+       old_password: 'Kata sandi saat ini belum diisi' })
+
+    return res.status(404).json({ new_password: 'Kata sandi baru belum diisi'})
+  } 
+  else if(!Validator.isLength(req.body.new_password, { min: 8, max: 30 })){
+    return res.status(404).json({ new_password: 'Kata sandi harus terdiri dari 8 hingga 30 karakter' })
+  } else if(!Validator.equals(new_password, new_password2)){
+    return res.status(404).json({ new_password: 'Konfirmasi Kata sandi harus sama'})
+  }
 
   User.findOne({ email }).then(user => {
     
@@ -138,20 +151,22 @@ router.post("/changepassword", (req,res) => {
     }
 
     // Check password
-    bcrypt.compare(password, user.password).then(isMatch => {
+    bcrypt.compare(old_password, user.password).then(isMatch => {
       if (isMatch) {
         // User matched, then hash the new password before saving to Database.
         
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(new_password, salt, (err, hash) => {
             if (err) throw err;
-            newUser.password = hash;
-            newUser
+            user.password = hash;
+            user
               .save()
               .then(user => res.json(user))
               .catch(err => console.log(err));
           });
         });
+    }else{
+      return res.status(404).json({ old_password: "Tidak sama dengan kata sandi sekarang"})
     }
   })
 })

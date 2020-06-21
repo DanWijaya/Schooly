@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Dialog, Grid, IconButton, List, ListItem, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   errorInfo: {
     color: "red",
     fontSize: "10px"
+  }, 
+  inputField: {
+    width: "450px"
   }
 }));
 
@@ -41,7 +44,7 @@ function EditPasswordField(props) {
 
   return (
     <ListItem>
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" className={classes.inputField}>
           <Grid item xs={6}>
             <Typography variant="subtitle2">
               {props.edit_password_requirement}
@@ -55,7 +58,7 @@ function EditPasswordField(props) {
             span_classname={classes.errorInfo}
             html_for="password_lama"
             labelname="Kata sandi lama"
-            error1 = {errors.password}
+            error1 = {errors}
             type="password"/>
           </Grid>
         </Grid>
@@ -67,23 +70,35 @@ function ProfilePasswordEditorDialog(props) {
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
   const [new_password2, setNewPassword2] = React.useState("");
-  const {changePassword, logoutUser} = props;
+  const {changePassword, logoutUser, errors} = props;
+  const [errorMessage, setErrorMessage] = React.useState({})
   const {user} = props.auth;
   
   const classes = useStyles();
+
+  useEffect(() => {
+    setErrorMessage(errors)
+  }, [errors])
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => {
+  const handleClose = (e) => {
     setOpen(false);
+    setErrorMessage({})
   };
 
   const onSubmit = (e) => {
     e.preventDefault()
-    handleClose()
-    props.handleOpenAlert()
+    
+    var passwordData = {
+      email: user.email,
+      old_password: old_password,
+      new_password: new_password,
+      new_password2: new_password2
+    }
+    changePassword(passwordData)
   }
 
   const onChange = e => {
@@ -139,21 +154,24 @@ function ProfilePasswordEditorDialog(props) {
             <List>
               <EditPasswordField
               id="old_password"
+              errors={errorMessage.old_password}
                 value={old_password}
                 on_change={onChange}
-                edit_password_requirement="Masukkan Kata Sandi Lama"
+                edit_password_requirement="Masukkan kata sandi saat ini"
               />
               <EditPasswordField
               id="new_password"
               value={new_password}
+              errors={errorMessage.new_password}
               on_change={onChange}
-                edit_password_requirement="Masukkan Kata Sandi Baru"
+                edit_password_requirement="Masukkan kata sandi baru"
               />
               <EditPasswordField
               id="new_password2"
               value={new_password2}
               on_change={onChange}
-                edit_password_requirement="Konfirmasi Kata Sandi Baru"
+              errors={errorMessage.new_password}
+                edit_password_requirement="Konfirmasi kata sandi baru"
               />
             </List>
             <Grid container justify="center" style={{marginTop: "15px"}}>

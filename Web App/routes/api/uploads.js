@@ -310,7 +310,7 @@ router.delete("/image/:name", (req,res) => {
       var type = file.contentType;
       var filename = file.filename;
       res.set("Content-Type", type);
-      res.set("Content-Disposition", "attachment;filename=" + filename)
+      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
 
       // Files exist
       const readStream = gfs2.createReadStream(filename);
