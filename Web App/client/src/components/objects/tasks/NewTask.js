@@ -18,6 +18,8 @@ import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../../../
 import { viewOneTask } from "../../../actions/TaskActions"
 import { getTaskFilesByUser } from "../../../actions/UploadActions"
 import { getOneUser } from "../../../actions/UserActions"
+import { useEffect } from "react";
+import { useMemo } from "react";
 
 const path = require("path");
 
@@ -214,7 +216,7 @@ function NewTask(props) {
   const [fileTugas, setFileTugas] = React.useState(null);
   const [tasksContents, setTaskContents] = React.useState([]);
 
-  const [isEmptyFileTugas, setIsEmpty] = React.useState(false);
+  const [isEmptyFileTugas, setIsEmpty] = React.useState(true);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
@@ -223,21 +225,34 @@ function NewTask(props) {
   console.log(tugasId)
   console.log(tasksCollection)
   console.log(Object.keys(tasksCollection).length === 0)
-  if(filesCollection.files.length == 0 && !isEmptyFileTugas){
-  console.log(filesCollection, "file collections")
-    getTaskFilesByUser(user.id, tugasId)
-    setIsEmpty(true)
-  }
+
+  // this page is only for student later on, so for now put the user.role logic condition
+  useEffect(() => {
+    if(user.role == "Student"){
+      getTaskFilesByUser(user.id, tugasId)
+    }
+    viewOneTask(tugasId)
+    console.log(tasksCollection.person_in_charge_id)
+    console.log(filesCollection.files.length)    // if(tasksCollection.person_in_charge_id != undefined)
+    getOneUser(tasksCollection.person_in_charge_id)
+  },[tasksCollection.person_in_charge_id]
+    )
+  // if(user.role == "Student" && filesCollection.files.length == 0 && isEmptyFileTugas){
+  //   getTaskFilesByUser(user.id, tugasId)
+  //   setIsEmpty(false)
+  // }
 
   // checking if the Object is empty or nah (instead of using undefined field).
-  if(Object.keys(tasksCollection).length === 0){
-    viewOneTask(tugasId)
-  }
+  // if(Object.keys(tasksCollection).length === 0){
+  //   console.log("here is the tasksCollection:", tasksCollection)
+  //   viewOneTask(tugasId)
+  // }
 
   // checking if the selectedUser (Person in charge) has already been retrieved or not. the id of the PIC is at tasksCollection.
-  if(Object.keys(selectedUser).length == 0 || selectedUser._id != tasksCollection.person_in_charge_id){
-    getOneUser(tasksCollection.person_in_charge_id)
-  }
+  // if(Object.keys(selectedUser).length == 0 || selectedUser._id != tasksCollection.person_in_charge_id){
+  //   getOneUser(tasksCollection.person_in_charge_id)
+  // }
+
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
     switch(ext_file) {
@@ -587,16 +602,17 @@ function NewTask(props) {
 
 NewTask.propTypes = {
    auth: PropTypes.object.isRequired,
+   tasksCollection: PropTypes.object.isRequired,
+   filesCollection: PropTypes.object.isRequired,
+
    uploadTugas: PropTypes.func.isRequired,
    deleteTugas: PropTypes.func.isRequired,
    downloadTugas: PropTypes.func.isRequired,
    previewTugas: PropTypes.func.isRequired,
-   updateUserData: PropTypes.func.isRequired,
+   updateUserData: PropTypes.func.isRequired, // when you upload files, then update the user data.
    viewOneTask: PropTypes.func.isRequired,
-   getTaskFilesByUser: PropTypes.func.isRequired,
-   getOneUser: PropTypes.func.isRequired,
-   tasksCollection: PropTypes.object.isRequired,
-   filesCollection: PropTypes.object.isRequired
+   getTaskFilesByUser: PropTypes.func.isRequired, //get the task files.
+   getOneUser: PropTypes.func.isRequired, // for the person in charge task
  }
 
 const mapStateToProps = (state) => ({

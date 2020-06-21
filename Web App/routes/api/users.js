@@ -274,14 +274,12 @@ router.get("/gettask/:id/:task_id", (req, res) => {
       res.status(404).send("User data is not found");
     else {
       let tugasList = []
+      if(user.role == "Student"){ //Student are the ones has tugas field... 
       user.tugas.map((item) => {
-      if(item.for_task_object == tugasId){
+      if(item.for_task_object == tugasId)
         tugasList.push(item)
-      } else {
-        console.log("IDnya adalah:", item.for_task_object, tugasId)
-      }
-    }
-      )
+        }
+      )}
       res.json(tugasList)
     }
   } )
@@ -367,7 +365,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
 })
 
 router.get("/getteachers", (req, res) => {
-  console.log("GET teachers runned")
+  // console.log("GET teachers runned")
   User.find({ role: "Teacher" }).then((users, err) => {
     if(!users)
       console.log("No teachers yet in Schooly System")
@@ -387,6 +385,7 @@ router.get("/getstudents", (req,res) => {
 })
 
 router.get("/getOneUser/:id", (req,res) => {
+  console.log("getOneUser is runned")
   let id = req.params.id;
   User.findById(id, (err, user) => {
     if(!user)
