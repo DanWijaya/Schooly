@@ -74,7 +74,7 @@ function AttachedFile(props) {
   return(
     <ListItem style={{width: "250px"}}>
       <ListItemAvatar>
-        <Avatar /> //Icon File
+        <Avatar /> 
       </ListItemAvatar>
       <ListItemText
         primary="NamaFile"
@@ -332,6 +332,9 @@ function NewTask(props) {
 
   const handleTugasUpload = (e) => {
     const files = e.target.files;
+    // console.log(files)
+    // if(fileTugas != null)
+    //   files.push(fileTugas)
     setFileTugas(files)
 
     if (files) {
@@ -496,10 +499,10 @@ function NewTask(props) {
                 Berkas yang Terlampir:
               </Typography>
               <Tabs variant="scrollable" className={classes.attachedFileContainer}>
-                <AttachedFile />
-                <AttachedFile />
-                <AttachedFile />
-                <AttachedFile />
+                A<AttachedFile />
+                A<AttachedFile />
+                A<AttachedFile />
+                A<AttachedFile />
               </Tabs>
             </Grid>
           </Grid>
