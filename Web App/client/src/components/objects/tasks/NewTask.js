@@ -205,9 +205,7 @@ function NewTask(props) {
 
   // this page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
-    if(user.role == "Student"){
-      getTaskFilesByUser(user.id, tugasId)
-    }
+    getTaskFilesByUser(user.id, tugasId)
     viewOneTask(tugasId)
     console.log(tasksCollection.person_in_charge_id)
     console.log(filesCollection.files.length)    // if(tasksCollection.person_in_charge_id != undefined)
