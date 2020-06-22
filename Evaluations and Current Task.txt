@@ -8,15 +8,15 @@ Botak:
 5. Tambahkan step 3 register untuk konfirmasi terms and condition
 6. Tambahin show password pas register (step 3)
 7. Starred notification
-8. footer masih masalah (mungkin harus media query)
 9. Misteri ripple berubah jadi biru pas apply di globalstyles
 11. Test klik semua button
 12. Disable navbar untuk login dan register
 14. Disable landing pas udah login
 15. Update Landing biar lebih mempromosikan
 16. bikin satu akun sistem untuk schoolysystem untuk notif update.
-17. Cek lagi kata-kata di bantuan, landing, about.
+17. Cek lagi kata-kata di bantuan, landing, about, policy.
 18. Update field-field profile.
+19. Delete tester di akhir
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
