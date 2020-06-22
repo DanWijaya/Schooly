@@ -14,6 +14,8 @@ const User= require("../../models/user_model/User");
 const Task = require("../../models/Task");
 
 // Create Mongo Connection
+mongoose.set('useUnifiedTopology', true);
+mongoose.set('useNewUrlParser', true)
 const conn = mongoose.createConnection(keys.mongoURI)
 
 // Initialize gfs
