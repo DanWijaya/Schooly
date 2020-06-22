@@ -1,46 +1,22 @@
-import React from "react"
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { logoutUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import LightTooltip from "../light-tooltip/LightTooltip";
-import NavBarDrawerContent from "./NavBarDrawerContent";
-import NavBarDrawerMenuButton from "./NavBarDrawerMenuButton";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
 import { AppBar, Button, CssBaseline, Grid, IconButton, Link, Toolbar, useMediaQuery } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import HelpIcon from "@material-ui/icons/Help";
-
-export const drawerWidth = 220;
+import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: "1",
+    display: "flex",
   },
   appBar: {
-    backgroundColor: theme.palette.primary,
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100%)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  profileMenuItem: {
-    "&:hover": {
-      backgroundColor: "#2196f3",
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-      },
-    },
+    zIndex: theme.zIndex.drawer + 1
   },
   navbarContainer: {
     flex: "auto",
@@ -66,42 +42,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NavBar(props){
-  const theme = useTheme()
-  const classes = useStyles();
+function NavBar(props) {
   const { user } = props.auth;
+
+  const classes = useStyles();
   const isMobileView = useMediaQuery("(max-width:600px)");
-  // const isMobileView = useMediaQuery(theme.breakpoints.up('sm'));
 
-  //Drawer at Mobile View Hooks
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleDrawerMobile = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  //Drawer at Desktop View Hooks
-  const [desktopOpen, setOpen] = React.useState(false);
-  const handleDrawerDesktop = () => {
-    props.callbackFromParent(!desktopOpen)
-    if(!desktopOpen)
-      setOpen(true);
-    else
-      setOpen(false)
-  };
+  const { handleDrawerDesktop, handleDrawerMobile } = props;
 
   //NavBar Contents
-  let leftSideNavBarContents;
+  let leftNavBarContents;
   let middleNavBarContents;
-  let rightSideNavBarContents;
+  let rightNavBarContents;
 
   if(user.name !== undefined) {
-    leftSideNavBarContents = (
+    leftNavBarContents = (
       <div className={classes.navbarContainedLeftItems}>
-        <NavBarDrawerMenuButton
-          mobileView={isMobileView}
-          handleDrawerDesktop={handleDrawerDesktop}
-          handleDrawerMobile={handleDrawerMobile}
-        />
+        {isMobileView ?
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={handleDrawerMobile}
+          >
+            <MenuIcon />
+          </IconButton>
+          :
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={handleDrawerDesktop}
+          >
+            <MenuIcon />
+          </IconButton>
+        }
       </div>
     )
     middleNavBarContents = (
@@ -113,13 +86,13 @@ function NavBar(props){
         />
       </Link>
     )
-    rightSideNavBarContents = (
-      <NavBarLoggedInContents isMobileView={isMobileView}/>
+    rightNavBarContents = (
+      <NavBarLoggedInContents isMobileView={isMobileView} className={classes.navbarContainedRightItems} />
     )
   }
 
   else {
-    leftSideNavBarContents = (
+    leftNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
         <a href="/">
           <img
@@ -131,7 +104,7 @@ function NavBar(props){
       </Grid>
     )
     middleNavBarContents = null
-    rightSideNavBarContents = (
+    rightNavBarContents = (
       <div className={classes.navbarContainedRightItems}>
         <Button
           variant="contained"
@@ -165,28 +138,16 @@ function NavBar(props){
   }
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: desktopOpen,
-        })}
-      >
-        <Toolbar className={classes.navbarContainer}>
-          {leftSideNavBarContents}
-          {middleNavBarContents}
-          {rightSideNavBarContents}
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
-      <NavBarDrawerContent
-        userLoggedIn={user.name}
-        mobileOpen={mobileOpen}
-        desktopOpen={desktopOpen}
-        handleDrawerMobile={handleDrawerMobile}
-      />
-    </div>
+    <AppBar
+      position="fixed"
+      className={classes.appBar}
+    >
+      <Toolbar className={classes.navbarContainer}>
+        {leftNavBarContents}
+        {middleNavBarContents}
+        {rightNavBarContents}
+      </Toolbar>
+    </AppBar>
   )
 }
 

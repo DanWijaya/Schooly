@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { drawerWidth } from "./NavBar.js";
 import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
@@ -14,10 +13,11 @@ import HelpIcon from "@material-ui/icons/Help";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
+const drawerWidth = 240;
+
 const useStyles = makeStyles((theme) => ({
   drawerMobile: {
     [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
       flexShrink: 0,
     },
   },
@@ -127,13 +127,14 @@ function DrawerContent(props) {
   )
 };
 
-function NavBarDrawerContent(props) {
+function SideDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { desktopOpen, mobileOpen, handleDrawerMobile, userLoggedIn } = props
-  const {user} = props.auth;
-  if(userLoggedIn !== undefined) {
+  const { desktopOpen, mobileOpen, handleDrawerMobile } = props
+  const { user } = props.auth;
+
+  if(user.name !== undefined) {
     return (
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">
@@ -150,7 +151,7 @@ function NavBarDrawerContent(props) {
               keepMounted: true,
             }}
           >
-            <DrawerContent role="AA"/>
+            <DrawerContent user={user} />
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -169,7 +170,7 @@ function NavBarDrawerContent(props) {
             }}
           >
             <Toolbar />
-            <DrawerContent user={user}/>
+            <DrawerContent user={user} />
           </Drawer>
         </Hidden>
       </div>
@@ -182,7 +183,7 @@ function NavBarDrawerContent(props) {
   }
 }
 
-NavBarDrawerContent.propTypes = {
+SideDrawer.propTypes = {
   auth: PropTypes.object.isRequired,
 }
 
@@ -191,4 +192,4 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps) ( NavBarDrawerContent);
+  mapStateToProps) ( SideDrawer);
