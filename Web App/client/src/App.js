@@ -36,16 +36,14 @@ import ViewClass from "./components/objects/classes/ViewClass";
 import ViewSubject from "./components/objects/classes/ViewSubject";
 //Task
 import CreateTask from "./components/objects/tasks/CreateTask";
+import NewTask from "./components/objects/tasks/NewTask";
 import EditTask from "./components/objects/tasks/EditTask";
-import ViewTask from "./components/objects/tasks/ViewTask";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import ViewTaskListTeacher from "./components/objects/tasks/ViewTaskListTeacher";
 import NewTaskList from "./components/objects/tasks/NewTaskList";
 //Admin Only
-import ClassList from "./components/objects/admin-only/ClassList";
-//Prototypes
-import NewTask from "./components/objects/tasks/NewTask";
 import NewClassList from "./components/objects/admin-only/NewClassList";
+//Prototypes
 import Tester from "./prototypes/Tester";
 
 // Check for token to keep user logged in
@@ -113,7 +111,12 @@ class App extends Component {
                   desktopOpen={this.state.desktopOpen}
                   handleDrawerMobile={this.handleDrawerMobile}
                 />
-                <div style={{marginTop: `${this.state.marginTopValue}px`, flexGrow: "1"}}>
+                <div
+                  style={{
+                    flexGrow: "1",
+                    marginTop: `${this.state.marginTopValue}px`, 
+                  }}
+                >
                   <Toolbar />
                   <Switch>
                     <Route exact path="/"
@@ -152,16 +155,14 @@ class App extends Component {
                     <PrivateRoute exact path="/viewsubject/:subject_name" component={ViewSubject} />
                     {/* Route Task  */}
                     <PrivateRoute exact path="/createtask" component={CreateTask} />
-                    <PrivateRoute exact path="/viewtask" component={ViewTask} />
-                    <PrivateRoute exact path="/viewtaskteacher" component={ViewTaskTeacher} /> {/*prototype*/}
-                    <PrivateRoute exact path="/viewtasklistteacher" component={ViewTaskListTeacher} /> {/*prototype*/}
-                    <PrivateRoute exact path="/deletetask/:id" component={ViewTask} />
+                    <PrivateRoute exact path="/viewtaskteacher" component={ViewTaskTeacher} />
+                    <PrivateRoute exact path="/viewtasklistteacher" component={ViewTaskListTeacher} />
                     <PrivateRoute exact path="/task/:id" component={EditTask} />
-                    <PrivateRoute exact path="/new-task/:id" component={NewTask} /> {/*prototype*/}
-                    <PrivateRoute exact path="/newtasklist" component={NewTaskList} /> {/*prototype*/}
+                    <PrivateRoute exact path="/new-task/:id" component={NewTask} />
+                    <PrivateRoute exact path="/newtasklist" component={NewTaskList} />
                     {/* Route Admin-Only  */}
-                    <PrivateRoute exact path="/classlist" component={ClassList} /> {/*prototype*/}
-                    <PrivateRoute exact path="/newclasslist" component={NewClassList} /> {/*prototype*/}
+                    <PrivateRoute exact path="/newclasslist" component={NewClassList} />
+                    {/* Not Found  */}
                     <Route
                       render={(props) => (
                         <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
