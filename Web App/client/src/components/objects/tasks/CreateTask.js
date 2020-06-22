@@ -6,15 +6,18 @@ import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import {getOneUser} from "../../../actions/UserActions";
-
-import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import LightTooltip from "../../misc/light-tooltip/LightTooltip"
+import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles, IconButton, Divider } from "@material-ui/core";
 // import { Multiselect } from "multiselect-react-dropdown";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import 'date-fns';
 import lokal from "date-fns/locale/id";
+import PostAddIcon from '@material-ui/icons/PostAdd';
 
+const path = require("path");
 const styles = (theme) => ({
   root: {
     display: "flex",
@@ -51,6 +54,10 @@ const styles = (theme) => ({
   chip: {
     margin: 2,
   },
+  uploadButton: {
+    width: "5px",
+    height: "50%"
+  }
 });
 
 class CreateTask extends Component {
@@ -65,10 +72,13 @@ class CreateTask extends Component {
             // submitted: false,
             class_assigned: [],
             description: "",
-            errors: {}
-        };
-    }
+            errors: {},
+            fileTugas: null
+        }
+      }
 
+    tugasUploader = React.createRef(null)
+    uploadedTugas = React.createRef(null)
 
     onChange = (e, otherfield) => {
       console.log(this.state.deadline)
@@ -103,7 +113,12 @@ class CreateTask extends Component {
             errors: {}
         };
 
+        let formData = new FormData()
+        for(var i = 0; i < this.state.fileTugas.length; i++){
+          formData.append("lampiran_tugas", this.state.fileTugas[i])
+        }
         this.props.createTask(taskObject, this.props.history);
+
         this.setState({name: "", subject: ""})
     }
 
@@ -127,10 +142,36 @@ class CreateTask extends Component {
       console.log("AAA")
     }
 
+    handleTugasUpload = (e) => {
+      const files = e.target.files;  
+      this.setState({fileTugas: files})  
+    }
+
     render() {
       const {classesCollection,  classes, viewClass, subjectsCollection} = this.props;
-      const{ class_assigned} = this.state;
+      const{ class_assigned, fileTugas} = this.state;
       const { user } = this.props.auth
+      
+      const listFileChosen = () => {
+        let temp = []
+        if(!fileTugas) {
+          temp.push(
+            <Typography className={classes.workChosenFile}>
+              Kosong
+            </Typography>
+          )
+        }
+        else{
+          for (var i = 0; i < fileTugas.length; i++){
+            temp.push(
+              <Typography className={classes.workChosenFile}>
+                {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
+              </Typography>
+            )
+          }
+        }
+        return temp;
+      }
 
         var options = []
         var subjectOptions = []
@@ -253,6 +294,45 @@ class CreateTask extends Component {
           error1={errors.description}
         />
       </Grid>
+      <Grid item container direction="row" className={classes.gridItem}>
+        <input
+          type="file"
+          multiple={true}
+          name="tugas"
+          onChange={this.handleTugasUpload}
+          ref={this.tugasUploader}
+          accept="file/*"
+          style={{display: "none"}}/>
+        <input
+          type="file"
+          multiple={true}
+          name="file"
+          id="file"
+          ref={this.uploadedTugas}
+          style={{display: "none"}}/>
+          <Grid item container direction="row" alignItems="center">
+          <Grid item xs={11}>
+            <OutlinedTextField
+              disabled={true}
+              value={fileTugas ? `${fileTugas.length} berkas` : "Kosong"}
+              id="file_tugas"
+              type="text"
+              width="100%"
+              labelname="Berkas Lampiran"
+              html_for="Berkas lampiran"
+              label_classname={classes.inputLabel}/>
+            </Grid>
+
+            <Grid item xs={1}>
+            <LightTooltip title="Tambahkan berkas lampiran">
+            <IconButton onClick={() => {this.tugasUploader.current.click()}}> 
+              <PostAddIcon/>
+             </IconButton>
+             </LightTooltip>
+            </Grid>
+            </Grid>
+        
+      </Grid>
       <Grid item className={classes.gridItem}>
       <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
         <label id="class_assigned" className={classes.inputLabel}>Batas Waktu</label>
@@ -310,8 +390,7 @@ class CreateTask extends Component {
           )
         }
     }
-}
-
+  }
 CreateTask.propTypes = {
     createTask: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,

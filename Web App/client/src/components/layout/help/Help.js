@@ -131,7 +131,7 @@ function Help(props) {
                         <b>Ada berapa jenis akun dalam suatu lingkup sekolah?</b>
                       </Typography>
                       <Typography>
-                        Tiga. Murid, Guru, dan Pengelola.
+                        Ada tiga jenis yaitu Murid, Guru, dan Pengelola.
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -149,15 +149,6 @@ function Help(props) {
                       </Typography>
                       <Typography>
                         Bisa, foto akun dapat diubah dengan menekan tombol dengan lambang "Kamera" pada halaman profil,
-                        yang dapat diakses dengan menekan foto profil pada bagian kanan atas aplikasi.
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h6" gutterBottom>
-                        <b>Apakah kata sandi bisa diubah?</b>
-                      </Typography>
-                      <Typography>
-                        Bisa, kata sandi dapat diubah dengan menekan tombol "Ganti Kata Sandi" pada halaman profil,
                         yang dapat diakses dengan menekan foto profil pada bagian kanan atas aplikasi.
                       </Typography>
                     </Grid>

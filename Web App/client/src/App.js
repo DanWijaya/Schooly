@@ -103,6 +103,7 @@ class App extends Component {
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
             <Router>
+            {/* <Route exact path="/tester" component={Tester} /> */}
               <NavBar callbackFromParent={(data) => this.myCallback(data)} />
               <div style={{marginTop: `${this.state.marginTopValue}px`, marginLeft: `${translateXValue}px`}}>
                 <Switch>
@@ -130,7 +131,7 @@ class App extends Component {
                   <Route exact path="/masuk" component={Login} />
                   <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                   <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
-                  <Route exact path="/tester" component={Tester} /> {/*prototype*/}
+                  {/* <Route exact path="/tester" component={Tester} /> prototype */}
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/profil" component={Profile} />
                   <PrivateRoute exact path="/notifikasi" component={Notifications} />

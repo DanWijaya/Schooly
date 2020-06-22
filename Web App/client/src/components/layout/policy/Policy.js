@@ -250,7 +250,7 @@ function Policy(props) {
         <div className={classes.contentSection}>
           <Divider />
           <Typography variant="h6" className={classes.contentSectionTitle}>
-            <b>4. Linsensi Anda untuk menggunakan Produk</b>
+            <b>4. Lisensi Anda untuk menggunakan Produk</b>
           </Typography>
           <Typography paragraph>
             Schooly memberi Anda lisensi pribadi, di seluruh dunia, bebas royalti,

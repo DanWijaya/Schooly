@@ -12,6 +12,8 @@ const http = require('http');
 const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
 const Task = require("../../models/Task");
+const { reject } = require("async");
+const { resolve } = require("path");
 
 // Create Mongo Connection
 mongoose.set('useUnifiedTopology', true);
@@ -19,18 +21,20 @@ mongoose.set('useNewUrlParser', true)
 const conn = mongoose.createConnection(keys.mongoURI)
 
 // Initialize gfs
-let gfs;
-let gfs2;
+let gfsAvatar;
+let gfsTugas;
+let gfsLampiran;
 
 conn.once("open", () => {
   // Initialize Stream
-  gfs = GridFsStream(conn.db, mongoose.mongo);
-  gfs.collection("avatar")
+  gfsAvatar = GridFsStream(conn.db, mongoose.mongo);
+  gfsAvatar.collection("avatar")
 
-  gfs2 = GridFsStream(conn.db, mongoose.mongo);
-  gfs2.collection("tugas")
-
-  // all set!
+  gfsTugas = GridFsStream(conn.db, mongoose.mongo);
+  gfsTugas.collection("tugas")
+  
+  gfsLampiran = GridFsStream(conn.db, mongoose.mongo);
+  gfsLampiran.collection("lampiran")
 })
 
 
@@ -74,15 +78,35 @@ var tugas_storage = new GridFsStorage({
   }
 });
 
+var lampiran_storage = new GridFsStorage({
+  url: keys.mongoURI,
+  file: (req,file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if(!err) {
+          return reject(err);
+        }
+    const filename = file.originalname
+    const fileInfo = {
+      filename: filename, 
+      bucketName: "lampiran"
+    };
+    resolve(fileInfo);
+  })
+})
+  }
+})
 
 // Create the middleware which facilitates file uploads
 const uploadAvatar = multer({ storage: avatar_storage });
 const uploadTugas = multer({ storage: tugas_storage });
+const uploadLampiran = multer({ storage: lampiran_storage});
 
+// ------------------------------ Part for Avatar uploads ------------------------------- //
 //Uploading for Avatar
 router.get("/image-upload", (req,res) => {
     console.log("AA")
-    gfs.files.find().toArray((err, files) => {
+    gfsAvatar.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
         res.render("image-upload", {files: false})
@@ -105,7 +129,7 @@ router.get("/image-upload", (req,res) => {
   // @route GET /files
   // @desc Display all files in JSON
   router.get("/files/", (req, res) => {
-    gfs.files.find().toArray((err, files) => {
+    gfsAvatar.files.find().toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
         return res.status(404).json({
@@ -117,22 +141,6 @@ router.get("/image-upload", (req,res) => {
       return res.json(files);
     });
   });
-
-  // @route GET /files/:filename
-  // @desc  Display single file object
-  router.get("/files/:filename", (req, res) => {
-    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
-      // Check if file
-      if (!file || file.length === 0) {
-        return res.status(404).json({
-          err: "No file exists"
-        });
-      }
-      // File exists
-      return res.json(file);
-    });
-  });
-
 
   // @route POST /upload
   // @desc Upload files to DB
@@ -157,7 +165,7 @@ router.get("/image-upload", (req,res) => {
   });
 
   router.get("/image/:filename", (req, res) => {
-    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    gfsAvatar.files.findOne({ filename: req.params.filename }, (err, file) => {
       // Check if file
       if (!file || file.length === 0) {
         return res.status(404).json({
@@ -168,7 +176,7 @@ router.get("/image-upload", (req,res) => {
       if (file.contentType === "image/jpeg" || file.contentType === "image/png" || file.contentType === "image/jpg") {
         // Show outputnya di browser kita
 
-        const readStream = gfs.createReadStream(file.filename);
+        const readStream = gfsAvatar.createReadStream(file.filename);
         readStream.pipe(res)
       } else {
         res.status(404).json({
@@ -178,13 +186,112 @@ router.get("/image-upload", (req,res) => {
     });
   });
 
+  router.delete("/image/:name", (req,res) => {
+    gfsAvatar.remove({ filename: req.params.name, root: "avatar" }, (err, gridStore) => {
+      if (err) {
+        return res.status(404).json({ err: err });
+      }
+      else{
+       return res.json("Successful")
+      }
+  
+    });
+  })
+
+// --------------------------------- Tugas uploads ------------------------------------ //
 // // @route DELETE /files/:id
 // // @desc Delete File
+// Upload Tugas
+router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (req,res) => {
+  // To get the file details, use req.file
+
+  let id = req.params.user_id
+  let task_id = req.params.task_id;
+  console.log("Uploading the task file")
+
+  User.findById(id, (err, user) => {
+    if(!user){
+      console.log("User not found")
+      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
+    }
+
+    else{
+      for(var i = 0; i < req.files.length; i++) {
+        user.tugas.push({id: req.files[i].id,
+            filename: req.files[i].filename,
+            for_task_object: task_id})
+      }
+      user
+        .save()
+        .then(console.log("Successfully upload the task in user data"))
+        .catch(err => console.log(err))
+    }
+  })
+
+  res.json("Upload file completed")
+})
+
+router.get("/tugas/:id", (req,res) => {
+  id = new mongoose.mongo.ObjectId(req.params.id)
+  gfsTugas.files.findOne({_id: id}, (err, file) => {
+    // Check if files
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: "Tugas tidak ada"
+      });
+    }
+    var type = file.contentType;
+    var filename = file.filename;
+    res.set("Content-Type", type);
+    res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
+
+    // Files exist
+    const readStream = gfsTugas.createReadStream(filename);
+    readStream.pipe(res)
+
+  });
+  });
+
+router.get("/previewtugas/:id", (req,res) => {
+  id = new mongoose.mongo.ObjectId(req.params.id)
+  gfsTugas.files.findOne({_id: id}, (err, file) => {
+    // Check if files
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: "Tugas tidak ada"
+      });
+    }
+    var type = file.contentType;
+    var filename = file.filename;
+    res.set("Content-Type", type);
+    res.set("Content-Disposition", "inline;filename=" + filename)
+
+    // Files exist
+    const readStream = gfsTugas.createReadStream(filename);
+    readStream.pipe(res)
+
+});
+})
+
+router.get("/filetugas", (req, res) => {
+  gfsTugas.files.find().toArray((err, files) => {
+    // Check if files
+    if (!files || files.length === 0) {
+      return res.status(404).json({
+        err: "Tugas belum ada"
+      });
+    }
+
+    // Files exist
+    return res.json(files);
+  });
+});
+
 router.delete("/tugas/:userid/:tugasid/", (req,res) => {
   tugas_id = new mongoose.mongo.ObjectId(req.params.tugasid)
   user_id = req.params.userid;
 
-  gfs2.remove({ _id: tugas_id, root: "tugas" }, (err, gridStore) => {
+  gfsTugas.remove({ _id: tugas_id, root: "tugas" }, (err, gridStore) => {
     if(err) {
       return res.status(404).json({err: err});
     } else{
@@ -216,131 +323,8 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 
   console.log("Delete file completed")
 })
-router.delete("/image/:name", (req,res) => {
-  gfs.remove({ filename: req.params.name, root: "avatar" }, (err, gridStore) => {
-    if (err) {
-      return res.status(404).json({ err: err });
-    }
-    else{
-     return res.json("Successful")
-    }
 
-  });
-})
-
-  
-// Upload Tugas
-  router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (req,res) => {
-    // To get the file details, use req.file
-
-    let id = req.params.user_id
-    let task_id = req.params.task_id;
-
-    console.log("Uploading the task file")
-    User.findById(id, (err, user) => {
-      if(!user){
-        console.log("User not found")
-        return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
-      }
-
-      else{
-        for(var i = 0; i < req.files.length; i++) {
-          // console.log(req.files[i].id, req.files[i].filename)
-          user.tugas.push({id: req.files[i].id,
-             filename: req.files[i].filename,
-             for_task_object: task_id})
-        }
-
-        user
-          .save()
-          .then(console.log("Successfully upload the task in user data"))
-          .catch(err => console.log(err))
-      }
-    })
-    // Task.findById(req.params.tugasid, (err, task) => {
-    //   if(!task){
-    //     return res.status(404).json({tasknotfound: "Task not found"})
-    //   }
-    //   else {
-    //     console.log("Task object files are going to be added")
-    //     for(var i = 0; i < req.files.length; i++){
-    //       task.filesubmitted.push({
-    //         id: req.files[i].id,
-    //           filename: req.files[i].filename,
-    //           for_task_object: task_id}
-    //       )
-    //     }
-
-    //     task  
-    //         .save()
-    //         .then(console.log("Successfully upload the task in Task Object data"))
-    //         .catch(err => console.log(err))
-    //   }
-    // })
-
-    res.json("Upload file completed")
-  })
-
-  router.get("/filetugas", (req, res) => {
-    gfs2.files.find().toArray((err, files) => {
-      // Check if files
-      if (!files || files.length === 0) {
-        return res.status(404).json({
-          err: "Tugas belum ada"
-        });
-      }
-
-      // Files exist
-      return res.json(files);
-    });
-  });
-
-  //pakai read stream utk display imagenya di browser
-
-  // @route GET /files/:filename
-  // @desc  Display single file object
-
-  router.get("/tugas/:id", (req,res) => {
-    id = new mongoose.mongo.ObjectId(req.params.id)
-    gfs2.files.findOne({_id: id}, (err, file) => {
-      // Check if files
-      if (!file || file.length === 0) {
-        return res.status(404).json({
-          err: "Tugas tidak ada"
-        });
-      }
-      var type = file.contentType;
-      var filename = file.filename;
-      res.set("Content-Type", type);
-      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
-
-      // Files exist
-      const readStream = gfs2.createReadStream(filename);
-      readStream.pipe(res)
-
-    });
-    });
-  
-    router.get("/previewtugas/:id", (req,res) => {
-      id = new mongoose.mongo.ObjectId(req.params.id)
-      gfs2.files.findOne({_id: id}, (err, file) => {
-        // Check if files
-        if (!file || file.length === 0) {
-          return res.status(404).json({
-            err: "Tugas tidak ada"
-          });
-        }
-        var type = file.contentType;
-        var filename = file.filename;
-        res.set("Content-Type", type);
-        res.set("Content-Disposition", "inline;filename=" + filename)
-
-        // Files exist
-        const readStream = gfs2.createReadStream(filename);
-        readStream.pipe(res)
-
-    });
-    })
+// ------------------------------ Part untuk upload lampiran tugas -------------------- //
 
 
 

@@ -29,8 +29,9 @@ const OutlinedTextField = (props) => {
         id={props.id}
         type={props.type}
         className={props.classname}
+        disabled={props.disabled}
         style={{
-          width: "100%",
+          width: props.width ? props.width: "100%",
           padding: "10px 10px",
           display: "inline-block",
           border: `${borderStyle}`,
