@@ -13,14 +13,14 @@ import Register from "./components/auth/register/Register";
 import Login from "./components/auth/login/Login";
 import LoginForgot from "./components/auth/login/LoginForgot";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
-
 //Layout
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
+import Profile from "./components/layout/profile/Profile";
 import Notifications from "./components/layout/notifications/Notifications";
 import Help from "./components/layout/help/Help";
-import Profile from "./components/layout/profile/Profile";
+import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
@@ -39,7 +39,6 @@ import ViewTask from "./components/objects/tasks/ViewTask";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import ViewTaskListTeacher from "./components/objects/tasks/ViewTaskListTeacher";
 import NewTaskList from "./components/objects/tasks/NewTaskList";
-
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
 //Prototypes
@@ -88,7 +87,7 @@ class App extends Component {
   setLoggedIn = (dataFromChild) => {
     this.setState({ loggedIn : dataFromChild})
   }
-  
+
   render() {
     let translateXValue
 
@@ -122,6 +121,11 @@ class App extends Component {
                        <About {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
                      )}
                    />
+                  <Route exact path="/kebijakan-penggunaan"
+                    render={(props) => (
+                      <Policy {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
+                    )}
+                  />
                   <Route exact path="/daftar" component={Register} />
                   <Route exact path="/masuk" component={Login} />
                   <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />

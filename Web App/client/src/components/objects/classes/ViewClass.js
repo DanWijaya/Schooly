@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.componentbutton.main,
+      backgroundColor: theme.palette.custombutton.main,
     },
   },
   lookAllButtonContainer: {

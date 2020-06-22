@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const StyledListItem = withStyles((theme) => ({
   root: {
     "&:active, &:hover": {
-      backgroundColor: theme.palette.componentbutton.main,
+      backgroundColor: theme.palette.custombutton.main,
     },
   },
 }))(ListItem);

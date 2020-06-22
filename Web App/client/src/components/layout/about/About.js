@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
   },
   moreFeaturesBackground: {
-    backgroundColor: theme.palette.componentbutton.main,
+    backgroundColor: theme.palette.custombutton.main,
   },
   moreFeaturesTitle: {
     fontFamily: "Cambria",
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function About(props) {
-  document.title="Schooly | Tentang Schooly";
+  document.title = "Schooly | Tentang Schooly";
 
   const classes = useStyles();
 
