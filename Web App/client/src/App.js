@@ -114,7 +114,7 @@ class App extends Component {
                 <div
                   style={{
                     flexGrow: "1",
-                    marginTop: `${this.state.marginTopValue}px`, 
+                    marginTop: `${this.state.marginTopValue}px`,
                   }}
                 >
                   <Toolbar />

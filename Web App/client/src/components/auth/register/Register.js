@@ -8,11 +8,13 @@ import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects} from "../../../actions/SubjectActions"
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
+import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, FormControl, Grid, Link, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Dialog, FormControl, Grid, IconButton, Link, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import CloseIcon from "@material-ui/icons/Close";
 import Stepper from "@material-ui/core/Stepper"
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -76,7 +78,6 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-
 });
 
 class Register extends Component {
@@ -95,6 +96,7 @@ class Register extends Component {
       kelas: "", //Student Data
       subject_teached: "", //Teacher Data
       activeStep: 0,
+      dialogOpen: false,
       submitButtonClicked: false,
     };
   }
@@ -148,12 +150,17 @@ class Register extends Component {
       newUser.subject_teached = this.state.subject_teached;
     }
 
-    if(this.state.activeStep === 1)
-        this.setState({submitButtonClicked: true})
+    if(this.state.activeStep === 2)
+      this.setState({submitButtonClicked: true})
 
     console.log(newUser)
     if(this.state.submitButtonClicked)
       this.props.registerUser(newUser, this.props.history);
+  };
+
+  //Policy Dialog
+  handleToggleDialog = () => {
+    this.setState(prevState => ({dialogOpen: !prevState.dialogOpen }))
   };
 
   render() {
@@ -165,12 +172,10 @@ class Register extends Component {
     const { errors } = this.state;
 
     var classesOptions = []
-    // var selectedClasses = []
     var subjectOptions = []
 
     if(Object.keys(classesCollection).length !== 0){
       classesOptions = classesCollection.all_classes
-      // selectedClasses = classesCollection.selectedClasses
     }
 
     if(Object.keys(subjectsCollection).length !== 0){
@@ -179,7 +184,7 @@ class Register extends Component {
 
     console.log(subjectOptions)
     const getSteps = () => {
-      return ["Kredensial Masuk", "Informasi Pribadi"];
+      return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Registrasi"];
     }
 
     const getStepContent = (stepIndex) => {
@@ -359,6 +364,45 @@ class Register extends Component {
               </Grid>
             </Grid>
           );
+        case 2:
+          return (
+            <Grid
+              container
+              direction="column"
+              spacing={3}
+              alignItems="center"
+            >
+              <Grid item className={classes.inputField}>
+                <Typography align="center">
+                  Dengan mendaftar, berarti anda dan sekolah anda telah membaca dan
+                  menyetujui <Link onClick={this.handleToggleDialog} style={{cursor: "pointer"}}>
+                  Kebijakan Penggunaan Schooly</Link>.
+                </Typography>
+                <Dialog
+                  fullWidth
+                  maxWidth="lg"
+                  open={this.state.dialogOpen}
+                  onClose={this.handleToggleDialog}
+                >
+                  <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
+                    <Grid item container justify="flex-end" alignItems="flex-start" style={{marginBottom: "10px"}}>
+                      <IconButton
+                        size="small"
+                        disableRipple
+                        onClick={this.handleToggleDialog}
+                        style={{position: "fixed"}}
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <PolicyContent />
+                    </Grid>
+                  </Grid>
+                </Dialog>
+              </Grid>
+            </Grid>
+          );
         default:
           return "Unknown stepIndex";
       }
@@ -367,11 +411,11 @@ class Register extends Component {
     const steps = getSteps();
 
     const handleNext = () => {
-      if(this.state.activeStep !== 1 || this.state.errors === null)
+      if(this.state.activeStep !== 2 || this.state.errors === null)
         this.setState(prevState => ({
           activeStep: prevState.activeStep + 1,
           submitButtonClicked: false
-          })
+        })
       )
     };
 
