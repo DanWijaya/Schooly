@@ -5,8 +5,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "1000px",
     margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
   },
   schoolySymbol: {
     width: "10%",

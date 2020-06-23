@@ -18,9 +18,6 @@ const useStyles = makeStyles((theme) => ({
   whatIsSchoolyBackground: {
     backgroundColor: theme.palette.primary.light,
   },
-  whatIsSchoolyTitle: {
-    fontFamily: "Cambria",
-  },
   whatIsSchooly: {
     display: "flex",
     flexDirection: "column",
@@ -35,15 +32,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
+  whatIsSchoolyTitle: {
+    fontFamily: "Cambria",
+  },
   schoolyFeatures: {
     maxWidth: "1000px",
     margin: "auto",
   },
   moreFeaturesBackground: {
     backgroundColor: theme.palette.custombutton.main,
-  },
-  moreFeaturesTitle: {
-    fontFamily: "Cambria",
   },
   moreFeatures: {
     display: "flex",
@@ -55,20 +52,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "30px",
     maxWidth: "1000px",
   },
-  featurePaper: {
+  moreFeaturesTitle: {
+    fontFamily: "Cambria",
+  },
+  moreFeaturesPaper: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     height: "350px",
     padding: "20px",
   },
-  featureAvatar: {
+  moreFeaturesAvatar: {
     width: theme.spacing(17.5),
     height: theme.spacing(17.5),
     backgroundColor: theme.palette.primary.main,
     marginBottom: "30px",
   },
-  featureIcon: {
+  moreFeaturesIcon: {
     width: theme.spacing(10),
     height: theme.spacing(10),
   },
@@ -170,16 +170,16 @@ function About(props) {
       <div className={classes.moreFeaturesBackground}>
         <div className={classes.moreFeatures}>
           <Typography variant="h4" gutterBottom className={classes.moreFeaturesTitle}>
-            Fitur-Fitur Schooly yang Akan Datang
+            Akan Datang
           </Typography>
           <Typography variant="h6" style={{marginBottom: "50px"}}>
             Masih banyak fitur-fitur yang bisa dinantikan dari Schooly seperti:
           </Typography>
           <Grid container spacing={3} style={{marginBottom: "50px"}}>
             <Grid item xs={4}>
-              <Paper className={classes.featurePaper}>
-                <Avatar className={classes.featureAvatar}>
-                  <DescriptionIcon className={classes.featureIcon} />
+              <Paper className={classes.moreFeaturesPaper}>
+                <Avatar className={classes.moreFeaturesAvatar}>
+                  <DescriptionIcon className={classes.moreFeaturesIcon} />
                 </Avatar>
                 <Typography>
                   Kuis dan Ujian dengan berbagai jenis pertanyaan dari pilihan ganda, isilah, dan jawaban panjang.
@@ -188,9 +188,9 @@ function About(props) {
               </Paper>
             </Grid>
             <Grid item xs={4}>
-              <Paper className={classes.featurePaper}>
-                <Avatar className={classes.featureAvatar}>
-                  <ForumIcon className={classes.featureIcon} />
+              <Paper className={classes.moreFeaturesPaper}>
+                <Avatar className={classes.moreFeaturesAvatar}>
+                  <ForumIcon className={classes.moreFeaturesIcon} />
                 </Avatar>
                 <Typography>
                   Diskusi antar guru dan murid mengenai sebuah tugas hingga sistem chatting antar orang dalam suatu lingkup sekolah.
@@ -198,9 +198,9 @@ function About(props) {
               </Paper>
             </Grid>
             <Grid item xs={4}>
-              <Paper className={classes.featurePaper}>
-                <Avatar className={classes.featureAvatar}>
-                  <BusinessCenterIcon className={classes.featureIcon} />
+              <Paper className={classes.moreFeaturesPaper}>
+                <Avatar className={classes.moreFeaturesAvatar}>
+                  <BusinessCenterIcon className={classes.moreFeaturesIcon} />
                 </Avatar>
                 <Typography>
                   Bertanya langsung dengan alumni sekolah anda mengenai universitas impian hingga karir masa depan.

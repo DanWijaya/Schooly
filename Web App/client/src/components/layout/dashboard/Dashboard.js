@@ -124,6 +124,7 @@ class Dashboard extends Component {
   }
 
   render() {
+    document.body.style = { "background-color" : "#FFFFF"}
     document.title="Schooly | Beranda";
 
     const { classes } = this.props;

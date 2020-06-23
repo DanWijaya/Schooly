@@ -36,7 +36,7 @@ function RegisterStepIcon(props) {
   const icons = {
     1: <StorageIcon />,
     2: <ContactMailIcon />,
-    // 3: <DoneOutlineIcon />,
+    3: <DoneOutlineIcon />,
   };
 
   return (

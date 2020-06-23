@@ -120,9 +120,10 @@ function ProfileDataItemEdit(props) {
 
 function ProfileDataEditorDialog(props) {
   const classes = useStyles();
-  
+
   const { user } = props.auth;
   const { updateUserData } = props;
+
   //Dialog
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -134,6 +135,7 @@ function ProfileDataEditorDialog(props) {
       setDataProfil(defaultUserData)
     setOpen(false);
   };
+  
   //Tabs
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {

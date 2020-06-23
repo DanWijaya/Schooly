@@ -1,77 +1,83 @@
-import React from "react";
-import whatIsSchooly from "./WhatIsSchooly.png";
-import schoolyFeature1 from "./SchoolyFeature1.png";
-import schoolyFeature2 from "./SchoolyFeature2.png";
-import schoolyFeature3 from "./SchoolyFeature3.png";
+import React, { Component } from "react";
+import schoolyIntroduction from "./SchoolyIntroduction.png";
+import schoolyAccess from "./SchoolyAccess.png";
 import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
+import ContactlessIcon from "@material-ui/icons/Contactless";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
 import DescriptionIcon from "@material-ui/icons/Description";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import ForumIcon from "@material-ui/icons/Forum";
+import PeopleIcon from "@material-ui/icons/People";
+import WatchLaterIcon from "@material-ui/icons/WatchLater";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
   },
-  whatIsSchoolyBackground: {
+  schoolyIntroductionBackground: {
     backgroundColor: theme.palette.primary.light,
   },
-  whatIsSchoolyTitle: {
-    fontFamily: "Cambria",
-  },
-  whatIsSchooly: {
+  schoolyIntroduction: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-end",
-    textAlign: "center",
-    margin: "auto",
-    width: "1000px",
-    height: "475px",
-    backgroundImage: `url(${whatIsSchooly})`,
-    backgroundPosition: "top",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
-  },
-  schoolyFeatures: {
     maxWidth: "1000px",
+    color: "white",
     margin: "auto",
   },
-  moreFeaturesBackground: {
-    backgroundColor: theme.palette.custombutton.main,
-  },
-  moreFeaturesTitle: {
+  schoolyIntroductionTitle: {
     fontFamily: "Cambria",
+    color: "white"
   },
-  moreFeatures: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    textAlign: "center",
+  schoolyAccessBackground: {
+    backgroundColor: "#F5F5F5",
+  },
+  schoolyAccess: {
+    maxWidth: "1000px",
     margin: "auto",
     marginTop: "30px",
-    maxWidth: "1000px",
+    marginBottom: "30px",
+    textAlign: "center",
   },
-  featurePaper: {
+  schoolyFeaturesBackground: {
+    backgroundColor: theme.palette.custombutton.main,
+  },
+  schoolyFeatures: {
+    textAlign: "center",
+    maxWidth: "1000px",
+    margin: "auto",
+    marginTop: "75px",
+    marginBottom: "75px",
+  },
+  schoolyFeaturesTitle: {
+    color: "grey"
+  },
+  featuresPaper: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     height: "350px",
     padding: "20px",
   },
-  featureAvatar: {
-    width: theme.spacing(17.5),
-    height: theme.spacing(17.5),
-    backgroundColor: theme.palette.primary.main,
+  featuresAvatar: {
+    width: theme.spacing(15),
+    height: theme.spacing(15),
     marginBottom: "30px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
   },
-  featureIcon: {
+  featuresIcon: {
     width: theme.spacing(10),
     height: theme.spacing(10),
+    color: theme.palette.primary.main,
   },
   useSchooly: {
     display: "flex",
@@ -113,117 +119,128 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   }
-}));
+});
 
-function Landing(props) {
-  document.title="Selamat Datang di Schooly";
+class Landing extends Component {
 
-  const classes = useStyles();
-
-  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
-  const { handleMarginTopValue } = props;
-  if(!isFirsttimeRendered) {
-    handleMarginTopValue(0);
-    setFirstTime(true);
+  constructor(props) {
+    super(props);
   }
 
-  return (
+  componentDidMount() {
+    if(this.props.auth.isAuthenticated){
+      this.props.handleMarginTopValue(20)
+      this.props.history.push("/dashboard");
+    }else
+      this.props.handleMarginTopValue(0);
+  }
+
+  copyToClipboard(text) {
+    var dummy = document.createElement("textarea");
+    // to avoid breaking orgain page when copying more words
+    // cant copy when adding below this code
+    // dummy.style.display = 'none'
+    document.body.appendChild(dummy);
+    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
+
+  render() {
+    document.title = "Schooly | Sistem Persekolahan Pertama di Indonesia";
+
+    const { classes } = this.props;
+
+    return (
     <div className={classes.root}>
-      <div className={classes.whatIsSchoolyBackground}>
-        <div className={classes.whatIsSchooly}>
-          <Typography variant="h2" gutterBottom className={classes.whatIsSchoolyTitle}>
-            Apa itu Schooly?
-          </Typography>
-          <Typography variant="h6" paragraph style={{width: "700px"}}>
-            Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
-          </Typography>
-          <Typography style={{paddingBottom: "40px"}}>
-            "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien."
-          </Typography>
+      <div className={classes.schoolyIntroductionBackground}>
+        <div className={classes.schoolyIntroduction}>
+          <Grid container spacing={10} justify="center" alignItems="center">
+            <Grid item xs={6}>
+              <Typography
+                className={classes.schoolyIntroductionTitle}
+                variant="h4"
+                color="primary"
+                gutterBottom
+              >
+               Schooly membuat pekerjaan sekolahmu lebih mudah.
+              </Typography>
+              <Typography variant="h6">
+               Berikan pekerjaan sekolah dengan mudah. Rangkum hasil pengecekkan dengan mudah.
+               Tidak pernah lupa dengan tugas persekolahanmu.
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <img src={schoolyIntroduction} alt="Schooly Introduction" />
+            </Grid>
+          </Grid>
         </div>
       </div>
-      <div className={classes.schoolyFeatures}>
-        <Grid container direction="column">
-          <Grid item container spacing={10} justify="center" alignItems="center">
-            <Grid item xs={6}>
-              <img src={schoolyFeature1} alt="Schooly Feature 1" />
+      <div className={classes.schoolyAccessBackground}>
+        <div className={classes.schoolyAccess}>
+          <Grid item container direction="column" alignItems="center">
+            <Grid item>
+              <img src={schoolyAccess} alt="Schooly Access" />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item>
               <Typography variant="h4" color="primary" gutterBottom>
-               Semua kegiatan persekolahanmu ada di tanganmu
+               Akses dengan mudah di mana saja.
               </Typography>
               <Typography variant="h6">
-               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti tugas, kuis, hingga ujian.
+               Buka dan gunakan Schooly dengan mudah pada browser anda di perangkat apa saja,
+               dimana saja, dan kapan saja.
               </Typography>
             </Grid>
           </Grid>
-          <Grid item container spacing={10} justify="center" alignItems="center">
-            <Grid item xs={6}>
-              <Typography variant="h4" color="primary" gutterBottom>
-               Akses dengan mudah
-              </Typography>
-              <Typography variant="h6">
-               Akses merupakan salah satu hal yang paling penting dalam sebuah aplikasi.
-               Schooly dibuat sebagai aplikasi web sehingga bisa diakses perangkat apa saja dengan mudah.
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <img src={schoolyFeature2} alt="Schooly Feature 2" />
-            </Grid>
-          </Grid>
-          <Grid item container spacing={10} justify="center" alignItems="center">
-            <Grid item xs={6}>
-              <img src={schoolyFeature3} alt="Schooly Feature 3" />
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="h4" color="primary" gutterBottom>
-               Media sosial persekolahan
-              </Typography>
-              <Typography variant="h6">
-               Temukan kontak orang-orang sepersekolahan dengan mudah di Schooly.
-               Anda juga tidak akan pernah lupa lagi akan tugas persekolahan anda dengan fitur pengingat baik untuk guru dan murid.
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
+        </div>
       </div>
-      <div className={classes.moreFeaturesBackground}>
-        <div className={classes.moreFeatures}>
-          <Typography variant="h4" gutterBottom className={classes.moreFeaturesTitle}>
-            Fitur-Fitur Schooly yang Akan Datang
-          </Typography>
-          <Typography variant="h6" style={{marginBottom: "50px"}}>
-            Masih banyak fitur-fitur yang bisa dinantikan dari Schooly seperti:
-          </Typography>
-          <Grid container spacing={3} style={{marginBottom: "50px"}}>
-            <Grid item xs={4}>
-              <Paper className={classes.featurePaper}>
-                <Avatar className={classes.featureAvatar}>
-                  <DescriptionIcon className={classes.featureIcon} />
+      <div className={classes.schoolyFeaturesBackground}>
+        <div className={classes.schoolyFeatures}>
+          <Grid container spacing={3} justify="center" alignItems="center">
+            <Grid item xs={12}>
+              <Typography variant="h4" gutterBottom className={classes.schoolyFeaturesTitle}>
+               Fitur-Fitur Schooly
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <AssignmentIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography>
-                  Kuis dan Ujian dengan berbagai jenis pertanyaan dari pilihan ganda, isilah, dan jawaban panjang.
-                  Dilengkapi dengan pengecek otomatis dari jenis pertanyaan ini.
+                  Publikasi pekerjaan sekolah dengan mudah dan tidak pernah takut kehilangan data.
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={4}>
-              <Paper className={classes.featurePaper}>
-                <Avatar className={classes.featureAvatar}>
-                  <ForumIcon className={classes.featureIcon} />
+            <Grid item xs={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <PeopleIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography>
-                  Diskusi antar guru dan murid mengenai sebuah tugas hingga sistem chatting antar orang dalam suatu lingkup sekolah.
+                  Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari pengelola, guru, hingga murid.
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={4}>
-              <Paper className={classes.featurePaper}>
-                <Avatar className={classes.featureAvatar}>
-                  <BusinessCenterIcon className={classes.featureIcon} />
+            <Grid item xs={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <WatchLaterIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography>
-                  Bertanya langsung dengan alumni sekolah anda mengenai universitas impian hingga karir masa depan.
+                  Tidak pernah lupa untuk mengumpulkan atau memeriksa pekerjaan sekolah lagi dengan pengingat dari Schooly.
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <ContactlessIcon className={classes.featuresIcon} />
+                </Avatar>
+                <Typography>
+                  Temukan kontak orang-orang sepersekolahanmu dengan mudah.
                 </Typography>
               </Paper>
             </Grid>
@@ -232,10 +249,10 @@ function Landing(props) {
       </div>
       <div className={classes.useSchooly}>
         <Typography variant="h4" color="primary" gutterBottom >
-          Tertarik menggunakan Schooly?
+          Siap untuk Schooly?
         </Typography>
         <Typography paragraph>
-          Klik tombol "Kirim Pesan" untuk mengontak kami atau tombol "Copy Tautan" untuk mengirim tautan ini ke sekolah anda.
+          Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin Tautan" untuk mengirim tautan ini ke sekolah anda.
         </Typography>
         <div className={classes.useSchoolyButtonContainer}>
           <Button
@@ -252,13 +269,26 @@ function Landing(props) {
             size="large"
             startIcon={<FilterNoneIcon />}
             className={classes.copyLinkButton}
+            onClick={() => this.copyToClipboard("http://www.schoolysystem.com")}
           >
-            Copy Tautan
+            Salin Tautan
           </Button>
         </div>
       </div>
     </div>
   )
+  }
 };
 
-export default Landing;
+Landing.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default withRouter(
+  connect(mapStateToProps)
+  (withStyles(styles)(Landing))
+  )
