@@ -80,7 +80,7 @@ class CreateTask extends Component {
     tugasUploader = React.createRef(null)
     uploadedTugas = React.createRef(null)
 
-    onChange = (e, otherfield) => {
+    onChange = (e, otherfield) => { 
       console.log(this.state.deadline)
       if(otherfield == "kelas"){
         this.setState({ class_assigned: e.target.value})
@@ -92,6 +92,7 @@ class CreateTask extends Component {
         this.setState({ subject: e.target.value})
       } else
         this.setState({ [e.target.id]: e.target.value});
+        console.log(this.state.fileTugas)
     }
 
     onDateChange = (date) => {
@@ -102,7 +103,8 @@ class CreateTask extends Component {
     onSubmit = (e, id) => {
         e.preventDefault();
 
-        const taskObject = {
+        let formData = new FormData()
+        const taskData = {
             name: this.state.name,
             deadline: this.state.deadline,
             subject: this.state.subject,
@@ -112,14 +114,12 @@ class CreateTask extends Component {
             // submitted: this.state.submitted,
             errors: {}
         };
-
-        let formData = new FormData()
+        // formData.set("taskData", taskData)
         for(var i = 0; i < this.state.fileTugas.length; i++){
-          formData.append("lampiran_tugas", this.state.fileTugas[i])
+          formData.append("lampiran", this.state.fileTugas[i])
         }
-        this.props.createTask(taskObject, this.props.history);
-
-        this.setState({name: "", subject: ""})
+        this.props.createTask(taskData, formData, this.props.history);
+        // this.setState({name: "", subject: ""})
     }
 
     // UNSAFE_componentWillReceiveProps() is invoked before
@@ -142,7 +142,7 @@ class CreateTask extends Component {
       console.log("AAA")
     }
 
-    handleTugasUpload = (e) => {
+    handleLampiranUpload = (e) => {
       const files = e.target.files;  
       this.setState({fileTugas: files})  
     }
@@ -299,7 +299,7 @@ class CreateTask extends Component {
           type="file"
           multiple={true}
           name="tugas"
-          onChange={this.handleTugasUpload}
+          onChange={this.handleLampiranUpload}
           ref={this.tugasUploader}
           accept="file/*"
           style={{display: "none"}}/>

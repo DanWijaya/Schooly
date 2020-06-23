@@ -144,7 +144,8 @@ router.get("/image-upload", (req,res) => {
 
   // @route POST /upload
   // @desc Upload files to DB
-  router.post("/upload/:id", uploadAvatar.single("avatar"), (req,res) => {
+  // This part where it uploads the avatar is done on users.js (because want to update the user data at the same time)
+  /* router.post("/upload/:id", uploadAvatar.single("avatar"), (req,res) => {
 
     let id = req.params.id
     User.findById(id, (err, userData) => {
@@ -162,7 +163,7 @@ router.get("/image-upload", (req,res) => {
 
     res.redirect("/image-upload");
     console.log(req.file.filename)
-  });
+  }); */
 
   router.get("/image/:filename", (req, res) => {
     gfsAvatar.files.findOne({ filename: req.params.filename }, (err, file) => {
@@ -325,7 +326,29 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 })
 
 // ------------------------------ Part untuk upload lampiran tugas -------------------- //
+//When uploading the lampiran, it is done tgt when creating the task object. 
+// So, this implementation is on router.post("/create") in tasks.js file
 
-
-
-module.exports = {router, uploadAvatar, uploadTugas};
+router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (req,res) => {
+  let task_id = req.params.task_id;
+  console.log('Task Id is:', task_id)
+  Task.findById(task_id, (err, task) => {
+    console.log("This is the task", task)
+    if(!task){
+      return res.status(404).json({tasknotfound: "Task not found"});
+    } else {
+      let temp = []
+      for(var i = 0; req.files.length; i++){
+        temp.push(req.files[i].id)
+      }
+      
+      task.lampiran = temp;
+      task.save()
+          .then(res.json("Successfully delete the task in user data"))
+          .catch(err => res.status(400).send("Unable to update"))
+      
+      return res.status(200).json({success: "lampiran is uploaded"})
+    }
+  })
+})
+module.exports = {router, uploadAvatar, uploadTugas, uploadLampiran};

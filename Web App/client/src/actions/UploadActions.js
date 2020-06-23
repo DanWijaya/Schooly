@@ -1,10 +1,6 @@
 import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS } from "./Types";
 import axios from "axios";
 
-export const uploadLampiranTugas = () => {
-
-}
-
 export const uploadTugas = (tugas, userData, taskId) => dispatch => {
 
   if(userData.role === "Student") {
@@ -114,3 +110,5 @@ export const previewTugas = (tugas_id) => dispatch => {
             console.log(err)
         })
 }
+
+// upload lampiran is handled togethe with createTask.

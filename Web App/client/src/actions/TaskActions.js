@@ -2,22 +2,26 @@ import axios from "axios";
 import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER} from "./Types";
 
 // Addtask
-export const createTask = (taskData, history) => dispatch => {
+export const createTask = (taskData, formData, history) => dispatch => {
   axios
     .post("/api/tasks/create", taskData)
     .then(res => {
-        history.push("/view")
-        // window.location.href = "./view"
-        alert("Task is created")
-        history.push("/newtasklist");
-    })
-    .catch(err =>
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
+        console.log(res.data.id, res.data._id)
+        return axios.post(`/api/uploads/upload_lampiran/${res.data._id}`, formData)}
+        )
+        .then(res => {
+            console.log("Lampiran tugas is uploaded")
+            alert("Task is created")
+            history.push("/newtasklist");
         })
-    );
-};
+        .catch(err =>{
+            console.log("error happened")
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })   
+    }
 
 // export const getTaskByUser = (userId) => dispatch => {
 //     axios

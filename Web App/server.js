@@ -16,9 +16,12 @@ const app = express();
 // Bodyparser middleware
 app.use(
   bodyParser.urlencoded({
-    extended: false
+    extended: true
   })
 );
+// // for parsing application/json
+// app.use(express.json()); 
+
 app.use(bodyParser.json());
 
 // DB Config

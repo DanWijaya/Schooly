@@ -82,7 +82,7 @@ export function savePassword(data) {
     })
     .then(async (json) => {
       if (json && json.success) {
-        alert("Done with updating password")
+        alert("Selesai mengubah kata sandi")
         window.location.href = "/masuk"
       }
         else {

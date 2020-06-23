@@ -361,6 +361,8 @@ function NewTask(props) {
     for (var i = 0; i < fileTugas.length; i++){
       formData.append("tugas", fileTugas[i])
     }
+    
+    console.log(formData, fileTugas)
     uploadTugas(formData, user, tugasId)
     setFileTugas(null)
     handleClick()

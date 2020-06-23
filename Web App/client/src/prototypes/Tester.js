@@ -1,19 +1,12 @@
 import React from 'react';
-<<<<<<< HEAD
-=======
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
->>>>>>> e320ed1641cfecd0fea7b38e4cf391c881ad8f35
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-<<<<<<< HEAD
-import CssBaseline from '@material-ui/core/CssBaseline';
-=======
->>>>>>> e320ed1641cfecd0fea7b38e4cf391c881ad8f35
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -33,12 +26,6 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1
   },
-<<<<<<< HEAD
-  menuButton: {
-    marginRight: 36,
-  },
-=======
->>>>>>> e320ed1641cfecd0fea7b38e4cf391c881ad8f35
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -63,14 +50,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   toolbar: {
-<<<<<<< HEAD
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-=======
->>>>>>> e320ed1641cfecd0fea7b38e4cf391c881ad8f35
     ...theme.mixins.toolbar,
   },
   content: {
@@ -92,21 +71,8 @@ function Tester() {
   };
 
 
-  const [open, setOpen] = React.useState(false);
-  const handleDrawerToggle = () => {
-    if(!open)
-      setOpen(true);
-    else
-      setOpen(false);
-  };
-
-
   return (
     <div className={classes.root}>
-<<<<<<< HEAD
-      <CssBaseline />
-=======
->>>>>>> e320ed1641cfecd0fea7b38e4cf391c881ad8f35
       <AppBar
         position="fixed"
         className={classes.appBar}
@@ -117,12 +83,6 @@ function Tester() {
             aria-label="open drawer"
             onClick={handleDrawerToggle}
             edge="start"
-<<<<<<< HEAD
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-=======
->>>>>>> e320ed1641cfecd0fea7b38e4cf391c881ad8f35
           >
             <MenuIcon/>
           </IconButton>
@@ -144,13 +104,7 @@ function Tester() {
           }),
         }}
       >
-<<<<<<< HEAD
-        <div className={classes.toolbar}>
-         
-        </div>
-=======
         <div className={classes.toolbar} />
->>>>>>> e320ed1641cfecd0fea7b38e4cf391c881ad8f35
         <Divider />
         <List>
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (

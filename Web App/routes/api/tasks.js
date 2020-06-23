@@ -33,7 +33,7 @@ router.post("/create", (req, res) => {
         });
         newTask
             .save()
-            .then(task => {res.json(task)
+            .then(task => { res.json(task)
                 console.log("Task is created")})
             .catch(err => console.log(err));
             }
