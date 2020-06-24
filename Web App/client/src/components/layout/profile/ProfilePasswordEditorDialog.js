@@ -20,11 +20,7 @@ const useStyles = makeStyles((theme) => ({
   saveButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
@@ -32,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   errorInfo: {
     color: "red",
     fontSize: "10px"
-  }, 
+  },
   inputField: {
     width: "450px"
   }
@@ -51,7 +47,7 @@ function EditPasswordField(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <OutlinedTextField 
+            <OutlinedTextField
             on_change={on_change}
             id={id}
             value={value}
@@ -73,7 +69,7 @@ function ProfilePasswordEditorDialog(props) {
   const {changePassword, logoutUser, errors} = props;
   const [errorMessage, setErrorMessage] = React.useState({})
   const {user} = props.auth;
-  
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -91,7 +87,7 @@ function ProfilePasswordEditorDialog(props) {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    
+
     var passwordData = {
       email: user.email,
       old_password: old_password,
@@ -110,7 +106,7 @@ function ProfilePasswordEditorDialog(props) {
       case "new_password":
         setNewPassword(e.target.value)
         break;
-      
+
       case "new_password2":
         setNewPassword2(e.target.value)
         break;
@@ -202,5 +198,5 @@ const mapStateToProps = state => ({
   errors: state.errors
 })
 
-export default connect(mapStateToProps, { changePassword, logoutUser}) 
+export default connect(mapStateToProps, { changePassword, logoutUser})
 (ProfilePasswordEditorDialog);

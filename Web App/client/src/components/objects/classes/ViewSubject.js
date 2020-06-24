@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "15px",
     paddingBottom: "40px",
   },
-  
+
   subjectPanel: {
     marginLeft: "50px",
   },
@@ -78,7 +78,7 @@ const classes = useStyles()
       <ListItemText style={{textAlign: 'right'}}
         primary={
           <Typography varian  t="h6" className={classes.warningText}>
-            Batas waktu: {props.work_deadline}
+            Batas Waktu: {props.work_deadline}
           </Typography>
         }
         secondary={props.work_status}
@@ -109,8 +109,8 @@ function ViewSubject(props) {
     getAllTaskFilesByUser(user.id)
   }
   let tasksByClass = [] // tasks on specific class.
-  
-  // All actions to retrive datas from Database... 
+
+  // All actions to retrive datas from Database...
   if(tasksCollection.length == undefined){
     viewTask()
   }else{
@@ -126,7 +126,7 @@ function ViewSubject(props) {
 
   const generateTaskBySubject = () => {
     let tasksBySubjectClass = [] // tasks on specific subjects and class
-    
+
     tasksByClass.map((task) => {
       let workCategoryAvatar = (
       <Avatar className={classes.assignmentLate}>
@@ -146,7 +146,7 @@ function ViewSubject(props) {
         }
       }
       if(task.subject == subject_name){
-      tasksBySubjectClass.push( 
+      tasksBySubjectClass.push(
       <WorkListItem
         work_title={task.name}
         work_category_avatar={workCategoryAvatar}
@@ -157,7 +157,7 @@ function ViewSubject(props) {
       />)
     }
   })
-  return tasksBySubjectClass.length == 0 ? 
+  return tasksBySubjectClass.length == 0 ?
   (<Typography style={{textAlign: 'center'}} variant="h5" gutterBottom>
   Belum ada tugas yang tersedia
   </Typography>) : tasksBySubjectClass
@@ -316,7 +316,7 @@ ViewSubject.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  classesCollection: state.classesCollection, 
+  classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   tasksCollection: state.tasksCollection,
   filesCollection: state.filesCollection

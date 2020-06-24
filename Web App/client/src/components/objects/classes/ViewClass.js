@@ -113,7 +113,7 @@ function WorkListItem(props) {
         <ListItemText style={{textAlign: "right"}}
           primary={
             <Typography variant="h6" className={classes.warningText}>
-              Batas waktu: {props.work_deadline}
+              Batas Waktu: {props.work_deadline}
             </Typography>
           }
           secondary={props.work_status}

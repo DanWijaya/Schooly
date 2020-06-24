@@ -30,10 +30,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginBottom: "10px",
     width: "200px",
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
     },
   },
@@ -53,11 +50,7 @@ const useStyles = makeStyles((theme) => ({
   saveButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
@@ -135,7 +128,7 @@ function ProfileDataEditorDialog(props) {
       setDataProfil(defaultUserData)
     setOpen(false);
   };
-  
+
   //Tabs
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {

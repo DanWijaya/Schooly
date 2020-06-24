@@ -65,97 +65,96 @@ class ResetPassword extends Component {
     }
   }
 
-// dispatch is used as a callback which gets invoked once some async action is complete. 
+// dispatch is used as a callback which gets invoked once some async action is complete.
 // In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
-  
+
   render() {
-    
-    document.title = "Lupa Akun"
+
+    document.title = "Schooly | Lupa Akun"
     document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
+
     const { password, password2, errors } = this.state;
     const { classes, savePassword} = this.props;
-    // const { isPasswordReset, isPasswordUpdated } = this.props.passwordMatters
     const { hash } = this.props.match.params;
 
     const onSubmit = (e) => {
-        e.preventDefault();
-        console.log("Submitted")
-    
-        let passwordReset = {
-            password : password,
-            password2: password2,
-            hash: hash
-        }
-        savePassword(passwordReset)
+      e.preventDefault();
+      console.log("Submitted")
+
+      let passwordReset = {
+          password : password,
+          password2: password2,
+          hash: hash
       }
+      savePassword(passwordReset)
+    }
+
     return (
       <div className={classes.root}>
         <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
         <Paper>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="space-between"
-              spacing={4}
-              className={classes.loginForgotGrid}>
-                <Grid item className={classes.infoTitle}>
-                  <Typography variant="h6" gutterBottom>
-                    <b>Ubah Kata Sandi</b>
-                  </Typography>
-                  <Typography variant="body1">
-                    Masukkan Kata Sandi baru anda
-                  </Typography>
-                </Grid> 
-
-              <Grid item className={classes.inputField}>
-                <form noValidate onSubmit={onSubmit}>
-                <div style={{marginBottom: "20px"}}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={password}
-                      id="password"
-                      type="password"
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
-                      })}
-                      html_for="password"
-                      labelname="Kata Sandi"
-                      span_classname={classes.errorInfo}
-                      error1={errors.password_entry}
-                    />
-                </div>
-
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={password2}
-                      error={errors.password_match}
-                      id="password2"
-                      type="password"
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
-                      })}
-                      html_for="password2"
-                      labelname="Konfirmasi Kata Sandi"
-                      span_classname={classes.errorInfo}
-                      error1={errors.password_match}
-                      error2={errors.reset_problem}
-                    />
-
-                  <Button
-                    type="submit"
-                    style={{
-                      backgroundColor: "#2196f3",
-                      color: "white",
-                      width: "100%",
-                      marginTop: "30px"
-                    }}
-                  >
-                    Ubah Kata Sandi
-                  </Button>
-                </form> 
-              </Grid>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="space-between"
+            spacing={4}
+            className={classes.loginForgotGrid}
+          >
+            <Grid item className={classes.infoTitle}>
+              <Typography variant="h6" gutterBottom>
+                <b>Ubah Kata Sandi</b>
+              </Typography>
+              <Typography variant="body1">
+                Masukkan Kata Sandi baru anda
+              </Typography>
             </Grid>
+            <Grid item className={classes.inputField}>
+              <form noValidate onSubmit={onSubmit}>
+              <div style={{marginBottom: "20px"}}>
+                <OutlinedTextField
+                  on_change={this.onChange}
+                  value={password}
+                  id="password"
+                  type="password"
+                  classname={classnames("", {
+                    invalid: errors.email || errors.emailnotfound
+                  })}
+                  html_for="password"
+                  labelname="Kata Sandi"
+                  span_classname={classes.errorInfo}
+                  error1={errors.password_entry}
+                />
+              </div>
+                <OutlinedTextField
+                  on_change={this.onChange}
+                  value={password2}
+                  error={errors.password_match}
+                  id="password2"
+                  type="password"
+                  classname={classnames("", {
+                    invalid: errors.email || errors.emailnotfound
+                  })}
+                  html_for="password2"
+                  labelname="Konfirmasi Kata Sandi"
+                  span_classname={classes.errorInfo}
+                  error1={errors.password_match}
+                  error2={errors.reset_problem}
+                />
+                <Button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#2196f3",
+                    color: "white",
+                    width: "100%",
+                    marginTop: "30px"
+                  }}
+                >
+                  Ubah Kata Sandi
+                </Button>
+              </form>
+            </Grid>
+          </Grid>
         </Paper>
       </div>
     )

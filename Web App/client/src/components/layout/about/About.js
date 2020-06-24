@@ -84,11 +84,7 @@ const useStyles = makeStyles((theme) => ({
   supportSchoolyButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },

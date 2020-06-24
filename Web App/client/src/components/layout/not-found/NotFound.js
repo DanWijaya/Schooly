@@ -37,11 +37,7 @@ const useStyles = makeStyles((theme) => ({
   backButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
@@ -79,7 +75,7 @@ function NotFound(props) {
           className={classes.backButton}
           href="/dashboard"
         >
-          Kembali ke Beranda
+          Kembali ke Dashboard
         </Button>
       </div>
     </div>

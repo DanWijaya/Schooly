@@ -29,9 +29,10 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-end",
-    maxWidth: "1000px",
-    color: "white",
     margin: "auto",
+    maxWidth: "1000px",
+    padding: "20px",
+    color: "white",
   },
   schoolyIntroductionTitle: {
     fontFamily: "Cambria",
@@ -41,21 +42,23 @@ const styles = (theme) => ({
     backgroundColor: "#F5F5F5",
   },
   schoolyAccess: {
-    maxWidth: "1000px",
+    textAlign: "center",
     margin: "auto",
+    maxWidth: "1000px",
     marginTop: "30px",
     marginBottom: "30px",
-    textAlign: "center",
+    padding: "10px",
   },
   schoolyFeaturesBackground: {
     backgroundColor: theme.palette.custombutton.main,
   },
   schoolyFeatures: {
     textAlign: "center",
-    maxWidth: "1000px",
     margin: "auto",
+    maxWidth: "1000px",
     marginTop: "75px",
     marginBottom: "75px",
+    padding: "10px",
   },
   schoolyFeaturesTitle: {
     color: "grey"
@@ -64,7 +67,7 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    height: "350px",
+    height: "330px",
     padding: "20px",
   },
   featuresAvatar: {
@@ -97,11 +100,7 @@ const styles = (theme) => ({
     marginRight: "30px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
@@ -110,11 +109,7 @@ const styles = (theme) => ({
     width: "200px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
-    "&:focus": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.primary.main,
     },
@@ -173,7 +168,11 @@ class Landing extends Component {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <img src={schoolyIntroduction} alt="Schooly Introduction" />
+              <img
+                alt="Schooly Introduction"
+                src={schoolyIntroduction}
+                style={{maxWidth: "100%", maxHeight: "100%"}}
+              />
             </Grid>
           </Grid>
         </div>
@@ -182,7 +181,11 @@ class Landing extends Component {
         <div className={classes.schoolyAccess}>
           <Grid item container direction="column" alignItems="center">
             <Grid item>
-              <img src={schoolyAccess} alt="Schooly Access" />
+              <img
+                alt="Schooly Access"
+                src={schoolyAccess}
+                style={{maxWidth: "100%", maxHeight: "100%"}}
+              />
             </Grid>
             <Grid item>
               <Typography variant="h4" color="primary" gutterBottom>
@@ -204,42 +207,42 @@ class Landing extends Component {
                Fitur-Fitur Schooly
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={6} md={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <AssignmentIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography>
+                <Typography variant="subtitle1">
                   Publikasi pekerjaan sekolah dengan mudah dan tidak pernah takut kehilangan data.
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={6} md={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <PeopleIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography>
+                <Typography variant="subtitle1">
                   Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari pengelola, guru, hingga murid.
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={6} md={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <WatchLaterIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography>
+                <Typography variant="subtitle1">
                   Tidak pernah lupa untuk mengumpulkan atau memeriksa pekerjaan sekolah lagi dengan pengingat dari Schooly.
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={6} md={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <ContactlessIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography>
+                <Typography variant="subtitle1">
                   Temukan kontak orang-orang sepersekolahanmu dengan mudah.
                 </Typography>
               </Paper>
