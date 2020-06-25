@@ -44,11 +44,7 @@ const styles = (theme) => ({
     color: "white",
     width: "100%",
     marginTop: "30px",
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
@@ -76,7 +72,7 @@ class LoginForgot extends Component {
     }
   }
 
-// dispatch is used as a callback which gets invoked once some async action is complete. 
+// dispatch is used as a callback which gets invoked once some async action is complete.
 // In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
   onSubmit = (e) => {
     e.preventDefault();
@@ -87,7 +83,7 @@ class LoginForgot extends Component {
 
   render() {
     console.log(this.state.email)
-    document.title = "Lupa Akun"
+    document.title = "Schooly | Lupa Akun"
     document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
 
     const { errors, email } = this.state;
@@ -106,7 +102,7 @@ class LoginForgot extends Component {
               spacing={3}
               className={classes.loginForgotGrid}
             >
-                {!isPasswordReset ?
+              {!isPasswordReset ?
                 <Grid item className={classes.infoTitle}>
                   <Typography variant="h6" gutterBottom>
                     <b>Lupa Kata Sandi?</b>
@@ -114,7 +110,8 @@ class LoginForgot extends Component {
                   <Typography variant="body1">
                     Masukkan email dan nomor telepon anda untuk melanjutkan.
                   </Typography>
-                </Grid> :
+                </Grid>
+                :
                 <Grid item className={classes.infoTitle}>
                   <Typography variant="h6" gutterBottom>
                   Sebuah email telah dikirimkan ke alamat email yang anda berikan.
@@ -122,41 +119,41 @@ class LoginForgot extends Component {
                   <Typography variant="body1">
                     <b>Silahkan klik tautan itu untuk melanjutkan mengganti password</b>
                   </Typography>
-              </Grid>}
-
+                </Grid>
+              }
               <Grid item style={{width:"300px"}} >
                 {!isPasswordReset ?
-                <form noValidate onSubmit={this.onSubmit}>
-                  <div style={{marginBottom: "20px"}}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={email}
-                      id="email"
-                      type="email"
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
-                      })}
-                      html_for="email"
-                      labelname="Email"
-                      span_classname={classes.errorInfo}
-                      error1={errors.problem}
-                    />
-                  </div>
+                  <form noValidate onSubmit={this.onSubmit}>
+                    <div style={{marginBottom: "20px"}}>
+                      <OutlinedTextField
+                        on_change={this.onChange}
+                        value={email}
+                        id="email"
+                        type="email"
+                        classname={classnames("", {
+                          invalid: errors.email || errors.emailnotfound
+                        })}
+                        html_for="email"
+                        labelname="Email"
+                        span_classname={classes.errorInfo}
+                        error1={errors.problem}
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className={classes.containedButton}
+                    >
+                      Ubah Kata Sandi
+                    </Button>
+                  </form>
+                  :
                   <Button
-                    type="submit"
+                    onClick={() => window.location.reload()}
                     className={classes.containedButton}
                   >
-                    Ubah Kata Sandi
+                    Kirim Ulang Email
                   </Button>
-                </form>
-                :
-                <Button
-                  onClick={() => window.location.reload()}
-                  className={classes.containedButton}
-                >
-                  Kirim Ulang Email
-                </Button>
-              }
+                }
               </Grid>
             </Grid>
         </Paper>

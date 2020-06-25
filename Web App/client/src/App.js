@@ -5,7 +5,7 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
 import { ThemeProvider } from "@material-ui/core/styles";
-import Toolbar from '@material-ui/core/Toolbar';
+import Toolbar from "@material-ui/core/Toolbar";
 //Routing and Actions
 import { setCurrentUser, logoutUser } from "./actions/UserActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
@@ -25,7 +25,6 @@ import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
-import { drawerWidth } from "./components/misc/nav-bar/NavBar";
 import NavBar from "./components/misc/nav-bar/NavBar";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer";
 import Footer from "./components/misc/footer/Footer";
@@ -114,6 +113,7 @@ class App extends Component {
                 <div
                   style={{
                     flexGrow: "1",
+                    overflowX: "hidden",
                     marginTop: `${this.state.marginTopValue}px`,
                   }}
                 >

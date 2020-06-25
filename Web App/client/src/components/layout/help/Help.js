@@ -25,13 +25,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     textAlign: "center",
     margin: "auto",
-    width: "1000px",
+    maxWidth: "1000px",
     height: "500px",
     color: "white",
     backgroundImage: `url(${helpTopics})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
   },
   content: {
     maxWidth: "1000px",
@@ -65,10 +65,7 @@ const useStyles = makeStyles((theme) => ({
     width: "250px",
     height: "300px",
     padding: "20px",
-    "&:focus": {
-      boxShadow: "1px 3px 5px 2px rgba(0, 0, 0, .3)",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       boxShadow: "1px 3px 5px 2px rgba(0, 0, 0, .3)",
     },
   },
@@ -90,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Help(props) {
-  document.title="Schooly | Bantuan"
+  document.title = "Schooly | Bantuan"
 
   const classes = useStyles();
 

@@ -98,7 +98,7 @@ class Login extends Component {
       ({
         passwordIsMasked: !(prevState.passwordIsMasked),
         icon: !(prevState.icon
-          )}
+      )}
     ));
   }
 

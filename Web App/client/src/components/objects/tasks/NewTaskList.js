@@ -50,14 +50,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// const headCells = [
-//   { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
-//   { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-//   { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan pada" },
-//   { id: "deadline", numeric: false, disablePadding: false, label: "Batas waktu" },
-//   { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
-// ];
-
 function TaskListHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, role } = props;
 
@@ -69,7 +61,7 @@ function TaskListHead(props) {
     { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan pada" },
-    { id: "deadline", numeric: false, disablePadding: false, label: "Batas waktu" },
+    { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
     { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
   ];
 
@@ -164,8 +156,8 @@ const TaskListToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
-          {role == "Teacher" ? <b>Daftar tugas yang anda berikan</b> : 
-          <b>Daftar tugas yang diberikan</b>}
+          {role == "Teacher" ? <b>Daftar tugas yang anda berikan</b> :
+          <b>Daftar Tugas yang Anda Berikan</b>}
           {/* Nanti buat untuk yang admin juga */}
         </Typography>
       )}
@@ -179,7 +171,7 @@ const TaskListToolbar = (props) => {
       ) : (
         null
       )}
-      {role == "Student" ? <div style={{display: 'none'}}></div> : 
+      {role == "Student" ? <div style={{display: 'none'}}></div> :
       <Link to="/createtask">
         <LightToolTip title="Buat tugas">
         <IconButton>
@@ -234,11 +226,11 @@ function NewTaskList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
-  
+
   const { tasksCollection, viewTask, deleteTask } = props;
   const { user } = props.auth;
 
-  
+
   const taskRowItem = (data) => {
     rows.push(
       createData(data._id, data.name,
@@ -253,12 +245,12 @@ function NewTaskList(props) {
       </IconButton>
       </Link>,
       <Tooltip title="Delete">
-      <IconButton 
+      <IconButton
       onClick={(e) =>{
           handleOpenDeleteDialog(e, data._id, data.name)}}  >
         <DeleteIcon style={{color: "#B22222"}} />
       </IconButton>
-      
+
     </Tooltip>
         ]
       )
@@ -290,12 +282,12 @@ function NewTaskList(props) {
             if(class_assigned[i]._id == user.kelas){
               taskRowItem(data)
               break;
-            } 
+            }
         }
       })
       }
 
-      else { // Untuk Admin 
+      else { // Untuk Admin
         tasksCollection.map((data) => {
           taskRowItem(data)
           })
@@ -411,7 +403,7 @@ function NewTaskList(props) {
                 Hapus
               </Button>
               </Grid>
-  
+
               <Grid item>
                     <Button
                     onClick={handleCloseDeleteDialog}

@@ -12,12 +12,9 @@ import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, FormControl, Grid, IconButton, Link, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Dialog, FormControl, Grid, IconButton, Link, MenuItem,
+   Paper, Select, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import CloseIcon from "@material-ui/icons/Close";
-import Stepper from "@material-ui/core/Stepper"
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
 
 const styles = (theme) => ({
   root: {
@@ -56,11 +53,7 @@ const styles = (theme) => ({
     backgroundColor: "#61bd4f",
     color: "white",
     width: "90px",
-    "&:focus": {
-      backgroundColor: "#61bd4f",
-      color: "white",
-    },
-    "&:hover": {
+    "&:focus, &:hover": {
       backgroundColor: "#61bd4f",
       color: "white",
     },
@@ -69,11 +62,16 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.primary.main,
     color: "white",
     width: "90px",
-    "&:focus": {
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-    "&:hover": {
+  },
+  closeDialogButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    width: "90px",
+    "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
@@ -385,21 +383,24 @@ class Register extends Component {
                   onClose={this.handleToggleDialog}
                 >
                   <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
-                    <Grid item container justify="flex-end" alignItems="flex-start" style={{marginBottom: "10px"}}>
-                      <IconButton
-                        size="small"
-                        disableRipple
-                        onClick={this.handleToggleDialog}
-                        style={{position: "fixed"}}
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </Grid>
                     <Grid item>
                       <PolicyContent />
                     </Grid>
+                    <Grid item style={{marginTop: "50px"}}>
+                      <Button
+                        size="large"
+                        className={classes.closeDialogButton}
+                        onClick={this.handleToggleDialog}
+                      >
+                        Tutup
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Dialog>
+                <Typography variant="body2" color="textSecondary" align="center" style={{marginTop: "20px"}}>
+                  Jangan lupa untuk melengkapi profil anda pada halaman profil yang dapat diakses pada
+                  menekan foto profil pada bagian kanan atas aplikasi.
+                </Typography>
               </Grid>
             </Grid>
           );
@@ -451,47 +452,47 @@ class Register extends Component {
             </Stepper>
             <Grid item>
               <form noValidate onSubmit={this.onSubmit}>
-                  {getStepContent(this.state.activeStep)}
-                  <div style={{display: "flex", justifyContent: "space-between", marginTop: "30px"}}>
-                    {this.state.activeStep === 0 ?
-                      null
-                      :
+                {getStepContent(this.state.activeStep)}
+                <div style={{display: "flex", justifyContent: "space-between", marginTop: "30px"}}>
+                  {this.state.activeStep === 0 ?
+                    null
+                    :
+                    <Button
+                      variant="contained"
+                      onClick={handleBack}
+                      style={{
+                        backgroundColor: "#DCDCDC",
+                        color: "black",
+                        width: "90px",
+                      }}
+                    >
+                      Kembali
+                    </Button>
+                  }
+                  {this.state.activeStep === steps.length - 1 ?
+                    <Grid container justify="flex-end">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        size="medium"
+                        className={classes.registerButton}
+                      >
+                        Daftar
+                      </Button>
+                    </Grid>
+                    :
+                    <Grid container justify="flex-end">
                       <Button
                         variant="contained"
-                        onClick={handleBack}
-                        style={{
-                          backgroundColor: "#DCDCDC",
-                          color: "black",
-                          width: "90px",
-                        }}
+                        type="button"
+                        onClick={handleNext}
+                        className={classes.continueButton}
                       >
-                        Kembali
+                        Lanjut
                       </Button>
-                    }
-                    {this.state.activeStep === steps.length - 1 ?
-                      <Grid container justify="flex-end">
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          size="medium"
-                          className={classes.registerButton}
-                        >
-                          Daftar
-                        </Button>
-                      </Grid>
-                      :
-                      <Grid container justify="flex-end">
-                        <Button
-                          variant="contained"
-                          type="button"
-                          onClick={handleNext}
-                          className={classes.continueButton}
-                        >
-                          Lanjut
-                        </Button>
-                      </Grid>
-                    }
-                  </div>
+                    </Grid>
+                  }
+                </div>
               </form>
             </Grid>
             <Link href="/masuk" style={{marginTop: "20px"}}>

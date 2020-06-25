@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import dashboardBackground from "./DashboardBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -35,11 +35,13 @@ function NotificationItemList(props) {
           primary={props.notification_title}
           secondary={props.sender_name}
         />
-        <ListItemSecondaryAction>
-          <Typography variant="subtitle" color="textSecondary">
-            {props.time}
-          </Typography>
-        </ListItemSecondaryAction>
+        <ListItemText
+          align="right"
+          primary={
+            <Typography variant="subtitle" color="textSecondary">
+              {props.time}
+            </Typography>}
+        />
       </ListItem>
     </Paper>
   )
@@ -59,11 +61,14 @@ function WorkItemList(props) {
           }
           secondary={props.work_category}
         />
-        <ListItemSecondaryAction>
-          <Typography variant="subtitle" color="textSecondary">
-            {props.work_duetime}
-          </Typography>
-        </ListItemSecondaryAction>
+        <ListItemText
+          align="right"
+          primary={
+            <Typography variant="subtitle" color="textSecondary">
+              {props.work_duetime}
+            </Typography>
+          }
+        />
       </ListItem>
     </Paper>
   )
@@ -73,6 +78,7 @@ const styles = (theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px"
   },
   paperTitle: {
     display: "flex",
@@ -81,12 +87,12 @@ const styles = (theme) => ({
     height: "60px"
   },
   timePaper: {
-    width: "1000px",
     height: "250px",
     padding: "20px",
     color: "white",
+    backgroundColor: theme.palette.primary.light,
     backgroundImage: `url(${dashboardBackground})`,
-    backgroundPosition: "center",
+    backgroundPosition: "bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
@@ -124,8 +130,8 @@ class Dashboard extends Component {
   }
 
   render() {
-    document.body.style = { "background-color" : "#FFFFF"}
-    document.title="Schooly | Beranda";
+    document.body.style = "background: #ffffff";
+    document.title = "Schooly | Dashboard";
 
     const { classes } = this.props;
     const { user } = this.props.auth;
@@ -147,7 +153,7 @@ class Dashboard extends Component {
             </Paper>
           </Grid>
           <Grid item container spacing={3}>
-            <Grid item xs={8}>
+            <Grid item sm={7} xs={12}>
               <Paper className={classes.notificationPaper}>
                 <div className={classes.paperTitle}>
                   <Typography variant="h5" color="primary">
@@ -177,7 +183,7 @@ class Dashboard extends Component {
                 </List>
               </Paper>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item sm={5} xs={12}>
               <Paper className={classes.workPaper}>
                 <div className={classes.paperTitle}>
                   <Typography variant="h5" color="primary">

@@ -18,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: "white",
     margin: "auto",
-    width: "1000px",
+    maxWidth: "1000px",
     height: "100px",
   },
   content: {
-    maxWidth: "1000px",
     margin: "auto",
     marginTop: "50px",
+    maxWidth: "1000px",
   },
   contentSection: {
     marginTop: "50px",

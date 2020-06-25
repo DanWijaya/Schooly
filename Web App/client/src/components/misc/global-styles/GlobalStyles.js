@@ -1,7 +1,7 @@
-import { createMuiTheme } from "@material-ui/core/styles";
-import { fade } from "@material-ui/core/styles/colorManipulator"
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import { fade } from "@material-ui/core/styles/colorManipulator";
 
-export const globalStyles = createMuiTheme({
+export const globalStyles = responsiveFontSizes(createMuiTheme({
   palette: {
     primary: {
       main: "#2196f3",
@@ -20,10 +20,7 @@ export const globalStyles = createMuiTheme({
   overrides: {
     MuiButton: {
       root: {
-        "&:focus": {
-          backgroundColor: "transparent",
-        },
-        "&:hover": {
+        "&:focus, &:hover": {
           backgroundColor: "transparent",
         },
       },
@@ -40,20 +37,14 @@ export const globalStyles = createMuiTheme({
     },
     MuiPickersDay:{
       daySelected: {
-        "&:focus": {
-          backgroundColor: "#2196f3",
-        },
-        "&:hover": {
+        "&:focus, &:hover": {
           backgroundColor: "#2196f3",
         },
       },
     },
     MuiIconButton: {
       root: {
-        "&:focus": {
-          backgroundColor: "transparent",
-        },
-        "&:hover": {
+        "&:focus, &:hover": {
           backgroundColor: "transparent",
         },
       },
@@ -71,4 +62,4 @@ export const globalStyles = createMuiTheme({
       disableRipple: true,
     },
   },
-});
+}));
