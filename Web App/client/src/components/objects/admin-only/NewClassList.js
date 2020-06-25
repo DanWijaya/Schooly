@@ -1,23 +1,21 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
-import { Button, Checkbox, Dialog, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
-   TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import CloseIcon from "@material-ui/icons/Close";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import CancelIcon from "@material-ui/icons/Cancel";
-
-import { viewClass, deleteClass } from '../../../actions/ClassActions';
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import PostAddIcon from '@material-ui/icons/PostAdd';
+import { Button, Checkbox, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
+   TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import { lighten, makeStyles } from "@material-ui/core/styles";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CloseIcon from "@material-ui/icons/Close";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import EditIcon from "@material-ui/icons/Edit";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
-
 function createData(_id, classroom, homeroomTeacher, size, absent, action) {
   return { _id, classroom, homeroomTeacher, size, absent, action };
 }
@@ -55,11 +53,11 @@ const headCells = [
   { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
   { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
   { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
-  { id: "action", numeric: false, disablePadding: false, label: "Sunting/Buang" },
+  { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
 ];
 
 function ClassListHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { classes, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -95,7 +93,6 @@ function ClassListHead(props) {
 
 ClassListHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
@@ -104,9 +101,10 @@ ClassListHead.propTypes = {
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
+  toolbar: {
+    display: "auto",
+    justifyContent: "space-between",
+    padding: "15px"
   },
   highlight:
     theme.palette.type === "light"
@@ -118,72 +116,76 @@ const useToolbarStyles = makeStyles((theme) => ({
           color: theme.palette.text.secondary,
           backgroundColor: theme.palette.secondary.dark,
         },
-  title: {
-    flex: "1 1 100%",
+  newClassButton: {
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
   },
+  newClassIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px"
+  }
 }));
 
 const ClassListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, item , deleteClass} = props;
+  const { item , deleteClass } = props;
 
   return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected} Kelas Dipilih
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
-          <b>Daftar Kelas</b>
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <LightToolTip title="Buat Kelas">
-          <IconButton onClick={() =>{
-            deleteClass(item[0])}}>
-            <DeleteIcon />
-          </IconButton>
-
-        </LightToolTip>
-      ) : (
-        null
-      )}
+    <Toolbar className={classes.toolbar}>
+      <Typography className={classes.title} variant="h4" align="center">
+        <b>Daftar Kelas</b>
+      </Typography>
       <Link to="/createclass">
-      <LightToolTip title="Buat Kelas">
-        <IconButton>
-          <PostAddIcon/>
-        </IconButton>
-      </LightToolTip>
+        <Fab variant="extended" className={classes.newClassButton}>
+          <FaChalkboardTeacher className={classes.newClassIcon} />
+          Buat Kelas
+        </Fab>
       </Link>
     </Toolbar>
   );
 };
 
-ClassListToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "750px",
+    maxWidth: "1000px",
+    padding: "10px",
+  },
+  tableEditIcon: {
+    color: theme.palette.primary.main,
+  },
+  tableDeleteIcon: {
+    color: theme.palette.error.dark,
   },
   dialogBox: {
-    maxWidth: "450px",
-    margin: "auto"
+    padding: "15px",
+  },
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
+  dialogCancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
   },
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
-  },
-  table: {
-    minWidth: 750,
   },
   visuallyHidden: {
     border: 0,
@@ -196,6 +198,12 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+  tableRow: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+      cursor: "pointer",
+    },
+  },
 }));
 
 function NewClassList(props) {
@@ -203,7 +211,6 @@ function NewClassList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
   const [selected, setSelected] = React.useState([]);
-  // const [classesList, setClassesList] = React.useState([]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedClassId, setSelectedClassId] = React.useState(null)
@@ -215,7 +222,8 @@ function NewClassList(props) {
   const retrieveClasses = () => {
     if(classesCollection.all_classes.length == 0){
       viewClass();
-    } else {
+    }
+    else {
       rows = []
       classesCollection.all_classes.map((data) => {
         rows.push(
@@ -223,28 +231,32 @@ function NewClassList(props) {
             data.walikelas.name,
             data.ukuran,
             data.nihil ? "Nihil" : "Tidak Nihil",
-            [<IconButton onClick={(e) => { e.stopPropagation()
-                window.location.href = `/editclass/${data._id}`}
-            }>
-              <EditIcon />
-            </IconButton> , 
-            <IconButton>
-              <Tooltip title="Delete">
-              <IconButton 
+            [
+            <LightToolTip title="Sunting">
+              <IconButton
+                size="small"
+                style={{marginRight: "5px"}}
+                onClick={(e) => { e.stopPropagation()
+                  window.location.href = `/editclass/${data._id}`
+                }}
+              >
+                <EditIcon className={classes.tableEditIcon} />
+              </IconButton>
+            </LightToolTip>,
+            <LightToolTip title="Hapus">
+              <IconButton
+                size="small"
                 onClick={(e) =>{
                   handleOpenDeleteDialog(e, data._id, data.name)}}>
-                <DeleteIcon style={{color: "#B22222"}}/>
+                <DeleteIcon className={classes.tableDeleteIcon} />
               </IconButton>
-              </Tooltip>
-            </IconButton>
+            </LightToolTip>
             ]
           )
         )
       })
-
     }
-}
-
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -256,7 +268,6 @@ function NewClassList(props) {
     // console.log(event.target.checked)
     if (checked) {
       const newSelected = rows.map((n) => n._id);
-      console.log(newSelected)
       setSelected(newSelected);
       return;
     }
@@ -266,20 +277,21 @@ function NewClassList(props) {
   const handleClick = (event, item) => { // get the id by item._id
     const selectedIndex = selected.indexOf(item._id);
     let newSelected = [];
-
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, item._id);
-    } else if (selectedIndex === 0) {
+    }
+    else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
+    }
+    else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
+    }
+    else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1),
       );
     }
-
     setSelected(newSelected);
   };
 
@@ -288,10 +300,9 @@ function NewClassList(props) {
   // call the function to get the classes from DB
   if(rows.length == 0)
     retrieveClasses()
-
-    const onDeleteClass = (id) => {
-      deleteClass(id)
-    }
+  const onDeleteClass = (id) => {
+    deleteClass(id)
+  }
 
     //Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
@@ -305,83 +316,67 @@ function NewClassList(props) {
     setOpenDeleteDialog(false);
   };
 
-    function DeleteDialog(){
-      return (
-        <Dialog
-          open={openDeleteDialog}
-          onClose={handleCloseDeleteDialog}
-          className={classes.dialogBox}
-        >
-          <Grid container justify="center" className={classes.dialogRoot}>
-            <Grid item
-              container
-              justify="flex-end"
-              alignItems="flex-start"
-              style={{marginBottom: "10px"}}
+  function DeleteDialog(){
+    return (
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+      >
+        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+          <Grid item container justify="flex-end" alignItems="flex-start">
+            <IconButton
+              size="small"
+              onClick={handleCloseDeleteDialog}
             >
-              <IconButton
-                size="small"
-                disableRipple
-                onClick={handleCloseDeleteDialog}
-                className={classes.iconButtonClose}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px"}}>
-              <Typography variant="h5" gutterBottom>
-                Hapus Tugas berikut?
-              </Typography>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px", textAlign:'center'}}>
-              <Typography variant="h6" gutterBottom>
-                <b>{selectedClassName}</b>
-              </Typography>
-            </Grid>
-            <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={2}
-                  style={{marginBottom: "20px"}}
-                >
-              <Grid item>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h5" gutterBottom>
+              Hapus Kelas berikut?
+            </Typography>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h6" align="center" gutterBottom>
+              <b>Kelas {selectedClassName}</b>
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+            style={{marginBottom: "10px"}}
+          >
+            <Grid item>
               <Button
                 onClick={() => { onDeleteClass(selectedClassId)}}
                 startIcon={<DeleteOutlineIcon />}
-                style={{
-                  backgroundColor: "#B22222",
-                  color: "white",
-                  width: "150px",
-                }}
+                className={classes.dialogDeleteButton}
               >
                 Hapus
               </Button>
-              </Grid>
-  
-              <Grid item>
-                    <Button
-                    onClick={handleCloseDeleteDialog}
-                      startIcon={< CancelIcon/>}
-                      style={{
-                        backgroundColor: "#2196f3",
-                        color: "white",
-                        width: "150px",
-                      }}
-                    >
-                      Batalkan
-                    </Button>
-              </Grid>
             </Grid>
+            <Grid item>
+              <Button
+                onClick={handleCloseDeleteDialog}
+                startIcon={< CancelIcon/>}
+                className={classes.dialogCancelButton}
+              >
+                Batalkan
+              </Button>
             </Grid>
-        </Dialog>
-      )
-    }
-  if(user.role == "Student"){
+          </Grid>
+        </Grid>
+      </Dialog>
+    )
+  }
+
+  if(user.role == "Student") {
     return (
       <div className={classes.root}>
-        <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
+        <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
           <b>Anda tidak punya izin untuk akses halaman ini</b>
         </Typography>
       </div>
@@ -391,16 +386,11 @@ function NewClassList(props) {
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
-        <ClassListToolbar numSelected={selected.length} item={selected} deleteClass={deleteClass}/>
+        <ClassListToolbar deleteClass={deleteClass}/>
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
-          >
+          <Table>
             <ClassListHead
               classes={classes}
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
@@ -416,10 +406,8 @@ function NewClassList(props) {
                   let viewpage = `/viewclass/${row._id}`
                   return (
                     <TableRow
-                      hover
-                      // onClick={(event) => handleClick(event, row)}
+                      className={classes.tableRow}
                       onClick={() => window.location.href = viewpage}
-                      role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.classroom}
@@ -440,8 +428,8 @@ function NewClassList(props) {
         </TableContainer>
       </Paper>
     </div>
-  );
-}
+  )
+};
 
 NewClassList.propTypes = {
   viewClass: PropTypes.func.isRequired,
@@ -459,5 +447,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  {viewClass, deleteClass }
+{ viewClass, deleteClass }
 )(NewClassList);

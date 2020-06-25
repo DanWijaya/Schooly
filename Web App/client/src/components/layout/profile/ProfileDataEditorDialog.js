@@ -25,24 +25,18 @@ import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
-  buttonEditProfile: {
+  editProfileButton: {
+    width: "200px",
+    marginBottom: "10px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    marginBottom: "10px",
-    width: "200px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
+      color: "white",
     },
   },
-  dialogRoot: {
+  root: {
     padding: "15px",
-  },
-  tabContentList: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    width:"500px",
-    height: "300px",
   },
   profileDataItemAvatar: {
     backgroundColor: theme.palette.primary.main,
@@ -67,8 +61,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box p={2}>
+          {children}
         </Box>
       )}
     </div>
@@ -97,7 +91,7 @@ function ProfileDataItemEdit(props) {
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
-        <Grid container alignItems="center">
+        <Grid container spacing={2} justify="space-between" alignItems="center">
           <Grid item xs={6}>
             <Typography variant="button">
               {props.profile_data_category}
@@ -201,19 +195,18 @@ function ProfileDataEditorDialog(props) {
         variant="contained"
         onClick={handleClickOpen}
         startIcon={<EditIcon />}
-        className={classes.buttonEditProfile}
+        className={classes.editProfileButton}
       >
         Sunting Profil
       </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <Grid container direction="column" alignItems="center" className={classes.dialogRoot}>
+      <Dialog fullWidth open={open} onClose={handleClose}>
+        <Grid container direction="column" alignItems="center" className={classes.root}>
           <Grid item container justify="flex-end" alignItems="flex-start" style={{marginBottom: "10px"}}>
             <IconButton
               size="small"
-              disableRipple
               onClick={handleClose}
             >
-                <CloseIcon />
+              <CloseIcon />
             </IconButton>
           </Grid>
           <Grid item style={{marginBottom: "30px"}}>
@@ -223,18 +216,18 @@ function ProfileDataEditorDialog(props) {
           </Grid>
           <form onSubmit={onSubmit}>
             <Tabs
-              value={value}
-              onChange={handleChange}
-              variant="fullWidth"
+              centered
               indicatorColor="primary"
               textColor="primary"
+              value={value}
+              onChange={handleChange}
             >
               <Tab icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
-              <Tab icon={<ContactMailIcon />} label="Kontak" {...TabIndex(0)} />
-              <Tab icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(0)} />
+              <Tab icon={<ContactMailIcon />} label="Kontak" {...TabIndex(1)} />
+              <Tab icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(2)} />
             </Tabs>
             <TabPanel value={value} index={0}>
-              <List className={classes.tabContentList}>
+              <List>
                 <ProfileDataItemEdit
                   profile_data_icon={<PersonIcon />}
                   profile_data_category="Nama"
@@ -266,7 +259,7 @@ function ProfileDataEditorDialog(props) {
               </List>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <List className={classes.tabContentList}>
+              <List>
                 <ProfileDataItemEdit
                   profile_data_icon={<EmailIcon />}
                   profile_data_category="Email"
@@ -298,7 +291,7 @@ function ProfileDataEditorDialog(props) {
               </List>
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <List className={classes.tabContentList}>
+              <List>
                 <ProfileDataItemEdit
                   profile_data_icon={<SportsEsportsIcon />}
                   profile_data_category="Hobi dan Minat"

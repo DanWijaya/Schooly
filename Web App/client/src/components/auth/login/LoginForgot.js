@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import classnames from "classnames";
+import { createHash, password } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
-import PropTypes from "prop-types";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { connect } from "react-redux";
-import { createHash, password} from "../../../actions/AuthActions";
-import classnames from "classnames";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -60,6 +60,7 @@ class LoginForgot extends Component {
       email: "",
     };
   }
+
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value})
   }
@@ -77,14 +78,12 @@ class LoginForgot extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted")
-    console.log(this.state.email)
     this.props.createHash(this.state.email)
   }
 
   render() {
-    console.log(this.state.email)
     document.title = "Schooly | Lupa Akun"
-    document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
+    document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     const { errors, email } = this.state;
     const { classes} = this.props;

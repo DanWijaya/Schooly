@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   navbarContainedRightItems: {
-    display: "flex",
+    flex: "auto",
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -40,6 +40,27 @@ const useStyles = makeStyles((theme) => ({
     width: "100px",
     height: "50px",
   },
+  signupButton: {
+    width: "75px",
+    height: "30px",
+    marginRight: "15px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
+  loginButton: {
+    width: "75px",
+    height: "30px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  }
 }));
 
 function NavBar(props) {
@@ -110,13 +131,7 @@ function NavBar(props) {
           variant="contained"
           size="small"
           href="/daftar"
-          style={{
-            backgroundColor: "#61bd4f",
-            color: "white",
-            width: "75px",
-            height: "30px",
-            marginRight: "15px"
-          }}
+          className={classes.signupButton}
         >
           Daftar
         </Button>
@@ -124,12 +139,7 @@ function NavBar(props) {
           variant="contained"
           size="small"
           href="/masuk"
-          style={{
-            backgroundColor: "white",
-            color: "#2196f3",
-            width: "75px",
-            height: "30px",
-          }}
+          className={classes.loginButton}
         >
           Masuk
         </Button>

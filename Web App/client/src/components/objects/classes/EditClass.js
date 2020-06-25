@@ -14,11 +14,11 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "center",
     margin: "auto",
-    maxWidth: "800px",
+    maxWidth: "1000px",
   },
   mainGrid: {
     width: "450px",
-    padding: "20px",
+    padding: "30px",
   },
   gridItem: {
     width: "350px",
@@ -31,13 +31,23 @@ const styles = (theme) => ({
     width: "400px",
   },
   inputLabel: {
-    color: "#2196f3",
+    color: theme.palette.primary.main,
     fontSize: "15px",
   },
   errorInfo: {
     color: "red",
     fontSize: "10px"
   },
+  editClassButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  }
 });
 
 
@@ -63,24 +73,18 @@ class EditClass extends Component {
 
   onChange = (e, otherfield) => {
     switch(otherfield){
-      case "bendahara": 
+      case "bendahara":
         this.setState({ bendahara: e.target.value})
         break;
-
       case "sekretaris":
-        console.log("set sekretaris")
-        console.log(e.target.value)
         this.setState({ sekretaris: e.target.value})
-        break;  
-
+        break;
       case "ketua_kelas":
         this.setState({ ketua_kelas: e.target.value})
         break;
-
       case "walikelas":
         this.setState({ walikelas: e.target.value})
         break;
-
       default:
         this.setState({ [e.target.id]: e.target.value});
     }
@@ -94,7 +98,7 @@ class EditClass extends Component {
     var next_sekretaris = {}
     var next_walikelas = {}
 
-    //classesCollection.selectedClasses itu kelasnya, kalau semua kelas .all_classes
+    //classesCollection.selectedClasses = individual class, .all_classes = all classes
     if(nextProps.classesCollection.selectedClasses.ketua_kelas)
       next_ketua_kelas = nextProps.classesCollection.selectedClasses.ketua_kelas._id
 
@@ -106,7 +110,7 @@ class EditClass extends Component {
 
     if(nextProps.classesCollection.selectedClasses.walikelas)
       next_walikelas = nextProps.classesCollection.selectedClasses.walikelas._id
-    
+
     if(!name){
       this.setState({
         name: nextProps.classesCollection.selectedClasses.name,
@@ -122,7 +126,6 @@ class EditClass extends Component {
 
   onSubmit = (e) => {
     e.preventDefault()
-
     const { id } = this.props.match.params;
     const classObject = {
       name: this.state.name,
@@ -134,7 +137,6 @@ class EditClass extends Component {
       bendahara: this.state.bendahara,
       errors: {}
     }
-
     this.props.updateClass(classObject, id, this.props.history);
   }
 
@@ -158,19 +160,20 @@ class EditClass extends Component {
     const returnId = (user_id, arr) => {
       if(arr == "student"){
         for (var i = 0; i < student_options.length; i++) {
-            // console.log(student_options[i]._id)
-            if(student_options[i]._id == user_id._id){
-              return user_id._id
-            }
+          // console.log(student_options[i]._id)
+          if(student_options[i]._id == user_id._id){
+            return user_id._id
+          }
         }
-    } else {
-      for (var i = 0; i < teacher_options.length; i++) {
-        // console.log(student_options[i]._id)
-        if(teacher_options[i]._id == user_id._id){
-          return user_id._id
+      }
+      else {
+        for (var i = 0; i < teacher_options.length; i++) {
+          // console.log(student_options[i]._id)
+          if(teacher_options[i]._id == user_id._id){
+            return user_id._id
+          }
         }
-    }
-    }
+      }
     }
 
     const showValue = (options, arr) => {
@@ -178,170 +181,157 @@ class EditClass extends Component {
       options.map((student) => {
         console.log(student, this.state.sekretaris)
         items.push(
-        <MenuItem 
+        <MenuItem
         value={returnId(student, arr)}
         // value={student}
-        > 
+        >
         {student.name}
         </MenuItem>)
       })
       return items;
     }
 
-    if(user.role == "Teacher" || user.role == "Admin"){
-    return (
-      <div className={classes.root}>
-        <Paper>
-          <div className={classes.mainGrid}>
-            <Typography variant="h5" className={classes.formTitle}>
-              <b>Sunting Kelas</b>
-            </Typography>
-            <form noValidate onSubmit={this.onSubmit}>
-              <Grid
-                container
-                direction="column"
-                alignItems="center"
-                spacing={4}
-              >
-                <Grid item className={classes.gridItem}>
-                  {this.state.name === "" ?
-                    <label htmlFor="name">
-                      <div className={classes.inputLabel}>
-                        Nama Kelas
-                      </div>
-                    </label>
-                  :
-                    <label htmlFor="name" class="active">
-                      <div className={classes.inputLabel}>
-                        Nama Kelas
-                      </div>
-                    </label>
-                  }
-                  <OutlinedTextField
-                    on_change={this.onChange}
-                    value={this.state.name}
-                    error={errors.name}
-                    id="name"
-                    type="text"
-                    classname={classnames("", {
-                        invalid: errors.name
-                    })}
-                    span_classname={classes.errorInfo}
-                    error1={errors.name}
-                  />
+    if(user.role == "Teacher" || user.role == "Admin") {
+      return (
+        <div className={classes.root}>
+          <Paper>
+            <div className={classes.mainGrid}>
+              <Typography variant="h5" className={classes.formTitle}>
+                <b>Sunting Kelas</b>
+              </Typography>
+              <form noValidate onSubmit={this.onSubmit}>
+                <Grid
+                  container
+                  direction="column"
+                  alignItems="center"
+                  spacing={4}
+                >
+                  <Grid item className={classes.gridItem}>
+                    {this.state.name === "" ?
+                      <label htmlFor="name">
+                        <div className={classes.inputLabel}>
+                          Nama Kelas
+                        </div>
+                      </label>
+                    :
+                      <label htmlFor="name" class="active">
+                        <div className={classes.inputLabel}>
+                          Nama Kelas
+                        </div>
+                      </label>
+                    }
+                    <OutlinedTextField
+                      on_change={this.onChange}
+                      value={this.state.name}
+                      error={errors.name}
+                      id="name"
+                      type="text"
+                      classname={classnames("", {
+                          invalid: errors.name
+                      })}
+                      span_classname={classes.errorInfo}
+                      error1={errors.name}
+                    />
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    {this.state.name === "" ?
+                      <label htmlFor="ukuran">
+                        <div className={classes.inputLabel}>
+                          Jumlah Murid
+                        </div>
+                      </label>
+                    :
+                      <label htmlFor="ukuran" class="active">
+                        <div className={classes.inputLabel}>
+                          Jumlah Murid
+                        </div>
+                      </label>
+                    }
+                    <OutlinedTextField
+                      on_change={this.onChange}
+                      value={this.state.ukuran}
+                      error={errors.ukuran}
+                      id="ukuran"
+                      type="number"
+                      classname={classnames("", {
+                          invalid: errors.ukuran
+                      })}
+                      span_classname={classes.errorInfo}
+                      error1={errors.name}
+                    />
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                      <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
+                      <Select
+                        value={walikelas}
+                        displayEmpty
+                        onChange={(event) => {this.onChange(event, "walikelas")}}
+                      >
+                        {showValue(teacher_options, "teacher")}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    <FormControl id="ketua_kelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                      <label id="ketua_kelas" className={classes.inputLabel}>Ketua Kelas</label>
+                      <Select
+                        value={ketua_kelas}
+                        displayEmpty
+                        onChange={(event) => {this.onChange(event, "ketua_kelas")}}
+                      >
+                        {showValue(student_options, "student")}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    <FormControl id="sekretaris" variant="outlined" color="primary" style={{width: "100%"}}>
+                      <label id="sekretaris" className={classes.inputLabel}>Sekretaris</label>
+                      <Select
+                        value={sekretaris}
+                        displayEmpty
+                        onChange={(event) => {this.onChange(event, "sekretaris")}}
+                      >
+                        {showValue(student_options, "student")}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    <FormControl id="bendahara" variant="outlined" color="primary" style={{width: "100%"}}>
+                      <label id="bendahara" className={classes.inputLabel}>bendahara</label>
+                      <Select
+                        value={bendahara}
+                        displayEmpty
+                        onChange={(event) => {this.onChange(event, "bendahara")}}
+                      >
+                        {showValue(student_options, "student")}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    <Button
+                      type="submit"
+                      className={classes.editClassButton}
+                    >
+                      Sunting Kelas
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item className={classes.gridItem}>
-                  {this.state.name === "" ?
-                    <label htmlFor="ukuran">
-                      <div className={classes.inputLabel}>
-                        Jumlah Murid
-                      </div>
-                    </label>
-                  :
-                    <label htmlFor="ukuran" class="active">
-                      <div className={classes.inputLabel}>
-                        Jumlah Murid
-                      </div>
-                    </label>
-                  }
-                  <OutlinedTextField
-                    on_change={this.onChange}
-                    value={this.state.ukuran}
-                    error={errors.ukuran}
-                    id="ukuran"
-                    type="number"
-                    classname={classnames("", {
-                        invalid: errors.ukuran
-                    })}
-                    span_classname={classes.errorInfo}
-                    error1={errors.name}
-                  />
-                </Grid>
-                <Grid item className={classes.gridItem}>
-                
-                <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
-                    <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
-                    <Select
-                    value={walikelas}
-                    displayEmpty
-                    onChange={(event) => {this.onChange(event, "walikelas")}}
-                  >
-                    {showValue(teacher_options, "teacher")}
-                  </Select>
-                
-                </FormControl>
-                </Grid>
-                <Grid item className={classes.gridItem}>
-                
-                <FormControl id="ketua_kelas" variant="outlined" color="primary" style={{width: "100%"}}>
-                    <label id="ketua_kelas" className={classes.inputLabel}>Ketua Kelas</label>
-                    <Select
-                    value={ketua_kelas}
-                    displayEmpty
-                    onChange={(event) => {this.onChange(event, "ketua_kelas")}}
-                  >
-                    {showValue(student_options, "student")}
-                  </Select>
-                
-                </FormControl>
-                </Grid>
-                <Grid item className={classes.gridItem}>
-                <FormControl id="sekretaris" variant="outlined" color="primary" style={{width: "100%"}}>
-                    <label id="sekretaris" className={classes.inputLabel}>Sekretaris</label>
-                    <Select
-                    value={sekretaris}
-                    displayEmpty
-                    onChange={(event) => {this.onChange(event, "sekretaris")}}
-                  >
-                    {showValue(student_options, "student")}
-                  </Select>
-                
-                </FormControl>
-                </Grid>
-
-                <Grid item className={classes.gridItem}>
-                
-                <FormControl id="bendahara" variant="outlined" color="primary" style={{width: "100%"}}>
-                    <label id="bendahara" className={classes.inputLabel}>bendahara</label>
-                    <Select
-                    value={bendahara}
-                    displayEmpty
-                    onChange={(event) => {this.onChange(event, "bendahara")}}
-                  >
-                    {showValue(student_options, "student")}
-                  </Select>
-                
-                </FormControl>
-                </Grid>
-                <Grid item className={classes.gridItem}>
-                  <Button
-                    type="submit"
-                    style={{
-                      backgroundColor: "#61bd4f",
-                      color: "white",
-                      width: "100%",
-                      marginTop: "20px",
-                    }}
-                  >
-                    Sunting Kelas
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
-        </Paper>
-      </div>
-    )
-  }
-  else {
-    return(
-      <div className={classes.root}>
-        <Typography variant="h5" className={classes.formTitle}>
-        <b>Anda tidak punya izin untuk menyunting kelas</b>
-      </Typography>
-      </div>
-    )
-  }
+              </form>
+            </div>
+          </Paper>
+        </div>
+      )
+    }
+    else {
+      return(
+        <div className={classes.root}>
+          <Typography variant="h5" className={classes.formTitle}>
+            <b>Anda tidak punya izin untuk menyunting kelas</b>
+          </Typography>
+        </div>
+      )
+    }
   }
 }
 
@@ -362,5 +352,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { viewOneClass, updateClass , getTeachers, getStudents}
+    mapStateToProps, { viewOneClass, updateClass, getTeachers, getStudents }
 ) (withStyles(styles)(EditClass))

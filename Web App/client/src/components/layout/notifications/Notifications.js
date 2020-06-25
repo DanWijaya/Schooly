@@ -1,33 +1,25 @@
 import React from "react";
 import StandardTextField from "../../misc/text-field/StandardTextField"
-import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core"
+import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Paper, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "800px",
     margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
   },
   paperBox: {
     padding: "20px"
-  },
-  notificationTitleContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    height: "60px",
-  },
-  notificationSearchBarContainer: {
-    display: "flex",
-    width: "30%",
   },
   listItemPaper: {
     marginBottom: "10px"
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.custombutton.main,
+      backgroundColor: theme.palette.button.main,
     },
   },
 }));
@@ -53,11 +45,14 @@ function NotificationItemList(props) {
           }
           secondary={props.sender_name}
         />
-        <ListItemSecondaryAction>
-          <Typography variant="subtitle" color="textSecondary">
-            {props.time}
-          </Typography>
-        </ListItemSecondaryAction>
+        <ListItemText
+          align="right"
+          primary={
+            <Typography variant="subtitle" color="textSecondary">
+              {props.time}
+            </Typography>
+          }
+        />
       </ListItem>
     </Paper>
   )
@@ -69,33 +64,35 @@ function Notifications(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
-          <div className={classes.notificationTitleContainer}>
-            <Typography variant="subtitle2">
+        <Grid container justify="space-between">
+          <Grid item xs={4}>
+            <Typography variant="subtitle2" color="primary">
               <h5>Notifikasi</h5>
             </Typography>
-            <div className={classes.notificationSearchBarContainer}>
-              <StandardTextField />
-              <IconButton className={classes.searchButton}>
-                <SearchIcon />
-              </IconButton>
-            </div>
-          </div>
-          <List>
-            <NotificationItemList
-              sender_icon={<AccountCircleIcon />}
-              sender_name="Pak Peler"
-              notification_title="Ujian Kimia Besok"
-              notification_link="/test"
-              time={"20m ago"}
-            />
-            <NotificationItemList
-              sender_icon={<AccountCircleIcon />}
-              sender_name="My Nigga"
-              notification_title="Ujian Biologi Lusa"
-              notification_link="/test"
-              time={"20m ago"}
-            />
-          </List>
+          </Grid>
+          <Grid item xs={8} container justify="flex-end">
+            <StandardTextField />
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+        <List>
+          <NotificationItemList
+            sender_icon={<AccountCircleIcon />}
+            sender_name="Pak Peler"
+            notification_title="Ujian Kimia Besok"
+            notification_link="/test"
+            time={"20m ago"}
+          />
+          <NotificationItemList
+            sender_icon={<AccountCircleIcon />}
+            sender_name="My Nigga"
+            notification_title="Ujian Biologi Lusa"
+            notification_link="/test"
+            time={"20m ago"}
+          />
+        </List>
       </Paper>
     </div>
   )

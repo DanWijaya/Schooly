@@ -75,7 +75,7 @@ const styles = (theme) => ({
     width: "400px",
   },
   inputLabel: {
-    color: "#2196f3",
+    color: "#2196F3",
     fontSize: "15px",
   },
   errorInfo: {
@@ -455,7 +455,7 @@ class CreateTask extends Component {
                  <Button
                  type="submit"
                   style={{
-                    backgroundColor: "#61bd4f",
+                    backgroundColor: "#61BD4F",
                       color: "white",
                       width: "100%",
                       marginTop: "20px",

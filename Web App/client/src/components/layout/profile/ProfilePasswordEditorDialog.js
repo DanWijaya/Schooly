@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { changePassword } from "../../../actions/AuthActions"
 import { logoutUser } from "../../../actions/UserActions"
 const useStyles = makeStyles((theme) => ({
-  dialogRoot: {
+  root: {
     padding: "15px",
   },
   changePasswordCaution: {
@@ -29,9 +29,6 @@ const useStyles = makeStyles((theme) => ({
     color: "red",
     fontSize: "10px"
   },
-  inputField: {
-    width: "450px"
-  }
 }));
 
 function EditPasswordField(props) {
@@ -40,7 +37,7 @@ function EditPasswordField(props) {
 
   return (
     <ListItem>
-        <Grid container alignItems="center" className={classes.inputField}>
+        <Grid container alignItems="center">
           <Grid item xs={6}>
             <Typography variant="subtitle2">
               {props.edit_password_requirement}
@@ -53,7 +50,6 @@ function EditPasswordField(props) {
             value={value}
             span_classname={classes.errorInfo}
             html_for="password_lama"
-            labelname="Kata sandi lama"
             error1 = {errors}
             type="password"/>
           </Grid>
@@ -128,18 +124,17 @@ function ProfilePasswordEditorDialog(props) {
         Ganti Kata Sandi
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <Grid container direction="column" alignItems="center" className={classes.dialogRoot}>
+        <Grid container direction="column" alignItems="center" className={classes.root}>
           <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              disableRipple
               onClick={handleClose}
             >
-                <CloseIcon />
+              <CloseIcon />
             </IconButton>
           </Grid>
           <Grid item style={{marginBottom: "10px"}}>
-            <Typography variant="h6" gutterBottom style={{textAlign: "center"}}>
+            <Typography variant="h6" align="center" gutterBottom>
               <b>Ganti Kata Sandi</b>
             </Typography>
             <Typography variant="subtitle2" className={classes.changePasswordCaution}>
@@ -149,24 +144,24 @@ function ProfilePasswordEditorDialog(props) {
           <form onSubmit={onSubmit}>
             <List>
               <EditPasswordField
-              id="old_password"
-              errors={errorMessage.old_password}
+                id="old_password"
+                errors={errorMessage.old_password}
                 value={old_password}
                 on_change={onChange}
                 edit_password_requirement="Masukkan kata sandi saat ini"
               />
               <EditPasswordField
-              id="new_password"
-              value={new_password}
-              errors={errorMessage.new_password}
-              on_change={onChange}
+                id="new_password"
+                value={new_password}
+                errors={errorMessage.new_password}
+                on_change={onChange}
                 edit_password_requirement="Masukkan kata sandi baru"
               />
               <EditPasswordField
-              id="new_password2"
-              value={new_password2}
-              on_change={onChange}
-              errors={errorMessage.new_password}
+                id="new_password2"
+                value={new_password2}
+                on_change={onChange}
+                errors={errorMessage.new_password}
                 edit_password_requirement="Konfirmasi kata sandi baru"
               />
             </List>

@@ -14,30 +14,36 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "center",
     margin: "auto",
-    maxWidth: "800px",
+    maxWidth: "1000px",
   },
   mainGrid: {
     width: "450px",
-    padding: "20px",
+    padding: "30px",
   },
   gridItem: {
     width: "350px",
-  },
-  formTitle: {
-    textAlign: "center",
-    marginBottom: "30px",
   },
   inputField: {
     width: "400px",
   },
   inputLabel: {
-    color: "#2196f3",
+    color: theme.palette.primary.main,
     fontSize: "15px",
   },
   errorInfo: {
     color: "red",
     fontSize: "10px"
   },
+  createClassButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  }
 });
 
 
@@ -94,9 +100,9 @@ class CreateClass extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if(nextProps.errors) {
-        this.setState({
-            errors: nextProps.errors
-        });
+      this.setState({
+        errors: nextProps.errors
+      });
     }
   }
 
@@ -110,102 +116,100 @@ class CreateClass extends Component {
     const { classes } = this.props;
     const { all_teachers, user } = this.props.auth
     const { errors } = this.state;
-    var options = all_teachers
+    var options = all_teachers;
 
-    if(user.role == "Teacher" || user.role == "Admin"){
-    return (
-      <div className={classes.root}>
-        <Paper>
-          <div className={classes.mainGrid}>
-            <Typography variant="h5" className={classes.formTitle}>
-              <b>Tambahkan Keterangan Kelas untuk Membuat Kelas</b>
-            </Typography>
-            <form noValidate onSubmit={this.onSubmit}>
-              <Grid
-                container
-                direction="column"
-                alignItems="center"
-                spacing={4}
-              >
-                <Grid item className={classes.gridItem}>
-                  <OutlinedTextField
-                    on_change={this.onChange}
-                    value={this.state.name}
-                    error={errors.name}
-                    id="name"
-                    type="text"
-                    classname={classnames("", {
-                        invalid: errors.name
-                    })}
-                    html_for="name"
-                    labelname="Nama Kelas"
-                    label_classname={classes.inputLabel}
-                    span_classname={classes.errorInfo}
-                    error1={errors.name}
-                  />
+    if(user.role == "Teacher" || user.role == "Admin") {
+      return (
+        <div className={classes.root}>
+          <Paper>
+            <div className={classes.mainGrid}>
+              <Typography variant="h5" align="center" gutterBottom>
+                <b>Buat Kelas</b>
+              </Typography>
+              <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
+                Tambahkan Keterangan Kelas untuk Membuat Kelas
+              </Typography>
+              <form noValidate onSubmit={this.onSubmit}>
+                <Grid
+                  container
+                  direction="column"
+                  alignItems="center"
+                  spacing={4}
+                >
+                  <Grid item className={classes.gridItem}>
+                    <OutlinedTextField
+                      on_change={this.onChange}
+                      value={this.state.name}
+                      error={errors.name}
+                      id="name"
+                      type="text"
+                      classname={classnames("", {
+                          invalid: errors.name
+                      })}
+                      html_for="name"
+                      labelname="Nama Kelas"
+                      label_classname={classes.inputLabel}
+                      span_classname={classes.errorInfo}
+                      error1={errors.name}
+                    />
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                  <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                      <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
+                      <Select
+                      value={this.state.walikelas}
+                      onChange={(event) => {this.onChange(event, "walikelas")}}
+                    >
+                      {options.map((walikelas) => (
+                        <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
+                      ))}
+                    </Select>
+
+                  </FormControl>
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    <OutlinedTextField
+                      on_change={this.onChange}
+                      value={this.state.ukuran}
+                      error={errors.ukuran}
+                      id="ukuran"
+                      type="number"
+                      classname={classnames("", {
+                          invalid: errors.ukuran
+                      })}
+                      html_for="ukuran"
+                      labelname="Jumlah Murid"
+                      label_classname={classes.inputLabel}
+                      span_classname={classes.errorInfo}
+                      error1={errors.ukuran}
+                    />
+                  </Grid>
+                  <Grid item className={classes.gridItem}>
+                    <Button
+                      type="submit"
+                      className={classes.createClassButton}
+                    >
+                      Buat Kelas
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item className={classes.gridItem}>
-                <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
-                    <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
-                    <Select
-                    value={this.state.walikelas}
-                    onChange={(event) => {this.onChange(event, "walikelas")}}
-                  >
-                    {options.map((walikelas) => (
-                      <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
-                    ))}
-                  </Select>
-                
-                </FormControl>
-                </Grid>
-                <Grid item className={classes.gridItem}>
-                  <OutlinedTextField
-                    on_change={this.onChange}
-                    value={this.state.ukuran}
-                    error={errors.ukuran}
-                    id="ukuran"
-                    type="number"
-                    classname={classnames("", {
-                        invalid: errors.ukuran
-                    })}
-                    html_for="ukuran"
-                    labelname="Jumlah Murid"
-                    label_classname={classes.inputLabel}
-                    span_classname={classes.errorInfo}
-                    error1={errors.ukuran}
-                  />
-                </Grid>
-                <Grid item className={classes.gridItem}>
-                  <Button
-                    type="submit"
-                    style={{
-                      backgroundColor: "#61bd4f",
-                      color: "white",
-                      width: "100%",
-                      marginTop: "20px",
-                    }}
-                  >
-                    Buat Kelas
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
-        </Paper>
-      </div>
-    )
-  }
-  else {
-    return(
-      <div className={classes.root}>
-        <Typography variant="h5" className={classes.formTitle}>
-        <b>Anda tidak punya izin untuk membuat Kelas</b>
-      </Typography>
-      </div>
-    )
-  }
-  }
-}
+              </form>
+            </div>
+          </Paper>
+        </div>
+      )
+    }
+    else {
+      return(
+        <div className={classes.root}>
+          <Typography variant="h5" className={classes.formTitle}>
+            <b>Anda tidak punya izin untuk membuat Kelas</b>
+          </Typography>
+        </div>
+      )
+    };
+  };
+};
 
 CreateClass.propTypes = {
   createClass: PropTypes.func.isRequired,
@@ -219,5 +223,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createClass , getTeachers}
+  mapStateToProps, { createClass, getTeachers }
 ) (withStyles(styles)(CreateClass))

@@ -23,8 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     margin: "auto",
-    marginTop: "50px",
     maxWidth: "1000px",
+    marginTop: "50px",
+    padding: "20px",
   },
   contentSection: {
     marginTop: "50px",

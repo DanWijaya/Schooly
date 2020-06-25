@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const StyledListItem = withStyles((theme) => ({
   root: {
     "&:active, &:hover": {
-      backgroundColor: theme.palette.custombutton.main,
+      backgroundColor: theme.palette.button.main,
     },
   },
 }))(ListItem);
@@ -99,7 +99,7 @@ function DrawerContent(props) {
     if(user.role === "Student")
       directedTo = `/viewclass/${user.kelas}`
     else
-      directedTo = "/newtasklist"
+      directedTo = "/newclasslist"
   }
 
   let ListItemContents = [
@@ -155,7 +155,7 @@ function SideDrawer(props) {
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
-        {/* Desktop = Mini Variant */}
+          {/* Desktop = Mini Variant */}
           <Drawer
             variant="permanent"
             className={clsx(classes.drawerDesktop, {

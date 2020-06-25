@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.custombutton.main,
+      backgroundColor: theme.palette.button.main,
     },
   },
 }));
@@ -130,7 +130,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    document.body.style = "background: #ffffff";
+    document.body.style = "background: #FFFFFF";
     document.title = "Schooly | Dashboard";
 
     const { classes } = this.props;

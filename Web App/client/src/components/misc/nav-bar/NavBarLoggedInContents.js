@@ -13,7 +13,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 const useStyles = makeStyles((theme) => ({
   menuItem: {
     "&:hover": {
-      backgroundColor: "#2196f3",
+      backgroundColor: theme.palette.primary.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
@@ -109,8 +109,9 @@ function NavBarLoggedInContents(props) {
   const renderMobileMenu = (
     <Grid container className={classes.navbarContainedRightItems}>
       <IconButton
-        onClick={handleMobileMenuOpen}
+        edge="end"
         color="inherit"
+        onClick={handleMobileMenuOpen}
       >
         <MoreIcon />
       </IconButton>

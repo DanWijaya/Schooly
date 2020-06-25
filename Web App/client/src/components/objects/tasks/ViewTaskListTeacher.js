@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     maxWidth: "750px",
   },
   categoryTitle: {
-    color: "#2196f3"
+    color: "#2196F3"
   },
   expansionPanelList: {
     marginLeft: "20px",

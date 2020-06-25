@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import schoolyIntroduction from "./SchoolyIntroduction.png";
 import schoolyAccess from "./SchoolyAccess.png";
 import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
@@ -13,8 +15,6 @@ import ForumIcon from "@material-ui/icons/Forum";
 import PeopleIcon from "@material-ui/icons/People";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 
 const styles = (theme) => ({
   root: {
@@ -50,7 +50,7 @@ const styles = (theme) => ({
     padding: "10px",
   },
   schoolyFeaturesBackground: {
-    backgroundColor: theme.palette.custombutton.main,
+    backgroundColor: theme.palette.button.main,
   },
   schoolyFeatures: {
     textAlign: "center",
@@ -67,7 +67,7 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    height: "330px",
+    height: "100%",
     padding: "20px",
   },
   featuresAvatar: {
@@ -201,13 +201,13 @@ class Landing extends Component {
       </div>
       <div className={classes.schoolyFeaturesBackground}>
         <div className={classes.schoolyFeatures}>
-          <Grid container spacing={3} justify="center" alignItems="center">
+          <Grid container spacing={3} justify="center" alignItems="stretch">
             <Grid item xs={12}>
               <Typography variant="h4" gutterBottom className={classes.schoolyFeaturesTitle}>
                Fitur-Fitur Schooly
               </Typography>
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <AssignmentIcon className={classes.featuresIcon} />
@@ -217,7 +217,7 @@ class Landing extends Component {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <PeopleIcon className={classes.featuresIcon} />
@@ -227,7 +227,7 @@ class Landing extends Component {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <WatchLaterIcon className={classes.featuresIcon} />
@@ -237,7 +237,7 @@ class Landing extends Component {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
                 <Avatar className={classes.featuresAvatar}>
                   <ContactlessIcon className={classes.featuresIcon} />

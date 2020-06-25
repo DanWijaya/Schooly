@@ -237,7 +237,7 @@ function ProfilePictureEditorDialog(props) {
                       type="submit"
                       startIcon={<CloudUploadIcon />}
                       style={{
-                        backgroundColor: "#61bd4f",
+                        backgroundColor: "#61BD4F",
                         color: "white",
                         width: "150px",
                         opacity: "50%"
@@ -250,7 +250,7 @@ function ProfilePictureEditorDialog(props) {
                       type="submit"
                       startIcon={<CloudUploadIcon />}
                       style={{
-                        backgroundColor: "#61bd4f",
+                        backgroundColor: "#61BD4F",
                         color: "white",
                         width: "150px",
                       }}

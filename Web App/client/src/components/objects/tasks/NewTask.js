@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   workChosenFile: {
     width: "200px",
     textAlign:"center",
-    color:"#2196f3",
+    color:"#2196F3",
   },
   workButton: {
     width: "200px",
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.custombutton.main,
+      backgroundColor: theme.palette.button.main,
     },
   },
 }));
@@ -79,7 +79,7 @@ function LampiranFile(props) {
   return(
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem button disableRipple className={classes.listItem} 
+        <ListItem button disableRipple className={classes.listItem}
         onClick={() => {props.onPreviewFile(file_id, "lampiran")}}>
           <ListItemAvatar>
             <Avatar />
@@ -142,7 +142,7 @@ function WorkFile(props) {
 function CheckedWorkFilesButton() {
   const StyledMenu = withStyles({
     paper: {
-      border: "1px solid #d3d4d5",
+      border: "1px solid #D3D4D5",
     },
   })((props) => (
     <Menu
@@ -163,7 +163,7 @@ function CheckedWorkFilesButton() {
   const StyledMenuItem = withStyles((theme) => ({
     root: {
       "&:focus": {
-        backgroundColor: "#2196f3",
+        backgroundColor: "#2196F3",
         "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
           color: theme.palette.common.white,
         },
@@ -187,7 +187,7 @@ function CheckedWorkFilesButton() {
         variant="contained"
         onClick={handleClick}
         startIcon={<AssignmentTurnedInIcon />}
-        style={{color: "white", backgroundColor: "#2196f3"}}>
+        style={{color: "white", backgroundColor: "#2196F3"}}>
         Lihat Hasil Pengecekkan
       </Button>
       <StyledMenu
@@ -203,7 +203,7 @@ function CheckedWorkFilesButton() {
           </ListItemAvatar>
           <ListItemText
             primary="File Name"
-            secondary="File Type" 
+            secondary="File Type"
           />
         </StyledMenuItem>
         <StyledMenuItem>
@@ -217,11 +217,11 @@ function CheckedWorkFilesButton() {
   );
 }
 
-function NewTask(props) {       
+function NewTask(props) {
   const classes = useStyles();
   const { user, selectedUser } = props.auth;
-  const { uploadTugas, getTaskFilesByUser, tasksCollection, 
-    filesCollection, downloadTugas, previewTugas, 
+  const { uploadTugas, getTaskFilesByUser, tasksCollection,
+    filesCollection, downloadTugas, previewTugas,
     viewOneTask, getOneUser, downloadLampiran, previewLampiran } = props;
 
   const tugasUploader = React.useRef(null);
@@ -240,7 +240,7 @@ function NewTask(props) {
   // this page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
-    viewOneTask(tugasId)   
+    viewOneTask(tugasId)
     // will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
   },[tasksCollection.person_in_charge_id]
@@ -361,7 +361,7 @@ function NewTask(props) {
     else if(fileCategory == "lampiran")
       downloadLampiran(id)
     else
-      console.log("File Category is not specified") 
+      console.log("File Category is not specified")
   }
 
   const onPreviewFile = (id, fileCategory="none") => {
@@ -370,7 +370,7 @@ function NewTask(props) {
     else if(fileCategory == "lampiran")
       previewLampiran(id)
     else
-      console.log("File Category is not specified") 
+      console.log("File Category is not specified")
   }
 
   //Delete Dialog box
@@ -443,7 +443,7 @@ function NewTask(props) {
                 onClick={handleCloseDeleteDialog}
                 startIcon={< CancelIcon/>}
                 style={{
-                  backgroundColor: "#2196f3",
+                  backgroundColor: "#2196F3",
                   color: "white",
                   width: "150px",
                 }}
@@ -508,10 +508,10 @@ function NewTask(props) {
                 Berkas yang terlampir:
               </Typography>
               <Grid container spacing={1}>
-                {!tasksCollection.lampiran ? null : 
+                {!tasksCollection.lampiran ? null :
                 tasksCollection.lampiran.map((lampiran) => (
                   <LampiranFile
-                    file_id={lampiran.id} 
+                    file_id={lampiran.id}
                     onPreviewFile ={onPreviewFile}
                     onDownloadFile ={onDownloadFile}
                     filename={lampiran.filename}
@@ -574,7 +574,7 @@ function NewTask(props) {
                   variant="contained"
                   startIcon={<AddIcon />}
                   className={classes.workButton}
-                  style={{color: "#2196f3", backgroundColor: "white"}}
+                  style={{color: "#2196F3", backgroundColor: "white"}}
                   onClick={() => {tugasUploader.current.click()}}
                 >
                   Pilih File
@@ -585,7 +585,7 @@ function NewTask(props) {
                   variant="contained"
                   startIcon={<PublishIcon />}
                   className={classes.workButton}
-                  style={{color: "white", backgroundColor: "#2196f3"}}
+                  style={{color: "white", backgroundColor: "#2196F3"}}
                   type="submit"
                   disabled={fileTugas == null}
                 >
@@ -641,6 +641,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(
    mapStateToProps, {uploadTugas, deleteTugas, downloadTugas,
-     previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran, 
+     previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
      previewLampiran, viewOneTask}
  ) (NewTask);

@@ -9,7 +9,7 @@ const OutlinedTextField = (props) => {
     setBorderStyle("1px solid #CCC")
   }
   const onFocus = () => {
-    setBorderStyle("2px solid #2196f3")
+    setBorderStyle("2px solid #2196F3")
   }
   return (
     <div>

@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   workChosenFile: {
     width: "200px",
     textAlign:"center",
-    color:"#2196f3",
+    color:"#2196F3",
   },
   workButton: {
     width: "200px",
@@ -302,7 +302,7 @@ function ViewTaskTeacher(props) {
                 onClick={handleCloseDeleteDialog}
                 startIcon={< CancelIcon/>}
                 style={{
-                  backgroundColor: "#2196f3",
+                  backgroundColor: "#2196F3",
                   color: "white",
                   width: "150px",
                 }}
@@ -367,10 +367,10 @@ function ViewTaskTeacher(props) {
 
       //Masih ngasal
       <Grid container direction="column" alignItems="center">
-        <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "white", color: "#2196f3"}}>
+        <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "white", color: "#2196F3"}}>
           Sunting Tugas
         </Button>
-        <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "#2196f3", color: "white"}}>
+        <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "#2196F3", color: "white"}}>
           Lihat Daftar Hasil Pekerjaan Siswa
         </Button>
       </Grid>
