@@ -1,13 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
-// All redux actions
+import moment from 'moment';
+import 'moment/locale/id'
 import { viewOneClass } from "../../../actions/ClassActions"
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { viewTask } from "../../../actions/TaskActions"
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
-
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Fab, Grid,
    IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
@@ -20,27 +19,21 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
-import moment from 'moment';
-import 'moment/locale/id'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    marginTop: "30px", //Should be deleted after theme passing from navbar worked
-    maxWidth: "800px",
+    maxWidth: "1000px",
+    padding: "20px",
   },
   subjectIcons: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
-    color: "grey",
+    color: theme.palette.action.disabled,
   },
   subjectCardPaper: {
     padding: "15px",
     paddingBottom: "40px",
-  },
-
-  subjectPanel: {
-    marginLeft: "50px",
   },
   expansionPanelList: {
     marginLeft: "20px",
@@ -102,39 +95,40 @@ function ViewSubject(props) {
     setAnchorEl(null);
   };
 
-  if(selectedClasses.length == 0){
+  if(selectedClasses.length == 0) {
     viewOneClass(user.kelas)
   }
-  if(all_user_files.length == 0){
+  if(all_user_files.length == 0) {
     getAllTaskFilesByUser(user.id)
   }
   let tasksByClass = [] // tasks on specific class.
 
   // All actions to retrive datas from Database...
-  if(tasksCollection.length == undefined){
+  if(tasksCollection.length == undefined) {
     viewTask()
-  }else{
+  }
+  else{
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
-      for (var i = 0; i < class_assigned.length; i++){
+      for (var i = 0; i < class_assigned.length; i++) {
         if(class_assigned[i]._id == user.kelas)
           tasksByClass.push(task)
       }
     })
   }
-  ///
 
   const generateTaskBySubject = () => {
     let tasksBySubjectClass = [] // tasks on specific subjects and class
 
     tasksByClass.map((task) => {
       let workCategoryAvatar = (
-      <Avatar className={classes.assignmentLate}>
-      <AssignmentLateIcon/>
-    </Avatar>)
+        <Avatar className={classes.assignmentLate}>
+        <AssignmentLateIcon/>
+        </Avatar>
+      )
 
       let workStatus = "Belum Dikumpulkan"
-      for(var i =0; i < all_user_files.length; i++){
+      for(var i =0; i < all_user_files.length; i++) {
         console.log(all_user_files[i].for_task_object, task._id, all_user_files[i].for_task_object == task._id)
         if(all_user_files[i].for_task_object == task._id){
           workStatus = "Telah Dikumpulkan"
@@ -145,23 +139,24 @@ function ViewSubject(props) {
           break;
         }
       }
-      if(task.subject == subject_name){
+      if(task.subject == subject_name) {
       tasksBySubjectClass.push(
-      <WorkListItem
-        work_title={task.name}
-        work_category_avatar={workCategoryAvatar}
-        work_sender={`Mata Pelajaran: ${task.subject}`}
-        work_status={workStatus}
-        work_deadline={moment(task.deadline).format('DD-MM-YYYY')}
-        work_link={`/new-task/${task._id}`}
-      />)
+        <WorkListItem
+          work_title={task.name}
+          work_category_avatar={workCategoryAvatar}
+          work_sender={`Mata Pelajaran: ${task.subject}`}
+          work_status={workStatus}
+          work_deadline={moment(task.deadline).format('DD-MM-YYYY')}
+          work_link={`/new-task/${task._id}`}
+        />
+      )
     }
   })
   return tasksBySubjectClass.length == 0 ?
-  (<Typography style={{textAlign: 'center'}} variant="h5" gutterBottom>
-  Belum ada tugas yang tersedia
-  </Typography>) : tasksBySubjectClass
-
+    (<Typography style={{textAlign: 'center'}} variant="h5" gutterBottom>
+      Kosong
+    </Typography>)
+    : tasksBySubjectClass
   }
 
   return (
@@ -176,9 +171,6 @@ function ViewSubject(props) {
             <Typography variant="body2">
               <h5>Kelas: {selectedClasses.name}</h5>
             </Typography>
-            {/* <Typography variant="body2" color="textSecondary">
-              Teacher: LEONARDUS
-            </Typography> */}
           </Grid>
           <Grid item>
             <LightTooltip title="Pengumuman">
@@ -198,7 +190,7 @@ function ViewSubject(props) {
             <LightTooltip title="Kuis">
               <IconButton disabled>
                 <Badge badgeContent={0} color="secondary">
-                  <GrNotes className={classes.subjectIcons} />
+                  <GrNotes style={{color: "rgba(0, 0, 0, 0.26)"}} />
                 </Badge>
               </IconButton>
             </LightTooltip>
@@ -211,27 +203,10 @@ function ViewSubject(props) {
             </LightTooltip>
           </Grid>
         </Grid>
-        {/* <Grid item xs={6} container justify="flex-end" alignItems="flex-end">
-          <Fab color="primary" onClick={handleCreateMenuOpen}>
-            <PostAddIcon fontSize="large" />
-          </Fab>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleCreateMenuClose}
-          >
-            <MenuItem onClick={handleCreateMenuClose}>Buat Tugas</MenuItem>
-            <MenuItem onClick={handleCreateMenuClose}>Buat Kuis</MenuItem>
-            <MenuItem onClick={handleCreateMenuClose}>Buat Ujian</MenuItem>
-          </Menu>
-        </Grid> */}
       </Grid>
       </Paper>
-
       <Grid container direction="column" style={{marginTop: "20px"}}>
-        <Grid item className={classes.subjectPanel}>
+        <Grid item>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="h6">
@@ -244,7 +219,7 @@ function ViewSubject(props) {
             </List>
           </ExpansionPanel>
         </Grid>
-        <Grid item className={classes.subjectPanel}>
+        <Grid item>
           <ExpansionPanel disabled>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="h6">
@@ -254,23 +229,23 @@ function ViewSubject(props) {
             <Divider />
             <List className={classes.expansionPanelList}>
               <WorkListItem
-                work_title="Tugas Fisika"
+                work_title=""
                 work_category_avatar=""
-                work_sender="Mr Jenggot"
-                work_status="Telah Dikumpulkan"
-                work_link="/test"
+                work_sender=""
+                work_status=""
+                work_link=""
               />
               <WorkListItem
-                work_title="Tugas Biologi"
+                work_title=""
                 work_category_avatar=""
-                work_sender="Mr Jenggot"
-                work_status="Belum Dikumpulkan"
-                work_link="/test"
+                work_sender=""
+                work_status=""
+                work_link=""
               />
             </List>
           </ExpansionPanel>
         </Grid>
-        <Grid item className={classes.subjectPanel}>
+        <Grid item>
           <ExpansionPanel disabled>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="h6">
@@ -280,18 +255,18 @@ function ViewSubject(props) {
             <Divider />
             <List className={classes.expansionPanelList}>
               <WorkListItem
-                work_title="Tugas Fisika"
+                work_title=""
                 work_category_avatar=""
-                work_sender="Mr Jenggot"
-                work_status="Telah Dikumpulkan"
-                work_link="/test"
+                work_sender=""
+                work_status=""
+                work_link=""
               />
               <WorkListItem
-                work_title="Tugas Biologi"
+                work_title=""
                 work_category_avatar=""
-                work_sender="Mr Jenggot"
-                work_status="Belum Dikumpulkan"
-                work_link="/test"
+                work_sender=""
+                work_status=""
+                work_link=""
               />
             </List>
           </ExpansionPanel>
@@ -307,7 +282,6 @@ ViewSubject.propTypes = {
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
-
   viewOneClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
@@ -319,7 +293,7 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   tasksCollection: state.tasksCollection,
-  filesCollection: state.filesCollection
+  filesCollection: state.filesCollection,
 })
 
 export default connect(

@@ -130,7 +130,7 @@ function ProfilePasswordEditorDialog(props) {
               size="small"
               onClick={handleClose}
             >
-                <CloseIcon />
+              <CloseIcon />
             </IconButton>
           </Grid>
           <Grid item style={{marginBottom: "10px"}}>

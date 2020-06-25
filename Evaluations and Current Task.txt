@@ -18,6 +18,7 @@ Botak:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
 25. file icon
 26. nama sekolah di profil, ganti isi data dengan button merah
+27. anda tidak punya akses halaman ini
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
@@ -39,12 +40,10 @@ Penting untuk diimplemen:
 2. Buat Notification functionality (Schema Notif dan explore cara handlenya?)
 3. Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
 
-Page List On Work (Not completed/Not created yet):
-- All Task page (approx 5)
-- Announcement (Optional) (Approx 3)
+Error:
+1. classlist pas klik ke satu class terus back error buat tekan button lain
 
 Possibly will implement these features:
-- Send OTP pas user register.
 - Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
 - Mungkin buat page utk si Admin utk bisa manage users
 

@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import "moment/locale/id"
+import "moment/locale/id";
+import { viewOneClass } from "../../../actions/ClassActions";
+import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { viewTask } from "../../../actions/TaskActions";
+import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
@@ -15,12 +20,6 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-//All redux actions
-import { viewOneClass } from "../../../actions/ClassActions"
-import { getStudentsByClass, getTeachers } from "../../../actions/UserActions"
-import { getAllSubjects } from "../../../actions/SubjectActions"
-import { viewTask } from "../../../actions/TaskActions"
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   listItemPaper: {
-    marginBottom: "20px"
+    marginBottom: "20px",
   },
   listItem: {
     "&:focus, &:hover": {
@@ -136,11 +135,13 @@ function PersonListItem(props) {
           </Typography>
         }
       />
-      <ListItemSecondaryAction>
-        <Typography>
-          {props.person_role}
-        </Typography>
-      </ListItemSecondaryAction>
+      <ListItemText
+        primary={
+          <Typography align="right">
+            {props.person_role}
+          </Typography>
+        }
+      />
     </ListItem>
   )
 }
@@ -159,27 +160,28 @@ function ViewClass(props) {
   let tasksByClass = []
 
   // All actions to retrive datas from Database
-  if(tasksCollection.length == undefined){
+  if(tasksCollection.length === undefined){
     viewTask()
   }
   else{
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++){
-        if(class_assigned[i]._id == classId)
+        if(class_assigned[i]._id === classId)
           tasksByClass.push(task)
       }
     })
   }
-  if(selectedClasses.length == 0)
+
+  if(selectedClasses.length === 0)
     viewOneClass(classId)
-  if(all_subjects.length == 0)
+  if(all_subjects.length === 0)
     getAllSubjects()
-  if(all_students.length == 0)
+  if(all_students.length === 0)
     getStudentsByClass(props.match.params.id)
-  if(all_teachers.length == 0)
+  if(all_teachers.length === 0)
     getTeachers()
-  if(all_user_files.length == 0){
+  if(all_user_files.length === 0){
     getAllTaskFilesByUser(user.id)
   }
 
@@ -346,7 +348,6 @@ ViewClass.propTypes = {
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
-
   viewOneClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
