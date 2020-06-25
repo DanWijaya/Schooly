@@ -11,7 +11,6 @@ const OutlinedTextField = (props) => {
   const onFocus = () => {
     setBorderStyle("2px solid #2196f3")
   }
-
   return (
     <div>
       <label htmlFor={props.html_for}>
@@ -23,6 +22,7 @@ const OutlinedTextField = (props) => {
       <input
         onFocus={onFocus}
         onBlur={onBlur}
+        onClick={props.on_click}
         onChange={props.on_change}
         value={props.value}
         error={props.error}
@@ -39,6 +39,7 @@ const OutlinedTextField = (props) => {
           boxSizing: "border-box",
           boxShadow: "none",
           backgroundColor: "#FFFFFF",
+          cursor: props.pointer ? "pointer" : null
         }}
       />
       :

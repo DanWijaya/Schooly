@@ -8,7 +8,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions"
 import {getOneUser} from "../../../actions/UserActions";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import LightTooltip from "../../misc/light-tooltip/LightTooltip"
-import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles, IconButton, Divider } from "@material-ui/core";
+import { Button, Chip, Fade, FormControl, Grid,IconButton, Input, InputLabel, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography, withStyles, Divider } from "@material-ui/core";
 // import { Multiselect } from "multiselect-react-dropdown";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import DateFnsUtils from '@date-io/date-fns';
@@ -16,8 +16,43 @@ import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from 
 import 'date-fns';
 import lokal from "date-fns/locale/id";
 import PostAddIcon from '@material-ui/icons/PostAdd';
-
+import DescriptionIcon from '@material-ui/icons/Description';
+import DeleteIcon from '@material-ui/icons/Delete';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 const path = require("path");
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.secondary,
+      '& .MuiListItemIcon-root': {
+        color: theme.palette.primary.main,
+      },
+    },
+    width: "300px"
+  },
+}))(MenuItem);
+
 const styles = (theme) => ({
   root: {
     display: "flex",
@@ -60,6 +95,20 @@ const styles = (theme) => ({
   }
 });
 
+function LampiranFile(props) {
+  const {name, i, handleLampiranDelete} = props;
+
+  return(
+  <StyledMenuItem> 
+    <ListItemIcon>
+      <DescriptionIcon/>
+    </ListItemIcon>
+    <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
+      <HighlightOffIcon fontSize="small" style={{color:"#B22222"}} onClick={(e) => {handleLampiranDelete(e, i)}}/>
+  </StyledMenuItem>
+  )
+}
+
 class CreateTask extends Component {
   constructor() {
     super();
@@ -69,16 +118,27 @@ class CreateTask extends Component {
             subject: "",
             deadline: new Date(),
             focused: false,
-            // submitted: false,
             class_assigned: [],
             description: "",
             errors: {},
-            fileTugas: null
+            fileLampiran: [],
+            anchorEl: null
         }
       }
 
     tugasUploader = React.createRef(null)
     uploadedTugas = React.createRef(null)
+
+    handleClickMenu = (event) => {
+      // ini perlu karena pas filetugas null dan fileTugas adalah empty array, ndak boleh run.
+      if(this.state.fileLampiran.length > 0
+         && !Boolean(this.state.anchorEl))
+        this.setState({ anchorEl: event.currentTarget})
+    }
+
+    handleCloseMenu = () => {
+      this.setState({ anchorEl: null})
+    }
 
     onChange = (e, otherfield) => { 
       console.log(this.state.deadline)
@@ -92,7 +152,7 @@ class CreateTask extends Component {
         this.setState({ subject: e.target.value})
       } else
         this.setState({ [e.target.id]: e.target.value});
-        console.log(this.state.fileTugas)
+        console.log(this.state.fileLampiran)
     }
 
     onDateChange = (date) => {
@@ -116,13 +176,13 @@ class CreateTask extends Component {
         };
 
         // CHeck if there is any lampiran uploaded or not. 
-        if(this.state.fileTugas)
-          for(var i = 0; i < this.state.fileTugas.length; i++){
-            console.log(this.state.fileTugas[i])
-            formData.append("lampiran", this.state.fileTugas[i])
+        if(this.state.fileLampiran)
+          for(var i = 0; i < this.state.fileLampiran.length; i++){
+            console.log(this.state.fileLampiran[i])
+            formData.append("lampiran", this.state.fileLampiran[i])
           }
 
-        console.log(formData.getAll('lampiran'), this.state.fileTugas)
+        console.log(formData.getAll('lampiran'), this.state.fileLampiran)
         this.props.createTask(formData, taskData, this.props.history);
         // this.setState({name: "", subject: ""})
     }
@@ -148,33 +208,44 @@ class CreateTask extends Component {
     }
 
     handleLampiranUpload = (e) => {
-      const files = e.target.files;  
-      this.setState({fileTugas: files})  
+      const files = e.target.files;
+      if(this.state.fileLampiran.length == 0)
+        this.setState({fileLampiran: files})
+      else{
+        console.log(files)
+        if(files.length != 0){
+          let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
+          this.setState({ fileLampiran: temp})
+          }
+      }
+    }
+    handleLampiranDelete = (e, index) => {
+      e.preventDefault()
+      console.log("Index is: ", index)
+      let temp = Array.from(this.state.fileLampiran);
+      temp.splice(index,1);
+      if(temp.length == 0) // if it is empty.
+        this.handleCloseMenu()
 
-      console.log(this.state.fileTugas)
+      this.setState({ fileLampiran: temp})
     }
 
     render() {
       const {classesCollection,  classes, viewClass, subjectsCollection} = this.props;
-      const{ class_assigned, fileTugas, errors} = this.state;
+      const{ class_assigned, fileLampiran, errors} = this.state;
       const { user } = this.props.auth
       console.log(errors)
       
       const listFileChosen = () => {
         let temp = []
-        if(!fileTugas) {
-          temp.push(
-            <Typography className={classes.workChosenFile}>
-              Kosong
-            </Typography>
-          )
-        }
-        else{
-          for (var i = 0; i < fileTugas.length; i++){
+        if(fileLampiran.length > 0) {
+          for (var i = 0; i < fileLampiran.length; i++){
+            console.log(i)
             temp.push(
-              <Typography className={classes.workChosenFile}>
-                {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
-              </Typography>
+              <LampiranFile
+                name={fileLampiran[i].name}
+                handleLampiranDelete={this.handleLampiranDelete}
+                i={i}/>
             )
           }
         }
@@ -237,7 +308,6 @@ class CreateTask extends Component {
                     error1={errors.name}
                   />
               </Grid>
-
 
                   <Grid item className={classes.gridItem}>
                    <FormControl id="subject" variant="outlined" color="primary" fullWidth>
@@ -319,18 +389,36 @@ class CreateTask extends Component {
           style={{display: "none"}}/>
 
           <Grid item container direction="row" alignItems="center">
-          <Grid item xs={11}>
+          <Grid item xs={11} onClick={this.handleClickMenu}>
             <OutlinedTextField
               disabled={true}
-              value={fileTugas ? `${fileTugas.length} berkas` : "Kosong"}
+              value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
               id="file_tugas"
               type="text"
               width="100%"
               labelname="Berkas Lampiran"
               html_for="Berkas lampiran"
-              label_classname={classes.inputLabel}/>
+              label_classname={classes.inputLabel}
+              pointer= {fileLampiran.length > 0}/>
+              
             </Grid>
-
+            <StyledMenu
+              id="fade-menu"
+              anchorEl={this.state.anchorEl}
+              keepMounted
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleCloseMenu}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+            }}
+            transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+            }}
+            >
+              {listFileChosen()}
+            </StyledMenu>
             <Grid item xs={1}>
             <LightTooltip title="Tambahkan berkas lampiran">
             <IconButton onClick={() => {this.tugasUploader.current.click()}}> 
@@ -339,7 +427,6 @@ class CreateTask extends Component {
              </LightTooltip>
             </Grid>
             </Grid>
-        
       </Grid>
       <Grid item className={classes.gridItem}>
       <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
@@ -347,14 +434,12 @@ class CreateTask extends Component {
         <KeyboardDatePicker
           fullWidth
           disablePast
-          // disableToolbar
           format="dd/MM/yyyy"
           margin="normal"
           okLabel="Simpan"
           cancelLabel="Batal"
           id="date-picker-inline"
           value={this.state.deadline}
-          // onChange={(date) => this.onChange(date, "deadline")}
           onChange={(date) => this.onDateChange(date)}
           KeyboardButtonProps={{
             'aria-label': 'change date',

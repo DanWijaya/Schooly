@@ -3,20 +3,51 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import moment from "moment";
-import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Paper, Select, Typography, withStyles } from "@material-ui/core";
+import { Button, Chip, FormControl, Grid, IconButton, Input, InputLabel,Menu, MenuItem,ListItemIcon, ListItemText, Paper, Select, Typography, withStyles } from "@material-ui/core";
 import { viewClass } from "../../../actions/ClassActions";
 import { viewOneTask, updateTask } from "../../../actions/TaskActions";
 import { Multiselect } from "multiselect-react-dropdown";
 import { getAllSubjects} from "../../../actions/SubjectActions"
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider,KeyboardTimePicker, KeyboardDatePicker} from '@material-ui/pickers';
 import 'date-fns';
 import lokal from "date-fns/locale/id";
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import DescriptionIcon from '@material-ui/icons/Description';
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+const path = require("path");
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 const styles = (theme) => ({
     root: {
@@ -74,6 +105,8 @@ class EditTask extends Component {
             classChanged: false,
             focused: false,
             description: "",
+            fileLampiran: null,
+            anchorEl: null,
             errors: {},
         }
         const { id } = this.props.match.params;
@@ -81,29 +114,10 @@ class EditTask extends Component {
         this.props.viewOneTask(id)
     }
 
-    onChange = (e, otherfield) => {
-      if(otherfield == "kelas"){
-        console.log(this.state.class_assigned, e.target.value)
-        this.setState({ class_assigned: e.target.value, classChanged: true})
-      }
-      else if(otherfield == "deadline"){
-        this.setState({ deadline: e}) // e is the date value itself.
-      }
-      else if(otherfield == "description"){
-        this.setState({ description : e.target.value})
-      }
-      else if(otherfield == "subject"){
-        console.log(e.target.value)
-        this.setState({subject: e.target.value })
-      }
-      else
-        this.setState({ [e.target.id]: e.target.value});
-    }
+    tugasUploader = React.createRef(null)
+    uploadedTugas = React.createRef(null)
 
-    onDateChange = (date) => {
-        console.log(date)
-        this.setState({ deadline: date})
-      }
+    
     componentDidMount() {
         this.props.viewClass()
         this.props.getAllSubjects()
@@ -120,7 +134,8 @@ class EditTask extends Component {
                 subject: nextProps.tasksCollection.subject,
                 deadline: nextProps.tasksCollection.deadline,
                 class_assigned: nextProps.tasksCollection.class_assigned,
-                description: nextProps.tasksCollection.description
+                description: nextProps.tasksCollection.description,
+                fileLampiran: nextProps.tasksCollection.lampiran
             })
         }
     }
@@ -162,15 +177,68 @@ class EditTask extends Component {
         this.props.updateTask(taskObject, id, this.props.history);
     }
 
-    // focus = () =>{
-    //     this.nameInput.current.click();
-    //     this.subjectInput.current.click()
-    // }
+    handleLampiranUpload = (e) => {
+      const files = e.target.files;
+      console.log(this.state.fileLampiran)
+      if(Boolean(this.state.fileLampiran)){
+        let temp = this.state.fileLampiran;
+        console.log(files)
+        // for(var i = 0; i < files.length; i++){
+          
+        // }
+      }
+      // this.setState({fileLampiran: files})
+      // if(!this.state.fileLampiran)
+      //   this.setState({fileLampiran: files})
+      // else{
+      //   if(files.length != 0){
+      //     let temp = [];
 
+      //     for(var i = 0; i < this.state.fileLampiran.length; i++)
+      //       temp.push(this.state.fileLampiran[i])
+      //     for(var i = 0; i < files.length; i++)
+      //       temp.push(files[i]) 
+
+      //     this.setState({ fileLampiran: temp})
+      //     }
+      // }
+    }
+
+    handleClickMenu = (event) => {
+      if(!Boolean(this.state.anchorEl))
+        this.setState({ anchorEl: event.currentTarget})
+    }
+
+    handleCloseMenu = () => { this.setState({ anchorEl: null}) }
+    
+    onChange = (e, otherfield) => {
+      if(otherfield == "kelas"){
+        console.log(this.state.class_assigned, e.target.value)
+        this.setState({ class_assigned: e.target.value, classChanged: true})
+      }
+      else if(otherfield == "deadline"){
+        this.setState({ deadline: e}) // e is the date value itself.
+      }
+      else if(otherfield == "description"){
+        this.setState({ description : e.target.value})
+      }
+      else if(otherfield == "subject"){
+        console.log(e.target.value)
+        this.setState({subject: e.target.value })
+      }
+      else
+        this.setState({ [e.target.id]: e.target.value});
+    }
+
+    onDateChange = (date) => {
+        console.log(date)
+        this.setState({ deadline: date})
+      }
     render() {
+      console.log(this.state.fileLampiran)
         document.title = "Schooly - Edit Task"
-        const { errors } = this.state;
-        const {classes, subjectsCollection} = this.props;
+        const { errors , fileLampiran} = this.state;
+        const {classes, subjectsCollection, tasksCollection} = this.props;
         const { all_classes, selectedClasses} = this.props.classesCollection;
         const { user } = this.props.auth;
 
@@ -186,6 +254,30 @@ class EditTask extends Component {
             },
           },
         };
+
+        const listFileChosen = () => {
+          let temp = []
+          if(!fileLampiran) {
+            temp.push(
+              <Typography className={classes.workChosenFile}>
+                Kosong
+              </Typography>
+            )
+          }
+          else{
+            for (var i = 0; i < fileLampiran.length; i++){
+              temp.push(
+                <StyledMenuItem style={{width:"270px"}}>
+                  <ListItemIcon>
+                    <DescriptionIcon/>
+                  </ListItemIcon>
+                  <ListItemText primary={fileLampiran[i].filename.length < 21 ? fileLampiran[i].filename : `${fileLampiran[i].filename.slice(0,17)}..${path.extname(fileLampiran[i].filename)}`}/>
+                </StyledMenuItem>
+              )
+            }
+          }
+          return temp;
+        }
 
         var classesOptions = []
         var selectedClassOptions = []
@@ -309,6 +401,62 @@ class EditTask extends Component {
           // error1={errors.subject}
         />
       </Grid>
+      <Grid item container direction="row" className={classes.gridItem} alignItems="center">
+      <input
+          type="file"
+          multiple={true}
+          name="lampiran"
+          onChange={this.handleLampiranUpload}
+          ref={this.tugasUploader}
+          accept="file/*"
+          style={{display: "none"}}/>
+        <input
+          type="file"
+          multiple={true}
+          name="file"
+          id="file"
+          ref={this.uploadedTugas}
+          style={{display: "none"}}/>
+          <Grid item container direction="row" alignItems="center">
+          <Grid item xs={11} onClick={this.handleClickMenu}>
+            <OutlinedTextField
+              disabled={true}
+              value={fileLampiran ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
+              id="file_tugas"
+              type="text"
+              width="100%"
+              labelname="Berkas Lampiran"
+              html_for="Berkas lampiran"
+              label_classname={classes.inputLabel}
+              pointer= {true}/>
+              
+            </Grid>
+            <StyledMenu
+              id="fade-menu"
+              anchorEl={this.state.anchorEl}
+              keepMounted
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleCloseMenu}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+            }}
+            transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+            }}
+            >
+              {listFileChosen()}
+            </StyledMenu>
+            <Grid item xs={1}>
+            <LightTooltip title="Tambahkan berkas lampiran">
+            <IconButton onClick={() => {this.tugasUploader.current.click()}}> 
+              <PostAddIcon/>
+             </IconButton>
+             </LightTooltip>
+            </Grid>
+            </Grid>
+      </Grid>
           <Grid item className={classes.gridItem}>
           <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
             <Grid container>
@@ -353,7 +501,6 @@ class EditTask extends Component {
               </div>
               </Paper>
               </div>
-    
     
                       );
         }
