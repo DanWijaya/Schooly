@@ -300,7 +300,6 @@ router.get("/getalltask/:user_id", (req,res) => {
 })
 
 router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res) => {
-  console.log(req)
   let id = req.params.id;
 
   User.findById(id , (err, user) => {

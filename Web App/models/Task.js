@@ -30,7 +30,11 @@ const TaskSchema = new Schema({
     description: {
         type: String,
         required: true
-    }
+    },
+    lampiran: [{
+        type: Object,
+        default: []
+    }]
 
 })
 

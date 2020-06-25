@@ -37,65 +37,38 @@ conn.once("open", () => {
   gfsLampiran.collection("lampiran")
 })
 
-
-// Create storage engine
-var avatar_storage = new GridFsStorage({
+// Storage Engine initialization function
+function storageEngine(bucketName, random=false){
+  return new GridFsStorage({
     url: keys.mongoURI,
-    file: (req, file) => {
-      return new Promise((resolve, reject) => {
+    file: (req,file) => {
+      return new Promise((resolve,reject) => {
         crypto.randomBytes(16, (err, buf) => {
           if (err) {
             return reject(err);
           }
-          const filename = buf.toString("hex") + path.extname(file.originalname);
+          let filename
+          if(random)
+            filename = buf.toString("hex") + path.extname(file.originalname);
+          else
+            filename = file.originalname;
+          
           const fileInfo = {
             filename: filename,
-            bucketName: "avatar"
+            bucketName: bucketName
           };
+
           resolve(fileInfo);
-        });
-      });
+        })
+      })
     }
-  });
-
-var tugas_storage = new GridFsStorage({
-  url: keys.mongoURI,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        // const filename = buf.toString("hex") + path.extname(file.originalname);
-        const filename = file.originalname
-        const fileInfo = {
-          filename: filename,
-          bucketName: "tugas"
-        };
-        resolve(fileInfo);
-      });
-    });
-  }
-});
-
-var lampiran_storage = new GridFsStorage({
-  url: keys.mongoURI,
-  file: (req,file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if(!err) {
-          return reject(err);
-        }
-    const filename = file.originalname
-    const fileInfo = {
-      filename: filename, 
-      bucketName: "lampiran"
-    };
-    resolve(fileInfo);
   })
-})
-  }
-})
+}
+
+// Create storage engine
+var avatar_storage = storageEngine("avatar", true)
+var tugas_storage = storageEngine("tugas")
+var lampiran_storage = storageEngine("lampiran")
 
 // Create the middleware which facilitates file uploads
 const uploadAvatar = multer({ storage: avatar_storage });
@@ -233,7 +206,7 @@ router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (re
 })
 
 router.get("/tugas/:id", (req,res) => {
-  id = new mongoose.mongo.ObjectId(req.params.id)
+  let id = new mongoose.mongo.ObjectId(req.params.id)
   gfsTugas.files.findOne({_id: id}, (err, file) => {
     // Check if files
     if (!file || file.length === 0) {
@@ -331,6 +304,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 
 router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (req,res) => {
   let task_id = req.params.task_id;
+  console.log("Upload lampiran is runned")
   console.log('Task Id is:', task_id)
   Task.findById(task_id, (err, task) => {
     console.log("This is the task", task)
@@ -338,16 +312,75 @@ router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (r
       return res.status(404).json({tasknotfound: "Task not found"});
     } else {
       let temp = []
-      for(var i = 0; req.files.length; i++){
-        temp.push(req.files[i].id)
+      console.log("Files are here: ", req.files)
+      for(var i = 0; i< req.files.length; i++){
+        console.log(req.files[i])
+        temp.push({
+          id: req.files[i].id,
+          filename: req.files[i].filename,
+        })
       }
-      
+      console.log("Temp: ", temp)
       task.lampiran = temp;
-      task.save()
-          .then(res.json("Successfully delete the task in user data"))
-          .catch(err => res.status(400).send("Unable to update"))
+      console.log(task.lampiran)
+      task.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client. 
+          .then(task => console.log("Task"))
+          .catch(err => {console.log("error kan ini")})
       
-      return res.status(200).json({success: "lampiran is uploaded"})
+    }
+  })
+  res.json({success: "Successfully uploaded the lampiran file"})
+})
+
+router.get("/lampiran/:task_id", (req,res) => {
+  id = new mongoose.mongo.ObjectId(req.params.task_id)
+  gfsLampiran.files.findOne({_id: id}, (err, file) => {
+    // Check if files
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: "Tugas tidak ada"
+      });
+    }
+    var type = file.contentType;
+    var filename = file.filename;
+    res.set("Content-Type", type);
+    res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
+
+    // Files exist
+    const readStream = gfsLampiran.createReadStream(filename);
+    readStream.pipe(res)
+  })
+})
+
+router.get("/previewlampiran/:task_id", (req,res) => {
+  console.log("Previewing lampiran")
+  id = new mongoose.mongo.ObjectId(req.params.task_id)
+  gfsLampiran.files.findOne({_id: id}, (err, file) => {
+    // Check if files
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: "Tugas tidak ada"
+      });
+    }
+    var type = file.contentType;
+    var filename = file.filename;
+    res.set("Content-Type", type);
+    res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
+
+    // Files exist
+    const readStream = gfsLampiran.createReadStream(filename);
+    readStream.pipe(res)
+  })
+})
+router.get("/all_lampiran_by_task/:task_id", (req,res) => {
+  Task.findById(task_id, (err, task) => {
+    if(!task){
+      return res.status(400).json({ tasknotfound: "Task is not found"})
+    }
+    else{
+        for(var i = 0; i < task.lampiran.length; i++){
+          
+        }
     }
   })
 })

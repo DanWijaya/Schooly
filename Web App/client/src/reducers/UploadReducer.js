@@ -1,8 +1,11 @@
-import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER } from "../actions/Types";
+import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, 
+  GET_ALL_FILES_BY_USER, GET_LAMPIRAN_FILES, GET_ALL_LAMPIRAN_BY_TASK } from "../actions/Types";
 
 const initialState = {
   files: [],
   all_user_files: [],
+  lampiran_files:[],
+  all_lampiran_files:[],
   selectedFile: {} // for download or preview
 };
 
@@ -34,6 +37,20 @@ export default function(state = initialState, action) {
       return{
         ...state,
         all_user_files: action.payload
+      }
+    }
+    case GET_LAMPIRAN_FILES:{
+      console.log("Payload : ", action.payload);
+      return{
+        ...state,
+        lampiran_files: action.payload
+      }
+    }
+    case GET_ALL_LAMPIRAN_BY_TASK:{
+      console.log("Payload : ", action.payload);
+      return{
+        ...state,
+        all_lampiran_files: action.payload
       }
     }
     default:

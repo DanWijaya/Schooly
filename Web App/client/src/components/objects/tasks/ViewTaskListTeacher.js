@@ -117,13 +117,15 @@ function ViewTaskListTeacher(props) {
   const { viewOneClass, classesCollection, getStudentsByClass} = props;
   const {all_students} = props.auth;
 
-  if(classesCollection.name == undefined){
-    viewOneClass(props.match.params.id)
-  }
+  // COba pakai React.useEffect
+  // if(classesCollection.name == undefined){
+  //   viewOneClass(props.match.params.id)
+  // }
 
-  if(all_students.length == 0){
-    getStudentsByClass(props.match.params.id)
-  }
+  // if(all_students.length == 0){
+  //   getStudentsByClass(props.match.params.id)
+  // }
+
   console.log(all_students)
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {

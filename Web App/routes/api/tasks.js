@@ -33,7 +33,8 @@ router.post("/create", (req, res) => {
         });
         newTask
             .save()
-            .then(task => { res.json(task)
+            .then(task => {
+                res.json(task)
                 console.log("Task is created")})
             .catch(err => console.log(err));
             }
@@ -109,7 +110,7 @@ router.post("/update/:id", (req, res) => {
     console.log(req.body.name);
     Task.findById(id, (err, taskData) => {
         if(!taskData)
-            res.status(404).send("Task data is not found");
+            return res.status(404).send("Task data is not found");
         else{
             taskData.name = req.body.name;
             taskData.deadine = req.body.deadine;

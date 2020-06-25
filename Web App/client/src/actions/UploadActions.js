@@ -1,4 +1,4 @@
-import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS } from "./Types";
+import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK } from "./Types";
 import axios from "axios";
 
 export const uploadTugas = (tugas, userData, taskId) => dispatch => {
@@ -12,7 +12,10 @@ export const uploadTugas = (tugas, userData, taskId) => dispatch => {
         })
         .catch(err => {
             console.log("error in uploading")
-            console.log(err);
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
         })
     }
 }
@@ -75,40 +78,76 @@ export const getAllTaskFilesByUser = (userId) => dispatch => {
 }
 export const downloadTugas = (tugas_id, userData) => dispatch =>{
     console.log("Downloading Tugas")
-
-    axios
-        .get(`/api/uploads/tugas/${tugas_id}`)
-        .then(res => {
-            console.log("Tugas berhasil diunduh")
-            window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}` , "_blank")
-            dispatch({
-                type: GET_TUGAS,
-                payload: res.data
-            })
-        })
-        .catch(err => {
-            console.log("Error in downloading")
-            console.log(err)
-        })
+    window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}` , "_blank")
+    // Arsip dulu ini.. ternyata ndak perlu pakai axios karena getnya cuma muncul di reducer (kita kan gak perlu di reducer, cuma not really sure yet)
+    // axios
+    //     .get(`/api/uploads/tugas/${tugas_id}`)
+    //     .then(res => {
+    //         console.log("Tugas berhasil diunduh")
+    //         // window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}` , "_blank")
+    //         dispatch({
+    //             type: GET_TUGAS,
+    //             payload: res.data
+    //         })
+    //     })
+    //     .catch(err => {
+    //         console.log("Error in downloading")
+    //         dispatch({
+    //             type: GET_ERRORS,
+    //             payload: err.response.data
+    //         })
+    //     })
 }
 
 export const previewTugas = (tugas_id) => dispatch => {
     console.log("Previewing Tugas")
+    window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
+    // Arsip dulu ini.. ternyata ndak perlu pakai axios karena getnya cuma muncul di reducer (kita kan gak perlu di reducer, cuma not really sure yet)
+    // axios
+    //     .get(`/api/uploads/previewtugas/${tugas_id}`)
+    //     .then(res => {
+    //         console.log("Tugas berhasil di preview")
+    //         window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
+    //         dispatch({
+    //             type: GET_TUGAS,
+    //             payload: res.data
+    //         })
+    //     })
+    //     .catch(err => {
+    //         console.log("Error in downloading")
+    //         dispatch({
+    //             type: GET_ERRORS,
+    //             payload: err.response.data
+    //         })
+    //     })
+}
+// upload lampiran is handled togethe with createTask.
+export const getAllLampiranByTask = (lampiran) => dispatch => {
+    console.log("Get lampiran by task is runned")
 
-    axios
-        .get(`/api/uploads/previewtugas/${tugas_id}`)
-        .then(res => {
-            console.log("Tugas berhasil di preview")
-            window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
+    axios.get(`/api/uploads/all_lampiran_by_task/`, lampiran)
+        .then(res =>{
+            console.log(res.data);
             dispatch({
-                type: GET_TUGAS,
+                type: GET_ALL_LAMPIRAN_BY_TASK,
                 payload: res.data
             })
         })
         .catch(err => {
-            console.log("Error in downloading")
-            console.log(err)
+            console.log("Error in getting lampiran by tasks")
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
         })
 }
 
-// upload lampiran is handled togethe with createTask.
+export const downloadLampiran = (lampiran_id) => dispatch => {
+    console.log("Downloading lampiran")
+    window.open(`http://localhost:5000/api/uploads/lampiran/${lampiran_id}` , "_blank")
+}
+
+export const previewLampiran = (lampiran_id) => dispatch => {
+    console.log("Previewing lampiran")
+    window.open(`http://localhost:5000/api/uploads/previewlampiran/${lampiran_id}`, "_blank") // previously has "_blank"
+}
