@@ -95,8 +95,7 @@ function DrawerContent(props) {
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
-  if(user != undefined)
-  if(user){
+  if(user !== undefined){
     if(user.role === "Student")
       directedTo = `/viewclass/${user.kelas}`
     else
@@ -135,7 +134,7 @@ function SideDrawer(props) {
   const { desktopOpen, mobileOpen, handleDrawerMobile } = props
   const { user } = props.auth;
 
-  if(!user.name) {
+  if(user.name !== undefined) {
     return (
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">

@@ -206,7 +206,7 @@ router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (re
 })
 
 router.get("/tugas/:id", (req,res) => {
-  id = new mongoose.mongo.ObjectId(req.params.id)
+  let id = new mongoose.mongo.ObjectId(req.params.id)
   gfsTugas.files.findOne({_id: id}, (err, file) => {
     // Check if files
     if (!file || file.length === 0) {
@@ -333,18 +333,45 @@ router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (r
 })
 
 router.get("/lampiran/:task_id", (req,res) => {
-  Task.findById(task_id, (err, task) => {
-    if(!task){
-      return res.status(400).json({ tasknotfound: "Task is not found"})
+  id = new mongoose.mongo.ObjectId(req.params.task_id)
+  gfsLampiran.files.findOne({_id: id}, (err, file) => {
+    // Check if files
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: "Tugas tidak ada"
+      });
     }
-    else{
-        for(var i = 0; i < task.lampiran.length; i++){
+    var type = file.contentType;
+    var filename = file.filename;
+    res.set("Content-Type", type);
+    res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
 
-        }
-    }
+    // Files exist
+    const readStream = gfsLampiran.createReadStream(filename);
+    readStream.pipe(res)
   })
 })
 
+router.get("/previewlampiran/:task_id", (req,res) => {
+  console.log("Previewing lampiran")
+  id = new mongoose.mongo.ObjectId(req.params.task_id)
+  gfsLampiran.files.findOne({_id: id}, (err, file) => {
+    // Check if files
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: "Tugas tidak ada"
+      });
+    }
+    var type = file.contentType;
+    var filename = file.filename;
+    res.set("Content-Type", type);
+    res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
+
+    // Files exist
+    const readStream = gfsLampiran.createReadStream(filename);
+    readStream.pipe(res)
+  })
+})
 router.get("/all_lampiran_by_task/:task_id", (req,res) => {
   Task.findById(task_id, (err, task) => {
     if(!task){
