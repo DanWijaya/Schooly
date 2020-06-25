@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   workChosenFile: {
     width: "200px",
     textAlign:"center",
-    color:"#2196f3",
+    color:"#2196F3",
   },
   workButton: {
     width: "200px",
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.custombutton.main,
+      backgroundColor: theme.palette.button.main,
     },
   },
 }));
@@ -139,7 +139,7 @@ function WorkFile(props) {
 function CheckedWorkFilesButton() {
   const StyledMenu = withStyles({
     paper: {
-      border: "1px solid #d3d4d5",
+      border: "1px solid #D3D4D5",
     },
   })((props) => (
     <Menu
@@ -160,7 +160,7 @@ function CheckedWorkFilesButton() {
   const StyledMenuItem = withStyles((theme) => ({
     root: {
       "&:focus": {
-        backgroundColor: "#2196f3",
+        backgroundColor: "#2196F3",
         "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
           color: theme.palette.common.white,
         },
@@ -184,7 +184,7 @@ function CheckedWorkFilesButton() {
         variant="contained"
         onClick={handleClick}
         startIcon={<AssignmentTurnedInIcon />}
-        style={{color: "white", backgroundColor: "#2196f3"}}>
+        style={{color: "white", backgroundColor: "#2196F3"}}>
         Lihat Hasil Pengecekkan
       </Button>
       <StyledMenu
@@ -361,7 +361,7 @@ function NewTask(props) {
     for (var i = 0; i < fileTugas.length; i++){
       formData.append("tugas", fileTugas[i])
     }
-    
+
     console.log(formData, fileTugas)
     uploadTugas(formData, user, tugasId)
     setFileTugas(null)
@@ -445,7 +445,7 @@ function NewTask(props) {
                 onClick={handleCloseDeleteDialog}
                 startIcon={< CancelIcon/>}
                 style={{
-                  backgroundColor: "#2196f3",
+                  backgroundColor: "#2196F3",
                   color: "white",
                   width: "150px",
                 }}
@@ -570,7 +570,7 @@ function NewTask(props) {
                   variant="contained"
                   startIcon={<AddIcon />}
                   className={classes.workButton}
-                  style={{color: "#2196f3", backgroundColor: "white"}}
+                  style={{color: "#2196F3", backgroundColor: "white"}}
                   onClick={() => {tugasUploader.current.click()}}
                 >
                   Pilih File
@@ -581,7 +581,7 @@ function NewTask(props) {
                   variant="contained"
                   startIcon={<PublishIcon />}
                   className={classes.workButton}
-                  style={{color: "white", backgroundColor: "#2196f3"}}
+                  style={{color: "white", backgroundColor: "#2196F3"}}
                   type="submit"
                   disabled={fileTugas == null}
                 >

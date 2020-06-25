@@ -14,8 +14,10 @@ Botak:
 19. Delete tester di akhir
 20. Hapus tombol daftar di navbar
 21. Copy Link (https://coderrocketfuel.com/article/how-to-copy-text-to-the-clipboard-in-react-js)
-23. Ubah tombol daftar jadi merah kalau ada error
+23. Snackbar error pas register
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
+25. file icon
+26. nama sekolah di profil, ganti isi data dengan button merah
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.

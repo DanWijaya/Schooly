@@ -50,11 +50,11 @@ const styles = (theme) => ({
     marginBottom: theme.spacing(1),
   },
   registerButton: {
-    backgroundColor: "#61bd4f",
+    backgroundColor: "#61BD4F",
     color: "white",
     width: "90px",
     "&:focus, &:hover": {
-      backgroundColor: "#61bd4f",
+      backgroundColor: "#61BD4F",
       color: "white",
     },
   },
@@ -144,7 +144,8 @@ class Register extends Component {
 
     if(role === "Student") {
       newUser.kelas = this.state.kelas;
-    } else if (role === "Teacher") {
+    }
+    else if (role === "Teacher") {
       newUser.subject_teached = this.state.subject_teached;
     }
 
@@ -162,9 +163,8 @@ class Register extends Component {
   };
 
   render() {
-
     document.title="Daftar ke Schooly";
-    document.body.style = 'background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat';
+    document.body.style = 'background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat';
 
     const { classes, classesCollection, subjectsCollection } = this.props;
     const { errors } = this.state;

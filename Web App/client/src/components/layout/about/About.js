@@ -25,24 +25,23 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     textAlign: "center",
     margin: "auto",
-    width: "1000px",
-    height: "475px",
-    backgroundImage: `url(${whatIsSchooly})`,
-    backgroundPosition: "top",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    maxWidth: "1000px",
+    padding: "10px",
   },
   whatIsSchoolyTitle: {
     fontFamily: "Cambria",
   },
   schoolyFeatures: {
-    maxWidth: "1000px",
     margin: "auto",
+    maxWidth: "1000px",
+    marginTop: "10px",
+    marginBottom: "10px",
+    padding: "20px",
   },
-  moreFeaturesBackground: {
-    backgroundColor: theme.palette.custombutton.main,
+  supportSchoolyBackground: {
+    backgroundColor: theme.palette.button.main,
   },
-  moreFeatures: {
+  supportSchooly: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -50,35 +49,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     margin: "auto",
     marginTop: "30px",
-    maxWidth: "1000px",
-  },
-  moreFeaturesTitle: {
-    fontFamily: "Cambria",
-  },
-  moreFeaturesPaper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    height: "350px",
-    padding: "20px",
-  },
-  moreFeaturesAvatar: {
-    width: theme.spacing(17.5),
-    height: theme.spacing(17.5),
-    backgroundColor: theme.palette.primary.main,
     marginBottom: "30px",
-  },
-  moreFeaturesIcon: {
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-  },
-  supportSchooly: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    textAlign: "center",
-    margin: "auto",
-    marginTop: "30px",
     maxWidth: "1000px",
   },
   supportSchoolyButton: {
@@ -107,10 +78,15 @@ function About(props) {
     <div className={classes.root}>
       <div className={classes.whatIsSchoolyBackground}>
         <div className={classes.whatIsSchooly}>
+          <img
+            alt="What is Schooly"
+            src={whatIsSchooly}
+            style={{maxWidth: "100%", maxHeight: "100%", marginBottom: "20px"}}
+          />
           <Typography variant="h2" gutterBottom className={classes.whatIsSchoolyTitle}>
             Apa itu Schooly?
           </Typography>
-          <Typography variant="h6" paragraph style={{width: "700px"}}>
+          <Typography variant="h6" paragraph>
             Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
           </Typography>
           <Typography style={{paddingBottom: "40px"}}>
@@ -119,10 +95,14 @@ function About(props) {
         </div>
       </div>
       <div className={classes.schoolyFeatures}>
-        <Grid container direction="column">
-          <Grid item container spacing={10} justify="center" alignItems="center">
+        <Grid container spacing={5} direction="column">
+          <Grid item container spacing={5} justify="center" alignItems="center">
             <Grid item xs={6}>
-              <img src={schoolyFeature1} alt="Schooly Feature 1" />
+              <img
+                alt="Schooly Feature 1"
+                src={schoolyFeature1}
+                style={{maxWidth: "100%", maxHeight: "100%"}}
+              />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
@@ -133,7 +113,7 @@ function About(props) {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item container spacing={10} justify="center" alignItems="center">
+          <Grid item container spacing={5} justify="center" alignItems="center">
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
                Akses dengan mudah
@@ -144,12 +124,20 @@ function About(props) {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <img src={schoolyFeature2} alt="Schooly Feature 2" />
+              <img
+                alt="Schooly Feature 2"
+                src={schoolyFeature2}
+                style={{maxWidth: "100%", maxHeight: "100%"}}
+              />
             </Grid>
           </Grid>
-          <Grid item container spacing={10} justify="center" alignItems="center">
+          <Grid item container spacing={5} justify="center" alignItems="center">
             <Grid item xs={6}>
-              <img src={schoolyFeature3} alt="Schooly Feature 3" />
+              <img
+                alt="Schooly Feature 3"
+                src={schoolyFeature3}
+                style={{maxWidth: "100%", maxHeight: "100%"}}
+              />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
@@ -163,52 +151,10 @@ function About(props) {
           </Grid>
         </Grid>
       </div>
-      <div className={classes.moreFeaturesBackground}>
-        <div className={classes.moreFeatures}>
-          <Typography variant="h4" gutterBottom className={classes.moreFeaturesTitle}>
-            Akan Datang
-          </Typography>
-          <Typography variant="h6" style={{marginBottom: "50px"}}>
-            Masih banyak fitur-fitur yang bisa dinantikan dari Schooly seperti:
-          </Typography>
-          <Grid container spacing={3} style={{marginBottom: "50px"}}>
-            <Grid item xs={4}>
-              <Paper className={classes.moreFeaturesPaper}>
-                <Avatar className={classes.moreFeaturesAvatar}>
-                  <DescriptionIcon className={classes.moreFeaturesIcon} />
-                </Avatar>
-                <Typography>
-                  Kuis dan Ujian dengan berbagai jenis pertanyaan dari pilihan ganda, isilah, dan jawaban panjang.
-                  Dilengkapi dengan pengecek otomatis dari jenis pertanyaan ini.
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={4}>
-              <Paper className={classes.moreFeaturesPaper}>
-                <Avatar className={classes.moreFeaturesAvatar}>
-                  <ForumIcon className={classes.moreFeaturesIcon} />
-                </Avatar>
-                <Typography>
-                  Diskusi antar guru dan murid mengenai sebuah tugas hingga sistem chatting antar orang dalam suatu lingkup sekolah.
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid item xs={4}>
-              <Paper className={classes.moreFeaturesPaper}>
-                <Avatar className={classes.moreFeaturesAvatar}>
-                  <BusinessCenterIcon className={classes.moreFeaturesIcon} />
-                </Avatar>
-                <Typography>
-                  Bertanya langsung dengan alumni sekolah anda mengenai universitas impian hingga karir masa depan.
-                </Typography>
-              </Paper>
-            </Grid>
-          </Grid>
-        </div>
-      </div>
-      <div className={classes.supportSchooly}>
+      <div className={classes.supportSchoolyBackground}>
+        <div className={classes.supportSchooly}>
         <Typography variant="h4" color="primary" gutterBottom >
-          Sudah menggunakan Schooly tapi masih belum puas?
+          Sudah menggunakan Schooly tetapi masih belum puas?
         </Typography>
         <Typography paragraph>
           Bantu Schooly berkembang dengan pendapat anda. Saran maupun kritik anda sangat berarti bagi kami.
@@ -221,6 +167,8 @@ function About(props) {
         >
           Kirim Pesan
         </Button>
+
+        </div>
       </div>
     </div>
   )

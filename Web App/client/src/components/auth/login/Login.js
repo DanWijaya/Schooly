@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { connect } from "react-redux";
 import { loginUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
@@ -57,7 +57,6 @@ class Login extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Login page, should redirect them to dashboard
-    console.log("AA")
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
@@ -83,15 +82,12 @@ class Login extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-
     const userData = {
       email: this.state.email,
       password: this.state.password
     };
-
     this.props.loginUser(userData);
   };
-
 
   togglePasswordVisibility = () => {
     this.setState(prevState =>
@@ -104,7 +100,7 @@ class Login extends Component {
 
   render() {
     document.title = "Masuk ke Schooly";
-    document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
+    document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     const { classes } = this.props;
 
@@ -178,7 +174,7 @@ class Login extends Component {
                 <Button
                   type="submit"
                   style={{
-                    backgroundColor: "#61bd4f",
+                    backgroundColor: "#61BD4F",
                     color: "white",
                     width: "100%",
                     marginTop: "25px"

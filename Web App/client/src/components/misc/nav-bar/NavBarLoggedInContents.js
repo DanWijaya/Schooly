@@ -13,7 +13,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 const useStyles = makeStyles((theme) => ({
   menuItem: {
     "&:hover": {
-      backgroundColor: "#2196f3",
+      backgroundColor: "#2196F3",
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },

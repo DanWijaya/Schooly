@@ -62,8 +62,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    width: "250px",
-    height: "300px",
+    width: "200px",
+    height: "100%",
     padding: "20px",
     "&:focus, &:hover": {
       boxShadow: "1px 3px 5px 2px rgba(0, 0, 0, .3)",
@@ -72,17 +72,17 @@ const useStyles = makeStyles((theme) => ({
   iconAvatar: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    width: "150px",
-    height: "150px",
+    width: "100px",
+    height: "100px",
     marginBottom: "20px",
   },
   mailIcon: {
-    width: "100px",
-    height: "100px",
+    width: "75px",
+    height: "75px",
   },
   instagramIcon: {
-    width: "100px",
-    height: "100px",
+    width: "75px",
+    height: "75px",
   },
 }));
 
@@ -293,13 +293,13 @@ function Help(props) {
             Masih belum menemukan solusi dari permasalahan anda? Silahkan hubungi kami.
           </Typography>
         </div>
-        <Grid container justify="space-around">
+        <Grid container spacing={5} justify="center" alignItems="stretch">
           <Grid item>
             <Paper variant="outlined" button component="a" className={classes.paperIcon} href="mailto:schoolysystem@gmail.com">
               <Avatar className={classes.iconAvatar}>
                 <EmailIcon className={classes.mailIcon} />
               </Avatar>
-              <Typography variant="h7">
+              <Typography variant="body2">
                 <b>schoolysystem@gmail.com</b>
               </Typography>
             </Paper>
@@ -309,7 +309,7 @@ function Help(props) {
               <Avatar className={classes.iconAvatar}>
                 <InstagramIcon className={classes.instagramIcon} />
               </Avatar>
-              <Typography variant="h7">
+              <Typography variant="body2">
                 <b>schoolysystem.id</b>
               </Typography>
             </Paper>

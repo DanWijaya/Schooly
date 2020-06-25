@@ -111,7 +111,7 @@ function NavBar(props) {
           size="small"
           href="/daftar"
           style={{
-            backgroundColor: "#61bd4f",
+            backgroundColor: "#61BD4F",
             color: "white",
             width: "75px",
             height: "30px",
@@ -126,7 +126,7 @@ function NavBar(props) {
           href="/masuk"
           style={{
             backgroundColor: "white",
-            color: "#2196f3",
+            color: "#2196F3",
             width: "75px",
             height: "30px",
           }}

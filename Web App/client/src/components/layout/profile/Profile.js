@@ -25,16 +25,16 @@ import WorkIcon from "@material-ui/icons/Work";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "750px",
     margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
   },
   avatar: {
+    margin: "auto",
     width: theme.spacing(20),
     height: theme.spacing(20),
-    margin: "auto"
   },
   paperBox: {
-    width: "750px",
     paddingTop: "15px",
     paddingBottom: "10px",
     paddingLeft: "17.5px",
@@ -66,7 +66,7 @@ function ProfileDataItem(props) {
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
-        <Grid container>
+        <Grid container justify="space-between">
           <Grid item xs={6}>
             <Typography variant="button">
               {props.profile_data_category}
@@ -81,7 +81,7 @@ function ProfileDataItem(props) {
 }
 
 function Profile(props) {
-  document.title="Schooly | Profil";
+  document.title = "Schooly | Profil"
 
   const classes = useStyles();
 
@@ -126,8 +126,7 @@ function Profile(props) {
     setOpenPasswordEditorAlert(false);
   }
 
-  document.title=`Schooly | ${user.name}`
-
+  //Student Data Only
   if(user.role == "Student" && classesCollection.selectedClasses.name === undefined){
     viewOneClass(user.kelas)
   }
@@ -167,7 +166,7 @@ function Profile(props) {
         anchorOrigin={{vertical : "top", horizontal: "center"}}
       >
         <Alert onClose={handleClosePasswordEditorAlert} severity="info" >
-          Foto profil berhasil diganti!
+          Kata sandi berhasil diganti!
         </Alert>
       </Snackbar>
 
@@ -204,8 +203,11 @@ function Profile(props) {
           <Typography variant="subtitle2">
             <h3>{user.name}</h3>
           </Typography>
-          <Typography>
-            "School Name" High School {user.role}
+          <Typography variant="h6">
+            "School Name"
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
             Class {classesCollection.selectedClasses.name === undefined ?
@@ -214,14 +216,14 @@ function Profile(props) {
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
         </Grid>
-        <Grid item container spacing={4}>
+        <Grid item container direction="column" spacing={4}>
           <Grid item>
             <Paper className={classes.paperBox}>
                 <Typography variant="subtitle2">
                   <h4>Informasi Pribadi</h4>
                 </Typography>
                 <Typography variant="subtitle1" gutterBottom>
-                  Beberapa informasi profil dapat dilihat oleh orang lain yang juga menggunakan layanan Schooly.
+                  Beberapa informasi profil dapat dilihat oleh orang sepersekolahan anda.
                 </Typography>
                 <List>
                   <ProfileDataItem
@@ -289,7 +291,7 @@ function Profile(props) {
                   />
                   <ProfileDataItem
                     profile_data_icon={<ColorLensIcon />}
-                    profile_data_category="Keterampilan non-teknis"
+                    profile_data_category="Keterampilan Non-Akademik"
                     profile_data_info={user.ket_non_teknis}
                   />
                   <ProfileDataItem

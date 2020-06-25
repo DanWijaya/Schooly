@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import classnames from "classnames";
+import { savePassword } from "../../../actions/AuthActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
-import PropTypes from "prop-types";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { connect } from "react-redux";
-import {savePassword} from "../../../actions/AuthActions";
-import classnames from "classnames";
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -69,9 +69,8 @@ class ResetPassword extends Component {
 // In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
 
   render() {
-
     document.title = "Schooly | Lupa Akun"
-    document.body.style = "background: linear-gradient(#6a8cf6, #ffffff); background-repeat: no-repeat";
+    document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     const { password, password2, errors } = this.state;
     const { classes, savePassword} = this.props;
@@ -91,7 +90,11 @@ class ResetPassword extends Component {
 
     return (
       <div className={classes.root}>
-        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
+        <img
+          alt="schooly logo"
+          src={schoolyLogo}
+          className={classes.schoolyLogo}
+        />
         <Paper>
           <Grid
             container
@@ -144,7 +147,7 @@ class ResetPassword extends Component {
                 <Button
                   type="submit"
                   style={{
-                    backgroundColor: "#2196f3",
+                    backgroundColor: "#2196F3",
                     color: "white",
                     width: "100%",
                     marginTop: "30px"

@@ -407,7 +407,7 @@ function NewTaskList(props) {
                     onClick={handleCloseDeleteDialog}
                       startIcon={< CancelIcon/>}
                       style={{
-                        backgroundColor: "#2196f3",
+                        backgroundColor: "#2196F3",
                         color: "white",
                         width: "150px",
                       }}
