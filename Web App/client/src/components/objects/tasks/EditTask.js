@@ -71,7 +71,7 @@ const styles = (theme) => ({
       width: "400px",
     },
     inputLabel: {
-      color: "#2196F3",
+      color: "#2196f3",
       fontSize: "15px",
     },
     errorInfo: {
@@ -106,6 +106,8 @@ class EditTask extends Component {
             focused: false,
             description: "",
             fileLampiran: null,
+            fileLampiranToAdd: null,
+            fileLampiranToDelete: null,
             anchorEl: null,
             errors: {},
         }
@@ -180,28 +182,25 @@ class EditTask extends Component {
     handleLampiranUpload = (e) => {
       const files = e.target.files;
       console.log(this.state.fileLampiran)
-      if(Boolean(this.state.fileLampiran)){
-        let temp = this.state.fileLampiran;
-        console.log(files)
-        // for(var i = 0; i < files.length; i++){
-          
-        // }
+      let temp = [] // this is to store the existing ones
+      let tempAdded = [] // this is to store the lampiran files to be added.
+      let tempDeleted = []
+
+      this.setState({fileLampiran: files})
+      if(!this.state.fileLampiran)
+        this.setState({fileLampiran: files})
+      else{
+        if(files.length != 0){
+          let temp = [];
+
+          for(var i = 0; i < this.state.fileLampiran.length; i++)
+            temp.push(this.state.fileLampiran[i])
+          for(var i = 0; i < files.length; i++)
+            temp.push(files[i]) 
+
+          this.setState({ fileLampiran: temp})
+          }
       }
-      // this.setState({fileLampiran: files})
-      // if(!this.state.fileLampiran)
-      //   this.setState({fileLampiran: files})
-      // else{
-      //   if(files.length != 0){
-      //     let temp = [];
-
-      //     for(var i = 0; i < this.state.fileLampiran.length; i++)
-      //       temp.push(this.state.fileLampiran[i])
-      //     for(var i = 0; i < files.length; i++)
-      //       temp.push(files[i]) 
-
-      //     this.setState({ fileLampiran: temp})
-      //     }
-      // }
     }
 
     handleClickMenu = (event) => {
@@ -487,7 +486,7 @@ class EditTask extends Component {
                      <Button
                      type="submit"
                       style={{
-                        backgroundColor: "#61BD4F",
+                        backgroundColor: "#61bd4f",
                           color: "white",
                           width: "100%",
                           marginTop: "20px",
