@@ -55,7 +55,7 @@ function NavBar(props) {
   let middleNavBarContents;
   let rightNavBarContents;
 
-  if(user.name !== undefined) {
+  if(user.name) {
     leftNavBarContents = (
       <div className={classes.navbarContainedLeftItems}>
         {isMobileView ?

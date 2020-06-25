@@ -264,23 +264,25 @@ function NewTaskList(props) {
       )
     )
   }
+  React.useEffect(() => {
+    viewTask()
+  }, [tasksCollection.length])
+  console.log(tasksCollection)
+
   const retrieveTasks = () => {
-    if(tasksCollection.length == undefined){
-      viewTask();
-    } else {
-      rows = []
-      console.log(tasksCollection)
-      console.log(user)
-
-      if(user.role == "Teacher"){
-      tasksCollection.map((data) => {
-        console.log(data.person_in_charge_id, user.id)
-        if(data.person_in_charge_id == user.id){
-          taskRowItem(data)
-          }
-        })
-      }
-
+    // if tasksCollection is not undefined or an empty array
+      if(tasksCollection.length){
+        rows = []
+        console.log(tasksCollection)
+        console.log(user)
+        if(user.role == "Teacher"){
+        tasksCollection.map((data) => {
+          console.log(data.person_in_charge_id, user.id)
+          if(data.person_in_charge_id == user.id){
+            taskRowItem(data)
+            }
+          })
+        }
       else if (user.role == "Student"){
           tasksCollection.map((data) => {
           let class_assigned = data.class_assigned;
@@ -336,9 +338,9 @@ function NewTaskList(props) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  // call the function to get the tasks lists from DB
-  if(rows.length == 0)
-    retrieveTasks()
+  // call the function to view the tasks on tablerows.
+  // this function is defined upstairs.
+  retrieveTasks()
 
   const onDeleteTask = (id) => {
     deleteTask(id)
@@ -448,7 +450,7 @@ function NewTaskList(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows != undefined ?
+              rowCount={rows ?
               rows.length: 0}
             />
             <TableBody>

@@ -73,9 +73,9 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function AttachedFile(props) {
+function LampiranFile(props) {
   const classes = useStyles();
-
+  const {filename, filetype} = props;
   return(
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
@@ -84,8 +84,8 @@ function AttachedFile(props) {
             <Avatar />
           </ListItemAvatar>
           <ListItemText
-            primary="NamaFile"
-            secondary="Jenis File"
+            primary={filename}
+            secondary={filetype}
           />
           <ListItemIcon>
             <IconButton>
@@ -238,27 +238,11 @@ function NewTask(props) {
   // this page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
-    viewOneTask(tugasId)
-    console.log(tasksCollection.person_in_charge_id)
-    console.log(filesCollection.files.length)    // if(tasksCollection.person_in_charge_id != undefined)
+    viewOneTask(tugasId)   
+    // will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
   },[tasksCollection.person_in_charge_id]
     )
-  // if(user.role == "Student" && filesCollection.files.length == 0 && isEmptyFileTugas){
-  //   getTaskFilesByUser(user.id, tugasId)
-  //   setIsEmpty(false)
-  // }
-
-  // checking if the Object is empty or nah (instead of using undefined field).
-  // if(Object.keys(tasksCollection).length === 0){
-  //   console.log("here is the tasksCollection:", tasksCollection)
-  //   viewOneTask(tugasId)
-  // }
-
-  // checking if the selectedUser (Person in charge) has already been retrieved or not. the id of the PIC is at tasksCollection.
-  // if(Object.keys(selectedUser).length == 0 || selectedUser._id != tasksCollection.person_in_charge_id){
-  //   getOneUser(tasksCollection.person_in_charge_id)
-  // }
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -341,16 +325,13 @@ function NewTask(props) {
 
   const handleTugasUpload = (e) => {
     const files = e.target.files;
-    // console.log(files)
-    // if(fileTugas != null)
-    //   files.push(fileTugas)
     setFileTugas(files)
 
-    if (files) {
-      const reader = new FileReader();
-      const { current } = uploadedTugas;
-      current.file = files;
-    }
+    // if (files) {
+    //   const reader = new FileReader();
+    //   const { current } = uploadedTugas;
+    //   current.file = files;
+    // }
     console.log(fileTugas)
   }
 
@@ -361,7 +342,6 @@ function NewTask(props) {
     for (var i = 0; i < fileTugas.length; i++){
       formData.append("tugas", fileTugas[i])
     }
-    
     console.log(formData, fileTugas)
     uploadTugas(formData, user, tugasId)
     setFileTugas(null)
@@ -510,10 +490,13 @@ function NewTask(props) {
                 Berkas yang Terlampir:
               </Typography>
               <Grid container spacing={1}>
-                <AttachedFile />
-                <AttachedFile />
-                <AttachedFile />
-                <AttachedFile />
+                {!tasksCollection.lampiran ? null : 
+                tasksCollection.lampiran.map((lampiran) => (
+                  <LampiranFile 
+                    filename={lampiran.filename}
+                    filetype={fileType(lampiran.filename)}
+                    />
+                ))}
               </Grid>
             </Grid>
           </Grid>

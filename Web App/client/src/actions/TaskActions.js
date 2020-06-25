@@ -2,45 +2,32 @@ import axios from "axios";
 import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER} from "./Types";
 
 // Addtask
-export const createTask = (taskData, formData, history) => dispatch => {
+export const createTask = (formData, taskData, history) => dispatch => {
   axios
     .post("/api/tasks/create", taskData)
     .then(res => {
-        console.log(res.data.id, res.data._id)
-        return axios.post(`/api/uploads/upload_lampiran/${res.data._id}`, formData)}
-        )
-        .then(res => {
-            console.log("Lampiran tugas is uploaded")
+        console.log("this is the res" , res.data._id)
+        console.log("Will run this")
+        console.log(formData.has('lampiran'))
+        if(formData.has('lampiran'))
+            return axios.post(`/api/uploads/upload_lampiran/${res.data._id}`, formData);
+        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
+            return "Successfully created task with no lampiran"
+    })
+    .then(res => { console.log("Lampiran tugas is uploaded")
             alert("Task is created")
-            history.push("/newtasklist");
+            history.push("/newtasklist")
         })
-        .catch(err =>{
-            console.log("error happened")
-            dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data
-            })
-        })   
-    }
+    .catch(err =>{
+        console.log("error happened")
+        dispatch({
+            type: GET_ERRORS,
+            payload: err
+        })
+    })   
 
-// export const getTaskByUser = (userId) => dispatch => {
-//     axios
-//       .get("/api/users/gettask/" + userId)
-//       .then(res => {
-//           console.log(res.data);
-//           dispatch({ 
-//             type: GET_FILE_BY_USER,
-//             payload: res.data
-//           })
-//       })
-//       .catch(err => {
-//         console.log("Error in retrieving the user tasks");
-//         dispatch({
-//           type: GET_ERRORS,
-//           payload: err.response.data
-//         })
-//       })
-//   }
+
+    }
 
 // View Task
 export const viewTask = () => dispatch => {
@@ -66,7 +53,6 @@ export const viewTask = () => dispatch => {
 export const viewOneTask = (taskId) => dispatch => {
   axios
     .get("/api/tasks/viewOneTask/" + taskId)
-    // .get("/api/tasks/edit/" + taskId)
     .then(res => {
         console.log("Task to be edited: ", res.data);
         dispatch({
@@ -85,8 +71,7 @@ export const viewOneTask = (taskId) => dispatch => {
 
 export const updateTask = (taskData, taskId, history) => dispatch => {
   axios
-    // .post("/api/tasks/update/5e67b8a797cc01371983e17c")
-    .post("/api/tasks/update/" + taskId, taskData)
+    .post(`/api/tasks/update/${taskId}`, taskData)
     .then(res => {
         console.log("Task updated to be :", res.data);
         alert("Task is updated successfully");

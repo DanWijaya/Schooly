@@ -99,7 +99,7 @@ function Profile(props) {
     }
     setOpenAlert(false);
   }
-
+  console.log(user.avatar)
   // Alert control for ProfilePasswordEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
@@ -127,8 +127,9 @@ function Profile(props) {
   }
 
   document.title=`Schooly | ${user.name}`
-
-  if(user.role == "Student" && classesCollection.selectedClasses.name === undefined){
+// initially classesCOllection.selectedClasses.name == undefined. 
+  if(user.role == "Student" && !classesCollection.selectedClasses.name 
+  ){
     viewOneClass(user.kelas)
   }
 
@@ -173,7 +174,9 @@ function Profile(props) {
 
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
-          {user.avatar && user.avatar !== undefined ?
+          {user.avatar 
+          // && user.avatar !== undefined 
+          ?
             <StyledBadge
               badgeContent={
                 <ProfilePictureEditorDialog
@@ -208,7 +211,7 @@ function Profile(props) {
             "School Name" High School {user.role}
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class {classesCollection.selectedClasses.name === undefined ?
+            Class {!classesCollection.selectedClasses.name ?
              null : classesCollection.selectedClasses.name}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenAlert} userData={user}/>

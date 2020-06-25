@@ -16,6 +16,7 @@ router.post("/create", (req, res) => {
     //     console.log("not valid data");
     //     return res.status(404).json(errors)
     // }
+
     console.log(req.body.name)
     Subject.findOne({ name: req.body.name}).then(subject => {
         if(subject){

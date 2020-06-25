@@ -114,11 +114,16 @@ class CreateTask extends Component {
             // submitted: this.state.submitted,
             errors: {}
         };
-        // formData.set("taskData", taskData)
-        for(var i = 0; i < this.state.fileTugas.length; i++){
-          formData.append("lampiran", this.state.fileTugas[i])
-        }
-        this.props.createTask(taskData, formData, this.props.history);
+
+        // CHeck if there is any lampiran uploaded or not. 
+        if(this.state.fileTugas)
+          for(var i = 0; i < this.state.fileTugas.length; i++){
+            console.log(this.state.fileTugas[i])
+            formData.append("lampiran", this.state.fileTugas[i])
+          }
+
+        console.log(formData.getAll('lampiran'), this.state.fileTugas)
+        this.props.createTask(formData, taskData, this.props.history);
         // this.setState({name: "", subject: ""})
     }
 
@@ -145,12 +150,15 @@ class CreateTask extends Component {
     handleLampiranUpload = (e) => {
       const files = e.target.files;  
       this.setState({fileTugas: files})  
+
+      console.log(this.state.fileTugas)
     }
 
     render() {
       const {classesCollection,  classes, viewClass, subjectsCollection} = this.props;
-      const{ class_assigned, fileTugas} = this.state;
+      const{ class_assigned, fileTugas, errors} = this.state;
       const { user } = this.props.auth
+      console.log(errors)
       
       const listFileChosen = () => {
         let temp = []
@@ -185,7 +193,6 @@ class CreateTask extends Component {
         }
 
         document.title = "Schooly - Create Task"
-        const { errors } = this.state;
 
         console.log(options, subjectOptions)
         const ITEM_HEIGHT = 48;
@@ -298,7 +305,7 @@ class CreateTask extends Component {
         <input
           type="file"
           multiple={true}
-          name="tugas"
+          name="lampiran"
           onChange={this.handleLampiranUpload}
           ref={this.tugasUploader}
           accept="file/*"
@@ -310,6 +317,7 @@ class CreateTask extends Component {
           id="file"
           ref={this.uploadedTugas}
           style={{display: "none"}}/>
+
           <Grid item container direction="row" alignItems="center">
           <Grid item xs={11}>
             <OutlinedTextField
