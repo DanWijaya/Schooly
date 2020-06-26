@@ -1,25 +1,25 @@
 import React from "react";
+import { useEffect } from "react";
+import { useMemo } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
-   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
-import MuiAlert from "@material-ui/lab/Alert";
-import AddIcon from "@material-ui/icons/Add";
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import CancelIcon from "@material-ui/icons/Cancel";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran} from "../../../actions/UploadActions"
 import { viewOneTask } from "../../../actions/TaskActions"
 import { getTaskFilesByUser } from "../../../actions/UploadActions"
 import { getOneUser } from "../../../actions/UserActions"
-import { useEffect } from "react";
-import { useMemo } from "react";
+import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
+   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
+import AddIcon from "@material-ui/icons/Add";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CloseIcon from "@material-ui/icons/Close";
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
+import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import PublishIcon from "@material-ui/icons/Publish";
 
 const path = require("path");
 
@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
   },
   workChosenFile: {
     width: "200px",
-    textAlign:"center",
-    color:"#2196F3",
+    textAlign: "center",
+    color: theme.palette.primary.main,
   },
   workButton: {
     width: "200px",
@@ -237,11 +237,11 @@ function NewTask(props) {
 
   let tugasId = props.match.params.id;
 
-  // this page is only for student later on, so for now put the user.role logic condition
+  //This page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
     viewOneTask(tugasId)
-    // will run getOneUser again once the tasksCollection is retrieved
+    //Will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
   },[tasksCollection.person_in_charge_id]
     )

@@ -94,9 +94,7 @@ function PersonListItem(props) {
   return (
     <ListItem button component="a" href={props.person_profile_link}>
       <ListItemAvatar>
-        <Avatar src={props.person_avatar}/>
-          {/* {props.person_avatar} */}
-        {/* </Avatar> */}
+        <Avatar src={props.person_avatar} />
       </ListItemAvatar>
       <ListItemText
         primary={
@@ -124,14 +122,6 @@ function ViewTaskListTeacher(props) {
     viewOneTask(id)
   })
   console.log(tasksCollection)
-  // COba pakai React.useEffect
-  // if(classesCollection.name == undefined){
-  //   viewOneClass(props.match.params.id)
-  // }
-
-  // if(all_students.length == 0){
-  //   getStudentsByClass(props.match.params.id)
-  // }
 
   console.log(all_students)
   const [value, setValue] = React.useState(0);
@@ -157,7 +147,6 @@ function ViewTaskListTeacher(props) {
           <Tab label="Kelas 3" {...TabIndex(2)} />
         </Tabs>
       </Paper>
-
       <TabPanel value={value} index={0}>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -183,10 +172,8 @@ function ViewTaskListTeacher(props) {
             </List>
           </ExpansionPanel>
       </TabPanel>
-
       <TabPanel value={value} index={1}>
       </TabPanel>
-
       <TabPanel value={value} index={2}>
       </TabPanel>
     </div>

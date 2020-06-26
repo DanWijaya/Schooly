@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
+import { Avatar, Button, Dialog, Divider, Grid, IconButton,
+   List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
@@ -26,7 +28,7 @@ const path = require("path");
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px", // before that was 1075px
+    maxWidth: "1000px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -372,8 +374,6 @@ function ViewTaskTeacher(props) {
           </Grid>
         </Grid>
       </Paper>
-
-      //Masih ngasal
       <Grid container direction="column" alignItems="center">
         <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "white", color: "#2196F3"}}>
           Sunting Tugas

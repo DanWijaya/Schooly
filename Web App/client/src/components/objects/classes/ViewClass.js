@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     padding: "5px",
   },
+  lookAllButton: {
+    "&:focus, &:hover": {
+      color: theme.palette.primary.main,
+    },
+  },
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
   },
@@ -66,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+
   return (
     <div
       hidden={value !== index}
@@ -91,7 +97,8 @@ function TabIndex(index) {
   return {
     id: `simple-tab-${index}`,
   };
-}
+};
+
 function WorkListItem(props) {
   const classes = useStyles()
 
@@ -147,6 +154,8 @@ function PersonListItem(props) {
 }
 
 function ViewClass(props) {
+  document.title = "Schooly | Lihat Kelas"
+
   const classes = useStyles();
 
   const { viewOneClass, getStudentsByClass, getAllSubjects,
@@ -194,7 +203,7 @@ function ViewClass(props) {
   return (
     <div className={classes.root}>
       <Paper>
-        <Typography variant="h3" style={{textAlign: "center"}} gutterBottom>
+        <Typography variant="h3" align="center" gutterBottom>
           Kelas {selectedClasses.name}
         </Typography>
         <Tabs
@@ -219,9 +228,8 @@ function ViewClass(props) {
                 </Avatar>
               )
               let workStatus = "Belum Dikumpulkan"
-              for(var i =0; i < all_user_files.length; i++) {
-                console.log(all_user_files[i].for_task_object, task._id, all_user_files[i].for_task_object == task._id)
-                if(all_user_files[i].for_task_object == task._id){
+              for(var i = 0; i < all_user_files.length; i++) {
+                if(all_user_files[i].for_task_object === task._id){
                   workStatus = "Telah Dikumpulkan"
                   workCategoryAvatar = (
                     <Avatar className={classes.assignmentTurnedIn}>
@@ -252,9 +260,9 @@ function ViewClass(props) {
             return(
               <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h5" className={classes.subjectTitle}>
-                  {subject.name}
-                </Typography>
+                  <Typography variant="h5" className={classes.subjectTitle}>
+                    {subject.name}
+                  </Typography>
                 </ExpansionPanelSummary>
                 <Divider />
                 <List className={classes.expansionPanelList}>
@@ -291,13 +299,18 @@ function ViewClass(props) {
                     }
                   })}
                   {isEmpty ?
-                    <Typography style={{textAlign: "center"}} variant="h5" gutterBottom>
-                      Belum ada tugas yang tersedia
+                    <Typography variant="h5" align="center" gutterBottom>
+                      Kosong
                     </Typography>
                   : null}
                 </List>
                 <div className={classes.lookAllButtonContainer}>
-                  <Button endIcon={<ChevronRightIcon />} href={`/viewsubject/${subject.name}`}>
+                  <Button
+                    disableRipple
+                    endIcon={<ChevronRightIcon />}
+                    href={`/viewsubject/${subject.name}`}
+                    className={classes.lookAllButton}
+                  >
                     Lihat mata pelajaran
                   </Button>
                 </div>

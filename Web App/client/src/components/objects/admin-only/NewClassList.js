@@ -104,18 +104,8 @@ const useToolbarStyles = makeStyles((theme) => ({
   toolbar: {
     display: "auto",
     justifyContent: "space-between",
-    padding: "15px"
+    padding: "15px",
   },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.secondary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
   newClassButton: {
     backgroundColor: "#61BD4F",
     color: "white",
@@ -133,11 +123,11 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const ClassListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { item , deleteClass } = props;
+  const { item, deleteClass } = props;
 
   return (
     <Toolbar className={classes.toolbar}>
-      <Typography className={classes.title} variant="h4" align="center">
+      <Typography variant="h4" align="center">
         <b>Daftar Kelas</b>
       </Typography>
       <Link to="/createclass">
@@ -216,11 +206,11 @@ function NewClassList(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  const { viewClass, deleteClass, classesCollection} = props;
+  const { viewClass, deleteClass, classesCollection } = props;
   const { user } = props.auth;
 
   const retrieveClasses = () => {
-    if(classesCollection.all_classes.length == 0){
+    if(classesCollection.all_classes.length == 0) {
       viewClass();
     }
     else {
@@ -265,7 +255,6 @@ function NewClassList(props) {
   };
 
   const handleSelectAllClick = (event, checked) => {
-    // console.log(event.target.checked)
     if (checked) {
       const newSelected = rows.map((n) => n._id);
       setSelected(newSelected);
@@ -297,14 +286,14 @@ function NewClassList(props) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  // call the function to get the classes from DB
+  // Call the function to get the classes from DB
   if(rows.length == 0)
     retrieveClasses()
   const onDeleteClass = (id) => {
     deleteClass(id)
   }
 
-    //Delete Dialog box
+  //Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
@@ -338,7 +327,7 @@ function NewClassList(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h6" align="center" gutterBottom>
-              <b>Kelas {selectedClassName}</b>
+              <b>{selectedClassName}</b>
             </Typography>
           </Grid>
           <Grid
@@ -351,7 +340,7 @@ function NewClassList(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteClass(selectedClassId)}}
+                onClick={() => { onDeleteClass(selectedClassId) }}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -377,7 +366,7 @@ function NewClassList(props) {
     return (
       <div className={classes.root}>
         <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
-          <b>Anda tidak punya izin untuk akses halaman ini</b>
+          <b>Anda tidak mempunyai izin akses halaman ini</b>
         </Typography>
       </div>
     )

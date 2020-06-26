@@ -32,7 +32,7 @@ const styles = (theme) => ({
   },
   errorInfo: {
     color: "red",
-    fontSize: "10px"
+    fontSize: "10px",
   },
   createClassButton: {
     width: "100%",
@@ -127,7 +127,7 @@ class CreateClass extends Component {
                 <b>Buat Kelas</b>
               </Typography>
               <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
-                Tambahkan Keterangan Kelas untuk Membuat Kelas
+                Tambahkan keterangan kelas untuk membuat kelas.
               </Typography>
               <form noValidate onSubmit={this.onSubmit}>
                 <Grid
@@ -203,7 +203,7 @@ class CreateClass extends Component {
       return(
         <div className={classes.root}>
           <Typography variant="h5" className={classes.formTitle}>
-            <b>Anda tidak punya izin untuk membuat Kelas</b>
+            <b>Anda tidak mempunyai izin akses halaman ini</b>
           </Typography>
         </div>
       )
