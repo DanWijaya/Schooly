@@ -151,3 +151,14 @@ export const previewLampiran = (lampiran_id) => dispatch => {
     console.log("Previewing lampiran")
     window.open(`http://localhost:5000/api/uploads/previewlampiran/${lampiran_id}`, "_blank") // previously has "_blank"
 }
+
+export const deleteLampiran = (lampiran_to_delete, task_id)  => {
+    console.log("Delete lampiran is runned")
+    axios
+        .delete(`/api/uploads/lampiran/${task_id}`, lampiran_to_delete)
+        .then(res => console.log(res.data))
+        .catch(err => {
+            console.log("error in deleting lampiran file")
+            console.log(err)
+        })
+}

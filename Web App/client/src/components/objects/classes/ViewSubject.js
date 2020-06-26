@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import moment from 'moment';
-import 'moment/locale/id'
+import moment from "moment";
+import "moment/locale/id"
 import { viewOneClass } from "../../../actions/ClassActions"
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { viewTask } from "../../../actions/TaskActions"
@@ -10,12 +10,12 @@ import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Fab, Grid,
    IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
-   Menu, MenuItem, Paper, Typography } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+   Menu, MenuItem, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
-import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
@@ -26,10 +26,13 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     padding: "20px",
   },
-  subjectIcons: {
+  workIconButton: {
+    cursor: "default",
+  },
+  workIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
-    color: theme.palette.action.disabled,
+    color: theme.palette.primary.main,
   },
   subjectCardPaper: {
     padding: "15px",
@@ -68,9 +71,10 @@ const classes = useStyles()
         }
         secondary={props.work_sender}
       />
-      <ListItemText style={{textAlign: 'right'}}
+      <ListItemText
+        align="right"
         primary={
-          <Typography varian  t="h6" className={classes.warningText}>
+          <Typography variant="h6" className={classes.warningText}>
             Batas Waktu: {props.work_deadline}
           </Typography>
         }
@@ -123,22 +127,23 @@ function ViewSubject(props) {
     tasksByClass.map((task) => {
       let workCategoryAvatar = (
         <Avatar className={classes.assignmentLate}>
-        <AssignmentLateIcon/>
+          <AssignmentLateIcon/>
         </Avatar>
       )
 
       let workStatus = "Belum Dikumpulkan"
-      for(var i =0; i < all_user_files.length; i++) {
-        console.log(all_user_files[i].for_task_object, task._id, all_user_files[i].for_task_object == task._id)
+      for(var i = 0; i < all_user_files.length; i++) {
         if(all_user_files[i].for_task_object == task._id){
           workStatus = "Telah Dikumpulkan"
           workCategoryAvatar = (
-          <Avatar className={classes.assignmentTurnedIn}>
-            <AssignmentTurnedInIcon/>
-            </Avatar>)
+            <Avatar className={classes.assignmentTurnedIn}>
+              <AssignmentTurnedInIcon/>
+            </Avatar>
+          )
           break;
         }
       }
+
       if(task.subject == subject_name) {
       tasksBySubjectClass.push(
         <WorkListItem
@@ -146,14 +151,15 @@ function ViewSubject(props) {
           work_category_avatar={workCategoryAvatar}
           work_sender={`Mata Pelajaran: ${task.subject}`}
           work_status={workStatus}
-          work_deadline={moment(task.deadline).format('DD-MM-YYYY')}
+          work_deadline={moment(task.deadline).format("DD-MM-YYYY")}
           work_link={`/new-task/${task._id}`}
         />
       )
     }
   })
+
   return tasksBySubjectClass.length == 0 ?
-    (<Typography style={{textAlign: 'center'}} variant="h5" gutterBottom>
+    (<Typography variant="h5" align="center" gutterBottom>
       Kosong
     </Typography>)
     : tasksBySubjectClass
@@ -165,7 +171,7 @@ function ViewSubject(props) {
       <Grid container>
         <Grid item xs={12} container direction="column" spacing={3}>
           <Grid item xs>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" color="primary">
               <h3><b>{subject_name}</b></h3>
             </Typography>
             <Typography variant="body2">
@@ -173,31 +179,14 @@ function ViewSubject(props) {
             </Typography>
           </Grid>
           <Grid item>
-            <LightTooltip title="Pengumuman">
-              <IconButton disabled>
-                <Badge badgeContent={0} color="secondary">
-                  <AnnouncementIcon />
-                </Badge>
-              </IconButton>
-            </LightTooltip>
             <LightTooltip title="Tugas">
-              <IconButton disableRipple style={{cursor: "default"}}>
+              <IconButton
+                size="medium"
+                disableRipple
+                className={classes.workIconButton}
+              >
                 <Badge badgeContent={2} color="secondary">
-                  <AssignmentIcon />
-                </Badge>
-              </IconButton>
-            </LightTooltip>
-            <LightTooltip title="Kuis">
-              <IconButton disabled>
-                <Badge badgeContent={0} color="secondary">
-                  <GrNotes style={{color: "rgba(0, 0, 0, 0.26)"}} />
-                </Badge>
-              </IconButton>
-            </LightTooltip>
-            <LightTooltip title="Ujian">
-              <IconButton disabled>
-                <Badge badgeContent={0} color="secondary">
-                  <GrDocumentPerformance className={classes.subjectIcons} />
+                  <AssignmentIcon fontSize="large" className={classes.workIcon} />
                 </Badge>
               </IconButton>
             </LightTooltip>

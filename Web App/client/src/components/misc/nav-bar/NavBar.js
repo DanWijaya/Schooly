@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   navbarContainedRightItems: {
-    flex: "auto",
+    display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
   },

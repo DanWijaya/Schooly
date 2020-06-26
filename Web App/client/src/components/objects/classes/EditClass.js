@@ -147,20 +147,20 @@ class EditClass extends Component {
 
   render() {
     document.title = "Schooly | Sunting Kelas"
-    const { errors } = this.state;
+
     const { classes, classesCollection } = this.props;
+    const { errors } = this.state;
     const { user } = this.props.auth;
     const { all_teachers} = this.props.auth;
     const { all_students } = this.props.auth;
-    const { sekretaris , bendahara, ketua_kelas, walikelas} = this.state;
+    const { sekretaris, bendahara, ketua_kelas, walikelas} = this.state;
     var teacher_options = all_teachers
     var student_options = all_students
 
     console.log(classesCollection.selectedClasses.walikelas)
     const returnId = (user_id, arr) => {
-      if(arr == "student"){
+      if(arr == "student") {
         for (var i = 0; i < student_options.length; i++) {
-          // console.log(student_options[i]._id)
           if(student_options[i]._id == user_id._id){
             return user_id._id
           }
@@ -181,12 +181,12 @@ class EditClass extends Component {
       options.map((student) => {
         console.log(student, this.state.sekretaris)
         items.push(
-        <MenuItem
-        value={returnId(student, arr)}
-        // value={student}
-        >
-        {student.name}
-        </MenuItem>)
+          <MenuItem
+            value={returnId(student, arr)}
+          >
+            {student.name}
+          </MenuItem>
+        )
       })
       return items;
     }
@@ -298,7 +298,7 @@ class EditClass extends Component {
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <FormControl id="bendahara" variant="outlined" color="primary" style={{width: "100%"}}>
-                      <label id="bendahara" className={classes.inputLabel}>bendahara</label>
+                      <label id="bendahara" className={classes.inputLabel}>Bendahara</label>
                       <Select
                         value={bendahara}
                         displayEmpty
@@ -327,7 +327,7 @@ class EditClass extends Component {
       return(
         <div className={classes.root}>
           <Typography variant="h5" className={classes.formTitle}>
-            <b>Anda tidak punya izin untuk menyunting kelas</b>
+            <b>Anda tidak mempunyai izin akses halaman ini</b>
           </Typography>
         </div>
       )

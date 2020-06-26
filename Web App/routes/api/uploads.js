@@ -14,6 +14,7 @@ const User= require("../../models/user_model/User");
 const Task = require("../../models/Task");
 const { reject } = require("async");
 const { resolve } = require("path");
+const { Console } = require("console");
 
 // Create Mongo Connection
 mongoose.set('useUnifiedTopology', true);
@@ -321,16 +322,23 @@ router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (r
         })
       }
       console.log("Temp: ", temp)
-      task.lampiran = temp;
+      // kalau udah ada lampiran, push aja.
+      if(task.lampiran != undefined && task.lampiran.length > 0){
+        let temp2 = [...task.lampiran, ...temp]
+        task.lampiran = temp2
+      } else{
+        task.lampiran = temp;
+      }
       console.log(task.lampiran)
       task.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client. 
           .then(task => console.log("Task"))
           .catch(err => {console.log("error kan ini")})
       
-    }
-  })
+        }
+    })
   res.json({success: "Successfully uploaded the lampiran file"})
 })
+
 
 router.get("/lampiran/:task_id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.task_id)
@@ -372,16 +380,45 @@ router.get("/previewlampiran/:task_id", (req,res) => {
     readStream.pipe(res)
   })
 })
-router.get("/all_lampiran_by_task/:task_id", (req,res) => {
+
+router.delete("/lampiran/:task_id", (req,res) => {
+  let task_id = req.params.task_id;
+  // console.log("lampirannya to delete: ", req.body.lampiranToDelete)
+  // console.log("current_lampiran", req.body.current_lampiran)
+  const {lampiran_to_delete, current_lampiran} = req.body;
+  console.log("Current Lampiran nya ini:", current_lampiran)
+  console.log("Lampiran to deletenya: ", lampiran_to_delete)
+  for(var i = 0; i < lampiran_to_delete.length; i++){
+    console.log("Ready to delete lampiran")
+    lampiran_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
+    // di rootnya, masukkin collection namenya.. 
+    gfsLampiran.remove({ _id: lampiran_id, root: "lampiran"}, (err) => {
+      if(err) {
+        console.log("error occured")
+        return res.status(404).json({err: "Error in removing the files"});
+      } else {
+        console.log("Sucessful, lampiran kenadelete")
+      }
+    })
+
+    for(var j =0; j < current_lampiran.length; j++) {
+      if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+        current_lampiran.splice(j,1)
+        break;
+      }
+    }
+  }
+
   Task.findById(task_id, (err, task) => {
     if(!task){
-      return res.status(400).json({ tasknotfound: "Task is not found"})
-    }
-    else{
-        for(var i = 0; i < task.lampiran.length; i++){
-          
-        }
+      return res.status(404).json("Task object is not found in the Database")
+    } else {
+      task.lampiran = current_lampiran;
+      task.save()
+          .then((task) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
+          .catch((err) => console.log("Error happened in updating task lampiran field"))
     }
   })
+  
 })
 module.exports = {router, uploadAvatar, uploadTugas, uploadLampiran};

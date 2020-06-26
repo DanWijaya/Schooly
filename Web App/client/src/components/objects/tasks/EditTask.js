@@ -6,6 +6,7 @@ import moment from "moment";
 import { Button, Chip, FormControl, Grid, IconButton, Input, InputLabel,Menu, MenuItem,ListItemIcon, ListItemText, Paper, Select, Typography, withStyles } from "@material-ui/core";
 import { viewClass } from "../../../actions/ClassActions";
 import { viewOneTask, updateTask } from "../../../actions/TaskActions";
+import { deleteLampiran } from "../../../actions/UploadActions"
 import { Multiselect } from "multiselect-react-dropdown";
 import { getAllSubjects} from "../../../actions/SubjectActions"
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
@@ -16,6 +17,7 @@ import lokal from "date-fns/locale/id";
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import DescriptionIcon from '@material-ui/icons/Description';
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 const path = require("path");
 
 const StyledMenu = withStyles({
@@ -46,6 +48,7 @@ const StyledMenuItem = withStyles((theme) => ({
         color: theme.palette.common.white,
       },
     },
+    width: "300px"
   },
 }))(MenuItem);
 
@@ -92,6 +95,20 @@ const styles = (theme) => ({
     },
   });
 
+function LampiranFile(props) {
+  const { name, i, handleLampiranDelete} = props;
+
+  return(
+    <StyledMenuItem> 
+    <ListItemIcon>
+      <DescriptionIcon/>
+    </ListItemIcon>
+    <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
+      <HighlightOffIcon fontSize="small" style={{color:"#B22222"}} onClick={(e) => {handleLampiranDelete(e, i, name)}}/>
+  </StyledMenuItem>
+  )
+}
+
 class EditTask extends Component {
     constructor(props) {
         super(props);
@@ -105,15 +122,12 @@ class EditTask extends Component {
             classChanged: false,
             focused: false,
             description: "",
-            fileLampiran: null,
-            fileLampiranToAdd: null,
-            fileLampiranToDelete: null,
+            fileLampiran: [],
+            fileLampiranToAdd: [],
+            fileLampiranToDelete: [],
             anchorEl: null,
             errors: {},
         }
-        const { id } = this.props.match.params;
-        console.log(id)
-        this.props.viewOneTask(id)
     }
 
     tugasUploader = React.createRef(null)
@@ -121,6 +135,7 @@ class EditTask extends Component {
 
     
     componentDidMount() {
+        this.props.viewOneTask(this.props.match.params.id)
         this.props.viewClass()
         this.props.getAllSubjects()
     }
@@ -129,7 +144,9 @@ class EditTask extends Component {
         console.log("Tasks props is received");
         const { name } = this.state;
         // console.log(nextProps.tasksCollection.deadline);
-        console.log(nextProps.tasksCollection.class_assigned);
+        console.log(nextProps.tasksCollection);
+        console.log(nextProps.subjectsCollection);
+        console.log(nextProps.classesCollection);
         if(!name){
             this.setState({
                 name: nextProps.tasksCollection.name,
@@ -137,7 +154,9 @@ class EditTask extends Component {
                 deadline: nextProps.tasksCollection.deadline,
                 class_assigned: nextProps.tasksCollection.class_assigned,
                 description: nextProps.tasksCollection.description,
-                fileLampiran: nextProps.tasksCollection.lampiran
+                fileLampiran: Boolean(nextProps.tasksCollection.lampiran) ? nextProps.tasksCollection.lampiran : []
+                // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object. 
+                // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
             })
         }
     }
@@ -146,7 +165,7 @@ class EditTask extends Component {
         e.preventDefault();
 
         const { id } = this.props.match.params;
-        const { class_assigned, classChanged} = this.state;
+        const { class_assigned, classChanged, fileLampiranToAdd, fileLampiranToDelete} = this.state;
 
         let classesSelected = [];
         console.log(class_assigned)
@@ -175,32 +194,64 @@ class EditTask extends Component {
         else
           taskObject.class_assigned = class_assigned // when it has no change
 
-        console.log(taskObject)
-        this.props.updateTask(taskObject, id, this.props.history);
+        let formData = new FormData()
+        console.log(this.state.fileLampiranToAdd);
+        for(var i = 0; i< fileLampiranToAdd.length; i++){
+          console.log(this.state.fileLampiran[i])
+          formData.append("lampiran", this.state.fileLampiranToAdd[i])
+        }
+        console.log(fileLampiranToDelete, this.props.tasksCollection.lampiran)
+        console.log(formData.getAll("lampiran"))
+        this.props.updateTask(formData, fileLampiranToDelete, 
+          this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
     }
 
     handleLampiranUpload = (e) => {
       const files = e.target.files;
       console.log(this.state.fileLampiran)
-      let temp = [] // this is to store the existing ones
-      let tempAdded = [] // this is to store the lampiran files to be added.
-      let tempDeleted = []
+      let temp;
+      let tempToAdd;
 
-      this.setState({fileLampiran: files})
-      if(!this.state.fileLampiran)
-        this.setState({fileLampiran: files})
+      if(this.state.fileLampiran.length == 0)
+        this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
       else{
+        console.log(files)
         if(files.length != 0){
-          let temp = [];
-
-          for(var i = 0; i < this.state.fileLampiran.length; i++)
-            temp.push(this.state.fileLampiran[i])
-          for(var i = 0; i < files.length; i++)
-            temp.push(files[i]) 
-
-          this.setState({ fileLampiran: temp})
+          temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
+          tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
+          this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
           }
       }
+    }
+
+    handleLampiranDelete = (e, i, name) => {
+      e.preventDefault()
+      console.log("Index is: ", i)
+      let temp = Array.from(this.state.fileLampiran);
+      let tempToDelete = this.state.fileLampiranToDelete;
+      let tempToAdd = this.state.fileLampiranToAdd;
+      // kalau yang udah keupload , ada field filename (yang belum adanya name)
+      // Untuk yang udah di DB.
+      if(this.state.fileLampiran[i].filename != undefined){ 
+        // remove the file in fileLampiranToDelete
+        tempToDelete.push(temp[i])
+
+      }else{ // utk yang belum di DB
+        // remove the file in fileLampiranToAdd
+        for(var j = 0; j < tempToAdd.length; j++){
+          console.log(temp[i].name, tempToAdd[j].name)
+          if(tempToAdd[j].name == temp[i].name){
+            tempToAdd.splice(j,1)
+          }
+        }
+      }
+      temp.splice(i, 1);
+      console.log(tempToDelete)
+      if(temp.length == 0)
+        this.handleCloseMenu()
+      
+      this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
+        fileLampiranToDelete: tempToDelete})
     }
 
     handleClickMenu = (event) => {
@@ -234,14 +285,16 @@ class EditTask extends Component {
         this.setState({ deadline: date})
       }
     render() {
-      console.log(this.state.fileLampiran)
         document.title = "Schooly - Edit Task"
         const { errors , fileLampiran} = this.state;
         const {classes, subjectsCollection, tasksCollection} = this.props;
         const { all_classes, selectedClasses} = this.props.classesCollection;
         const { user } = this.props.auth;
 
-        console.log(this.state.class_assigned)
+        console.log("FileLampiran:", this.state.fileLampiran)
+        console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
+        console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
+
         let classIds = []
         const ITEM_HEIGHT = 48;
         const ITEM_PADDING_TOP = 8;
@@ -256,22 +309,16 @@ class EditTask extends Component {
 
         const listFileChosen = () => {
           let temp = []
-          if(!fileLampiran) {
-            temp.push(
-              <Typography className={classes.workChosenFile}>
-                Kosong
-              </Typography>
-            )
-          }
-          else{
+          if(fileLampiran.length > 0){
             for (var i = 0; i < fileLampiran.length; i++){
               temp.push(
-                <StyledMenuItem style={{width:"270px"}}>
-                  <ListItemIcon>
-                    <DescriptionIcon/>
-                  </ListItemIcon>
-                  <ListItemText primary={fileLampiran[i].filename.length < 21 ? fileLampiran[i].filename : `${fileLampiran[i].filename.slice(0,17)}..${path.extname(fileLampiran[i].filename)}`}/>
-                </StyledMenuItem>
+                <LampiranFile // yang di displaykan ada di DB (filename) sama yang baru diadd (name)
+                  name={fileLampiran[i].filename == undefined? 
+                    fileLampiran[i].name : 
+                    fileLampiran[i].filename
+                  }
+                  handleLampiranDelete={this.handleLampiranDelete}
+                  i={i}/>
               )
             }
           }
@@ -289,7 +336,6 @@ class EditTask extends Component {
         if(Object.keys(subjectsCollection.all_subjects).length !== 0){
           subjectOptions = subjectsCollection.all_subjects
         }
-        console.log(this.state.class_assigned)
         if(this.state.class_assigned != null) // when firstly received.
           this.state.class_assigned.map((kelas) => {
             if(kelas._id != undefined)
@@ -299,7 +345,6 @@ class EditTask extends Component {
           }
         )
 
-        console.log(classIds)
         if(user.role == "Teacher" || user.role=="Admin"){
         return(
             <div className={classes.root}>
@@ -418,16 +463,17 @@ class EditTask extends Component {
           style={{display: "none"}}/>
           <Grid item container direction="row" alignItems="center">
           <Grid item xs={11} onClick={this.handleClickMenu}>
+            {console.log("FileLampiran: ", fileLampiran)}
             <OutlinedTextField
               disabled={true}
-              value={fileLampiran ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
+              value={fileLampiran && fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
               id="file_tugas"
               type="text"
               width="100%"
               labelname="Berkas Lampiran"
               html_for="Berkas lampiran"
               label_classname={classes.inputLabel}
-              pointer= {true}/>
+              pointer= {fileLampiran.length > 0}/>
               
             </Grid>
             <StyledMenu

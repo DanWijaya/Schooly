@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
+import { Avatar, Button, Dialog, Divider, Grid, IconButton,
+   List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
@@ -14,14 +16,13 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CancelIcon from "@material-ui/icons/Cancel";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
-import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../../../actions/UploadActions"
 
 const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px", // before that was 1075px
+    maxWidth: "1000px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -116,7 +117,6 @@ function ViewTaskTeacher(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
-
 
   // if(tasksCollection.length === undefined) // it means it is empty
   //   getTaskByUser(user.id)
@@ -364,8 +364,6 @@ function ViewTaskTeacher(props) {
           </Grid>
         </Grid>
       </Paper>
-
-      //Masih ngasal
       <Grid container direction="column" alignItems="center">
         <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "white", color: "#2196F3"}}>
           Sunting Tugas

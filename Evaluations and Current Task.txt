@@ -19,6 +19,7 @@ Botak:
 25. file icon
 26. nama sekolah di profil, ganti isi data dengan button merah
 27. anda tidak punya akses halaman ini
+28. viewsubject iconnya masih error, hias lagi, viewclass more buttonnya hias
 
 Daniel:
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.

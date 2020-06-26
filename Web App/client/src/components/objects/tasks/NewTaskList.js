@@ -1,27 +1,28 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
-import { Button, Checkbox, IconButton, Dialog, Grid, Paper, ListItemSecondaryAction, Table, TableBody, TableCell, TableContainer,
-   TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import moment from 'moment';
-import CloseIcon from "@material-ui/icons/Close";
-import { viewTask, deleteTask } from '../../../actions/TaskActions';
+import moment from "moment";
+import "moment/locale/id";
+import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import { viewOneClass } from "../../../actions/ClassActions"
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import CancelIcon from "@material-ui/icons/Cancel";
-import 'moment/locale/id'
-import PostAddIcon from '@material-ui/icons/PostAdd';
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import { Button, Checkbox, IconButton, Dialog, Fab, Grid, Paper, ListItemSecondaryAction, Table, TableBody, TableCell, TableContainer,
+   TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
+import { lighten, makeStyles } from "@material-ui/core/styles";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CloseIcon from "@material-ui/icons/Close";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import EditIcon from "@material-ui/icons/Edit";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
   return (action == null ? { _id, tasktitle, subject, class_assigned, deadline }
     : { _id, tasktitle, subject, class_assigned, deadline, action});
 }
+
 var rows = [];
 
 function descendingComparator(a, b, orderBy) {
@@ -51,7 +52,7 @@ function stableSort(array, comparator) {
 }
 
 function TaskListHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, role } = props;
+  const { classes, onSelectAllClick, order, orderBy, rowCount, onRequestSort, role } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -65,22 +66,13 @@ function TaskListHead(props) {
     { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
   ];
 
-  if(role == "Student"){
-    console.log("Run ")
+  if(role == "Student") {
     headCells.pop()
   }
-  console.log(headCells)
+
   return (
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            color="secondary"
-          />
-        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -109,7 +101,6 @@ function TaskListHead(props) {
 
 TaskListHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
@@ -118,91 +109,85 @@ TaskListHead.propTypes = {
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
+  toolbar: {
+    display: "auto",
+    justifyContent: "space-between",
+    padding: "15px",
   },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.secondary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: "1 1 100%",
+  newTaskButton: {
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
   },
-  addIcon: {
-
+  newTaskIcon: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    marginRight: "7.5px"
   }
 }));
 
 const TaskListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, deleteTask, item , role} = props;
+  const { deleteTask, item, role } = props;
   // the item stores the id directly
   return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected} Kelas Dipilih
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h5" id="tableTitle" component="div" style={{textAlign: "center"}}>
-          {role == "Teacher" ? <b>Daftar tugas yang anda berikan</b> :
-          <b>Daftar Tugas yang Anda Berikan</b>}
-          {/* Nanti buat untuk yang admin juga */}
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={() => props.handleOpenDeleteDialog(item[0])}>
-            <DeleteIcon/>
-          </IconButton>
-        </Tooltip>
-      ) : (
-        null
-      )}
-      {role == "Student" ? <div style={{display: 'none'}}></div> :
-      <Link to="/createtask">
-        <LightToolTip title="Buat tugas">
-        <IconButton>
-          <PostAddIcon/>
-        </IconButton>
-        </LightToolTip>
-      </Link>
+    <Toolbar className={classes.toolbar}>
+      <Typography variant="h4" align="center">
+        {role === "Teacher" ? <b>Daftar Tugas yang Anda Berikan</b> :
+          <b>Daftar Tugas Anda</b>}
+        {/* Nanti buat untuk yang admin juga */}
+      </Typography>
+      {role === "Student" ? <div style={{display: "none"}} /> :
+        <Link to="/createtask">
+          <Fab variant="extended" className={classes.newTaskButton}>
+            <PostAddIcon className={classes.newTaskIcon} />
+              Buat Tugas
+          </Fab>
+        </Link>
       }
     </Toolbar>
   );
-};
-
-TaskListToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
+  },
+  tableEditIcon: {
+    color: theme.palette.primary.main,
+  },
+  tableDeleteIcon: {
+    color: theme.palette.error.dark,
   },
   dialogBox: {
-    maxWidth: "450px",
-    margin: "auto"
+    padding: "15px",
+  },
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
+  dialogCancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
   },
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
-  },
-  table: {
-    minWidth: 750,
   },
   visuallyHidden: {
     border: 0,
@@ -215,12 +200,18 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+  tableRow: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+      cursor: "pointer",
+    },
+  },
 }));
 
 function NewTaskList(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
+  const [orderBy, setOrderBy] = React.useState("subject");
   const [selected, setSelected] = React.useState([]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -239,61 +230,65 @@ function NewTaskList(props) {
         data.deadline,
         user.role == "Student" ? null :
         [
-          <Link to={`/task/${data._id}`}>
-        <IconButton onClick={(e)=> e.stopPropagation()}>
-        <EditIcon/>
-      </IconButton>
-      </Link>,
-      <Tooltip title="Delete">
-      <IconButton
-      onClick={(e) =>{
-          handleOpenDeleteDialog(e, data._id, data.name)}}  >
-        <DeleteIcon style={{color: "#B22222"}} />
-      </IconButton>
-
-    </Tooltip>
+          <LightToolTip title="Sunting">
+            <Link to={`/task/${data._id}`}>
+              <IconButton
+                size="small"
+                style={{marginRight: "5px"}}
+                onClick={(e)=> e.stopPropagation()}
+              >
+                <EditIcon className={classes.tableEditIcon} />
+              </IconButton>
+            </Link>
+          </LightToolTip>,
+          <LightToolTip title="Hapus">
+            <IconButton
+              size="small"
+              onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}
+            >
+              <DeleteIcon className={classes.tableDeleteIcon} />
+            </IconButton>
+          </LightToolTip>
         ]
       )
     )
   }
-  React.useEffect(() => {
-    viewTask()
-  }, [tasksCollection.length])
-  console.log(tasksCollection)
+
+  React.useEffect(() => {viewTask()}, [tasksCollection.length])
 
   const retrieveTasks = () => {
-    // if tasksCollection is not undefined or an empty array
-      if(tasksCollection.length){
+    // If tasksCollection is not undefined or an empty array
+    if(tasksCollection.length) {
         rows = []
         console.log(tasksCollection)
         console.log(user)
-        if(user.role == "Teacher"){
+        if(user.role == "Teacher") {
         tasksCollection.map((data) => {
           console.log(data.person_in_charge_id, user.id)
-          if(data.person_in_charge_id == user.id){
+          if(data.person_in_charge_id == user.id) {
             taskRowItem(data)
             }
           })
         }
-      else if (user.role == "Student"){
+        else if (user.role == "Student"){
           tasksCollection.map((data) => {
-          let class_assigned = data.class_assigned;
-          for (var i = 0; i < class_assigned.length; i++){
-            if(class_assigned[i]._id == user.kelas){
-              taskRowItem(data)
-              break;
+            let class_assigned = data.class_assigned;
+            for (var i = 0; i < class_assigned.length; i++) {
+              if(class_assigned[i]._id == user.kelas) {
+                taskRowItem(data)
+                break;
+              }
             }
-        }
-      })
-      }
-
-      else { // Untuk Admin
-        tasksCollection.map((data) => {
-          taskRowItem(data)
           })
-    }
+        }
+        else { //Admin
+          tasksCollection.map((data) => {
+            taskRowItem(data)
+          })
+        }
+      }
   }
-}
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -315,11 +310,14 @@ function NewTaskList(props) {
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, item._id);
-    } else if (selectedIndex === 0) {
+    }
+    else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
+    }
+    else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
+    }
+    else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1),
@@ -330,14 +328,15 @@ function NewTaskList(props) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  // call the function to view the tasks on tablerows.
-  // this function is defined upstairs.
+  // Call the function to view the tasks on tablerows.
+  // This function is defined upstairs.
   retrieveTasks()
 
   const onDeleteTask = (id) => {
     deleteTask(id)
   }
-    //Delete Dialog box
+
+  //Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
@@ -349,95 +348,73 @@ function NewTaskList(props) {
     setOpenDeleteDialog(false);
   };
 
-    function DeleteDialog(){
-      return (
-        <Dialog
-          open={openDeleteDialog}
-          onClose={handleCloseDeleteDialog}
-          className={classes.dialogBox}
-        >
-          <Grid container justify="center" className={classes.dialogRoot}>
-            <Grid item
-              container
-              justify="flex-end"
-              alignItems="flex-start"
-              style={{marginBottom: "10px"}}
+  function DeleteDialog(){
+    return (
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+      >
+        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+          <Grid item container justify="flex-end" alignItems="flex-start">
+            <IconButton
+              size="small"
+              onClick={handleCloseDeleteDialog}
             >
-              <IconButton
-                size="small"
-                disableRipple
-                onClick={handleCloseDeleteDialog}
-                className={classes.iconButtonClose}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px"}}>
-              <Typography variant="h5" gutterBottom>
-                Hapus Tugas berikut?
-              </Typography>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px", textAlign:'center'}}>
-              <Typography variant="h6" gutterBottom>
-                <b>{selectedTaskName}</b>
-              </Typography>
-            </Grid>
-            <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={2}
-                  style={{marginBottom: "20px"}}
-                >
-              <Grid item>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h5" gutterBottom>
+              Hapus Tugas berikut?
+            </Typography>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h6" align="center" gutterBottom>
+              <b>{selectedTaskName}</b>
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+            style={{marginBottom: "10px"}}
+          >
+            <Grid item>
               <Button
-                onClick={() => { onDeleteTask(selectedTaskId)}}
+                onClick={() => { onDeleteTask(selectedTaskId) }}
                 startIcon={<DeleteOutlineIcon />}
-                style={{
-                  backgroundColor: "#B22222",
-                  color: "white",
-                  width: "150px",
-                }}
+                className={classes.dialogDeleteButton}
               >
                 Hapus
               </Button>
-              </Grid>
-
-              <Grid item>
-                    <Button
-                    onClick={handleCloseDeleteDialog}
-                      startIcon={< CancelIcon/>}
-                      style={{
-                        backgroundColor: "#2196F3",
-                        color: "white",
-                        width: "150px",
-                      }}
-                    >
-                      Batalkan
-                    </Button>
-              </Grid>
             </Grid>
+            <Grid item>
+              <Button
+                onClick={handleCloseDeleteDialog}
+                startIcon={< CancelIcon/>}
+                className={classes.dialogCancelButton}
+              >
+                Batalkan
+              </Button>
             </Grid>
-        </Dialog>
-      )
-    }
+          </Grid>
+        </Grid>
+      </Dialog>
+    )
+  }
 
   return (
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
-        <TaskListToolbar role={user.role} numSelected={selected.length} item={selected} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog}/>
+        <TaskListToolbar role={user.role} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog} />
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
-          >
+          <Table>
             <TaskListHead
-            role={user.role}
+              role={user.role}
               classes={classes}
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
@@ -453,12 +430,8 @@ function NewTaskList(props) {
                   let viewpage = `/new-task/${row._id}`
                   return (
                     <TableRow
-                      hover
-                      // onClick={(event) => handleClick(event, row)}
-                      onClick={() =>window.location.href = viewpage}
-                      // component="a"
-                      // href={viewpage}
-                      role="checkbox"
+                      className={classes.tableRow}
+                      onClick={() => window.location.href = viewpage}
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.classroom}
@@ -499,5 +472,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  {viewTask, deleteTask, viewOneClass}
+  { viewTask, deleteTask, viewOneClass }
 )(NewTaskList);
