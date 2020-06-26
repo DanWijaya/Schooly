@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Dialog, Divider, Grid, IconButton,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
@@ -16,12 +15,13 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CancelIcon from "@material-ui/icons/Cancel";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
-import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../../../actions/UploadActions"
 import { viewOneTask } from "../../../actions/TaskActions"
+import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions"
 import { getOneUser } from "../../../actions/UserActions"
 import moment from "moment";
 import "moment/locale/id";
+import { Link } from "react-router-dom"
 
 const path = require("path");
 
@@ -127,8 +127,9 @@ function ViewTaskTeacher(props) {
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
+  const task_id = props.match.params.id
   React.useEffect(() => {
-    viewOneTask(props.match.params.id)
+    viewOneTask(task_id)
   }, [tasksCollection._id])
   // if(tasksCollection.length === undefined) // it means it is empty
   //   getTaskByUser(user.id)
@@ -375,9 +376,11 @@ function ViewTaskTeacher(props) {
         </Grid>
       </Paper>
       <Grid container direction="column" alignItems="center">
+      <Link to={`/task/${task_id}`}>
         <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "white", color: "#2196F3"}}>
           Sunting Tugas
         </Button>
+      </Link>
         <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "#2196F3", color: "white"}}>
           Lihat Daftar Hasil Pekerjaan Siswa
         </Button>
