@@ -42,12 +42,12 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
   root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
+    // '&:focus': {
+    //   backgroundColor: theme.palette.primary.main,
+    //   '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+    //     color: theme.palette.common.white,
+    //   },
+    // },
     width: "300px"
   },
 }))(MenuItem);
@@ -466,7 +466,7 @@ class EditTask extends Component {
             {console.log("FileLampiran: ", fileLampiran)}
             <OutlinedTextField
               disabled={true}
-              value={fileLampiran && fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
+              value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
               id="file_tugas"
               type="text"
               width="100%"

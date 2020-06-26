@@ -390,7 +390,7 @@ class CreateTask extends Component {
           <Grid item container direction="row" alignItems="center">
           <Grid item xs={11} onClick={this.handleClickMenu}>
             <OutlinedTextField
-              disabled={true}
+              disabled={fileLampiran.length > 0}
               value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
               id="file_tugas"
               type="text"

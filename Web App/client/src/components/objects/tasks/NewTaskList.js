@@ -450,14 +450,11 @@ function NewTaskList(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = `/new-task/${row._id}`
+                  let viewpage = user.role == "Student" ? `/new-task/${row._id}` : `/viewtaskteacher/${row._id}`
                   return (
                     <TableRow
                       hover
-                      // onClick={(event) => handleClick(event, row)}
                       onClick={() =>window.location.href = viewpage}
-                      // component="a"
-                      // href={viewpage}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

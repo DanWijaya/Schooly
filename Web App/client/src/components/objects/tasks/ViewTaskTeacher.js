@@ -15,6 +15,11 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas} from "../../../actions/UploadActions"
+import { viewOneTask } from "../../../actions/TaskActions"
+import { getTaskFilesByUser } from "../../../actions/UploadActions"
+import { getOneUser } from "../../../actions/UserActions"
+import moment from "moment";
+import "moment/locale/id";
 
 const path = require("path");
 
@@ -57,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: "20px",
+  },
+  deadlineWarningText: {
+    color: theme.palette.warning.main
   }
 }));
 
@@ -105,7 +113,7 @@ function WorkFile(props) {
 function ViewTaskTeacher(props) {
   const classes = useStyles();
   const { user } = props.auth;
-  const { uploadTugas, getTaskByUser, tasksCollection, downloadTugas, previewTugas } = props;
+  const { uploadTugas, getTaskByUser, viewOneTask, tasksCollection, downloadTugas, previewTugas } = props;
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -117,7 +125,9 @@ function ViewTaskTeacher(props) {
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
-
+  React.useEffect(() => {
+    viewOneTask(props.match.params.id)
+  }, [tasksCollection._id])
   // if(tasksCollection.length === undefined) // it means it is empty
   //   getTaskByUser(user.id)
 
@@ -326,13 +336,13 @@ function ViewTaskTeacher(props) {
         >
           <Grid item xs={6}>
             <Typography variant="h4" >
-              Task Title
+              {tasksCollection.name}
             </Typography>
             <Typography variant="caption" color="textSecondary">
-              <h6>Subject Name</h6>
+              <h6>{tasksCollection.subject}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Penanggung Jawab:
+              Penanggung Jawab: {user.name}
             </Typography>
           </Grid>
           <Grid item xs={6}
@@ -340,8 +350,8 @@ function ViewTaskTeacher(props) {
             direction="column"
             alignItems="flex-end"
           >
-            <Typography variant="overline" color="textSecondary">
-              Tanggal Kumpul:
+            <Typography variant="overline" className={classes.deadlineWarningText}>
+              Batas waktu kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Nilai Maksimum: 100
@@ -352,9 +362,7 @@ function ViewTaskTeacher(props) {
               Deskripsi Tugas:
             </Typography>
             <Typography variant="paragraph" gutterBottom>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-              unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-              dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+              {tasksCollection.description}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -380,12 +388,17 @@ function ViewTaskTeacher(props) {
 
 ViewTaskTeacher.propTypes = {
    auth: PropTypes.object.isRequired,
+   tasksCollection: PropTypes.object.isRequired,
+   filesCollection: PropTypes.object.isRequired,
+
    uploadTugas: PropTypes.func.isRequired,
    deleteTugas: PropTypes.func.isRequired,
    downloadTugas: PropTypes.func.isRequired,
    previewTugas: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
-   tasksCollection: PropTypes.object.isRequired
+   getOneUser: PropTypes.func.isRequired, // for the person in charge task
+   getTaskFilesByUser: PropTypes.func.isRequired, //get the task files.
+   viewOneTask: PropTypes.func.isRequired
  }
 
 const mapStateToProps = (state) => ({
@@ -394,5 +407,6 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas, previewTugas}
+   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas, 
+    previewTugas, viewOneTask, getTaskFilesByUser, getOneUser}
  ) (ViewTaskTeacher);
