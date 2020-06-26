@@ -17,7 +17,6 @@ import 'date-fns';
 import lokal from "date-fns/locale/id";
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import DescriptionIcon from '@material-ui/icons/Description';
-import DeleteIcon from '@material-ui/icons/Delete';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 const path = require("path");
 
@@ -219,11 +218,11 @@ class CreateTask extends Component {
           }
       }
     }
-    handleLampiranDelete = (e, index) => {
+    handleLampiranDelete = (e, i) => {
       e.preventDefault()
-      console.log("Index is: ", index)
+      console.log("Index is: ", i)
       let temp = Array.from(this.state.fileLampiran);
-      temp.splice(index,1);
+      temp.splice(i,1);
       if(temp.length == 0) // if it is empty.
         this.handleCloseMenu()
 

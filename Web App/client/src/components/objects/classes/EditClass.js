@@ -298,7 +298,7 @@ class EditClass extends Component {
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <FormControl id="bendahara" variant="outlined" color="primary" style={{width: "100%"}}>
-                      <label id="bendahara" className={classes.inputLabel}>bendahara</label>
+                      <label id="bendahara" className={classes.inputLabel}>Bendahara</label>
                       <Select
                         value={bendahara}
                         displayEmpty
