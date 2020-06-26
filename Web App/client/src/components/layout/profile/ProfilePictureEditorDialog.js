@@ -48,14 +48,23 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   uploadButton: {
+    width: "150px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
-    width: "150px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
   },
+  submitPhotoButton: {
+    width: "150px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  }
 }));
 
 function ProfilePictureEditorDialog(props) {
@@ -231,33 +240,15 @@ function ProfilePictureEditorDialog(props) {
                   </Button>
                 </Grid>
                 <Grid item>
-                  {profileImg == null ?
-                    <Button
-                      disabled
-                      type="submit"
-                      startIcon={<CloudUploadIcon />}
-                      style={{
-                        backgroundColor: "#61BD4F",
-                        color: "white",
-                        width: "150px",
-                        opacity: "50%"
-                      }}
-                    >
-                      Simpan
-                    </Button>
-                    :
-                    <Button
-                      type="submit"
-                      startIcon={<CloudUploadIcon />}
-                      style={{
-                        backgroundColor: "#61BD4F",
-                        color: "white",
-                        width: "150px",
-                      }}
-                    >
-                      Simpan
-                    </Button>
-                  }
+                  <Button
+                    disabled={!profileImg}
+                    variant="contained"
+                    type="submit"
+                    startIcon={<CloudUploadIcon />}
+                    className={classes.submitPhotoButton}
+                  >
+                    Simpan
+                  </Button>
                 </Grid>
               </Grid>
             </form>

@@ -396,7 +396,7 @@ function NewTaskList(props) {
                 startIcon={< CancelIcon/>}
                 className={classes.dialogCancelButton}
               >
-                Batalkan
+                Batal
               </Button>
             </Grid>
           </Grid>

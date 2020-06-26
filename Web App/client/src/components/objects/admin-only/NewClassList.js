@@ -353,7 +353,7 @@ function NewClassList(props) {
                 startIcon={< CancelIcon/>}
                 className={classes.dialogCancelButton}
               >
-                Batalkan
+                Batal
               </Button>
             </Grid>
           </Grid>
@@ -366,7 +366,7 @@ function NewClassList(props) {
     return (
       <div className={classes.root}>
         <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
-          <b>Anda tidak mempunyai izin akses halaman ini</b>
+          <b>Anda tidak mempunyai izin akses halaman ini.</b>
         </Typography>
       </div>
     )

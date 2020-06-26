@@ -203,7 +203,7 @@ class CreateClass extends Component {
       return(
         <div className={classes.root}>
           <Typography variant="h5" className={classes.formTitle}>
-            <b>Anda tidak mempunyai izin akses halaman ini</b>
+            <b>Anda tidak mempunyai izin akses halaman ini.</b>
           </Typography>
         </div>
       )

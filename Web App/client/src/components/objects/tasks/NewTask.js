@@ -25,12 +25,33 @@ const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     margin: "auto",
-    maxWidth: "1175px", // before that was 1075px
-  },
-  dialogRoot: {
-    width: "350px",
+    maxWidth: "1200px",
     padding: "10px",
+  },
+  dialogBox: {
+    padding: "15px",
+  },
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
+  dialogCancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
   },
   profilePicture: {
     width: theme.spacing(5),
@@ -50,8 +71,23 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.primary.main,
   },
-  workButton: {
+  selectFileButton: {
     width: "200px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  submitWorkButton: {
+    width: "200px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
   },
   workResultSection: {
     display: "flex",
@@ -127,14 +163,13 @@ function WorkFile(props) {
           <CloudDownloadIcon />
         </IconButton>
       </ListItemIcon>
-      <ListItemSecondaryAction>
+      <ListItemIcon>
         <IconButton className={classes.iconButton}
-          // onClick={() => {props.onDeleteTugas(props.file_id)}}
           onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
           <DeleteIcon />
         </IconButton>
-      </ListItemSecondaryAction>
+      </ListItemIcon>
     </ListItem>
   )
 }
@@ -282,18 +317,17 @@ function NewTask(props) {
             file_name={filesCollection.files[i].filename}
             file_id={filesCollection.files[i].id}
             file_type={fileType(filesCollection.files[i].filename)}
-        />
+          />
         )
       }
-
-    if(temp.length !== tasksContents.length){
+    if(temp.length !== tasksContents.length) {
       console.log("tasks added")
       setTaskContents(temp);
     }
     return tasksContents
   }
 
-  // ini untuk pas upload punya, munculin filenamenya sblm disubmit worknya
+  //For upload, showing file names before submitting
   const listFileChosen = () => {
     let temp = []
     if(!fileTugas) {
@@ -304,7 +338,7 @@ function NewTask(props) {
       )
     }
     else {
-      for (var i = 0; i < fileTugas.length; i++){
+      for (var i = 0; i < fileTugas.length; i++) {
         temp.push(
           <Typography className={classes.workChosenFile}>
             {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
@@ -329,12 +363,6 @@ function NewTask(props) {
   const handleTugasUpload = (e) => {
     const files = e.target.files;
     setFileTugas(files)
-
-    // if (files) {
-    //   const reader = new FileReader();
-    //   const { current } = uploadedTugas;
-    //   current.file = files;
-    // }
     console.log(fileTugas)
   }
 
@@ -342,7 +370,7 @@ function NewTask(props) {
     console.log("Submit tugas")
     e.preventDefault();
     let formData = new FormData()
-    for (var i = 0; i < fileTugas.length; i++){
+    for (var i = 0; i < fileTugas.length; i++) {
       formData.append("tugas", fileTugas[i])
     }
     console.log(formData, fileTugas)
@@ -355,6 +383,7 @@ function NewTask(props) {
     deleteTugas(id, user)
     setFileTugas(null)
   }
+
   const onDownloadFile = (id, fileCategory="none") => {
     if(fileCategory == "tugas")
       downloadTugas(id)
@@ -391,18 +420,11 @@ function NewTask(props) {
         onClose={handleCloseDeleteDialog}
         className={classes.root}
       >
-        <Grid container justify="center" className={classes.dialogRoot}>
-          <Grid item
-            container
-            justify="flex-end"
-            alignItems="flex-start"
-            style={{marginBottom: "10px"}}
-          >
+        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+          <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              disableRipple
               onClick={handleCloseDeleteDialog}
-              className={classes.iconButtonClose}
             >
               <CloseIcon />
             </IconButton>
@@ -429,11 +451,7 @@ function NewTask(props) {
               <Button
                 onClick={() => { onDeleteTugas(selectedFileId)}}
                 startIcon={<DeleteOutlineIcon />}
-                style={{
-                  backgroundColor: "#B22222",
-                  color: "white",
-                  width: "150px",
-                }}
+                className={classes.dialogDeleteButton}
               >
                 Hapus
               </Button>
@@ -442,13 +460,9 @@ function NewTask(props) {
               <Button
                 onClick={handleCloseDeleteDialog}
                 startIcon={< CancelIcon/>}
-                style={{
-                  backgroundColor: "#2196F3",
-                  color: "white",
-                  width: "150px",
-                }}
+                className={classes.dialogCancelButton}
               >
-                Batalkan
+                Batal
               </Button>
             </Grid>
           </Grid>
@@ -463,49 +477,43 @@ function NewTask(props) {
       <Grid container
         spacing={2}
         justify="space-between"
-        alignItems="flex-start"
+        alignItems="stretch"
         style={{marginBottom: "30px"}}
       >
-        <Paper className={classes.paperBox}>
-          <Grid item
-            container
-            spacing={2}
-            style={{width: "750px"}}
-          >
-            <Grid item xs={6}>
-              <Typography variant="h4" >
-                {tasksCollection.name}
-              </Typography>
-              <Typography variant="caption" color="textSecondary">
-                <h6>{tasksCollection.subject}</h6>
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Penanggung Jawab: <b>{selectedUser.name}</b>
-              </Typography>
+        <Grid item xs={12} md={8}>
+          <Paper className={classes.paperBox}>
+            <Grid container style={{marginBottom: "30px"}}>
+              <Grid item xs={6}>
+                <Typography variant="h4" >
+                  {tasksCollection.name}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  <h6>Mata Pelajaran: {tasksCollection.subject}</h6>
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Penanggung Jawab: <b>{selectedUser.name}</b>
+                </Typography>
+              </Grid>
+              <Grid item xs={6} container direction="column" alignItems="flex-end">
+                <Typography variant="overline" color="textSecondary">
+                  Tanggal Kumpul:
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Nilai Maksimum: 100
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={6}
-              container
-              direction="column"
-              alignItems="flex-end"
-            >
-              <Typography variant="overline" color="textSecondary">
-                Tanggal Kumpul:
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Nilai Maksimum: 100
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>
+            <div style={{marginBottom: "30px"}}>
+              <Typography color="primary" gutterBottom>
                 Deskripsi Tugas:
               </Typography>
-              <Typography variant="paragraph" gutterBottom>
+              <Typography variant="paragraph">
                 {tasksCollection.description}
               </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>
-                Berkas yang terlampir:
+            </div>
+            <div>
+              <Typography color="primary" gutterBottom>
+                Berkas Lampiran:
               </Typography>
               <Grid container spacing={1}>
                 {!tasksCollection.lampiran ? null :
@@ -519,16 +527,11 @@ function NewTask(props) {
                     />
                 ))}
               </Grid>
-            </Grid>
-          </Grid>
-        </Paper>
-        <Paper className={classes.paperBox}>
-          <Grid item
-            container
-            direction="column"
-            justify="space-evenly"
-            style={{width: "350px"}}
-          >
+            </div>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Paper className={classes.paperBox}>
             <Grid item>
               <div className={classes.workResultSection}>
                 <Typography variant="h5">
@@ -573,8 +576,7 @@ function NewTask(props) {
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
-                  className={classes.workButton}
-                  style={{color: "#2196F3", backgroundColor: "white"}}
+                  className={classes.selectFileButton}
                   onClick={() => {tugasUploader.current.click()}}
                 >
                   Pilih File
@@ -584,10 +586,9 @@ function NewTask(props) {
                 <Button
                   variant="contained"
                   startIcon={<PublishIcon />}
-                  className={classes.workButton}
-                  style={{color: "white", backgroundColor: "#2196F3"}}
+                  className={classes.submitWorkButton}
                   type="submit"
-                  disabled={fileTugas == null}
+                  disabled={fileTugas === null}
                 >
                   Kumpul Tugas
                 </Button>
@@ -599,8 +600,8 @@ function NewTask(props) {
               </Grid>
               </form>
             </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </Grid>
       </Grid>
 
       <Grid container direction="column" alignItems="center">
@@ -620,15 +621,14 @@ NewTask.propTypes = {
    auth: PropTypes.object.isRequired,
    tasksCollection: PropTypes.object.isRequired,
    filesCollection: PropTypes.object.isRequired,
-
    uploadTugas: PropTypes.func.isRequired,
    deleteTugas: PropTypes.func.isRequired,
    downloadTugas: PropTypes.func.isRequired,
    previewTugas: PropTypes.func.isRequired,
-   updateUserData: PropTypes.func.isRequired, // when you upload files, then update the user data.
+   updateUserData: PropTypes.func.isRequired, //When you upload files, then update the user data.
    viewOneTask: PropTypes.func.isRequired,
-   getTaskFilesByUser: PropTypes.func.isRequired, //get the task files.
-   getOneUser: PropTypes.func.isRequired, // for the person in charge task
+   getTaskFilesByUser: PropTypes.func.isRequired, //Get the task files.
+   getOneUser: PropTypes.func.isRequired, //For the person in charge task
    previewLampiran: PropTypes.func.isRequired,
    downloadLampiran: PropTypes.func.isRequired
  }
@@ -640,7 +640,7 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas,
+   mapStateToProps, { uploadTugas, deleteTugas, downloadTugas,
      previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
-     previewLampiran, viewOneTask}
+     previewLampiran, viewOneTask }
  ) (NewTask);
