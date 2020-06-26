@@ -155,7 +155,7 @@ class App extends Component {
                     <PrivateRoute exact path="/viewsubject/:subject_name" component={ViewSubject} />
                     {/* Route Task  */}
                     <PrivateRoute exact path="/createtask" component={CreateTask} />
-                    <PrivateRoute exact path="/viewtaskteacher" component={ViewTaskTeacher} />
+                    <PrivateRoute exact path="/viewtaskteacher/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact path="/viewtasklistteacher" component={ViewTaskListTeacher} />
                     <PrivateRoute exact path="/task/:id" component={EditTask} />
                     <PrivateRoute exact path="/new-task/:id" component={NewTask} />

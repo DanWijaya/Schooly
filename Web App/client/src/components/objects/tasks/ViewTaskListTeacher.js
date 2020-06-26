@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { viewOneClass } from "../../../actions/ClassActions"
+import { viewOneTask } from "../../../actions/TaskActions"
+import { getTaskFilesByUser } from "../../../actions/UploadActions"
 import { getStudentsByClass } from "../../../actions/UserActions"
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
    List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
@@ -112,8 +114,14 @@ function PersonListItem(props) {
 
 function ViewTaskListTeacher(props) {
   const classes = useStyles();
-  const { viewOneClass, classesCollection, getStudentsByClass} = props;
+  const { viewOneClass, tasksCollection, classesCollection, getStudentsByClass} = props;
   const {all_students} = props.auth;
+  const {id} = props.match.params;
+
+  React.useEffect(() => {
+    viewOneTask(id)
+  })
+  console.log(tasksCollection)
 
   console.log(all_students)
   const [value, setValue] = React.useState(0);
@@ -175,16 +183,22 @@ function ViewTaskListTeacher(props) {
 ViewTaskListTeacher.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getStudentsByClass: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+
   viewOneClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  getStudentsByClass: PropTypes.func.isRequired,
+  getTaskFilesByUser:PropTypes.func.isRequired,
+  viewOneTask: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  getStudentsByClass: PropTypes.func.isRequired,
+  tasksCollection: state.tasksCollection,
   classesCollection: state.classesCollection
 });
 
 export default connect(
-  mapStateToProps, {viewOneClass, getStudentsByClass}
+  mapStateToProps, {viewOneClass, getStudentsByClass, 
+    getTaskFilesByUser, viewOneTask}
 ) (ViewTaskListTeacher);
