@@ -1,27 +1,29 @@
 import React from "react";
+import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Avatar, Button, Dialog, Divider, Grid, IconButton,
-   List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
-   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
-import MuiAlert from "@material-ui/lab/Alert";
-import AddIcon from "@material-ui/icons/Add";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import CancelIcon from "@material-ui/icons/Cancel";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import PublishIcon from "@material-ui/icons/Publish";
-import { viewOneTask } from "../../../actions/TaskActions"
-import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../actions/UploadActions";
-import { getTaskFilesByUser } from "../../../actions/UploadActions"
-import { getOneUser } from "../../../actions/UserActions"
 import moment from "moment";
 import "moment/locale/id";
-import { Link } from "react-router-dom"
+import { viewOneTask } from "../../../actions/TaskActions";
+import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../actions/UploadActions";
+import { getTaskFilesByUser } from "../../../actions/UploadActions";
+import { getOneUser } from "../../../actions/UserActions";
+import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Button, Dialog, Divider, Fab, Grid, IconButton,
+   List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
+   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CloseIcon from "@material-ui/icons/Close";
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import EditIcon from "@material-ui/icons/Edit";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import PublishIcon from "@material-ui/icons/Publish";
 
 const path = require("path");
 
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    padding: "10px",
   },
   dialogRoot: {
     width: "350px",
@@ -43,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBox: {
     padding: "20px",
-    marginBottom: "40px"
+    marginBottom: "10px"
   },
   workBox: {
     margin: "auto",
@@ -67,7 +70,31 @@ const useStyles = makeStyles((theme) => ({
   },
   deadlineWarningText: {
     color: theme.palette.warning.main
-  }
+  },
+  seeAllTaskButton: {
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: "#61BD4F",
+    },
+  },
+  editTaskButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  deleteTaskButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
 }));
 
 function Alert(props) {
@@ -99,15 +126,13 @@ function WorkFile(props) {
           <CloudDownloadIcon />
         </IconButton>
       </ListItemIcon>
-
-      <ListItemSecondaryAction>
+      <ListItemIcon>
         <IconButton className={classes.iconButton}
-          // onClick={() => {props.onDeleteTugas(props.file_id)}}
           onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
           <DeleteIcon />
         </IconButton>
-      </ListItemSecondaryAction>
+      </ListItemIcon>
     </ListItem>
   )
 }
@@ -131,8 +156,6 @@ function ViewTaskTeacher(props) {
   React.useEffect(() => {
     viewOneTask(task_id)
   }, [tasksCollection._id])
-  // if(tasksCollection.length === undefined) // it means it is empty
-  //   getTaskByUser(user.id)
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -337,53 +360,63 @@ function ViewTaskTeacher(props) {
           container
           spacing={2}
         >
-          <Grid item xs={6}>
+          <Grid item xs={6} style={{marginBottom: "30px"}}>
             <Typography variant="h4" >
               {tasksCollection.name}
             </Typography>
             <Typography variant="caption" color="textSecondary">
-              <h6>{tasksCollection.subject}</h6>
+              <h6>Mata Pelajaran: {tasksCollection.subject}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Penanggung Jawab: {user.name}
+              Penanggung Jawab: <b>{user.name}</b>
             </Typography>
           </Grid>
-          <Grid item xs={6}
-            container
-            direction="column"
-            alignItems="flex-end"
-          >
+          <Grid item xs={6} container direction="column" alignItems="flex-end">
             <Typography variant="overline" className={classes.deadlineWarningText}>
-              Batas waktu kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
+              Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Nilai Maksimum: 100
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Typography>
+          <Grid item xs={12} style={{marginBottom: "30px"}}>
+            <Typography color="primary" gutterBottom>
               Deskripsi Tugas:
             </Typography>
-            <Typography variant="paragraph" gutterBottom>
+            <Typography>
               {tasksCollection.description}
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography>
-              Berkas yang Terlampir:
+            <Typography color="primary" gutterBottom>
+              Lampiran Berkas:
             </Typography>
           </Grid>
         </Grid>
       </Paper>
-      <Grid container direction="column" alignItems="center">
-      <Link to={`/task/${task_id}`}>
-        <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "white", color: "#2196F3"}}>
-          Sunting Tugas
-        </Button>
-      </Link>
-        <Button startIcon={<AssignmentIcon />} style={{backgroundColor: "#2196F3", color: "white"}}>
-          Lihat Daftar Hasil Pekerjaan Siswa
-        </Button>
+      <Grid container spacing={2} justify="flex-end" alignItems="center">
+        <Grid item>
+          <Fab variant="extended" className={classes.seeAllTaskButton}>
+            <AssignmentIcon style={{marginRight: "10px"}} />
+            Lihat Hasil Pekerjaan
+          </Fab>
+        </Grid>
+        <Grid item>
+          <Link to={`/task/${task_id}`}>
+            <LightToolTip title="Sunting Tugas" placement="bottom">
+              <Fab className={classes.editTaskButton}>
+                <EditIcon />
+              </Fab>
+            </LightToolTip>
+          </Link>
+        </Grid>
+        <Grid item>
+          <LightToolTip title="Sunting Tugas" placement="bottom">
+            <Fab className={classes.deleteTaskButton}>
+              <DeleteIcon />
+            </Fab>
+          </LightToolTip>
+        </Grid>
       </Grid>
     </div>
   )
@@ -410,6 +443,6 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas, 
+   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas,
     previewTugas, viewOneTask, getTaskFilesByUser, getOneUser}
  ) (ViewTaskTeacher);

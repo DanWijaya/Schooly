@@ -5,9 +5,8 @@ import classnames from "classnames";
 import { getTeachers , getStudents} from "../../../actions/UserActions";
 import { viewOneClass, updateClass } from "../../../actions/ClassActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography, Menu } from "@material-ui/core";
+import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { Multiselect } from "multiselect-react-dropdown";
 
 const styles = (theme) => ({
   root: {

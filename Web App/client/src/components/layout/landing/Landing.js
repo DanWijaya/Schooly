@@ -6,12 +6,9 @@ import schoolyAccess from "./SchoolyAccess.png";
 import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import ContactlessIcon from "@material-ui/icons/Contactless";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
-import DescriptionIcon from "@material-ui/icons/Description";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import ForumIcon from "@material-ui/icons/Forum";
 import PeopleIcon from "@material-ui/icons/People";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import PropTypes from "prop-types";
@@ -117,11 +114,6 @@ const styles = (theme) => ({
 });
 
 class Landing extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     if(this.props.auth.isAuthenticated){
       this.props.handleMarginTopValue(20)
@@ -132,11 +124,11 @@ class Landing extends Component {
 
   copyToClipboard(text) {
     var dummy = document.createElement("textarea");
-    // to avoid breaking orgain page when copying more words
-    // cant copy when adding below this code
-    // dummy.style.display = 'none'
+    //To avoid breaking orgain page when copying more words
+    //Cant copy when adding below this code
+    //Dummy.style.display = 'none'
     document.body.appendChild(dummy);
-    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea".
     dummy.value = text;
     dummy.select();
     document.execCommand("copy");

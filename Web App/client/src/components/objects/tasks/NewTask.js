@@ -507,13 +507,13 @@ function NewTask(props) {
               <Typography color="primary" gutterBottom>
                 Deskripsi Tugas:
               </Typography>
-              <Typography variant="paragraph">
+              <Typography>
                 {tasksCollection.description}
               </Typography>
             </div>
             <div>
               <Typography color="primary" gutterBottom>
-                Berkas Lampiran:
+                Lampiran Berkas:
               </Typography>
               <Grid container spacing={1}>
                 {!tasksCollection.lampiran ? null :
