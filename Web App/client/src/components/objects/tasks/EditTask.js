@@ -263,7 +263,7 @@ class EditTask extends Component {
   }
 
   handleClickMenu = (event) => {
-    if(!Boolean(this.state.anchorEl))
+    if(!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
       this.setState({ anchorEl: event.currentTarget})
   }
 

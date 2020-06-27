@@ -14,14 +14,14 @@ Botak:
 19. Delete tester di akhir
 20. Hapus tombol daftar di navbar
 21. Copy Link (https://coderrocketfuel.com/article/how-to-copy-text-to-the-clipboard-in-react-js)
-23. Snackbar error pas register
-24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
 25. file icon
 26. nama sekolah di profil, ganti isi data dengan button merah
 27. anda tidak punya akses halaman ini
 28. viewsubject iconnya masih error, hias lagi, viewclass more buttonnya hias
 
 Daniel:
+24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
+23. Snackbar error pas register
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
 3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 4. Notifications page dan listnya (previewnya muncul di Dashboard)
@@ -32,14 +32,19 @@ Daniel:
 14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. (DONE)
 15. Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
 16. Do auto complete field untuk subject punya
-17. Buat class pagenya munculin tasks, students, dll.
+17. Buat class pagenya munculin tasks, students, dll. (done)
 18. Masih perlu perbaiki viewTask untuk si student (tablenya agak aneh)
-19. Untuk pas udah kelogin, pas buka login pagenya dia ndak immediately ke Dashboard lol.
+19. Untuk pas udah kelogin, pas buka login pagenya dia ndak immediately ke Dashboard lol. (fixed already)
+20. Have to handle if the user not uploading an image, it gives error message.
+21. Handle this stupid warning (not so urgent)
+    (node:3857) DeprecationWarning: GridStore is deprecated, and will be removed in a future version. Please use GridFSBucket instead
+    (node:3857) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
+    (node:3857) DeprecationWarning: collection.remove is deprecated. Use deleteOne, deleteMany, or bulkWrite instead.
 
 Penting untuk diimplemen:
-1. Guru bisa pasang attachment di TaskObjectnya -> Dan studentnya bisa download dan preview attachments itu.
+1. (UDAH SELESAI) Guru bisa pasang attachment di TaskObjectnya -> Dan studentnya bisa download dan preview attachments itu. (Udah selesai)
 2. Buat Notification functionality (Schema Notif dan explore cara handlenya?)
-3. Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
+3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
 
 Error:
 1. classlist pas klik ke satu class terus back error buat tekan button lain

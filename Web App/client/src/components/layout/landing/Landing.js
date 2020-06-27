@@ -156,7 +156,7 @@ class Landing extends Component {
               </Typography>
               <Typography variant="h6">
                Berikan pekerjaan sekolah dengan mudah. Rangkum hasil pengecekkan dengan mudah.
-               Tidak pernah lupa dengan tugas persekolahanmu.
+               Tidak pernah lupa dengan tugas sekolahmu.
               </Typography>
             </Grid>
             <Grid item xs={6}>

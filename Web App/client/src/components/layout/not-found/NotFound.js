@@ -61,10 +61,10 @@ function NotFound(props) {
       <div className={classes.notFoundBackground}>
         <div className={classes.notFoundContainer}>
           <Typography variant="h4" className={classes.notFoundText}>
-            <b>ERROR 404</b>
+            <b>404 ERROR</b>
           </Typography>
           <Typography variant="h5" className={classes.notFoundText}>
-            TAUTAN TIDAK DITEMUKAN
+            Maaf, Halaman in tidak ditemukan
           </Typography>
         </div>
       </div>

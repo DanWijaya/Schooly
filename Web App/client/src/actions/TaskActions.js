@@ -110,8 +110,7 @@ export const deleteTask = (taskId, history) => dispatch => {
     .delete("/api/tasks/delete/" + taskId)
     .then((res) => {
         console.log(res.data)
-        window.location.reload()
-        // history.push("/viewtask")
+        window.location.href="/newtasklist"
     })
     .catch(err => {
         console.log(err);

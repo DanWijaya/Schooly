@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { viewOneTask } from "../../../actions/TaskActions";
-import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../actions/UploadActions";
+import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
+import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
@@ -94,62 +94,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-function WorkFile(props) {
+function LampiranFile(props) {
   const classes = useStyles();
-  const {file_type_icon, file_name, file_type, onDownloadTugas, file_id} = props;
-  let displayedName = ""
-
-  file_name.length >= 25 ?
-  displayedName = `${file_name.slice(0,17)}..${path.extname(file_name)}`
-  : displayedName = file_name
-
+  const {file_id, filename, filetype, onDownloadFile, onPreviewFile} = props;
   return (
-    <ListItem button disableRipple onClick={() => {props.onPreviewTugas(file_id)}}>
-      <ListItemAvatar>
-        <Avatar src={file_type_icon} className={classes.profilePicture} />
-      </ListItemAvatar>
-      <ListItemText
-        primary={displayedName}
-        secondary={file_type}
-      />
-      <ListItemIcon>
-        <IconButton className={classes.iconButton}
-          onClick={() => {props.onDownloadTugas(file_id)}}
-         >
-          <CloudDownloadIcon />
-        </IconButton>
-      </ListItemIcon>
-      <ListItemIcon>
-        <IconButton className={classes.iconButton}
-          onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
-         >
-          <DeleteIcon />
-        </IconButton>
-      </ListItemIcon>
-    </ListItem>
+    <Grid item xs={6}>
+      <Paper variant="outlined" className={classes.listItemPaper}>
+        <ListItem button disableRipple className={classes.listItem}
+        onClick={() => {onPreviewFile(file_id, "lampiran")}}>
+          <ListItemAvatar>
+            <Avatar />
+          </ListItemAvatar>
+          <ListItemText
+            primary={filename}
+            secondary={filetype}
+          />
+          <ListItemIcon>
+            <IconButton onClick={(e) => {
+              e.stopPropagation()
+              onDownloadFile(file_id, "lampiran")}}>
+              <CloudDownloadIcon />
+            </IconButton>
+          </ListItemIcon>
+        </ListItem>
+      </Paper>
+    </Grid>
   )
 }
 
 function ViewTaskTeacher(props) {
   const classes = useStyles();
   const { user } = props.auth;
-  const { uploadTugas, getTaskByUser, viewOneTask, tasksCollection, downloadTugas, previewTugas } = props;
-
-  const tugasUploader = React.useRef(null);
-  const uploadedTugas = React.useRef(null);
-  const [open, setOpen] = React.useState(false);
-  const [fileTugas, setFileTugas] = React.useState(null);
-  const [tasksContents, setTaskContents] = React.useState([]);
-
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedFileName, setSelectedFileName] = React.useState(null);
-  const [selectedFileId, setSelectedFileId] = React.useState(null);
-
+  const {deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask } = props;
   const task_id = props.match.params.id
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+
   React.useEffect(() => {
     viewOneTask(task_id)
   }, [tasksCollection._id])
@@ -177,99 +156,28 @@ function ViewTaskTeacher(props) {
     }
   }
 
-  const listWorkFile = () => {
-    let temp = []
-    if(tasksCollection.length !== undefined) {
-      for (let i = 0 ; i < tasksCollection.length; i++) {
-        temp.push(
-          <WorkFile
-            handleOpenDeleteDialog = {handleOpenDeleteDialog}
-            onDownloadTugas = {onDownloadTugas}
-            onPreviewTugas = {onPreviewTugas}
-            file_type_icon={0}
-            file_name={tasksCollection[i].filename}
-            file_id={tasksCollection[i].id}
-            file_type={fileType(tasksCollection[i].filename)}
-        />
-        )
-      }
-    }
-    if(temp.length !== tasksContents.length){
-      console.log("tasks added")
-      setTaskContents(temp);
-    }
-    return tasksContents
+  const onDownloadFile = (id, fileCategory="none") => {
+    if(fileCategory === "lampiran")
+      downloadLampiran(id)
+    else
+      console.log("File Category is not specified")
   }
 
-  const listFileChosen = () => {
-    let temp = []
-    if(!fileTugas) {
-      temp.push(
-        <Typography className={classes.workChosenFile}>
-          Kosong
-        </Typography>
-      )
-    }
-    else {
-      for (var i = 0; i < fileTugas.length; i++){
-        temp.push(
-          <Typography className={classes.workChosenFile}>
-            {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
-          </Typography>
-        )
-      }
-    }
-    return temp
+  const onPreviewFile = (id, fileCategory="none") => {
+   if(fileCategory === "lampiran")
+      previewLampiran(id)
+    else
+      console.log("File Category is not specified")
   }
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
-
-  const handleTugasUpload = (e) => {
-    const files = e.target.files;
-    setFileTugas(files)
-
-    if (files) {
-      const reader = new FileReader();
-      const { current } = uploadedTugas;
-      current.file = files;
-    }
-    console.log(fileTugas)
+  const onDeleteTask = (id) => {
+    deleteTask(id)
+    // setFileTugas(null)
   }
-
-  const onSubmitTugas = (e) => {
-    console.log("Submit tugas")
-    e.preventDefault();
-    let formData = new FormData()
-    for (var i = 0; i < fileTugas.length; i++){
-      formData.append("tugas", fileTugas[i])
-    }
-    uploadTugas(formData, user)
-    // getTaskByUser(user.id)
-    setFileTugas(null)
-    handleClick()
-  }
-
-  const onDeleteTugas = (id) => {
-    deleteTugas(id, user)
-    setFileTugas(null)
-  }
-  const onDownloadTugas = (id) => {downloadTugas(id)}
-  const onPreviewTugas = (id) => {previewTugas(id)}
 
   //Delete Dialog box
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true);
-    setSelectedFileId(fileid)
-    setSelectedFileName(filename)
   };
 
   const handleCloseDeleteDialog = () => {
@@ -301,12 +209,12 @@ function ViewTaskTeacher(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Hapus file berikut?
+              Hapus tugas berikut?
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px", textAlign:"center"}}>
             <Typography variant="h6" gutterBottom>
-              <b>{selectedFileName}</b>
+              <b>{tasksCollection.name}</b>
             </Typography>
           </Grid>
           <Grid
@@ -319,7 +227,7 @@ function ViewTaskTeacher(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteTugas(selectedFileId)}}
+                onClick={() => { onDeleteTask(task_id)}}
                 startIcon={<DeleteOutlineIcon />}
                 style={{
                   backgroundColor: "#B22222",
@@ -388,15 +296,29 @@ function ViewTaskTeacher(props) {
             <Typography color="primary" gutterBottom>
               Lampiran Berkas:
             </Typography>
+            <Grid container spacing={1}>
+            {!tasksCollection.lampiran ? null :
+              tasksCollection.lampiran.map((lampiran) => (
+                <LampiranFile
+                  file_id={lampiran.id}
+                  onPreviewFile ={onPreviewFile}
+                  onDownloadFile ={onDownloadFile}
+                  filename={lampiran.filename}
+                  filetype={fileType(lampiran.filename)}
+                  />
+              ))}
+            </Grid>
           </Grid>
         </Grid>
       </Paper>
       <Grid container spacing={2} justify="flex-end" alignItems="center">
         <Grid item>
-          <Fab variant="extended" className={classes.seeAllTaskButton}>
-            <AssignmentIcon style={{marginRight: "10px"}} />
-            Lihat Hasil Pekerjaan
-          </Fab>
+          <Link to={`/viewtasklistteacher/${task_id}`}>
+            <Fab variant="extended" className={classes.seeAllTaskButton}>
+              <AssignmentIcon style={{marginRight: "10px"}} />
+              Lihat Hasil Pekerjaan
+            </Fab>
+          </Link>
         </Grid>
         <Grid item>
           <Link to={`/task/${task_id}`}>
@@ -408,8 +330,8 @@ function ViewTaskTeacher(props) {
           </Link>
         </Grid>
         <Grid item>
-          <LightToolTip title="Sunting Tugas" placement="bottom">
-            <Fab className={classes.deleteTaskButton}>
+          <LightToolTip title="Buang Tugas" placement="bottom">
+            <Fab className={classes.deleteTaskButton} onClick={(e) => handleOpenDeleteDialog(e,task_id)}>
               <DeleteIcon />
             </Fab>
           </LightToolTip>
@@ -424,10 +346,9 @@ ViewTaskTeacher.propTypes = {
    tasksCollection: PropTypes.object.isRequired,
    filesCollection: PropTypes.object.isRequired,
 
-   uploadTugas: PropTypes.func.isRequired,
-   deleteTugas: PropTypes.func.isRequired,
-   downloadTugas: PropTypes.func.isRequired,
-   previewTugas: PropTypes.func.isRequired,
+   downloadLampiran: PropTypes.func.isRequired,
+   previewLampiran: PropTypes.func.isRequired,
+   deleteTask: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
    getOneUser: PropTypes.func.isRequired, // for the person in charge task
    getTaskFilesByUser: PropTypes.func.isRequired, //get the task files.
@@ -440,6 +361,6 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, deleteTugas, downloadTugas,
-    previewTugas, viewOneTask, getTaskFilesByUser, getOneUser}
+   mapStateToProps, {uploadTugas, deleteTask, downloadLampiran,
+    previewLampiran, viewOneTask, getTaskFilesByUser, getOneUser}
  ) (ViewTaskTeacher);

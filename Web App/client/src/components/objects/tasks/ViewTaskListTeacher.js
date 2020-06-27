@@ -109,26 +109,36 @@ function WorkListItem(props) {
 
 function ViewTaskListTeacher(props) {
   const classes = useStyles();
-  const { viewOneClass, tasksCollection, classesCollection, getStudentsByClass} = props;
+  const { viewOneClass, viewOneTask, tasksCollection, classesCollection, getStudentsByClass} = props;
   const {all_students} = props.auth;
-  const {id} = props.match.params;
+  const task_id = props.match.params.id;
 
   React.useEffect(() => {
-    viewOneTask(id)
-  })
-  console.log(tasksCollection)
+    viewOneTask(task_id)
+    console.log(tasksCollection)
+  }, [tasksCollection._id])
 
-  console.log(all_students)
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const listClassAssigned = () => {
+    let class_assigned = []
+    if(!tasksCollection.class_assigned){
+      return null;
+    }else {
+      for (var i = 0; i < tasksCollection.class_assigned.length; i++){
+        class_assigned.push(<Tab label={tasksCollection.class_assigned[i].name} {...TabIndex(i)}/>)
+      }
+      return class_assigned;
+    }
+  }
   return (
     <div className={classes.root}>
       <Paper>
-        <Typography variant="h3" style={{textAlign: "center"}} gutterBottom>
-          Tugas X
+        <Typography variant="h4" style={{textAlign: "center"}} gutterBottom>
+          Tugas <b>{tasksCollection.name}</b>
         </Typography>
         <Tabs
           value={value}
@@ -137,9 +147,10 @@ function ViewTaskListTeacher(props) {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="Kelas 1" {...TabIndex(0)} />
+          {listClassAssigned()}
+          {/* <Tab label="Kelas 1" {...TabIndex(0)} />
           <Tab label="Kelas 2" {...TabIndex(1)} />
-          <Tab label="Kelas 3" {...TabIndex(2)} />
+          <Tab label="Kelas 3" {...TabIndex(2)} /> */}
         </Tabs>
       </Paper>
       <TabPanel value={value} index={0}>

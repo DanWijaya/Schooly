@@ -80,40 +80,44 @@ const uploadLampiran = multer({ storage: lampiran_storage});
 //Uploading for Avatar
 router.get("/image-upload", (req,res) => {
     console.log("AA")
-    gfsAvatar.files.find().toArray((err, files) => {
-      // Check if files
-      if (!files || files.length === 0) {
-        res.render("image-upload", {files: false})
-      } else {
-        files.map(file => {
-          if(file.contentType === "image/jpeg" || file.contentType === "image/png" || file.contentType === "image/jpg")
-          {
-            file.isImage = true;
-          } else {
-            file.isImage = false;
-          }
-        });
-        res.render("image-upload", {files: files})
-      }
+    if(Boolean(gfsAvatar)){
+      gfsAvatar.files.find().toArray((err, files) => {
+        // Check if files
+        if (!files || files.length === 0) {
+          res.render("image-upload", {files: false})
+        } else {
+          files.map(file => {
+            if(file.contentType === "image/jpeg" || file.contentType === "image/png" || file.contentType === "image/jpg")
+            {
+              file.isImage = true;
+            } else {
+              file.isImage = false;
+            }
+          });
+          res.render("image-upload", {files: files})
+        }
 
-      // Files exist
-      return res.json(files);
-    });
+        // Files exist
+        return res.json(files);
+      });
+    }
   })
   // @route GET /files
   // @desc Display all files in JSON
   router.get("/files/", (req, res) => {
-    gfsAvatar.files.find().toArray((err, files) => {
-      // Check if files
-      if (!files || files.length === 0) {
-        return res.status(404).json({
-          err: "No files exist"
-        });
-      }
+    if(Boolean(gfsAvatar)){
+      gfsAvatar.files.find().toArray((err, files) => {
+        // Check if files
+        if (!files || files.length === 0) {
+          return res.status(404).json({
+            err: "No files exist"
+          });
+        }
 
-      // Files exist
-      return res.json(files);
-    });
+        // Files exist
+        return res.json(files);
+      });
+    }
   });
 
   // @route POST /upload
@@ -140,37 +144,41 @@ router.get("/image-upload", (req,res) => {
   }); */
 
   router.get("/image/:filename", (req, res) => {
-    gfsAvatar.files.findOne({ filename: req.params.filename }, (err, file) => {
-      // Check if file
-      if (!file || file.length === 0) {
-        return res.status(404).json({
-          err: "No file exists"
-        });
-      }
-      // Check if Image
-      if (file.contentType === "image/jpeg" || file.contentType === "image/png" || file.contentType === "image/jpg") {
-        // Show outputnya di browser kita
+    if(Boolean(gfsAvatar)){
+      gfsAvatar.files.findOne({ filename: req.params.filename }, (err, file) => {
+        // Check if file
+        if (!file || file.length === 0) {
+          return res.status(404).json({
+            err: "No file exists"
+          });
+        }
+        // Check if Image
+        if (file.contentType === "image/jpeg" || file.contentType === "image/png" || file.contentType === "image/jpg") {
+          // Show outputnya di browser kita
 
-        const readStream = gfsAvatar.createReadStream(file.filename);
-        readStream.pipe(res)
-      } else {
-        res.status(404).json({
-          err: "Not an image"
-        });
-      }
-    });
+          const readStream = gfsAvatar.createReadStream(file.filename);
+          readStream.pipe(res)
+        } else {
+          res.status(404).json({
+            err: "Not an image"
+          });
+        }
+      });
+    }
   });
 
   router.delete("/image/:name", (req,res) => {
-    gfsAvatar.remove({ filename: req.params.name, root: "avatar" }, (err, gridStore) => {
-      if (err) {
-        return res.status(404).json({ err: err });
-      }
-      else{
-       return res.json("Successful")
-      }
-  
-    });
+    if(Boolean(gfsAvatar)){
+      gfsAvatar.remove({ filename: req.params.name, root: "avatar" }, (err, gridStore) => {
+        if (err) {
+          return res.status(404).json({ err: err });
+        }
+        else{
+        return res.json("Successful")
+        }
+    
+      });
+    }
   })
 
 // --------------------------------- Tugas uploads ------------------------------------ //
@@ -208,58 +216,64 @@ router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (re
 
 router.get("/tugas/:id", (req,res) => {
   let id = new mongoose.mongo.ObjectId(req.params.id)
-  gfsTugas.files.findOne({_id: id}, (err, file) => {
-    // Check if files
-    if (!file || file.length === 0) {
-      return res.status(404).json({
-        err: "Tugas tidak ada"
-      });
-    }
-    var type = file.contentType;
-    var filename = file.filename;
-    res.set("Content-Type", type);
-    res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
+  if(Boolean(gfsTugas)){
+    gfsTugas.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
 
-    // Files exist
-    const readStream = gfsTugas.createReadStream(filename);
-    readStream.pipe(res)
+      // Files exist
+      const readStream = gfsTugas.createReadStream(filename);
+      readStream.pipe(res)
 
-  });
-  });
+    });
+  }
+});
 
 router.get("/previewtugas/:id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.id)
-  gfsTugas.files.findOne({_id: id}, (err, file) => {
-    // Check if files
-    if (!file || file.length === 0) {
-      return res.status(404).json({
-        err: "Tugas tidak ada"
-      });
-    }
-    var type = file.contentType;
-    var filename = file.filename;
-    res.set("Content-Type", type);
-    res.set("Content-Disposition", "inline;filename=" + filename)
+  if(Boolean(gfsTugas)){
+    gfsTugas.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "inline;filename=" + filename)
 
-    // Files exist
-    const readStream = gfsTugas.createReadStream(filename);
-    readStream.pipe(res)
+      // Files exist
+      const readStream = gfsTugas.createReadStream(filename);
+      readStream.pipe(res)
 
-});
+    });
+  }
 })
 
 router.get("/filetugas", (req, res) => {
-  gfsTugas.files.find().toArray((err, files) => {
-    // Check if files
-    if (!files || files.length === 0) {
-      return res.status(404).json({
-        err: "Tugas belum ada"
-      });
-    }
+  if(Boolean(gfsTugas)){
+    gfsTugas.files.find().toArray((err, files) => {
+      // Check if files
+      if (!files || files.length === 0) {
+        return res.status(404).json({
+          err: "Tugas belum ada"
+        });
+      }
 
-    // Files exist
-    return res.json(files);
-  });
+      // Files exist
+      return res.json(files);
+    });
+  }
 });
 
 router.delete("/tugas/:userid/:tugasid/", (req,res) => {
@@ -342,54 +356,53 @@ router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (r
 
 router.get("/lampiran/:task_id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.task_id)
-  gfsLampiran.files.findOne({_id: id}, (err, file) => {
-    // Check if files
-    if (!file || file.length === 0) {
-      return res.status(404).json({
-        err: "Tugas tidak ada"
-      });
-    }
-    var type = file.contentType;
-    var filename = file.filename;
-    res.set("Content-Type", type);
-    res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
+  if(Boolean(gfsLampiran)){
+    gfsLampiran.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
 
-    // Files exist
-    const readStream = gfsLampiran.createReadStream(filename);
-    readStream.pipe(res)
-  })
+      // Files exist
+      const readStream = gfsLampiran.createReadStream(filename);
+      readStream.pipe(res)
+    })
+  }
 })
 
 router.get("/previewlampiran/:task_id", (req,res) => {
   console.log("Previewing lampiran")
   id = new mongoose.mongo.ObjectId(req.params.task_id)
-  gfsLampiran.files.findOne({_id: id}, (err, file) => {
-    // Check if files
-    if (!file || file.length === 0) {
-      return res.status(404).json({
-        err: "Tugas tidak ada"
-      });
-    }
-    var type = file.contentType;
-    var filename = file.filename;
-    res.set("Content-Type", type);
-    res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
+  if(Boolean(gfsLampiran)){
+    gfsLampiran.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
 
-    // Files exist
-    const readStream = gfsLampiran.createReadStream(filename);
-    readStream.pipe(res)
-  })
+      // Files exist
+      const readStream = gfsLampiran.createReadStream(filename);
+      readStream.pipe(res)
+    })
+  }
 })
 
 router.delete("/lampiran/:task_id", (req,res) => {
   let task_id = req.params.task_id;
-  // console.log("lampirannya to delete: ", req.body.lampiranToDelete)
-  // console.log("current_lampiran", req.body.current_lampiran)
   const {lampiran_to_delete, current_lampiran} = req.body;
-  console.log("Current Lampiran nya ini:", current_lampiran)
-  console.log("Lampiran to deletenya: ", lampiran_to_delete)
   for(var i = 0; i < lampiran_to_delete.length; i++){
-    console.log("Ready to delete lampiran")
     lampiran_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // di rootnya, masukkin collection namenya.. 
     gfsLampiran.remove({ _id: lampiran_id, root: "lampiran"}, (err) => {

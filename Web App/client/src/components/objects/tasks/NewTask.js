@@ -18,6 +18,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import DescriptionIcon from '@material-ui/icons/Description';
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
 
@@ -103,6 +104,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
+  fileLainnyaIcon: {
+    color: theme.palette.primary.dark
+  },
 }));
 
 function Alert(props) {
@@ -116,9 +120,11 @@ function LampiranFile(props) {
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem button disableRipple className={classes.listItem}
-        onClick={() => {props.onPreviewFile(file_id, "lampiran")}}>
+        onClick={() => {onPreviewFile(file_id, "lampiran")}}>
           <ListItemAvatar>
-            <Avatar />
+            {filetype == "File lainnya" ? 
+            <DescriptionIcon className={classes.fileLainnyaIcon}/> : 
+            <Avatar/>}
           </ListItemAvatar>
           <ListItemText
             primary={filename}
@@ -149,7 +155,8 @@ function WorkFile(props) {
   return (
     <ListItem button disableRipple onClick={() => {props.onPreviewFile(file_id, "tugas")}}>
       <ListItemAvatar>
-        <Avatar src={file_type_icon} className={classes.profilePicture} />
+        {file_type == "File lainnya" ? 
+        <DescriptionIcon className={classes.fileLainnyaIcon}/> : <Avatar/>}
       </ListItemAvatar>
       <ListItemText
         primary={displayedName}
@@ -165,7 +172,8 @@ function WorkFile(props) {
       </ListItemIcon>
       <ListItemIcon>
         <IconButton className={classes.iconButton}
-          onClick={() => {props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
+          onClick={(e) => { e.stopPropagation()
+            props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
           <DeleteIcon />
         </IconButton>
@@ -313,7 +321,7 @@ function NewTask(props) {
             handleOpenDeleteDialog = {handleOpenDeleteDialog}
             onDownloadFile = {onDownloadFile}
             onPreviewFile = {onPreviewFile}
-            file_type_icon={0}
+            file_type_icon={<DescriptionIcon/>}
             file_name={filesCollection.files[i].filename}
             file_id={filesCollection.files[i].id}
             file_type={fileType(filesCollection.files[i].filename)}
@@ -588,7 +596,7 @@ function NewTask(props) {
                   startIcon={<PublishIcon />}
                   className={classes.submitWorkButton}
                   type="submit"
-                  disabled={fileTugas === null}
+                  disabled={!fileTugas}
                 >
                   Kumpul Tugas
                 </Button>
