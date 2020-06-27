@@ -2,22 +2,19 @@ Current Task
 
 Botak:
 1. Admin Dashboard
-2. Mobile view
 3. Rename yang belum bahasa indo dan Cek link nya udah dalam indo semua belum
 4. Rename Page Title
-5. Tambahkan step 3 register untuk konfirmasi terms and condition
 7. Starred notification
-9. Misteri ripple berubah jadi biru pas apply di globalstyles
 16. bikin satu akun sistem untuk schoolysystem untuk notif update.
 17. Cek lagi kata-kata di bantuan, landing, about, policy.
 18. Update field-field profile.
 19. Delete tester di akhir
 20. Hapus tombol daftar di navbar
-21. Copy Link (https://coderrocketfuel.com/article/how-to-copy-text-to-the-clipboard-in-react-js)
 25. file icon
 26. nama sekolah di profil, ganti isi data dengan button merah
 27. anda tidak punya akses halaman ini
 28. viewsubject iconnya masih error, hias lagi, viewclass more buttonnya hias
+29. Wallpaper dashboard
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -42,7 +39,6 @@ Daniel:
     (node:3857) DeprecationWarning: collection.remove is deprecated. Use deleteOne, deleteMany, or bulkWrite instead.
 
 Penting untuk diimplemen:
-1. (UDAH SELESAI) Guru bisa pasang attachment di TaskObjectnya -> Dan studentnya bisa download dan preview attachments itu. (Udah selesai)
 2. Buat Notification functionality (Schema Notif dan explore cara handlenya?)
 3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
 

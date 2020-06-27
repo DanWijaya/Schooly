@@ -4,6 +4,7 @@ import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText,
 import { makeStyles } from "@material-ui/core/styles"
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
+import StarIcon from "@material-ui/icons/Star";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +33,9 @@ function NotificationItemList(props) {
   return (
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
+        <IconButton>
+          <StarIcon />
+        </IconButton>
         <ListItemAvatar>
           <Avatar>
             {props.sender_avatar}

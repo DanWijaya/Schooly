@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   drawerListItemMuiIcons: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(2.75),
+    height: theme.spacing(2.75),
   },
   drawerListItemReactIcons: {
     width: theme.spacing(2.5),

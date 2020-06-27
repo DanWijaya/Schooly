@@ -345,14 +345,13 @@ ViewTaskTeacher.propTypes = {
    auth: PropTypes.object.isRequired,
    tasksCollection: PropTypes.object.isRequired,
    filesCollection: PropTypes.object.isRequired,
-
    downloadLampiran: PropTypes.func.isRequired,
    previewLampiran: PropTypes.func.isRequired,
    deleteTask: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
    getOneUser: PropTypes.func.isRequired, // for the person in charge task
    getTaskFilesByUser: PropTypes.func.isRequired, //get the task files.
-   viewOneTask: PropTypes.func.isRequired
+   viewOneTask: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({
@@ -361,6 +360,6 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, viewOneTask, getTaskFilesByUser, getOneUser}
+   mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
+    previewLampiran, viewOneTask, getTaskFilesByUser, getOneUser }
  ) (ViewTaskTeacher);

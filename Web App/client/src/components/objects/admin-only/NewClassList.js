@@ -126,7 +126,7 @@ const ClassListToolbar = (props) => {
 
   return (
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" align="center">
+      <Typography variant="h4" align="left">
         <b>Daftar Kelas</b>
       </Typography>
       <Link to="/createclass">

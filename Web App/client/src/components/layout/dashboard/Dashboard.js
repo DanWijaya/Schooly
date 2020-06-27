@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import dashboardBackground from "./DashboardBackground.png";
+import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -91,7 +91,7 @@ const styles = (theme) => ({
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
-    backgroundImage: `url(${dashboardBackground})`,
+    backgroundImage: `url(${dashboardStudentBackground})`,
     backgroundPosition: "bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
