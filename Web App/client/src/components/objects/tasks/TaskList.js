@@ -62,7 +62,7 @@ function TaskListHead(props) {
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
     { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
-    { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
+    { id: "action", numeric: false, disablePadding: false, label: "Atur Tugas" },
   ];
 
   if(role === "Student") {
@@ -298,7 +298,7 @@ function TaskList(props) {
   // Call the function to view the tasks on tablerows.
   // This function is defined upstairs.
   retrieveTasks()
-  
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const onDeleteTask = (id) => {
     deleteTask(id)

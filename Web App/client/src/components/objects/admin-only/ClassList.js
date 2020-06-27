@@ -209,6 +209,35 @@ function ClassList(props) {
   const { viewClass, deleteClass, classesCollection } = props;
   const { user } = props.auth;
 
+  const taskRowItem = (data) => {
+    rows.push(
+      createData(data._id, data.name,
+        data.walikelas.name,
+        data.ukuran,
+        data.nihil ? "Nihil" : "Tidak Nihil",
+        [
+        <LightToolTip title="Sunting">
+          <Link to ={`/sunting-kelas/${data._id}`}>
+          <IconButton
+            size="small"
+            style={{marginRight: "5px"}}
+            onClick={(e) =>  e.stopPropagation()}>
+            <EditIcon className={classes.tableEditIcon} />
+          </IconButton>
+          </Link>
+        </LightToolTip>,
+        <LightToolTip title="Hapus">
+          <IconButton
+            size="small"
+            onClick={(e) =>{
+              handleOpenDeleteDialog(e, data._id, data.name)}}>
+            <DeleteIcon className={classes.tableDeleteIcon} />
+          </IconButton>
+        </LightToolTip>
+        ]
+      )
+    )
+  }
   const retrieveClasses = () => {
     if(classesCollection.all_classes.length === 0) {
       viewClass();
@@ -216,34 +245,7 @@ function ClassList(props) {
     else {
       rows = []
       classesCollection.all_classes.map((data) => {
-        rows.push(
-          createData(data._id, data.name,
-            data.walikelas.name,
-            data.ukuran,
-            data.nihil ? "Nihil" : "Tidak Nihil",
-            [
-            <LightToolTip title="Sunting">
-              <IconButton
-                size="small"
-                style={{marginRight: "5px"}}
-                onClick={(e) => { e.stopPropagation()
-                  window.location.href = `/sunting-kelas/${data._id}`
-                }}
-              >
-                <EditIcon className={classes.tableEditIcon} />
-              </IconButton>
-            </LightToolTip>,
-            <LightToolTip title="Hapus">
-              <IconButton
-                size="small"
-                onClick={(e) =>{
-                  handleOpenDeleteDialog(e, data._id, data.name)}}>
-                <DeleteIcon className={classes.tableDeleteIcon} />
-              </IconButton>
-            </LightToolTip>
-            ]
-          )
-        )
+        taskRowItem(data)
       })
     }
   }
@@ -384,7 +386,7 @@ function ClassList(props) {
               orderBy={orderBy}
               onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
               onRequestSort={handleRequestSort}
-              rowCount={rows !== undefined ?
+              rowCount={rows ?
               rows.length : 0}
             />
             <TableBody>
