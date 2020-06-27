@@ -5,10 +5,8 @@ import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
 import classnames from "classnames";
-import moment from "moment";
 import { viewClass } from "../../../actions/ClassActions";
 import { viewOneTask, updateTask } from "../../../actions/TaskActions";
-import { deleteLampiran } from "../../../actions/UploadActions"
 import { getAllSubjects} from "../../../actions/SubjectActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";

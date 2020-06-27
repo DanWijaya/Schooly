@@ -9,7 +9,7 @@ import {PWD_RESET_HASH_CREATED, GET_ERRORS, PWD_SAVE_SUCCESS } from "./Types"
 export const createHash = (email) => {
     return async (dispatch) => {
       //contact the API
-
+      
       await fetch(
         //where to contact
         '/api/authentication/saveresethash',

@@ -16,7 +16,7 @@ export const createTask = (formData, taskData, history) => dispatch => {
     })
     .then(res => { console.log("Lampiran tugas is uploaded")
             alert("Task is created")
-            history.push("/newtasklist")
+            history.push("/daftar-tugas")
         })
     .catch(err =>{
         console.log("error happened")
@@ -93,7 +93,7 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     .then(res => {
         console.log("Lampiran file is uploaded")
         alert("Task is created")
-        history.push("/newtasklist");
+        history.push("/daftar-tugas");
     })
 
     .catch(err => {
@@ -110,7 +110,7 @@ export const deleteTask = (taskId, history) => dispatch => {
     .delete("/api/tasks/delete/" + taskId)
     .then((res) => {
         console.log(res.data)
-        window.location.href="/newtasklist"
+        window.location.href="/daftar-tugas"
     })
     .catch(err => {
         console.log(err);

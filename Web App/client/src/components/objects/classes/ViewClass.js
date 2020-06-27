@@ -153,8 +153,6 @@ function PersonListItem(props) {
 }
 
 function ViewClass(props) {
-  document.title = "Schooly | Lihat Kelas"
-
   const classes = useStyles();
 
   const { viewOneClass, getStudentsByClass, getAllSubjects,
@@ -164,6 +162,8 @@ function ViewClass(props) {
   const { selectedClasses} = props.classesCollection
   const {all_students, all_teachers, user} = props.auth;
   const classId = props.match.params.id;
+
+  document.title = !selectedClasses.name ? "Schooly | Lihat Kelas" : `Schooly | ${selectedClasses.name}`
 
   let tasksByClass = []
 
@@ -245,7 +245,7 @@ function ViewClass(props) {
                   work_sender={`Mata Pelajaran: ${task.subject}`}
                   work_status={workStatus}
                   work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                  work_link={`/new-task/${task._id}`}
+                  work_link={`/tugas-murid/${task._id}`}
                 />
               )
             })}
@@ -292,7 +292,7 @@ function ViewClass(props) {
                           work_sender={`Mata Pelajaran: ${task.subject}`}
                           work_status={workStatus}
                           work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                          work_link={`/new-task/${task._id}`}
+                          work_link={`/tugas-murid/${task._id}`}
                         />
                       )
                     }
@@ -307,7 +307,7 @@ function ViewClass(props) {
                   <Button
                     disableRipple
                     endIcon={<ChevronRightIcon />}
-                    href={`/viewsubject/${subject.name}`}
+                    href={`/mata-pelajaran/${subject.name}`}
                     className={classes.lookAllButton}
                   >
                     Lihat mata pelajaran

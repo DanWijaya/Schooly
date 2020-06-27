@@ -35,13 +35,13 @@ import ViewClass from "./components/objects/classes/ViewClass";
 import ViewSubject from "./components/objects/classes/ViewSubject";
 //Task
 import CreateTask from "./components/objects/tasks/CreateTask";
-import NewTask from "./components/objects/tasks/NewTask";
+import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
 import EditTask from "./components/objects/tasks/EditTask";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
-import ViewTaskListTeacher from "./components/objects/tasks/ViewTaskListTeacher";
-import NewTaskList from "./components/objects/tasks/NewTaskList";
+import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
+import TaskList from "./components/objects/tasks/TaskList";
 //Admin Only
-import NewClassList from "./components/objects/admin-only/NewClassList";
+import ClassList from "./components/objects/admin-only/ClassList";
 //Prototypes
 import Tester from "./prototypes/Tester";
 
@@ -144,24 +144,23 @@ class App extends Component {
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
-                    <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                    <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/notifikasi" component={Notifications} />
                     {/* Route Class */}
-                    <PrivateRoute exact path="/createclass" component={CreateClass} />
-                    <PrivateRoute exact path="/viewclass/:id" component={ViewClass} />
-                    <PrivateRoute exact path="/editclass/:id" component={EditClass} />
-                    <PrivateRoute exact path="/deleteclass/:id" component={ViewClass} />
-                    <PrivateRoute exact path="/viewsubject/:subject_name" component={ViewSubject} />
+                    <PrivateRoute exact path="/buat-kelas" component={CreateClass} />
+                    <PrivateRoute exact path="/kelas/:id" component={ViewClass} />
+                    <PrivateRoute exact path="/sunting-kelas/:id" component={EditClass} />
+                    <PrivateRoute exact path="/mata-pelajaran/:subject_name" component={ViewSubject} />
                     {/* Route Task  */}
-                    <PrivateRoute exact path="/createtask" component={CreateTask} />
-                    <PrivateRoute exact path="/viewtaskteacher/:id" component={ViewTaskTeacher} />
-                    <PrivateRoute exact path="/viewtasklistteacher/:id" component={ViewTaskListTeacher} />
-                    <PrivateRoute exact path="/task/:id" component={EditTask} />
-                    <PrivateRoute exact path="/new-task/:id" component={NewTask} />
-                    <PrivateRoute exact path="/newtasklist" component={NewTaskList} />
+                    <PrivateRoute exact path="/buat-tugas" component={CreateTask} />
+                    <PrivateRoute exact path="/tugas-guru/:id" component={ViewTaskTeacher} />
+                    <PrivateRoute exact path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
+                    <PrivateRoute exact path="/sunting-tugas/:id" component={EditTask} />
+                    <PrivateRoute exact path="/tugas-murid/:id" component={ViewTaskStudent} />
+                    <PrivateRoute exact path="/daftar-tugas" component={TaskList} />
                     {/* Route Admin-Only  */}
-                    <PrivateRoute exact path="/newclasslist" component={NewClassList} />
+                    <PrivateRoute exact path="/daftar-kelas" component={ClassList} />
                     {/* Not Found  */}
                     <Route
                       render={(props) => (

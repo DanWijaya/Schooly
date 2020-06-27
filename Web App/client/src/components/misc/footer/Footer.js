@@ -98,7 +98,7 @@ function Footer() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="http://www.instagram.com">
+              <Link href="http://www.instagram.com" target="_blank">
                 Instagram
               </Link>
             </Grid>

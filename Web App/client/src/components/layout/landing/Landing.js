@@ -117,7 +117,7 @@ class Landing extends Component {
   componentDidMount() {
     if(this.props.auth.isAuthenticated){
       this.props.handleMarginTopValue(20)
-      this.props.history.push("/dashboard");
+      this.props.history.push("/beranda");
     }else
       this.props.handleMarginTopValue(0);
   }
@@ -136,7 +136,7 @@ class Landing extends Component {
   }
 
   render() {
-    document.title = "Schooly | Sistem Persekolahan Pertama di Indonesia";
+    document.title = "Schooly | Sistem Persekolahan Terbaik di Indonesia";
 
     const { classes } = this.props;
 

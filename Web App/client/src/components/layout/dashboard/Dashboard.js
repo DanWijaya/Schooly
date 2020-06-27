@@ -131,7 +131,7 @@ class Dashboard extends Component {
 
   render() {
     document.body.style = "background: #FFFFFF";
-    document.title = "Schooly | Dashboard";
+    document.title = "Schooly | Beranda";
 
     const { classes } = this.props;
     const { user } = this.props.auth;

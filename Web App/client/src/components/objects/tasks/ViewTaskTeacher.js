@@ -129,6 +129,8 @@ function ViewTaskTeacher(props) {
   const task_id = props.match.params.id
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
+  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
+  
   React.useEffect(() => {
     viewOneTask(task_id)
   }, [tasksCollection._id])
@@ -313,7 +315,7 @@ function ViewTaskTeacher(props) {
       </Paper>
       <Grid container spacing={2} justify="flex-end" alignItems="center">
         <Grid item>
-          <Link to={`/viewtasklistteacher/${task_id}`}>
+          <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
             <Fab variant="extended" className={classes.seeAllTaskButton}>
               <AssignmentIcon style={{marginRight: "10px"}} />
               Lihat Hasil Pekerjaan
@@ -321,7 +323,7 @@ function ViewTaskTeacher(props) {
           </Link>
         </Grid>
         <Grid item>
-          <Link to={`/task/${task_id}`}>
+          <Link to={`/sunting-tugas/${task_id}`}>
             <LightToolTip title="Sunting Tugas" placement="bottom">
               <Fab className={classes.editTaskButton}>
                 <EditIcon />

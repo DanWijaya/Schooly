@@ -81,19 +81,15 @@ const classes = useStyles()
 }
 
 function ViewSubject(props) {
-  const classes = useStyles();
   const { subject_name } = props.match.params
+  document.title = `Schooly | ${subject_name}`
+
+  const classes = useStyles();
+
   const { user } = props.auth;
   const{ viewOneClass, viewTask, tasksCollection, getAllTaskFilesByUser} = props;
   const { selectedClasses } = props.classesCollection
   const {all_user_files} = props.filesCollection
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleCreateMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCreateMenuClose = () => {
-    setAnchorEl(null);
-  };
 
   if(selectedClasses.length === 0) {
     viewOneClass(user.kelas)
@@ -148,7 +144,7 @@ function ViewSubject(props) {
           work_sender={`Mata Pelajaran: ${task.subject}`}
           work_status={workStatus}
           work_deadline={moment(task.deadline).format("DD-MM-YYYY")}
-          work_link={`/new-task/${task._id}`}
+          work_link={`/tugas-murid/${task._id}`}
         />
       )
     }
