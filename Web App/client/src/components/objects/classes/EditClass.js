@@ -47,7 +47,7 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-  }
+  },
 });
 
 

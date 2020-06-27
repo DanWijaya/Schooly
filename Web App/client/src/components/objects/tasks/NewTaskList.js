@@ -61,7 +61,7 @@ function TaskListHead(props) {
   const headCells = [
     { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan pada" },
+    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
     { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
     { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
   ];

@@ -15,9 +15,9 @@ import { Button, Chip, Divider, Fade, FormControl, Grid, IconButton, Input, Inpu
    ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DescriptionIcon from "@material-ui/icons/Description";
-import PostAddIcon from "@material-ui/icons/PostAdd";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
 const path = require("path");
@@ -44,13 +44,11 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
   root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.secondary,
-      "& .MuiListItemIcon-root": {
-        color: theme.palette.primary.main,
-      },
+    cursor: "default",
+    width: "300px",
+    "&:focus, &:hover": {
+      backgroundColor: "transparent",
     },
-    width: "300px"
   },
 }))(MenuItem);
 
@@ -63,7 +61,7 @@ const styles = (theme) => ({
   },
   mainGrid: {
     width: "450px",
-    padding: "20px",
+    padding: "30px",
   },
   gridItem: {
     width: "350px",
@@ -93,19 +91,35 @@ const styles = (theme) => ({
   uploadButton: {
     width: "5px",
     height: "50%"
-  }
+  },
+  createTaskButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
 });
 
 function LampiranFile(props) {
   const {name, i, handleLampiranDelete} = props;
 
   return(
-  <StyledMenuItem>
+  <StyledMenuItem disableRipple>
     <ListItemIcon>
       <DescriptionIcon/>
     </ListItemIcon>
     <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
-      <HighlightOffIcon fontSize="small" style={{color:"#B22222"}} onClick={(e) => {handleLampiranDelete(e, i)}}/>
+    <IconButton>
+      <HighlightOffIcon
+        fontSize="small"
+        style={{color:"#B22222"}}
+        onClick={(e) => {handleLampiranDelete(e, i)}}
+      />
+    </IconButton>
   </StyledMenuItem>
   )
 }
@@ -280,8 +294,11 @@ class CreateTask extends Component {
         <div className={classes.root}>
           <Paper>
             <div className={classes.mainGrid}>
-              <Typography variant="h5" className={classes.formTitle}>
-                <b>Tambahkan keterangan tugas untuk membuat tugas</b>
+              <Typography variant="h5" align="center" gutterBottom>
+                <b>Buat Tugas</b>
+              </Typography>
+              <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
+                Tambahkan keterangan tugas untuk membuat tugas.
               </Typography>
               <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
                 <Grid
@@ -322,7 +339,7 @@ class CreateTask extends Component {
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <FormControl variant="outlined" fullWidth>
-                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
+                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang Ditugaskan</label>
                       <Select
                         id="class_assigned"
                         multiple
@@ -392,7 +409,7 @@ class CreateTask extends Component {
                           id="file_tugas"
                           type="text"
                           width="100%"
-                          labelname="Berkas Lampiran"
+                          labelname="Lampiran Berkas"
                           html_for="Berkas lampiran"
                           label_classname={classes.inputLabel}
                           pointer= {fileLampiran.length > 0}
@@ -408,9 +425,9 @@ class CreateTask extends Component {
                         {listFileChosen()}
                       </StyledMenu>
                       <Grid item xs={1}>
-                        <LightTooltip title="Tambahkan berkas lampiran">
+                        <LightTooltip title="Tambahkan Lampiran Berkas">
                           <IconButton onClick={() => {this.tugasUploader.current.click()}}>
-                            <PostAddIcon />
+                            <AttachFileIcon />
                            </IconButton>
                          </LightTooltip>
                       </Grid>
@@ -441,14 +458,9 @@ class CreateTask extends Component {
                   <Grid item className={classes.gridItem}>
                     <Button
                       type="submit"
-                      style={{
-                        backgroundColor: "#61BD4F",
-                        color: "white",
-                        width: "100%",
-                        marginTop: "20px",
-                      }}
+                      className={classes.createTaskButton}
                     >
-                      Tambahkan Tugas
+                      Buat Tugas
                   </Button>
                   </Grid>
                 </Grid>

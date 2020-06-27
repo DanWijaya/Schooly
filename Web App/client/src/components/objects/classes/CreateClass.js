@@ -43,7 +43,7 @@ const styles = (theme) => ({
       backgroundColor: "#61BD4F",
       color: "white",
     },
-  }
+  },
 });
 
 

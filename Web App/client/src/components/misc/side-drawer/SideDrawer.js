@@ -47,7 +47,11 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
-  drawerListItemIcons: {
+  drawerListItemMuiIcons: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+  drawerListItemReactIcons: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
@@ -103,12 +107,12 @@ function DrawerContent(props) {
   }
 
   let ListItemContents = [
-    ["/dashboard", <DashboardIcon className={classes.drawerListItemIcons} />, "Dashboard", null, false],
-    [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcons} />, "Kelas", null, false],
-    [null, <AnnouncementIcon className={classes.drawerListItemIcons} />,"Pengumuman", "Coming Soon", true],
-    ["/newtasklist", <AssignmentIcon className={classes.drawerListItemIcons} />, "Tugas", null, false],
-    [null, <GrNotes className={classes.drawerListItemIcons} />, "Kuis", "Coming Soon", true],
-    [null, <GrDocumentPerformance className={classes.drawerListItemIcons} />, "Ujian", "Coming Soon", true],
+    ["/dashboard", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Dashboard", null, false],
+    [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
+    [null, <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", "Coming Soon", true],
+    ["/newtasklist", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
+    [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],
+    [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
   ]
 
   return (
@@ -120,8 +124,8 @@ function DrawerContent(props) {
       </List>
       <Divider />
       <List>
-        {generateList("/bantuan", <HelpIcon className={classes.drawerListItemIcons} />,  "Bantuan", null, false)}
-        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemIcons} />,  "Tentang Schooly", null, false)}
+        {generateList("/bantuan", <HelpIcon className={classes.drawerListItemMuiIcons} />,  "Bantuan", null, false)}
+        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemMuiIcons} />,  "Tentang Schooly", null, false)}
       </List>
     </div>
   )

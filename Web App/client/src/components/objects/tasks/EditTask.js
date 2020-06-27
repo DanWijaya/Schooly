@@ -1,23 +1,26 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Multiselect } from "multiselect-react-dropdown";
+import PropTypes from "prop-types";
+import DateFnsUtils from "@date-io/date-fns";
+import "date-fns";
+import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import moment from "moment";
-import { Button, Chip, FormControl, Grid, IconButton, Input, InputLabel,Menu, MenuItem,ListItemIcon, ListItemText, Paper, Select, Typography, withStyles } from "@material-ui/core";
 import { viewClass } from "../../../actions/ClassActions";
 import { viewOneTask, updateTask } from "../../../actions/TaskActions";
 import { deleteLampiran } from "../../../actions/UploadActions"
-import { Multiselect } from "multiselect-react-dropdown";
 import { getAllSubjects} from "../../../actions/SubjectActions"
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider,KeyboardTimePicker, KeyboardDatePicker} from "@material-ui/pickers";
-import "date-fns";
-import lokal from "date-fns/locale/id";
-import PostAddIcon from "@material-ui/icons/PostAdd";
-import DescriptionIcon from "@material-ui/icons/Description";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
+import { Button, Chip, FormControl, Grid, IconButton, Input, InputLabel,
+   Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
+import { MuiPickersUtilsProvider,KeyboardTimePicker, KeyboardDatePicker} from "@material-ui/pickers";
+import { withStyles } from "@material-ui/core/styles";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
+import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+
 const path = require("path");
 
 const StyledMenu = withStyles({
@@ -42,13 +45,11 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
   root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
+    cursor: "default",
+    width: "300px",
+    "&:focus, &:hover": {
+      backgroundColor: "transparent",
     },
-    width: "300px"
   },
 }))(MenuItem);
 
@@ -61,7 +62,7 @@ const styles = (theme) => ({
   },
   mainGrid: {
     width: "450px",
-    padding: "20px",
+    padding: "30px",
   },
   gridItem: {
     width: "350px",
@@ -93,18 +94,34 @@ const styles = (theme) => ({
   chip: {
     margin: 2,
   },
+  editTaskButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
 });
 
 function LampiranFile(props) {
   const { name, i, handleLampiranDelete} = props;
 
   return(
-    <StyledMenuItem>
+    <StyledMenuItem disableRipple>
       <ListItemIcon>
         <DescriptionIcon/>
       </ListItemIcon>
       <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
-      <HighlightOffIcon fontSize="small" style={{color:"#B22222"}} onClick={(e) => {handleLampiranDelete(e, i, name)}}/>
+      <IconButton>
+        <HighlightOffIcon
+          fontSize="small"
+          style={{color:"#B22222"}}
+          onClick={(e) => {handleLampiranDelete(e, i, name)}}
+        />
+      </IconButton>
     </StyledMenuItem>
   )
 }
@@ -461,7 +478,7 @@ class EditTask extends Component {
                           id="file_tugas"
                           type="text"
                           width="100%"
-                          labelname="Berkas Lampiran"
+                          labelname="Lampiran Berkas"
                           html_for="Berkas lampiran"
                           label_classname={classes.inputLabel}
                           pointer= {fileLampiran.length > 0}
@@ -477,9 +494,9 @@ class EditTask extends Component {
                         {listFileChosen()}
                       </StyledMenu>
                       <Grid item xs={1}>
-                        <LightTooltip title="Tambahkan berkas lampiran">
+                        <LightTooltip title="Tambahkan Lampiran Berkas">
                           <IconButton onClick={() => {this.tugasUploader.current.click()}}>
-                            <PostAddIcon/>
+                            <AttachFileIcon />
                           </IconButton>
                         </LightTooltip>
                       </Grid>
@@ -510,12 +527,7 @@ class EditTask extends Component {
                   <Grid item className={classes.gridItem}>
                     <Button
                       type="submit"
-                      style={{
-                        backgroundColor: "#61bd4f",
-                        color: "white",
-                        width: "100%",
-                        marginTop: "20px",
-                      }}
+                      className={classes.editTaskButton}
                     >
                       Sunting Tugas
                     </Button>
