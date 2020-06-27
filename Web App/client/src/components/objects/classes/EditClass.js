@@ -158,9 +158,9 @@ class EditClass extends Component {
 
     console.log(classesCollection.selectedClasses.walikelas)
     const returnId = (user_id, arr) => {
-      if(arr == "student") {
+      if(arr === "student") {
         for (var i = 0; i < student_options.length; i++) {
-          if(student_options[i]._id == user_id._id){
+          if(student_options[i]._id === user_id._id){
             return user_id._id
           }
         }
@@ -168,7 +168,7 @@ class EditClass extends Component {
       else {
         for (var i = 0; i < teacher_options.length; i++) {
           // console.log(student_options[i]._id)
-          if(teacher_options[i]._id == user_id._id){
+          if(teacher_options[i]._id === user_id._id){
             return user_id._id
           }
         }
@@ -190,7 +190,7 @@ class EditClass extends Component {
       return items;
     }
 
-    if(user.role == "Teacher" || user.role == "Admin") {
+    if(user.role === "Teacher" || user.role === "Admin") {
       return (
         <div className={classes.root}>
           <Paper>

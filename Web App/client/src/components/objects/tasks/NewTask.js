@@ -7,7 +7,7 @@ import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampira
 import { viewOneTask } from "../../../actions/TaskActions"
 import { getTaskFilesByUser } from "../../../actions/UploadActions"
 import { getOneUser } from "../../../actions/UserActions"
-import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
+import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
    Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -385,18 +385,18 @@ function NewTask(props) {
   }
 
   const onDownloadFile = (id, fileCategory="none") => {
-    if(fileCategory == "tugas")
+    if(fileCategory === "tugas")
       downloadTugas(id)
-    else if(fileCategory == "lampiran")
+    else if(fileCategory === "lampiran")
       downloadLampiran(id)
     else
       console.log("File Category is not specified")
   }
 
   const onPreviewFile = (id, fileCategory="none") => {
-    if(fileCategory == "tugas")
+    if(fileCategory === "tugas")
       previewTugas(id)
-    else if(fileCategory == "lampiran")
+    else if(fileCategory === "lampiran")
       previewLampiran(id)
     else
       console.log("File Category is not specified")

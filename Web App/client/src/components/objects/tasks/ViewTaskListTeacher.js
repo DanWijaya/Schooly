@@ -8,7 +8,6 @@ import { getStudentsByClass } from "../../../actions/UserActions"
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton, Paper,
    List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import GetAppIcon from "@material-ui/icons/GetApp";

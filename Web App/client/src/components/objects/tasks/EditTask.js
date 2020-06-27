@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Multiselect } from "multiselect-react-dropdown";
 import PropTypes from "prop-types";
 import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
@@ -13,9 +12,8 @@ import { deleteLampiran } from "../../../actions/UploadActions"
 import { getAllSubjects} from "../../../actions/SubjectActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl, Grid, IconButton, Input, InputLabel,
-   Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider,KeyboardTimePicker, KeyboardDatePicker} from "@material-ui/pickers";
+import { Button, Chip, FormControl, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -188,7 +186,7 @@ class EditTask extends Component {
 
     class_assigned.map((id) => {
       for( var i = 0; i < classesOptions.length; i++) {
-      if(classesOptions[i]._id == id) {
+      if(classesOptions[i]._id === id) {
         classesSelected.push(classesOptions[i])
         break;
       }
@@ -243,7 +241,7 @@ class EditTask extends Component {
     let tempToAdd = this.state.fileLampiranToAdd;
     //Kalau yang udah keupload, ada field filename (yang belum adanya name)
     //Untuk yang udah di DB.
-    if(this.state.fileLampiran[i].filename != undefined) {
+    if(this.state.fileLampiran[i].filename !== undefined) {
       //Remove the file in fileLampiranToDelete
       tempToDelete.push(temp[i])
     }
@@ -251,14 +249,14 @@ class EditTask extends Component {
       //Remove the file in fileLampiranToAdd
       for(var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
-        if(tempToAdd[j].name == temp[i].name){
+        if(tempToAdd[j].name === temp[i].name){
           tempToAdd.splice(j,1)
         }
       }
     }
     temp.splice(i, 1);
     console.log(tempToDelete)
-    if(temp.length == 0)
+    if(temp.length === 0)
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
       fileLampiranToDelete: tempToDelete})
@@ -272,17 +270,17 @@ class EditTask extends Component {
   handleCloseMenu = () => { this.setState({ anchorEl: null}) }
 
   onChange = (e, otherfield) => {
-    if(otherfield == "kelas"){
+    if(otherfield === "kelas"){
       console.log(this.state.class_assigned, e.target.value)
       this.setState({ class_assigned: e.target.value, classChanged: true})
     }
-    else if(otherfield == "deadline") {
+    else if(otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
     }
-    else if(otherfield == "description") {
+    else if(otherfield === "description") {
       this.setState({ description : e.target.value})
     }
-    else if(otherfield == "subject") {
+    else if(otherfield === "subject") {
       console.log(e.target.value)
       this.setState({subject: e.target.value })
     }
@@ -325,7 +323,7 @@ class EditTask extends Component {
         for (var i = 0; i < fileLampiran.length; i++) {
           temp.push(
             <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
-              name={fileLampiran[i].filename == undefined?
+              name={fileLampiran[i].filename === undefined?
                 fileLampiran[i].name :
                 fileLampiran[i].filename
               }
@@ -358,7 +356,7 @@ class EditTask extends Component {
       }
     )
 
-    if(user.role == "Teacher" || user.role=="Admin") {
+    if(user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
           <Paper>

@@ -3,12 +3,9 @@ import whatIsSchooly from "./WhatIsSchooly.png";
 import schoolyFeature1 from "./SchoolyFeature1.png";
 import schoolyFeature2 from "./SchoolyFeature2.png";
 import schoolyFeature3 from "./SchoolyFeature3.png";
-import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
-import DescriptionIcon from "@material-ui/icons/Description";
 import EmailIcon from "@material-ui/icons/Email";
-import ForumIcon from "@material-ui/icons/Forum";
 
 const useStyles = makeStyles((theme) => ({
   root: {

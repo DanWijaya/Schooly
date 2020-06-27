@@ -8,17 +8,13 @@ import { getAllSubjects } from "../../../actions/SubjectActions"
 import { viewTask } from "../../../actions/TaskActions"
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Fab, Grid,
-   IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
-   Menu, MenuItem, Paper, Typography } from "@material-ui/core";
+import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Grid,
+   IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
-import PostAddIcon from "@material-ui/icons/PostAdd";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,23 +95,23 @@ function ViewSubject(props) {
     setAnchorEl(null);
   };
 
-  if(selectedClasses.length == 0) {
+  if(selectedClasses.length === 0) {
     viewOneClass(user.kelas)
   }
-  if(all_user_files.length == 0) {
+  if(all_user_files.length === 0) {
     getAllTaskFilesByUser(user.id)
   }
   let tasksByClass = [] // tasks on specific class.
 
   // All actions to retrive datas from Database...
-  if(tasksCollection.length == undefined) {
+  if(tasksCollection.length === undefined) {
     viewTask()
   }
   else{
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++) {
-        if(class_assigned[i]._id == user.kelas)
+        if(class_assigned[i]._id === user.kelas)
           tasksByClass.push(task)
       }
     })
@@ -133,7 +129,7 @@ function ViewSubject(props) {
 
       let workStatus = "Belum Dikumpulkan"
       for(var i = 0; i < all_user_files.length; i++) {
-        if(all_user_files[i].for_task_object == task._id){
+        if(all_user_files[i].for_task_object === task._id){
           workStatus = "Telah Dikumpulkan"
           workCategoryAvatar = (
             <Avatar className={classes.assignmentTurnedIn}>
@@ -144,7 +140,7 @@ function ViewSubject(props) {
         }
       }
 
-      if(task.subject == subject_name) {
+      if(task.subject === subject_name) {
       tasksBySubjectClass.push(
         <WorkListItem
           work_title={task.name}
@@ -158,7 +154,7 @@ function ViewSubject(props) {
     }
   })
 
-  return tasksBySubjectClass.length == 0 ?
+  return tasksBySubjectClass.length === 0 ?
     (<Typography variant="h5" align="center" gutterBottom>
       Kosong
     </Typography>)

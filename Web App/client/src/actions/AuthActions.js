@@ -24,7 +24,7 @@ export const createHash = (email) => {
         },
       )
       .then((res) => {
-        if(res.status == 200) {
+        if(res.status === 200) {
           return res.json();
         } else{
          return null
@@ -32,7 +32,7 @@ export const createHash = (email) => {
       })
       .then((json) => {
         console.log(json)
-        if( json.success) // kalau emailnya ada di database 
+        if( json.success) // kalau emailnya ada di database
           return dispatch({
             type: PWD_RESET_HASH_CREATED,
             payload: json
@@ -86,7 +86,7 @@ export function savePassword(data) {
         window.location.href = "/masuk"
       }
         else {
-          if(json.expired == "yes"){
+          if(json.expired === "yes"){
             alert("Tautan ini sudah tidak berlaku, silahkan memohon ulang")
             window.location.href = '/akun/lupa-katasandi'
           }

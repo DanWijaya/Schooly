@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
 import { viewOneClass } from "../../../actions/ClassActions";
@@ -10,7 +9,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
-   List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText,
+   List, ListItem, ListItemAvatar, ListItemText,
    Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
@@ -254,7 +253,7 @@ function ViewClass(props) {
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {all_subjects.length == 0 ? null :
+        {all_subjects.length === 0 ? null :
           all_subjects.map((subject) => {
             let isEmpty = true
             return(
@@ -274,7 +273,7 @@ function ViewClass(props) {
                     )
                     let workStatus = "Belum Dikumpulkan"
                     for(var i =0; i < all_user_files.length; i++) {
-                      if(all_user_files[i].for_task_object == task._id){
+                      if(all_user_files[i].for_task_object === task._id){
                         workStatus = "Telah Dikumpulkan"
                         workCategoryAvatar = (
                           <Avatar className={classes.assignmentTurnedIn}>
@@ -284,7 +283,7 @@ function ViewClass(props) {
                         break;
                       }
                     }
-                    if(task.subject == subject.name){
+                    if(task.subject === subject.name){
                       isEmpty = false
                       return (
                         <WorkListItem

@@ -1,14 +1,11 @@
 import React from "react";
 import helpTopics from "./HelpTopics.png";
 import moreHelpBackground from "./MoreHelpBackground.png";
-import { Avatar, Button, Drawer, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Paper, Typography, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
+import { Avatar, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import EmailIcon from "@material-ui/icons/Email";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import InstagramIcon from "@material-ui/icons/Instagram";
-import MailIcon from "@material-ui/icons/Mail";
 
 const useStyles = makeStyles((theme) => ({
   root: {

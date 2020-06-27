@@ -7,7 +7,6 @@ import { getTeachers } from "../../../actions/UserActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, Grid, MenuItem,Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { Multiselect } from "multiselect-react-dropdown";
 
 const styles = (theme) => ({
   root: {
@@ -60,7 +59,7 @@ class CreateClass extends Component {
   }
 
   onChange = (e, otherfield) => {
-    if(otherfield == "walikelas")
+    if(otherfield === "walikelas")
       this.setState({ walikelas: e.target.value});
     else
       this.setState({ [e.target.id]: e.target.value});
@@ -118,7 +117,7 @@ class CreateClass extends Component {
     const { errors } = this.state;
     var options = all_teachers;
 
-    if(user.role == "Teacher" || user.role == "Admin") {
+    if(user.role === "Teacher" || user.role === "Admin") {
       return (
         <div className={classes.root}>
           <Paper>

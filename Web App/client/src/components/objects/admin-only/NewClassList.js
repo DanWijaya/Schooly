@@ -2,12 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import clsx from "clsx";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Checkbox, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
+import { Button, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -210,7 +209,7 @@ function NewClassList(props) {
   const { user } = props.auth;
 
   const retrieveClasses = () => {
-    if(classesCollection.all_classes.length == 0) {
+    if(classesCollection.all_classes.length === 0) {
       viewClass();
     }
     else {
@@ -287,7 +286,7 @@ function NewClassList(props) {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Call the function to get the classes from DB
-  if(rows.length == 0)
+  if(rows.length === 0)
     retrieveClasses()
   const onDeleteClass = (id) => {
     deleteClass(id)
@@ -362,7 +361,7 @@ function NewClassList(props) {
     )
   }
 
-  if(user.role == "Student") {
+  if(user.role === "Student") {
     return (
       <div className={classes.root}>
         <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
@@ -384,7 +383,7 @@ function NewClassList(props) {
               orderBy={orderBy}
               onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
               onRequestSort={handleRequestSort}
-              rowCount={rows != undefined ?
+              rowCount={rows !== undefined ?
               rows.length : 0}
             />
             <TableBody>

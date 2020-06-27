@@ -9,12 +9,11 @@ import { uploadTugas, deleteTugas, downloadTugas, previewTugas } from "../../../
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Divider, Fab, Grid, IconButton,
-   List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, ListItemIcon,
-   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
+import { Avatar, Button, Dialog, Fab, Grid, IconButton,
+   ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+   Paper, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
+import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -22,8 +21,6 @@ import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import PublishIcon from "@material-ui/icons/Publish";
 
 const path = require("path");
 

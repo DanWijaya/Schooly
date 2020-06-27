@@ -12,7 +12,7 @@ import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, FormControl, Grid, IconButton, Link, MenuItem,
+import { Button, Dialog, FormControl, Grid, Link, MenuItem,
    Paper, Select, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 

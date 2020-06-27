@@ -126,8 +126,8 @@ function Profile(props) {
     setOpenPasswordEditorAlert(false);
   }
 
-// initially classesCollection.selectedClasses.name == undefined. 
-  if(user.role == "Student" && !classesCollection.selectedClasses.name
+  //Initially classesCollection.selectedClasses.name === undefined. 
+  if(user.role === "Student" && !classesCollection.selectedClasses.name
   ){
     viewOneClass(user.kelas)
   }

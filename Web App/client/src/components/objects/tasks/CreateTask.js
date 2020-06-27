@@ -11,12 +11,11 @@ import { getAllSubjects } from "../../../actions/SubjectActions"
 import {getOneUser} from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, Divider, Fade, FormControl, Grid, IconButton, Input, InputLabel,
+import { Button, Chip, FormControl, Grid, IconButton,
    ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
@@ -155,16 +154,16 @@ class CreateTask extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.deadline)
-    if(otherfield == "kelas") {
+    if(otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
-    else if(otherfield == "deadline") {
+    else if(otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
     }
-    else if(otherfield == "description") {
+    else if(otherfield === "description") {
       this.setState({ description : e.target.value})
     }
-    else if(otherfield == "subject") {
+    else if(otherfield === "subject") {
       this.setState({ subject: e.target.value})
     }
     else
@@ -222,7 +221,7 @@ class CreateTask extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    if(this.state.fileLampiran.length == 0)
+    if(this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files})
     else {
       if(files.length != 0) {
@@ -289,7 +288,7 @@ class CreateTask extends Component {
       },
     };
 
-    if(user.role == "Teacher") {
+    if(user.role === "Teacher") {
       return(
         <div className={classes.root}>
           <Paper>

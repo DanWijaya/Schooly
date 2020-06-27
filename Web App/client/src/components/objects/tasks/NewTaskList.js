@@ -2,15 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import clsx from "clsx";
 import moment from "moment";
 import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import { viewOneClass } from "../../../actions/ClassActions"
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Checkbox, IconButton, Dialog, Fab, Grid, Paper, ListItemSecondaryAction, Table, TableBody, TableCell, TableContainer,
-   TableHead, TableRow, TableSortLabel, Toolbar, Tooltip, Typography } from "@material-ui/core/";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
+   TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -19,7 +18,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
-  return (action == null ? { _id, tasktitle, subject, class_assigned, deadline }
+  return (action === null ? { _id, tasktitle, subject, class_assigned, deadline }
     : { _id, tasktitle, subject, class_assigned, deadline, action});
 }
 
@@ -66,7 +65,7 @@ function TaskListHead(props) {
     { id: "action", numeric: false, disablePadding: false, label: "Tindakan" },
   ];
 
-  if(role == "Student") {
+  if(role === "Student") {
     headCells.pop()
   }
 
@@ -228,7 +227,7 @@ function NewTaskList(props) {
         data.subject,
         data.class_assigned,
         data.deadline,
-        user.role == "Student" ? null :
+        user.role === "Student" ? null :
         [
           <LightToolTip title="Sunting">
             <Link to={`/task/${data._id}`}>
@@ -262,19 +261,19 @@ function NewTaskList(props) {
         rows = []
         console.log(tasksCollection)
         console.log(user)
-        if(user.role == "Teacher") {
+        if(user.role === "Teacher") {
         tasksCollection.map((data) => {
           console.log(data.person_in_charge_id, user.id)
-          if(data.person_in_charge_id == user.id) {
+          if(data.person_in_charge_id === user.id) {
             taskRowItem(data)
             }
           })
         }
-        else if (user.role == "Student"){
+        else if (user.role === "Student"){
           tasksCollection.map((data) => {
             let class_assigned = data.class_assigned;
             for (var i = 0; i < class_assigned.length; i++) {
-              if(class_assigned[i]._id == user.kelas) {
+              if(class_assigned[i]._id === user.kelas) {
                 taskRowItem(data)
                 break;
               }
@@ -427,7 +426,7 @@ function NewTaskList(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = user.role == "Student" ? `/new-task/${row._id}` : `/viewtaskteacher/${row._id}`
+                  let viewpage = user.role === "Student" ? `/new-task/${row._id}` : `/viewtaskteacher/${row._id}`
                   return (
                     <TableRow
                       className={classes.tableRow}
@@ -443,7 +442,7 @@ function NewTaskList(props) {
                       <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
                       <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY")}</TableCell>
-                      {user.role == "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
+                      {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>
                   );
                 })}

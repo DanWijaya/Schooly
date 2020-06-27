@@ -1,14 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import clsx from "clsx";
 import { logoutUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import LightTooltip from "../light-tooltip/LightTooltip";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
-import { AppBar, Button, CssBaseline, Grid, IconButton, Link, Toolbar, useMediaQuery } from "@material-ui/core";
+import { AppBar, Button, Grid, IconButton, Link, Toolbar, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import HelpIcon from "@material-ui/icons/Help";
 import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
