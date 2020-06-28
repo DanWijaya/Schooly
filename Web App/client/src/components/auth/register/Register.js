@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { registerUser } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
-import { getAllSubjects} from "../../../actions/SubjectActions"
+import { getAllSubjects } from "../../../actions/SubjectActions"
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
@@ -23,7 +23,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    maxWidth: "750px",
+    maxWidth: "1000px",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "fixed",
     backgroundRepeat: "no-repeat",
@@ -31,7 +31,7 @@ const styles = (theme) => ({
   },
   errorInfo: {
     color: "red",
-    fontSize: "10px"
+    fontSize: "10px",
   },
   inputField: {
     width: "300px",
@@ -518,7 +518,7 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection
+  classesCollection: state.classesCollection,
 });
 
 export default withRouter(

@@ -16,7 +16,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    maxWidth: "750px",
+    maxWidth: "1000px",
     margin: "auto",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
@@ -113,7 +113,7 @@ class LoginForgot extends Component {
                 :
                 <Grid item className={classes.infoTitle}>
                   <Typography variant="h6" gutterBottom>
-                  Sebuah email telah dikirimkan ke alamat email yang anda berikan.
+                    Sebuah email telah dikirimkan ke alamat email yang anda berikan.
                   </Typography>
                   <Typography variant="body1">
                     <b>Silahkan klik tautan itu untuk melanjutkan mengganti password</b>

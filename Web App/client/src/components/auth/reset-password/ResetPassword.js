@@ -16,7 +16,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    maxWidth: "750px",
+    maxWidth: "1000px",
     margin: "auto",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
@@ -65,8 +65,8 @@ class ResetPassword extends Component {
     }
   }
 
-// dispatch is used as a callback which gets invoked once some async action is complete.
-// In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
+//Dispatch is used as a callback which gets invoked once some async action is complete.
+//In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
 
   render() {
     document.title = "Schooly | Lupa Akun"

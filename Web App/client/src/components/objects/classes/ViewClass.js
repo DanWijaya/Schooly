@@ -158,11 +158,11 @@ function ViewClass(props) {
   const classes = useStyles();
 
   const { viewOneClass, getStudentsByClass, getAllSubjects,
-     tasksCollection, getTeachers, getAllTaskFilesByUser, viewTask} = props;
-  const { all_user_files} = props.filesCollection
-  const {all_subjects} = props.subjectsCollection
-  const { selectedClasses} = props.classesCollection
-  const {all_students, all_teachers, user} = props.auth;
+     tasksCollection, getTeachers, getAllTaskFilesByUser, viewTask } = props;
+  const { all_user_files } = props.filesCollection
+  const { all_subjects } = props.subjectsCollection
+  const { selectedClasses } = props.classesCollection
+  const { all_students, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
 
   let tasksByClass = []
@@ -310,7 +310,7 @@ function ViewClass(props) {
                     href={`/viewsubject/${subject.name}`}
                     className={classes.lookAllButton}
                   >
-                    Lihat mata pelajaran
+                    Lihat Mata Pelajaran
                   </Button>
                 </div>
               </ExpansionPanel>

@@ -18,7 +18,7 @@ const styles = (theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    maxWidth: "750px",
+    maxWidth: "1000px",
     margin: "auto",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
