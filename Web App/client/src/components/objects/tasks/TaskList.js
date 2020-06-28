@@ -2,9 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { viewClass, deleteClass } from "../../../actions/ClassActions";
+import moment from "moment";
+import "moment/locale/id";
+import { viewTask, deleteTask } from "../../../actions/TaskActions";
+import { viewOneClass } from "../../../actions/ClassActions"
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
+import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -12,14 +15,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 
-// Source of the tables codes are from here : https://material-ui.com/components/tables/
-function createData(_id, classroom, homeroomTeacher, size, absent, action) {
-  return { _id, classroom, homeroomTeacher, size, absent, action };
+function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
+  return (action === null ? { _id, tasktitle, subject, class_assigned, deadline }
+    : { _id, tasktitle, subject, class_assigned, deadline, action});
 }
 
-var rows=[];
+var rows = [];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,19 +50,24 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  { id: "classroom", numeric: false, disablePadding: true, label: "Kelas" },
-  { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
-  { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
-  { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
-  { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
-];
+function TaskListHead(props) {
+  const { classes, order, orderBy, onRequestSort, role } = props;
 
-function ClassListHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+
+  const headCells = [
+    { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
+    { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
+    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
+    { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
+    { id: "action", numeric: false, disablePadding: false, label: "Atur Tugas" },
+  ];
+
+  if(role === "Student") {
+    headCells.pop()
+  }
 
   return (
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
@@ -90,7 +98,7 @@ function ClassListHead(props) {
   );
 }
 
-ClassListHead.propTypes = {
+TaskListHead.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -105,7 +113,7 @@ const useToolbarStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     padding: "15px",
   },
-  newClassButton: {
+  newTaskButton: {
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
@@ -113,28 +121,32 @@ const useToolbarStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newClassIcon: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
+  newTaskIcon: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
     marginRight: "7.5px"
   }
 }));
 
-const ClassListToolbar = (props) => {
+const TaskListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { item, deleteClass } = props;
-
+  const {role } = props;
+  // the item stores the id directly
   return (
     <Toolbar className={classes.toolbar}>
       <Typography variant="h4" align="left">
-        <b>Daftar Kelas</b>
+        {role === "Teacher" ? <b>Daftar Tugas</b> :
+          <b>Daftar Tugas</b>}
+        {/* Nanti buat untuk yang admin juga */}
       </Typography>
-      <Link to="/createclass">
-        <Fab variant="extended" className={classes.newClassButton}>
-          <FaChalkboardTeacher className={classes.newClassIcon} />
-          Buat Kelas
-        </Fab>
-      </Link>
+      {role === "Student" ? <div style={{display: "none"}} /> :
+        <Link to="/buat-kelas">
+          <Fab variant="extended" className={classes.newTaskButton}>
+            <PostAddIcon className={classes.newTaskIcon} />
+              Buat Tugas
+          </Fab>
+        </Link>
+      }
     </Toolbar>
   );
 };
@@ -195,56 +207,86 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NewClassList(props) {
+function TaskList(props) {
+  document.title = "Schooly | Daftar Tugas"
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
+  const [orderBy, setOrderBy] = React.useState("subject");
   const [selected, setSelected] = React.useState([]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedClassId, setSelectedClassId] = React.useState(null)
-  const [selectedClassName, setSelectedClassName] = React.useState(null);
+  const [selectedTaskId, setSelectedTaskId] = React.useState(null)
+  const [selectedTaskName, setSelectedTaskName] = React.useState(null);
 
-  const { viewClass, deleteClass, classesCollection } = props;
+  const { tasksCollection, viewTask, deleteTask } = props;
   const { user } = props.auth;
 
-  const retrieveClasses = () => {
-    if(classesCollection.all_classes.length === 0) {
-      viewClass();
-    }
-    else {
-      rows = []
-      classesCollection.all_classes.map((data) => {
-        rows.push(
-          createData(data._id, data.name,
-            data.walikelas.name,
-            data.ukuran,
-            data.nihil ? "Nihil" : "Tidak Nihil",
-            [
-            <LightToolTip title="Sunting">
+
+  const taskRowItem = (data) => {
+    rows.push(
+      createData(data._id, data.name,
+        data.subject,
+        data.class_assigned,
+        data.deadline,
+        user.role === "Student" ? null :
+        [
+          <LightToolTip title="Sunting">
+            <Link to={`/sunting-tugas/${data._id}`}>
               <IconButton
                 size="small"
                 style={{marginRight: "5px"}}
-                onClick={(e) => { e.stopPropagation()
-                  window.location.href = `/editclass/${data._id}`
-                }}
+                onClick={(e)=> e.stopPropagation()}
               >
                 <EditIcon className={classes.tableEditIcon} />
               </IconButton>
-            </LightToolTip>,
-            <LightToolTip title="Hapus">
-              <IconButton
-                size="small"
-                onClick={(e) =>{
-                  handleOpenDeleteDialog(e, data._id, data.name)}}>
-                <DeleteIcon className={classes.tableDeleteIcon} />
-              </IconButton>
-            </LightToolTip>
-            ]
-          )
-        )
-      })
-    }
+            </Link>
+          </LightToolTip>,
+          <LightToolTip title="Hapus">
+            <IconButton
+              size="small"
+              onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}
+            >
+              <DeleteIcon className={classes.tableDeleteIcon} />
+            </IconButton>
+          </LightToolTip>
+        ]
+      )
+    )
+  }
+
+  React.useEffect(() => {viewTask()}, [tasksCollection.length])
+
+  const retrieveTasks = () => {
+    // If tasksCollection is not undefined or an empty array
+    if(tasksCollection.length) {
+        rows = []
+        console.log(tasksCollection)
+        console.log(user)
+        if(user.role === "Teacher") {
+        tasksCollection.map((data) => {
+          console.log(data.person_in_charge_id, user.id)
+          if(data.person_in_charge_id === user.id) {
+            taskRowItem(data)
+            }
+          })
+        }
+        else if (user.role === "Student"){
+          tasksCollection.map((data) => {
+            let class_assigned = data.class_assigned;
+            for (var i = 0; i < class_assigned.length; i++) {
+              if(class_assigned[i]._id === user.kelas) {
+                taskRowItem(data)
+                break;
+              }
+            }
+          })
+        }
+        else { //Admin
+          tasksCollection.map((data) => {
+            taskRowItem(data)
+          })
+        }
+      }
   }
 
   const handleRequestSort = (event, property) => {
@@ -253,51 +295,21 @@ function NewClassList(props) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event, checked) => {
-    if (checked) {
-      const newSelected = rows.map((n) => n._id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, item) => { // get the id by item._id
-    const selectedIndex = selected.indexOf(item._id);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, item._id);
-    }
-    else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    }
-    else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    }
-    else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-  };
+  // Call the function to view the tasks on tablerows.
+  // This function is defined upstairs.
+  retrieveTasks()
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  // Call the function to get the classes from DB
-  if(rows.length === 0)
-    retrieveClasses()
-  const onDeleteClass = (id) => {
-    deleteClass(id)
+  const onDeleteTask = (id) => {
+    deleteTask(id)
   }
 
   //Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedClassId(id)
-    setSelectedClassName(name)
+    setSelectedTaskId(id)
+    setSelectedTaskName(name)
   };
 
   const handleCloseDeleteDialog = () => {
@@ -321,12 +333,12 @@ function NewClassList(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Hapus Kelas berikut?
+              Hapus Tugas berikut?
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedClassName}</b>
+              <b>{selectedTaskName}</b>
             </Typography>
           </Grid>
           <Grid
@@ -339,7 +351,7 @@ function NewClassList(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteClass(selectedClassId) }}
+                onClick={() => { onDeleteTask(selectedTaskId) }}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -361,37 +373,28 @@ function NewClassList(props) {
     )
   }
 
-  if(user.role === "Student") {
-    return (
-      <div className={classes.root}>
-        <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
-          <b>Anda tidak mempunyai izin akses halaman ini.</b>
-        </Typography>
-      </div>
-    )
-  }
   return (
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
-        <ClassListToolbar deleteClass={deleteClass}/>
+        <TaskListToolbar role={user.role} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog} />
         <TableContainer>
           <Table>
-            <ClassListHead
+            <TaskListHead
+              role={user.role}
               classes={classes}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
               onRequestSort={handleRequestSort}
-              rowCount={rows !== undefined ?
-              rows.length : 0}
+              rowCount={rows ?
+              rows.length: 0}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .map((row, index) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = `/viewclass/${row._id}`
+                  let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
                   return (
                     <TableRow
                       className={classes.tableRow}
@@ -402,12 +405,12 @@ function NewClassList(props) {
                       selected={isItemSelected}
                     >
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
-                        {row.classroom}
+                        {row.tasktitle}
                       </TableCell>
-                      <TableCell align="center">{row.homeroomTeacher}</TableCell>
-                      <TableCell align="center">{row.size}</TableCell>
-                      <TableCell align="center">{row.absent}</TableCell>
-                      <TableCell align="center">{row.action}</TableCell>
+                      <TableCell align="center">{row.subject}</TableCell>
+                      <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
+                      <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY")}</TableCell>
+                      {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>
                   );
                 })}
@@ -416,24 +419,25 @@ function NewClassList(props) {
         </TableContainer>
       </Paper>
     </div>
-  )
-};
+  );
+}
 
-NewClassList.propTypes = {
-  viewClass: PropTypes.func.isRequired,
-  classesCollection: PropTypes.object.isRequired,
+TaskList.propTypes = {
+  viewTask: PropTypes.func.isRequired,
+  deleteTask: PropTypes.func.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  deleteClass: PropTypes.func.isRequired,
+  viewOneClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-  classesCollection: state.classesCollection,
+  tasksCollection: state.tasksCollection,
 })
 
 export default connect(
   mapStateToProps,
-{ viewClass, deleteClass }
-)(NewClassList);
+  { viewTask, deleteTask, viewOneClass }
+)(TaskList);

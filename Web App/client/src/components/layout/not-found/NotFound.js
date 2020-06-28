@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NotFound(props) {
-  document.title="Schooly | Error 404: Tautan tidak Ditemukan";
+  document.title="Schooly | Error 404";
 
   const classes = useStyles();
 
@@ -64,7 +64,7 @@ function NotFound(props) {
             <b>404 ERROR</b>
           </Typography>
           <Typography variant="h5" className={classes.notFoundText}>
-            Maaf, Halaman in tidak ditemukan
+            Maaf, halaman ini tidak ditemukan
           </Typography>
         </div>
       </div>
@@ -73,9 +73,9 @@ function NotFound(props) {
           variant="contained"
           size="large"
           className={classes.backButton}
-          href="/dashboard"
+          href="/beranda"
         >
-          Kembali ke Dashboard
+          Kembali ke Beranda
         </Button>
       </div>
     </div>

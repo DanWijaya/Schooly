@@ -107,7 +107,8 @@ function WorkListItem(props) {
   )
 }
 
-function ViewTaskListTeacher(props) {
+function SubmittedTaskList(props) {
+  document.title = "Schooly | Daftar Tugas Terkumpul"
   const classes = useStyles();
   const { viewOneClass, viewOneTask, tasksCollection, classesCollection, getStudentsByClass} = props;
   const {all_students} = props.auth;
@@ -138,7 +139,7 @@ function ViewTaskListTeacher(props) {
     <div className={classes.root}>
       <Paper>
         <Typography variant="h4" style={{textAlign: "center"}} gutterBottom>
-          Tugas <b>{tasksCollection.name}</b>
+        <b>{tasksCollection.name}</b>
         </Typography>
         <Tabs
           value={value}
@@ -148,9 +149,6 @@ function ViewTaskListTeacher(props) {
           variant="fullWidth"
         >
           {listClassAssigned()}
-          {/* <Tab label="Kelas 1" {...TabIndex(0)} />
-          <Tab label="Kelas 2" {...TabIndex(1)} />
-          <Tab label="Kelas 3" {...TabIndex(2)} /> */}
         </Tabs>
       </Paper>
       <TabPanel value={value} index={0}>
@@ -197,7 +195,7 @@ function ViewTaskListTeacher(props) {
   )
 };
 
-ViewTaskListTeacher.propTypes = {
+SubmittedTaskList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getStudentsByClass: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
@@ -218,4 +216,4 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps, {viewOneClass, getStudentsByClass,
     getTaskFilesByUser, viewOneTask}
-) (ViewTaskListTeacher);
+) (SubmittedTaskList);

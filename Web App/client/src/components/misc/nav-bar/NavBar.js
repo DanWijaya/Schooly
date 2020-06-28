@@ -96,7 +96,7 @@ function NavBar(props) {
       </div>
     )
     middleNavBarContents = (
-      <Link href="/dashboard">
+      <Link href="/beranda">
         <img
           alt="SchoolyLogoNavBar"
           src={schoolyLogo}

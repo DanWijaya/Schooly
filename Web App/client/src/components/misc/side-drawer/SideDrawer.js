@@ -101,16 +101,16 @@ function DrawerContent(props) {
   let directedTo;
   if(user !== undefined){
     if(user.role === "Student")
-      directedTo = `/viewclass/${user.kelas}`
+      directedTo = `/kelas/${user.kelas}`
     else
-      directedTo = "/newclasslist"
+      directedTo = "/daftar-kelas"
   }
 
   let ListItemContents = [
-    ["/dashboard", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Dashboard", null, false],
+    ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Dashboard", null, false],
     [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
     [null, <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", "Coming Soon", true],
-    ["/newtasklist", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
+    ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
     [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],
     [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
   ]

@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect } from "react";
-import { useMemo } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran} from "../../../actions/UploadActions"
@@ -260,12 +259,14 @@ function CheckedWorkFilesButton() {
   );
 }
 
-function NewTask(props) {
+function ViewTaskStudent(props) {
   const classes = useStyles();
   const { user, selectedUser } = props.auth;
   const { uploadTugas, getTaskFilesByUser, tasksCollection,
     filesCollection, downloadTugas, previewTugas,
     viewOneTask, getOneUser, downloadLampiran, previewLampiran } = props;
+
+  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -625,7 +626,7 @@ function NewTask(props) {
   )
 }
 
-NewTask.propTypes = {
+ViewTaskStudent.propTypes = {
    auth: PropTypes.object.isRequired,
    tasksCollection: PropTypes.object.isRequired,
    filesCollection: PropTypes.object.isRequired,
@@ -651,4 +652,4 @@ export default connect(
    mapStateToProps, { uploadTugas, deleteTugas, downloadTugas,
      previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
      previewLampiran, viewOneTask }
- ) (NewTask);
+ ) (ViewTaskStudent);

@@ -34,6 +34,7 @@ Daniel:
     (node:3857) DeprecationWarning: GridStore is deprecated, and will be removed in a future version. Please use GridFSBucket instead
     (node:3857) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
     (node:3857) DeprecationWarning: collection.remove is deprecated. Use deleteOne, deleteMany, or bulkWrite instead.
+22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 
 Penting untuk diimplemen:
 2. Buat Notification functionality (Schema Notif dan explore cara handlenya?)
