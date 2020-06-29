@@ -8,6 +8,7 @@ module.exports = function validateTaskInput(data) {
     // data.deadline, there is no need? 
     data.subject = isEmpty(data.subject) ? "" : data.subject;
     data.description = isEmpty(data.description) ? "" : data.description;
+    data.grade = isEmpty(data.grade) ? "" : data.grade;
 
     console.log(data.description, "Description")
     console.log(isEmpty(data.description))
@@ -25,9 +26,17 @@ module.exports = function validateTaskInput(data) {
     if(Validator.isEmpty(data.description)) {
         errors.description = "Deskripsi belum diberikan"
     }
+    if(data.grade > 100 && data.grade < 0){
+        errors = { grade : "Nilai harus diantara 0 dan 100"}
+    }
 
-    console.log(data.class_assigned)
-    console.log("AAA", errors)
+    if(!isEmpty(data.grade)){
+        return {
+            errors,
+            isValid: isEmpty(errors)
+        }
+    }
+
     return{
         errors,
         isValid: isEmpty(errors)

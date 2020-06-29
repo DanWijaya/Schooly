@@ -58,35 +58,52 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
   if(userData.avatar !== undefined) {
     axios.delete(`/api/uploads/image/${userData.avatar}`)
       .then(res => {
+        return axios
+        .post("/api/users/update/avatar/" + userId, formData)
+        
+      })
+      .then(res => {
         console.log("Old Profile picture is removed")
+        // Set token to localStorage
+        const { token } = res.data;
+        localStorage.setItem("jwtToken", token);
+        console.log("Foto udah diganti")
+        // Set token to Auth header
+        setAuthToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current user
+        dispatch(setCurrentUser(decoded));
+
       })
       .catch(err => {
         console.log("No Profile picture set previously or error occured in removing old Profile picture")
       })
+  } else {
+      axios
+        .post("/api/users/update/avatar/" + userId, formData, userData)
+        .then(res => {
+
+            // Set token to localStorage
+          const { token } = res.data;
+          localStorage.setItem("jwtToken", token);
+          console.log("Foto udah diganti")
+          // Set token to Auth header
+          setAuthToken(token);
+          // Decode token to get user data
+          const decoded = jwt_decode(token);
+          // Set current user
+          dispatch(setCurrentUser(decoded));
+
+        })
+        .catch(err => {
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+          })
+        })
+    }
   }
-  axios
-    .post("/api/users/update/avatar/" + userId, formData, userData)
-    .then(res => {
-
-        // Set token to localStorage
-      const { token } = res.data;
-      localStorage.setItem("jwtToken", token);
-      console.log("Foto udah diganti")
-      // Set token to Auth header
-      setAuthToken(token);
-      // Decode token to get user data
-      const decoded = jwt_decode(token);
-      // Set current user
-      dispatch(setCurrentUser(decoded));
-
-    })
-    .catch(err => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    })
-}
 
 // to initiate a dispatch, pass the result to the dispatch() function.
 // Login - get user token

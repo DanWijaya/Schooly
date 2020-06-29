@@ -13,10 +13,14 @@ const StandardTextField = (props) => {
   return (
     <div>
       <input
+        defaultValue={props.defaultValue}
+        onChange={props.on_change}
+        value={props.value}
+        disabled={props.disabled}
         style={{
-          width: "100%",
+          width: !props.width ? "100%" : props.width,
           display: "inline-block",
-          borderBottom: `${borderStyle}`,
+          borderBottom: !props.borderBottom ? borderStyle : props.borderBottom,
           boxShadow: "none",
           backgroundColor: "#FFFFFF",
         }}

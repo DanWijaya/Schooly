@@ -35,7 +35,12 @@ const TaskSchema = new Schema({
         type: Object,
         default: []
     }]
-
+    // ,grades: [{user_id : {type: String, default: ""}, 
+    // nilai: {type: Number, default: 0}}]
+    , grades: {
+        type: Map,
+        default: null // userId -> the score. 
+    }
 })
 
 module.exports = Task = mongoose.model("tasks", TaskSchema);

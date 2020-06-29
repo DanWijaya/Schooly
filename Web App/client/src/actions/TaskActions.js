@@ -105,6 +105,23 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     })
 }
 
+
+export const gradeTask = (taskId, gradingData, student_name) => dispatch => {
+    console.log(taskId, gradingData)
+    axios
+        .post(`/api/tasks/update/${taskId}`, gradingData)
+        .then(res => {
+            console.log("Grade task is added")
+            alert(`Tugas ${student_name} berhasil dinilai `);
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch({
+                type: GET_ERRORS,
+                payload: err
+            })
+        })
+}
 export const deleteTask = (taskId, history) => dispatch => {
   axios
     .delete("/api/tasks/delete/" + taskId)

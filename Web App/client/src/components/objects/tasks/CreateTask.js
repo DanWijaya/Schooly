@@ -248,7 +248,6 @@ class CreateTask extends Component {
     const{ class_assigned, fileLampiran, errors} = this.state;
     const { user } = this.props.auth
     console.log(errors)
-
     const listFileChosen = () => {
       let temp = []
       if(fileLampiran.length > 0) {
