@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER} from "./Types";
+import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER, GRADE_TASKS} from "./Types";
 
 // Addtask
 export const createTask = (formData, taskData, history) => dispatch => {
@@ -113,6 +113,10 @@ export const gradeTask = (taskId, gradingData, student_name) => dispatch => {
         .then(res => {
             console.log("Grade task is added")
             alert(`Tugas ${student_name} berhasil dinilai `);
+            dispatch({
+                type: GRADE_TASKS,
+                payload: res.data
+            })
         })
         .catch(err => {
             console.log(err);

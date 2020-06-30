@@ -235,8 +235,7 @@ function TaskList(props) {
               <IconButton
                 size="small"
                 style={{marginRight: "5px"}}
-                onClick={(e)=> e.stopPropagation()}
-              >
+                onClick={(e)=> e.stopPropagation()}>
                 <EditIcon className={classes.tableEditIcon} />
               </IconButton>
             </Link>
@@ -244,8 +243,7 @@ function TaskList(props) {
           <LightToolTip title="Hapus">
             <IconButton
               size="small"
-              onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}
-            >
+              onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}>
               <DeleteIcon className={classes.tableDeleteIcon} />
             </IconButton>
           </LightToolTip>
@@ -260,11 +258,8 @@ function TaskList(props) {
     // If tasksCollection is not undefined or an empty array
     if(tasksCollection.length) {
         rows = []
-        console.log(tasksCollection)
-        console.log(user)
         if(user.role === "Teacher") {
         tasksCollection.map((data) => {
-          console.log(data.person_in_charge_id, user.id)
           if(data.person_in_charge_id === user.id) {
             taskRowItem(data)
             }
@@ -296,7 +291,7 @@ function TaskList(props) {
   };
 
   // Call the function to view the tasks on tablerows.
-  // This function is defined upstairs.
+  // This function is defined above.
   retrieveTasks()
 
   const isSelected = (name) => selected.indexOf(name) !== -1;

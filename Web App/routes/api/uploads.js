@@ -12,6 +12,7 @@ const http = require('http');
 const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
 const Task = require("../../models/Task");
+const Announcement = require("../../models/Announcement");
 const { reject } = require("async");
 const { resolve } = require("path");
 const { Console } = require("console");
@@ -22,9 +23,7 @@ mongoose.set('useNewUrlParser', true)
 const conn = mongoose.createConnection(keys.mongoURI)
 
 // Initialize gfs
-let gfsAvatar;
-let gfsTugas;
-let gfsLampiran;
+let gfsAvatar, gfsTugas, gfsLampiran, gfsLampiranAnnouncement;
 
 conn.once("open", () => {
   // Initialize Stream
@@ -36,6 +35,9 @@ conn.once("open", () => {
   
   gfsLampiran = GridFsStream(conn.db, mongoose.mongo);
   gfsLampiran.collection("lampiran")
+
+  gfsLampiranAnnouncement = GridFsStream(conn.db, mongoose.mongo);
+  gfsLampiranAnnouncement.collection("lampiran_announcement")
 })
 
 // Storage Engine initialization function
@@ -70,11 +72,13 @@ function storageEngine(bucketName, random=false){
 var avatar_storage = storageEngine("avatar", true)
 var tugas_storage = storageEngine("tugas")
 var lampiran_storage = storageEngine("lampiran")
+var lampiran_announcement_storage = storageEngine("lampiran_announcement")
 
 // Create the middleware which facilitates file uploads
 const uploadAvatar = multer({ storage: avatar_storage });
 const uploadTugas = multer({ storage: tugas_storage });
 const uploadLampiran = multer({ storage: lampiran_storage});
+const uploadLampiranAnnouncement = multer({ storage: lampiran_announcement_storage});
 
 // ------------------------------ Part for Avatar uploads ------------------------------- //
 //Uploading for Avatar
@@ -429,6 +433,81 @@ router.delete("/lampiran/:task_id", (req,res) => {
           .catch((err) => console.log("Error happened in updating task lampiran field"))
     }
   })
-  
 })
+
+// Router for handling the upload lampiran announcement... 
+router.post("/upload_lampiran_annoucement/:id", uploadLampiranAnnouncement.array("lampiran_announcement", 5), (req,res) => {
+  let announcement_id = req.params.id;
+  console.log("Upload lampiran is runned")
+
+  Announcement.findById(announcement_id, (err, announcement) => {
+    console.log("This is the announcement", announcement)
+    if(!announcement){
+      return res.status(404).json({notfound: "Announcement not found"});
+    } else {
+      let temp = [];
+      console.log("Files are here: ", req.files)
+      // console.log("Files are here: ", req.files)
+      for(var i = 0; i< req.files.length; i++){
+        console.log(req.files[i])
+        temp.push({
+          id: req.files[i].id,
+          filename: req.files[i].filename,
+        })
+      }
+      console.log("Temp: ", temp)
+      announcement.lampiran = temp;
+
+      // kalau udah ada lampiran, push aja.
+      if(announcement.lampiran != undefined && announcement.lampiran.length > 0){
+        let temp2 = [...announcement.lampiran, ...temp]
+        announcement.lampiran = temp2
+      } else{
+        announcement.lampiran = temp;
+      }
+
+      announcement.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client. 
+                  .then(announcement => console.log("Lampiran announcement"))
+                  .catch(err => {console.log("error kan ini")})
+      
+        }
+    })
+  res.json({success: "Successfully uploaded the lampiran file"})
+})
+
+router.delete("/lampiran_announcement/:id", (req,res) => {
+  let announcement_id = req.params.id;
+  const {lampiran_to_delete, current_lampiran} = req.body;
+  for(var i = 0; i < lampiran_to_delete.length; i++){
+    announcement_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
+    // di rootnya, masukkin collection namenya.. 
+    gfsLampiranAnnouncement.remove({ _id: announcement_id, root: "lampiran_announcement"}, (err) => {
+      if(err) {
+        console.log("error occured")
+        return res.status(404).json({err: "Error in removing the files"});
+      } else {
+        console.log("Sucessful, lampiran kenadelete")
+      }
+    })
+
+    for(var j =0; j < current_lampiran.length; j++) {
+      if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+        current_lampiran.splice(j,1)
+        break;
+      }
+    }
+  }
+
+  Announcement.findById(task_id, (err, ann) => {
+    if(!task){
+      return res.status(404).json("Task object is not found in the Database")
+    } else {
+      ann.lampiran = current_lampiran;
+      task.save()
+          .then((ann) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
+          .catch((err) => console.log("Error happened in updating task lampiran field"))
+    }
+  })
+})
+
 module.exports = {router, uploadAvatar, uploadTugas, uploadLampiran};

@@ -181,84 +181,6 @@ function WorkFile(props) {
   )
 }
 
-function CheckedWorkFilesButton() {
-  const StyledMenu = withStyles({
-    paper: {
-      border: "1px solid #D3D4D5",
-    },
-  })((props) => (
-    <Menu
-      elevation={0}
-      getContentAnchorEl={null}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "center",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "center",
-      }}
-      {...props}
-    />
-  ));
-
-  const StyledMenuItem = withStyles((theme) => ({
-    root: {
-      "&:focus": {
-        backgroundColor: "#2196F3",
-        "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-          color: theme.palette.common.white,
-        },
-      },
-    },
-  }))(MenuItem);
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <div>
-      <Button
-        variant="contained"
-        onClick={handleClick}
-        startIcon={<AssignmentTurnedInIcon />}
-        style={{color: "white", backgroundColor: "#2196F3"}}>
-        Lihat Hasil Pengecekkan
-      </Button>
-      <StyledMenu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <StyledMenuItem>
-          <ListItemAvatar>
-            <Avatar src={0} />
-          </ListItemAvatar>
-          <ListItemText
-            primary="File Name"
-            secondary="File Type"
-          />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <GetAppIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Download Semua File" />
-        </StyledMenuItem>
-      </StyledMenu>
-    </div>
-  );
-}
-
 function ViewTaskStudent(props) {
   const classes = useStyles();
   const { user, selectedUser } = props.auth;
@@ -278,9 +200,9 @@ function ViewTaskStudent(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
-
+  
   let tugasId = props.match.params.id;
-
+  
   //This page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
@@ -614,13 +536,12 @@ function ViewTaskStudent(props) {
       </Grid>
 
       <Grid container direction="column" alignItems="center">
-        <Typography variant="subtitle1">
-          Status: Sudah Diperiksa/Belum Diperiksa
+        <Typography variant="h6">
+          Status: {!tasksCollection.grades ? "Belum Diperiksa" : !tasksCollection.grades[user.id] ? "Belum Diperiksa" :  "Telah Diperiksa"}
         </Typography>
         <Typography variant="h4" gutterBottom>
-          Hasil Penilaian: {100}
+          Hasil Penilaian: {!tasksCollection.grades ? "N/A" : !tasksCollection.grades[user.id] ? "N/A" :  `${tasksCollection.grades[user.id]}/100`}
         </Typography>
-        <CheckedWorkFilesButton />
       </Grid>
     </div>
   )

@@ -181,6 +181,7 @@ function SubmittedTaskList(props) {
   const task_id = props.match.params.id;
 
   const [grade, setGrade] = React.useState(new Map());
+  const [gradeStatus, setGradeStatus] = React.useState(new Map());
 
   console.log()
   console.log(grade)
@@ -199,10 +200,9 @@ function SubmittedTaskList(props) {
 
   const handleChangeGrade = (e, id) => {
     let gradeMap = grade
-    console.log(id, e.target.value)
     gradeMap.set(id, e.target.value)
-    console.log(gradeMap, grade)
     setGrade(gradeMap)
+    
   }
   
   const onDownloadFile = (id, fileCategory="none") => {
@@ -232,8 +232,14 @@ function SubmittedTaskList(props) {
       studentId: studentId
     }
     console.log(taskId, gradingData)
-    gradeTask(taskId, gradingData, student_name)  
+    let gradeStatusMap = gradeStatus
 
+    if(grade.has(studentId)){
+      gradeStatusMap.set(studentId, "Graded")
+      setGradeStatus(gradeStatusMap)
+      viewOneTask(task_id) 
+      gradeTask(taskId, gradingData, student_name) 
+    }
   }
 
   const fileType = (filename) => {
@@ -270,16 +276,18 @@ function SubmittedTaskList(props) {
       return (
         <Tabs
           value={value}
+          variant="scrollable"
           onChange={handleChange}
           indicatorColor="primary"
           textColor="primary"
-          variant="fullWidth">
+          >
             {class_assigned}
         </Tabs>
         )
     }
   }
 
+  // let TabPanelList = []
   const listClassTabPanel = () => {
     let TabPanelList = []
     if( !tasksCollection.class_assigned || !all_students){
@@ -318,27 +326,13 @@ function SubmittedTaskList(props) {
                 </ListItemAvatar>
                 <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
                 //  secondary={task_list_on_panel.length == 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
-                 secondary={Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
+                 secondary={!tasksCollection.grades ? "Not graded" : !gradeStatus.has(student._id) && !tasksCollection.grades[student._id] ? "Not Graded" : "Graded"}/>
             </ListItem>
             </ExpansionPanelSummary>
              <Divider />
              <div className={classes.studentFileListContainer}>
               <List>
                 {task_list_on_panel}
-                {/* {student_task.map((task) => { 
-                  let tasks_list = []
-                  if(task.for_task_object == task_id){
-                    student_task_files_id.push(task.id)
-                    tasks_list.push(
-                    <WorkFile 
-                      file_id={task.id}
-                      file_name={task.filename}
-                      file_type={fileType(task.filename)}
-                      onPreviewFile={onPreviewFile}
-                      onDownloadFile={onDownloadFile}/>)
-                  }
-                  return tasks_list
-                })} */}
                 
               </List>
               {student_task_files_id.length > 0 ? 
@@ -349,44 +343,6 @@ function SubmittedTaskList(props) {
                     on_change={(e) => {handleChangeGrade(e, student._id)}}
                     width="35px" borderBottom="1px solid #CCC"/>
                     <StandardTextField disabled={true} value="/ 100" width="40px" />
-
-                  {/* <FormControl> */}
-                  {/* <Input
-                      id="standard-adornment-weight"
-                      defaultValue={grade.has(student._id) ? grade.get(student._id) : tasksCollection.grades[student._id]}
-                      onChange={(e) => {handleChangeGrade(e, student._id)}}
-                      aria-describedby="standard-weight-helper-text"
-                      style={{width: "65px"}}
-                      endAdornment={<InputAdornment position="end">/100</InputAdornment>}
-                      inputProps={{
-                        style: { borderBottom: 'none', boxShadow: 'none'}
-                      }}
-                    /> */}
-                    {/* {tasksCollection.grades.has(student._id) ? 
-                      <Input
-                      id="standard-adornment-weight"
-                      value={tasksCollection.grades.get(student._id)}
-                      onChange={handleChangeGrade}
-                      aria-describedby="standard-weight-helper-text"
-                      style={{width: "65px"}}
-                      endAdornment={<InputAdornment position="end">/100</InputAdornment>}
-                      inputProps={{
-                        style: { borderBottom: 'none', boxShadow: 'none'}
-                      }}
-                    />
-                        :
-                      <Input
-                        id="standard-adornment-weight"
-                        onChange={handleChangeGrade}
-                        aria-describedby="standard-weight-helper-text"
-                        style={{width: "65px"}}
-                        endAdornment={<InputAdornment position="end">/100</InputAdornment>}
-                        inputProps={{
-                          style: { borderBottom: 'none', boxShadow: 'none'}
-                        }}
-                      />
-                    } */}
-                {/* </FormControl> */}
                   </div>
 
                   <div>
@@ -413,6 +369,7 @@ function SubmittedTaskList(props) {
     return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
   }
 
+  // Before that, run this : 
   return (
     <div className={classes.root}>
       <Paper>

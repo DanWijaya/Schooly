@@ -115,7 +115,9 @@ router.post("/update/:id", (req, res) => {
         if(!taskData)
             return res.status(404).send("Task data is not found");
         else{
+            console.log(grade)
             if(!grade){
+                // Untuk taskData yang bukan edit atau kasi nilai
                 taskData.name = req.body.name;
                 taskData.deadine = req.body.deadine;
                 taskData.subject = req.body.subject;
@@ -123,23 +125,22 @@ router.post("/update/:id", (req, res) => {
                 taskData.description = req.body.description;
                 taskData.deadline = req.body.deadline;
             } else{
-                
+                // untuk yang kasi nilai
                 if(!taskData.grades){
-                    console.log("WOI1, Updating the task for grading")
                     let gradeMap = new Map()
                     gradeMap.set(req.body.studentId, grade)
                     taskData.grades = gradeMap
                     console.log(gradeMap, taskData.grades)
                 }else{
-                    console.log("WOI2, Updating the task for grading")
                     taskData.grades.set(req.body.studentId,grade)
                 }
         
+            }
+
             taskData
                 .save()
                 .then(taskData => res.json("Update Task complete"))
                 .catch(err => res.status(400).send("Unable to update task database"));
-            }
 
         }
         });

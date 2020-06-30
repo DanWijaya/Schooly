@@ -47,19 +47,19 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  { id: "classroom", numeric: false, disablePadding: true, label: "Kelas" },
-  { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
-  { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
-  { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
-  { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
-];
-
 function ClassListHead(props) {
   const { classes, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+
+  const headCells = [
+    { id: "classroom", numeric: false, disablePadding: true, label: "Kelas" },
+    { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
+    { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
+    { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
+    { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
+  ];
 
   return (
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
@@ -214,7 +214,7 @@ function ClassList(props) {
       createData(data._id, data.name,
         data.walikelas.name,
         data.ukuran,
-        data.nihil ? "Nihil" : "Tidak Nihil",
+        !data.nihil ? "Nihil" : "Tidak Nihil",
         [
         <LightToolTip title="Sunting">
           <Link to ={`/sunting-kelas/${data._id}`}>
@@ -238,11 +238,10 @@ function ClassList(props) {
       )
     )
   }
+  React.useEffect(() => {viewClass()}, [classesCollection.length])
+
   const retrieveClasses = () => {
-    if(classesCollection.all_classes.length === 0) {
-      viewClass();
-    }
-    else {
+    if(classesCollection.all_classes.length > 0) {
       rows = []
       classesCollection.all_classes.map((data) => {
         taskRowItem(data)
@@ -289,8 +288,9 @@ function ClassList(props) {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Call the function to get the classes from DB
-  if(rows.length === 0)
-    retrieveClasses()
+  // this function is defined above
+  retrieveClasses()
+
   const onDeleteClass = (id) => {
     deleteClass(id)
   }
