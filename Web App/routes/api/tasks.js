@@ -99,32 +99,48 @@ router.get("/viewOneTask/:id", (req, res) => {
 
 //Define update routes
 router.post("/update/:id", (req, res) => {
+    let grade = req.body.grade;
+
     const { errors, isValid } = validateTaskInput(req.body)
 
-    if(!isValid) { 
+    if(!isValid && !grade) { 
         console.log("Not Valid");
         return res.status(400).json(errors);
     }
     
     let id = req.params.id;
+    
     console.log(req.body.name);
     Task.findById(id, (err, taskData) => {
         if(!taskData)
             return res.status(404).send("Task data is not found");
         else{
-            taskData.name = req.body.name;
-            taskData.deadine = req.body.deadine;
-            taskData.subject = req.body.subject;
-            taskData.class_assigned = req.body.class_assigned;
-            taskData.description = req.body.description;
-            taskData.deadline = req.body.deadline;
-            // taskData.submitted = req.body.submitted;
+            if(!grade){
+                taskData.name = req.body.name;
+                taskData.deadine = req.body.deadine;
+                taskData.subject = req.body.subject;
+                taskData.class_assigned = req.body.class_assigned;
+                taskData.description = req.body.description;
+                taskData.deadline = req.body.deadline;
+            } else{
+                
+                if(!taskData.grades){
+                    console.log("WOI1, Updating the task for grading")
+                    let gradeMap = new Map()
+                    gradeMap.set(req.body.studentId, grade)
+                    taskData.grades = gradeMap
+                    console.log(gradeMap, taskData.grades)
+                }else{
+                    console.log("WOI2, Updating the task for grading")
+                    taskData.grades.set(req.body.studentId,grade)
+                }
         
             taskData
                 .save()
                 .then(taskData => res.json("Update Task complete"))
                 .catch(err => res.status(400).send("Unable to update task database"));
-        
+            }
+
         }
         });
     });

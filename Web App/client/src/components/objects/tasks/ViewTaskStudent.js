@@ -97,8 +97,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
-  fileLainnyaIcon: {
-    color: theme.palette.primary.dark
+  otherFileTypeIcon: {
+    backgroundColor: theme.palette.primary.dark
   },
 }));
 
@@ -116,7 +116,7 @@ function LampiranFile(props) {
         onClick={() => {onPreviewFile(file_id, "lampiran")}}>
           <ListItemAvatar>
             {filetype == "File lainnya" ?
-            <DescriptionIcon className={classes.fileLainnyaIcon}/> :
+            <Avatar className={classes.otherFileTypeIcon}><DescriptionIcon/></Avatar> :
             <Avatar/>}
           </ListItemAvatar>
           <ListItemText
@@ -138,7 +138,7 @@ function LampiranFile(props) {
 
 function WorkFile(props) {
   const classes = useStyles();
-  const {file_type_icon, file_name, file_type, onDownloadFile, file_id} = props;
+  const {file_type_icon, file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog} = props;
   let displayedName = ""
 
   file_name.length >= 25 ?
@@ -146,10 +146,10 @@ function WorkFile(props) {
   : displayedName = file_name
 
   return (
-    <ListItem button disableRipple onClick={() => {props.onPreviewFile(file_id, "tugas")}}>
+    <ListItem button disableRipple onClick={() => {onPreviewFile(file_id, "tugas")}}>
       <ListItemAvatar>
         {file_type == "File lainnya" ?
-        <DescriptionIcon className={classes.fileLainnyaIcon}/> : <Avatar/>}
+        <Avatar className={classes.otherFileTypeIcon}> <DescriptionIcon/> </Avatar>: <Avatar/>}
       </ListItemAvatar>
       <ListItemText
         primary={displayedName}
@@ -158,7 +158,7 @@ function WorkFile(props) {
       <ListItemIcon>
         <IconButton className={classes.iconButton}
           onClick={(e) => { e.stopPropagation()
-            props.onDownloadFile(file_id, "tugas")}}
+            onDownloadFile(file_id, "tugas")}}
          >
           <CloudDownloadIcon />
         </IconButton>
@@ -166,7 +166,7 @@ function WorkFile(props) {
       <ListItemIcon>
         <IconButton className={classes.iconButton}
           onClick={(e) => { e.stopPropagation()
-            props.handleOpenDeleteDialog(props.file_id, props.file_name)}}
+            handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
           <DeleteIcon />
         </IconButton>

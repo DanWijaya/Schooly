@@ -124,21 +124,18 @@ router.get("/image-upload", (req,res) => {
   // @desc Upload files to DB
   // This part where it uploads the avatar is done on users.js (because want to update the user data at the same time)
   /* router.post("/upload/:id", uploadAvatar.single("avatar"), (req,res) => {
-
     let id = req.params.id
     User.findById(id, (err, userData) => {
       if(!userData)
         res.status(404).send("User data is not found");
       else{
         userData.avatar = req.file.filename;
-
         userData
               .save()
               .then()
               .catch(err => res.status(400).send("Unable to update user"))
       }
     })
-
     res.redirect("/image-upload");
     console.log(req.file.filename)
   }); */
