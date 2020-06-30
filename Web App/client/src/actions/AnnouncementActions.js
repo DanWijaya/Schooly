@@ -1,40 +1,16 @@
 import axios from "axios";
+import { GET_ERRORS } from "./Types"
 
 // Add Announcement
 export const createAnnouncement = (formData, announcementData, history) => dispatch => {
+    console.log("RUnLAH!!", formData, announcementData)
     axios
-      .post("/api/tasks/create", announcementData)
+      .post("/api/announcements/create", announcementData)
       .then(res => {
           console.log("this is the res" , res.data._id)
           console.log("Will run this")
           console.log(formData.has('lampiran'))
-          if(formData.has('lampiran'))
-              return axios.post(`/api/uploads/upload_lampiran_annoucement/${res.data._id}`, formData);
-          else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
-              return "Successfully created announcement with no lampiran"
-      })
-      .then(res => {
-              alert("Announcement is created")
-            //   history.push("/daftar-tugas")
-          })
-      .catch(err =>{
-          console.log("error happened")
-          dispatch({
-              type: GET_ERRORS,
-              payload: err
-          })
-      })  
-} 
-
-// Add Announcement
-export const createAnnouncement = (formData, announcementData, history) => dispatch => {
-    axios
-      .post("/api/tasks/create", announcementData)
-      .then(res => {
-          console.log("this is the res" , res.data._id)
-          console.log("Will run this")
-          console.log(formData.has('lampiran'))
-          if(formData.has('lampiran'))
+          if(formData.has('lampiran_announcement'))
               return axios.post(`/api/uploads/upload_lampiran_annoucement/${res.data._id}`, formData);
           else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
               return "Successfully created announcement with no lampiran"
@@ -54,7 +30,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
 
 export const deleteAnnouncement = (announcementId, history) => dispatch => {
     axios
-        .delete(`/api/announcements/delete/${annId}`, annData)
+        .delete(`/api/announcements/delete/${announcementId}`)
         .then((res) => {
             console.log(res.data)
             window.location.href="/daftar-tugas"

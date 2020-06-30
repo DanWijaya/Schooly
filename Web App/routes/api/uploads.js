@@ -344,6 +344,7 @@ router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (r
       } else{
         task.lampiran = temp;
       }
+      
       console.log(task.lampiran)
       task.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client. 
           .then(task => console.log("Task"))
@@ -456,7 +457,6 @@ router.post("/upload_lampiran_annoucement/:id", uploadLampiranAnnouncement.array
         })
       }
       console.log("Temp: ", temp)
-      announcement.lampiran = temp;
 
       // kalau udah ada lampiran, push aja.
       if(announcement.lampiran != undefined && announcement.lampiran.length > 0){

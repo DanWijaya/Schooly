@@ -145,8 +145,8 @@ class CreateTask extends Component {
     }
   }
 
-  tugasUploader = React.createRef(null)
-  uploadedTugas = React.createRef(null)
+  lampiranUploader = React.createRef(null)
+  uploadedLampiran = React.createRef(null)
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
@@ -393,7 +393,7 @@ class CreateTask extends Component {
                       multiple={true}
                       name="lampiran"
                       onChange={this.handleLampiranUpload}
-                      ref={this.tugasUploader}
+                      ref={this.lampiranUploader}
                       accept="file/*"
                       style={{display: "none"}}
                     />
@@ -402,7 +402,7 @@ class CreateTask extends Component {
                       multiple={true}
                       name="file"
                       id="file"
-                      ref={this.uploadedTugas}
+                      ref={this.uploadedLampiran}
                       style={{display: "none"}}
                     />
                     <Grid item container direction="row" alignItems="center">
@@ -430,7 +430,7 @@ class CreateTask extends Component {
                       </StyledMenu>
                       <Grid item xs={1}>
                         <LightTooltip title="Tambahkan Lampiran Berkas">
-                          <IconButton onClick={() => {this.tugasUploader.current.click()}}>
+                          <IconButton onClick={() => {this.lampiranUploader.current.click()}}>
                             <AttachFileIcon />
                            </IconButton>
                          </LightTooltip>

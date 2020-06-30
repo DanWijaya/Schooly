@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
+const validateAnnouncementInput = require("../../validation/AnnouncementData");
 
 const Announcement = require("../../models/Announcement");
 
@@ -20,7 +21,7 @@ router.post("/create", (req, res) => {
         title: req.body.title,
         description: req.body.description,
         author: req.body.author,
-        date_announced: req.body.date_announced
+        date_announced: new Date()
     })
 
 
@@ -93,4 +94,4 @@ router.delete("/delete/:id", (req, res) => {
 })
 
 
-
+module.exports = router;
