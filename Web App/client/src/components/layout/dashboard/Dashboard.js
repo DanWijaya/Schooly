@@ -156,7 +156,7 @@ class Dashboard extends Component {
     document.body.style = "background: #FFFFFF";
 
     const { classes } = this.props;
-    const { user, role } = this.props.auth;
+    const { user } = this.props.auth;
 
     return (
       <div className={classes.root}>

@@ -51,11 +51,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexDirection: "row"
   },
-  workChosenFile: {
-    width: "200px",
-    textAlign:"center",
-    color:"#2196F3",
-  },
   workButton: {
     width: "200px",
   },
@@ -90,6 +85,14 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.error.dark,
+    },
+  },
+  listItemPaper: {
+    marginBottom: "10px"
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
     },
   },
 }));

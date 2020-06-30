@@ -485,7 +485,6 @@ function Help(props) {
 
 Help.propTypes = {
   auth: PropTypes.object.isRequired,
-  logoutUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({

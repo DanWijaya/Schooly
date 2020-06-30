@@ -155,22 +155,18 @@ function WorkFile(props) {
         primary={displayedName}
         secondary={file_type}
       />
-      <ListItemIcon>
-        <IconButton className={classes.iconButton}
-          onClick={(e) => { e.stopPropagation()
-            onDownloadFile(file_id, "tugas")}}
-         >
-          <CloudDownloadIcon />
-        </IconButton>
-      </ListItemIcon>
-      <ListItemIcon>
-        <IconButton className={classes.iconButton}
-          onClick={(e) => { e.stopPropagation()
-            handleOpenDeleteDialog(props.file_id, props.file_name)}}
-         >
-          <DeleteIcon />
-        </IconButton>
-      </ListItemIcon>
+      <IconButton size="small" className={classes.iconButton}
+        onClick={(e) => { e.stopPropagation()
+          onDownloadFile(file_id, "tugas")}}
+       >
+        <CloudDownloadIcon />
+      </IconButton>
+      <IconButton size="small" className={classes.iconButton}
+        onClick={(e) => { e.stopPropagation()
+          handleOpenDeleteDialog(props.file_id, props.file_name)}}
+       >
+        <DeleteIcon />
+      </IconButton>
     </ListItem>
   )
 }
