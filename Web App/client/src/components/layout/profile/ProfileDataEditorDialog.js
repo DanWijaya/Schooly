@@ -214,9 +214,9 @@ function ProfileDataEditorDialog(props) {
               <b>Sunting Profil</b>
             </Typography>
           </Grid>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} style={{width: "100%"}}>
             <Tabs
-              centered
+              variant="fullWidth"
               indicatorColor="primary"
               textColor="primary"
               value={value}

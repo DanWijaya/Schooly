@@ -140,7 +140,7 @@ const TaskListToolbar = (props) => {
         {/* Nanti buat untuk yang admin juga */}
       </Typography>
       {role === "Student" ? <div style={{display: "none"}} /> :
-        <Link to="/buat-kelas">
+        <Link to="/buat-tugas">
           <Fab variant="extended" className={classes.newTaskButton}>
             <PostAddIcon className={classes.newTaskIcon} />
               Buat Tugas

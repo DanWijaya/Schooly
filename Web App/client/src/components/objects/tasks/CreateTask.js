@@ -101,6 +101,12 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  deadlinePicker: {
+    "&:focus, &:hover": {
+      borderBottom: "1px solid #2196f3",
+      boxShadow: "none",
+    },
+  },
 });
 
 function LampiranFile(props) {
@@ -445,11 +451,11 @@ class CreateTask extends Component {
                         id="date-picker-inline"
                         value={this.state.deadline}
                         onChange={(date) => this.onDateChange(date)}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
                         InputProps={{
                           disableUnderline: true
+                        }}
+                        inputProps={{
+                          className: classes.deadlinePicker
                         }}
                       />
                     </MuiPickersUtilsProvider>

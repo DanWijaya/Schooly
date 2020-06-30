@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { updateAvatar } from "../../../actions/UserActions"
 import { viewOneClass} from "../../../actions/ClassActions"
-import defaultAvatar from "./DefaultAvatar.jpg";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
@@ -126,7 +125,7 @@ function Profile(props) {
     setOpenPasswordEditorAlert(false);
   }
 
-  //Initially classesCollection.selectedClasses.name === undefined. 
+  //Initially classesCollection.selectedClasses.name === undefined.
   if(user.role === "Student" && !classesCollection.selectedClasses.name
   ){
     viewOneClass(user.kelas)
@@ -174,7 +173,6 @@ function Profile(props) {
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar
-          // && user.avatar !== undefined
           ?
             <StyledBadge
               badgeContent={
@@ -200,7 +198,7 @@ function Profile(props) {
                 />
               }
             >
-              <Avatar src={defaultAvatar} className={classes.avatar} />
+              <Avatar className={classes.avatar} />
             </StyledBadge>
           }
           <Typography variant="subtitle2">

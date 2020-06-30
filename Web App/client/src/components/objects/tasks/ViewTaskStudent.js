@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     margin: "auto",
-    maxWidth: "1200px",
+    maxWidth: "1000px",
     padding: "10px",
   },
   dialogBox: {
@@ -89,12 +89,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  workResultSection: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: "20px",
-  },
   listItemPaper: {
     marginBottom: "10px"
   },
@@ -121,8 +115,8 @@ function LampiranFile(props) {
         <ListItem button disableRipple className={classes.listItem}
         onClick={() => {onPreviewFile(file_id, "lampiran")}}>
           <ListItemAvatar>
-            {filetype == "File lainnya" ? 
-            <DescriptionIcon className={classes.fileLainnyaIcon}/> : 
+            {filetype == "File lainnya" ?
+            <DescriptionIcon className={classes.fileLainnyaIcon}/> :
             <Avatar/>}
           </ListItemAvatar>
           <ListItemText
@@ -154,7 +148,7 @@ function WorkFile(props) {
   return (
     <ListItem button disableRipple onClick={() => {props.onPreviewFile(file_id, "tugas")}}>
       <ListItemAvatar>
-        {file_type == "File lainnya" ? 
+        {file_type == "File lainnya" ?
         <DescriptionIcon className={classes.fileLainnyaIcon}/> : <Avatar/>}
       </ListItemAvatar>
       <ListItemText
@@ -542,11 +536,9 @@ function ViewTaskStudent(props) {
         <Grid item xs={12} md={4}>
           <Paper className={classes.paperBox}>
             <Grid item>
-              <div className={classes.workResultSection}>
-                <Typography variant="h5">
-                  Hasil Pekerjaan
-                </Typography>
-              </div>
+              <Typography variant="h5" align="center" style={{marginBottom: "20px"}}>
+                Hasil Pekerjaan
+              </Typography>
             </Grid>
             <Divider />
             <Grid item>
@@ -557,7 +549,7 @@ function ViewTaskStudent(props) {
             <Divider />
             <Grid item container direction="column" alignItems="center">
               <Typography variant="h6">
-                <b><u>File terpilih</u></b>
+                <b><u>File Terpilih</u></b>
               </Typography>
               {listFileChosen()}
             </Grid>
@@ -612,7 +604,6 @@ function ViewTaskStudent(props) {
           </Paper>
         </Grid>
       </Grid>
-
       <Grid container direction="column" alignItems="center">
         <Typography variant="subtitle1">
           Status: Sudah Diperiksa/Belum Diperiksa
@@ -639,7 +630,7 @@ ViewTaskStudent.propTypes = {
    getTaskFilesByUser: PropTypes.func.isRequired, //Get the task files.
    getOneUser: PropTypes.func.isRequired, //For the person in charge task
    previewLampiran: PropTypes.func.isRequired,
-   downloadLampiran: PropTypes.func.isRequired
+   downloadLampiran: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({

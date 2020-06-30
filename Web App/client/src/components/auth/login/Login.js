@@ -103,10 +103,7 @@ class Login extends Component {
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     const { classes } = this.props;
-
-    const { errors } = this.state;
-    const { passwordIsMasked } = this.state;
-    const { icon } = this.state
+    const { errors, passwordIsMasked, icon } = this.state;
 
     return (
       <div className={classes.root}>

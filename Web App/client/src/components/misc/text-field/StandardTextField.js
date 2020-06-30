@@ -14,14 +14,16 @@ const StandardTextField = (props) => {
     <div>
       <input
         style={{
-          width: "100%",
+          width: !props.width ? "100%" : props.width,
           display: "inline-block",
-          borderBottom: `${borderStyle}`,
+          borderBottom: !props.borderBottom ? `${borderStyle}` : props.borderBottom,
           boxShadow: "none",
           backgroundColor: "#FFFFFF",
         }}
         onFocus={onFocus}
         onBlur={onBlur}
+        disabled={props.disabled}
+        value={props.value}
       />
     </div>
   )

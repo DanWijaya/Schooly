@@ -1,5 +1,5 @@
 import React from "react";
-import WarningIcon from "@material-ui/icons/Warning";
+import ErrorIcon from "@material-ui/icons/Error";
 import { Typography } from "@material-ui/core";
 
 const OutlinedTextField = (props) => {
@@ -67,7 +67,7 @@ const OutlinedTextField = (props) => {
       }
       <span className={props.span_classname}>
         <div style={{ display:"flex", alignItems: "center"}}>
-          {props.error1 || props.error2 ? <WarningIcon style={{ height: "5%", width:"5%"}} /> : null}
+          {props.error1 || props.error2 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
           <Typography variant="h8" style={{marginLeft: "4px"}}>
             {props.error1}
             {props.error2}

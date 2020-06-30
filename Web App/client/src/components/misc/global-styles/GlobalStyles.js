@@ -15,7 +15,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
     },
     button: {
       main: fade("#2196F3", 0.15),
-    }
+    },
   },
   overrides: {
     MuiButton: {
@@ -33,7 +33,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         "&:hover": {
           backgroundColor: "transparent"
         },
-      }
+      },
     },
     MuiPickersDay:{
       daySelected: {

@@ -61,11 +61,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NavBar(props) {
+  const classes = useStyles();
+
   const { user } = props.auth;
 
-  const classes = useStyles();
   const isMobileView = useMediaQuery("(max-width:600px)");
-
   const { handleDrawerDesktop, handleDrawerMobile } = props;
 
   //NavBar Contents
