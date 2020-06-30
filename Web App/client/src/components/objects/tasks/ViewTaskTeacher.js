@@ -51,11 +51,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexDirection: "row"
   },
-  workChosenFile: {
-    width: "200px",
-    textAlign:"center",
-    color:"#2196F3",
-  },
   workButton: {
     width: "200px",
   },
@@ -90,6 +85,14 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.error.dark,
+    },
+  },
+  listItemPaper: {
+    marginBottom: "10px"
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
     },
   },
 }));
@@ -130,7 +133,7 @@ function ViewTaskTeacher(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
-  
+
   React.useEffect(() => {
     viewOneTask(task_id)
   }, [tasksCollection._id])
@@ -191,7 +194,6 @@ function ViewTaskTeacher(props) {
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
-        className={classes.root}
       >
         <Grid container justify="center" className={classes.dialogRoot}>
           <Grid item
@@ -214,8 +216,8 @@ function ViewTaskTeacher(props) {
               Hapus tugas berikut?
             </Typography>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px", textAlign:"center"}}>
-            <Typography variant="h6" gutterBottom>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h6" align="center" gutterBottom>
               <b>{tasksCollection.name}</b>
             </Typography>
           </Grid>

@@ -26,6 +26,8 @@ const StandardTextField = (props) => {
         }}
         onFocus={onFocus}
         onBlur={onBlur}
+        disabled={props.disabled}
+        value={props.value}
       />
     </div>
   )

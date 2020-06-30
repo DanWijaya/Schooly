@@ -10,12 +10,12 @@ import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
-import PostAddIcon from "@material-ui/icons/PostAdd";
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
   return (action === null ? { _id, tasktitle, subject, class_assigned, deadline }
@@ -142,7 +142,7 @@ const TaskListToolbar = (props) => {
       {role === "Student" ? <div style={{display: "none"}} /> :
         <Link to="/buat-tugas">
           <Fab variant="extended" className={classes.newTaskButton}>
-            <PostAddIcon className={classes.newTaskIcon} />
+            <AssignmentIcon className={classes.newTaskIcon} />
               Buat Tugas
           </Fab>
         </Link>

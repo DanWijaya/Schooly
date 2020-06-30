@@ -3,6 +3,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
+import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
+import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -86,12 +88,32 @@ const styles = (theme) => ({
     alignItems: "center",
     height: "60px"
   },
-  timePaper: {
+  timePaperStudent: {
     height: "250px",
     padding: "20px",
     color: "white",
     backgroundColor: theme.palette.primary.light,
     backgroundImage: `url(${dashboardStudentBackground})`,
+    backgroundPosition: "bottom",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+  },
+  timePaperTeacher: {
+    height: "250px",
+    padding: "20px",
+    color: "white",
+    backgroundColor: theme.palette.primary.light,
+    backgroundImage: `url(${dashboardTeacherBackground})`,
+    backgroundPosition: "bottom",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+  },
+  timePaperAdmin: {
+    height: "250px",
+    padding: "20px",
+    color: "white",
+    backgroundColor: theme.palette.primary.light,
+    backgroundImage: `url(${dashboardAdminBackground})`,
     backgroundPosition: "bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
@@ -140,17 +162,43 @@ class Dashboard extends Component {
       <div className={classes.root}>
         <Grid container direction="column" spacing={3}>
           <Grid item>
-            <Paper elevation={0} className={classes.timePaper}>
-              <Typography variant="h3">
-                <b>Selamat Datang, {user.name}</b>
-              </Typography>
-              <Typography variant="h5" style={{marginBottom: "40px"}}>
-                Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
-              </Typography>
-              <Typography variant="h6">
-                Apa yang ingin kamu lakukan hari ini?
-              </Typography>
-            </Paper>
+            { user.role === "Student" ?
+                <Paper elevation={0} className={classes.timePaperStudent}>
+                  <Typography variant="h3">
+                    <b>Selamat Datang, {user.name}</b>
+                  </Typography>
+                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                    Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
+                  </Typography>
+                  <Typography variant="h6">
+                    Apa yang ingin kamu lakukan hari ini?
+                  </Typography>
+                </Paper>
+              : user.role === "Teacher" ?
+                <Paper elevation={0} className={classes.timePaperTeacher}>
+                  <Typography variant="h3">
+                    <b>Selamat Datang, {user.name}</b>
+                  </Typography>
+                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                    Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
+                  </Typography>
+                  <Typography variant="h6">
+                    Apa yang ingin kamu lakukan hari ini?
+                  </Typography>
+                </Paper>
+              :
+                <Paper elevation={0} className={classes.timePaperAdmin}>
+                  <Typography variant="h3">
+                    <b>Selamat Datang, {user.name}</b>
+                  </Typography>
+                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                    Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
+                  </Typography>
+                  <Typography variant="h6">
+                    Apa yang ingin kamu lakukan hari ini?
+                  </Typography>
+                </Paper>
+            }
           </Grid>
           <Grid item container spacing={3}>
             <Grid item sm={7} xs={12}>

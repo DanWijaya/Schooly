@@ -1,12 +1,12 @@
 import React from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip"
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import defaultAvatar from "./DefaultAvatar.svg";
 import { Avatar, Button, Dialog, Grid, IconButton, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import defaultAvatar from "./DefaultAvatar.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,9 +105,7 @@ function ProfilePictureEditorDialog(props) {
 
   const onSubmitForm = (e) => {
     e.preventDefault()
-    console.log("AAA")
     let formData = new FormData()
-    console.log(profileImg)
     formData.append("avatar", profileImg)
 
     let userData = user
@@ -129,41 +127,52 @@ function ProfilePictureEditorDialog(props) {
   const imageUploadPreview = () => {
     let avatarImgClass;
 
-    if(avatarDimensions.width < avatarDimensions.height){
+    if(avatarDimensions.width < avatarDimensions.height) {
       avatarImgClass = classes.avatarImg1
-    } else{
+    }
+    else {
       avatarImgClass = classes.avatarImg2
     }
 
     if(!profileImg){
-      let avatar_default
-
-      if(user.avatar === ""){
-        avatar_default = defaultAvatar
-      } else {
-        avatar_default = `/api/uploads/image/${user.avatar}`
+      if(user.avatar){
+        return (
+          <Avatar className={classes.avatar}>
+            <img
+              alt="profile"
+              onLoad={onImgLoad}
+              src={`/api/uploads/image/${user.avatar}`}
+              ref={uploadedImage}
+              className={avatarImgClass}
+            />
+          </Avatar>
+        )
       }
-
+      else {
+        return (
+          <Avatar className={classes.avatar}>
+            <img
+              alt="profile"
+              onLoad={onImgLoad}
+              src={defaultAvatar}
+              ref={uploadedImage}
+              className={avatarImgClass}
+            />
+          </Avatar>
+        )
+      }
+    }
+    else {
       return (
-      <Avatar className={classes.avatar}>
-        <img
-          alt="profile"
-          onLoad={onImgLoad}
-          src={avatar_default}
-          ref={uploadedImage}
-          className={avatarImgClass}
-        />
-        </Avatar>)
-    } else {
-      return (
-      <Avatar className={classes.avatar}>
-        <img
-          alt="default profile"
-          onLoad={onImgLoad}
-          ref={uploadedImage}
-          className={avatarImgClass}
-        />
-      </Avatar>)
+        <Avatar className={classes.avatar}>
+          <img
+            alt="current profile"
+            onLoad={onImgLoad}
+            ref={uploadedImage}
+            className={avatarImgClass}
+          />
+        </Avatar>
+      )
     }
   }
 

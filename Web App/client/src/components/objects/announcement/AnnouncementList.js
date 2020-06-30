@@ -1,0 +1,120 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import StandardTextField from "../../misc/text-field/StandardTextField";
+import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
+import SearchIcon from "@material-ui/icons/Search";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
+  },
+  paperBox: {
+    padding: "20px"
+  },
+  listItemPaper: {
+    marginBottom: "10px"
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
+  },
+  newAnnouncementButton: {
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
+  newAnnouncementIcon: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    marginRight: "7.5px"
+  }
+}));
+
+function AnnouncementItemList(props) {
+  document.title="Schooly | Notifikasi";
+
+  const classes = useStyles();
+
+  return (
+    <Paper variant="outlined" className={classes.listItemPaper}>
+      <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
+        <ListItemAvatar>
+          <Avatar>
+            {props.sender_avatar}
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <Typography>
+              {props.notification_title}
+            </Typography>
+          }
+          secondary={props.sender_name}
+        />
+        <ListItemText
+          align="right"
+          primary={
+            <Typography variant="subtitle" color="textSecondary">
+              {props.time}
+            </Typography>
+          }
+        />
+      </ListItem>
+    </Paper>
+  )
+}
+
+function AnnouncementList(props) {
+  document.title = "Schooly | Daftar Pengumuman"
+
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.paperBox}>
+        <Grid container justify="space-between">
+          <Grid item>
+            <Typography variant="subtitle2" color="primary">
+              <h5>Daftar Pengumuman</h5>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Link to="/buat-pengumuman">
+              <Fab variant="Extended" className={classes.newAnnouncementButton}>
+                <AnnouncementIcon className={classes.newAnnouncementIcon} />
+                Buat Pengumuman
+              </Fab>
+            </Link>
+          </Grid>
+        </Grid>
+        <List>
+          <AnnouncementItemList
+            sender_icon={<AccountCircleIcon />}
+            sender_name="Pak Peler"
+            notification_title="Ujian Kimia Besok"
+            notification_link="/pengumuman"
+            time={"20m ago"}
+          />
+          <AnnouncementItemList
+            sender_icon={<AccountCircleIcon />}
+            sender_name="My Nigga"
+            notification_title="Ujian Biologi Lusa"
+            notification_link="/pengumuman"
+            time={"20m ago"}
+          />
+        </List>
+      </Paper>
+    </div>
+  )
+}
+
+export default AnnouncementList;

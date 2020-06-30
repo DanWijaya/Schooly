@@ -24,14 +24,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
   },
-  subjectTitle: {
-    color: theme.palette.primary.main,
+  subjectDivider: {
+    backgroundColor: theme.palette.primary.main,
   },
   expansionPanelList: {
-    marginLeft: "20px",
-    marginRight: "15px",
-    marginBottom: "10px",
+    margin: "20px",
   },
   paperBox: {
     padding: "20px",
@@ -201,16 +200,16 @@ function ViewClass(props) {
 
   return (
     <div className={classes.root}>
-      <Paper>
+      <Paper square>
         <Typography variant="h3" align="center" gutterBottom>
-          Kelas {selectedClasses.name}
+          {selectedClasses.name}
         </Typography>
         <Tabs
-          value={value}
-          onChange={handleChange}
+          variant="fullWidth"
           indicatorColor="primary"
           textColor="primary"
-          centered
+          value={value}
+          onChange={handleChange}
         >
           <Tab icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" {...TabIndex(0)} />
           <Tab icon={<BallotIcon />} label="Mata Pelajaran" {...TabIndex(1)} />
@@ -259,11 +258,11 @@ function ViewClass(props) {
             return(
               <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h5" className={classes.subjectTitle}>
+                  <Typography variant="h5">
                     {subject.name}
                   </Typography>
                 </ExpansionPanelSummary>
-                <Divider />
+                <Divider className={classes.subjectDivider} />
                 <List className={classes.expansionPanelList}>
                   {tasksByClass.map((task) => {
                     let workCategoryAvatar = (

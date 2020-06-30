@@ -1,17 +1,19 @@
 Current Task
 
 Botak:
-1. Admin Dashboard
-2. Starred notification
-3. Akun sistem: schoolysystem@gmail.com
-4. Cek lagi kata-kata di bantuan, landing, about, policy.
-5. Update field-field profile.
-6. Delete tester di akhir
-7. Hapus tombol daftar di navbar
-8. file icon
-9. nama sekolah di profil, ganti isi data dengan button merah
-12. Wallpaper dashboard per user type
-13. lihat mata pelajaran button
+1. Starred notification
+2. Akun sistem: schoolysystem@gmail.com
+3. Cek lagi kata-kata di bantuan, landing, about, policy.
+4. Update field-field profile.
+5. Delete tester di akhir
+6. Hapus tombol daftar di navbar
+7. file icon
+8. nama sekolah di profil, ganti isi data dengan button merah
+9. lihat mata pelajaran button
+10. Hijau-hijau di datepicker
+11. matikan notification page kalau nda perlu dulu
+12. Tambahin desktop version pas create task
+13. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -20,7 +22,7 @@ Daniel:
 3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 4. Notifications page dan listnya (previewnya muncul di Dashboard)
 5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-10. Reset Kata Sandi functionality
+10. Reset Kata Sandi functionality (done)
 11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
 13. Perlu fix Edit Task yang MenuItemnya ndak muncul dibold pas dibuka. Anjeng
 14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. (DONE)
@@ -45,6 +47,7 @@ Penting untuk diimplemen:
 
 Error:
 1. classlist pas klik ke satu class terus back error buat tekan button lain
+2. error upload image banyak2
 
 Possibly will implement these features:
 - Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
