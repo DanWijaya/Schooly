@@ -3,7 +3,7 @@ import { GET_ERRORS } from "./Types"
 
 // Add Announcement
 export const createAnnouncement = (formData, announcementData, history) => dispatch => {
-    console.log("RUnLAH!!", formData, announcementData)
+    console.log("RUNLAH!!", formData, announcementData)
     axios
       .post("/api/announcements/create", announcementData)
       .then(res => {
@@ -12,7 +12,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
           console.log(formData.has('lampiran'))
           if(formData.has('lampiran_announcement'))
               return axios.post(`/api/uploads/upload_lampiran_annoucement/${res.data._id}`, formData);
-          else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
+          else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created announcement with no lampiran"
       })
       .then(res => {
@@ -25,8 +25,8 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
               type: GET_ERRORS,
               payload: err
           })
-      })  
-} 
+      })
+}
 
 export const deleteAnnouncement = (announcementId, history) => dispatch => {
     axios
@@ -51,18 +51,18 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
     .then(res => {
         console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_announcement'))
-        if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different.. 
+        if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran_announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         else
             return "No lampiran file is going to be deleted"
-        
+
     })
     .then(res => {
         console.log("Update the lampiran files, upload some new lampiran files")
         console.log(formData.has("lampiran_announcement"), formData.getAll("lampiran_announcement"))
         if(formData.has('lampiran_announcement'))
             return axios.post(`/api/uploads/upload_lampiran/${annId}`, formData);
-        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
+        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"
     })
     .then(res => {
@@ -79,4 +79,3 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
         })
     })
 }
-  

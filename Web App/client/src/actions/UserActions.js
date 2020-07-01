@@ -60,7 +60,6 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
       .then(res => {
         return axios
         .post("/api/users/update/avatar/" + userId, formData)
-        
       })
       .then(res => {
         console.log("Old Profile picture is removed")
@@ -79,12 +78,12 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
       .catch(err => {
         console.log("No Profile picture set previously or error occured in removing old Profile picture")
       })
-  } else {
+  }
+  else {
       axios
         .post("/api/users/update/avatar/" + userId, formData, userData)
         .then(res => {
-
-            // Set token to localStorage
+          // Set token to localStorage
           const { token } = res.data;
           localStorage.setItem("jwtToken", token);
           console.log("Foto udah diganti")
@@ -129,7 +128,7 @@ export const loginUser = (userData) => dispatch => {
       console.log("error")
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
+        payload: err.response.data,
       })
     })
 };
@@ -139,14 +138,14 @@ export const setCurrentUser = decoded => {
   console.log(decoded)
   return {
     type: SET_CURRENT_USER,
-    payload: decoded
+    payload: decoded,
   };
 };
 
 // User loading
 export const setUserLoading = () => {
   return {
-    type: USER_LOADING
+    type: USER_LOADING,
   };
 };
 

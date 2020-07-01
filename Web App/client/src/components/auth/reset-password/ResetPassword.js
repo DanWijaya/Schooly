@@ -42,6 +42,16 @@ const styles = (theme) => ({
   inputField: {
     width: "300px",
   },
+  submitButton: {
+    width: "100%",
+    marginTop: "30px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
 });
 
 class ResetPassword extends Component {
@@ -88,7 +98,7 @@ class ResetPassword extends Component {
       savePassword(passwordReset)
     }
 
-    return (
+    return(
       <div className={classes.root}>
         <img
           alt="schooly logo"
@@ -146,12 +156,7 @@ class ResetPassword extends Component {
                 />
                 <Button
                   type="submit"
-                  style={{
-                    backgroundColor: "#2196F3",
-                    color: "white",
-                    width: "100%",
-                    marginTop: "30px"
-                  }}
+                  className={classes.submitButton}
                 >
                   Ubah Kata Sandi
                 </Button>

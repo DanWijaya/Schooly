@@ -2,8 +2,6 @@ import React from "react";
 import PolicyContent from "./PolicyContent";
 
 function Policy(props) {
-  document.title = "Schooly | Kebijakan Penggunaan";
-
   const [isFirsttimeRendered, setFirstTime] = React.useState(false)
   const { handleMarginTopValue } = props;
   if(!isFirsttimeRendered) {
@@ -11,7 +9,9 @@ function Policy(props) {
     setFirstTime(true);
   }
 
-  return (
+  document.title = "Schooly | Kebijakan Penggunaan";
+
+  return(
     <PolicyContent />
   )
 };

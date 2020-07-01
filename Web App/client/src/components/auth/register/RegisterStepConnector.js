@@ -1,5 +1,5 @@
 import StepConnector from "@material-ui/core/StepConnector";
-import { withStyles } from "@material-ui/core/styles"
+import { withStyles } from "@material-ui/core/styles";
 
 const RegisterStepConnector = withStyles((theme) => ({
   alternativeLabel: {
@@ -25,4 +25,4 @@ const RegisterStepConnector = withStyles((theme) => ({
   },
 }))(StepConnector);
 
-export default RegisterStepConnector
+export default RegisterStepConnector;

@@ -15,15 +15,15 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(25),
     height: theme.spacing(25),
-    margin: "auto"
+    margin: "auto",
   },
   avatarImg1: { // If width is smaller than height
     width: theme.spacing(25),
-    margin: "auto"
+    margin: "auto",
   },
   avatarImg2: { //If height is smaller than width
     height: theme.spacing(25),
-    margin: "auto"
+    margin: "auto",
   },
   dialogRoot: {
     width: "350px",
@@ -70,14 +70,14 @@ const useStyles = makeStyles((theme) => ({
 function ProfilePictureEditorDialog(props) {
   const classes = useStyles();
 
-  //Function Hooks and Ref Declaration
+  // Function Hooks and Ref Declaration
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const [profileImg, setProfileImg] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [avatarDimensions, setAvatarDimensions] = React.useState({height: null , width: null})
 
-  //Dialog
+  // Dialog
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -86,8 +86,8 @@ function ProfilePictureEditorDialog(props) {
     setProfileImg(null)
   };
 
-  const {user} = props;
-  const {updateAvatar} = props;
+  const { user } = props;
+  const { updateAvatar } = props;
 
   const handleImageUpload = e => {
     const [file] = e.target.files;
@@ -118,8 +118,8 @@ function ProfilePictureEditorDialog(props) {
   }
 
   function onImgLoad({target:img}) {
-    setAvatarDimensions({ height:img.offsetHeight, width:img.offsetWidth})
-    }
+    setAvatarDimensions({ height:img.offsetHeight, width:img.offsetWidth })
+  }
 
   console.log("width is smaller", avatarDimensions.width < avatarDimensions.height)
   console.log("height is smaller", avatarDimensions.height < avatarDimensions.width)
@@ -136,7 +136,7 @@ function ProfilePictureEditorDialog(props) {
 
     if(!profileImg){
       if(user.avatar){
-        return (
+        return(
           <Avatar className={classes.avatar}>
             <img
               alt="profile"
@@ -149,7 +149,7 @@ function ProfilePictureEditorDialog(props) {
         )
       }
       else {
-        return (
+        return(
           <Avatar className={classes.avatar}>
             <img
               alt="profile"
@@ -163,7 +163,7 @@ function ProfilePictureEditorDialog(props) {
       }
     }
     else {
-      return (
+      return(
         <Avatar className={classes.avatar}>
           <img
             alt="current profile"
@@ -176,7 +176,7 @@ function ProfilePictureEditorDialog(props) {
     }
   }
 
-  return (
+  return(
     <div className={classes.root}>
       <LightTooltip title="Ganti Foto Profil">
         <IconButton
@@ -241,6 +241,7 @@ function ProfilePictureEditorDialog(props) {
                 </Grid>
                 <Grid item>
                   <Button
+                    variant="contained"
                     startIcon={<AddAPhotoIcon />}
                     onClick={() => {imageUploader.current.click()}}
                     className={classes.uploadButton}
@@ -250,10 +251,10 @@ function ProfilePictureEditorDialog(props) {
                 </Grid>
                 <Grid item>
                   <Button
-                    disabled={!profileImg}
                     variant="contained"
                     type="submit"
                     startIcon={<CloudUploadIcon />}
+                    disabled={!profileImg}
                     className={classes.submitPhotoButton}
                   >
                     Simpan

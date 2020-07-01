@@ -118,7 +118,7 @@ class EditClass extends Component {
         ukuran: nextProps.classesCollection.selectedClasses.ukuran,
         ketua_kelas: next_ketua_kelas,
         sekretaris: next_sekretaris,
-        bendahara: next_bendahara
+        bendahara: next_bendahara,
       });
     }
   }
@@ -145,8 +145,6 @@ class EditClass extends Component {
   }
 
   render() {
-    document.title = "Schooly | Sunting Kelas"
-
     const { classes, classesCollection } = this.props;
     const { errors } = this.state;
     const { user } = this.props.auth;
@@ -190,8 +188,10 @@ class EditClass extends Component {
       return items;
     }
 
+    document.title = "Schooly | Sunting Kelas";
+
     if(user.role === "Teacher" || user.role === "Admin") {
-      return (
+      return(
         <div className={classes.root}>
           <Paper>
             <div className={classes.mainGrid}>
@@ -310,6 +310,7 @@ class EditClass extends Component {
                   <Grid item className={classes.gridItem}>
                     <Button
                       type="submit"
+                      variant="contained"
                       className={classes.editClassButton}
                     >
                       Sunting Kelas
@@ -352,4 +353,4 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps, { viewOneClass, updateClass, getTeachers, getStudents }
-) (withStyles(styles)(EditClass))
+) (withStyles(styles)(EditClass));

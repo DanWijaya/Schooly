@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 function LampiranFile(props) {
   const classes = useStyles();
-  return (
+  return(
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem button disableRipple className={classes.listItem}

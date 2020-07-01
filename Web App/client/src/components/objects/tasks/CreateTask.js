@@ -8,7 +8,7 @@ import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
-import {getOneUser} from "../../../actions/UserActions";
+import { getOneUser } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Chip, FormControl, Grid, IconButton,
@@ -103,7 +103,7 @@ const styles = (theme) => ({
   },
   deadlinePicker: {
     "&:focus, &:hover": {
-      borderBottom: "1px solid #2196f3",
+      borderBottom: "1px solid #2196F3",
       boxShadow: "none",
     },
   },
@@ -192,7 +192,7 @@ class CreateTask extends Component {
       class_assigned: this.state.class_assigned,
       person_in_charge_id: id,
       description: this.state.description,
-      errors: {}
+      errors: {},
     };
 
     //Check if there is any lampiran uploaded or not.
@@ -206,10 +206,10 @@ class CreateTask extends Component {
   }
 
   // UNSAFE_componentWillReceiveProps() is invoked before
-  //  a mounted component receives new props. If you need
-  //   update the state in response to prop changes (for example, to reset it),
-  //   you may compare this.props and nextProps and perform state transitions
-  //   using this.setState() in this method.
+  // a mounted component receives new props. If you need
+  // update the state in response to prop changes (for example, to reset it),
+  // you may compare this.props and nextProps and perform state transitions
+  // using this.setState() in this method.
 
   UNSAFE_componentWillReceiveProps(nextProps){
     if(nextProps.errors){
@@ -230,7 +230,7 @@ class CreateTask extends Component {
     if(this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files})
     else {
-      if(files.length != 0) {
+      if(files.length !== 0) {
         let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
         this.setState({ fileLampiran: temp})
       }
@@ -248,10 +248,8 @@ class CreateTask extends Component {
   }
 
   render() {
-    document.title = "Schooly | Buat Tugas";
-
-    const {classesCollection,  classes, viewClass, subjectsCollection} = this.props;
-    const{ class_assigned, fileLampiran, errors} = this.state;
+    const { classesCollection, classes, viewClass, subjectsCollection}  = this.props;
+    const { class_assigned, fileLampiran, errors}  = this.state;
     const { user } = this.props.auth
     console.log(errors)
     const listFileChosen = () => {
@@ -293,6 +291,8 @@ class CreateTask extends Component {
       },
     };
 
+    document.title = "Schooly | Buat Tugas";
+
     if(user.role === "Teacher") {
       return(
         <div className={classes.root}>
@@ -313,20 +313,20 @@ class CreateTask extends Component {
                 >
                   <Grid item className={classes.gridItem}>
                     <OutlinedTextField
-                        on_change={this.onChange}
-                        value={this.state.name}
-                        error={errors.name}
-                        id="name"
-                        type="text"
-                        className={classnames("", {
-                          invalid: errors.name
-                        })}
-                        labelname="Nama Tugas"
-                        html_for="tugas"
-                        label_classname={classes.inputLabel}
-                        span_classname={classes.errorInfo}
-                        error1={errors.name}
-                      />
+                      on_change={this.onChange}
+                      value={this.state.name}
+                      error={errors.name}
+                      id="name"
+                      type="text"
+                      className={classnames("", {
+                        invalid: errors.name
+                      })}
+                      labelname="Nama Tugas"
+                      html_for="tugas"
+                      label_classname={classes.inputLabel}
+                      span_classname={classes.errorInfo}
+                      error1={errors.name}
+                    />
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <FormControl id="subject" variant="outlined" color="primary" fullWidth>
@@ -355,7 +355,7 @@ class CreateTask extends Component {
                             {selected.map((kelas) => {
                               console.log(selected)
                               console.log(kelas, class_assigned)
-                              return (
+                              return(
                                 <Chip key={kelas} label={kelas.name} className={classes.chip} />
                               )
                             })}
@@ -363,7 +363,7 @@ class CreateTask extends Component {
                         )}
                       >
                         {options.map((kelas) => { console.log(kelas, class_assigned)
-                          return (
+                          return(
                             <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                         )})}
                       </Select>

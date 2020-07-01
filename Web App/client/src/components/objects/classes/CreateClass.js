@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { createClass } from "../../../actions/ClassActions"
+import { createClass } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, Grid, MenuItem,Paper, Select, Typography } from "@material-ui/core";
@@ -54,7 +54,7 @@ class CreateClass extends Component {
       nihil: true,
       walikelas: {},
       ukuran: 0,
-      errors: {}
+      errors: {},
     };
   }
 
@@ -110,15 +110,16 @@ class CreateClass extends Component {
   }
 
   render() {
-    document.title = "Schooly | Buat Kelas"
-
     const { classes } = this.props;
+
     const { all_teachers, user } = this.props.auth
     const { errors } = this.state;
     var options = all_teachers;
 
+    document.title = "Schooly | Buat Kelas";
+
     if(user.role === "Teacher" || user.role === "Admin") {
-      return (
+      return(
         <div className={classes.root}>
           <Paper>
             <div className={classes.mainGrid}>
@@ -186,6 +187,7 @@ class CreateClass extends Component {
                   <Grid item className={classes.gridItem}>
                     <Button
                       type="submit"
+                      variant="contained"
                       className={classes.createClassButton}
                     >
                       Buat Kelas
@@ -213,14 +215,14 @@ class CreateClass extends Component {
 CreateClass.propTypes = {
   createClass: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  getTeachers: PropTypes.func.isRequired
+  getTeachers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  auth: state.auth
+  auth: state.auth,
 })
 
 export default connect(
   mapStateToProps, { createClass, getTeachers }
-) (withStyles(styles)(CreateClass))
+) (withStyles(styles)(CreateClass));

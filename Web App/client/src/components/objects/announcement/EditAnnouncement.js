@@ -109,7 +109,7 @@ class EditAnnouncement extends Component {
 
     const { classes } = this.props;
 
-    return (
+    return(
       <div className={classes.root}>
         <Paper>
           <div className={classes.mainGrid}>

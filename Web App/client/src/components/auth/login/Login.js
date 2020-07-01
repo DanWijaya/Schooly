@@ -25,11 +25,11 @@ const styles = (theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  loginGrid: {
+  mainGrid: {
     maxWidth: "400px",
     padding: "40px",
   },
-  loginGridContent: {
+  gridContent: {
     width: "300px",
   },
   schoolyLogo: {
@@ -39,7 +39,7 @@ const styles = (theme) => ({
   },
   errorInfo: {
     color: "red",
-    fontSize: "10px"
+    fontSize: "10px",
   }
 });
 
@@ -50,8 +50,8 @@ class Login extends Component {
       email: "",
       password: "",
       errors: {},
-      passwordIsMasked: true, // true kalau dimask
-      icon: true // true kalau keliatan
+      passwordIsMasked: true, // True = masked
+      icon: true // True = shown
     };
   }
 
@@ -65,7 +65,6 @@ class Login extends Component {
   handleChange(event) {}
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      // this.props.history.push("/beranda");
       window.location.href = "./beranda"
     }
 
@@ -99,13 +98,14 @@ class Login extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
+    const { errors, passwordIsMasked, icon } = this.state;
+
     document.title = "Masuk ke Schooly";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
-    const { classes } = this.props;
-    const { errors, passwordIsMasked, icon } = this.state;
-
-    return (
+    return(
       <div className={classes.root}>
         <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
         <Paper>
@@ -115,14 +115,14 @@ class Login extends Component {
             alignItems="center"
             justify="space-between"
             spacing={3}
-            className={classes.loginGrid}
+            className={classes.mainGrid}
           >
             <Grid item>
               <Typography variant="h6">
                 <b>Masuk ke Schooly</b>
               </Typography>
             </Grid>
-            <Grid item className={classes.loginGridContent}>
+            <Grid item className={classes.gridContent}>
               <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
                 <div style={{marginBottom: "20px"}}>
                   <OutlinedTextField
@@ -157,9 +157,9 @@ class Login extends Component {
                   error2={errors.passwordincorrect}
                 />
                 <Button
+                  disableRipple
                   startIcon={icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
                   onClick={this.togglePasswordVisibility}
-                  disableRipple
                   style={{
                     backgroundColor: "transparent",
                     textTransform: "none",
@@ -181,7 +181,7 @@ class Login extends Component {
                 </Button>
               </form>
             </Grid>
-            <Divider className={classes.loginGridContent} />
+            <Divider className={classes.gridContent} />
             <Grid item container justify="space-around">
               <Link href="/akun/lupa-katasandi">
                 Lupa Kata Sandi?
@@ -195,8 +195,8 @@ class Login extends Component {
         </Paper>
       </div>
     );
-  }
-}
+  };
+};
 
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
@@ -212,4 +212,4 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(mapStateToProps, { loginUser })
   (withStyles(styles)(Login))
-  )
+);

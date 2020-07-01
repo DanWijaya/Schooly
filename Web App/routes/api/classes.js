@@ -3,15 +3,14 @@ const router = express.Router();
 const keys = require("../../config/keys");
 const mongoose = require("mongoose");
 
-//Load input validation 
+// Load input validation
 const validateClassInput = require("../../validation/ClassData");
 
-//Load the required Model 
+// Load the required Model
 const Class = require("../../models/Class");
 const User = require("../../models/user_model/User")
 
 router.post("/create", (req, res) => {
-
     const { errors, isValid } = validateClassInput(req.body);
 
     if(!isValid) {
@@ -55,7 +54,7 @@ router.get("/viewall", (req, res) => {
     Class.find({ }).then((classes, err) => {
         if(!classes)
             res.status(400).json(err);
-        else 
+        else
             res.json(classes);
     });
 });
@@ -72,8 +71,6 @@ router.delete("/delete/:id", (req, res) => {
             }
         })
         // .catch(res.json("Error happened"))
-    
-    
 })
 
 router.get("/viewOneClass/:id", (req, res) => {
@@ -91,14 +88,14 @@ router.post("/update/:id", (req,res) => {
         if(!classData){
             return res.status(400).json("Class to update not found");
         }
-// Initially there is else block
+        // Initially there is else block
         classData.name = req.body.name;
         classData.walikelas = req.body.walikelas;
         classData.nihil = req.body.nihil;
         classData.ukuran = req.body.ukuran;
 
         // Pipeline on how to create a Async functions to be Synchronous function call
-        //Step 1: declare promise
+        // Step 1: declare promise
         var myPromise = (id) => {
             return new Promise((resolve, reject) => {
                 User.findById(id, (err, user) => {
@@ -110,7 +107,6 @@ router.post("/update/:id", (req,res) => {
                 })
             })
         }
-
         //Step 2: async promise handler
         var callMyPromise = async () => {
             var walikelas_data = await(myPromise(req.body.walikelas));
@@ -126,16 +122,13 @@ router.post("/update/:id", (req,res) => {
             // classData.save()
             return classData;
         }
-
         //Step 3 : Make the call
         callMyPromise().then(function(classData) {
 
             classData.save()
             res.json("Done")
-         });
-
-
-})
+        });
+    })
 })
 
 module.exports = router;

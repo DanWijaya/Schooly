@@ -7,11 +7,11 @@ import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { viewClass } from "../../../actions/ClassActions";
 import { viewOneTask, updateTask } from "../../../actions/TaskActions";
-import { getAllSubjects} from "../../../actions/SubjectActions"
+import { getAllSubjects } from "../../../actions/SubjectActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Chip, FormControl, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -71,7 +71,7 @@ const styles = (theme) => ({
     width: "400px",
   },
   inputLabel: {
-    color: "#2196f3",
+    color: theme.palette.primary.main,
     fontSize: "15px",
   },
   errorInfo: {
@@ -145,7 +145,6 @@ class EditTask extends Component {
   tugasUploader = React.createRef(null)
   uploadedTugas = React.createRef(null)
 
-
   componentDidMount() {
     this.props.viewOneTask(this.props.match.params.id)
     this.props.viewClass()
@@ -153,24 +152,24 @@ class EditTask extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-      console.log("Tasks props is received");
-      const { name } = this.state;
-      // console.log(nextProps.tasksCollection.deadline);
-      console.log(nextProps.tasksCollection);
-      console.log(nextProps.subjectsCollection);
-      console.log(nextProps.classesCollection);
-      if(!name){
-          this.setState({
-              name: nextProps.tasksCollection.name,
-              subject: nextProps.tasksCollection.subject,
-              deadline: nextProps.tasksCollection.deadline,
-              class_assigned: nextProps.tasksCollection.class_assigned,
-              description: nextProps.tasksCollection.description,
-              fileLampiran: Boolean(nextProps.tasksCollection.lampiran) ? nextProps.tasksCollection.lampiran : []
-              // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
-              // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
-          })
-      }
+    console.log("Tasks props is received");
+    const { name } = this.state;
+    // console.log(nextProps.tasksCollection.deadline);
+    console.log(nextProps.tasksCollection);
+    console.log(nextProps.subjectsCollection);
+    console.log(nextProps.classesCollection);
+    if(!name){
+      this.setState({
+          name: nextProps.tasksCollection.name,
+          subject: nextProps.tasksCollection.subject,
+          deadline: nextProps.tasksCollection.deadline,
+          class_assigned: nextProps.tasksCollection.class_assigned,
+          description: nextProps.tasksCollection.description,
+          fileLampiran: Boolean(nextProps.tasksCollection.lampiran) ? nextProps.tasksCollection.lampiran : []
+          // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
+          // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      })
+    }
   }
 
   onSubmit = (e, classesOptions) => {
@@ -200,9 +199,9 @@ class EditTask extends Component {
   }
 
   if(classChanged)
-    taskObject.class_assigned = classesSelected //When the classes is changed
+    taskObject.class_assigned = classesSelected // When the classes is changed
   else
-    taskObject.class_assigned = class_assigned //When it has no change
+    taskObject.class_assigned = class_assigned // When it has no change
 
   let formData = new FormData()
   for(var i = 0; i< fileLampiranToAdd.length; i++) {
@@ -237,14 +236,14 @@ class EditTask extends Component {
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
-    //Kalau yang udah keupload, ada field filename (yang belum adanya name)
-    //Untuk yang udah di DB.
+    // For the one that has already been uploaded, there will be a filename field (yang belum adanya name)
+    // For the one that has already in DB
     if(this.state.fileLampiran[i].filename !== undefined) {
-      //Remove the file in fileLampiranToDelete
+      // Remove the file in fileLampiranToDelete
       tempToDelete.push(temp[i])
     }
-    else { //Untuk yang belum di DB
-      //Remove the file in fileLampiranToAdd
+    else { // For the one that's not yet in DB
+      // Remove the file in fileLampiranToAdd
       for(var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
         if(tempToAdd[j].name === temp[i].name){
@@ -292,11 +291,9 @@ class EditTask extends Component {
   }
 
   render() {
-    document.title = "Schooly | Sunting Tugas";
-
-    const { errors , fileLampiran} = this.state;
-    const {classes, subjectsCollection, tasksCollection} = this.props;
-    const { all_classes, selectedClasses} = this.props.classesCollection;
+    const { errors , fileLampiran } = this.state;
+    const { classes, subjectsCollection, tasksCollection } = this.props;
+    const { all_classes, selectedClasses } = this.props.classesCollection;
     const { user } = this.props.auth;
 
     console.log("FileLampiran:", this.state.fileLampiran)
@@ -320,7 +317,7 @@ class EditTask extends Component {
       if(fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
           temp.push(
-            <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
+            <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
               name={fileLampiran[i].filename === undefined?
                 fileLampiran[i].name :
                 fileLampiran[i].filename
@@ -353,6 +350,8 @@ class EditTask extends Component {
           classIds.push(kelas)
       }
     )
+
+    document.title = "Schooly | Sunting Tugas";
 
     if(user.role === "Teacher" || user.role === "Admin") {
       return(
@@ -409,7 +408,7 @@ class EditTask extends Component {
                         value={classIds}
                         onChange={(event) => {this.onChange(event, "kelas")}}
                         renderValue={(selected) => {
-                          return (
+                          return(
                             <div className={classes.chips}>
                               {selected.map((id) => {
                                 let name
@@ -419,7 +418,7 @@ class EditTask extends Component {
                                     break;
                                   }
                                 }
-                                return (
+                                return(
                                   <Chip key={id} label={name} className={classes.chip} />
                                 )
                               })}
@@ -523,6 +522,7 @@ class EditTask extends Component {
                   <Grid item className={classes.gridItem}>
                     <Button
                       type="submit"
+                      variant="contained"
                       className={classes.editTaskButton}
                     >
                       Sunting Tugas
@@ -548,26 +548,23 @@ class EditTask extends Component {
 }
 
 EditTask.propTypes = {
-    errors: PropTypes.object.isRequired,
-    viewOneTask : PropTypes.func.isRequired,
-    updateTask: PropTypes.func.isRequired,
-    getAllSubjects: PropTypes.func.isRequired,
-    tasksCollection: PropTypes.object.isRequired,
-    classesCollection: PropTypes.object.isRequired,
-    subjectsCollection: PropTypes.object.isRequired,
-    viewClass: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  viewOneTask : PropTypes.func.isRequired,
+  updateTask: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+  viewClass: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-    errors: state.errors,
-    auth: state.auth,
-    tasksCollection: state.tasksCollection,
-    classesCollection: state.classesCollection,
-    subjectsCollection: state.subjectsCollection
-    // name: state.name,
-    // subject: state.subject,
-    // deadline: state.deadline
+  errors: state.errors,
+  auth: state.auth,
+  tasksCollection: state.tasksCollection,
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
 })
 
 export default connect(

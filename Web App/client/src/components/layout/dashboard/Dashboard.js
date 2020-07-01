@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 function NotificationItemList(props) {
   const classes = useStyles();
 
-  return (
+  return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
         <ListItemAvatar>
@@ -52,7 +52,7 @@ function NotificationItemList(props) {
 function WorkItemList(props) {
   const classes = useStyles();
 
-  return (
+  return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.work_link} className={classes.listItem}>
         <ListItemText
@@ -152,13 +152,14 @@ class Dashboard extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
+    const { user } = this.props.auth;
+
     document.title = "Schooly | Dashboard";
     document.body.style = "background: #FFFFFF";
 
-    const { classes } = this.props;
-    const { user } = this.props.auth;
-
-    return (
+    return(
       <div className={classes.root}>
         <Grid container direction="column" spacing={3}>
           <Grid item>
@@ -269,14 +270,14 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
 });
 
 export default withRouter(
   connect(mapStateToProps)
   (withStyles(styles)(Dashboard))
-  )
+)

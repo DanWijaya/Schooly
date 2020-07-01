@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -32,8 +32,9 @@ const useStyles = makeStyles((theme) => ({
 
 function NavBarLoggedInContents(props) {
   const classes = useStyles();
-  const { isMobileView, logoutUser} = props;
-  const {user } = props.auth;
+
+  const { isMobileView, logoutUser } = props;
+  const { user } = props.auth;
   const history = useHistory()
 
   // Menu items in Mobile
@@ -148,18 +149,17 @@ function NavBarLoggedInContents(props) {
   )
 
   if(isMobileView){
-    console.log(isMobileView)
       return renderMobileMenu
-  } else {
-    console.log(isMobileView)
+  }
+  else {
       return renderDesktopMenu
   }
 }
 
 NavBarLoggedInContents.propTypes = {
-    auth: PropTypes.object.isRequired,
-    logoutUser: PropTypes.func.isRequired,
-  }
+  auth: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,

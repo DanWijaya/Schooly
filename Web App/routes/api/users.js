@@ -36,14 +36,14 @@ router.post("/register", (req, res) => {
     reg_user = Student
   else if(req.body.role == "Teacher")
     reg_user = Teacher
-  else 
+  else
     reg_user = Admin
 
   reg_user.findOne({ email: req.body.email }).then(user => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" });
-    } else {
-
+    }
+    else {
         var newUser
         if(req.body.role == "Student")
           newUser = new Student({
@@ -66,7 +66,7 @@ router.post("/register", (req, res) => {
             address: req.body.address,
             subject_teached: req.body.subject_teached
           });
-        else{
+        else {
           newUser = new Admin({
             name: req.body.name,
             email: req.body.email,
@@ -104,7 +104,6 @@ router.post("/login", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  
 
   const email = req.body.email;
   const password = req.body.password;
@@ -168,7 +167,8 @@ router.post("/login", (req, res) => {
             });
           }
         );
-      } else {
+      }
+      else {
         return res
           .status(400)
           .json({ passwordincorrect: "Kata sandi tidak benar" });
@@ -242,7 +242,7 @@ router.post("/update/data/:id", (req,res) => {
             payload.kelas = user.kelas
             payload.tugas = user.tugas
           }
-    
+
           else if(user.role == "Teacher") {
             payload.subject_teached = user.subject_teached
           }
@@ -274,7 +274,7 @@ router.get("/gettask/:id/:task_id", (req, res) => {
       res.status(404).send("User data is not found");
     else {
       let tugasList = []
-      if(user.role == "Student"){ //Student are the ones has tugas field... 
+      if(user.role == "Student"){ //Student are the ones has tugas field...
       user.tugas.map((item) => {
       if(item.for_task_object == tugasId)
         tugasList.push(item)
@@ -305,7 +305,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
   User.findById(id , (err, user) => {
     if(!user)
       res.status(404).send("User data is not found");
-    else{
+    else {
       user.avatar = req.file.filename;
 
       user
@@ -389,7 +389,7 @@ router.get("/getOneUser/:id", (req,res) => {
   User.findById(id, (err, user) => {
     if(!user)
       return res.status(404).json("No user is found in Database")
-    else 
+    else
     return res.json(user)
   })
 })
@@ -399,7 +399,6 @@ router.get("/getstudentsbyclass/:id", (req,res) => {
   Student.find({ kelas: id}).then((users, err) => {
     if(!users)
       console.log("No students yet in Schooly System")
-
     else
       return res.json(users)
   })

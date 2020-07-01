@@ -8,19 +8,19 @@ import {PWD_RESET_HASH_CREATED, GET_ERRORS, PWD_SAVE_SUCCESS } from "./Types"
 // SEND EMAIL TO API FOR HASHING
 export const createHash = (email) => {
     return async (dispatch) => {
-      //contact the API
-      
+      // Contact the API
+
       await fetch(
-        //where to contact
+        // Where to contact
         '/api/authentication/saveresethash',
-        // what to send
+        // What to send
         {
           method: 'POST',
           body: JSON.stringify({ email}),
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'same-origin', //WTF IS THIS
+          credentials: 'same-origin',
         },
       )
       .then((res) => {
@@ -32,7 +32,7 @@ export const createHash = (email) => {
       })
       .then((json) => {
         console.log(json)
-        if( json.success) // kalau emailnya ada di database
+        if( json.success) // If email is in database
           return dispatch({
             type: PWD_RESET_HASH_CREATED,
             payload: json
@@ -45,7 +45,7 @@ export const createHash = (email) => {
           })
         }
       })
-      .catch(err => { // Kalau emailnya ada masalah pas MailGun service send tke emailnya (cth misalnya emailnya gak ada di recipient list)
+      .catch(err => { // If there is a problem email and mailgun service sending tke email (ex: email is not in recipient list)
         console.log("Mailgun has error in sending email")
         console.log(err, "Errornya ini")
         dispatch({
@@ -59,12 +59,11 @@ export const createHash = (email) => {
 // Save a user's password
 export function savePassword(data) {
   return async (dispatch) => {
-
-    // contact the API
+    // Contact the API
     await fetch(
-      // where to contact
+      // Where to contact
       '/api/authentication/savepassword',
-      // what to send
+      // What to send
       {
         method: 'POST',
         body: JSON.stringify(data),

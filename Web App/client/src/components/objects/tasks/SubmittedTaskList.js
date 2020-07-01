@@ -1,26 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { viewOneClass } from "../../../actions/ClassActions"
-import { viewOneTask, gradeTask } from "../../../actions/TaskActions"
-import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions"
-import { getStudents } from "../../../actions/UserActions"
+import PropTypes from "prop-types";
+import { viewOneClass } from "../../../actions/ClassActions";
+import { viewOneTask, gradeTask } from "../../../actions/TaskActions";
+import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
+import { getStudents } from "../../../actions/UserActions";
+import StandardTextField from "../../misc/text-field/StandardTextField";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
-   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Popover, Tabs, Tab,TextField, Typography } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Tabs, Tab, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import DescriptionIcon from '@material-ui/icons/Description';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import StandardTextField from "../../misc/text-field/StandardTextField"
-import FormControl from '@material-ui/core/FormControl';
-import clsx from 'clsx';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import DescriptionIcon from "@material-ui/icons/Description";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const path = require("path");
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
@@ -63,20 +58,12 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: theme.palette.primary.dark
   },
-  
-  gradeTextField: {
-    color: "blue",
-    "&.Mui-focused .MuiInputBase-input .MuiInput-input": {
-      boxShadow: "none",
-      borderBottom: "10px solid #2196f3",
-    },
-   }
 }));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return (
+  return(
     <div
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -108,12 +95,12 @@ function WorkFile(props) {
 
   const {file_type_icon, file_id, file_name, file_type, onDownloadFile, onPreviewFile} = props;
 
-  return (
+  return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button disableRipple className={classes.listItem}
       onClick={() => {onPreviewFile(file_id, "lampiran")}}>
         <ListItemAvatar>
-          {file_type == "File lainnya" ? 
+          {file_type === "File lainnya" ?
           <Avatar className={classes.otherFileTypeIcon}>
             <DescriptionIcon/>
           </Avatar>
@@ -134,7 +121,7 @@ function WorkFile(props) {
           }
         />
         <ListItemIcon>
-          <IconButton onClick={(e) => { e.stopPropagation() 
+          <IconButton onClick={(e) => { e.stopPropagation()
             onDownloadFile(file_id, "lampiran")}}>
             <CloudDownloadIcon />
           </IconButton>
@@ -149,10 +136,11 @@ function GradeButton(props) {
 
   return(
     <Button
-    variant="outlined"
-    startIcon={<CheckCircleIcon/>}
-    className={classes.checkCircleIcon}
-    onClick={() => onGradeTugas(task_id, student_id, student_name, grade)}>
+      variant="contained"
+      startIcon={<CheckCircleIcon/>}
+      className={classes.checkCircleIcon}
+      onClick={() => onGradeTugas(task_id, student_id, student_name, grade)}
+    >
       Simpan
     </Button>
   )
@@ -160,24 +148,24 @@ function GradeButton(props) {
 
 function UnduhSemuaButton(props) {
   const classes = useStyles()
-  const {onDownloadFile, student_task_files_id} = props;
-    return( 
+  const { onDownloadFile, student_task_files_id } = props;
+    return(
       <Button
-      variant="outlined"
-      startIcon={<GetAppIcon />}
-      className={classes.downloadAllButton}
-      onClick={() => onDownloadFile(student_task_files_id, "lampiran/bulk")}
-        >
-      Unduh Semua
-    </Button>
+        variant="contained"
+        startIcon={<GetAppIcon />}
+        className={classes.downloadAllButton}
+        onClick={() => onDownloadFile(student_task_files_id, "lampiran/bulk")}
+      >
+        Unduh Semua
+      </Button>
     )
 }
 
 function SubmittedTaskList(props) {
-  document.title = "Schooly | Daftar Tugas Terkumpul"
   const classes = useStyles();
-  const { viewOneClass, viewOneTask, tasksCollection, classesCollection, getStudents, downloadTugas, previewTugas, gradeTask} = props;
-  const {all_students} = props.auth;
+
+  const { viewOneClass, viewOneTask, tasksCollection, classesCollection, getStudents, downloadTugas, previewTugas, gradeTask } = props;
+  const { all_students } = props.auth;
   const task_id = props.match.params.id;
 
   const [grade, setGrade] = React.useState(new Map());
@@ -202,10 +190,10 @@ function SubmittedTaskList(props) {
     let gradeMap = grade
     gradeMap.set(id, e.target.value)
     setGrade(gradeMap)
-    
+
   }
-  
-  const onDownloadFile = (id, fileCategory="none") => {
+
+  const onDownloadFile = (id, fileCategory = "none") => {
     if(fileCategory === "lampiran")
       downloadTugas(id)
     else if(fileCategory === "lampiran/bulk"){
@@ -217,7 +205,7 @@ function SubmittedTaskList(props) {
       console.log("File Category is not specified")
   }
 
-  const onPreviewFile = (id, fileCategory="none") => {
+  const onPreviewFile = (id, fileCategory = "none") => {
     if(fileCategory === "lampiran")
       previewTugas(id)
     else
@@ -237,8 +225,8 @@ function SubmittedTaskList(props) {
     if(grade.has(studentId)){
       gradeStatusMap.set(studentId, "Graded")
       setGradeStatus(gradeStatusMap)
-      viewOneTask(task_id) 
-      gradeTask(taskId, gradingData, student_name) 
+      viewOneTask(task_id)
+      gradeTask(taskId, gradingData, student_name)
     }
   }
 
@@ -273,7 +261,7 @@ function SubmittedTaskList(props) {
       for (var i = 0; i < tasksCollection.class_assigned.length; i++){
         class_assigned.push(<Tab label={tasksCollection.class_assigned[i].name} {...TabIndex(i)}/>)
       }
-      return (
+      return(
         <Tabs
           value={value}
           variant="scrollable"
@@ -283,17 +271,16 @@ function SubmittedTaskList(props) {
           >
             {class_assigned}
         </Tabs>
-        )
+      )
     }
   }
 
-  // let TabPanelList = []
   const listClassTabPanel = () => {
     let TabPanelList = []
     if( !tasksCollection.class_assigned || !all_students){
       return null
-    } else{ 
-      let student_task_files_id; // to handle the download semua, this is needed.
+    } else{
+      let student_task_files_id; // to handle the download all, this is needed.
       for(var i = 0; i < tasksCollection.class_assigned.length; i++){
         let students_in_class = [];
         for(var j = 0; j < all_students.length; j++){
@@ -308,7 +295,7 @@ function SubmittedTaskList(props) {
               if(student_task[k].for_task_object === task_id){
                 student_task_files_id.push(task.id)
                 task_list_on_panel.push(
-                <WorkFile 
+                <WorkFile
                   file_id={task.id}
                   file_name={task.filename}
                   file_type={fileType(task.filename)}
@@ -333,28 +320,25 @@ function SubmittedTaskList(props) {
              <div className={classes.studentFileListContainer}>
               <List>
                 {task_list_on_panel}
-                
               </List>
-              {student_task_files_id.length > 0 ? 
-                <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}> 
+              {student_task_files_id.length > 0 ?
+                <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
                   <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
-                    <StandardTextField 
+                    <StandardTextField
                     defaultValue={grade.has(student._id) || tasksCollection.grades == null ? grade.get(student._id) : tasksCollection.grades[student._id]}
                     on_change={(e) => {handleChangeGrade(e, student._id)}}
                     width="35px" borderBottom="1px solid #CCC"/>
                     <StandardTextField disabled={true} value="/ 100" width="40px" />
                   </div>
-
                   <div>
                     <GradeButton onGradeTugas={onGradeTugas} task_id={task_id} student_id={student._id} student_name ={student.name} grade={grade}/>
                     <UnduhSemuaButton onDownloadFile={onDownloadFile} student_task_files_id={student_task_files_id}/>
-                  </div> 
+                  </div>
                 </div>
-                : null 
+                : null
               }
             </div>
              </ExpansionPanel>
-
             )
           }
         }
@@ -365,12 +349,13 @@ function SubmittedTaskList(props) {
       )
     }
   }
-
     return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
   }
 
-  // Before that, run this : 
-  return (
+  document.title = "Schooly | Daftar Tugas Terkumpul"
+
+  // Before that, run this :
+  return(
     <div className={classes.root}>
       <Paper>
         <Typography variant="h4" style={{textAlign: "center"}} gutterBottom>
@@ -387,24 +372,23 @@ SubmittedTaskList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-
   viewOneClass: PropTypes.func.isRequired,
   getTaskFilesByUser:PropTypes.func.isRequired,
   viewOneTask: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
   downloadTugas: PropTypes.func.isRequired,
   previewTugas: PropTypes.func.isRequired,
-  gradeTask: PropTypes.func.isRequired
+  gradeTask: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   tasksCollection: state.tasksCollection,
-  classesCollection: state.classesCollection
+  classesCollection: state.classesCollection,
 });
 
 export default connect(
-  mapStateToProps, {viewOneClass, getStudents,
+  mapStateToProps, { viewOneClass, getStudents,
     getTaskFilesByUser, viewOneTask, downloadTugas,
     previewTugas, gradeTask }
 ) (SubmittedTaskList);

@@ -35,7 +35,7 @@ function EditPasswordField(props) {
   const {on_change, value, errors, id} = props;
   const classes = useStyles();
 
-  return (
+  return(
     <ListItem>
         <Grid container alignItems="center">
           <Grid item xs={6}>
@@ -109,7 +109,7 @@ function ProfilePasswordEditorDialog(props) {
     }
   }
 
-  return (
+  return(
     <div>
       <Button
         variant="contained"
@@ -168,6 +168,7 @@ function ProfilePasswordEditorDialog(props) {
             <Grid container justify="center" style={{marginTop: "15px"}}>
               <Button
                 type="submit"
+                variant="contained"
                 className={classes.saveButton}
               >
                 Simpan
@@ -183,15 +184,15 @@ function ProfilePasswordEditorDialog(props) {
 ProfilePasswordEditorDialog.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-
   changePassword: PropTypes.func.isRequired,
-  logoutUser: PropTypes.func.isRequired
+  logoutUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 })
 
-export default connect(mapStateToProps, { changePassword, logoutUser})
+export default connect(
+  mapStateToProps, { changePassword, logoutUser })
 (ProfilePasswordEditorDialog);

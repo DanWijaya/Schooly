@@ -197,7 +197,7 @@ class CreateAnnouncement extends Component {
       return temp;
     }
 
-    return (
+    return(
       <div className={classes.root}>
         <Paper>
           <div className={classes.mainGrid}>

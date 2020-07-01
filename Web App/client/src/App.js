@@ -100,7 +100,7 @@ class App extends Component {
   }
 
   render() {
-    return (
+    return(
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>

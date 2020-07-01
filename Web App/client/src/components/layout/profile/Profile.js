@@ -58,7 +58,7 @@ function Alert(props) {
 function ProfileDataItem(props) {
   const classes = useStyles();
 
-  return (
+  return(
     <ListItem>
         <ListItemAvatar>
           <Avatar className={classes.profileDataItemAvatar}>
@@ -80,12 +80,10 @@ function ProfileDataItem(props) {
 }
 
 function Profile(props) {
-  document.title = "Schooly | Profil"
-
   const classes = useStyles();
 
   const { user } = props.auth;
-  const {updateAvatar, viewOneClass, classesCollection} = props;
+  const { updateAvatar, viewOneClass, classesCollection } = props;
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -99,12 +97,12 @@ function Profile(props) {
     setOpenAlert(false);
   }
   console.log(user.avatar)
+
   // Alert control for ProfilePasswordEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
     setOpenDataEditorAlert(true);
   }
-
   const handleCloseDataEditorAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
@@ -125,13 +123,15 @@ function Profile(props) {
     setOpenPasswordEditorAlert(false);
   }
 
-  //Initially classesCollection.selectedClasses.name === undefined.
+  // Initially classesCollection.selectedClasses.name === undefined
   if(user.role === "Student" && !classesCollection.selectedClasses.name
   ){
     viewOneClass(user.kelas)
   }
 
-  return (
+  document.title = "Schooly | Profil"
+
+  return(
     <div className={classes.root}>
 
       {/* ProfilePictureEditorDialog Snackbar */}
@@ -318,14 +318,14 @@ Profile.propTypes = {
     auth: PropTypes.object.isRequired,
     classesCollection: PropTypes.object.isRequired,
     updateAvatar: PropTypes.func.isRequired,
-    viewOneClass: PropTypes.func.isRequired
+    viewOneClass: PropTypes.func.isRequired,
   }
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
-    classesCollection: state.classesCollection
+    classesCollection: state.classesCollection,
   });
 
 export default connect(
-    mapStateToProps, {updateAvatar, viewOneClass}
-  ) (Profile);
+  mapStateToProps, { updateAvatar, viewOneClass }
+) (Profile);

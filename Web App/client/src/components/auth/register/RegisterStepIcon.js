@@ -39,7 +39,7 @@ function RegisterStepIcon(props) {
     3: <DoneOutlineIcon />,
   };
 
-  return (
+  return(
     <div
       className={clsx(classes.root, {
         [classes.active]: active,

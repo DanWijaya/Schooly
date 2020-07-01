@@ -1,4 +1,5 @@
-import { GET_SUBJECT, GET_ALL_SUBJECTS } from "../actions/Types"
+import { GET_SUBJECT, GET_ALL_SUBJECTS } from "../actions/Types";
+
 const initialState = {
     all_subjects: [],
     subject:{}
@@ -18,7 +19,7 @@ export default function(state = initialState, action) {
                 all_subjects: action.payload
             };
 
-        default: 
+        default:
             return state;
     }
 }

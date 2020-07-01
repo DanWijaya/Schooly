@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
-import { viewOneClass } from "../../../actions/ClassActions"
+import { viewOneClass } from "../../../actions/ClassActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
@@ -18,7 +18,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 
 function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
-  return (action === null ? { _id, tasktitle, subject, class_assigned, deadline }
+  return(action === null ? { _id, tasktitle, subject, class_assigned, deadline }
     : { _id, tasktitle, subject, class_assigned, deadline, action});
 }
 
@@ -69,7 +69,7 @@ function TaskListHead(props) {
     headCells.pop()
   }
 
-  return (
+  return(
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
         {headCells.map((headCell) => (
@@ -124,15 +124,15 @@ const useToolbarStyles = makeStyles((theme) => ({
   newTaskIcon: {
     width: theme.spacing(3),
     height: theme.spacing(3),
-    marginRight: "7.5px"
+    marginRight: "7.5px",
   }
 }));
 
 const TaskListToolbar = (props) => {
   const classes = useToolbarStyles();
-  const {role } = props;
-  // the item stores the id directly
-  return (
+  const { role } = props;
+  // The item stores the id directly
+  return(
     <Toolbar className={classes.toolbar}>
       <Typography variant="h4" align="left">
         {role === "Teacher" ? <b>Daftar Tugas</b> :
@@ -208,8 +208,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TaskList(props) {
-  document.title = "Schooly | Daftar Tugas"
   const classes = useStyles();
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
   const [selected, setSelected] = React.useState([]);
@@ -220,7 +220,6 @@ function TaskList(props) {
 
   const { tasksCollection, viewTask, deleteTask } = props;
   const { user } = props.auth;
-
 
   const taskRowItem = (data) => {
     rows.push(
@@ -299,7 +298,7 @@ function TaskList(props) {
     deleteTask(id)
   }
 
-  //Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
@@ -312,7 +311,7 @@ function TaskList(props) {
   };
 
   function DeleteDialog(){
-    return (
+    return(
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -368,7 +367,9 @@ function TaskList(props) {
     )
   }
 
-  return (
+  document.title = "Schooly | Daftar Tugas";
+
+  return(
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
@@ -390,7 +391,7 @@ function TaskList(props) {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
-                  return (
+                  return(
                     <TableRow
                       className={classes.tableRow}
                       onClick={() => window.location.href = viewpage}
@@ -423,7 +424,7 @@ TaskList.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   viewOneClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({

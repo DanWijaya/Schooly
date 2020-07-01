@@ -27,7 +27,7 @@ router.post("/create", (req, res) => {
                 name: req.body.name
             })
 
-            newSubject 
+            newSubject
                     .save()
                     .then(subject => res.json(subject))
                     .catch(err => res.json(err));
@@ -50,7 +50,7 @@ router.get("/viewall", (req, res) => {
     Subject.find({}).then((subjects, err) => {
         if(!subjects)
             res.status(400).json(err);
-        else 
+        else
             res.json(subjects);
     });
 });

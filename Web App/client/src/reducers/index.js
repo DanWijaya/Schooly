@@ -14,5 +14,5 @@ export default combineReducers({
   tasksCollection: TasksReducer,
   filesCollection: UploadReducer,
   subjectsCollection: SubjectReducer,
-  passwordMatters: AuthReducer
+  passwordMatters: AuthReducer,
 });

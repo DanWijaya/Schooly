@@ -10,28 +10,23 @@ const Announcement = require("../../models/Announcement");
 
 router.post("/create", (req, res) => {
     // Form Validation
-
     const { errors, isValid } = validateAnnouncementInput(req.body);
-
     if(!isValid){
         return res.status(404).json("Annoucement input is not valid ")
     }
-    //Check Validation
+    // Check Validation
     const newAnnouncement = new Announcement({
         title: req.body.title,
         description: req.body.description,
         author: req.body.author,
         date_announced: new Date()
     })
-
-
     newAnnouncement
             .save()
             .then(ann => {
                 res.json(ann)
                 console.log("Announcement is created")})
             .catch(err => console.log(err));
-
 })
 
 //Define View one announcement
@@ -49,13 +44,12 @@ router.get("/viewall", (req, res) => {
     Announcement.find({}).then((announcements, err) => {
         if(!announcements)
             return res.status(400).json("Tasks are not found");
-        else 
+        else
             return res.json(announcements);
     })
 })
 
 router.post("/update/:id", (req,res) => {
-    
     if(!isValid){
         console.log("Not valid");
         return res.status(400).json(errors);

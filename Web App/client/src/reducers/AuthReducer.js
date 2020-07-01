@@ -1,4 +1,4 @@
-import { PWD_RESET_CLEAR, PWD_RESET_HASH_CREATED, PWD_RESET_HASH_FAILURE, PWD_SAVE_FAILURE, PWD_SAVE_SUCCESS} from "../actions/Types"
+import { PWD_RESET_CLEAR, PWD_RESET_HASH_CREATED, PWD_RESET_HASH_FAILURE, PWD_SAVE_FAILURE, PWD_SAVE_SUCCESS } from "../actions/Types"
 
 const isEmpty = require("is-empty");
 const initialState = {
