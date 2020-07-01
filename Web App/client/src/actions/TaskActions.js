@@ -130,6 +130,7 @@ export const deleteTask = (taskId, history) => dispatch => {
         console.log(res.data)
         window.location.href="/daftar-tugas"
     })
+    
     .catch(err => {
         console.log(err);
         dispatch({
