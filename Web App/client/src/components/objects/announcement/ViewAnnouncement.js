@@ -12,6 +12,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    flexDirection: "column",
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
@@ -27,8 +28,13 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
+  teacherButtonContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop: "20px",
+  },
   editAnnouncementButton: {
-    marginBottom: "10px",
+    marginRight: "10px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -116,15 +122,15 @@ function ViewAnnouncement(props) {
         </Grid>
       </Paper>
       { user.role === "Teacher" ?
-          <div style={{marginLeft: "20px"}}>
+          <div className={classes.teacherButtonContainer}>
             <Link to="/sunting-pengumuman">
-              <LightToolTip title="Sunting Pengumuman" placement="right">
+              <LightToolTip title="Sunting Pengumuman" placement="bottom">
                 <Fab className={classes.editAnnouncementButton}>
                   <EditIcon />
                 </Fab>
               </LightToolTip>
             </Link>
-            <LightToolTip title="Hapus Pengumuman" placement="right">
+            <LightToolTip title="Hapus Pengumuman" placement="bottom">
               <Fab className={classes.deleteAnnouncementButton}>
                 <DeleteIcon />
               </Fab>
