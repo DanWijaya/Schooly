@@ -26,11 +26,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NotificationItemList(props) {
-  document.title="Schooly | Notifikasi";
-
   const classes = useStyles();
 
-  return (
+  document.title="Schooly | Notifikasi";
+
+  return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
         <IconButton>
@@ -65,7 +65,7 @@ function NotificationItemList(props) {
 function Notifications(props) {
   const classes = useStyles();
 
-  return (
+  return(
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
         <Grid container justify="space-between">

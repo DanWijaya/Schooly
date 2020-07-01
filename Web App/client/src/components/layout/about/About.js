@@ -60,8 +60,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function About(props) {
-  document.title = "Schooly | Tentang Schooly";
-
   const classes = useStyles();
 
   const [isFirsttimeRendered, setFirstTime] = React.useState(false)
@@ -71,7 +69,9 @@ function About(props) {
     setFirstTime(true);
   }
 
-  return (
+  document.title = "Schooly | Tentang Schooly";
+
+  return(
     <div className={classes.root}>
       <div className={classes.whatIsSchoolyBackground}>
         <div className={classes.whatIsSchooly}>
@@ -150,21 +150,20 @@ function About(props) {
       </div>
       <div className={classes.supportSchoolyBackground}>
         <div className={classes.supportSchooly}>
-        <Typography variant="h4" color="primary" gutterBottom >
-          Sudah menggunakan Schooly tetapi masih belum puas?
-        </Typography>
-        <Typography paragraph>
-          Bantu Schooly berkembang dengan pendapat anda. Saran maupun kritik anda sangat berarti bagi kami.
-        </Typography>
-        <Button
-          variant="contained"
-          size="large"
-          startIcon={<EmailIcon />}
-          className={classes.supportSchoolyButton}
-        >
-          Kirim Pesan
-        </Button>
-
+          <Typography variant="h4" color="primary" gutterBottom >
+            Sudah menggunakan Schooly tetapi masih belum puas?
+          </Typography>
+          <Typography paragraph>
+            Bantu Schooly berkembang dengan pendapat anda. Saran maupun kritik anda sangat berarti bagi kami.
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<EmailIcon />}
+            className={classes.supportSchoolyButton}
+          >
+            Kirim Pesan
+          </Button>
         </div>
       </div>
     </div>

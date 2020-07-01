@@ -1,10 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { updateUserData } from "../../../actions/UserActions"
+import { updateUserData } from "../../../actions/UserActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar,
-   Tab, Tabs, Typography } from "@material-ui/core";
+import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar, Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return (
+  return(
     <div
       hidden={value !== index}
       id={`tabpanel-${index}`}
@@ -84,7 +83,7 @@ function TabIndex(index) {
 function ProfileDataItemEdit(props) {
   const classes = useStyles();
 
-  return (
+  return(
     <ListItem>
         <ListItemAvatar>
           <Avatar className={classes.profileDataItemAvatar}>
@@ -189,7 +188,7 @@ function ProfileDataEditorDialog(props) {
     }))
   }
 
-  return (
+  return(
     <div>
       <Button
         variant="contained"
@@ -325,6 +324,7 @@ function ProfileDataEditorDialog(props) {
             <Grid container justify="center" style={{marginTop: "15px"}}>
               <Button
                 type="submit"
+                variant="contained"
                 id="simpan"
                 className={classes.saveButton}
               >
@@ -340,13 +340,13 @@ function ProfileDataEditorDialog(props) {
 
 ProfileDataEditorDialog.propTypes = {
   auth: PropTypes.object.isRequired,
-  updateUserData: PropTypes.func.isRequired
+  updateUserData: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
 });
 
 export default connect(
-  mapStateToProps, {updateUserData}
-)(ProfileDataEditorDialog);
+  mapStateToProps, { updateUserData }
+) (ProfileDataEditorDialog);

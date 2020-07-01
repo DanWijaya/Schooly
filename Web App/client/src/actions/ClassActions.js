@@ -81,9 +81,7 @@ export const deleteClass = (classId) => dispatch => {
   axios
     .delete("/api/classes/delete/" + classId)
     .then(res => {
-        console.log(res.data)
         alert("Class Deleted")
-        // history.push("/daftar-kelas")
         window.location.reload()
     })
     .catch(err => {

@@ -45,8 +45,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NotFound(props) {
-  document.title="Schooly | Error 404";
-
   const classes = useStyles();
 
   const [isFirsttimeRendered, setFirstTime] = React.useState(false)
@@ -55,6 +53,8 @@ function NotFound(props) {
     handleMarginTopValue(0);
     setFirstTime(true);
   }
+
+  document.title="Schooly | Error 404";
 
   return(
     <div className={classes.root}>

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 function PolicyContent() {
   const classes = useStyles();
 
-  return (
+  return(
     <div className={classes.root}>
       <div className={classes.policyBackground}>
         <div className={classes.policy}>

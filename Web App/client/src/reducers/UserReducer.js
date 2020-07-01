@@ -20,25 +20,22 @@ export default function(state = initialState, action) {
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload
       };
-      
     case USER_LOADING:
       return {
         ...state,
         loading: true
       };
-    
     case GET_TEACHERS:
       return{
         ...state,
         all_teachers: action.payload
       }
-    
-    case GET_STUDENTS: 
-    return{
-      ...state,
-      all_students: action.payload
-    }
-    case GET_ONE_USER: //teacher or student or anyone lah. 
+    case GET_STUDENTS:
+      return{
+        ...state,
+        all_students: action.payload
+      }
+    case GET_ONE_USER: //teacher or student or anyone lah.
       return {
         ...state,
         selectedUser: action.payload

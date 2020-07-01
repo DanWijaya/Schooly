@@ -61,7 +61,7 @@ function ClassListHead(props) {
     { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
   ];
 
-  return (
+  return(
     <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
       <TableRow>
         {headCells.map((headCell) => (
@@ -77,11 +77,12 @@ function ClassListHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               <b>{headCell.label}</b>
-              {orderBy === headCell.id ? (
+              {orderBy === headCell.id ?
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </span>
-              ) : null}
+                : null
+              }
             </TableSortLabel>
           </TableCell>
         ))}
@@ -116,7 +117,7 @@ const useToolbarStyles = makeStyles((theme) => ({
   newClassIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
-    marginRight: "7.5px"
+    marginRight: "7.5px",
   }
 }));
 
@@ -124,7 +125,7 @@ const ClassListToolbar = (props) => {
   const classes = useToolbarStyles();
   const { item, deleteClass } = props;
 
-  return (
+  return(
     <Toolbar className={classes.toolbar}>
       <Typography variant="h4" align="left">
         <b>Daftar Kelas</b>
@@ -295,7 +296,7 @@ function ClassList(props) {
     deleteClass(id)
   }
 
-  //Delete Dialog box
+  // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
@@ -308,7 +309,7 @@ function ClassList(props) {
   };
 
   function DeleteDialog(){
-    return (
+    return(
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -365,7 +366,7 @@ function ClassList(props) {
   }
 
   if(user.role === "Student") {
-    return (
+    return(
       <div className={classes.root}>
         <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
           <b>Anda tidak mempunyai izin akses halaman ini.</b>
@@ -373,7 +374,7 @@ function ClassList(props) {
       </div>
     )
   }
-  return (
+  return(
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
@@ -395,7 +396,7 @@ function ClassList(props) {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   let viewpage = `/kelas/${row._id}`
-                  return (
+                  return(
                     <TableRow
                       className={classes.tableRow}
                       onClick={() => window.location.href = viewpage}
@@ -427,7 +428,7 @@ ClassList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -437,6 +438,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps,
-{ viewClass, deleteClass }
-)(ClassList);
+  mapStateToProps, { viewClass, deleteClass }
+) (ClassList);

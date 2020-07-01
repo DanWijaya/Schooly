@@ -32,7 +32,7 @@ conn.once("open", () => {
 
   gfsTugas = GridFsStream(conn.db, mongoose.mongo);
   gfsTugas.collection("tugas")
-  
+
   gfsLampiran = GridFsStream(conn.db, mongoose.mongo);
   gfsLampiran.collection("lampiran")
 
@@ -55,7 +55,7 @@ function storageEngine(bucketName, random=false){
             filename = buf.toString("hex") + path.extname(file.originalname);
           else
             filename = file.originalname;
-          
+
           const fileInfo = {
             filename: filename,
             bucketName: bucketName
@@ -177,12 +177,11 @@ router.get("/image-upload", (req,res) => {
         else{
         return res.json("Successful")
         }
-    
+
       });
     }
   })
 
-// --------------------------------- Tugas uploads ------------------------------------ //
 // // @route DELETE /files/:id
 // // @desc Delete File
 // Upload Tugas
@@ -314,8 +313,8 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
   console.log("Delete file completed")
 })
 
-// ------------------------------ Part untuk upload lampiran tugas -------------------- //
-//When uploading the lampiran, it is done tgt when creating the task object. 
+// Lampiran Upload
+// When uploading the lampiran, it is done tgt when creating the task object
 // So, this implementation is on router.post("/create") in tasks.js file
 
 router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (req,res) => {
@@ -344,12 +343,12 @@ router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (r
       } else{
         task.lampiran = temp;
       }
-      
+
       console.log(task.lampiran)
-      task.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client. 
+      task.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
           .then(task => console.log("Task"))
           .catch(err => {console.log("error kan ini")})
-      
+
         }
     })
   res.json({success: "Successfully uploaded the lampiran file"})
@@ -406,7 +405,7 @@ router.delete("/lampiran/:task_id", (req,res) => {
   const {lampiran_to_delete, current_lampiran} = req.body;
   for(var i = 0; i < lampiran_to_delete.length; i++){
     lampiran_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
-    // di rootnya, masukkin collection namenya.. 
+    // di rootnya, masukkin collection namenya..
     gfsLampiran.remove({ _id: lampiran_id, root: "lampiran"}, (err) => {
       if(err) {
         console.log("error occured")
@@ -466,10 +465,10 @@ router.post("/upload_lampiran_announcement/:id", uploadLampiranAnnouncement.arra
         announcement.lampiran = temp;
       }
 
-      announcement.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client. 
+      announcement.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
                   .then(announcement => console.log("Lampiran announcement"))
                   .catch(err => {console.log("error kan ini")})
-      
+
         }
     })
   res.json({success: "Successfully uploaded the lampiran file"})
@@ -479,13 +478,20 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
   let announcement_id = req.params.id;
   const {lampiran_to_delete, current_lampiran} = req.body;
   for(var i = 0; i < lampiran_to_delete.length; i++){
+<<<<<<< HEAD
     id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // di rootnya, masukkin collection namenya.. 
     gfsLampiranAnnouncement.remove({ _id: id, root: "lampiran_announcement"}, (err) => {
+=======
+    announcement_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
+    // di rootnya, masukkin collection namenya..
+    gfsLampiranAnnouncement.remove({ _id: announcement_id, root: "lampiran_announcement"}, (err) => {
+>>>>>>> 6b01cc0d7bb76f9cb6f6d8b64035890bd055e0cb
       if(err) {
         console.log("error occured")
         return res.status(404).json({err: "Error in removing the files"});
-      } else {
+      }
+      else {
         console.log("Sucessful, lampiran kenadelete")
       }
     })
@@ -511,6 +517,7 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
   })
 })
 
+<<<<<<< HEAD
 router.get("/lampiran_announcement/:id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.id)
   if(Boolean(gfsLampiranAnnouncement)){
@@ -557,3 +564,6 @@ router.get("/previewlampiran_announcement/:id", (req,res) => {
 })
 
 module.exports = {router, uploadAvatar, uploadTugas, uploadLampiran};
+=======
+module.exports = { router, uploadAvatar, uploadTugas, uploadLampiran };
+>>>>>>> 6b01cc0d7bb76f9cb6f6d8b64035890bd055e0cb

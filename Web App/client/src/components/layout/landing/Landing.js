@@ -32,8 +32,7 @@ const styles = (theme) => ({
     color: "white",
   },
   schoolyIntroductionTitle: {
-    fontFamily: "Cambria",
-    color: "white"
+    color: "white",
   },
   schoolyAccessBackground: {
     backgroundColor: "#F5F5F5",
@@ -58,7 +57,7 @@ const styles = (theme) => ({
     padding: "10px",
   },
   schoolyFeaturesTitle: {
-    color: "grey"
+    color: "grey",
   },
   featuresPaper: {
     display: "flex",
@@ -126,9 +125,9 @@ class Landing extends Component {
     var dummy = document.createElement("textarea");
     //To avoid breaking orgain page when copying more words
     //Cant copy when adding below this code
-    //Dummy.style.display = 'none'
+    //Dummy.style.display = "none"
     document.body.appendChild(dummy);
-    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea".
+    //Be careful if you use texarea. setAttribute("value", value), which works with "input" does not work with "textarea".
     dummy.value = text;
     dummy.select();
     document.execCommand("copy");
@@ -136,11 +135,11 @@ class Landing extends Component {
   }
 
   render() {
-    document.title = "Schooly | Sistem Persekolahan Terbaik di Indonesia";
-
     const { classes } = this.props;
 
-    return (
+    document.title = "Schooly | Sistem Persekolahan Terbaik di Indonesia";
+
+    return(
     <div className={classes.root}>
       <div className={classes.schoolyIntroductionBackground}>
         <div className={classes.schoolyIntroduction}>

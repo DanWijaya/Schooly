@@ -10,9 +10,11 @@ const StandardTextField = (props) => {
     setBorderStyle("2px solid #2196F3")
   }
 
-  return (
+  return(
     <div>
       <input
+        onFocus={onFocus}
+        onBlur={onBlur}
         defaultValue={props.defaultValue}
         onChange={props.on_change}
         value={props.value}
@@ -24,10 +26,6 @@ const StandardTextField = (props) => {
           boxShadow: "none",
           backgroundColor: "#FFFFFF",
         }}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        disabled={props.disabled}
-        value={props.value}
       />
     </div>
   )

@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1
+    zIndex: theme.zIndex.drawer + 1,
   },
   navbarContainer: {
     flex: "auto",
@@ -68,7 +68,7 @@ function NavBar(props) {
   const isMobileView = useMediaQuery("(max-width:600px)");
   const { handleDrawerDesktop, handleDrawerMobile } = props;
 
-  //NavBar Contents
+  // NavBar Contents
   let leftNavBarContents;
   let middleNavBarContents;
   let rightNavBarContents;
@@ -144,7 +144,7 @@ function NavBar(props) {
     )
   }
 
-  return (
+  return(
     <AppBar
       position="fixed"
       className={classes.appBar}
@@ -168,5 +168,5 @@ const mapStateToProps = (state) => ({
  });
 
 export default connect(
-   mapStateToProps, { logoutUser }
+  mapStateToProps, { logoutUser }
  ) (NavBar);

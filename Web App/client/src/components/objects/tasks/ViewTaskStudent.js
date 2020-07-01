@@ -2,24 +2,24 @@ import React from "react";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran} from "../../../actions/UploadActions"
-import { viewOneTask } from "../../../actions/TaskActions"
-import { getTaskFilesByUser } from "../../../actions/UploadActions"
-import { getOneUser } from "../../../actions/UserActions"
+import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
+import { viewOneTask } from "../../../actions/TaskActions";
+import { getTaskFilesByUser } from "../../../actions/UploadActions";
+import { getOneUser } from "../../../actions/UserActions";
+import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
-   Menu, MenuItem, Paper, Snackbar, Typography } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+   Paper, Snackbar, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import AddIcon from "@material-ui/icons/Add";
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import DescriptionIcon from '@material-ui/icons/Description';
-import GetAppIcon from "@material-ui/icons/GetApp";
 import PublishIcon from "@material-ui/icons/Publish";
+import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
 
@@ -53,18 +53,8 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  profilePicture: {
-    width: theme.spacing(5),
-    height: theme.spacing(5),
-  },
   paperBox: {
     padding: "20px",
-  },
-  workBox: {
-    margin: "auto",
-    marginTop: "30px",
-    justifyContent: "center",
-    flexDirection: "row"
   },
   workChosenFile: {
     width: "200px",
@@ -97,8 +87,52 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
+  downloadIconButton: {
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
+    marginLeft: "5px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  deleteIconButton: {
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
+  actionIcon: {
+    width: theme.spacing(2),
+    height: theme.spacing(2),
+  },
+  wordFileTypeIcon: {
+    backgroundColor: "#16B0DD",
+  },
+  excelFileTypeIcon: {
+    backgroundColor: "#68C74F",
+  },
+  imageFileTypeIcon: {
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    backgroundColor: "#FD931D",
+  },
   otherFileTypeIcon: {
-    backgroundColor: theme.palette.primary.dark
+    backgroundColor: "#808080",
   },
 }));
 
@@ -108,28 +142,66 @@ function Alert(props) {
 
 function LampiranFile(props) {
   const classes = useStyles();
-  const {file_id, filename, filetype, onDownloadFile, onPreviewFile} = props;
+
+  const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
+
   return(
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem button disableRipple className={classes.listItem}
-        onClick={() => {onPreviewFile(file_id, "lampiran")}}>
+        <ListItem
+          button
+          disableRipple
+          className={classes.listItem}
+          onClick={() => {onPreviewFile(file_id, "lampiran")}}
+        >
           <ListItemAvatar>
-            {filetype == "File lainnya" ?
-            <Avatar className={classes.otherFileTypeIcon}><DescriptionIcon/></Avatar> :
-            <Avatar/>}
+            {filetype === "Word" ?
+                <Avatar className={classes.wordFileTypeIcon}>
+                  <FaFileWord />
+                </Avatar>
+              :
+              filetype === "Excel" ?
+                <Avatar className={classes.excelFileTypeIcon}>
+                  <FaFileExcel />
+                </Avatar>
+              :
+              filetype === "Gambar" ?
+                <Avatar className={classes.imageFileTypeIcon}>
+                  <FaFileImage />
+                </Avatar>
+              :
+              filetype === "PDF" ?
+                <Avatar className={classes.pdfFileTypeIcon}>
+                  <FaFilePdf />
+                </Avatar>
+              :
+              filetype === "Teks" ?
+                <Avatar className={classes.textFileTypeIcon}>
+                  <FaFileAlt />
+                </Avatar>
+              :
+              filetype === "Presentasi" ?
+                <Avatar className={classes.presentationFileTypeIcon}>
+                  <FaFilePowerpoint />
+                </Avatar>
+              :
+              filetype === "File Lainnya" ?
+                <Avatar className={classes.otherFileTypeIcon}>
+                  <FaFile />
+                </Avatar>
+              : null
+            }
           </ListItemAvatar>
           <ListItemText
             primary={filename}
             secondary={filetype}
           />
-          <ListItemIcon>
-            <IconButton onClick={(e) => {
-              e.stopPropagation()
-              onDownloadFile(file_id, "lampiran")}}>
-              <CloudDownloadIcon />
-            </IconButton>
-          </ListItemIcon>
+          <IconButton
+            className={classes.downloadIconButton}
+            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran") }}
+          >
+            <CloudDownloadIcon className={classes.actionIcon} />
+          </IconButton>
         </ListItem>
       </Paper>
     </Grid>
@@ -138,47 +210,95 @@ function LampiranFile(props) {
 
 function WorkFile(props) {
   const classes = useStyles();
-  const {file_type_icon, file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog} = props;
+
+  const { file_type_icon, file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog } = props;
   let displayedName = ""
 
-  file_name.length >= 25 ?
-  displayedName = `${file_name.slice(0,17)}..${path.extname(file_name)}`
-  : displayedName = file_name
+  file_name.length >= 10 ?
+    displayedName = `${file_name.slice(0,9)}..${path.extname(file_name)}`
+  :
+    displayedName = file_name
 
-  return (
-    <ListItem button disableRipple onClick={() => {onPreviewFile(file_id, "tugas")}}>
-      <ListItemAvatar>
-        {file_type == "File lainnya" ?
-        <Avatar className={classes.otherFileTypeIcon}> <DescriptionIcon/> </Avatar>: <Avatar/>}
-      </ListItemAvatar>
-      <ListItemText
-        primary={displayedName}
-        secondary={file_type}
-      />
-      <IconButton size="small" className={classes.iconButton}
-        onClick={(e) => { e.stopPropagation()
-          onDownloadFile(file_id, "tugas")}}
-       >
-        <CloudDownloadIcon />
-      </IconButton>
-      <IconButton size="small" className={classes.iconButton}
-        onClick={(e) => { e.stopPropagation()
-          handleOpenDeleteDialog(props.file_id, props.file_name)}}
-       >
-        <DeleteIcon />
-      </IconButton>
-    </ListItem>
+  return(
+    <Paper variant="outlined" className={classes.listItemPaper}>
+      <ListItem
+        button
+        disableRipple
+        className={classes.listItem}
+        onClick={() => {onPreviewFile(file_id, "tugas")}}
+      >
+        <ListItemAvatar>
+          {file_type === "Word" ?
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            :
+            file_type === "Excel" ?
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            :
+            file_type === "Gambar" ?
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            :
+            file_type === "PDF" ?
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            :
+            file_type === "Teks" ?
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            :
+            file_type === "Presentasi" ?
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            :
+            file_type === "File Lainnya" ?
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            : null
+          }
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <LightToolTip title={file_name} placement="top">
+              <Typography variant="subtitle2">
+                {displayedName}
+              </Typography>
+            </LightToolTip>
+          }
+          secondary={file_type}
+        />
+        <IconButton className={classes.downloadIconButton}
+          onClick={(e) => { e.stopPropagation()
+            onDownloadFile(file_id, "tugas")}}
+         >
+          <CloudDownloadIcon className={classes.actionIcon} />
+        </IconButton>
+        <IconButton className={classes.deleteIconButton}
+          onClick={(e) => { e.stopPropagation()
+            handleOpenDeleteDialog(props.file_id, props.file_name)}}
+         >
+          <DeleteIcon className={classes.actionIcon} />
+        </IconButton>
+      </ListItem>
+    </Paper>
   )
 }
 
 function ViewTaskStudent(props) {
   const classes = useStyles();
+
   const { user, selectedUser } = props.auth;
   const { uploadTugas, getTaskFilesByUser, tasksCollection,
     filesCollection, downloadTugas, previewTugas,
     viewOneTask, getOneUser, downloadLampiran, previewLampiran } = props;
-
-  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -190,17 +310,16 @@ function ViewTaskStudent(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
-  
+
   let tugasId = props.match.params.id;
-  
-  //This page is only for student later on, so for now put the user.role logic condition
+
+  // This page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
     viewOneTask(tugasId)
-    //Will run getOneUser again once the tasksCollection is retrieved
+    // Will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
-  },[tasksCollection.person_in_charge_id]
-    )
+  }, [tasksCollection.person_in_charge_id])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -221,26 +340,26 @@ function ViewTaskStudent(props) {
       case ".ppt" :
       case ".pptx": return "Presentasi"
 
-      default: return "File lainnya"
+      default: return "File Lainnya"
     }
   }
 
   const listWorkFile = () => {
     let temp = []
-      for (let i = 0 ; i < filesCollection.files.length; i++) {
-        console.log(filesCollection.files[i], i)
-        temp.push(
-          <WorkFile
-            handleOpenDeleteDialog = {handleOpenDeleteDialog}
-            onDownloadFile = {onDownloadFile}
-            onPreviewFile = {onPreviewFile}
-            file_type_icon={<DescriptionIcon/>}
-            file_name={filesCollection.files[i].filename}
-            file_id={filesCollection.files[i].id}
-            file_type={fileType(filesCollection.files[i].filename)}
-          />
-        )
-      }
+    for (let i = 0; i < filesCollection.files.length; i++) {
+      console.log(filesCollection.files[i], i)
+      temp.push(
+        <WorkFile
+          handleOpenDeleteDialog = {handleOpenDeleteDialog}
+          onDownloadFile={onDownloadFile}
+          onPreviewFile={onPreviewFile}
+          file_type_icon={<DescriptionIcon />}
+          file_name={filesCollection.files[i].filename}
+          file_id={filesCollection.files[i].id}
+          file_type={fileType(filesCollection.files[i].filename)}
+        />
+      )
+    }
     if(temp.length !== tasksContents.length) {
       console.log("tasks added")
       setTaskContents(temp);
@@ -248,7 +367,7 @@ function ViewTaskStudent(props) {
     return tasksContents
   }
 
-  //For upload, showing file names before submitting
+  // For upload, showing file names before submitting
   const listFileChosen = () => {
     let temp = []
     if(!fileTugas) {
@@ -335,7 +454,7 @@ function ViewTaskStudent(props) {
   };
 
   function DeleteDialog(){
-    return (
+    return(
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -356,7 +475,7 @@ function ViewTaskStudent(props) {
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px", textAlign:"center"}}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" align="center" gutterBottom>
               <b>{selectedFileName}</b>
             </Typography>
           </Grid>
@@ -387,12 +506,14 @@ function ViewTaskStudent(props) {
               </Button>
             </Grid>
           </Grid>
-          </Grid>
+        </Grid>
       </Dialog>
     )
   }
 
-  return (
+  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
+
+  return(
     <div className={classes.root}>
       {DeleteDialog()}
       <Grid container
@@ -459,64 +580,64 @@ function ViewTaskStudent(props) {
               </Typography>
             </Grid>
             <Divider />
-            <Grid item>
+            <Grid item style={{padding: "10px"}}>
               <List>
                 {listWorkFile()}
               </List>
             </Grid>
             <Divider />
-            <Grid item container direction="column" alignItems="center">
+            <Grid item container direction="column" alignItems="center" style={{padding: "10px"}}>
               <Typography variant="h6">
                 <b><u>File Terpilih</u></b>
               </Typography>
               {listFileChosen()}
             </Grid>
             <Divider/>
-            <Grid item container direction="column" spacing={2} className={classes.workBox}>
-            <form onSubmit={onSubmitTugas}>
-              <Grid item style={{ marginBottom: "15px"}}>
-                <input
-                  type="file"
-                  multiple={true}
-                  name="tugas"
-                  onChange={handleTugasUpload}
-                  ref={tugasUploader}
-                  accept="file/*"
-                  style={{display: "none"}}
-                />
-                <input
-                  type="file"
-                  multiple={true}
-                  name="file"
-                  id="file"
-                  ref={uploadedTugas}
-                  style={{display: "none"}}
-                />
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  className={classes.selectFileButton}
-                  onClick={() => {tugasUploader.current.click()}}
-                >
-                  Pilih File
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  startIcon={<PublishIcon />}
-                  className={classes.submitWorkButton}
-                  type="submit"
-                  disabled={!fileTugas}
-                >
-                  Kumpul Tugas
-                </Button>
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                  <Alert onClose={handleClose} severity="success">
-                    File Berhasil Dikumpulkan!
-                  </Alert>
-                </Snackbar>
-              </Grid>
+            <Grid item container direction="column" alignItems="center" spacing={2} style={{padding: "20px"}}>
+              <form onSubmit={onSubmitTugas}>
+                <div style={{ marginBottom: "15px"}}>
+                  <input
+                    type="file"
+                    multiple={true}
+                    name="tugas"
+                    onChange={handleTugasUpload}
+                    ref={tugasUploader}
+                    accept="file/*"
+                    style={{display: "none"}}
+                  />
+                  <input
+                    type="file"
+                    multiple={true}
+                    name="file"
+                    id="file"
+                    ref={uploadedTugas}
+                    style={{display: "none"}}
+                  />
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    className={classes.selectFileButton}
+                    onClick={() => {tugasUploader.current.click()}}
+                  >
+                    Pilih File
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    variant="contained"
+                    startIcon={<PublishIcon />}
+                    className={classes.submitWorkButton}
+                    type="submit"
+                    disabled={!fileTugas}
+                  >
+                    Kumpul Tugas
+                  </Button>
+                  <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success">
+                      File Berhasil Dikumpulkan!
+                    </Alert>
+                  </Snackbar>
+                </div>
               </form>
             </Grid>
           </Paper>
@@ -527,7 +648,7 @@ function ViewTaskStudent(props) {
           Status: {!tasksCollection.grades ? "Belum Diperiksa" : !tasksCollection.grades[user.id] ? "Belum Diperiksa" :  "Telah Diperiksa"}
         </Typography>
         <Typography variant="h4" gutterBottom>
-          Hasil Penilaian: {!tasksCollection.grades ? "N/A" : !tasksCollection.grades[user.id] ? "N/A" :  `${tasksCollection.grades[user.id]}/100`}
+          Nilai: {!tasksCollection.grades ? "N/A" : !tasksCollection.grades[user.id] ? "N/A" :  `${tasksCollection.grades[user.id]}/100`}
         </Typography>
       </Grid>
     </div>
@@ -535,26 +656,26 @@ function ViewTaskStudent(props) {
 }
 
 ViewTaskStudent.propTypes = {
-   auth: PropTypes.object.isRequired,
-   tasksCollection: PropTypes.object.isRequired,
-   filesCollection: PropTypes.object.isRequired,
-   uploadTugas: PropTypes.func.isRequired,
-   deleteTugas: PropTypes.func.isRequired,
-   downloadTugas: PropTypes.func.isRequired,
-   previewTugas: PropTypes.func.isRequired,
-   updateUserData: PropTypes.func.isRequired, //When you upload files, then update the user data.
-   viewOneTask: PropTypes.func.isRequired,
-   getTaskFilesByUser: PropTypes.func.isRequired, //Get the task files.
-   getOneUser: PropTypes.func.isRequired, //For the person in charge task
-   previewLampiran: PropTypes.func.isRequired,
-   downloadLampiran: PropTypes.func.isRequired,
- }
+  auth: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  filesCollection: PropTypes.object.isRequired,
+  uploadTugas: PropTypes.func.isRequired,
+  deleteTugas: PropTypes.func.isRequired,
+  downloadTugas: PropTypes.func.isRequired,
+  previewTugas: PropTypes.func.isRequired,
+  updateUserData: PropTypes.func.isRequired, // When you upload files, then update the user data.
+  viewOneTask: PropTypes.func.isRequired,
+  getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
+  getOneUser: PropTypes.func.isRequired, // For the person in charge task
+  previewLampiran: PropTypes.func.isRequired,
+  downloadLampiran: PropTypes.func.isRequired,
+}
 
 const mapStateToProps = (state) => ({
-   auth: state.auth,
-   tasksCollection: state.tasksCollection,
-   filesCollection: state.filesCollection
- });
+  auth: state.auth,
+  tasksCollection: state.tasksCollection,
+  filesCollection: state.filesCollection
+});
 
 export default connect(
    mapStateToProps, { uploadTugas, deleteTugas, downloadTugas,

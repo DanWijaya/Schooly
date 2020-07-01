@@ -1,4 +1,4 @@
-import { GET_CLASSES, GET_ALL_CLASSES} from "../actions/Types";
+import { GET_CLASSES, GET_ALL_CLASSES } from "../actions/Types";
 import isEmpty from "is-empty";
 
 const initialState = {

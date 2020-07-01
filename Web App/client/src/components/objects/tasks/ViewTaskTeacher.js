@@ -8,9 +8,7 @@ import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
 import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Fab, Grid, IconButton,
-   ListItem, ListItemAvatar, ListItemText, ListItemIcon,
-   Paper, Typography } from "@material-ui/core";
+import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, ListItemIcon, Paper, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -20,6 +18,8 @@ import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+
 
 const path = require("path");
 
@@ -32,35 +32,34 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: "10px",
   },
-  dialogRoot: {
+  dialogBox: {
     width: "350px",
     padding: "10px",
   },
-  profilePicture: {
-    width: theme.spacing(5),
-    height: theme.spacing(5),
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
+  dialogCancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
   },
   paperBox: {
     padding: "20px",
-    marginBottom: "10px"
-  },
-  workBox: {
-    margin: "auto",
-    marginTop: "30px",
-    justifyContent: "center",
-    flexDirection: "row"
-  },
-  workButton: {
-    width: "200px",
-  },
-  workResultSection: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: "20px",
+    marginBottom: "10px",
   },
   deadlineWarningText: {
-    color: theme.palette.warning.main
+    color: theme.palette.warning.main,
   },
   seeAllTaskButton: {
     backgroundColor: "#61BD4F",
@@ -87,37 +86,111 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listItemPaper: {
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
   listItem: {
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
   },
+  downloadIconButton: {
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  downloadIcon: {
+    width: theme.spacing(2),
+    height: theme.spacing(2),
+  },
+  wordFileTypeIcon: {
+    backgroundColor: "#16B0DD",
+  },
+  excelFileTypeIcon: {
+    backgroundColor: "#68C74F",
+  },
+  imageFileTypeIcon: {
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    backgroundColor: "#FD931D",
+  },
+  otherFileTypeIcon: {
+    backgroundColor: "#808080",
+  },
 }));
 
 function LampiranFile(props) {
   const classes = useStyles();
-  const {file_id, filename, filetype, onDownloadFile, onPreviewFile} = props;
-  return (
+  const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
+
+  return(
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem button disableRipple className={classes.listItem}
-        onClick={() => {onPreviewFile(file_id, "lampiran")}}>
+        <ListItem
+          button
+          disableRipple
+          className={classes.listItem}
+          onClick={() => {onPreviewFile(file_id, "lampiran")}}
+        >
           <ListItemAvatar>
-            <Avatar />
+            {filetype === "Word" ?
+                <Avatar className={classes.wordFileTypeIcon}>
+                  <FaFileWord />
+                </Avatar>
+              :
+              filetype === "Excel" ?
+                <Avatar className={classes.excelFileTypeIcon}>
+                  <FaFileExcel />
+                </Avatar>
+              :
+              filetype === "Gambar" ?
+                <Avatar className={classes.imageFileTypeIcon}>
+                  <FaFileImage />
+                </Avatar>
+              :
+              filetype === "PDF" ?
+                <Avatar className={classes.pdfFileTypeIcon}>
+                  <FaFilePdf />
+                </Avatar>
+              :
+              filetype === "Teks" ?
+                <Avatar className={classes.textFileTypeIcon}>
+                  <FaFileAlt />
+                </Avatar>
+              :
+              filetype === "Presentasi" ?
+                <Avatar className={classes.presentationFileTypeIcon}>
+                  <FaFilePowerpoint />
+                </Avatar>
+              :
+              filetype === "File Lainnya" ?
+                <Avatar className={classes.otherFileTypeIcon}>
+                  <FaFile />
+                </Avatar>
+              : null
+            }
           </ListItemAvatar>
           <ListItemText
             primary={filename}
             secondary={filetype}
           />
-          <ListItemIcon>
-            <IconButton onClick={(e) => {
-              e.stopPropagation()
-              onDownloadFile(file_id, "lampiran")}}>
-              <CloudDownloadIcon />
-            </IconButton>
-          </ListItemIcon>
+          <IconButton
+            className={classes.downloadIconButton}
+            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran") }}
+          >
+            <CloudDownloadIcon className={classes.downloadIcon} />
+          </IconButton>
         </ListItem>
       </Paper>
     </Grid>
@@ -126,12 +199,11 @@ function LampiranFile(props) {
 
 function ViewTaskTeacher(props) {
   const classes = useStyles();
+
   const { user } = props.auth;
-  const {deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask } = props;
+  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask } = props;
   const task_id = props.match.params.id
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-
-  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
 
   React.useEffect(() => {
     viewOneTask(task_id)
@@ -179,7 +251,7 @@ function ViewTaskTeacher(props) {
     // setFileTugas(null)
   }
 
-  //Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true);
   };
@@ -189,12 +261,12 @@ function ViewTaskTeacher(props) {
   };
 
   function DeleteDialog(){
-    return (
+    return(
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
       >
-        <Grid container justify="center" className={classes.dialogRoot}>
+        <Grid container justify="center" className={classes.dialogBox}>
           <Grid item
             container
             justify="flex-end"
@@ -232,11 +304,7 @@ function ViewTaskTeacher(props) {
               <Button
                 onClick={() => { onDeleteTask(task_id)}}
                 startIcon={<DeleteOutlineIcon />}
-                style={{
-                  backgroundColor: "#B22222",
-                  color: "white",
-                  width: "150px",
-                }}
+                className={classes.dialogDeleteButton}
               >
                 Hapus
               </Button>
@@ -245,11 +313,7 @@ function ViewTaskTeacher(props) {
               <Button
                 onClick={handleCloseDeleteDialog}
                 startIcon={< CancelIcon/>}
-                style={{
-                  backgroundColor: "#2196F3",
-                  color: "white",
-                  width: "150px",
-                }}
+                className={classes.dialogCancelButton}
               >
                 Batalkan
               </Button>
@@ -260,7 +324,9 @@ function ViewTaskTeacher(props) {
     )
   }
 
-  return (
+  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
+
+  return(
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paperBox}>
@@ -308,7 +374,7 @@ function ViewTaskTeacher(props) {
                   onDownloadFile ={onDownloadFile}
                   filename={lampiran.filename}
                   filetype={fileType(lampiran.filename)}
-                  />
+                />
               ))}
             </Grid>
           </Grid>
@@ -351,13 +417,18 @@ ViewTaskTeacher.propTypes = {
    previewLampiran: PropTypes.func.isRequired,
    deleteTask: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
+<<<<<<< HEAD
    getOneUser: PropTypes.func.isRequired, // for the person in charge task
+=======
+   getOneUser: PropTypes.func.isRequired, // For the person in charge task
+   getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
+>>>>>>> 6b01cc0d7bb76f9cb6f6d8b64035890bd055e0cb
    viewOneTask: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({
    auth: state.auth,
-   tasksCollection: state.tasksCollection
+   tasksCollection: state.tasksCollection,
  });
 
 export default connect(

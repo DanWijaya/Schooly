@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import moment from "moment";
-import "moment/locale/id"
-import { viewOneClass } from "../../../actions/ClassActions"
-import { getAllSubjects } from "../../../actions/SubjectActions"
-import { viewTask } from "../../../actions/TaskActions"
-import { getAllTaskFilesByUser } from "../../../actions/UploadActions"
+import "moment/locale/id";
+import { viewOneClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { viewTask } from "../../../actions/TaskActions";
+import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Grid,
    IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
@@ -40,19 +40,19 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
   assignmentLate: {
-    backgroundColor: theme.palette.error.main
+    backgroundColor: theme.palette.error.main,
   },
   assignmentTurnedIn: {
-    backgroundColor: theme.palette.success.main
+    backgroundColor: theme.palette.success.main,
   },
   warningText: {
-    color: theme.palette.warning.main
+    color: theme.palette.warning.main,
   }
 }));
 
 function WorkListItem(props) {
 const classes = useStyles()
-  return (
+  return(
     <ListItem button component="a" href={props.work_link}>
       <ListItemAvatar>
         <Avatar>
@@ -81,12 +81,10 @@ const classes = useStyles()
 }
 
 function ViewSubject(props) {
-  const { subject_name } = props.match.params
-  document.title = `Schooly | ${subject_name}`
-
   const classes = useStyles();
 
   const { user } = props.auth;
+  const { subject_name } = props.match.params
   const{ viewOneClass, viewTask, tasksCollection, getAllTaskFilesByUser} = props;
   const { selectedClasses } = props.classesCollection
   const {all_user_files} = props.filesCollection
@@ -97,7 +95,7 @@ function ViewSubject(props) {
   if(all_user_files.length === 0) {
     getAllTaskFilesByUser(user.id)
   }
-  let tasksByClass = [] // tasks on specific class.
+  let tasksByClass = [] // Tasks on specific class.
 
   // All actions to retrive datas from Database...
   if(tasksCollection.length === undefined) {
@@ -114,7 +112,7 @@ function ViewSubject(props) {
   }
 
   const generateTaskBySubject = () => {
-    let tasksBySubjectClass = [] // tasks on specific subjects and class
+    let tasksBySubjectClass = [] // Tasks on specific subjects and class
 
     tasksByClass.map((task) => {
       let workCategoryAvatar = (
@@ -157,7 +155,9 @@ function ViewSubject(props) {
     : tasksBySubjectClass
   }
 
-  return (
+  document.title = `Schooly | ${subject_name}`
+
+  return(
     <div className={classes.root}>
       <Paper className={classes.subjectCardPaper}>
       <Grid container>
@@ -266,7 +266,7 @@ ViewSubject.propTypes = {
   viewOneClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
-  getAllTaskFilesByUser: PropTypes.func.isRequired
+  getAllTaskFilesByUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({

@@ -66,9 +66,20 @@ const StyledListItem = withStyles((theme) => ({
 }))(ListItem);
 
 const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
-  return (
+  return(
     !isDisabled ?
-    <Link to={linkto}>
+      <Link to={linkto}>
+        <StyledListItem button disabled={isDisabled}>
+          <ListItemIcon>
+            {icon}
+          </ListItemIcon>
+          <ListItemText
+            primary={<Typography color="textPrimary">{itemText1}</Typography>}
+            secondary={itemText2}
+          />
+        </StyledListItem>
+      </Link>
+    :
       <StyledListItem button disabled={isDisabled}>
         <ListItemIcon>
           {icon}
@@ -78,17 +89,6 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
           secondary={itemText2}
         />
       </StyledListItem>
-    </Link>
-    :
-    <StyledListItem button disabled={isDisabled}>
-      <ListItemIcon>
-        {icon}
-      </ListItemIcon>
-      <ListItemText
-        primary={<Typography color="textPrimary">{itemText1}</Typography>}
-        secondary={itemText2}
-      />
-    </StyledListItem>
   )
 }
 
@@ -115,7 +115,7 @@ function DrawerContent(props) {
     [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
   ]
 
-  return (
+  return(
     <div>
       <List>
         {ListItemContents.map((item) => (
@@ -139,7 +139,7 @@ function SideDrawer(props) {
   const { user } = props.auth;
 
   if(user.name !== undefined) {
-    return (
+    return(
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">
           {/* Mobile = Backdrop Drawer */}
@@ -181,7 +181,7 @@ function SideDrawer(props) {
     )
   }
   else {
-    return (
+    return(
       <div style={{display: "none"}} />
     )
   }
@@ -192,8 +192,9 @@ SideDrawer.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
 })
 
 export default connect(
-  mapStateToProps) ( SideDrawer);
+  mapStateToProps
+) (SideDrawer);

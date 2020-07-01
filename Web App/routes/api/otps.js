@@ -28,12 +28,12 @@ router.route("/visitor/:id").put((req,res, next) => {
 
     findLatestOTP(OTP, function() {
         if(req.body.otpReceivedByVisitor !== latestOtp[0]) {
-            return res  
+            return res
                     .status(401)
                     .send({ success: false, msg: "Incorrect code was input"});
 
         } else {
-            // allow the user to register
+            // Allow the user to register
         }
     })
 })
@@ -41,8 +41,8 @@ router.route("/visitor/:id").put((req,res, next) => {
 router.route("/sendotptovisitor").post((req, res, next) => {
     let visitorEmail = req.body.company_email;
     let newGeneratedOTP = shortid.generate();
-  
-    // create the otp and mongo-related data for saving into OTP mongo schema
+
+    // Create the otp and mongo-related data for saving into OTP mongo schema
     let thisOTP_Mongo = {
       visitor_email: visitorEmail,
       generated_otp: newGeneratedOTP

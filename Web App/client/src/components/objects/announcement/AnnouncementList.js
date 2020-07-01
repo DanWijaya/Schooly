@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   paperBox: {
-    padding: "20px"
+    padding: "20px",
   },
   listItemPaper: {
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
   listItem: {
     "&:focus, &:hover": {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   newAnnouncementIcon: {
     width: theme.spacing(3),
     height: theme.spacing(3),
-    marginRight: "7.5px"
+    marginRight: "7.5px",
   }
 }));
 
@@ -50,7 +50,7 @@ function AnnouncementItemList(props) {
 
   const classes = useStyles();
 
-  return (
+  return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
         <ListItemText
@@ -114,7 +114,7 @@ function AnnouncementList(props) {
     return annList;
   }
 
-  return (
+  return(
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
         <Grid container justify="space-between">

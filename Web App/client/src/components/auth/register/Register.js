@@ -12,8 +12,7 @@ import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, FormControl, Grid, Link, MenuItem,
-   Paper, Select, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
+import { Button, Dialog, FormControl, Grid, Link, MenuItem, Paper, Select, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -49,13 +48,13 @@ const styles = (theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  registerButton: {
-    backgroundColor: "#61BD4F",
-    color: "white",
+  backButton: {
+    backgroundColor: "#DCDCDC",
+    color: "black",
     width: "90px",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
-      color: "white",
+      backgroundColor: "#DCDCDC",
+      color: "black",
     },
   },
   continueButton: {
@@ -64,6 +63,15 @@ const styles = (theme) => ({
     width: "90px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
+  registerButton: {
+    backgroundColor: "#61BD4F",
+    color: "white",
+    width: "90px",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
       color: "white",
     },
   },
@@ -91,8 +99,8 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
-      kelas: "", //Student Data
-      subject_teached: "", //Teacher Data
+      kelas: "", // Student Data
+      subject_teached: "", // Teacher Data
       activeStep: 0,
       dialogOpen: false,
       submitButtonClicked: false,
@@ -157,15 +165,12 @@ class Register extends Component {
       this.props.registerUser(newUser, this.props.history);
   };
 
-  //Policy Dialog
+  // Policy Dialog
   handleToggleDialog = () => {
     this.setState(prevState => ({dialogOpen: !prevState.dialogOpen }))
   };
 
   render() {
-    document.title="Daftar ke Schooly";
-    document.body.style = 'background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat';
-
     const { classes, classesCollection, subjectsCollection } = this.props;
     const { errors } = this.state;
 
@@ -188,7 +193,7 @@ class Register extends Component {
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
         case 0:
-          return (
+          return(
             <Grid
               container
               direction="column"
@@ -246,7 +251,7 @@ class Register extends Component {
             </Grid>
           );
         case 1:
-          return (
+          return(
             <Grid
               container
               direction="column"
@@ -363,7 +368,7 @@ class Register extends Component {
             </Grid>
           );
         case 2:
-          return (
+          return(
             <Grid
               container
               direction="column"
@@ -427,7 +432,10 @@ class Register extends Component {
       )
     }
 
-    return (
+    document.title = "Daftar ke Schooly";
+    document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
+
+    return(
       <div className={classes.root}>
         <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt"/>
         <Paper>
@@ -453,45 +461,36 @@ class Register extends Component {
             <Grid item>
               <form noValidate onSubmit={this.onSubmit}>
                 {getStepContent(this.state.activeStep)}
-                <div style={{display: "flex", justifyContent: "space-between", marginTop: "30px"}}>
-                  {this.state.activeStep === 0 ?
-                    null
-                    :
-                    <Button
-                      variant="contained"
-                      onClick={handleBack}
-                      style={{
-                        backgroundColor: "#DCDCDC",
-                        color: "black",
-                        width: "90px",
-                      }}
-                    >
-                      Kembali
-                    </Button>
-                  }
-                  {this.state.activeStep === steps.length - 1 ?
-                    <Grid container justify="flex-end">
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        size="medium"
-                        className={classes.registerButton}
-                      >
-                        Daftar
-                      </Button>
-                    </Grid>
-                    :
-                    <Grid container justify="flex-end">
-                      <Button
-                        variant="contained"
-                        type="button"
-                        onClick={handleNext}
-                        className={classes.continueButton}
-                      >
-                        Lanjut
-                      </Button>
-                    </Grid>
-                  }
+                <div style={{display: "flex", justifyContent: "space-between", width: "100%", marginTop: "40px"}}>
+                  <div style={{display: "flex", justifyContent: "flex-start"}}>
+                    {this.state.activeStep === 0 ?
+                      null
+                      :
+                        <Button
+                          onClick={handleBack}
+                          className={classes.backButton}
+                        >
+                          Kembali
+                        </Button>
+                    }
+                  </div>
+                  <div style={{display: "flex", justifyContent: "flex-end"}}>
+                    {this.state.activeStep === steps.length - 1 ?
+                        <Button
+                          type="submit"
+                          className={classes.registerButton}
+                        >
+                          Daftar
+                        </Button>
+                      :
+                        <Button
+                          onClick={handleNext}
+                          className={classes.continueButton}
+                        >
+                          Lanjut
+                        </Button>
+                    }
+                  </div>
                 </div>
               </form>
             </Grid>
@@ -524,4 +523,4 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(mapStateToProps, { registerUser, viewClass , getAllSubjects})
   (withStyles(styles)(Register))
-  )
+)

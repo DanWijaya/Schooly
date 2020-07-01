@@ -86,8 +86,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Help(props) {
-  document.title = "Schooly | Bantuan"
-
   const classes = useStyles();
 
   const { user } = props.auth;
@@ -99,7 +97,9 @@ function Help(props) {
     setFirstTime(true);
   }
 
-  return (
+  document.title = "Schooly | Bantuan";
+
+  return(
     <div className={classes.root}>
       <div className={classes.helpTopicsBackground}>
         <div className={classes.helpTopics}>

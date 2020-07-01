@@ -2,7 +2,6 @@ import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_E
 import axios from "axios";
 
 export const uploadTugas = (tugas, userData, taskId) => dispatch => {
-
   if(userData.role === "Student") {
     axios
         .post(`/api/uploads/uploadtugas/${userData.id}/${taskId}`, tugas)
@@ -21,7 +20,7 @@ export const uploadTugas = (tugas, userData, taskId) => dispatch => {
 }
 
 export const deleteTugas = (tugas_id, userData) => {
-    console.log("delete tugas is runned")
+    console.log("Delete tugas is runned")
 
     if(userData.role === "Student") {
         axios
@@ -43,7 +42,7 @@ export const getTaskFilesByUser = (userId, tugasId) => dispatch => {
       .get(`/api/users/gettask/${userId}/${tugasId}`)
       .then(res => {
           console.log(res.data);
-          dispatch({ 
+          dispatch({
             type: GET_FILE_BY_USER,
             payload: res.data
           })
@@ -76,6 +75,7 @@ export const getAllTaskFilesByUser = (userId) => dispatch => {
             })
         })
 }
+
 export const downloadTugas = (tugas_id, userData) => dispatch =>{
     console.log("Downloading Tugas")
     window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}` , "_blank")
@@ -121,7 +121,8 @@ export const previewTugas = (tugas_id) => dispatch => {
     //         })
     //     })
 }
-// upload lampiran is handled togethe with createTask.
+
+// Upload lampiran is handled together with createTask.
 export const getAllLampiranByTask = (lampiran) => dispatch => {
     console.log("Get lampiran by task is runned")
 
@@ -149,7 +150,7 @@ export const downloadLampiran = (lampiran_id) => dispatch => {
 
 export const previewLampiran = (lampiran_id) => dispatch => {
     console.log("Previewing lampiran")
-    window.open(`http://localhost:5000/api/uploads/previewlampiran/${lampiran_id}`, "_blank") // previously has "_blank"
+    window.open(`http://localhost:5000/api/uploads/previewlampiran/${lampiran_id}`, "_blank")
 }
 
 export const deleteLampiran = (lampiran_to_delete, task_id)  => {

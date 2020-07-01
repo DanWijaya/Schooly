@@ -9,8 +9,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
-   List, ListItem, ListItemAvatar, ListItemText,
-   Tabs, Tab, Typography } from "@material-ui/core";
+   List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
@@ -70,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return (
+  return(
     <div
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -100,7 +99,7 @@ function TabIndex(index) {
 function WorkListItem(props) {
   const classes = useStyles()
 
-  return (
+  return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.work_link} className={classes.listItem}>
         <ListItemAvatar>
@@ -128,7 +127,7 @@ function WorkListItem(props) {
 }
 
 function PersonListItem(props) {
-  return (
+  return(
     <ListItem>
       <ListItemAvatar>
         <Avatar src={props.person_avatar}/>
@@ -161,8 +160,6 @@ function ViewClass(props) {
   const { selectedClasses } = props.classesCollection
   const { all_students, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
-
-  document.title = !selectedClasses.name ? "Schooly | Lihat Kelas" : `Schooly | ${selectedClasses.name}`
 
   let tasksByClass = []
 
@@ -198,7 +195,9 @@ function ViewClass(props) {
   };
   console.log(selectedClasses)
 
-  return (
+  document.title = !selectedClasses.name ? "Schooly | Lihat Kelas" : `Schooly | ${selectedClasses.name}`
+
+  return(
     <div className={classes.root}>
       <Paper square>
         <Typography variant="h3" align="center" gutterBottom>
@@ -237,7 +236,7 @@ function ViewClass(props) {
                   break;
                 }
               }
-              return (
+              return(
                 <WorkListItem
                   work_title={task.name}
                   work_category_avatar={workCategoryAvatar}
@@ -284,7 +283,7 @@ function ViewClass(props) {
                     }
                     if(task.subject === subject.name){
                       isEmpty = false
-                      return (
+                      return(
                         <WorkListItem
                           work_title={task.name}
                           work_category_avatar={workCategoryAvatar}
@@ -305,6 +304,7 @@ function ViewClass(props) {
                 <div className={classes.lookAllButtonContainer}>
                   <Button
                     disableRipple
+                    variant="contained"
                     endIcon={<ChevronRightIcon />}
                     href={`/mata-pelajaran/${subject.name}`}
                     className={classes.lookAllButton}
@@ -363,7 +363,7 @@ ViewClass.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  getAllTaskFilesByUser: PropTypes.func.isRequired
+  getAllTaskFilesByUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -371,10 +371,10 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   tasksCollection: state.tasksCollection,
-  filesCollection: state.filesCollection
+  filesCollection: state.filesCollection,
 });
 
 export default connect(
-  mapStateToProps, {viewOneClass, getStudentsByClass,
-    getAllSubjects, viewTask, getTeachers, getAllTaskFilesByUser}
+  mapStateToProps, { viewOneClass, getStudentsByClass,
+    getAllSubjects, viewTask, getTeachers, getAllTaskFilesByUser }
 ) (ViewClass);

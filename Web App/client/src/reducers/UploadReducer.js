@@ -1,5 +1,4 @@
-import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, 
-  GET_ALL_FILES_BY_USER, GET_LAMPIRAN_FILES, GET_ALL_LAMPIRAN_BY_TASK } from "../actions/Types";
+import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_LAMPIRAN_FILES, GET_ALL_LAMPIRAN_BY_TASK } from "../actions/Types";
 
 const initialState = {
   files: [],

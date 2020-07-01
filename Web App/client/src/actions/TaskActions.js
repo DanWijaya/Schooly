@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER, GRADE_TASKS} from "./Types";
 
-// Addtask
+// Add Task
 export const createTask = (formData, taskData, history) => dispatch => {
   axios
     .post("/api/tasks/create", taskData)
@@ -11,7 +11,7 @@ export const createTask = (formData, taskData, history) => dispatch => {
         console.log(formData.has('lampiran'))
         if(formData.has('lampiran'))
             return axios.post(`/api/uploads/upload_lampiran/${res.data._id}`, formData);
-        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
+        else // Must return something, if false it won't continue to the next "then"
             return "Successfully created task with no lampiran"
     })
     .then(res => { console.log("Lampiran tugas is uploaded")
@@ -24,10 +24,8 @@ export const createTask = (formData, taskData, history) => dispatch => {
             type: GET_ERRORS,
             payload: err
         })
-    })   
-
-
-    }
+    })
+}
 
 // View Task
 export const viewTask = () => dispatch => {
@@ -76,18 +74,18 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     .then(res => {
         console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran'))
-        if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different.. 
+        if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran/${taskId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         else
             return "No lampiran file is going to be deleted"
-        
+
     })
     .then(res => {
         console.log("Update the lampiran files, upload some new lampiran files")
         console.log(formData.has("lampiran"), formData.getAll("lampiran"))
         if(formData.has('lampiran'))
             return axios.post(`/api/uploads/upload_lampiran/${taskId}`, formData);
-        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
+        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"
     })
     .then(res => {
