@@ -195,6 +195,19 @@ export const getOneUser = (userId) => dispatch => {
       })
 }
 
+export const getUsers = (userIds) => dispatch => {
+  axios
+    .get("/api/users/getUsers", {params: {userIds: userIds}})
+    .then(res => {
+      console.log(res.data)
+      dispatch({
+        type: GET_USERS,
+        payload: res.data
+      })
+    })
+    .catch(err => console.log("Error in getting users"))
+}
+
 export const getStudentsByClass = (classId) => dispatch => {
   axios
       .get("/api/users/getstudentsbyclass/" + classId)

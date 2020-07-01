@@ -6,7 +6,6 @@ import moment from "moment";
 import "moment/locale/id";
 import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
 import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
-import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, IconButton,
@@ -348,13 +347,11 @@ function ViewTaskTeacher(props) {
 ViewTaskTeacher.propTypes = {
    auth: PropTypes.object.isRequired,
    tasksCollection: PropTypes.object.isRequired,
-   filesCollection: PropTypes.object.isRequired,
    downloadLampiran: PropTypes.func.isRequired,
    previewLampiran: PropTypes.func.isRequired,
    deleteTask: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
    getOneUser: PropTypes.func.isRequired, // for the person in charge task
-   getTaskFilesByUser: PropTypes.func.isRequired, //get the task files.
    viewOneTask: PropTypes.func.isRequired,
  }
 
@@ -365,5 +362,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
    mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, viewOneTask, getTaskFilesByUser, getOneUser }
+    previewLampiran, viewOneTask, getOneUser }
  ) (ViewTaskTeacher);

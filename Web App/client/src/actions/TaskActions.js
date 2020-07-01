@@ -107,7 +107,6 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
 
 
 export const gradeTask = (taskId, gradingData, student_name) => dispatch => {
-    console.log(taskId, gradingData)
     axios
         .post(`/api/tasks/update/${taskId}`, gradingData)
         .then(res => {

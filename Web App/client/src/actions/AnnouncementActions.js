@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS } from "./Types"
+import { GET_ERRORS, GET_ALL_ANNOUNCEMENTS, GET_ANNOUNCEMENT } from "./Types"
 
 // Add Announcement
 export const createAnnouncement = (formData, announcementData, history) => dispatch => {
@@ -17,7 +17,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
       })
       .then(res => {
               alert("Announcement is created")
-            //   history.push("/daftar-tugas")
+              history.push("/daftar-pengumuman")
           })
       .catch(err =>{
           console.log("error happened")
@@ -27,6 +27,57 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
           })
       })  
 } 
+
+export const getAllAnnouncements = (announcementId, history) => dispatch => {
+    axios
+        .get('/api/announcements/viewall')
+        .then((res) => {
+            console.log("Announcement data is received")
+            dispatch({
+                type: GET_ALL_ANNOUNCEMENTS,
+                payload: res.data
+            })
+        })
+}
+
+export const getAnnouncement = (authorId) => dispatch => {
+    axios
+        .get(`/api/announcements/view/${authorId}`)
+        .then((res) => {
+            console.log("Announcement datas are received")
+            dispatch({
+                type: GET_ANNOUNCEMENT,
+                payload: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })
+}
+
+export const getOneAnnouncement = (annId) => dispatch => {
+    console.log("run getOneAnnoucnement")
+    axios
+        .get(`/api/announcements/viewOne/${annId}`)
+        .then((res) => {
+            console.log("Announcement datas are received")
+            dispatch({
+                type: GET_ANNOUNCEMENT,
+                payload: res.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch({
+                type: GET_ERRORS,
+                payload: err
+            })
+        })
+}
 
 export const deleteAnnouncement = (announcementId, history) => dispatch => {
     axios
@@ -51,8 +102,9 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
     .then(res => {
         console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_announcement'))
-        if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different.. 
+        if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
             return axios.delete(`/api/uploads/lampiran_announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
+        }
         else
             return "No lampiran file is going to be deleted"
         
@@ -60,15 +112,17 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
     .then(res => {
         console.log("Update the lampiran files, upload some new lampiran files")
         console.log(formData.has("lampiran_announcement"), formData.getAll("lampiran_announcement"))
-        if(formData.has('lampiran_announcement'))
-            return axios.post(`/api/uploads/upload_lampiran/${annId}`, formData);
+        if(formData.has('lampiran_announcement')){
+            console.log("Lampiran announcement going to be uploaded")
+            return axios.post(`/api/uploads/upload_lampiran_announcement/${annId}`, formData);
+        }
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
             return "Successfully updated task with no lampiran"
     })
     .then(res => {
         console.log("Lampiran file is uploaded")
         alert("Announcement is created")
-        // history.push("/daftar-pengumuman");
+        history.push("/daftar-pengumuman");
     })
 
     .catch(err => {

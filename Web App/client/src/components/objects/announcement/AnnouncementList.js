@@ -1,11 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import StandardTextField from "../../misc/text-field/StandardTextField";
 import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import SearchIcon from "@material-ui/icons/Search";
+import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
+import { getUsers } from "../../../actions/UserActions";
+import moment from "moment";
+import "moment/locale/id";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,26 +53,22 @@ function AnnouncementItemList(props) {
   return (
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
-        <ListItemAvatar>
-          <Avatar>
-            {props.sender_avatar}
-          </Avatar>
-        </ListItemAvatar>
         <ListItemText
           primary={
             <Typography>
               {props.notification_title}
             </Typography>
           }
-          secondary={props.sender_name}
+          secondary={props.author_name}
         />
         <ListItemText
           align="right"
           primary={
             <Typography variant="subtitle" color="textSecondary">
-              {props.time}
+              {props.date}
             </Typography>
           }
+          secondary={`Pukul ${props.time}`}
         />
       </ListItem>
     </Paper>
@@ -77,6 +79,40 @@ function AnnouncementList(props) {
   document.title = "Schooly | Daftar Pengumuman"
 
   const classes = useStyles();
+  const { selectedAnnouncements, all_announcements} = props.announcements;
+  const{ getAnnouncement, getAllAnnouncement, getUsers } = props;
+  const { user, retrieved_users } = props.auth;
+  const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false)
+  
+  let temp = new Set();
+
+  React.useEffect(() => {
+    if(user.role == "Teacher" && !annIsRetrieved){
+      getAnnouncement(user.id)
+      setAnnIsRetrieved(true)
+    }
+  }, props.announcements)
+  // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
+
+  console.log(selectedAnnouncements)
+  const listAnnouncements = () => {
+    let annList = [];
+
+    for(var i = 0; i < selectedAnnouncements.length; i++){
+      console.log()
+      annList.push(
+        <AnnouncementItemList
+            sender_icon={<AccountCircleIcon />}
+            author_name={selectedAnnouncements[i].author_name}
+            notification_title={selectedAnnouncements[i].title}
+            notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
+            date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MM-YYYY")}
+            time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
+          />
+      )
+    }
+    return annList;
+  }
 
   return (
     <div className={classes.root}>
@@ -97,24 +133,26 @@ function AnnouncementList(props) {
           </Grid>
         </Grid>
         <List>
-          <AnnouncementItemList
-            sender_icon={<AccountCircleIcon />}
-            sender_name="Pak Peler"
-            notification_title="Ujian Kimia Besok"
-            notification_link="/pengumuman"
-            time={"20m ago"}
-          />
-          <AnnouncementItemList
-            sender_icon={<AccountCircleIcon />}
-            sender_name="My Nigga"
-            notification_title="Ujian Biologi Lusa"
-            notification_link="/pengumuman"
-            time={"20m ago"}
-          />
+          {listAnnouncements()}
         </List>
       </Paper>
     </div>
   )
 }
 
-export default AnnouncementList;
+AnnouncementList.propTypes = {
+  auth: PropTypes.object.isRequired,
+  announcements: PropTypes.object.isRequired,
+  getAnnouncement: PropTypes.func.isRequired,
+  getAllAnnouncements: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  announcements: state.announcementsCollection
+});
+
+export default connect(
+  mapStateToProps, { getAnnouncement, getAllAnnouncements, getUsers}
+) (AnnouncementList);

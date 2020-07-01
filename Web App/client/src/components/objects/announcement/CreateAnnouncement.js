@@ -160,7 +160,8 @@ class CreateAnnouncement extends Component {
     const announcementData = {
       title: this.state.title,
       description: this.state.description,
-      author: this.props.auth.user.id,
+      author_name: this.props.auth.user.name,
+      author_id: this.props.auth.user.id,
       errors: {}
     };
 

@@ -8,7 +8,8 @@ const initialState = {
   all_teachers: [],
   all_students: [],
   loading: false,
-  selectedUser: {}
+  selectedUser: {},
+  retrieved_users: new Map()
 };
 
 export default function(state = initialState, action) {
@@ -41,6 +42,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         selectedUser: action.payload
+    }
+    case GET_USERS: 
+      return {
+        ...state,
+        retrieved_users: action.payload
       }
     default:
       return state;

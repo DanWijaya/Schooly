@@ -5,10 +5,14 @@ import classnames from "classnames";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import { GET_ERRORS } from "../../../actions/Types";
+
+const path = require("path");
 
 const StyledMenu = withStyles({
   paper: {
@@ -40,24 +44,6 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-function LampiranFile(props) {
-
-  return(
-  <StyledMenuItem disableRipple>
-    <ListItemIcon>
-      <DescriptionIcon/>
-    </ListItemIcon>
-    <ListItemText primary="File name"/>
-    <IconButton>
-      <HighlightOffIcon
-        fontSize="small"
-        style={{color:"#B22222"}}
-        onClick=""
-      />
-    </IconButton>
-  </StyledMenuItem>
-  )
-}
 
 const styles = (theme) => ({
   root: {
@@ -96,18 +82,172 @@ const styles = (theme) => ({
   },
 });
 
+function LampiranFile(props) {
+  const { name, i, handleLampiranDelete} = props;
+
+  return(
+    <StyledMenuItem disableRipple>
+      <ListItemIcon>
+        <DescriptionIcon/>
+      </ListItemIcon>
+      <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
+      <IconButton>
+        <HighlightOffIcon
+          fontSize="small"
+          style={{color:"#B22222"}}
+          onClick={(e) => {handleLampiranDelete(e, i, name)}}
+        />
+      </IconButton>
+    </StyledMenuItem>
+  )
+}
 
 class EditAnnouncement extends Component {
   constructor() {
     super();
     this.state = {
+      title: "",
+      description: "",
+      fileLampiran: [],
+      fileLampiranToAdd: [],
+      fileLampiranToDelete: [],
+      anchorEl: null,
+      errors: {}
     };
+  }
+
+  lampiranUploader = React.createRef(null)
+  uploadedLampiran = React.createRef(null)
+
+  componentDidMount(){
+    this.props.getOneAnnouncement(this.props.match.params.id)
+    
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    console.log("Tasks props is received");
+    const { name } = this.state;
+    const { selectedAnnouncements } = nextProps.announcements;
+    // console.log(nextProps.tasksCollection.deadline);
+    if(!name){
+        this.setState({
+            title: selectedAnnouncements.title,
+            description: selectedAnnouncements.description,
+            fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : []
+            // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
+            // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
+        })
+    }
+}
+
+  handleLampiranUpload = (e) => {
+    const files = e.target.files;
+    console.log(this.state.fileLampiran)
+    let temp;
+    let tempToAdd;
+
+    if(this.state.fileLampiran.length === 0)
+      this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
+    else{
+      console.log(files)
+      if(files.length !== 0) {
+        temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
+        tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
+        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+      }
+    }
+  }
+
+  handleLampiranDelete = (e, i, name) => {
+    e.preventDefault()
+    console.log("Index is: ", i)
+    let temp = Array.from(this.state.fileLampiran);
+    let tempToDelete = this.state.fileLampiranToDelete;
+    let tempToAdd = this.state.fileLampiranToAdd;
+    //Kalau yang udah keupload, ada field filename (yang belum adanya name)
+    //Untuk yang udah di DB.
+    if(this.state.fileLampiran[i].filename !== undefined) {
+      //Remove the file in fileLampiranToDelete
+      tempToDelete.push(temp[i])
+    }
+    else { //Untuk yang belum di DB
+      //Remove the file in fileLampiranToAdd
+      for(var j = 0; j < tempToAdd.length; j++) {
+        console.log(temp[i].name, tempToAdd[j].name)
+        if(tempToAdd[j].name === temp[i].name){
+          tempToAdd.splice(j,1)
+        }
+      }
+    }
+    temp.splice(i, 1);
+    console.log(tempToDelete)
+    if(temp.length === 0)
+      this.handleCloseMenu()
+    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
+      fileLampiranToDelete: tempToDelete})
+  }
+
+  handleClickMenu = (event) => {
+    if(!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
+      this.setState({ anchorEl: event.currentTarget})
+  }
+
+  handleCloseMenu = () => { this.setState({ anchorEl: null}) }
+
+  onChange = (e, otherfield) => {
+    if(otherfield === "description") {
+      this.setState({ description : e.target.value})
+    }
+    else
+      this.setState({ [e.target.id]: e.target.value});
+  }
+
+  onSubmit = (e) => {
+    e.preventDefault();
+
+    const { id } = this.props.match.params;
+    const { fileLampiranToAdd, fileLampiranToDelete } = this.state;
+
+  const announcementObject = {
+    title: this.state.title,
+    description: this.state.description,
+    errors: {}
+  }
+
+  let formData = new FormData()
+  for(var i = 0; i< fileLampiranToAdd.length; i++) {
+    console.log(this.state.fileLampiran[i])
+    formData.append("lampiran_announcement", this.state.fileLampiranToAdd[i])
+  }
+  this.props.updateAnnouncement(formData, fileLampiranToDelete,
+    this.props.announcements.selectedAnnouncements.lampiran, announcementObject, id, this.props.history);
   }
 
   render() {
     document.title = "Schooly | Sunting Pengumuman"
 
-    const { classes } = this.props;
+    const { classes, updateAnnouncement, getOneAnnouncement } = this.props;
+    const { selectedAnnouncements} = this.props.announcements;
+    const{ errors, fileLampiran} = this.state
+
+    const listFileChosen = () => {
+      let temp = []
+      if(fileLampiran.length > 0) {
+        for (var i = 0; i < fileLampiran.length; i++) {
+          temp.push(
+            <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
+              name={fileLampiran[i].filename === undefined?
+                fileLampiran[i].name :
+                fileLampiran[i].filename
+              }
+              handleLampiranDelete={this.handleLampiranDelete}
+              i={i}
+            />
+          )
+        }
+      }
+      return temp;
+    }
 
     return (
       <div className={classes.root}>
@@ -116,7 +256,7 @@ class EditAnnouncement extends Component {
             <Typography variant="h5" align="center" gutterBottom>
               <b>Sunting Pengumuman</b>
             </Typography>
-            <form noValidate onSubmit="">
+            <form noValidate onSubmit={this.onSubmit}>
               <Grid
                 container
                 direction="column"
@@ -125,37 +265,37 @@ class EditAnnouncement extends Component {
               >
                 <Grid item className={classes.gridItem}>
                   <OutlinedTextField
-                    on_change=""
-                    value=""
-                    error=""
-                    id="name"
+                    on_change={this.onChange}
+                    value={this.state.title}
+                    error={errors.title}
+                    id="title"
                     type="text"
                     classname={classnames("", {
-                        invalid: ""
+                        invalid: errors.title
                     })}
-                    html_for="name"
+                    html_for="title"
                     labelname="Judul"
                     label_classname={classes.inputLabel}
                     span_classname={classes.errorInfo}
-                    error1=""
+                    error1={errors.title}
                   />
                 </Grid>
                 <Grid item className={classes.gridItem}>
                   <OutlinedTextField
                     multiline={true}
-                    on_change=""
-                    value=""
-                    error=""
-                    id="ukuran"
+                    on_change={(e) => {this.onChange(e, "description")}}
+                    value={this.state.description}
+                    error={errors.description}
+                    id="description"
                     type="text"
                     classname={classnames("", {
                         invalid: ""
                     })}
-                    html_for="ukuran"
+                    html_for="description"
                     labelname="Deskripsi"
                     label_classname={classes.inputLabel}
                     span_classname={classes.errorInfo}
-                    error1=""
+                    error1={errors.description}
                   />
                 </Grid>
                 <Grid item container direction="row" className={classes.gridItem}>
@@ -164,7 +304,7 @@ class EditAnnouncement extends Component {
                     multiple={true}
                     name="lampiran"
                     onChange={this.handleLampiranUpload}
-                    ref={this.tugasUploader}
+                    ref={this.lampiranUploader}
                     accept="file/*"
                     style={{display: "none"}}
                   />
@@ -173,21 +313,21 @@ class EditAnnouncement extends Component {
                     multiple={true}
                     name="file"
                     id="file"
-                    ref={this.uploadedTugas}
+                    ref={this.uploadedLampiran}
                     style={{display: "none"}}
                   />
                   <Grid item container direction="row" alignItems="center">
                     <Grid item xs={11} onClick={this.handleClickMenu}>
                       <OutlinedTextField
                         disabled={true}
-                        value=""
+                        value={fileLampiran && fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
                         id="file_tugas"
                         type="text"
                         width="100%"
                         labelname="Lampiran Berkas"
                         html_for="Berkas lampiran"
                         label_classname={classes.inputLabel}
-                        pointer= ""
+                        pointer= {fileLampiran.length > 0}
                       />
                     </Grid>
                     <StyledMenu
@@ -197,11 +337,11 @@ class EditAnnouncement extends Component {
                       open={Boolean(this.state.anchorEl)}
                       onClose={this.handleCloseMenu}
                     >
-                      <LampiranFile />
+                      {listFileChosen()}
                     </StyledMenu>
                     <Grid item xs={1}>
                       <LightTooltip title="Tambahkan Lampiran Berkas">
-                        <IconButton onClick={() => {this.tugasUploader.current.click()}}>
+                        <IconButton onClick={() => {this.lampiranUploader.current.click()}}>
                           <AttachFileIcon />
                          </IconButton>
                        </LightTooltip>
@@ -227,9 +367,19 @@ class EditAnnouncement extends Component {
 };
 
 EditAnnouncement.propTypes = {
+  auth: PropTypes.object.isRequired,
+  announcements: PropTypes.object.isRequired,
+  getAnnouncement: PropTypes.func.isRequired,
+  getAllAnnouncements: PropTypes.func.isRequired,
+  getOneAnnouncement: PropTypes.func.isRequired,
+  updateAnnouncement: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
+  auth: state.auth,
+  announcements: state.announcementsCollection
 })
 
-export default (withStyles(styles)(EditAnnouncement))
+export default connect(
+  mapStateToProps, { getOneAnnouncement, updateAnnouncement }
+  )(withStyles(styles)(EditAnnouncement))

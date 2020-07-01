@@ -437,7 +437,7 @@ router.delete("/lampiran/:task_id", (req,res) => {
 })
 
 // Router for handling the upload lampiran announcement... 
-router.post("/upload_lampiran_annoucement/:id", uploadLampiranAnnouncement.array("lampiran_announcement", 5), (req,res) => {
+router.post("/upload_lampiran_announcement/:id", uploadLampiranAnnouncement.array("lampiran_announcement", 5), (req,res) => {
   let announcement_id = req.params.id;
   console.log("Upload lampiran is runned")
 
@@ -479,9 +479,9 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
   let announcement_id = req.params.id;
   const {lampiran_to_delete, current_lampiran} = req.body;
   for(var i = 0; i < lampiran_to_delete.length; i++){
-    announcement_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
+    id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // di rootnya, masukkin collection namenya.. 
-    gfsLampiranAnnouncement.remove({ _id: announcement_id, root: "lampiran_announcement"}, (err) => {
+    gfsLampiranAnnouncement.remove({ _id: id, root: "lampiran_announcement"}, (err) => {
       if(err) {
         console.log("error occured")
         return res.status(404).json({err: "Error in removing the files"});
@@ -498,16 +498,62 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
     }
   }
 
-  Announcement.findById(task_id, (err, ann) => {
-    if(!task){
-      return res.status(404).json("Task object is not found in the Database")
+  console.log("Deleted alr")
+  Announcement.findById(announcement_id, (err, ann) => {
+    if(!ann){
+      return res.status(404).json("Ann object is not found in the Database")
     } else {
       ann.lampiran = current_lampiran;
-      task.save()
+      ann.save()
           .then((ann) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
           .catch((err) => console.log("Error happened in updating task lampiran field"))
     }
   })
+})
+
+router.get("/lampiran_announcement/:id", (req,res) => {
+  id = new mongoose.mongo.ObjectId(req.params.id)
+  if(Boolean(gfsLampiranAnnouncement)){
+    gfsLampiranAnnouncement.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
+
+      // Files exist
+      const readStream = gfsLampiranAnnouncement.createReadStream(filename);
+      readStream.pipe(res)
+    })
+  }
+})
+
+router.get("/previewlampiran_announcement/:id", (req,res) => {
+  console.log("Previewing lampiran")
+  id = new mongoose.mongo.ObjectId(req.params.id)
+  if(Boolean(gfsLampiranAnnouncement)){
+    gfsLampiranAnnouncement.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
+
+      // Files exist
+      const readStream = gfsLampiranAnnouncement.createReadStream(filename);
+      readStream.pipe(res)
+    })
+  }
 })
 
 module.exports = {router, uploadAvatar, uploadTugas, uploadLampiran};

@@ -159,8 +159,8 @@ class App extends Component {
                     <PrivateRoute exact path="/mata-pelajaran/:subject_name" component={ViewSubject} />
                     {/* Route Announcement  */}
                     <PrivateRoute exact path="/buat-pengumuman" component={CreateAnnouncement} />
-                    <PrivateRoute exact path="/sunting-pengumuman" component={EditAnnouncement} />
-                    <PrivateRoute exact path="/pengumuman" component={ViewAnnouncement} />
+                    <PrivateRoute exact path="/sunting-pengumuman/:id" component={EditAnnouncement} />
+                    <PrivateRoute exact path="/pengumuman/:id" component={ViewAnnouncement} />
                     <PrivateRoute exact path="/daftar-pengumuman" component={AnnouncementList} />
                     {/* Route Task  */}
                     <PrivateRoute exact path="/buat-tugas" component={CreateTask} />

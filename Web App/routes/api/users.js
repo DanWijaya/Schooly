@@ -390,8 +390,27 @@ router.get("/getOneUser/:id", (req,res) => {
     if(!user)
       return res.status(404).json("No user is found in Database")
     else 
-    return res.json(user)
+      return res.json(user)
   })
+})
+
+router.get("/getUsers", (req,res) => {
+  let userIds = req.query.userIds;
+
+  let retrieved_users = new Map()
+  console.log(userIds)
+  if(Boolean(userIds)){
+    for(var i = 0; i < userIds.length; i++){
+      User.findById(userIds[i], (err, user) => {
+        if(!user)
+          console.log("No user is found")
+        else
+          retrieved_users.set(userIds[i], user.name)
+      })
+    }
+  }
+  console.log("R users:". retrieved_users)
+  return res.json(retrieved_users)
 })
 
 router.get("/getstudentsbyclass/:id", (req,res) => {

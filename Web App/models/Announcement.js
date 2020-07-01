@@ -18,8 +18,12 @@ const AnnoucementSchema = new Schema({
         type: Object,
         default: []
     }],
-    author: {
-        type: String, // Taruh idnya saja
+    author_name: {
+        type: String,
+        required: true
+    },
+    author_id: {
+        type: String,
         required: true
     },
     date_announced: {

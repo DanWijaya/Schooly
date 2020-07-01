@@ -20,7 +20,8 @@ router.post("/create", (req, res) => {
     const newAnnouncement = new Announcement({
         title: req.body.title,
         description: req.body.description,
-        author: req.body.author,
+        author_name: req.body.author_name,
+        author_id: req.body.author_id,
         date_announced: new Date()
     })
 
@@ -33,14 +34,17 @@ router.post("/create", (req, res) => {
             .catch(err => console.log(err));
 
 })
-
 //Define View one announcement
-router.get("viewOneAnnouncement/:id", (req,res) => {
+router.get("/viewOne/:id", (req,res) => {
+    console.log("view one is runned")
     let id = req.params.id;
-    Announcement.findById(id, (err, announcement) => {
-        if(!announcement)
-            return res.status(400).json("Announcement is not found");
-        return res.json(announcement)
+    Announcement.findById(id, (err, announcementData) => {
+        if(!announcementData)
+            return res.status(404).send("Announcement data is not found");
+        else {
+            console.log("Announcementnya yang ini: ", announcementData)
+            return res.json(announcementData)
+        }
     })
 })
 
@@ -48,30 +52,48 @@ router.get("viewOneAnnouncement/:id", (req,res) => {
 router.get("/viewall", (req, res) => {
     Announcement.find({}).then((announcements, err) => {
         if(!announcements)
-            return res.status(400).json("Tasks are not found");
+            return res.status(400).json("Announcements are not found");
         else 
             return res.json(announcements);
     })
 })
 
+// Search announcement by author.
+router.get("/view/:id", (req, res) => {
+    console.log("View announcement is runned")
+    let id = req.params.id;
+    Announcement.find({author_id: id }).then((announcements, err) => {
+        if(!announcements){
+            console.log("announcement is not found")
+            return res.status(400).json("Announcements are not found")
+        }
+        else {
+            console.log(announcements)
+            return res.json(announcements);
+        }
+    })
+})
+
 router.post("/update/:id", (req,res) => {
     
+    const { errors, isValid } = validateAnnouncementInput(req.body);
+
     if(!isValid){
         console.log("Not valid");
         return res.status(400).json(errors);
     }
+
     let id = req.params.id;
 
-    console.log(req.body.name);
+    console.log(req.body);
     Announcement.findById(id, (err, announcementData) => {
-        if(!taskData)
-            return res.status(404).send("Task data is not found");
+        if(!announcementData)
+            return res.status(404).send("Announcement data is not found");
         else{
             announcementData.title = req.body.title;
             announcementData.description = req.body.description;
-            announcementData.lampiran = req.body.lampiran;
-            announcementData.author = req.body.author;
-            announcementData.date_announced = req.body.date_announced
+            // announcementData.lampiran = req.body.lampiran;
+            // announcementData.date_announced = req.body.date_announced
 
             announcementData
                         .save()
@@ -83,12 +105,12 @@ router.post("/update/:id", (req,res) => {
 
 //Define delete routes
 router.delete("/delete/:id", (req, res) => {
-    Task.findByIdAndRemove(req.params.id)
+    Announcement.findByIdAndRemove(req.params.id)
         .then((announcements, err) => {
-            if(!tasks) {
+            if(!announcements) {
                 res.status(400).json(err);
             } else {
-                res.json(tasks);
+                res.json(announcements);
             }
         })
 })
