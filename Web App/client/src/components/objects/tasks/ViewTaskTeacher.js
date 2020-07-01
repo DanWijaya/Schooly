@@ -252,7 +252,7 @@ function ViewTaskTeacher(props) {
     // setFileTugas(null)
   }
 
-  //Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true);
   };

@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   listItemPaper: {
@@ -124,6 +125,19 @@ const styles = (theme) => ({
   workPaper: {
     padding: "20px",
   },
+  manageClassButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
+  manageClassIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
+  }
 });
 
 class Dashboard extends Component {
@@ -201,68 +215,81 @@ class Dashboard extends Component {
                 </Paper>
             }
           </Grid>
-          <Grid item container spacing={3}>
-            <Grid item sm={7} xs={12}>
-              <Paper className={classes.notificationPaper}>
-                <div className={classes.paperTitle}>
-                  <Typography variant="h5" color="primary">
-                    Notifikasi Terkini
-                  </Typography>
-                  <LightTooltip title="Lihat Semua" placement="top">
-                    <IconButton href="/notifikasi">
-                      <ChevronRightIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </div>
-                <List>
-                  <NotificationItemList
-                    sender_icon={<AccountCircleIcon />}
-                    sender_name="Pak Peler"
-                    notification_title="Ujian Kimia Besok"
-                    notification_link="/test"
-                    time={"20m ago"}
-                  />
-                  <NotificationItemList
-                    sender_icon={<AccountCircleIcon />}
-                    sender_name="My Nigga"
-                    notification_title="Ujian Biologi Lusa"
-                    notification_link="/test"
-                    time={"20m ago"}
-                  />
-                </List>
-              </Paper>
-            </Grid>
-            <Grid item sm={5} xs={12}>
-              <Paper className={classes.workPaper}>
-                <div className={classes.paperTitle}>
-                  <Typography variant="h5" color="primary">
-                    Pekerjaan Mendatang
-                  </Typography>
-                  <div style={{display: "flex", justifyContent: "flex-end"}}>
-                  <LightTooltip title="Lihat Semua" placement="top">
-                    <IconButton>
-                      <ChevronRightIcon />
-                    </IconButton>
-                  </LightTooltip>
+          {user.role !== "Admin" ?
+            <Grid item container spacing={3}>
+              <Grid item sm={7} xs={12}>
+                <Paper className={classes.notificationPaper}>
+                  <div className={classes.paperTitle}>
+                    <Typography variant="h5" color="primary">
+                      Notifikasi Terkini
+                    </Typography>
+                    <LightTooltip title="Lihat Semua" placement="top">
+                      <IconButton href="/notifikasi">
+                        <ChevronRightIcon />
+                      </IconButton>
+                    </LightTooltip>
                   </div>
-                </div>
-                <List>
-                  <WorkItemList
-                    work_title="Tugas 1"
-                    work_link="/test"
-                    work_category="Fisika"
-                    work_duetime="5 jam lagi"
-                  />
-                  <WorkItemList
-                    work_title="Tugas 2: hisap peler"
-                    work_link="/test"
-                    work_category="Biologi"
-                    work_duetime="1 jam lagi"
-                  />
-                </List>
-              </Paper>
+                  <List>
+                    <NotificationItemList
+                      sender_icon={<AccountCircleIcon />}
+                      sender_name="Pak Peler"
+                      notification_title="Ujian Kimia Besok"
+                      notification_link="/test"
+                      time={"20m ago"}
+                    />
+                    <NotificationItemList
+                      sender_icon={<AccountCircleIcon />}
+                      sender_name="My Nigga"
+                      notification_title="Ujian Biologi Lusa"
+                      notification_link="/test"
+                      time={"20m ago"}
+                    />
+                  </List>
+                </Paper>
+              </Grid>
+              <Grid item sm={5} xs={12}>
+                <Paper className={classes.workPaper}>
+                  <div className={classes.paperTitle}>
+                    <Typography variant="h5" color="primary">
+                      Pekerjaan Mendatang
+                    </Typography>
+                    <div style={{display: "flex", justifyContent: "flex-end"}}>
+                    <LightTooltip title="Lihat Semua" placement="top">
+                      <IconButton>
+                        <ChevronRightIcon />
+                      </IconButton>
+                    </LightTooltip>
+                    </div>
+                  </div>
+                  <List>
+                    <WorkItemList
+                      work_title="Tugas 1"
+                      work_link="/test"
+                      work_category="Fisika"
+                      work_duetime="5 jam lagi"
+                    />
+                    <WorkItemList
+                      work_title="Tugas 2: hisap peler"
+                      work_link="/test"
+                      work_category="Biologi"
+                      work_duetime="1 jam lagi"
+                    />
+                  </List>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
+          :
+            <Grid item container direction="row" justify="flex-end">
+              <Grid item>
+                <Link to ="/daftar-kelas">
+                  <Fab variant="extended" className={classes.manageClassButton}>
+                    <FaChalkboardTeacher className={classes.manageClassIcon} />
+                    Atur Kelas
+                  </Fab>
+                </Link>
+              </Grid>
+            </Grid>
+          }
         </Grid>
       </div>
     )
