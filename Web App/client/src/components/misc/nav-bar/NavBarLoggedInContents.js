@@ -96,13 +96,6 @@ function NavBarLoggedInContents(props) {
             <ListItemText primary="Keluar" />
           </MenuItem>
       </Menu>
-      <LightTooltip title="Notifikasi">
-        <IconButton color="inherit" href="/notifikasi">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-      </LightTooltip>
     </Grid>
   )
 
@@ -129,14 +122,6 @@ function NavBarLoggedInContents(props) {
               <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
             </ListItemIcon>
             <ListItemText primary="Profil Saya" />
-          </MenuItem>
-          <MenuItem className={classes.menuItem} button component="a" href="/notifikasi">
-            <ListItemIcon>
-              <Badge badgeContent={11} color="secondary">
-                <NotificationsIcon fontSize="medium" />
-              </Badge>
-            </ListItemIcon>
-            <ListItemText primary="Notifikasi" />
           </MenuItem>
           <MenuItem className={classes.menuItem} onClick={onLogoutClick}>
             <ListItemIcon>

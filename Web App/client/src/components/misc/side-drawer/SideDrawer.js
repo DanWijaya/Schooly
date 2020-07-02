@@ -107,7 +107,7 @@ function DrawerContent(props) {
   }
 
   let ListItemContents = [
-    ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Dashboard", null, false],
+    ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
     [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
     ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
     ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],

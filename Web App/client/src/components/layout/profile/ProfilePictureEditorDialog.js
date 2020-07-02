@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   uploadButton: {
-    width: "150px",
+    width: "160px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   submitPhotoButton: {
-    width: "150px",
+    width: "160px",
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {

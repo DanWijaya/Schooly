@@ -454,7 +454,10 @@ class CreateTask extends Component {
                           disableUnderline: true
                         }}
                         inputProps={{
-                          className: classes.deadlinePicker
+                          className: classes.deadlinePicker,
+                          style: {
+                            borderBottom: "1px solid #2196F3",
+                          }
                         }}
                       />
                     </MuiPickersUtilsProvider>

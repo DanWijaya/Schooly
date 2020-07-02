@@ -145,6 +145,12 @@ function LampiranFile(props) {
 
   const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
 
+  let displayedName = ""
+  filename.length >= 16 ?
+    displayedName = `${filename.slice(0,15)}..${path.extname(filename)}`
+  :
+    displayedName = filename
+
   return(
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
@@ -193,7 +199,13 @@ function LampiranFile(props) {
             }
           </ListItemAvatar>
           <ListItemText
-            primary={filename}
+            primary={
+              <LightToolTip title={filename} placement="top">
+                <Typography>
+                  {displayedName}
+                </Typography>
+              </LightToolTip>
+            }
             secondary={filetype}
           />
           <IconButton
@@ -212,8 +224,8 @@ function WorkFile(props) {
   const classes = useStyles();
 
   const { file_type_icon, file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog } = props;
-  let displayedName = ""
 
+  let displayedName = ""
   file_name.length >= 10 ?
     displayedName = `${file_name.slice(0,9)}..${path.extname(file_name)}`
   :
@@ -328,8 +340,8 @@ function ViewTaskStudent(props) {
       case ".xlsx" :
       case ".csv"  : return "Excel"
 
-      case ".png":
-      case ".jpg":
+      case ".png" :
+      case ".jpg" :
       case ".jpeg" : return "Gambar"
 
       case ".pdf" : return "PDF"
@@ -338,7 +350,7 @@ function ViewTaskStudent(props) {
       case ".rtf" : return "Teks"
 
       case ".ppt" :
-      case ".pptx": return "Presentasi"
+      case ".pptx" : return "Presentasi"
 
       default: return "File Lainnya"
     }

@@ -216,67 +216,35 @@ class Dashboard extends Component {
             }
           </Grid>
           {user.role !== "Admin" ?
-            <Grid item container spacing={3}>
-              <Grid item sm={7} xs={12}>
-                <Paper className={classes.notificationPaper}>
-                  <div className={classes.paperTitle}>
-                    <Typography variant="h5" color="primary">
-                      Notifikasi Terkini
-                    </Typography>
-                    <LightTooltip title="Lihat Semua" placement="top">
-                      <IconButton href="/notifikasi">
-                        <ChevronRightIcon />
-                      </IconButton>
-                    </LightTooltip>
+            <Grid item xs={12}>
+              <Paper className={classes.workPaper}>
+                <div className={classes.paperTitle}>
+                  <Typography variant="h5" color="primary">
+                    Pekerjaan Anda
+                  </Typography>
+                  <div style={{display: "flex", justifyContent: "flex-end"}}>
+                  <LightTooltip title="Lihat Semua" placement="top">
+                    <IconButton>
+                      <ChevronRightIcon />
+                    </IconButton>
+                  </LightTooltip>
                   </div>
-                  <List>
-                    <NotificationItemList
-                      sender_icon={<AccountCircleIcon />}
-                      sender_name="Pak Peler"
-                      notification_title="Ujian Kimia Besok"
-                      notification_link="/test"
-                      time={"20m ago"}
-                    />
-                    <NotificationItemList
-                      sender_icon={<AccountCircleIcon />}
-                      sender_name="My Nigga"
-                      notification_title="Ujian Biologi Lusa"
-                      notification_link="/test"
-                      time={"20m ago"}
-                    />
-                  </List>
-                </Paper>
-              </Grid>
-              <Grid item sm={5} xs={12}>
-                <Paper className={classes.workPaper}>
-                  <div className={classes.paperTitle}>
-                    <Typography variant="h5" color="primary">
-                      Pekerjaan Mendatang
-                    </Typography>
-                    <div style={{display: "flex", justifyContent: "flex-end"}}>
-                    <LightTooltip title="Lihat Semua" placement="top">
-                      <IconButton>
-                        <ChevronRightIcon />
-                      </IconButton>
-                    </LightTooltip>
-                    </div>
-                  </div>
-                  <List>
-                    <WorkItemList
-                      work_title="Tugas 1"
-                      work_link="/test"
-                      work_category="Fisika"
-                      work_duetime="5 jam lagi"
-                    />
-                    <WorkItemList
-                      work_title="Tugas 2: hisap peler"
-                      work_link="/test"
-                      work_category="Biologi"
-                      work_duetime="1 jam lagi"
-                    />
-                  </List>
-                </Paper>
-              </Grid>
+                </div>
+                <List>
+                  <WorkItemList
+                    work_title="Tugas 1"
+                    work_link="/test"
+                    work_category="Fisika"
+                    work_duetime="5 jam lagi"
+                  />
+                  <WorkItemList
+                    work_title="Tugas 2: hisap peler"
+                    work_link="/test"
+                    work_category="Biologi"
+                    work_duetime="1 jam lagi"
+                  />
+                </List>
+              </Paper>
             </Grid>
           :
             <Grid item container direction="row" justify="flex-end">

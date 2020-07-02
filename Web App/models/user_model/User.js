@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     type: String,
     default: ""
   },
-  
+
   // Informasi Pribadi
   name: {
     type: String,
@@ -25,15 +25,15 @@ const UserSchema = new Schema({
   },
   tanggal_lahir: {
     type: String,
-    default: "Isi tanggal dengan format HH/BB/TTTT !"
+    default: "Belum Diisi"
   },
   jenis_kelamin: {
     type: String,
-    default: "Isi pria atau wanita !"
+    default: "Belum Diisi"
   },
   sekolah: {
-    type: String, 
-    default: "Isi Sekolah mu !"
+    type: String,
+    default: "Belum Diisi"
   },
 
   //Kontak
@@ -53,23 +53,23 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  
+
   //Karir
   hobi_minat: {
     type: String,
-    default: "Isi hobimu"
+    default: "Belum Diisi"
   },
   ket_non_teknis: {
-    type: String, 
-    default: "Isi"
+    type: String,
+    default: "Belum Diisi"
   },
   cita_cita: {
-    type: String, 
-    default: "Isi"
+    type: String,
+    default: "Belum Diisi"
   },
-  uni_impian: { 
-    type: String, 
-    default: "Isi"
+  uni_impian: {
+    type: String,
+    default: "Belum Diisi"
   },
   passwordReset: { type: String, select: false },
   passwordResetTime: { type: Date, select: true}
@@ -77,4 +77,3 @@ const UserSchema = new Schema({
 
 const User = mongoose.model("users", UserSchema);
 module.exports = User;
-
