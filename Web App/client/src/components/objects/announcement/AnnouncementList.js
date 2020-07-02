@@ -91,6 +91,10 @@ function AnnouncementList(props) {
       getAnnouncement(user.id)
       setAnnIsRetrieved(true)
     }
+    else if(user.role == "Student" && !annIsRetrieved){
+      getAnnouncement()
+      setAnnIsRetrieved(true)
+    }
   }, props.announcements)
   // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
 

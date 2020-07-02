@@ -19,6 +19,7 @@ router.post("/create", (req, res) => {
         title: req.body.title,
         description: req.body.description,
         author_name: req.body.author_name,
+        class_assigned: req.body.class_assigned,
         author_id: req.body.author_id,
         date_announced: new Date()
     })
@@ -87,6 +88,7 @@ router.post("/update/:id", (req,res) => {
         else{
             announcementData.title = req.body.title;
             announcementData.description = req.body.description;
+            announcementData.class_assigned = req.body.class_assigned;
             // announcementData.lampiran = req.body.lampiran;
             // announcementData.date_announced = req.body.date_announced
 

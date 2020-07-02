@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { getAllAnnouncements, getAnnouncement, getOneAnnouncement} from "../../../actions/AnnouncementActions"
+import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from "@material-ui/icons/Close";
+import CancelIcon from "@material-ui/icons/Cancel";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import moment from "moment";
 import "moment/locale/id";
 import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
@@ -48,6 +51,28 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  dialogBox: {
+    width: "350px",
+    padding: "10px",
+  },
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
+  dialogCancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
   deleteAnnouncementButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
@@ -57,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
 
 function LampiranFile(props) {
   const classes = useStyles();
@@ -92,8 +118,9 @@ function ViewAnnouncement(props) {
 
   const classes = useStyles();
   const { selectedAnnouncements, all_announcements } = props.announcements;
-  const { getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement,  getAnnouncement, getAllAnnouncement, getUsers } = props;
+  const { getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, getAnnouncement, getAllAnnouncement, getUsers } = props;
   const { user } = props.auth;
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
@@ -123,6 +150,84 @@ function ViewAnnouncement(props) {
     }
   }
 
+  const onDeleteAnnouncement = (announcement_id) => {
+    deleteAnnouncement(announcement_id)
+    // setFileTugas(null)
+  }
+
+  // Delete Dialog
+  const handleOpenDeleteDialog = (fileid, filename) => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  function DeleteDialog(){
+    return(
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+      >
+        <Grid container justify="center" className={classes.dialogBox}>
+          <Grid item
+            container
+            justify="flex-end"
+            alignItems="flex-start"
+            style={{marginBottom: "10px"}}
+          >
+            <IconButton
+              size="small"
+              disableRipple
+              onClick={handleCloseDeleteDialog}
+              className={classes.iconButtonClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h5" gutterBottom>
+              Hapus Pengumuman berikut?
+            </Typography>
+          </Grid>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            <Typography variant="h6" align="center" gutterBottom>
+              <b>{selectedAnnouncements.title}</b>
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+            style={{marginBottom: "20px"}}
+          >
+            <Grid item>
+              <Button
+                onClick={() => { onDeleteAnnouncement(announcement_id)}}
+                startIcon={<DeleteOutlineIcon />}
+                className={classes.dialogDeleteButton}
+              >
+                Hapus
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={handleCloseDeleteDialog}
+                startIcon={< CancelIcon/>}
+                className={classes.dialogCancelButton}
+              >
+                Batalkan
+              </Button>
+            </Grid>
+          </Grid>
+          </Grid>
+      </Dialog>
+    )
+  }
+
   const onDownloadFile = (id, fileCategory="none") => {
     if(fileCategory === "lampiran_announcement")
       downloadLampiranAnnouncement(id)
@@ -139,6 +244,7 @@ function ViewAnnouncement(props) {
 
   return(
     <div className={classes.root}>
+      {DeleteDialog()}
       <Paper className={classes.paper}>
         <Grid container direction="column" spacing={3}>
           <Grid item container direction="row">
@@ -188,7 +294,7 @@ function ViewAnnouncement(props) {
               </LightToolTip>
             </Link>
             <LightToolTip title="Hapus Pengumuman" placement="bottom">
-              <Fab className={classes.deleteAnnouncementButton}>
+              <Fab className={classes.deleteAnnouncementButton} onClick={(e) => handleOpenDeleteDialog(e,announcement_id)}>
                 <DeleteIcon />
               </Fab>
             </LightToolTip>
@@ -205,6 +311,7 @@ ViewAnnouncement.propTypes = {
   getAnnouncement: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
   getOneAnnouncement: PropTypes.func.isRequired,
+  deleteAnnouncement: PropTypes.func.isRequired,
   downloadLampiranAnnouncement: PropTypes.func.isRequired,
   previewLampiranAnnouncement: PropTypes.func.isRequired
 }
@@ -215,6 +322,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, getAnnouncement, getAllAnnouncements, 
+  mapStateToProps, { getOneAnnouncement, getAnnouncement, deleteAnnouncement, getAllAnnouncements, 
     previewLampiranAnnouncement, downloadLampiranAnnouncement}
 ) (ViewAnnouncement);

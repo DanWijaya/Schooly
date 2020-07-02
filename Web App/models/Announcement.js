@@ -18,6 +18,10 @@ const AnnoucementSchema = new Schema({
         type: Object,
         default: []
     }],
+    class_assigned: [{
+        type: Object,
+        required: true
+    }],
     author_name: {
         type: String,
         required: true

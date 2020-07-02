@@ -84,7 +84,7 @@ export const deleteAnnouncement = (announcementId, history) => dispatch => {
         .delete(`/api/announcements/delete/${announcementId}`)
         .then((res) => {
             console.log(res.data)
-            window.location.href="/daftar-tugas"
+            window.location.href="/daftar-pengumuman"
         })
         .catch(err => {
             console.log(err);

@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Chip, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { createAnnouncement } from "../../../actions/AnnouncementActions"
+import { viewClass } from "../../../actions/ClassActions";
 
 const path = require("path");
 const StyledMenu = withStyles({
@@ -106,12 +107,18 @@ class CreateAnnouncement extends Component {
       title: "",
       description: "",
       fileLampiran: [],
+      class_assigned: [],
       errors: {}
     };
   }
 
   lampiranUploader = React.createRef(null)
   uploadedLampiran = React.createRef(null)
+
+  componentDidMount() {
+    this.props.viewClass()
+    console.log("AAA")
+  }
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
@@ -126,6 +133,9 @@ class CreateAnnouncement extends Component {
   onChange = (e, otherfield) => {
     if(otherfield === "deadline"){
       this.setState({ description: e.target.value })
+    } else if(otherfield === "kelas") {
+      console.log(e.target.value)
+      this.setState({ class_assigned: e.target.value})
     } else { 
       this.setState({ [e.target.id] : e.target.value })
     }
@@ -161,6 +171,7 @@ class CreateAnnouncement extends Component {
       title: this.state.title,
       description: this.state.description,
       author_name: this.props.auth.user.name,
+      class_assigned: this.state.class_assigned,
       author_id: this.props.auth.user.id,
       errors: {}
     };
@@ -176,8 +187,20 @@ class CreateAnnouncement extends Component {
 
   render() {
     document.title = "Schooly | Buat Pengumuman"
-
+    
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+      PaperProps: {
+        style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 250,
+        },
+      },
+    };
+    
     const {classesCollection,  classes, viewClass, subjectsCollection} = this.props;
+    const { all_classes } = this.props.classesCollection
     const{ class_assigned, fileLampiran, errors} = this.state;
     const { user } = this.props.auth
 
@@ -249,6 +272,34 @@ class CreateAnnouncement extends Component {
                     span_classname={classes.errorInfo}
                     error1={errors.description}
                   />
+                </Grid>
+                <Grid item className={classes.gridItem}>
+                  <FormControl variant="outlined" fullWidth>
+                    <label id="class_assigned" className={classes.inputLabel}>Kelas yang Ditugaskan</label>
+                    <Select
+                      id="class_assigned"
+                      multiple
+                      MenuProps={MenuProps}
+                      value={class_assigned}
+                      onChange={(event) => {this.onChange(event, "kelas")}}
+                      renderValue={(selected) => (
+                        <div className={classes.chips}>
+                          {selected.map((kelas) => {
+                            console.log(selected)
+                            console.log(kelas, class_assigned)
+                            return(
+                              <Chip key={kelas} label={kelas.name} className={classes.chip} />
+                            )
+                          })}
+                        </div>
+                      )}
+                    >
+                      {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                        return(
+                          <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
+                      )})}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item container direction="row" className={classes.gridItem}>
                   <input
@@ -327,10 +378,11 @@ CreateAnnouncement.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  viewClass: PropTypes.func.isRequired,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
 })
 
 export default connect(
-  mapStateToProps, { createAnnouncement }
+  mapStateToProps, { createAnnouncement, viewClass }
  ) (withStyles(styles)(CreateAnnouncement))
