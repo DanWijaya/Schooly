@@ -510,11 +510,11 @@ class EditTask extends Component {
                         id="date-picker-inline"
                         value={this.state.deadline}
                         onChange={(date) => this.onChange(date, "deadline")}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                        InputProps={{
-                          disableUnderline: true
+                        inputProps={{
+                          style: {
+                            borderBottom: "none",
+                            boxShadow: "none",
+                          },
                         }}
                       />
                     </MuiPickersUtilsProvider>

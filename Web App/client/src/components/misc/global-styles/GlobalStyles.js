@@ -35,29 +35,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         },
       },
     },
-    MuiInput: {
-      input: {
-        boxShadow: "none",
-        "&:focus, &:active": {
-          boxShadow: "none",
-        },
-      },
-    },
-    MuiInputBase: {
-      input: {
-        boxShadow: "none",
-        "&:focus, &:active": {
-          boxShadow: "none",
-        },
-      },
-      inputAdornedEnd: {
-        boxShadow: "none",
-        "&:focus, &:active": {
-          boxShadow: "none",
-        },
-      },
-    },
-    MuiPickersDay:{
+    MuiPickersDay: {
       daySelected: {
         "&:focus, &:hover": {
           backgroundColor: "#2196F3",

@@ -101,12 +101,6 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  deadlinePicker: {
-    "&:focus, &:hover": {
-      borderBottom: "1px solid #2196F3",
-      boxShadow: "none",
-    },
-  },
 });
 
 function LampiranFile(props) {
@@ -345,8 +339,8 @@ class CreateTask extends Component {
                     <FormControl variant="outlined" fullWidth>
                       <label id="class_assigned" className={classes.inputLabel}>Kelas yang Ditugaskan</label>
                       <Select
-                        id="class_assigned"
                         multiple
+                        id="class_assigned"
                         MenuProps={MenuProps}
                         value={class_assigned}
                         onChange={(event) => {this.onChange(event, "kelas")}}
@@ -450,14 +444,11 @@ class CreateTask extends Component {
                         id="date-picker-inline"
                         value={this.state.deadline}
                         onChange={(date) => this.onDateChange(date)}
-                        InputProps={{
-                          disableUnderline: true
-                        }}
                         inputProps={{
-                          className: classes.deadlinePicker,
                           style: {
-                            borderBottom: "1px solid #2196F3",
-                          }
+                            borderBottom: "none",
+                            boxShadow: "none",
+                          },
                         }}
                       />
                     </MuiPickersUtilsProvider>

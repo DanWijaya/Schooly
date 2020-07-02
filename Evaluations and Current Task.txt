@@ -1,18 +1,14 @@
 Current Task
 
 Botak:
-1. Starred notification
-2. Akun sistem: schoolysystem@gmail.com
+1. notification
 3. Cek lagi kata-kata di bantuan, landing, about, policy.
-4. Update field-field profile.
+4. Update field-field profile (calendar buat tanggal lahir), select buat wanita atau pria
 5. Delete tester di akhir
-6. Hapus tombol daftar di navbar
-8. nama sekolah di profil, ganti isi data dengan button merah
+8. nama sekolah di profil
 9. lihat mata pelajaran button
-10. Hijau-hijau di datepicker
-11. matikan notification page kalau nda perlu dulu
-12. Tambahin desktop version pas create task
-13. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
+10. Tambahin desktop version pas create task
+11. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

@@ -42,6 +42,16 @@ const useStyles = makeStyles((theme) => ({
   profileDataItemAvatar: {
     backgroundColor: theme.palette.primary.main,
   },
+  emptyProfileData: {
+    display: "flex",
+    justifyContent: "center",
+    maxWidth: "150px",
+    padding: "5px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+  },
 }));
 
 const StyledBadge = withStyles((theme) => ({
@@ -72,7 +82,15 @@ function ProfileDataItem(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            {props.profile_data_info}
+            {props.profile_data_info === "Belum Diisi" ?
+              <Paper className={classes.emptyProfileData}>
+                <Typography variant="button">
+                  {props.profile_data_info}
+                </Typography>
+              </Paper>
+              :
+              props.profile_data_info
+            }
           </Grid>
         </Grid>
     </ListItem>
