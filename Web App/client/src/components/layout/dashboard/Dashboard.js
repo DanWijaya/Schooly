@@ -244,7 +244,7 @@ class Dashboard extends Component {
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
-                    Apa yang ingin kamu lakukan hari ini?
+                    Apa yang ingin anda kerjakan hari ini?
                   </Typography>
                 </Paper>
               : user.role === "Teacher" ?
@@ -256,7 +256,7 @@ class Dashboard extends Component {
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
-                    Apa yang ingin kamu lakukan hari ini?
+                    Apa yang ingin anda kerjakan hari ini?
                   </Typography>
                 </Paper>
               :
@@ -268,7 +268,7 @@ class Dashboard extends Component {
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
-                    Apa yang ingin kamu lakukan hari ini?
+                    Apa yang ingin anda kerjakan hari ini?
                   </Typography>
                 </Paper>
             }

@@ -47,17 +47,17 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function ClassListHead(props) {
+function ManageUsersHead(props) {
   const { classes, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   const headCells = [
-    { id: "classroom", numeric: false, disablePadding: true, label: "Kelas" },
-    { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
-    { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
-    { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
+    { id: "classroom", numeric: false, disablePadding: true, label: "Nama" },
+    { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Email" },
+    { id: "size", numeric: true, disablePadding: false, label: "Nomor Telepon" },
+    { id: "absent", numeric: false, disablePadding: false, label: "Tanggal Lahir" },
     { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
   ];
 
@@ -91,7 +91,7 @@ function ClassListHead(props) {
   );
 }
 
-ClassListHead.propTypes = {
+ManageUsersHead.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -103,39 +103,20 @@ ClassListHead.propTypes = {
 const useToolbarStyles = makeStyles((theme) => ({
   toolbar: {
     display: "auto",
-    justifyContent: "space-between",
+    justifyContent: "center",
     padding: "15px",
   },
-  newClassButton: {
-    backgroundColor: "#61BD4F",
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
-      color: "white",
-    },
-  },
-  newClassIcon: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    marginRight: "7.5px",
-  }
 }));
 
-const ClassListToolbar = (props) => {
+const ManageUsersToolbar = (props) => {
   const classes = useToolbarStyles();
   const { item, deleteClass } = props;
 
   return(
     <Toolbar className={classes.toolbar}>
       <Typography variant="h4" align="left">
-        <b>Daftar Kelas</b>
+        <b>Daftar Pengguna</b>
       </Typography>
-      <Link to="/buat-kelas">
-        <Fab variant="extended" className={classes.newClassButton}>
-          <FaChalkboardTeacher className={classes.newClassIcon} />
-          Buat Kelas
-        </Fab>
-      </Link>
     </Toolbar>
   );
 };
@@ -145,9 +126,6 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
-  },
-  tableEditIcon: {
-    color: theme.palette.primary.main,
   },
   tableDeleteIcon: {
     color: theme.palette.error.dark,
@@ -196,7 +174,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ClassList(props) {
+function ManageUsers(props) {
   document.title = "Schooly | Daftar Kelas"
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -217,18 +195,7 @@ function ClassList(props) {
         data.ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
         [
-        <LightToolTip title="Sunting">
-          <Link to ={`/sunting-kelas/${data._id}`}>
-            <IconButton
-              size="small"
-              style={{marginRight: "5px"}}
-              onClick={(e) =>  e.stopPropagation()}
-            >
-              <EditIcon className={classes.tableEditIcon} />
-            </IconButton>
-          </Link>
-        </LightToolTip>,
-        <LightToolTip title="Hapus">
+        <LightToolTip title="Hapus Akun">
           <IconButton
             size="small"
             onClick={(e) =>{
@@ -379,10 +346,10 @@ function ClassList(props) {
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
-        <ClassListToolbar deleteClass={deleteClass}/>
+        <ManageUsersToolbar deleteClass={deleteClass}/>
         <TableContainer>
           <Table>
-            <ClassListHead
+            <ManageUsersHead
               classes={classes}
               order={order}
               orderBy={orderBy}
@@ -424,7 +391,7 @@ function ClassList(props) {
   )
 };
 
-ClassList.propTypes = {
+ManageUsers.propTypes = {
   viewClass: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
@@ -440,4 +407,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { viewClass, deleteClass }
-) (ClassList);
+) (ManageUsers);

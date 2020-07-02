@@ -2,6 +2,8 @@ import React from "react";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { viewOneTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
@@ -17,7 +19,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import DescriptionIcon from '@material-ui/icons/Description';
 import PublishIcon from "@material-ui/icons/Publish";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
@@ -55,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBox: {
     padding: "20px",
+  },
+  deadlineWarningText: {
+    color: theme.palette.warning.main,
   },
   workChosenFile: {
     width: "200px",
@@ -223,7 +227,7 @@ function LampiranFile(props) {
 function WorkFile(props) {
   const classes = useStyles();
 
-  const { file_type_icon, file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog } = props;
+  const { file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog } = props;
 
   let displayedName = ""
   file_name.length >= 10 ?
@@ -365,7 +369,6 @@ function ViewTaskStudent(props) {
           handleOpenDeleteDialog = {handleOpenDeleteDialog}
           onDownloadFile={onDownloadFile}
           onPreviewFile={onPreviewFile}
-          file_type_icon={<DescriptionIcon />}
           file_name={filesCollection.files[i].filename}
           file_id={filesCollection.files[i].id}
           file_type={fileType(filesCollection.files[i].filename)}
@@ -549,8 +552,8 @@ function ViewTaskStudent(props) {
                 </Typography>
               </Grid>
               <Grid item xs={6} container direction="column" alignItems="flex-end">
-                <Typography variant="overline" color="textSecondary">
-                  Tanggal Kumpul:
+                <Typography variant="overline" color="textSecondary" className={classes.deadlineWarningText}>
+                  Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   Nilai Maksimum: 100

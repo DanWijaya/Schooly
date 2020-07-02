@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   drawerListItemMuiIcons: {
-    width: theme.spacing(2.75),
-    height: theme.spacing(2.75),
+    width: theme.spacing(2.70),
+    height: theme.spacing(2.70),
   },
   drawerListItemReactIcons: {
     width: theme.spacing(2.5),
@@ -99,21 +99,30 @@ function DrawerContent(props) {
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
-  if(user !== undefined){
+  if(user !== undefined) {
     if(user.role === "Student")
       directedTo = `/kelas/${user.kelas}`
     else
       directedTo = "/daftar-kelas"
   }
 
-  let ListItemContents = [
-    ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
-    [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
-    ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
-    ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
-    [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],
-    [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
-  ]
+  let ListItemContents;
+  if(user.role === "Admin")
+    ListItemContents = [
+      ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
+      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
+      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
+    ]
+  else
+    ListItemContents = [
+      ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
+      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
+      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
+      [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],
+      [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
+    ]
 
   return(
     <div>
