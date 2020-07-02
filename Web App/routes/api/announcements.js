@@ -70,12 +70,9 @@ router.get("/view/:id", (req, res) => {
 })
 
 router.post("/update/:id", (req,res) => {
-<<<<<<< HEAD
     
     const { errors, isValid } = validateAnnouncementInput(req.body);
 
-=======
->>>>>>> 6b01cc0d7bb76f9cb6f6d8b64035890bd055e0cb
     if(!isValid){
         console.log("Not valid");
         return res.status(400).json(errors);

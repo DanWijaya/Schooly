@@ -478,15 +478,9 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
   let announcement_id = req.params.id;
   const {lampiran_to_delete, current_lampiran} = req.body;
   for(var i = 0; i < lampiran_to_delete.length; i++){
-<<<<<<< HEAD
     id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // di rootnya, masukkin collection namenya.. 
     gfsLampiranAnnouncement.remove({ _id: id, root: "lampiran_announcement"}, (err) => {
-=======
-    announcement_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
-    // di rootnya, masukkin collection namenya..
-    gfsLampiranAnnouncement.remove({ _id: announcement_id, root: "lampiran_announcement"}, (err) => {
->>>>>>> 6b01cc0d7bb76f9cb6f6d8b64035890bd055e0cb
       if(err) {
         console.log("error occured")
         return res.status(404).json({err: "Error in removing the files"});
@@ -517,7 +511,6 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
   })
 })
 
-<<<<<<< HEAD
 router.get("/lampiran_announcement/:id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.id)
   if(Boolean(gfsLampiranAnnouncement)){
@@ -564,6 +557,3 @@ router.get("/previewlampiran_announcement/:id", (req,res) => {
 })
 
 module.exports = {router, uploadAvatar, uploadTugas, uploadLampiran};
-=======
-module.exports = { router, uploadAvatar, uploadTugas, uploadLampiran };
->>>>>>> 6b01cc0d7bb76f9cb6f6d8b64035890bd055e0cb
