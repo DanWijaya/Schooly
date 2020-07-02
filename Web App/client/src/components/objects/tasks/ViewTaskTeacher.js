@@ -417,12 +417,8 @@ ViewTaskTeacher.propTypes = {
    previewLampiran: PropTypes.func.isRequired,
    deleteTask: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
-<<<<<<< HEAD
-   getOneUser: PropTypes.func.isRequired, // for the person in charge task
-=======
    getOneUser: PropTypes.func.isRequired, // For the person in charge task
    getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
->>>>>>> 6b01cc0d7bb76f9cb6f6d8b64035890bd055e0cb
    viewOneTask: PropTypes.func.isRequired,
  }
 
