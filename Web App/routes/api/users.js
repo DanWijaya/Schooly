@@ -293,7 +293,8 @@ router.get("/getalltask/:user_id", (req,res) => {
       res.status(404).send("User data is not found");
     else {
       let allFilesList = []
-      user.tugas.map((item) => allFilesList.push(item))
+      if(Boolean(user.tugas.length))
+        user.tugas.map((item) => allFilesList.push(item))
       res.json(allFilesList)
     }
   })

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import { viewTask } from "../../../actions/TaskActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
@@ -11,6 +13,10 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import moment from "moment";
+import "moment/locale/id";
 
 const useStyles = makeStyles((theme) => ({
   listItemPaper: {
@@ -20,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
+  },
+  warningText: {
+    color: theme.palette.warning.main,
   },
 }));
 
@@ -50,27 +59,31 @@ function NotificationItemList(props) {
   )
 }
 
-function WorkItemList(props) {
-  const classes = useStyles();
+
+function WorkListItem(props) {
+  const classes = useStyles()
 
   return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+        <ListItemAvatar>
+          {props.work_category_avatar}
+        </ListItemAvatar>
         <ListItemText
           primary={
-            <Typography>
+            <Typography variant="h6">
               {props.work_title}
             </Typography>
           }
-          secondary={props.work_category}
+          secondary={props.work_sender}
         />
-        <ListItemText
-          align="right"
+        <ListItemText style={{textAlign: "right"}}
           primary={
-            <Typography variant="subtitle" color="textSecondary">
-              {props.work_duetime}
+            <Typography variant="h6" className={classes.warningText}>
+              Batas Waktu: {props.work_deadline}
             </Typography>
           }
+          secondary={props.work_status}
         />
       </ListItem>
     </Paper>
@@ -125,19 +138,38 @@ const styles = (theme) => ({
   workPaper: {
     padding: "20px",
   },
-  manageClassButton: {
-    backgroundColor: theme.palette.primary.main,
+  assignmentLate: {
+    backgroundColor: theme.palette.error.main,
+  },
+  buatTugasButton: {
+    marginRight: "20px",
+  },
+  createTaskButton: {
+    backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
+      backgroundColor: "white",
+      color: "#61BD4F",
     },
   },
-  manageClassIcon: {
+  createTaskIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     marginRight: "7.5px",
-  }
+  },
+  manageTaskButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  manageTaskIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
+  },
 });
 
 class Dashboard extends Component {
@@ -149,6 +181,12 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    const {viewTask, getAllTaskFilesByUser} = this.props;
+    const { user} = this.props.auth;
+
+    viewTask()
+    if(user.role == "Student")
+      getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
     this.intervalID = setInterval(
       () => this.tick(),
       1000
@@ -166,12 +204,32 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, tasksCollection, viewTask, getAllTaskFilesByUser,  } = this.props;
 
     const { user } = this.props.auth;
+    const { all_user_files } = this.props.filesCollection
+    const { all_subjects } = this.props.subjectsCollection
+    const { selectedClasses } = this.props.classesCollection
 
     document.title = "Schooly | Dashboard";
     document.body.style = "background: #FFFFFF";
+    console.log(tasksCollection)
+    let tasksByClass = []
+    console.log(tasksByClass)
+    if(Boolean(tasksCollection.length)) {
+      if(user.role == "Student"){
+        tasksCollection.map((task) => {
+          let class_assigned = task.class_assigned
+          for (var i = 0; i < class_assigned.length; i++){
+            if(class_assigned[i]._id === user.kelas)
+              tasksByClass.push(task)
+          }
+        })
+      } else if(user.role === "Teacher"){
+        // in untuk si guru
+        console.log("Ini untuk guru")
+      }
+    }
 
     return(
       <div className={classes.root}>
@@ -216,37 +274,63 @@ class Dashboard extends Component {
             }
           </Grid>
           {user.role !== "Admin" ?
-            <Grid item container spacing={3}>
-              <Grid item sm={12} xs={12}>
-                <Paper className={classes.workPaper}>
-                  <div className={classes.paperTitle}>
-                    <Typography variant="h5" color="primary">
-                      Pekerjaan Yang belum dikumpulkan
-                    </Typography>
-                    <div style={{display: "flex", justifyContent: "flex-end"}}>
-                    <LightTooltip title="Lihat Semua" placement="top">
-                      <IconButton>
-                        <ChevronRightIcon />
-                      </IconButton>
-                    </LightTooltip>
-                    </div>
-                  </div>
-                  <List>
-                    <WorkItemList
-                      work_title="Tugas 1"
-                      work_link="/test"
-                      work_category="Fisika"
-                      work_duetime="5 jam lagi"
-                    />
-                    <WorkItemList
-                      work_title="Tugas 2: hisap peler"
-                      work_link="/test"
-                      work_category="Biologi"
-                      work_duetime="1 jam lagi"
-                    />
-                  </List>
-                </Paper>
+            <Grid item container direction="row" justify="flex-end">
+              <Grid item className={classes.buatTugasButton}>
+                <Link to ="/buat-tugas">
+                  <Fab variant="extended" className={classes.createTaskButton}>
+                    <AssignmentIcon className={classes.createTaskIcon} />
+                    Buat Tugas
+                  </Fab>
+                </Link>
               </Grid>
+              <Grid item>
+                <Link to ="/daftar-tugas">
+                  <Fab variant="extended" className={classes.manageTaskButton}>
+                    <AssignmentIcon className={classes.manageTaskIcon} />
+                    Lihat Tugas
+                  </Fab>
+                </Link>
+              </Grid>
+              {/* <Paper className={classes.workPaper}>
+                <div className={classes.paperTitle}>
+                  <Typography variant="h5" color="primary">
+                    Pekerjaan Anda
+                  </Typography>
+                  <div style={{display: "flex", justifyContent: "flex-end"}}>
+                  <LightTooltip title="Lihat Semua" placement="top">
+                    <IconButton>
+                      <ChevronRightIcon />
+                    </IconButton>
+                  </LightTooltip>
+                  </div>
+                </div>
+                <List>
+                {tasksByClass.map((task) => {
+              let workCategoryAvatar = (
+                <Avatar className={classes.assignmentLate}>
+                  <AssignmentLateIcon/>
+                </Avatar>
+              )
+              let workStatus = "Belum Dikumpulkan"
+              for(var i = 0; i < all_user_files.length; i++) {
+                if(all_user_files[i].for_task_object === task._id){
+                  workStatus = "Telah Dikumpulkan"
+                  return null;
+                }
+              }
+              return(
+                <WorkListItem
+                  work_title={task.name}
+                  work_category_avatar={workCategoryAvatar}
+                  work_sender={`Mata Pelajaran: ${task.subject}`}
+                  work_status={workStatus}
+                  work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+                  work_link={`/tugas-murid/${task._id}`}
+                />
+              )
+            })}
+                </List>
+              </Paper> */}
             </Grid>
           :
             <Grid item container direction="row" justify="flex-end">
@@ -268,13 +352,22 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
+  viewTask: PropTypes.func.isRequired,
+  getAllTaskFilesByUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
+  tasksCollection: state.tasksCollection,
+  subjectsCollection: state.subjectsCollection,
+  classesCollection: state.classesCollection,
+  filesCollection: state.filesCollection
 });
 
 export default withRouter(
-  connect(mapStateToProps)
+  connect(mapStateToProps, {viewTask, getAllTaskFilesByUser})
   (withStyles(styles)(Dashboard))
 )

@@ -132,7 +132,14 @@ const useStyles = makeStyles((theme) => ({
 
 function LampiranFile(props) {
   const classes = useStyles();
+
   const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
+
+  let displayedName = ""
+  filename.length >= 31 ?
+    displayedName = `${filename.slice(0,30)}..${path.extname(filename)}`
+  :
+    displayedName = filename
 
   return(
     <Grid item xs={6}>
@@ -182,7 +189,13 @@ function LampiranFile(props) {
             }
           </ListItemAvatar>
           <ListItemText
-            primary={filename}
+            primary={
+              <LightToolTip title={filename} placement="top">
+                <Typography>
+                  {displayedName}
+                </Typography>
+              </LightToolTip>
+            }
             secondary={filetype}
           />
           <IconButton
@@ -216,8 +229,8 @@ function ViewTaskTeacher(props) {
       case ".xlsx" :
       case ".csv"  : return "Excel"
 
-      case ".png":
-      case ".jpg":
+      case ".png" :
+      case ".jpg" :
       case ".jpeg" : return "Gambar"
 
       case ".pdf" : return "PDF"
@@ -226,9 +239,9 @@ function ViewTaskTeacher(props) {
       case ".rtf" : return "Teks"
 
       case ".ppt" :
-      case ".pptx": return "Presentasi"
+      case ".pptx" : return "Presentasi"
 
-      default: return "File lainnya"
+      default: return "File Lainnya"
     }
   }
 

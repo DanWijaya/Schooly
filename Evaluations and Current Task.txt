@@ -7,7 +7,6 @@ Botak:
 4. Update field-field profile.
 5. Delete tester di akhir
 6. Hapus tombol daftar di navbar
-7. file icon
 8. nama sekolah di profil, ganti isi data dengan button merah
 9. lihat mata pelajaran button
 10. Hijau-hijau di datepicker

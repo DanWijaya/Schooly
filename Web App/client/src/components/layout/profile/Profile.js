@@ -315,16 +315,16 @@ function Profile(props) {
 }
 
 Profile.propTypes = {
-    auth: PropTypes.object.isRequired,
-    classesCollection: PropTypes.object.isRequired,
-    updateAvatar: PropTypes.func.isRequired,
-    viewOneClass: PropTypes.func.isRequired,
-  }
+  auth: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  updateAvatar: PropTypes.func.isRequired,
+  viewOneClass: PropTypes.func.isRequired,
+}
 
 const mapStateToProps = (state) => ({
-    auth: state.auth,
-    classesCollection: state.classesCollection,
-  });
+  auth: state.auth,
+  classesCollection: state.classesCollection,
+});
 
 export default connect(
   mapStateToProps, { updateAvatar, viewOneClass }

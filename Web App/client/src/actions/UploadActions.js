@@ -58,6 +58,7 @@ export const getTaskFilesByUser = (userId, tugasId) => dispatch => {
 
 export const getAllTaskFilesByUser = (userId) => dispatch => {
     console.log("getAllTaskFilesByUser is runned")
+    console.log("User ID: ", userId)
     axios
         .get(`/api/users/getalltask/${userId}`)
         .then(res =>{

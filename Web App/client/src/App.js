@@ -19,7 +19,6 @@ import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import Profile from "./components/layout/profile/Profile";
-import Notifications from "./components/layout/notifications/Notifications";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
@@ -151,7 +150,6 @@ class App extends Component {
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
-                    <PrivateRoute exact path="/notifikasi" component={Notifications} />
                     {/* Route Class */}
                     <PrivateRoute exact path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact path="/sunting-kelas/:id" component={EditClass} />
