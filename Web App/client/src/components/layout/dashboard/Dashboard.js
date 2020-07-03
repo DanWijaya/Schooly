@@ -141,9 +141,6 @@ const styles = (theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
   },
-  buatTugasButton: {
-    marginRight: "20px",
-  },
   createTaskButton: {
     backgroundColor: "#61BD4F",
     color: "white",
@@ -211,8 +208,6 @@ class Dashboard extends Component {
     const { all_subjects } = this.props.subjectsCollection
     const { selectedClasses } = this.props.classesCollection
 
-    document.title = "Schooly | Dashboard";
-    document.body.style = "background: #FFFFFF";
     console.log(tasksCollection)
     let tasksByClass = []
     console.log(tasksByClass)
@@ -230,6 +225,9 @@ class Dashboard extends Component {
         console.log("Ini untuk guru")
       }
     }
+
+    document.title = "Schooly | Dashboard";
+    document.body.style = "background: #FFFFFF";
 
     return(
       <div className={classes.root}>
@@ -274,8 +272,8 @@ class Dashboard extends Component {
             }
           </Grid>
           {user.role !== "Admin" ?
-            <Grid item container direction="row" justify="flex-end">
-              <Grid item className={classes.buatTugasButton}>
+            <Grid item container direction="row" spacing={2} justify="flex-end">
+              <Grid item>
                 <Link to ="/buat-tugas">
                   <Fab variant="extended" className={classes.createTaskButton}>
                     <AssignmentIcon className={classes.createTaskIcon} />
