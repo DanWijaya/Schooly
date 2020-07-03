@@ -170,6 +170,19 @@ const styles = (theme) => ({
     height: theme.spacing(2.5),
     marginRight: "7.5px",
   },
+  manageClassButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  manageClassIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
+  },
 });
 
 class Dashboard extends Component {
@@ -273,7 +286,7 @@ class Dashboard extends Component {
                 </Paper>
             }
           </Grid>
-          {user.role !== "Admin" ?
+          {user.role === "Teacher" ?
             <Grid item container direction="row" justify="flex-end">
               <Grid item className={classes.buatTugasButton}>
                 <Link to ="/buat-tugas">
@@ -290,8 +303,11 @@ class Dashboard extends Component {
                     Lihat Tugas
                   </Fab>
                 </Link>
+              </Grid> 
               </Grid>
-              {/* <Paper className={classes.workPaper}>
+              : 
+              user.role === "Student" ? 
+              <Paper className={classes.workPaper}>
                 <div className={classes.paperTitle}>
                   <Typography variant="h5" color="primary">
                     Pekerjaan Anda
@@ -330,8 +346,7 @@ class Dashboard extends Component {
               )
             })}
                 </List>
-              </Paper> */}
-            </Grid>
+              </Paper>
           :
             <Grid item container direction="row" justify="flex-end">
               <Grid item>
