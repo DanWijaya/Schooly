@@ -141,6 +141,9 @@ const styles = (theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
   },
+  buatTugasButton: {
+    marginRight: "20px",
+  },
   createTaskButton: {
     backgroundColor: "#61BD4F",
     color: "white",
@@ -163,6 +166,19 @@ const styles = (theme) => ({
     },
   },
   manageTaskIcon: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    marginRight: "7.5px",
+  },
+  manageClassButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  manageClassIcon: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     marginRight: "7.5px",
@@ -208,6 +224,8 @@ class Dashboard extends Component {
     const { all_subjects } = this.props.subjectsCollection
     const { selectedClasses } = this.props.classesCollection
 
+    document.title = "Schooly | Dashboard";
+    document.body.style = "background: #FFFFFF";
     console.log(tasksCollection)
     let tasksByClass = []
     console.log(tasksByClass)
@@ -225,9 +243,6 @@ class Dashboard extends Component {
         console.log("Ini untuk guru")
       }
     }
-
-    document.title = "Schooly | Dashboard";
-    document.body.style = "background: #FFFFFF";
 
     return(
       <div className={classes.root}>
@@ -271,9 +286,9 @@ class Dashboard extends Component {
                 </Paper>
             }
           </Grid>
-          {user.role !== "Admin" ?
-            <Grid item container direction="row" spacing={2} justify="flex-end">
-              <Grid item>
+          {user.role === "Teacher" ?
+            <Grid item container direction="row" justify="flex-end">
+              <Grid item className={classes.buatTugasButton}>
                 <Link to ="/buat-tugas">
                   <Fab variant="extended" className={classes.createTaskButton}>
                     <AssignmentIcon className={classes.createTaskIcon} />
@@ -288,8 +303,11 @@ class Dashboard extends Component {
                     Lihat Tugas
                   </Fab>
                 </Link>
+              </Grid> 
               </Grid>
-              {/* <Paper className={classes.workPaper}>
+              : 
+              user.role === "Student" ? 
+              <Paper className={classes.workPaper}>
                 <div className={classes.paperTitle}>
                   <Typography variant="h5" color="primary">
                     Pekerjaan Anda
@@ -328,8 +346,7 @@ class Dashboard extends Component {
               )
             })}
                 </List>
-              </Paper> */}
-            </Grid>
+              </Paper>
           :
             <Grid item container direction="row" justify="flex-end">
               <Grid item>
