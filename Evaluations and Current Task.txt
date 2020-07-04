@@ -8,6 +8,7 @@ Botak:
 8. nama sekolah di profil
 9. lihat mata pelajaran button
 10. Tambahin desktop version pas create task
+11. dialog dan snackbar
 11. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
 
 Daniel:
