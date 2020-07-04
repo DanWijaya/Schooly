@@ -217,7 +217,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { classes, tasksCollection, viewTask, getAllTaskFilesByUser,  } = this.props;
+    const { classes, tasksCollection, classesCollection, viewTask, getAllTaskFilesByUser,  } = this.props;
 
     const { user } = this.props.auth;
     const { all_user_files } = this.props.filesCollection
@@ -227,6 +227,8 @@ class Dashboard extends Component {
     document.title = "Schooly | Dashboard";
     document.body.style = "background: #FFFFFF";
     console.log(tasksCollection)
+    console.log(classesCollection)
+    console.log(user)
     let tasksByClass = []
     console.log(tasksByClass)
     if(Boolean(tasksCollection.length)) {
@@ -369,6 +371,7 @@ Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired

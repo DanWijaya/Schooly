@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_CLASSES, GET_CLASSES } from "./Types";
+import { GET_ERRORS, GET_ALL_CLASSES, GET_CLASSES, SET_CURRENT_CLASS } from "./Types";
 
 // Add Class
 export const createClass = (classData, history) => dispatch => {
@@ -40,11 +40,13 @@ export const viewClass = () => dispatch => {
     })
 }
 
-export const viewOneClass = (classId) => dispatch => {
+export const viewSelectedClasses = (classes_ids) => dispatch => {
   axios
-    .get("/api/classes/viewOneClass/" + classId)
+    .get("/api/classes/viewSelectedClasses/", { params: { classes_ids : classes_ids}})
     .then(res => {
         console.log("Class to be edited");
+        // dispatch(setCurrentClass(res.data))
+        console.log(res)
         dispatch({
             type: GET_CLASSES,
             payload: res.data
@@ -52,7 +54,6 @@ export const viewOneClass = (classId) => dispatch => {
         // res.send(classData);
     })
     .catch(err => {
-        console.log(classId);
         console.log("error")
         dispatch({
             type: GET_ERRORS,
@@ -91,4 +92,31 @@ export const deleteClass = (classId) => dispatch => {
             payload: err.response.data
         })
     })
+}
+
+export const setCurrentClass = (classId) => dispatch => {
+    console.log("set current class is runned")
+    axios
+        .get("/api/classes/setCurrentClass/" + classId)
+        .then(res => {
+            console.log("Class to be edited");
+            // dispatch(setCurrentClass(res.data))
+            dispatch({
+                type: SET_CURRENT_CLASS,
+                payload: res.data
+            })
+            // res.send(classData);
+        })
+        .catch(err => {
+            console.log(classId);
+            console.log("error")
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })
+    // return {
+    //     type: SET_CURRENT_CLASS,
+    //     payload: decoded,
+    // }
 }

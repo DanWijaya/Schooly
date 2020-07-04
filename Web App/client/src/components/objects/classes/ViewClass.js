@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/id";
-import { viewOneClass } from "../../../actions/ClassActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
@@ -153,16 +153,16 @@ function PersonListItem(props) {
 function ViewClass(props) {
   const classes = useStyles();
 
-  const { viewOneClass, getStudentsByClass, getAllSubjects,
+  const { setCurrentClass, getStudentsByClass, getAllSubjects,
      tasksCollection, getTeachers, getAllTaskFilesByUser, viewTask } = props;
-  const { all_user_files } = props.filesCollection
-  const { all_subjects } = props.subjectsCollection
-  const { selectedClasses } = props.classesCollection
+  const { all_user_files } = props.filesCollection;
+  const { all_subjects } = props.subjectsCollection;
+  const { selectedClasses, kelas } = props.classesCollection
   const { all_students, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
 
   let tasksByClass = []
-
+  console.log(props.classesCollection)
   // All actions to retrive datas from Database
   if(tasksCollection.length === undefined){
     viewTask()
@@ -177,8 +177,8 @@ function ViewClass(props) {
     })
   }
 
-  if(selectedClasses.length === 0)
-    viewOneClass(classId)
+  if(Object.keys(kelas).length === 0)
+    setCurrentClass(classId)
   if(all_subjects.length === 0)
     getAllSubjects()
   if(all_students.length === 0)
@@ -193,15 +193,15 @@ function ViewClass(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  console.log(selectedClasses)
 
-  document.title = !selectedClasses.name ? "Schooly | Lihat Kelas" : `Schooly | ${selectedClasses.name}`
+
+  document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
 
   return(
     <div className={classes.root}>
       <Paper square>
         <Typography variant="h3" align="center" gutterBottom>
-          {selectedClasses.name}
+          {kelas.name}
         </Typography>
         <Tabs
           variant="fullWidth"
@@ -325,10 +325,10 @@ function ViewClass(props) {
           <Divider className={classes.personListDivider} />
           <List className={classes.listContainer}>
             <PersonListItem
-              person_avatar={selectedClasses.walikelas ?
-                `/api/uploads/image/${selectedClasses.walikelas.avatar}` : null}
-              person_name={selectedClasses.walikelas ? selectedClasses.walikelas.name : null}
-              person_role={selectedClasses.walikelas ? selectedClasses.walikelas.subject_teached : null}
+              person_avatar={kelas.walikelas ?
+                `/api/uploads/image/${kelas.walikelas.avatar}` : null}
+              person_name={kelas.walikelas ? kelas.walikelas.name : null}
+              person_role={kelas.walikelas ? kelas.walikelas.subject_teached : null}
             />
           </List>
         </Paper>
@@ -359,7 +359,7 @@ ViewClass.propTypes = {
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
-  viewOneClass: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
@@ -375,6 +375,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { viewOneClass, getStudentsByClass,
+  mapStateToProps, { setCurrentClass, getStudentsByClass,
     getAllSubjects, viewTask, getTeachers, getAllTaskFilesByUser }
 ) (ViewClass);

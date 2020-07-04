@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button,Chip, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
+import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -111,6 +112,7 @@ class EditAnnouncement extends Component {
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
+      class_assigned: [],
       anchorEl: null,
       errors: {}
     };
@@ -120,8 +122,14 @@ class EditAnnouncement extends Component {
   uploadedLampiran = React.createRef(null)
 
   componentDidMount(){
-    this.props.getOneAnnouncement(this.props.match.params.id)
-    
+    const { user } = this.props.auth;
+    const { setCurrentClass, getOneAnnouncement, viewClass } = this.props;
+
+    getOneAnnouncement(this.props.match.params.id)
+    viewClass()
+    if(user.role ==="Student")
+      setCurrentClass(user.kelas)
+
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -133,7 +141,8 @@ class EditAnnouncement extends Component {
         this.setState({
             title: selectedAnnouncements.title,
             description: selectedAnnouncements.description,
-            fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : []
+            fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
+            class_assigned: Boolean(selectedAnnouncements.class_assigned) ? selectedAnnouncements.class_assigned : []
             // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
             // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
         })
@@ -197,6 +206,8 @@ class EditAnnouncement extends Component {
   onChange = (e, otherfield) => {
     if(otherfield === "description") {
       this.setState({ description : e.target.value})
+    } else if(otherfield === "kelas") {
+      this.setState({ class_assigned: e.target.value})
     }
     else
       this.setState({ [e.target.id]: e.target.value});
@@ -206,30 +217,51 @@ class EditAnnouncement extends Component {
     e.preventDefault();
 
     const { id } = this.props.match.params;
-    const { fileLampiranToAdd, fileLampiranToDelete } = this.state;
+    const { fileLampiranToAdd, fileLampiranToDelete, fileLampiran } = this.state;
+    const { user } = this.props.auth;
+    const { kelas } = this.props.classesCollection
+    const { selectedAnnouncements } = this.props.announcements;
 
-  const announcementObject = {
-    title: this.state.title,
-    description: this.state.description,
-    errors: {}
-  }
+    const announcementObject = {
+      title: this.state.title,
+      description: this.state.description,
+      class_assigned: user.role == "Student" ? [kelas] : this.state.class_assigned,
+      errors: {}
+    }
 
-  let formData = new FormData()
-  for(var i = 0; i< fileLampiranToAdd.length; i++) {
-    console.log(this.state.fileLampiran[i])
-    formData.append("lampiran_announcement", this.state.fileLampiranToAdd[i])
-  }
-  this.props.updateAnnouncement(formData, fileLampiranToDelete,
-    this.props.announcements.selectedAnnouncements.lampiran, announcementObject, id, this.props.history);
+    let formData = new FormData()
+    for(var i = 0; i< fileLampiranToAdd.length; i++) {
+      console.log(fileLampiran[i])
+      formData.append("lampiran_announcement", fileLampiranToAdd[i])
+    }
+
+    this.props.updateAnnouncement(formData, fileLampiranToDelete,
+      selectedAnnouncements.lampiran, announcementObject, id, this.props.history);
+
   }
 
   render() {
     document.title = "Schooly | Sunting Pengumuman"
 
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+      PaperProps: {
+        style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 250,
+        },
+      },
+    };
+
     const { classes, updateAnnouncement, getOneAnnouncement } = this.props;
     const { selectedAnnouncements} = this.props.announcements;
-    const{ errors, fileLampiran} = this.state
+    const{ errors, fileLampiran, class_assigned} = this.state
+    const { user } = this.props.auth;
+    const { all_classes, kelas } = this.props.classesCollection;
 
+    console.log(selectedAnnouncements)
+    console.log(all_classes)
     const listFileChosen = () => {
       let temp = []
       if(fileLampiran.length > 0) {
@@ -298,6 +330,46 @@ class EditAnnouncement extends Component {
                     error1={errors.description}
                   />
                 </Grid>
+                {user.role === "Student" // berarti dia ketua kelas 
+                ? null : 
+                <Grid item className={classes.gridItem}>
+                    <FormControl variant="outlined" fullWidth>
+                    <label id="class_assigned" className={classes.inputLabel}>Kelas yang diumumkan</label>
+                    <Select
+                      id="class_assigned"
+                      multiple
+                      MenuProps={MenuProps}
+                      value={class_assigned}
+                      onChange={(event) => {this.onChange(event, "kelas")}}
+                      renderValue={(selected) => {
+                        return(
+                        <div className={classes.chips}>
+                          {selected.map((id) => {
+                            let name
+                            if(all_classes.length == 0)
+                              return null;
+                            else {
+                              for (var i in all_classes){
+                                if(all_classes[i]._id === id){
+                                  name = all_classes[i].name
+                                  break;
+                                }
+                              }
+                              return(
+                                <Chip key={id} label={name} className={classes.chip} />
+                              )
+                            }
+                          })}
+                        </div>
+                      )}}>
+                      {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                        return(
+                          <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
+                      )})}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                }
                 <Grid item container direction="row" className={classes.gridItem}>
                   <input
                     type="file"
@@ -368,18 +440,23 @@ class EditAnnouncement extends Component {
 
 EditAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
   getAnnouncement: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
   getOneAnnouncement: PropTypes.func.isRequired,
-  updateAnnouncement: PropTypes.func.isRequired
+  updateAnnouncement: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
+  viewClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  announcements: state.announcementsCollection
+  errors: state.errors,
+  announcements: state.announcementsCollection,
+  classesCollection: state.classesCollection,
 })
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement }
+  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, viewClass }
   )(withStyles(styles)(EditAnnouncement))

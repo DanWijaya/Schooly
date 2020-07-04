@@ -6,6 +6,7 @@ import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
+import { viewSelectedClasses } from "../../../actions/ClassActions"
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -118,15 +119,18 @@ function ViewAnnouncement(props) {
 
   const classes = useStyles();
   const { selectedAnnouncements, all_announcements } = props.announcements;
-  const { getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, getAnnouncement, getAllAnnouncement, getUsers } = props;
+  const { classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, viewSelectedClasses } = props;
   const { user } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
     getOneAnnouncement(announcement_id)
-  }, selectedAnnouncements.title) // beacause only receive one announcement.
+    viewSelectedClasses(selectedAnnouncements.class_assigned)
+    console.log(selectedAnnouncements)
+  }, selectedAnnouncements._id) // beacause only receive one announcement.
 
+  console.log(classesCollection)
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
     switch(ext_file) {
@@ -284,7 +288,7 @@ function ViewAnnouncement(props) {
           </Grid>
         </Grid>
       </Paper>
-      { user.role === "Teacher" ?
+      { user.role === "Admin" || user.id === selectedAnnouncements.author_id? // kalau studentnya ketua kelas yang buat pengumumannya
           <div className={classes.teacherButtonContainer}>
             <Link to={`/sunting-pengumuman/${announcement_id}`}>
               <LightToolTip title="Sunting Pengumuman" placement="bottom">
@@ -308,20 +312,23 @@ function ViewAnnouncement(props) {
 ViewAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   getAnnouncement: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
   getOneAnnouncement: PropTypes.func.isRequired,
   deleteAnnouncement: PropTypes.func.isRequired,
   downloadLampiranAnnouncement: PropTypes.func.isRequired,
-  previewLampiranAnnouncement: PropTypes.func.isRequired
+  previewLampiranAnnouncement: PropTypes.func.isRequired,
+  viewSelectedClasses: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  classesCollection: state.classesCollection,
   announcements: state.announcementsCollection
 });
 
 export default connect(
   mapStateToProps, { getOneAnnouncement, getAnnouncement, deleteAnnouncement, getAllAnnouncements, 
-    previewLampiranAnnouncement, downloadLampiranAnnouncement}
+    previewLampiranAnnouncement, downloadLampiranAnnouncement, viewSelectedClasses}
 ) (ViewAnnouncement);

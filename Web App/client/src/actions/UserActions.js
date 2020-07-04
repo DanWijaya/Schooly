@@ -121,6 +121,10 @@ export const loginUser = (userData) => dispatch => {
       // Decode token to get user data
       const decoded = jwt_decode(token);
       // Set current user
+      // if(decoded.role === "Student"){
+      //   console.log("HEHE")
+      //   dispatch(setCurrentClass(decoded.kelas))
+      // }
       dispatch(setCurrentUser(decoded));
 
     })
@@ -135,7 +139,8 @@ export const loginUser = (userData) => dispatch => {
 
 // Set logged in user
 export const setCurrentUser = decoded => {
-  console.log(decoded)
+  console.log("The role is: ", decoded.role)
+  
   return {
     type: SET_CURRENT_USER,
     payload: decoded,

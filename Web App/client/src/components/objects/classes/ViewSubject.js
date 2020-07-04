@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/id";
-import { viewOneClass } from "../../../actions/ClassActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
@@ -85,23 +85,21 @@ function ViewSubject(props) {
 
   const { user } = props.auth;
   const { subject_name } = props.match.params
-  const{ viewOneClass, viewTask, tasksCollection, getAllTaskFilesByUser} = props;
-  const { selectedClasses } = props.classesCollection
+  const{ setCurrentClass, viewTask, tasksCollection, getAllTaskFilesByUser} = props;
+  const { selectedClasses, kelas } = props.classesCollection
   const {all_user_files} = props.filesCollection
 
-  if(selectedClasses.length === 0) {
-    viewOneClass(user.kelas)
-  }
-  if(all_user_files.length === 0) {
+  console.log(props.classesCollection)
+  React.useEffect(() => {
+    setCurrentClass(user.kelas)
+    viewTask()
     getAllTaskFilesByUser(user.id)
-  }
+  }, [all_user_files.length])
+
   let tasksByClass = [] // Tasks on specific class.
 
   // All actions to retrive datas from Database...
-  if(tasksCollection.length === undefined) {
-    viewTask()
-  }
-  else{
+  if(tasksCollection.length !== undefined){
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++) {
@@ -111,9 +109,8 @@ function ViewSubject(props) {
     })
   }
 
-  const generateTaskBySubject = () => {
-    let tasksBySubjectClass = [] // Tasks on specific subjects and class
-
+  let tasksBySubjectClass = [];
+  const generateTaskBySubject = (target=null) => {
     tasksByClass.map((task) => {
       let workCategoryAvatar = (
         <Avatar className={classes.assignmentLate}>
@@ -146,14 +143,20 @@ function ViewSubject(props) {
         />
       )
     }
-  })
 
-  return tasksBySubjectClass.length === 0 ?
-    (<Typography variant="h5" align="center" gutterBottom>
-      Kosong
-    </Typography>)
-    : tasksBySubjectClass
+  })
+  if(target == "length")
+    return tasksBySubjectClass.length;
+  
+  else{
+      return tasksBySubjectClass.length === 0 ?
+      (<Typography variant="h5" align="center" gutterBottom>
+        Kosong
+      </Typography>)
+      : tasksBySubjectClass
+    }
   }
+  
 
   document.title = `Schooly | ${subject_name}`
 
@@ -167,7 +170,7 @@ function ViewSubject(props) {
               <h3><b>{subject_name}</b></h3>
             </Typography>
             <Typography variant="body2">
-              <h5>Kelas: {selectedClasses.name}</h5>
+              <h5>Kelas: {kelas.name}</h5>
             </Typography>
           </Grid>
           <Grid item>
@@ -177,7 +180,7 @@ function ViewSubject(props) {
                 disableRipple
                 className={classes.workIconButton}
               >
-                <Badge badgeContent={2} color="secondary">
+                <Badge badgeContent={generateTaskBySubject("length")} color="secondary">
                   <AssignmentIcon fontSize="large" className={classes.workIcon} />
                 </Badge>
               </IconButton>
@@ -196,7 +199,7 @@ function ViewSubject(props) {
             </ExpansionPanelSummary>
             <Divider />
             <List className={classes.expansionPanelList}>
-            {generateTaskBySubject()}
+            {tasksBySubjectClass}
             </List>
           </ExpansionPanel>
         </Grid>
@@ -263,7 +266,7 @@ ViewSubject.propTypes = {
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
-  viewOneClass: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
@@ -278,6 +281,6 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, {viewOneClass,
+  mapStateToProps, {setCurrentClass,
     getAllSubjects, viewTask, getAllTaskFilesByUser}
 ) (ViewSubject)

@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
-import { viewOneClass } from "../../../actions/ClassActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
@@ -423,7 +422,6 @@ TaskList.propTypes = {
   deleteTask: PropTypes.func.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  viewOneClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 }
 
@@ -435,5 +433,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { viewTask, deleteTask, viewOneClass }
+  { viewTask, deleteTask }
 )(TaskList);
