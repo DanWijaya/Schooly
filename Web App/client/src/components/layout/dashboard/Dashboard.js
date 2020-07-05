@@ -224,13 +224,7 @@ class Dashboard extends Component {
     const { all_subjects } = this.props.subjectsCollection
     const { selectedClasses } = this.props.classesCollection
 
-    document.title = "Schooly | Dashboard";
-    document.body.style = "background: #FFFFFF";
-    console.log(tasksCollection)
-    console.log(classesCollection)
-    console.log(user)
     let tasksByClass = []
-    console.log(tasksByClass)
     if(Boolean(tasksCollection.length)) {
       if(user.role == "Student"){
         tasksCollection.map((task) => {
@@ -245,6 +239,9 @@ class Dashboard extends Component {
         console.log("Ini untuk guru")
       }
     }
+
+    document.title = "Schooly | Dashboard";
+    document.body.style = "background: #FFFFFF";
 
     return(
       <div className={classes.root}>
@@ -288,7 +285,8 @@ class Dashboard extends Component {
                 </Paper>
             }
           </Grid>
-          {user.role === "Teacher" ?
+          <Grid item>
+            {user.role === "Teacher" ?
             <Grid item container direction="row" justify="flex-end">
               <Grid item className={classes.buatTugasButton}>
                 <Link to ="/buat-tugas">
@@ -305,52 +303,49 @@ class Dashboard extends Component {
                     Lihat Tugas
                   </Fab>
                 </Link>
-              </Grid> 
               </Grid>
-              : 
-              user.role === "Student" ? 
-              <Paper className={classes.workPaper}>
-                <div className={classes.paperTitle}>
-                  <Typography variant="h5" color="primary">
-                    Pekerjaan Anda
-                  </Typography>
-                  <div style={{display: "flex", justifyContent: "flex-end"}}>
-                    <Link to ="/daftar-tugas">
-                  <LightTooltip title="Lihat Semua" placement="top">
-                    <IconButton>
-                      <ChevronRightIcon />
-                    </IconButton>
-                  </LightTooltip>
-                  </Link>
-                  </div>
+            </Grid>
+          : user.role === "Student" ?
+            <Paper className={classes.workPaper}>
+              <div className={classes.paperTitle}>
+                <Typography variant="h5" color="primary">
+                  Pekerjaan Anda
+                </Typography>
+                <div style={{display: "flex", justifyContent: "flex-end"}}>
+                <LightTooltip title="Lihat Semua" placement="top">
+                  <IconButton>
+                    <ChevronRightIcon />
+                  </IconButton>
+                </LightTooltip>
                 </div>
-                <List>
-                {tasksByClass.map((task) => {
-              let workCategoryAvatar = (
-                <Avatar className={classes.assignmentLate}>
-                  <AssignmentLateIcon/>
-                </Avatar>
-              )
-              let workStatus = "Belum Dikumpulkan"
-              for(var i = 0; i < all_user_files.length; i++) {
-                if(all_user_files[i].for_task_object === task._id){
-                  workStatus = "Telah Dikumpulkan"
-                  return null;
-                }
+              </div>
+              <List>
+              {tasksByClass.map((task) => {
+            let workCategoryAvatar = (
+              <Avatar className={classes.assignmentLate}>
+                <AssignmentLateIcon/>
+              </Avatar>
+            )
+            let workStatus = "Belum Dikumpulkan"
+            for(var i = 0; i < all_user_files.length; i++) {
+              if(all_user_files[i].for_task_object === task._id){
+                workStatus = "Telah Dikumpulkan"
+                return null;
               }
-              return(
-                <WorkListItem
-                  work_title={task.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_sender={`Mata Pelajaran: ${task.subject}`}
-                  work_status={workStatus}
-                  work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                  work_link={`/tugas-murid/${task._id}`}
-                />
-              )
-            })}
-                </List>
-              </Paper>
+            }
+            return(
+              <WorkListItem
+                work_title={task.name}
+                work_category_avatar={workCategoryAvatar}
+                work_sender={`Mata Pelajaran: ${task.subject}`}
+                work_status={workStatus}
+                work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+                work_link={`/tugas-murid/${task._id}`}
+              />
+            )
+          })}
+              </List>
+            </Paper>
           :
             <Grid item container direction="row" justify="flex-end">
               <Grid item>
@@ -363,6 +358,7 @@ class Dashboard extends Component {
               </Grid>
             </Grid>
           }
+          </Grid>
         </Grid>
       </div>
     )

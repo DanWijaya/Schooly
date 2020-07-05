@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dialog, Grid, IconButton, Snackbar, Typography } from "@material-ui/core"
+import { Button, Dialog, Grid, IconButton, Snackbar, TextField, Typography } from "@material-ui/core"
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -18,10 +18,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 export default function Tester(props) {
   const classes = useStyles();
 
@@ -36,6 +32,7 @@ export default function Tester(props) {
     }
     setOpen(false);
   };
+
   //Dialog
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const handleOpenDeleteDialog = (fileid, filename) => {
@@ -125,10 +122,9 @@ export default function Tester(props) {
           </Grid>
           </Grid>
       </Dialog>
-      <div style={{display: "flex"}}>
-        <StandardTextField width="35px" borderBottom="1px solid #CCC" />
-        <StandardTextField disabled="true" value="/ 100" width="40px" />
-      </div>
+      <TextField
+        variant="outlined"
+      />
     </div>
   )
 }

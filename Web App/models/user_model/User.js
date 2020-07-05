@@ -24,16 +24,16 @@ const UserSchema = new Schema({
     required: true
   },
   tanggal_lahir: {
-    type: String,
-    default: "Belum Diisi"
+    type: Date,
+    default: null
   },
   jenis_kelamin: {
     type: String,
-    default: "Belum Diisi"
+    default: null
   },
   sekolah: {
     type: String,
-    default: "Belum Diisi"
+    default: null
   },
 
   //Kontak
@@ -57,19 +57,19 @@ const UserSchema = new Schema({
   //Karir
   hobi_minat: {
     type: String,
-    default: "Belum Diisi"
+    default: null
   },
   ket_non_teknis: {
     type: String,
-    default: "Belum Diisi"
+    default: null
   },
   cita_cita: {
     type: String,
-    default: "Belum Diisi"
+    default: null
   },
   uni_impian: {
     type: String,
-    default: "Belum Diisi"
+    default: null
   },
   passwordReset: { type: String, select: false },
   passwordResetTime: { type: Date, select: true}

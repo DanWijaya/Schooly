@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions"
 import { setCurrentClass} from "../../../actions/ClassActions"
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
@@ -34,10 +36,8 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(20),
   },
   paperBox: {
-    paddingTop: "15px",
-    paddingBottom: "10px",
-    paddingLeft: "17.5px",
-    paddingRight: "17.5px",
+    padding: "15px",
+    paddingTop: "20px",
   },
   profileDataItemAvatar: {
     backgroundColor: theme.palette.primary.main,
@@ -82,14 +82,16 @@ function ProfileDataItem(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            {props.profile_data_info === "Belum Diisi" ?
+            {props.profile_data_info === null ?
               <Paper className={classes.emptyProfileData}>
                 <Typography variant="button">
-                  {props.profile_data_info}
+                  Kosong
                 </Typography>
               </Paper>
               :
-              props.profile_data_info
+              <Typography>
+                {props.profile_data_info}
+              </Typography>
             }
           </Grid>
         </Grid>
@@ -219,14 +221,20 @@ function Profile(props) {
               <Avatar className={classes.avatar} />
             </StyledBadge>
           }
-          <Typography variant="subtitle2">
-            <h3>{user.name}</h3>
+          <Typography variant="h3" style={{padding: "10px"}}>
+            {user.name}
           </Typography>
           <Typography variant="h6">
-            "School Name"
+            "Nama Sekolah"
           </Typography>
           <Typography variant="h6" gutterBottom>
-            High School {user.role}
+            {user.role === "Student" ?
+              "Murid"
+            : user.role === "Teacher" ?
+              "Guru"
+            :
+              "Pengelola"
+            } SMA
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
             Class {!classesCollection.kelas.name ?
@@ -237,11 +245,12 @@ function Profile(props) {
         </Grid>
         <Grid item container direction="column" spacing={4}>
           <Grid item>
-            <Paper className={classes.paperBox}>
-                <Typography variant="subtitle2">
-                  <h4>Informasi Pribadi</h4>
+            <Paper>
+              <div className={classes.paperBox}>
+                <Typography variant="h4" gutterBottom>
+                  Informasi Pribadi
                 </Typography>
-                <Typography variant="subtitle1" gutterBottom>
+                <Typography variant="subtitle1">
                   Beberapa informasi profil dapat dilihat oleh orang sepersekolahan anda.
                 </Typography>
                 <List>
@@ -253,7 +262,7 @@ function Profile(props) {
                   <ProfileDataItem
                     profile_data_icon={<CakeIcon />}
                     profile_data_category="Tanggal Lahir"
-                    profile_data_info={user.tanggal_lahir}
+                    profile_data_info={moment(user.tanggal_lahir).locale("id").format("DD-MM-YYYY")}
                   />
                   <ProfileDataItem
                     profile_data_icon={<WcIcon />}
@@ -266,12 +275,14 @@ function Profile(props) {
                     profile_data_info={user.sekolah}
                   />
                 </List>
+              </div>
             </Paper>
           </Grid>
           <Grid item>
-            <Paper className={classes.paperBox}>
-                <Typography variant="subtitle2" gutterBottom>
-                  <h4>Kontak</h4>
+            <Paper>
+              <div className={classes.paperBox}>
+                <Typography variant="h4">
+                  Kontak
                 </Typography>
                 <List>
                   <ProfileDataItem
@@ -295,12 +306,14 @@ function Profile(props) {
                     profile_data_info={user.address}
                   />
                 </List>
+              </div>
             </Paper>
           </Grid>
           <Grid item>
-            <Paper className={classes.paperBox}>
-                <Typography variant="subtitle2" gutterBottom>
-                  <h4>Karir</h4>
+            <Paper>
+              <div className={classes.paperBox}>
+                <Typography variant="h4">
+                  Karir
                 </Typography>
                 <List>
                   <ProfileDataItem
@@ -324,6 +337,7 @@ function Profile(props) {
                     profile_data_info={user.uni_impian}
                   />
                 </List>
+              </div>
             </Paper>
           </Grid>
         </Grid>

@@ -3,13 +3,16 @@ Current Task
 Botak:
 1. notification
 3. Cek lagi kata-kata di bantuan, landing, about, policy.
-4. Update field-field profile (calendar buat tanggal lahir), select buat wanita atau pria
 5. Delete tester di akhir
 8. nama sekolah di profil
 9. lihat mata pelajaran button
 10. Tambahin desktop version pas create task
 11. dialog dan snackbar
-11. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
+12. datepicker jadi timepicker buat deadline.
+13. Spacing nda rata di profile picture editor
+14. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
+15. Drawernya dia render duluan pas login
+16.
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

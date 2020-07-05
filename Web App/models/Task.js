@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Create Task Schema 
-const TaskSchema = new Schema({ 
+// Create Task Schema
+const TaskSchema = new Schema({
     name: {
-        type: String, 
+        type: String,
         required: true
     },
     deadline: {
-        type: Date, 
+        type: Date,
         required: [true, "The task has no deadline?"]
-    }, 
+    },
     subject: {
         type: String,
         required: true
@@ -30,12 +30,10 @@ const TaskSchema = new Schema({
     lampiran: [{
         type: Object,
         default: []
-    }]
-    // ,grades: [{user_id : {type: String, default: ""}, 
-    // nilai: {type: Number, default: 0}}]
-    , grades: {
+    }],
+    grades: {
         type: Map,
-        default: null // userId -> the score. 
+        default: null // userId -> the score.
     }
 })
 
