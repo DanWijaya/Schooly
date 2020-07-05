@@ -1,16 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Create Task Schema 
-const TaskSchema = new Schema({ 
+// Create MaterialSchema
+const MaterialSchema = new Schema({ 
     name: {
         type: String, 
         required: true
     },
-    deadline: {
-        type: Date, 
-        required: [true, "The task has no deadline?"]
-    }, 
     subject: {
         type: String,
         required: true
@@ -19,7 +15,7 @@ const TaskSchema = new Schema({
         type: Object,
         required: true
     }],
-    person_in_charge_id: {
+    author_id: {
         type: String,
         default: ""
     },
@@ -39,4 +35,4 @@ const TaskSchema = new Schema({
     }
 })
 
-module.exports = Task = mongoose.model("tasks", TaskSchema);
+module.exports = Material = mongoose.model("materials", MaterialSchema);

@@ -147,7 +147,7 @@ const styles = (theme) => ({
   createTaskButton: {
     backgroundColor: "#61BD4F",
     color: "white",
-    "&:focus, &:hover": {
+  "&:focus, &:hover": {
       backgroundColor: "white",
       color: "#61BD4F",
     },
@@ -315,11 +315,13 @@ class Dashboard extends Component {
                     Pekerjaan Anda
                   </Typography>
                   <div style={{display: "flex", justifyContent: "flex-end"}}>
+                    <Link to ="/daftar-tugas">
                   <LightTooltip title="Lihat Semua" placement="top">
                     <IconButton>
                       <ChevronRightIcon />
                     </IconButton>
                   </LightTooltip>
+                  </Link>
                   </div>
                 </div>
                 <List>

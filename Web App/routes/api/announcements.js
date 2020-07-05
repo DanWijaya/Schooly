@@ -1,4 +1,3 @@
-const avatar = require("./uploads");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -15,7 +14,7 @@ router.post("/create", (req, res) => {
         console.log(errors)
         return res.status(400).json(errors);
     }
-    // Check Validation
+
     let class_assigned = req.body.class_assigned;
     let class_assigned_ids = []
     if(class_assigned.length > 0){
@@ -38,6 +37,36 @@ router.post("/create", (req, res) => {
                 console.log("Announcement is created")})
             .catch(err => console.log(err));
 })
+
+//Define Update routing.
+router.post("/update/:id", (req,res) => {
+    
+    const { errors, isValid } = validateAnnouncementInput(req.body);
+
+    if(!isValid){
+        console.log("Not valid lahhh");
+        return res.status(400).json(errors);
+    }
+
+    let id = req.params.id;
+
+    console.log(req.body);
+    Announcement.findById(id, (err, announcementData) => {
+        if(!announcementData)
+            return res.status(404).send("Announcement data is not found");
+        else{
+            announcementData.title = req.body.title;
+            announcementData.description = req.body.description;
+            announcementData.class_assigned = req.body.class_assigned;
+
+            announcementData
+                        .save()
+                        .then(taskData => res.json("Update Task complete"))
+                        .catch(err => res.status(400).send("Unable to update task database"));
+        }
+    })
+})
+
 //Define View one announcement
 router.get("/viewOne/:id", (req,res) => {
     console.log("view one is runned")
@@ -90,33 +119,6 @@ router.get("/viewByClass/:id", (req,res) => {
         }
         console.log("Announcements: ", announcements)
         return res.json(announcements)
-    })
-})
-router.post("/update/:id", (req,res) => {
-    
-    const { errors, isValid } = validateAnnouncementInput(req.body);
-
-    if(!isValid){
-        console.log("Not valid lahhh");
-        return res.status(400).json(errors);
-    }
-
-    let id = req.params.id;
-
-    console.log(req.body);
-    Announcement.findById(id, (err, announcementData) => {
-        if(!announcementData)
-            return res.status(404).send("Announcement data is not found");
-        else{
-            announcementData.title = req.body.title;
-            announcementData.description = req.body.description;
-            announcementData.class_assigned = req.body.class_assigned;
-
-            announcementData
-                        .save()
-                        .then(taskData => res.json("Update Task complete"))
-                        .catch(err => res.status(400).send("Unable to update task database"));
-        }
     })
 })
 

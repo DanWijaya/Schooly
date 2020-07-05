@@ -8,8 +8,8 @@ export const createTask = (formData, taskData, history) => dispatch => {
     .then(res => {
         console.log("this is the res" , res.data._id)
         console.log("Will run this")
-        console.log(formData.has('lampiran'))
-        if(formData.has('lampiran'))
+        console.log(formData.has('lampiran_tugas'))
+        if(formData.has('lampiran_tugas'))
             return axios.post(`/api/uploads/upload_lampiran/${res.data._id}`, formData);
         else // Must return something, if false it won't continue to the next "then"
             return "Successfully created task with no lampiran"
@@ -73,7 +73,7 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     .post(`/api/tasks/update/${taskId}`, taskData)
     .then(res => {
         console.log("Task updated to be :", res.data);
-        console.log("Has lampiran? :", formData.has('lampiran'))
+        console.log("Has lampiran? :", formData.has('lampiran_tugas'))
         if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran/${taskId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         else
@@ -82,8 +82,8 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     })
     .then(res => {
         console.log("Update the lampiran files, upload some new lampiran files")
-        console.log(formData.has("lampiran"), formData.getAll("lampiran"))
-        if(formData.has('lampiran'))
+        console.log(formData.has("lampiran_tugas"), formData.getAll("lampiran_tugas"))
+        if(formData.has('lampiran_tugas'))
             return axios.post(`/api/uploads/upload_lampiran/${taskId}`, formData);
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"

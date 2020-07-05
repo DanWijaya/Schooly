@@ -7,9 +7,9 @@ import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions"
-import { getOneUser } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { createMaterial } from "../../../actions/MaterialActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Chip, FormControl, FormHelperText, Grid, IconButton,
@@ -19,6 +19,7 @@ import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ErrorIcon from "@material-ui/icons/Error";
 
 const path = require("path");
@@ -125,13 +126,12 @@ function LampiranFile(props) {
   )
 }
 
-class CreateTask extends Component {
+class CreateMaterial extends Component {
   constructor() {
     super();
     this.state = {
       name: "",
       subject: "",
-      deadline: new Date(),
       focused: false,
       class_assigned: [],
       description: "",
@@ -155,7 +155,7 @@ class CreateTask extends Component {
   }
 
   onChange = (e, otherfield) => {
-    console.log(this.state.deadline)
+    console.log("On change : ", e.target.value)
     if(otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
@@ -173,32 +173,27 @@ class CreateTask extends Component {
       console.log(this.state.fileLampiran)
   }
 
-  onDateChange = (date) => {
-    console.log(date)
-    this.setState({ deadline: date})
-  }
-
   onSubmit = (e, id) => {
     e.preventDefault();
     let formData = new FormData()
-    const taskData = {
+    const materialData = {
       name: this.state.name,
-      deadline: this.state.deadline,
       subject: this.state.subject,
       class_assigned: this.state.class_assigned,
-      person_in_charge_id: id,
       description: this.state.description,
+      lampiran: this.state.fileLampiran,
+      author_id: id,
       errors: {},
     };
 
-    //Check if there is any lampiran_tugas uploaded or not.
+    //Check if there is any lampiran uploaded or not.
     if(this.state.fileLampiran)
       for(var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
-        formData.append("lampiran_tugas", this.state.fileLampiran[i])
+        formData.append("lampiran_materi", this.state.fileLampiran[i])
       }
-      console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran)
-      this.props.createTask(formData, taskData, this.props.history);
+      console.log(formData.getAll("lampiran_materi"), this.state.fileLampiran)
+      this.props.createMaterial(formData, materialData, this.props.history);
   }
 
   // UNSAFE_componentWillReceiveProps() is invoked before
@@ -209,6 +204,7 @@ class CreateTask extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps){
     if(nextProps.errors){
+        console.log(nextProps.errors)
       this.setState({
         errors: nextProps.errors
       });
@@ -216,10 +212,9 @@ class CreateTask extends Component {
   }
 
   componentDidMount() {
-    const { clearErrors, viewClass, getAllSubjects} = this.props;
-    clearErrors()
-    viewClass()
-    getAllSubjects()
+    this.props.clearErrors()
+    this.props.viewClass()
+    this.props.getAllSubjects()
   }
 
   handleLampiranUpload = (e) => {
@@ -245,9 +240,10 @@ class CreateTask extends Component {
   }
 
   render() {
-    const { classesCollection, classes, viewClass, subjectsCollection}  = this.props;
+    const { classesCollection, classes, subjectsCollection}  = this.props;
     const { class_assigned, fileLampiran, errors}  = this.state;
     const { user } = this.props.auth
+
     console.log(errors)
     const listFileChosen = () => {
       let temp = []
@@ -288,7 +284,7 @@ class CreateTask extends Component {
       },
     };
 
-    document.title = "Schooly | Buat Tugas";
+    document.title = "Schooly | Buat Materi";
 
     if(user.role === "Teacher") {
       return(
@@ -296,10 +292,10 @@ class CreateTask extends Component {
           <Paper>
             <div className={classes.mainGrid}>
               <Typography variant="h5" align="center" gutterBottom>
-                <b>Buat Tugas</b>
+                <b>Buat Materi</b>
               </Typography>
               <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
-                Tambahkan keterangan tugas untuk membuat tugas.
+                Tambahkan keterangan materi untuk membuat materi.
               </Typography>
               <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
                 <Grid
@@ -318,15 +314,15 @@ class CreateTask extends Component {
                       className={classnames("", {
                         invalid: errors.name
                       })}
-                      labelname="Nama Tugas"
-                      html_for="tugas"
+                      labelname="Nama Materi"
+                      html_for="Materi"
                       label_classname={classes.inputLabel}
                       span_classname={classes.errorInfo}
                       error1={errors.name}
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl id="subject" variant="outlined" color="primary" fullWidth>
+                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
                       <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
                       <Select
                         value={this.state.subject}
@@ -336,11 +332,15 @@ class CreateTask extends Component {
                           <MenuItem value={subject.name}>{subject.name}</MenuItem>
                         ))}
                       </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.subject) && !this.state.subject ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.subject) && !this.state.subject ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
+                    </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl variant="outlined" fullWidth>
-                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang Ditugaskan</label>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
+                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang Diberikan</label>
                       <Select
                         multiple
                         id="class_assigned"
@@ -359,11 +359,15 @@ class CreateTask extends Component {
                           </div>
                         )}
                       >
-                        {options.map((kelas) => { console.log(kelas, class_assigned)
+                        {options.map((kelas) => {
                           return(
                             <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                         )})}
                       </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                    </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
@@ -407,13 +411,16 @@ class CreateTask extends Component {
                         <OutlinedTextField
                           disabled={true}
                           value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
+                          error={errors.lampiran_materi}
                           id="file_tugas"
                           type="text"
                           width="100%"
                           labelname="Lampiran Berkas"
                           html_for="Berkas lampiran"
+                          span_classname={classes.errorInfo}
                           label_classname={classes.inputLabel}
                           pointer= {fileLampiran.length > 0}
+                          error1={errors.lampiran_materi}
                         />
                       </Grid>
                       <StyledMenu
@@ -435,33 +442,11 @@ class CreateTask extends Component {
                     </Grid>
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                      <label id="class_assigned" className={classes.inputLabel}>Batas Waktu</label>
-                      <KeyboardDatePicker
-                        fullWidth
-                        disablePast
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        id="date-picker-inline"
-                        value={this.state.deadline}
-                        onChange={(date) => this.onDateChange(date)}
-                        inputProps={{
-                          style: {
-                            borderBottom: "none",
-                            boxShadow: "none",
-                          },
-                        }}
-                      />
-                    </MuiPickersUtilsProvider>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
                     <Button
                       type="submit"
                       className={classes.createTaskButton}
                     >
-                      Buat Tugas
+                      Buat Materi
                   </Button>
                   </Grid>
                 </Grid>
@@ -483,12 +468,11 @@ class CreateTask extends Component {
   }
 }
 
-CreateTask.propTypes = {
-  createTask: PropTypes.func.isRequired,
+CreateMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  getOneUser: PropTypes.func.isRequired,
+  createMaterial: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
@@ -501,5 +485,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createTask, viewClass, getAllSubjects, getOneUser, clearErrors }
-) (withStyles(styles)(CreateTask))
+  mapStateToProps, { viewClass, getAllSubjects, createMaterial, clearErrors }
+) (withStyles(styles)(CreateMaterial))

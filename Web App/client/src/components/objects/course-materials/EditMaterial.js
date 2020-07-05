@@ -11,13 +11,12 @@ import { getAllSubjects } from "../../../actions/SubjectActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl,FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Chip, FormControl, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import ErrorIcon from "@material-ui/icons/Error";
 
 const path = require("path");
 
@@ -124,7 +123,7 @@ function LampiranFile(props) {
   )
 }
 
-class EditTask extends Component {
+class EditMaterial extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -148,10 +147,12 @@ class EditTask extends Component {
   uploadedTugas = React.createRef(null)
 
   componentDidMount() {
-    this.props.clearErrors()
-    this.props.viewOneTask(this.props.match.params.id)
-    this.props.viewClass()
-    this.props.getAllSubjects()
+    const { viewOneTask, viewClass, getAllSubjects, clearErrors } = this.props;
+
+    clearErrors()
+    viewOneTask(this.props.match.params.id)
+    viewClass()
+    getAllSubjects()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -209,7 +210,7 @@ class EditTask extends Component {
   let formData = new FormData()
   for(var i = 0; i< fileLampiranToAdd.length; i++) {
     console.log(this.state.fileLampiran[i])
-    formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i])
+    formData.append("lampiran", this.state.fileLampiranToAdd[i])
   }
   this.props.updateTask(formData, fileLampiranToDelete,
     this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
@@ -251,7 +252,7 @@ class EditTask extends Component {
         console.log(temp[i].name, tempToAdd[j].name)
         if(tempToAdd[j].name === temp[i].name){
           tempToAdd.splice(j,1)
-        } 
+        }
       }
     }
     temp.splice(i, 1);
@@ -389,7 +390,7 @@ class EditTask extends Component {
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                    <FormControl id="subject" variant="outlined" color="primary" fullWidth>
                       <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
                       <Select
                         value={this.state.subject}
@@ -399,17 +400,12 @@ class EditTask extends Component {
                           <MenuItem value={subject.name}>{subject.name}</MenuItem>
                         ))}
                       </Select>
-                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.subject) && !this.state.subject ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.subject) && !this.state.subject ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
-                    </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <FormControl variant="outlined" fullWidth>
                       <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
                       <Select
-                        error={errors.class_assigned !== undefined}
                         id="class_assigned"
                         multiple
                         MenuProps={MenuProps}
@@ -555,7 +551,7 @@ class EditTask extends Component {
   }
 }
 
-EditTask.propTypes = {
+EditMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
   viewOneTask : PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
@@ -578,4 +574,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
     mapStateToProps, { viewOneTask, updateTask, viewClass, getAllSubjects, clearErrors }
-) (withStyles(styles)(EditTask))
+) (withStyles(styles)(EditMaterial))

@@ -10,7 +10,9 @@ import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { GoBook } from "react-icons/go";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
 const drawerWidth = 240;
@@ -52,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(2.70),
   },
   drawerListItemReactIcons: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+  },
+  drawerListItemReactIconsGo: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
@@ -118,6 +124,7 @@ function DrawerContent(props) {
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
+      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemMuiIcons}/>, "Materi", null, false],
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
       [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],

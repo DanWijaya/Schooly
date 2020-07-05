@@ -7,6 +7,7 @@ import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button,Chip, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
 import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
+import { clearErrors } from "../../../actions/ErrorActions"
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -123,8 +124,9 @@ class EditAnnouncement extends Component {
 
   componentDidMount(){
     const { user } = this.props.auth;
-    const { setCurrentClass, getOneAnnouncement, viewClass } = this.props;
+    const { setCurrentClass, getOneAnnouncement, viewClass, clearErrors } = this.props;
 
+    clearErrors()
     getOneAnnouncement(this.props.match.params.id)
     viewClass()
     if(user.role ==="Student")
@@ -447,6 +449,7 @@ EditAnnouncement.propTypes = {
   getOneAnnouncement: PropTypes.func.isRequired,
   updateAnnouncement: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   viewClass: PropTypes.func.isRequired,
 };
 
@@ -458,5 +461,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, viewClass }
+  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, viewClass, clearErrors }
   )(withStyles(styles)(EditAnnouncement))
