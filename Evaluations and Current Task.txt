@@ -36,10 +36,10 @@ Daniel:
     (node:3857) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
     (node:3857) DeprecationWarning: collection.remove is deprecated. Use deleteOne, deleteMany, or bulkWrite instead.
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
-23. Connect viewtasklist teachernya punya page dgn tunjukkin classes dan student"nya beserta tugas" mereyang mereka kumpul.
 24. Somehow akun Nathan Drake ndak bisa upload profile picture???
 25. Tanggal Lahir in String (mau diubah jadi MuiDatePicker)
-
+26. Buat pas si student buka announcement, mereka ndak bisa create announcement (cuma ketua kelasnya)
+27. Select untuk yang edit class masih bermasalah... 
 Penting untuk diimplemen:
 2. Buat Notification functionality (Schema Notif dan explore cara handlenya?)
 3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)

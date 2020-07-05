@@ -12,6 +12,7 @@ import { getUsers } from "../../../actions/UserActions";
 import moment from "moment";
 import "moment/locale/id";
 import PropTypes from "prop-types";
+import { setCurrentClass } from "../../../actions/ClassActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,25 +81,28 @@ function AnnouncementList(props) {
 
   const classes = useStyles();
   const { selectedAnnouncements, all_announcements} = props.announcements;
-  const{ getAnnouncement, getAllAnnouncement, getUsers } = props;
+  const{ getAnnouncement, getAllAnnouncement, getUsers, setCurrentClass } = props;
+  const { kelas, selectedClass} = props.classesCollection
   const { user, retrieved_users } = props.auth;
   const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false)
   
-  let temp = new Set();
 
   React.useEffect(() => {
     if(user.role == "Teacher" && !annIsRetrieved){
-      getAnnouncement(user.id)
+      getAnnouncement(user.id, "by_author")
       setAnnIsRetrieved(true)
     }
     else if(user.role == "Student" && !annIsRetrieved){
-      getAnnouncement()
+      getAnnouncement(user.kelas, "by_class")
+      setCurrentClass(user.kelas)
       setAnnIsRetrieved(true)
     }
   }, props.announcements)
+
   // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
 
   console.log(selectedAnnouncements)
+
   const listAnnouncements = () => {
     let annList = [];
 
@@ -118,6 +122,14 @@ function AnnouncementList(props) {
     return annList;
   }
 
+  const canAnnounce = () => {
+    console.log(user.role)
+    if(Object.keys(kelas).length > 0){
+      return user.id === kelas.ketua_kelas._id
+    }
+    return user.role === "Teacher"
+  }
+
   return(
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
@@ -128,12 +140,14 @@ function AnnouncementList(props) {
             </Typography>
           </Grid>
           <Grid item>
+            {canAnnounce() ?  
             <Link to="/buat-pengumuman">
               <Fab variant="Extended" className={classes.newAnnouncementButton}>
                 <AnnouncementIcon className={classes.newAnnouncementIcon} />
                 Buat Pengumuman
               </Fab>
-            </Link>
+            </Link> : 
+            null}
           </Grid>
         </Grid>
         <List>
@@ -149,14 +163,16 @@ AnnouncementList.propTypes = {
   announcements: PropTypes.object.isRequired,
   getAnnouncement: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  announcements: state.announcementsCollection
+  announcements: state.announcementsCollection,
+  classesCollection: state.classesCollection
 });
 
 export default connect(
-  mapStateToProps, { getAnnouncement, getAllAnnouncements, getUsers}
+  mapStateToProps, { getAnnouncement, getAllAnnouncements, getUsers, setCurrentClass}
 ) (AnnouncementList);

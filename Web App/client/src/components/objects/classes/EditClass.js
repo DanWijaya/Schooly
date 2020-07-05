@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getTeachers , getStudents} from "../../../actions/UserActions";
-import { viewOneClass, updateClass } from "../../../actions/ClassActions";
+import { setCurrentClass, updateClass } from "../../../actions/ClassActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -67,7 +67,7 @@ class EditClass extends Component {
     const { id } = this.props.match.params;
     console.log(id);
     console.log("Aduh");
-    this.props.viewOneClass(id);
+    this.props.setCurrentClass(id);
   }
 
   onChange = (e, otherfield) => {
@@ -97,25 +97,25 @@ class EditClass extends Component {
     var next_sekretaris = {}
     var next_walikelas = {}
 
-    //classesCollection.selectedClasses = individual class, .all_classes = all classes
-    if(nextProps.classesCollection.selectedClasses.ketua_kelas)
-      next_ketua_kelas = nextProps.classesCollection.selectedClasses.ketua_kelas._id
+    //classesCollection.kelas = individual class, .all_classes = all classes
+    if(nextProps.classesCollection.kelas.ketua_kelas)
+      next_ketua_kelas = nextProps.classesCollection.kelas.ketua_kelas._id
 
-    if(nextProps.classesCollection.selectedClasses.sekretaris)
-      next_sekretaris = nextProps.classesCollection.selectedClasses.sekretaris._id
+    if(nextProps.classesCollection.kelas.sekretaris)
+      next_sekretaris = nextProps.classesCollection.kelas.sekretaris._id
 
-    if(nextProps.classesCollection.selectedClasses.bendahara)
-      next_bendahara = nextProps.classesCollection.selectedClasses.bendahara._id
+    if(nextProps.classesCollection.kelas.bendahara)
+      next_bendahara = nextProps.classesCollection.kelas.bendahara._id
 
-    if(nextProps.classesCollection.selectedClasses.walikelas)
-      next_walikelas = nextProps.classesCollection.selectedClasses.walikelas._id
+    if(nextProps.classesCollection.kelas.walikelas)
+      next_walikelas = nextProps.classesCollection.kelas.walikelas._id
 
     if(!name){
       this.setState({
-        name: nextProps.classesCollection.selectedClasses.name,
-        nihil: nextProps.classesCollection.selectedClasses.nihil,
+        name: nextProps.classesCollection.kelas.name,
+        nihil: nextProps.classesCollection.kelas.nihil,
         walikelas: next_walikelas,
-        ukuran: nextProps.classesCollection.selectedClasses.ukuran,
+        ukuran: nextProps.classesCollection.kelas.ukuran,
         ketua_kelas: next_ketua_kelas,
         sekretaris: next_sekretaris,
         bendahara: next_bendahara,
@@ -154,7 +154,7 @@ class EditClass extends Component {
     var teacher_options = all_teachers
     var student_options = all_students
 
-    console.log(classesCollection.selectedClasses.walikelas)
+    console.log(classesCollection.kelas.walikelas)
     const returnId = (user_id, arr) => {
       if(arr === "student") {
         for (var i = 0; i < student_options.length; i++) {
@@ -336,7 +336,7 @@ class EditClass extends Component {
 }
 
 EditClass.propTypes = {
-    viewOneClass: PropTypes.func.isRequired,
+    setCurrentClass: PropTypes.func.isRequired,
     updateClass: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     getTeachers: PropTypes.func.isRequired,
@@ -352,5 +352,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { viewOneClass, updateClass, getTeachers, getStudents }
+    mapStateToProps, { setCurrentClass, updateClass, getTeachers, getStudents }
 ) (withStyles(styles)(EditClass));

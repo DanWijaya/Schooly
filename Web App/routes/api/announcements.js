@@ -12,14 +12,22 @@ router.post("/create", (req, res) => {
     // Form Validation
     const { errors, isValid } = validateAnnouncementInput(req.body);
     if(!isValid){
-        return res.status(404).json("Annoucement input is not valid ")
+        console.log(errors)
+        return res.status(400).json(errors);
     }
     // Check Validation
+    let class_assigned = req.body.class_assigned;
+    let class_assigned_ids = []
+    if(class_assigned.length > 0){
+        class_assigned.map((kelas) =>
+         class_assigned_ids.push(kelas._id))
+    }
+
     const newAnnouncement = new Announcement({
         title: req.body.title,
         description: req.body.description,
         author_name: req.body.author_name,
-        class_assigned: req.body.class_assigned,
+        class_assigned: class_assigned_ids,
         author_id: req.body.author_id,
         date_announced: new Date()
     })
@@ -70,12 +78,26 @@ router.get("/view/:id", (req, res) => {
     })
 })
 
+router.get("/viewByClass/:id", (req,res) => {
+    let id = req.params.id;
+    console.log(id)
+    console.log("View announcement by class is runned")
+    // if want to get the MongoDB object that has id element in the array.
+    Announcement.find({ class_assigned: id }, (err, announcements) => {
+        if(!announcements){
+            console.log("Not found")
+            return res.status(400).json("Announcement with that class is not found");
+        }
+        console.log("Announcements: ", announcements)
+        return res.json(announcements)
+    })
+})
 router.post("/update/:id", (req,res) => {
     
     const { errors, isValid } = validateAnnouncementInput(req.body);
 
     if(!isValid){
-        console.log("Not valid");
+        console.log("Not valid lahhh");
         return res.status(400).json(errors);
     }
 
@@ -89,8 +111,6 @@ router.post("/update/:id", (req,res) => {
             announcementData.title = req.body.title;
             announcementData.description = req.body.description;
             announcementData.class_assigned = req.body.class_assigned;
-            // announcementData.lampiran = req.body.lampiran;
-            // announcementData.date_announced = req.body.date_announced
 
             announcementData
                         .save()

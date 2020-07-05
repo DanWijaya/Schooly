@@ -4,13 +4,14 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Chip, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography, FormHelperText } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { createAnnouncement } from "../../../actions/AnnouncementActions"
-import { viewClass } from "../../../actions/ClassActions";
+import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const path = require("path");
 const StyledMenu = withStyles({
@@ -115,9 +116,22 @@ class CreateAnnouncement extends Component {
   lampiranUploader = React.createRef(null)
   uploadedLampiran = React.createRef(null)
 
+  UNSAFE_componentWillReceiveProps(nextProps){
+    console.log(nextProps.errors)
+    if(nextProps.errors){
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
+
   componentDidMount() {
-    this.props.viewClass()
-    console.log("AAA")
+    const { user } = this.props.auth;
+    const { viewClass, setCurrentClass} = this.props;
+
+    viewClass()
+    if(user.role === "Student")
+      setCurrentClass(user.kelas)
   }
 
   handleClickMenu = (event) => {
@@ -166,13 +180,15 @@ class CreateAnnouncement extends Component {
   onSubmit = (e, id) => {
     e.preventDefault()
     let formData = new FormData()
+    const { user } = this.props.auth;
+    const { kelas } = this.props.classesCollection;
 
     const announcementData = {
       title: this.state.title,
       description: this.state.description,
-      author_name: this.props.auth.user.name,
-      class_assigned: this.state.class_assigned,
-      author_id: this.props.auth.user.id,
+      author_name: user.name,
+      class_assigned: user.role == "Student" ? [kelas] : this.state.class_assigned,
+      author_id: user.id,
       errors: {}
     };
 
@@ -199,8 +215,8 @@ class CreateAnnouncement extends Component {
       },
     };
     
-    const {classesCollection,  classes, viewClass, subjectsCollection} = this.props;
-    const { all_classes } = this.props.classesCollection
+    const {classesCollection,  classes, setCurrentClass, viewClass, subjectsCollection} = this.props;
+    const { all_classes, kelas } = this.props.classesCollection
     const{ class_assigned, fileLampiran, errors} = this.state;
     const { user } = this.props.auth
 
@@ -226,7 +242,7 @@ class CreateAnnouncement extends Component {
         <Paper>
           <div className={classes.mainGrid}>
             <Typography variant="h5" align="center" gutterBottom>
-              <b>Buat Pengumuman</b>
+              <b>Buat Pengumuman {user.role === "Student" ? `untuk kelas ${kelas.name}` : null}</b>
             </Typography>
             <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
               Tambahkan keterangan pengumuman untuk membuat pengumuman.
@@ -273,9 +289,11 @@ class CreateAnnouncement extends Component {
                     error1={errors.description}
                   />
                 </Grid>
+                {user.role === "Student" // berarti dia ketua kelas 
+                ? null : 
                 <Grid item className={classes.gridItem}>
-                  <FormControl variant="outlined" fullWidth>
-                    <label id="class_assigned" className={classes.inputLabel}>Kelas yang Ditugaskan</label>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
+                    <label id="class_assigned" className={classes.inputLabel}>Kelas yang diumumkan</label>
                     <Select
                       id="class_assigned"
                       multiple
@@ -299,8 +317,13 @@ class CreateAnnouncement extends Component {
                           <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                       )})}
                     </Select>
+                    <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                    </FormHelperText>
                   </FormControl>
                 </Grid>
+                }
                 <Grid item container direction="row" className={classes.gridItem}>
                   <input
                     type="file"
@@ -373,6 +396,7 @@ CreateAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   createAnnouncement: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -384,5 +408,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createAnnouncement, viewClass }
+  mapStateToProps, { createAnnouncement, viewClass , setCurrentClass}
  ) (withStyles(styles)(CreateAnnouncement))

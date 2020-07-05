@@ -8,7 +8,8 @@ const validateClassInput = require("../../validation/ClassData");
 
 // Load the required Model
 const Class = require("../../models/Class");
-const User = require("../../models/user_model/User")
+const User = require("../../models/user_model/User");
+const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
     const { errors, isValid } = validateClassInput(req.body);
@@ -73,13 +74,42 @@ router.delete("/delete/:id", (req, res) => {
         // .catch(res.json("Error happened"))
 })
 
-router.get("/viewOneClass/:id", (req, res) => {
+router.get("/setCurrentClass/:id", (req, res) => {
     let id = req.params.id;
-    console.log("viewOneClass is runned", id);
+    console.log("set Current class is runned", id);
     Class.findById(id, (err, classData) => {
-        res.json(classData)
+        if(!classData)
+            return res.status(404).json("Class is not found")
+
+        return res.json(classData)
     });
 })
+
+router.get("/viewSelectedClasses/", (req,res) => {
+    const {classes_ids} = req.query;
+    // console.log(classes_ids)
+    let ids_to_find
+    
+    if(classes_ids !== undefined){
+        ids_to_find =  classes_ids.map((id) => new ObjectId(id))
+
+    }
+    Class.find({_id : { $in : ids_to_find}}, (err, classes) => {
+        if(!classes)
+            return res.status(400).json("Class to update not found");
+
+        // let result = new Map();
+
+        // for (var i = 0; i < classes.length; i++){
+        //     console.log(classes[i].name)
+        //     result.set(String(classes[i]._id), classes[i])
+        // }
+
+        return res.json(classes)
+ 
+    })
+})
+    
 
 router.post("/update/:id", (req,res) => {
     let id = req.params.id;

@@ -7,11 +7,13 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
     axios
       .post("/api/announcements/create", announcementData)
       .then(res => {
-          console.log("this is the res" , res.data._id)
+          console.log("this is the res" , res.data)
           console.log("Will run this")
-          console.log(formData.has('lampiran'))
-          if(formData.has('lampiran_announcement'))
-              return axios.post(`/api/uploads/upload_lampiran_annoucement/${res.data._id}`, formData);
+          console.log(formData.get('lampiran_announcement'))
+          if(formData.has('lampiran_announcement')){
+              console.log("Post lampiran announcement is running")
+              return axios.post(`/api/uploads/upload_lampiran_announcement/${res.data._id}`, formData);
+          }
           else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created announcement with no lampiran"
       })
@@ -23,7 +25,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
           console.log("error happened")
           dispatch({
               type: GET_ERRORS,
-              payload: err
+              payload: err.response.data
           })
       })
 }
@@ -40,23 +42,35 @@ export const getAllAnnouncements = (announcementId, history) => dispatch => {
         })
 }
 
-export const getAnnouncement = (authorId) => dispatch => {
-    axios
-        .get(`/api/announcements/view/${authorId}`)
-        .then((res) => {
-            console.log("Announcement datas are received")
-            dispatch({
-                type: GET_ANNOUNCEMENT,
-                payload: res.data
+export const getAnnouncement = (Id, category) => dispatch => {
+    if(category == "by_author"){
+        axios
+            .get(`/api/announcements/view/${Id}`)
+            .then((res) => {
+                console.log("Announcement datas are received")
+                dispatch({
+                    type: GET_ANNOUNCEMENT,
+                    payload: res.data
+                })
             })
-        })
-        .catch(err => {
-            console.log(err);
-            dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data
+            .catch(err => {
+                console.log(err);
+                dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                })
             })
-        })
+    } else if (category == "by_class"){
+        axios
+            .get(`/api/announcements/viewByClass/${Id}`)
+            .then((res) => {
+                console.log("Announcement by class is received")
+                dispatch({
+                    type: GET_ANNOUNCEMENT,
+                    payload: res.data
+                })
+            })
+    }
 }
 
 export const getOneAnnouncement = (annId) => dispatch => {
@@ -126,7 +140,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
     })
 
     .catch(err => {
-        console.log(err);
+        console.log("ERROR happen when editing");
         dispatch({
             type: GET_ERRORS,
             payload: err.response.data

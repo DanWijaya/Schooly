@@ -10,11 +10,15 @@ module.exports = function validateAnnouncementInput(data) {
 
     // Name checks
     if (Validator.isEmpty(data.title)) {
-        errors.name = "Name Pengumuman belum diisi";
+        errors.title = "Name Pengumuman belum diisi";
     }
 
     if(Validator.isEmpty(data.description)) {
-        errors.ukuran = "Deskripsi Pengumuman belum diisi"
+        errors.description = "Deskripsi Pengumuman belum diisi"
+    }
+
+    if(data.class_assigned.length === 0 || !data.class_assigned.length){
+        errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
 
     return {

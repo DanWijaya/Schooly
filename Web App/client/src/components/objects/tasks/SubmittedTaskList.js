@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { viewOneClass } from "../../../actions/ClassActions";
 import { viewOneTask, gradeTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
@@ -164,7 +163,7 @@ function UnduhSemuaButton(props) {
 function SubmittedTaskList(props) {
   const classes = useStyles();
 
-  const { viewOneClass, viewOneTask, tasksCollection, classesCollection, getStudents, downloadTugas, previewTugas, gradeTask } = props;
+  const { viewOneTask, tasksCollection, classesCollection, getStudents, downloadTugas, previewTugas, gradeTask } = props;
   const { all_students } = props.auth;
   const task_id = props.match.params.id;
 
@@ -372,7 +371,6 @@ SubmittedTaskList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  viewOneClass: PropTypes.func.isRequired,
   getTaskFilesByUser:PropTypes.func.isRequired,
   viewOneTask: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
@@ -388,7 +386,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { viewOneClass, getStudents,
+  mapStateToProps, { getStudents,
     getTaskFilesByUser, viewOneTask, downloadTugas,
     previewTugas, gradeTask }
 ) (SubmittedTaskList);

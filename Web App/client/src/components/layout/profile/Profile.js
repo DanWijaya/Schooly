@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions"
-import { viewOneClass} from "../../../actions/ClassActions"
+import { setCurrentClass} from "../../../actions/ClassActions"
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
@@ -103,7 +103,7 @@ function Profile(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { updateAvatar, viewOneClass, classesCollection } = props;
+  const { updateAvatar, setCurrentClass, classesCollection } = props;
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -143,10 +143,10 @@ function Profile(props) {
     setOpenPasswordEditorAlert(false);
   }
 
-  // Initially classesCollection.selectedClasses.name === undefined
-  if(user.role === "Student" && !classesCollection.selectedClasses.name
+  // Initially classesCollection.kelas.name === undefined
+  if(user.role === "Student" && !classesCollection.kelas.name
   ){
-    viewOneClass(user.kelas)
+    setCurrentClass(user.kelas)
   }
 
   document.title = "Schooly | Profil"
@@ -237,8 +237,8 @@ function Profile(props) {
             } SMA
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Kelas {!classesCollection.selectedClasses.name ?
-             null : classesCollection.selectedClasses.name}
+            Class {!classesCollection.kelas.name ?
+             null : classesCollection.kelas.name}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
@@ -350,7 +350,7 @@ Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   updateAvatar: PropTypes.func.isRequired,
-  viewOneClass: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -359,5 +359,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { updateAvatar, viewOneClass }
+  mapStateToProps, { updateAvatar, setCurrentClass }
 ) (Profile);
