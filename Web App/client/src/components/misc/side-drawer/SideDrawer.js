@@ -168,7 +168,7 @@ function SideDrawer(props) {
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
-          {/* Desktop = Mini Variant */}
+          {/* Desktop = Mini Variant Drawer */}
           <Drawer
             variant="permanent"
             className={clsx(classes.drawerDesktop, {

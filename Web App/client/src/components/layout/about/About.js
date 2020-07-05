@@ -106,7 +106,7 @@ function About(props) {
                Semua kegiatan persekolahanmu ada di tanganmu
               </Typography>
               <Typography variant="h6">
-               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti tugas, kuis, hingga ujian.
+               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti materi pembelajaran, tugas, hingga pengumuman.
               </Typography>
             </Grid>
           </Grid>

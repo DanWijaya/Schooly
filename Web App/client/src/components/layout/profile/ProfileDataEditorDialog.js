@@ -1,9 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import DateFnsUtils from "@date-io/date-fns";
+import "date-fns";
+import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../actions/UserActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar, Tab, Tabs, Typography } from "@material-ui/core";
+import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar, MenuItem, Select, Tab, Tabs, Typography } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -97,7 +101,15 @@ function ProfileDataItemEdit(props) {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <OutlinedTextField value={props.value} id={props.id} on_change={props.on_change}/>
+            { props.is_textfield ?
+              <OutlinedTextField
+                value={props.value}
+                id={props.id}
+                on_change={props.on_change}
+              />
+              :
+              props.non_textfield_content
+            }
           </Grid>
         </Grid>
     </ListItem>
@@ -128,10 +140,11 @@ function ProfileDataEditorDialog(props) {
     setValue(newValue);
   };
 
+  console.log(user.tanggal_lahir instanceof Date)
   const defaultUserData = {
     // Informasi Pribadi
     nama: user.name,
-    tanggal_lahir: user.tanggal_lahir,
+    tanggal_lahir: new Date(user.tanggal_lahir),
     jenis_kelamin: user.jenis_kelamin,
     sekolah: user.sekolah,
 
@@ -180,11 +193,24 @@ function ProfileDataEditorDialog(props) {
     updateUserData(userData, userId, props.history)
   }
 
-  const handleChangeDataProfil = (e) => {
-    let { id , value} = e.target
+  const handleChangeDataProfil = (e, otherfield) => {
+    let { id, value } = e.target
+    if (otherfield === "jenis_kelamin") {
+      setDataProfil((prev) => ({
+        ...prev,
+        jenis_kelamin : value
+      }))
+    }
     setDataProfil((prev) => ({
       ...prev,
       [id] : value
+    }))
+  }
+
+  const handleDateChange = (date) => {
+    setDataProfil((prev) => ({
+      ...prev,
+      tanggal_lahir : date
     }))
   }
 
@@ -208,7 +234,7 @@ function ProfileDataEditorDialog(props) {
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item style={{marginBottom: "30px"}}>
+          <Grid item style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
               <b>Sunting Profil</b>
             </Typography>
@@ -230,6 +256,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<PersonIcon />}
                   profile_data_category="Nama"
+                  is_textfield
                   value={dataProfil.nama}
                   id="nama"
                   on_change={handleChangeDataProfil}
@@ -237,20 +264,55 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
-                  value={dataProfil.tanggal_lahir}
-                  id="tanggal_lahir"
-                  on_change={handleChangeDataProfil}
+                  non_textfield_content={
+                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        fullWidth
+                        disableFuture
+                        inputVariant="outlined"
+                        format="dd/MM/yyyy"
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        id="tanggal_lahir"
+                        onChange={(date) => handleDateChange(date)}
+                        value={dataProfil.tanggal_lahir instanceof Date ?
+                          dataProfil.tanggal_lahir
+                          :
+                          null
+                        }
+                        inputProps={{
+                          style: {
+                            borderBottom: "none",
+                            boxShadow: "none",
+                            margin: 0,
+                            paddingLeft: "11px",
+                          },
+                        }}
+                      />
+                    </MuiPickersUtilsProvider>
+                  }
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
-                  value={dataProfil.jenis_kelamin}
-                  id="jenis_kelamin"
-                  on_change={handleChangeDataProfil}
+                  non_textfield_content={
+                    <Select
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      id="jenis_kelamin"
+                      value={dataProfil.jenis_kelamin}
+                      onChange={(event) => {handleChangeDataProfil(event, "jenis_kelamin")}}
+                    >
+                      <MenuItem value="Pria">Pria</MenuItem>
+                      <MenuItem value="Wanita">Wanita</MenuItem>
+                    </Select>
+                  }
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
+                  is_textfield
                   value={dataProfil.sekolah}
                   id="sekolah"
                   on_change={handleChangeDataProfil}
@@ -262,6 +324,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<EmailIcon />}
                   profile_data_category="Email"
+                  is_textfield
                   value={dataProfil.email}
                   id="email"
                   on_change={handleChangeDataProfil}
@@ -269,6 +332,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<PhoneIcon />}
                   profile_data_category="Nomor Telepon"
+                  is_textfield
                   value={dataProfil.no_telp}
                   id="no_telp"
                   on_change={handleChangeDataProfil}
@@ -276,6 +340,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<ContactPhoneIcon />}
                   profile_data_category="Nomor Telepon Darurat"
+                  is_textfield
                   value={dataProfil.no_telp_darurat}
                   id="no_telp_darurat"
                   on_change={handleChangeDataProfil}
@@ -283,6 +348,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<HomeIcon />}
                   profile_data_category="Alamat"
+                  is_textfield
                   value={dataProfil.alamat}
                   id="alamat"
                   on_change={handleChangeDataProfil}
@@ -294,6 +360,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<SportsEsportsIcon />}
                   profile_data_category="Hobi dan Minat"
+                  is_textfield
                   value={dataProfil.hobi_minat}
                   id="hobi_minat"
                   on_change={handleChangeDataProfil}
@@ -301,6 +368,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<ColorLensIcon />}
                   profile_data_category="Keterampilan non-teknis"
+                  is_textfield
                   value={dataProfil.ket_non_teknis}
                   id="ket_non_teknis"
                   on_change={handleChangeDataProfil}
@@ -308,6 +376,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<WorkIcon />}
                   profile_data_category="Cita-Cita"
+                  is_textfield
                   value={dataProfil.cita_cita}
                   id="cita_cita"
                   on_change={handleChangeDataProfil}
@@ -315,6 +384,7 @@ function ProfileDataEditorDialog(props) {
                 <ProfileDataItemEdit
                   profile_data_icon={<AccountBalanceIcon />}
                   profile_data_category="Universitas Impian"
+                  is_textfield
                   value={dataProfil.uni_impian}
                   id="uni_impian"
                   on_change={handleChangeDataProfil}

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import helpTopics from "./HelpTopics.png";
 import moreHelpBackground from "./MoreHelpBackground.png";
-import { Avatar, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Paper, Typography } from "@material-ui/core";
+import { Avatar, Button, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Hidden, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EmailIcon from "@material-ui/icons/Email";
@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
     height: "500px",
     color: "white",
     backgroundImage: `url(${helpTopics})`,
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     margin: "auto",
     marginTop: "50px",
+    padding: "10px",
   },
   moreHelpText: {
     fontFamily: "Cambria",
@@ -53,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: `url(${moreHelpBackground})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
   },
   paperIcon: {
     display: "flex",
@@ -83,6 +85,15 @@ const useStyles = makeStyles((theme) => ({
     width: "75px",
     height: "75px",
   },
+  moreHelpMobileButton: {
+    minWidth: "250px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
 }));
 
 function Help(props) {
@@ -103,7 +114,7 @@ function Help(props) {
     <div className={classes.root}>
       <div className={classes.helpTopicsBackground}>
         <div className={classes.helpTopics}>
-          <Typography variant="h2">
+          <Typography variant="h3">
             <b>CARI TOPIK BANTUAN</b>
           </Typography>
           <Typography variant="h6">
@@ -126,10 +137,10 @@ function Help(props) {
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
                       <Typography variant="h6" gutterBottom>
-                        <b>Ada berapa jenis akun dalam suatu lingkup sekolah?</b>
+                        <b>Ada jenis akun apa saja di Schooly?</b>
                       </Typography>
                       <Typography>
-                        Ada tiga jenis yaitu Murid, Guru, dan Pengelola.
+                        Ada tiga jenis akun yaitu Murid, Guru, dan Pengelola.
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -137,7 +148,7 @@ function Help(props) {
                         <b>Bagaimana cara untuk melengkapi keterangan profil atau mengubah keterangan profil?</b>
                       </Typography>
                       <Typography>
-                        Bisa, keterangan akun dapat diubah dengan menekan tombol "Sunting Profil" pada halaman profil,
+                        Keterangan akun dapat diubah dengan menekan tombol "Sunting Profil" pada halaman profil,
                         yang dapat diakses dengan menekan foto profil pada bagian kanan atas aplikasi.
                       </Typography>
                     </Grid>
@@ -146,7 +157,7 @@ function Help(props) {
                         <b>Bagaimana cara mengubah foto akun?</b>
                       </Typography>
                       <Typography>
-                        Bisa, foto akun dapat diubah dengan menekan tombol dengan lambang "Kamera" pada halaman profil,
+                        Foto akun dapat diubah dengan menekan tombol dengan gambar "Kamera" pada halaman profil,
                         yang dapat diakses dengan menekan foto profil pada bagian kanan atas aplikasi.
                       </Typography>
                     </Grid>
@@ -155,7 +166,7 @@ function Help(props) {
                         <b>Bagaimana cara mengubah kata sandi?</b>
                       </Typography>
                       <Typography>
-                        Bisa, kata sandi dapat diubah dengan menekan tombol "Ganti Kata Sandi" pada halaman profil,
+                        Kata sandi dapat diubah dengan menekan tombol "Ganti Kata Sandi" pada halaman profil,
                         yang dapat diakses dengan menekan foto profil pada bagian kanan atas aplikasi.
                       </Typography>
                     </Grid>
@@ -339,7 +350,7 @@ function Help(props) {
                         <b>Apa saja isi suatu tugas?</b>
                       </Typography>
                       <Typography>
-                        Suatu tugas terdiri dari judul tugas, penanggung jawab, deskripsi tugas, file terlampir, dan batas waktu.
+                        Suatu tugas terdiri dari judul tugas, deskripsi tugas, penanggung jawab, lampiran berkas, dan batas waktu.
                         Tugas yang dikumpulkan adalah dalam bentuk file dengan jenis apa saja.
                       </Typography>
                     </Grid>
@@ -456,26 +467,61 @@ function Help(props) {
             Masih belum menemukan solusi dari permasalahan anda? Silahkan hubungi kami.
           </Typography>
         </div>
-        <Grid container spacing={5} justify="center" alignItems="stretch">
+        <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
-            <Paper variant="outlined" button component="a" className={classes.paperIcon} href="mailto:schoolysystem@gmail.com">
-              <Avatar className={classes.iconAvatar}>
-                <EmailIcon className={classes.mailIcon} />
-              </Avatar>
-              <Typography variant="body2">
-                <b>schoolysystem@gmail.com</b>
-              </Typography>
-            </Paper>
+            <Hidden smUp implementation="css">
+              <Button
+                variant="contained"
+                startIcon={<EmailIcon />}
+                className={classes.moreHelpMobileButton}
+                href="mailto:schoolysystem@gmail.com"
+              >
+                schoolysystem@gmail.com
+              </Button>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+              <Paper
+                variant="outlined"
+                button component="a"
+                className={classes.paperIcon}
+                href="mailto:schoolysystem@gmail.com"
+                style={{marginRight: "50px"}}
+              >
+                <Avatar className={classes.iconAvatar}>
+                  <EmailIcon className={classes.mailIcon} />
+                </Avatar>
+                <Typography variant="caption">
+                  <b>schoolysystem@gmail.com</b>
+                </Typography>
+              </Paper>
+            </Hidden>
           </Grid>
           <Grid item>
-            <Paper variant="outlined" button component="a" className={classes.paperIcon} href="http://www.instagram.com">
-              <Avatar className={classes.iconAvatar}>
-                <InstagramIcon className={classes.instagramIcon} />
-              </Avatar>
-              <Typography variant="body2">
-                <b>schoolysystem.id</b>
-              </Typography>
-            </Paper>
+            <Hidden smUp implementation="css">
+              <Button
+                variant="contained"
+                startIcon={<InstagramIcon />}
+                className={classes.moreHelpMobileButton}
+                href="http://www.instagram.com"
+              >
+                schoolysystem.com
+              </Button>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+              <Paper
+                variant="outlined"
+                button component="a"
+                className={classes.paperIcon}
+                href="http://www.instagram.com"
+              >
+                <Avatar className={classes.iconAvatar}>
+                  <InstagramIcon className={classes.instagramIcon} />
+                </Avatar>
+                <Typography variant="caption">
+                  <b>schoolysystem.com</b>
+                </Typography>
+              </Paper>
+            </Hidden>
           </Grid>
         </Grid>
       </div>

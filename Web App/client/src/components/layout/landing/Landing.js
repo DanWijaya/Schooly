@@ -85,6 +85,7 @@ const styles = (theme) => ({
     textAlign: "center",
     margin: "auto",
     marginTop: "30px",
+    padding: "10px",
     maxWidth: "1000px",
   },
   useSchoolyButtonContainer: {
@@ -92,7 +93,7 @@ const styles = (theme) => ({
     justifyContent: "space-between"
   },
   sendMessageButton: {
-    width: "200px",
+    width: "150px",
     marginRight: "30px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -102,7 +103,7 @@ const styles = (theme) => ({
     },
   },
   copyLinkButton: {
-    width: "200px",
+    width: "150px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
     "&:focus, &:hover": {
@@ -123,11 +124,11 @@ class Landing extends Component {
 
   copyToClipboard(text) {
     var dummy = document.createElement("textarea");
-    //To avoid breaking orgain page when copying more words
-    //Cant copy when adding below this code
-    //Dummy.style.display = "none"
+    // To avoid breaking orgain page when copying more words
+    // Cant copy when adding below this code
+    // Dummy.style.display = "none"
     document.body.appendChild(dummy);
-    //Be careful if you use texarea. setAttribute("value", value), which works with "input" does not work with "textarea".
+    // Be careful if you use texarea. setAttribute("value", value), which works with "input" does not work with "textarea".
     dummy.value = text;
     dummy.select();
     document.execCommand("copy");
@@ -143,8 +144,8 @@ class Landing extends Component {
     <div className={classes.root}>
       <div className={classes.schoolyIntroductionBackground}>
         <div className={classes.schoolyIntroduction}>
-          <Grid container spacing={10} justify="center" alignItems="center">
-            <Grid item xs={6}>
+          <Grid container justify="center" alignItems="center">
+            <Grid item xs={12} sm={6}>
               <Typography
                 className={classes.schoolyIntroductionTitle}
                 variant="h4"
@@ -154,11 +155,12 @@ class Landing extends Component {
                Schooly membuat pekerjaan sekolahmu lebih mudah.
               </Typography>
               <Typography variant="h6">
-               Berikan pekerjaan sekolah dengan mudah. Rangkum hasil pengecekkan dengan mudah.
+               Berikan pekerjaan sekolah dengan mudah. <br />
+               Rangkum hasil pengecekkan dengan mudah. <br />
                Tidak pernah lupa dengan tugas sekolahmu.
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <img
                 alt="Schooly Introduction"
                 src={schoolyIntroduction}
@@ -214,7 +216,7 @@ class Landing extends Component {
                   <PeopleIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography variant="subtitle1">
-                  Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari pengelola, guru, hingga murid.
+                  Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari murid, guru, hingga pengelola.
                 </Typography>
               </Paper>
             </Grid>
@@ -251,21 +253,19 @@ class Landing extends Component {
         <div className={classes.useSchoolyButtonContainer}>
           <Button
             variant="contained"
-            size="large"
             href="mailto:schoolysystem@gmail.com"
             startIcon={<ContactMailIcon />}
             className={classes.sendMessageButton}
           >
-            Kirim Pesan
+            KIRIM PESAN
           </Button>
           <Button
             variant="contained"
-            size="large"
             startIcon={<FilterNoneIcon />}
             className={classes.copyLinkButton}
             onClick={() => this.copyToClipboard("http://www.schoolysystem.com")}
           >
-            Salin Tautan
+            SALIN TAUTAN
           </Button>
         </div>
       </div>
@@ -275,14 +275,14 @@ class Landing extends Component {
 };
 
 Landing.propTypes = {
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
 });
 
 export default withRouter(
   connect(mapStateToProps)
   (withStyles(styles)(Landing))
-  )
+)
