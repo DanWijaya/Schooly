@@ -29,7 +29,6 @@ module.exports = function validateMaterialInput(data) {
         errors.lampiran_materi = "Lampiran belum ditambahkan ke Materi"
     }
 
-
     return{
         errors,
         isValid: isEmpty(errors)

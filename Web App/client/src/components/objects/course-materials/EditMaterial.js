@@ -6,17 +6,19 @@ import "date-fns";
 import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { viewClass } from "../../../actions/ClassActions";
-import { viewOneTask, updateTask } from "../../../actions/TaskActions";
-import { getAllSubjects } from "../../../actions/SubjectActions"
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Chip, FormControl, FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import ErrorIcon from "@material-ui/icons/Error";
+import { getOneMaterial } from "../../../actions/MaterialActions";
 
 const path = require("path");
 
@@ -91,7 +93,7 @@ const styles = (theme) => ({
   chip: {
     margin: 2,
   },
-  editTaskButton: {
+  editMaterialButton: {
     width: "100%",
     marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
@@ -129,49 +131,65 @@ class EditMaterial extends Component {
     this.state = {
       name: "",
       subject: "",
-      deadline: new Date(),
-      tasksCollection: [],
-      class_assigned: null,
-      classChanged: false,
       focused: false,
+      class_assigned: [],
       description: "",
+      errors: {},
+      fileLampiran: [],
+      anchorEl: null,
+      classChanged: false,
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
-      anchorEl: null,
       errors: {},
     }
   }
 
-  tugasUploader = React.createRef(null)
-  uploadedTugas = React.createRef(null)
+  lampiranUploader = React.createRef(null)
+  uploadedLampiran = React.createRef(null)
 
   componentDidMount() {
-    const { viewOneTask, viewClass, getAllSubjects, clearErrors } = this.props;
+    const { user} = this.props.auth;
+    const { viewClass, getAllSubjects, clearErrors, getOneMaterial } = this.props;
 
-    clearErrors()
-    viewOneTask(this.props.match.params.id)
     viewClass()
+    clearErrors()
+    getOneMaterial(this.props.match.params.id)
     getAllSubjects()
+
   }
+
+  // shouldComponentUpdate(nextProps) {
+  //   const { materialsCollection } = this.props;
+  //   return materialsCollection.selectedMaterial.length != nextProps.materialsCollection.selectedMaterial.length
+  // }
+
+  // componentDidUpdate(props) {
+  //   const { selectedMaterial} = this.props.materialsCollection;
+  //   this.props.viewSelectedClasses(selectedMaterial.class_assigned)
+  // }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { name } = this.state;
-    // console.log(nextProps.tasksCollection.deadline);
-    console.log(nextProps.tasksCollection);
-    console.log(nextProps.subjectsCollection);
-    console.log(nextProps.classesCollection);
+
+    const { selectedMaterials } = nextProps.materialsCollection;
+
+    // console.log(selectedMaterials.deadline);
+    if(nextProps.errors){
+      console.log(nextProps.errors)
+      this.setState({ errors: nextProps.errors})
+    }
     if(!name){
       this.setState({
-          name: nextProps.tasksCollection.name,
-          subject: nextProps.tasksCollection.subject,
-          deadline: nextProps.tasksCollection.deadline,
-          class_assigned: nextProps.tasksCollection.class_assigned,
-          description: nextProps.tasksCollection.description,
-          fileLampiran: Boolean(nextProps.tasksCollection.lampiran) ? nextProps.tasksCollection.lampiran : []
-          // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
-          // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
+          name: selectedMaterials.name,
+          subject: selectedMaterials.subject,
+          deadline: selectedMaterials.deadline,
+          class_assigned: Boolean(selectedMaterials.class_assigned) ? selectedMaterials.class_assigned : [],
+          fileLampiran: Boolean(selectedMaterials.lampiran) ? selectedMaterials.lampiran : [],
+          description: selectedMaterials.description,
+          // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
+          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
       })
     }
   }
@@ -187,33 +205,36 @@ class EditMaterial extends Component {
 
     class_assigned.map((id) => {
       for( var i = 0; i < classesOptions.length; i++) {
-      if(classesOptions[i]._id === id) {
-        classesSelected.push(classesOptions[i])
-        break;
+        if(classesOptions[i]._id === id) {
+          classesSelected.push(classesOptions[i])
+          break;
       }
     }
   })
 
-  const taskObject = {
+  const materialObject = {
     name: this.state.name,
     deadline: this.state.deadline,
     subject: this.state.subject,
     description: this.state.description,
+    lampiran: Array.from(this.state.fileLampiran),
     errors: {}
   }
 
   if(classChanged)
-    taskObject.class_assigned = classesSelected // When the classes is changed
+    materialObject.class_assigned = classesSelected // When the classes is changed
   else
-    taskObject.class_assigned = class_assigned // When it has no change
+    materialObject.class_assigned = class_assigned // When it has no change
 
   let formData = new FormData()
   for(var i = 0; i< fileLampiranToAdd.length; i++) {
     console.log(this.state.fileLampiran[i])
-    formData.append("lampiran", this.state.fileLampiranToAdd[i])
+    formData.append("lampiran_materi", this.state.fileLampiranToAdd[i])
   }
-  this.props.updateTask(formData, fileLampiranToDelete,
-    this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
+
+  const {selectedMaterials} = this.props.materialsCollection;
+  console.log(materialObject)
+  this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
   }
 
   handleLampiranUpload = (e) => {
@@ -259,8 +280,7 @@ class EditMaterial extends Component {
     console.log(tempToDelete)
     if(temp.length === 0)
       this.handleCloseMenu()
-    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
-      fileLampiranToDelete: tempToDelete})
+    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd, fileLampiranToDelete: tempToDelete})
   }
 
   handleClickMenu = (event) => {
@@ -268,7 +288,9 @@ class EditMaterial extends Component {
       this.setState({ anchorEl: event.currentTarget})
   }
 
-  handleCloseMenu = () => { this.setState({ anchorEl: null}) }
+  handleCloseMenu = () => { 
+    this.setState({ anchorEl: null}) 
+  }
 
   onChange = (e, otherfield) => {
     if(otherfield === "kelas"){
@@ -295,14 +317,19 @@ class EditMaterial extends Component {
   }
 
   render() {
-    const { errors , fileLampiran } = this.state;
-    const { classes, subjectsCollection, tasksCollection } = this.props;
+    const { classesCollection, classes, subjectsCollection, updateMaterial}  = this.props;
     const { all_classes, selectedClasses } = this.props.classesCollection;
-    const { user } = this.props.auth;
+    const { all_subjects } = this.props.subjectsCollection;
+    const { selectedMaterial} = this.props.materialsCollection;
+    const { class_assigned, fileLampiran, errors}  = this.state;
+    const { user } = this.props.auth
 
     console.log("FileLampiran:", this.state.fileLampiran)
     console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
+
+    console.log(all_classes)
+    console.log(selectedMaterial);
 
     let classIds = []
     const ITEM_HEIGHT = 48;
@@ -335,17 +362,6 @@ class EditMaterial extends Component {
       return temp;
     }
 
-    var classesOptions = []
-    var selectedClassOptions = []
-    var subjectOptions = []
-    if(all_classes.length !== 0) {
-      classesOptions = all_classes
-      selectedClassOptions = selectedClasses
-    }
-
-    if(Object.keys(subjectsCollection.all_subjects).length !== 0) {
-      subjectOptions = subjectsCollection.all_subjects
-    }
     if(this.state.class_assigned != null) //When firstly received.
       this.state.class_assigned.map((kelas) => {
         if(kelas._id != undefined)
@@ -355,7 +371,7 @@ class EditMaterial extends Component {
       }
     )
 
-    document.title = "Schooly | Sunting Tugas";
+    document.title = "Schooly | Sunting Materi";
 
     if(user.role === "Teacher" || user.role === "Admin") {
       return(
@@ -363,9 +379,9 @@ class EditMaterial extends Component {
           <Paper>
             <div className={classes.mainGrid}>
               <Typography variant="h5" className={classes.formTitle}>
-                <b>Sunting Tugas</b>
+                <b>Sunting Materi</b>
               </Typography>
-              <form noValidate onSubmit={(e) => {this.onSubmit(e, classesOptions)}}>
+              <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
                 <Grid
                   container
                   direction="column"
@@ -382,82 +398,97 @@ class EditMaterial extends Component {
                       className={classnames("", {
                         invalid: errors.name
                       })}
-                      labelname="Nama Tugas"
-                      html_for="tugas"
+                      labelname="Nama Materi"
+                      html_for="Materi"
                       label_classname={classes.inputLabel}
                       span_classname={classes.errorInfo}
                       error1={errors.name}
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl id="subject" variant="outlined" color="primary" fullWidth>
+                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
                       <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
                       <Select
                         value={this.state.subject}
                         onChange={(event) => {this.onChange(event, "subject")}}
                       >
-                        {subjectOptions.map((subject) => (
+                        {all_subjects.map((subject) => (
                           <MenuItem value={subject.name}>{subject.name}</MenuItem>
                         ))}
                       </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.subject) && !this.state.subject ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.subject) && !this.state.subject ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
+                    </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl variant="outlined" fullWidth>
-                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
+                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang Diberikan</label>
                       <Select
-                        id="class_assigned"
                         multiple
+                        id="class_assigned"
                         MenuProps={MenuProps}
-                        value={classIds}
+                        value={class_assigned}
                         onChange={(event) => {this.onChange(event, "kelas")}}
                         renderValue={(selected) => {
                           return(
-                            <div className={classes.chips}>
-                              {selected.map((id) => {
-                                let name
-                                for (var i in classesOptions){ // i is the index
-                                  if(classesOptions[i]._id === id){
-                                    name = classesOptions[i].name
+                          <div className={classes.chips}>
+                            {selected.map((id) => {
+                              let name
+                              if(all_classes.length == 0)
+                                return null;
+                              else{
+                                for(var i in all_classes){
+                                  if(all_classes[i]._id === id){
+                                    name = all_classes[i].name
                                     break;
                                   }
                                 }
-                                return(
-                                  <Chip key={id} label={name} className={classes.chip} />
-                                )
-                              })}
+                              return(
+                                <Chip key={id} label={name} className={classes.chip} />
+                              )
+                            }
+                            })}
                             </div>
-                        )}}
-                      >
-                        {classesOptions.map((kelas) => (
-                            <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
-                        ))}
+                        )
+                      }}>
+                        {all_classes.map((kelas) => {
+                          return(
+                            <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
+                        )})}
                       </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                    </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <OutlinedTextField
                       on_change={(e) => this.onChange(e, "description")}
                       value={this.state.description}
+                      error={errors.description}
                       id="descripton"
                       type="textarea"
                       className={classnames("", {
-                        invalid: errors.name
+                        invalid: errors.description
                       })}
                       labelname="Deskripsi"
                       html_for="description"
                       label_classname={classes.inputLabel}
                       span_classname={classes.errorInfo}
                       multiline={true}
+                      error1={errors.description}
                     />
                   </Grid>
-                  <Grid item container direction="row" className={classes.gridItem} alignItems="center">
+                  <Grid item container direction="row" className={classes.gridItem}>
                     <input
                       type="file"
                       multiple={true}
                       name="lampiran"
                       onChange={this.handleLampiranUpload}
-                      ref={this.tugasUploader}
+                      ref={this.lampiranUploader}
                       accept="file/*"
                       style={{display: "none"}}
                     />
@@ -466,21 +497,24 @@ class EditMaterial extends Component {
                       multiple={true}
                       name="file"
                       id="file"
-                      ref={this.uploadedTugas}
+                      ref={this.uploadedLampiran}
                       style={{display: "none"}}
                     />
                     <Grid item container direction="row" alignItems="center">
                       <Grid item xs={11} onClick={this.handleClickMenu}>
                         <OutlinedTextField
                           disabled={true}
-                          value={fileLampiran && fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
+                          value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
+                          error={errors.lampiran_materi}
                           id="file_tugas"
                           type="text"
                           width="100%"
                           labelname="Lampiran Berkas"
                           html_for="Berkas lampiran"
+                          span_classname={classes.errorInfo}
                           label_classname={classes.inputLabel}
                           pointer= {fileLampiran.length > 0}
+                          error1={errors.lampiran_materi}
                         />
                       </Grid>
                       <StyledMenu
@@ -494,43 +528,20 @@ class EditMaterial extends Component {
                       </StyledMenu>
                       <Grid item xs={1}>
                         <LightTooltip title="Tambahkan Lampiran Berkas">
-                          <IconButton onClick={() => {this.tugasUploader.current.click()}}>
+                          <IconButton onClick={() => {this.lampiranUploader.current.click()}}>
                             <AttachFileIcon />
-                          </IconButton>
-                        </LightTooltip>
+                           </IconButton>
+                         </LightTooltip>
                       </Grid>
                     </Grid>
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <label id="class_assigned" className={classes.inputLabel}>Batas Waktu</label>
-                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                      <KeyboardDatePicker
-                        fullWidth
-                        disablePast
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        id="date-picker-inline"
-                        value={this.state.deadline}
-                        onChange={(date) => this.onChange(date, "deadline")}
-                        inputProps={{
-                          style: {
-                            borderBottom: "none",
-                            boxShadow: "none",
-                          },
-                        }}
-                      />
-                    </MuiPickersUtilsProvider>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
                     <Button
                       type="submit"
-                      variant="contained"
-                      className={classes.editTaskButton}
+                      className={classes.editMaterialButton}
                     >
-                      Sunting Tugas
-                    </Button>
+                      Sunting Materi
+                  </Button>
                   </Grid>
                 </Grid>
               </form>
@@ -553,13 +564,13 @@ class EditMaterial extends Component {
 
 EditMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
-  viewOneTask : PropTypes.func.isRequired,
-  updateTask: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  tasksCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
+  materialsCollection: PropTypes.object.isRequired,
+  updateMaterial: PropTypes.func.isRequired,
+  getOneMaterial: PropTypes.func.isRequired,
   viewClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
@@ -567,11 +578,11 @@ EditMaterial.propTypes = {
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-  tasksCollection: state.tasksCollection,
+  materialsCollection: state.materialsCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
 })
 
 export default connect(
-    mapStateToProps, { viewOneTask, updateTask, viewClass, getAllSubjects, clearErrors }
+    mapStateToProps, { viewClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial }
 ) (withStyles(styles)(EditMaterial))

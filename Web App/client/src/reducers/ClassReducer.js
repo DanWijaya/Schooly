@@ -11,9 +11,11 @@ export default function(state = initialState, action) {
   switch(action.type) {
     case GET_CLASSES:{
       console.log("Payload : ", action.payload);
+      let retrieved = new Map()
+      action.payload.map((kelas) => retrieved.set(kelas._id, kelas))
       return {
         ...state,
-        selectedClasses: action.payload
+        selectedClasses: retrieved
       }
     }
     case GET_ALL_CLASSES: {

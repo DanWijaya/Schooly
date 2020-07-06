@@ -17,6 +17,8 @@ const Student = require("../../models/user_model/Student");
 const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
 const Class = require("../../models/Class")
+const { ObjectId } = require("mongodb");
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -396,22 +398,20 @@ router.get("/getOneUser/:id", (req,res) => {
 })
 
 router.get("/getUsers", (req,res) => {
-  let userIds = req.query.userIds;
+  const{ userIds } = req.query;
 
-  let retrieved_users = new Map()
-  console.log(userIds)
-  if(Boolean(userIds)){
-    for(var i = 0; i < userIds.length; i++){
-      User.findById(userIds[i], (err, user) => {
-        if(!user)
-          console.log("No user is found")
-        else
-          retrieved_users.set(userIds[i], user.name)
-      })
-    }
+  let ids_to_find
+
+  if(userIds !== undefined){
+    ids_to_find = userIds.map((id) => new ObjectId(id))
   }
-  console.log("R users:". retrieved_users)
-  return res.json(retrieved_users)
+
+  User.find({_id : { $in : ids_to_find}}, (err, users) => {
+    if(!users)
+      return res.status(400).json("Users to update not found")
+    else
+      return res.json(users)
+  })
 })
 
 router.get("/getstudentsbyclass/:id", (req,res) => {

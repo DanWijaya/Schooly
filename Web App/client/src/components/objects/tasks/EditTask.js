@@ -157,10 +157,7 @@ class EditTask extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { name } = this.state;
-    // console.log(nextProps.tasksCollection.deadline);
-    console.log(nextProps.tasksCollection);
-    console.log(nextProps.subjectsCollection);
-    console.log(nextProps.classesCollection);
+
     if(!name){
       this.setState({
           name: nextProps.tasksCollection.name,
@@ -295,8 +292,9 @@ class EditTask extends Component {
 
   render() {
     const { errors , fileLampiran } = this.state;
-    const { classes, subjectsCollection, tasksCollection } = this.props;
+    const { classes } = this.props;
     const { all_classes, selectedClasses } = this.props.classesCollection;
+    const { all_subjects } = this.props.subjectsCollection
     const { user } = this.props.auth;
 
     console.log("FileLampiran:", this.state.fileLampiran)
@@ -334,17 +332,6 @@ class EditTask extends Component {
       return temp;
     }
 
-    var classesOptions = []
-    var selectedClassOptions = []
-    var subjectOptions = []
-    if(all_classes.length !== 0) {
-      classesOptions = all_classes
-      selectedClassOptions = selectedClasses
-    }
-
-    if(Object.keys(subjectsCollection.all_subjects).length !== 0) {
-      subjectOptions = subjectsCollection.all_subjects
-    }
     if(this.state.class_assigned != null) //When firstly received.
       this.state.class_assigned.map((kelas) => {
         if(kelas._id != undefined)
@@ -364,7 +351,7 @@ class EditTask extends Component {
               <Typography variant="h5" className={classes.formTitle}>
                 <b>Sunting Tugas</b>
               </Typography>
-              <form noValidate onSubmit={(e) => {this.onSubmit(e, classesOptions)}}>
+              <form noValidate onSubmit={(e) => {this.onSubmit(e, all_classes)}}>
                 <Grid
                   container
                   direction="column"
@@ -395,7 +382,7 @@ class EditTask extends Component {
                         value={this.state.subject}
                         onChange={(event) => {this.onChange(event, "subject")}}
                       >
-                        {subjectOptions.map((subject) => (
+                        {all_subjects.map((subject) => (
                           <MenuItem value={subject.name}>{subject.name}</MenuItem>
                         ))}
                       </Select>
@@ -420,9 +407,9 @@ class EditTask extends Component {
                             <div className={classes.chips}>
                               {selected.map((id) => {
                                 let name
-                                for (var i in classesOptions){ // i is the index
-                                  if(classesOptions[i]._id === id){
-                                    name = classesOptions[i].name
+                                for (var i in all_classes){ // i is the index
+                                  if(all_classes[i]._id === id){
+                                    name = all_classes[i].name
                                     break;
                                   }
                                 }
@@ -433,7 +420,7 @@ class EditTask extends Component {
                             </div>
                         )}}
                       >
-                        {classesOptions.map((kelas) => (
+                        {all_classes.map((kelas) => (
                             <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
                         ))}
                       </Select>

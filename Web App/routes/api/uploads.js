@@ -545,7 +545,7 @@ router.get("/previewlampiran_announcement/:id", (req,res) => {
 })
 
 // Router for handling the upload lampiran Materi... 
-router.post("/upload_lampiran_materi/:id", uploadLampiranMateri.array("lampiran_announcement", 5), (req,res) => {
+router.post("/upload_lampiran_materi/:id", uploadLampiranMateri.array("lampiran_materi", 5), (req,res) => {
   let material_id = req.params.id;
   console.log("Upload lampiran is runned")
 
@@ -585,7 +585,10 @@ router.post("/upload_lampiran_materi/:id", uploadLampiranMateri.array("lampiran_
 
 router.delete("/lampiran_materi/:id", (req,res) => {
   let material_id = req.params.id;
+  console.log(material_id)
   const {lampiran_to_delete, current_lampiran} = req.body;
+  console.log("Current Lampirannya: ",Boolean(current_lampiran))
+  console.log("Material ID: ",Boolean(material_id))
   for(var i = 0; i < lampiran_to_delete.length; i++){
     id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // di rootnya, masukkin collection namenya.. 
@@ -599,25 +602,30 @@ router.delete("/lampiran_materi/:id", (req,res) => {
       }
     })
 
-    for(var j =0; j < current_lampiran.length; j++) {
-      if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
-        current_lampiran.splice(j,1)
-        break;
+    if(material_id!=="deleteall"){
+      for(var j =0; j < current_lampiran.length; j++) {
+        if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+          current_lampiran.splice(j,1)
+          break;
+        }
       }
-    }
-  }
 
-  console.log("Deleted alr")
-  Material.findById(material_id, (err, ann) => {
-    if(!ann){
-      return res.status(404).json("Ann object is not found in the Database")
-    } else {
-      ann.lampiran = current_lampiran;
-      ann.save()
-          .then((ann) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
-          .catch((err) => console.log("Error happened in updating task lampiran field"))
+    console.log("Deleted alr")
+    Material.findById(material_id, (err, ann) => {
+      if(!ann){
+        return res.status(404).json("Ann object is not found in the Database")
+      } else {
+        ann.lampiran = current_lampiran;
+        ann.save()
+            .then((ann) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
+            .catch((err) => console.log("Error happened in updating task lampiran field"))
+        }
+      })
     }
-  })
+    else{
+      return res.json({success: "Succesfully deleted all lampiran materi"})
+    }
+  } 
 })
 
 router.get("/lampiran_materi/:id", (req,res) => {

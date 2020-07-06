@@ -156,6 +156,7 @@ class CreateMaterial extends Component {
 
   onChange = (e, otherfield) => {
     console.log("On change : ", e.target.value)
+    console.log(Array.from(this.state.fileLampiran))
     if(otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
@@ -170,21 +171,11 @@ class CreateMaterial extends Component {
     }
     else
       this.setState({ [e.target.id]: e.target.value});
-      console.log(this.state.fileLampiran)
   }
 
   onSubmit = (e, id) => {
     e.preventDefault();
     let formData = new FormData()
-    const materialData = {
-      name: this.state.name,
-      subject: this.state.subject,
-      class_assigned: this.state.class_assigned,
-      description: this.state.description,
-      lampiran: this.state.fileLampiran,
-      author_id: id,
-      errors: {},
-    };
 
     //Check if there is any lampiran uploaded or not.
     if(this.state.fileLampiran)
@@ -193,6 +184,17 @@ class CreateMaterial extends Component {
         formData.append("lampiran_materi", this.state.fileLampiran[i])
       }
       console.log(formData.getAll("lampiran_materi"), this.state.fileLampiran)
+
+      const materialData = {
+        name: this.state.name,
+        subject: this.state.subject,
+        class_assigned: this.state.class_assigned,
+        description: this.state.description,
+        lampiran: Array.from(this.state.fileLampiran),
+        author_id: id,
+        errors: {},
+      };
+
       this.props.createMaterial(formData, materialData, this.props.history);
   }
 
@@ -241,6 +243,8 @@ class CreateMaterial extends Component {
 
   render() {
     const { classesCollection, classes, subjectsCollection}  = this.props;
+    const { all_classes } = this.props.classesCollection;
+    const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran, errors}  = this.state;
     const { user } = this.props.auth
 
@@ -260,17 +264,6 @@ class CreateMaterial extends Component {
         }
       }
       return temp;
-    }
-
-    var options = []
-    var subjectOptions = []
-
-    if(Object.keys(classesCollection).length !== 0) {
-      options = classesCollection.all_classes
-    }
-
-    if(Object.keys(subjectsCollection).length !== 0) {
-      subjectOptions = subjectsCollection.all_subjects
     }
 
     const ITEM_HEIGHT = 48;
@@ -328,7 +321,7 @@ class CreateMaterial extends Component {
                         value={this.state.subject}
                         onChange={(event) => {this.onChange(event, "subject")}}
                       >
-                        {subjectOptions.map((subject) => (
+                        {all_subjects.map((subject) => (
                           <MenuItem value={subject.name}>{subject.name}</MenuItem>
                         ))}
                       </Select>
@@ -359,7 +352,7 @@ class CreateMaterial extends Component {
                           </div>
                         )}
                       >
-                        {options.map((kelas) => {
+                        {all_classes.map((kelas) => {
                           return(
                             <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                         )})}

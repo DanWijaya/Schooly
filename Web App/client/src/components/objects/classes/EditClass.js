@@ -98,25 +98,26 @@ class EditClass extends Component {
     var next_sekretaris = {}
     var next_walikelas = {}
 
+    const {kelas} = nextProps.classesCollection
     //classesCollection.kelas = individual class, .all_classes = all classes
-    if(nextProps.classesCollection.kelas.ketua_kelas)
-      next_ketua_kelas = nextProps.classesCollection.kelas.ketua_kelas._id
+    if(kelas.ketua_kelas)
+      next_ketua_kelas = kelas.ketua_kelas._id
 
-    if(nextProps.classesCollection.kelas.sekretaris)
-      next_sekretaris = nextProps.classesCollection.kelas.sekretaris._id
+    if(kelas.sekretaris)
+      next_sekretaris = kelas.sekretaris._id
 
-    if(nextProps.classesCollection.kelas.bendahara)
-      next_bendahara = nextProps.classesCollection.kelas.bendahara._id
+    if(kelas.bendahara)
+      next_bendahara = kelas.bendahara._id
 
-    if(nextProps.classesCollection.kelas.walikelas)
-      next_walikelas = nextProps.classesCollection.kelas.walikelas._id
+    if(kelas.walikelas)
+      next_walikelas = kelas.walikelas._id
 
     if(!name){
       this.setState({
-        name: nextProps.classesCollection.kelas.name,
-        nihil: nextProps.classesCollection.kelas.nihil,
+        name: kelas.name,
+        nihil: kelas.nihil,
         walikelas: next_walikelas,
-        ukuran: nextProps.classesCollection.kelas.ukuran,
+        ukuran: kelas.ukuran,
         ketua_kelas: next_ketua_kelas,
         sekretaris: next_sekretaris,
         bendahara: next_bendahara,

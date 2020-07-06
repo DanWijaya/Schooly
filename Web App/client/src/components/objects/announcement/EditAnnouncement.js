@@ -366,7 +366,7 @@ class EditAnnouncement extends Component {
                       )}}>
                       {all_classes.map((kelas) => { console.log(kelas, class_assigned)
                         return(
-                          <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
+                          <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                       )})}
                     </Select>
                   </FormControl>

@@ -10,13 +10,13 @@ export default function(state=initialState, action) {
         case GET_ALL_MATERIALS: {
             return {
             ...state,
-            all_announcements: action.payload
+            all_materials: action.payload
             }
         }
         case GET_MATERIAL: {
             return {
             ...state,
-            selectedAnnouncements: action.payload
+            selectedMaterials: action.payload
             }
         }
         default: 

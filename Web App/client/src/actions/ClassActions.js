@@ -32,7 +32,7 @@ export const viewClass = () => dispatch => {
     })
 
     .catch(err => {
-        console.log("Data should be here")
+        console.log(err, " Data should be here")
         // dispatch({
         //     type: GET_ERRORS,
         //     payload: err.response.data
@@ -55,10 +55,11 @@ export const viewSelectedClasses = (classes_ids) => dispatch => {
     })
     .catch(err => {
         console.log("error")
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-        })
+        console.log(err)
+        // dispatch({
+        //     type: GET_ERRORS,
+        //     payload: err.response.data
+        // })
     })
 }
 

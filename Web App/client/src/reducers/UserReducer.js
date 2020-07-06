@@ -41,9 +41,11 @@ export default function(state = initialState, action) {
         selectedUser: action.payload
     }
     case GET_USERS: 
+      let retrieved = new Map()
+      action.payload.map((user) => retrieved.set(user._id, user))
       return {
         ...state,
-        retrieved_users: action.payload
+        retrieved_users: retrieved
       }
     default:
       return state;

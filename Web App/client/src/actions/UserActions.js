@@ -203,7 +203,7 @@ export const getUsers = (userIds) => dispatch => {
   axios
     .get("/api/users/getUsers", {params: {userIds: userIds}})
     .then(res => {
-      console.log(res.data)
+      console.log("These are the users: ", res.data)
       dispatch({
         type: GET_USERS,
         payload: res.data

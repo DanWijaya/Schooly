@@ -12,14 +12,15 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
           console.log(formData.getAll('lampiran_materi'))
           if(formData.has('lampiran_materi')){
               console.log("Post lampiran material is running")
-              return axios.post(`/api/uploads/upload_lampiran_material/${res.data._id}`, formData);
+              return axios.post(`/api/uploads/upload_lampiran_materi/${res.data._id}`, formData);
           }
           else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created material with no lampiran"
       })
       .then(res => {
               alert("material is created")
-              history.push("/daftar-materi")
+              window.location.href="/daftar-materi"
+            //   history.push("/daftar-materi")
           })
       .catch(err =>{
           console.log("error happened")
@@ -30,11 +31,12 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
       })
 }
 
-export const getAllmaterials = (materialId, history) => dispatch => {
+export const getAllMaterials = (materialId, history) => dispatch => {
     axios
         .get('/api/materials/viewall')
         .then((res) => {
             console.log("material data is received")
+            console.log(res.data)
             dispatch({
                 type: GET_ALL_MATERIALS,
                 payload: res.data
@@ -104,8 +106,17 @@ export const deleteMaterial = (materialId, history) => dispatch => {
     axios
         .delete(`/api/materials/delete/${materialId}`)
         .then((res) => {
-            console.log(res.data)
-            window.location.href="/daftar-pengumuman"
+            console.log("Deleted: ", res.data)
+            let lampiran_to_delete = Array.from(res.data.lampiran)
+            return axios.delete(`/api/uploads/lampiran_materi/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
+            // if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
+            // return axios.delete(`/api/uploads/lampiran_materi/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete} })
+            // }
+            
+        })
+        .then((res) => {
+        console.log(res)
+        window.location.href="/daftar-materi"
         })
         .catch(err => {
             console.log(err);
@@ -118,6 +129,7 @@ export const deleteMaterial = (materialId, history) => dispatch => {
 
 export const updateMaterial = (formData, lampiran_to_delete, current_lampiran, annData, annId, history) => dispatch => {
     // formData is the lampiran files
+console.log("Update material is runned")
   axios
     .post(`/api/materials/update/${annId}`, annData)
     .then(res => {
@@ -135,7 +147,7 @@ export const updateMaterial = (formData, lampiran_to_delete, current_lampiran, a
         console.log(formData.has("lampiran_materi"), formData.getAll("lampiran_materi"))
         if(formData.has('lampiran_materi')){
             console.log("Lampiran material going to be uploaded")
-            return axios.post(`/api/uploads/upload_lampiran_material/${annId}`, formData);
+            return axios.post(`/api/uploads/upload_lampiran_materi/${annId}`, formData);
         }
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
             return "Successfully updated task with no lampiran"
@@ -143,7 +155,7 @@ export const updateMaterial = (formData, lampiran_to_delete, current_lampiran, a
     .then(res => {
         console.log("Lampiran file is uploaded")
         alert("material is created")
-        history.push("/daftar-pengumuman");
+        history.push("/daftar-materi");
     })
 
     .catch(err => {

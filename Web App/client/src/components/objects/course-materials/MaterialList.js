@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { viewTask, deleteTask } from "../../../actions/TaskActions";
+import { getAllMaterials, deleteMaterial } from "../../../actions/MaterialActions";
+import { getUsers } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
@@ -16,10 +17,12 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import { viewSelectedClasses } from "../../../actions/ClassActions";
 
-function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
-  return(action === null ? { _id, tasktitle, subject, class_assigned, deadline }
-    : { _id, tasktitle, subject, class_assigned, deadline, action});
+function createData(_id, tasktitle, subject, author, class_assigned, action) {
+  console.log(author)
+  return(action === null ? { _id, tasktitle, subject, author, class_assigned }
+    : { _id, tasktitle, subject, author, class_assigned, action});
 }
 
 var rows = [];
@@ -61,7 +64,7 @@ function MaterialListHead(props) {
     { id: "materialtitle", numeric: false, disablePadding: true, label: "Nama Materi" },
     { id: "material", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
     { id: "author", numeric: false, disablePadding: false, label: "Pemberi Materi" },
-    { id: "class_given", numeric: false, disablePadding: false, label: "Kelas dituju" },
+    { id: "class_given", numeric: false, disablePadding: false, label: "Kelas yang diberikan" },
     { id: "action", numeric: false, disablePadding: false, label: "Atur Materi" },
   ];
 
@@ -217,19 +220,41 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
 
-  const { tasksCollection, viewTask, deleteTask } = props;
-  const { user } = props.auth;
+  const {getAllMaterials, deleteMaterial, getUsers, viewSelectedClasses } = props;
+  const {all_materials, selectedMaterials} = props.materialsCollection;
+  const { selectedClasses, all_classes} = props.classesCollection;
+  const { user, retrieved_users } = props.auth;
 
-  const taskRowItem = (data) => {
+  React.useEffect(() => {
+    console.log(all_materials)
+    getAllMaterials()
+
+    let userIds = []
+    let classIds = new Set()
+    for(var i = 0; i < all_materials.length; i++){
+      let material = all_materials[i]
+      userIds.push(material.author_id)
+
+      for(var j = 0; j < material.class_assigned.length; j++){
+        classIds.add(material.class_assigned[j])
+      }
+    }
+    getUsers(userIds)
+    viewSelectedClasses(Array.from(classIds))
+  }, [all_materials.length])
+
+  const materialRowItem = (data) => {
+    console.log(data)
+    console.log(retrieved_users.get(user.id))
     rows.push(
       createData(data._id, data.name,
         data.subject,
+        !(retrieved_users).size ? {}: retrieved_users.get(user.id),
         data.class_assigned,
-        data.deadline,
         user.role === "Student" ? null :
         [
           <LightToolTip title="Sunting">
-            <Link to={`/sunting-tugas/${data._id}`}>
+            <Link to={`/sunting-materi/${data._id}`}>
               <IconButton
                 size="small"
                 style={{marginRight: "5px"}}
@@ -250,33 +275,35 @@ function MaterialList(props) {
     )
   }
 
-  React.useEffect(() => {viewTask()}, [tasksCollection.length])
-
-  const retrieveTasks = () => {
-    // If tasksCollection is not undefined or an empty array
-    if(tasksCollection.length) {
+  console.log(retrieved_users)
+  console.log(selectedClasses)
+  const retrieveMaterials = () => {
+    console.log(all_materials)
+    console.log(retrieved_users)
+    // If all_materials is not undefined or an empty array
+    if(all_materials.length) {
         rows = []
         if(user.role === "Teacher") {
-        tasksCollection.map((data) => {
-          if(data.person_in_charge_id === user.id) {
-            taskRowItem(data)
+        all_materials.map((data) => {
+          if(data.author_id === user.id) {
+            materialRowItem(data)
             }
           })
         }
         else if (user.role === "Student"){
-          tasksCollection.map((data) => {
+          all_materials.map((data) => {
             let class_assigned = data.class_assigned;
             for (var i = 0; i < class_assigned.length; i++) {
               if(class_assigned[i]._id === user.kelas) {
-                taskRowItem(data)
+                materialRowItem(data)
                 break;
               }
             }
           })
         }
         else { //Admin
-          tasksCollection.map((data) => {
-            taskRowItem(data)
+          all_materials.map((data) => {
+            materialRowItem(data)
           })
         }
       }
@@ -290,11 +317,11 @@ function MaterialList(props) {
 
   // Call the function to view the tasks on tablerows.
   // This function is defined above.
-// retrieveTasks()
+  retrieveMaterials()
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const onDeleteTask = (id) => {
-    deleteTask(id)
+  const onDeleteMaterial = (id) => {
+    deleteMaterial(id)
   }
 
   // Delete Dialog
@@ -319,14 +346,13 @@ function MaterialList(props) {
           <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              onClick={handleCloseDeleteDialog}
-            >
+              onClick={handleCloseDeleteDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Hapus Tugas berikut?
+              Hapus Materi berikut?
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -344,7 +370,7 @@ function MaterialList(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteTask(selectedTaskId) }}
+                onClick={() => { onDeleteMaterial(selectedTaskId) }}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -366,13 +392,13 @@ function MaterialList(props) {
     )
   }
 
-  document.title = "Schooly | Daftar Tugas";
+  document.title = "Schooly | Daftar Materi";
 
   return(
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
-        <MaterialListToolbar role={user.role} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog} />
+        <MaterialListToolbar role={user.role} deleteMaterial={deleteMaterial} handleOpenDeleteDialog={handleOpenDeleteDialog} />
         <TableContainer>
           <Table>
             <MaterialListHead
@@ -403,8 +429,9 @@ function MaterialList(props) {
                         {row.tasktitle}
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
-                      <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
-                      <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY")}</TableCell>
+                      {console.log(row.author.name)}
+                      <TableCell align="center">{row.author.name}</TableCell>
+                      <TableCell align="center">{!selectedClasses.size ? null : row.class_assigned.map(kelas => `${selectedClasses.get(kelas).name}, `)}</TableCell>
                       {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>
                   );
@@ -418,9 +445,11 @@ function MaterialList(props) {
 }
 
 MaterialList.propTypes = {
-  viewTask: PropTypes.func.isRequired,
-  deleteTask: PropTypes.func.isRequired,
-  tasksCollection: PropTypes.object.isRequired,
+  deleteMaterial: PropTypes.func.isRequired,
+  getAllMaterials: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
+  viewSelectedClasses: PropTypes.func.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -429,11 +458,11 @@ MaterialList.propTypes = {
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-  tasksCollection: state.tasksCollection,
+  classesCollection: state.classesCollection,
   materialsCollection: state.materialsCollection,
 })
 
 export default connect(
   mapStateToProps,
-  { viewTask, deleteTask }
+  { deleteMaterial, getAllMaterials, getUsers, viewSelectedClasses }
 )(MaterialList);

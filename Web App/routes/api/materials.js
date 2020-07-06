@@ -34,6 +34,7 @@ router.post("/create", (req,res) => {
         // lampiran: req.body.lampiran
     })
 
+    console.log(newMaterial)
     newMaterial
             .save()
             .then(material => {
@@ -51,6 +52,7 @@ router.post("/update/:id", (req,res) => {
         return res.status(400).json(errors);
     }
 
+    console.log(errors)
     let id = req.params.id;
 
     console.log(req.body);

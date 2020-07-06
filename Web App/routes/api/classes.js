@@ -98,13 +98,6 @@ router.get("/viewSelectedClasses/", (req,res) => {
         if(!classes)
             return res.status(400).json("Class to update not found");
 
-        // let result = new Map();
-
-        // for (var i = 0; i < classes.length; i++){
-        //     console.log(classes[i].name)
-        //     result.set(String(classes[i]._id), classes[i])
-        // }
-
         return res.json(classes)
  
     })
