@@ -2,21 +2,24 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { viewTask } from "../../../actions/TaskActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import moment from "moment";
-import "moment/locale/id";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   listItemPaper: {
@@ -32,59 +35,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NotificationItemList(props) {
-  const classes = useStyles();
-
-  return(
-    <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
-        <ListItemAvatar>
-          <Avatar>
-            {props.sender_avatar}
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          primary={props.notification_title}
-          secondary={props.sender_name}
-        />
-        <ListItemText
-          align="right"
-          primary={
-            <Typography variant="subtitle" color="textSecondary">
-              {props.time}
-            </Typography>}
-        />
-      </ListItem>
-    </Paper>
-  )
-}
-
-
 function WorkListItem(props) {
   const classes = useStyles()
 
   return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-        <ListItemAvatar>
-          {props.work_category_avatar}
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Typography variant="h6">
-              {props.work_title}
-            </Typography>
-          }
-          secondary={props.work_sender}
-        />
-        <ListItemText style={{textAlign: "right"}}
-          primary={
-            <Typography variant="h6" className={classes.warningText}>
-              Batas Waktu: {props.work_deadline}
-            </Typography>
-          }
-          secondary={props.work_status}
-        />
+        <Grid container alignItems="center">
+          <Grid item xs={8}>
+            <ListItemText
+              primary={
+                <Typography variant="h6">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={props.work_sender}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="h7" className={classes.warningText}>
+                  Batas Waktu:
+                </Typography>
+              }
+              secondary={props.work_deadline}
+            />
+          </Grid>
+        </Grid>
       </ListItem>
     </Paper>
   )
@@ -141,21 +120,21 @@ const styles = (theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
   },
-  buatTugasButton: {
-    marginRight: "20px",
-  },
-  createTaskButton: {
+  createButton: {
     backgroundColor: "#61BD4F",
     color: "white",
-  "&:focus, &:hover": {
+    "&:focus, &:hover": {
       backgroundColor: "white",
       color: "#61BD4F",
     },
   },
-  createTaskIcon: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    marginRight: "7.5px",
+  menuItem: {
+    "&:hover": {
+      backgroundColor: "#61BD4F",
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
+    },
   },
   manageTaskButton: {
     backgroundColor: theme.palette.primary.main,
@@ -189,7 +168,8 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: new Date()
+      time: new Date(),
+      anchorEl: null,
     };
   }
 
@@ -216,6 +196,14 @@ class Dashboard extends Component {
     });
   }
 
+  // Create Button Menu
+  handleMenuOpen = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
   render() {
     const { classes, tasksCollection, classesCollection, viewTask, getAllTaskFilesByUser,  } = this.props;
 
@@ -226,7 +214,7 @@ class Dashboard extends Component {
 
     let tasksByClass = []
     if(Boolean(tasksCollection.length)) {
-      if(user.role == "Student"){
+      if(user.role === "Student"){
         tasksCollection.map((task) => {
           let class_assigned = task.class_assigned
           for (var i = 0; i < class_assigned.length; i++){
@@ -235,7 +223,7 @@ class Dashboard extends Component {
           }
         })
       } else if(user.role === "Teacher"){
-        // in untuk si guru
+        // For Teacher
         console.log("Ini untuk guru")
       }
     }
@@ -252,7 +240,7 @@ class Dashboard extends Component {
                   <Typography variant="h3">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
-                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                  <Typography variant="h5" style={{marginBottom: "20px"}}>
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
@@ -264,7 +252,7 @@ class Dashboard extends Component {
                   <Typography variant="h3">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
-                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                  <Typography variant="h5" style={{marginBottom: "20px"}}>
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
@@ -276,7 +264,7 @@ class Dashboard extends Component {
                   <Typography variant="h3">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
-                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                  <Typography variant="h5" style={{marginBottom: "20px"}}>
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
@@ -287,15 +275,7 @@ class Dashboard extends Component {
           </Grid>
           <Grid item>
             {user.role === "Teacher" ?
-            <Grid item container direction="row" justify="flex-end">
-              <Grid item className={classes.buatTugasButton}>
-                <Link to ="/buat-tugas">
-                  <Fab variant="extended" className={classes.createTaskButton}>
-                    <AssignmentIcon className={classes.createTaskIcon} />
-                    Buat Tugas
-                  </Fab>
-                </Link>
-              </Grid>
+            <Grid item container direction="row" spacing={2} justify="flex-end" alignItems="center">
               <Grid item>
                 <Link to ="/daftar-tugas">
                   <Fab variant="extended" className={classes.manageTaskButton}>
@@ -303,6 +283,46 @@ class Dashboard extends Component {
                     Lihat Tugas
                   </Fab>
                 </Link>
+              </Grid>
+              <Grid item>
+                <Fab className={classes.createButton} onClick={(event) => this.handleMenuOpen(event)}>
+                  <AddIcon />
+                </Fab>
+                <Menu
+                  keepMounted
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleMenuClose}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  style={{marginTop: "10px"}}
+                >
+                  <MenuItem button component="a" href="/buat-pengumuman" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <AnnouncementIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Pengumuman" />
+                  </MenuItem>
+                  <MenuItem button component="a" href="/buat-materi" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <MenuBookIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Materi" />
+                  </MenuItem>
+                  <MenuItem button component="a" href="/buat-tugas" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <AssignmentIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Tugas" />
+                  </MenuItem>
+                </Menu>
               </Grid>
             </Grid>
           : user.role === "Student" ?
@@ -320,30 +340,23 @@ class Dashboard extends Component {
                 </div>
               </div>
               <List>
-              {tasksByClass.map((task) => {
-            let workCategoryAvatar = (
-              <Avatar className={classes.assignmentLate}>
-                <AssignmentLateIcon/>
-              </Avatar>
-            )
-            let workStatus = "Belum Dikumpulkan"
-            for(var i = 0; i < all_user_files.length; i++) {
-              if(all_user_files[i].for_task_object === task._id){
-                workStatus = "Telah Dikumpulkan"
-                return null;
-              }
-            }
-            return(
-              <WorkListItem
-                work_title={task.name}
-                work_category_avatar={workCategoryAvatar}
-                work_sender={`Mata Pelajaran: ${task.subject}`}
-                work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                work_link={`/tugas-murid/${task._id}`}
-              />
-            )
-          })}
+                {tasksByClass.map((task) => {
+                  let workStatus = "Belum Dikumpulkan"
+                  for(var i = 0; i < all_user_files.length; i++) {
+                    if(all_user_files[i].for_task_object === task._id){
+                      workStatus = "Telah Dikumpulkan"
+                      return null;
+                    }
+                  }
+                  return(
+                    <WorkListItem
+                      work_title={task.name}
+                      work_sender={`Mata Pelajaran: ${task.subject}`}
+                      work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+                      work_link={`/tugas-murid/${task._id}`}
+                    />
+                  )
+                })}
               </List>
             </Paper>
           :
@@ -372,7 +385,7 @@ Dashboard.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
-  getAllTaskFilesByUser: PropTypes.func.isRequired
+  getAllTaskFilesByUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -380,7 +393,7 @@ const mapStateToProps = state => ({
   tasksCollection: state.tasksCollection,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
-  filesCollection: state.filesCollection
+  filesCollection: state.filesCollection,
 });
 
 export default withRouter(

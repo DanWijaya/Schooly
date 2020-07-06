@@ -12,8 +12,7 @@ import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, FormControl, Grid, Link, MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
-import MuiAlert from '@material-ui/lab/Alert';
+import { Button, Dialog, FormControl, Grid, Link, MenuItem, Paper, Select, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -24,6 +23,7 @@ const styles = (theme) => ({
     justifyContent: "center",
     alignItems: "center",
     maxWidth: "1000px",
+    padding: "10px",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "fixed",
     backgroundRepeat: "no-repeat",
@@ -104,7 +104,6 @@ class Register extends Component {
       subject_teached: "", // Teacher Data
       activeStep: 0,
       dialogOpen: false,
-      snackbarOpen: false,
       submitButtonClicked: false,
     };
   }
@@ -119,11 +118,9 @@ class Register extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (Object.keys(nextProps.errors).length > 0) {
-      console.log(this.state.snackbarOpen)
+    if (nextProps.errors) {
       this.setState({
-        snackbarOpen: true,
-        errors: nextProps.errors,
+        errors: nextProps.errors
       });
     }
   }
@@ -436,13 +433,6 @@ class Register extends Component {
       )
     }
 
-    const handleCloseSnackbar = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-      this.setState({snackbarOpen: false});
-    };
-
     document.title = "Daftar ke Schooly";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
@@ -510,11 +500,6 @@ class Register extends Component {
             </Link>
           </Grid>
         </Paper>
-        <Snackbar open={this.state.snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-          <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="error">
-            Terdapat kesalahan dalam pengisian!
-          </MuiAlert>
-        </Snackbar>
       </div>
     );
   }

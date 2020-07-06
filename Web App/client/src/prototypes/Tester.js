@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Dialog, Grid, IconButton, Snackbar, TextField, Typography } from "@material-ui/core"
 import MuiAlert from '@material-ui/lab/Alert';
+import OutlinedTextField from "../components/misc/text-field/OutlinedTextField";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -43,7 +44,7 @@ export default function Tester(props) {
   };
 
   return(
-    <div style={{display: "flex", justifyContent: "center"}}>
+    <div style={{display: "flex", flexDirection: "column"}}>
       <Button variant="outlined" onClick={handleClick}>
         Error Snackbar Button
       </Button>
@@ -122,9 +123,10 @@ export default function Tester(props) {
           </Grid>
           </Grid>
       </Dialog>
-      <TextField
-        variant="outlined"
+      <div>
+      <OutlinedTextField
       />
+      </div>
     </div>
   )
 }

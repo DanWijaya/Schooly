@@ -1,18 +1,19 @@
 Current Task
 
 Botak:
-1. notification
-3. Cek lagi kata-kata di bantuan, landing, about, policy.
-5. Delete tester di akhir
-8. nama sekolah di profil
-9. lihat mata pelajaran button
-10. Tambahin desktop version pas create task
-11. dialog dan snackbar
-12. datepicker jadi timepicker buat deadline.
-13. Spacing nda rata di profile picture editor
-14. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
-15. Drawernya dia render duluan pas login
-16.
+1. Delete tester di akhir
+2. nama sekolah di profil
+3. lihat mata pelajaran button
+4. Tambahin desktop version pas create task
+5. dialog dan snackbar
+7. Spacing nda rata di profile picture editor
+8. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
+9. Drawernya dia render duluan pas login
+10. Update OutlinedTextField jadi TextField
+11. Create Task, Edit Task dll desktop version
+12. Field Berkas
+13. Manage Users
+14. IMPORTANT loading buat upload file, Dashboard background jadiin img aja
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -37,7 +38,7 @@ Daniel:
     (node:3857) DeprecationWarning: collection.remove is deprecated. Use deleteOne, deleteMany, or bulkWrite instead.
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 26. Buat pas si student buka announcement, mereka ndak bisa create announcement (cuma ketua kelasnya)
-27. Select untuk yang edit class masih bermasalah... 
+27. Select untuk yang edit class masih bermasalah...
 Penting untuk diimplemen:
 2. (Diganti dengan announcement) Buat Notification functionality (Schema Notif dan explore cara handlenya?)
 3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)

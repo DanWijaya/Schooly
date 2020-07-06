@@ -74,7 +74,8 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         style: {
           borderBottom: "none",
           boxShadow: "none",
-          marginBottom: 0,
+          marginLeft: 10,
+          marginRight: 10,
         },
       },
     },

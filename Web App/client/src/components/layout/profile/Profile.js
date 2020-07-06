@@ -8,7 +8,7 @@ import { setCurrentClass} from "../../../actions/ClassActions"
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
-import { Avatar, Badge, Grid, List, ListItem, ListItemAvatar, Paper, Snackbar, Typography } from "@material-ui/core";
+import { Avatar, Badge, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
@@ -69,33 +69,65 @@ function ProfileDataItem(props) {
   const classes = useStyles();
 
   return(
-    <ListItem>
-        <ListItemAvatar>
-          <Avatar className={classes.profileDataItemAvatar}>
-            {props.profile_data_icon}
-          </Avatar>
-        </ListItemAvatar>
-        <Grid container justify="space-between">
-          <Grid item xs={6}>
-            <Typography variant="button">
-              {props.profile_data_category}
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            {props.profile_data_info === null ?
-              <Paper className={classes.emptyProfileData}>
-                <Typography variant="button">
-                  Kosong
-                </Typography>
-              </Paper>
-              :
-              <Typography>
-                {props.profile_data_info}
+    <div>
+      <Hidden smUp implementation="css">
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar className={classes.profileDataItemAvatar}>
+              {props.profile_data_icon}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="overline">
+                {props.profile_data_category}
               </Typography>
             }
+            secondary={
+              !props.profile_data_info ?
+                <Paper className={classes.emptyProfileData}>
+                  <Typography variant="button">
+                    Kosong
+                  </Typography>
+                </Paper>
+              :
+                <Typography>
+                  {props.profile_data_info}
+                </Typography>
+            }
+          />
+        </ListItem>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar className={classes.profileDataItemAvatar}>
+              {props.profile_data_icon}
+            </Avatar>
+          </ListItemAvatar>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Typography variant="overline">
+                {props.profile_data_category}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              {!props.profile_data_info ?
+                <Paper className={classes.emptyProfileData}>
+                  <Typography variant="button">
+                    Kosong
+                  </Typography>
+                </Paper>
+                :
+                <Typography>
+                  {props.profile_data_info}
+                </Typography>
+              }
+            </Grid>
           </Grid>
-        </Grid>
-    </ListItem>
+        </ListItem>
+      </Hidden>
+    </div>
   )
 }
 
@@ -144,8 +176,7 @@ function Profile(props) {
   }
 
   // Initially classesCollection.kelas.name === undefined
-  if(user.role === "Student" && !classesCollection.kelas.name
-  ){
+  if(user.role === "Student" && !classesCollection.kelas.name) {
     setCurrentClass(user.kelas)
   }
 
@@ -153,7 +184,6 @@ function Profile(props) {
 
   return(
     <div className={classes.root}>
-
       {/* ProfilePictureEditorDialog Snackbar */}
       <Snackbar
         open={openAlert}
@@ -165,7 +195,6 @@ function Profile(props) {
           Foto profil berhasil diganti!
         </Alert>
       </Snackbar>
-
       {/* ProfileDataEditorDialog Snackbar */}
       <Snackbar
         open={openDataEditorAlert}
@@ -177,7 +206,6 @@ function Profile(props) {
           Data profil berhasil diganti!
         </Alert>
       </Snackbar>
-
       {/* ProfilePasswordEditorDialog Snackbar */}
       <Snackbar
         open={openPasswordEditorAlert}
@@ -189,7 +217,6 @@ function Profile(props) {
           Kata sandi berhasil diganti!
         </Alert>
       </Snackbar>
-
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar
@@ -221,13 +248,13 @@ function Profile(props) {
               <Avatar className={classes.avatar} />
             </StyledBadge>
           }
-          <Typography variant="h3" style={{padding: "10px"}}>
+          <Typography variant="h3" align="center" style={{padding: "10px"}}>
             {user.name}
           </Typography>
-          <Typography variant="h6">
-            "Nama Sekolah"
+          <Typography variant="h6" align="center">
+            {user.sekolah}
           </Typography>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" align="center" gutterBottom>
             {user.role === "Student" ?
               "Murid"
             : user.role === "Teacher" ?

@@ -20,6 +20,7 @@ const styles = (theme) => ({
     alignItems: "center",
     maxWidth: "1000px",
     margin: "auto",
+    padding: "10px",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
