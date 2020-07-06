@@ -180,7 +180,6 @@ class App extends Component {
                   </Switch>
                   <div
                     style={{
-                      display: "flex",
                       width: "100%",
                       marginTop: "150px",
                     }}

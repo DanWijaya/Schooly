@@ -75,7 +75,7 @@ function ProfileDataItem(props) {
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
-        <Grid container justify="space-between">
+        <Grid container spacing={2} justify="space-between">
           <Grid item xs={6}>
             <Typography variant="button">
               {props.profile_data_category}

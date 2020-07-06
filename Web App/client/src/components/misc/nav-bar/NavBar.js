@@ -15,18 +15,9 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  navbarContainer: {
-    flex: "auto",
-    justifyContent: "space-between",
-  },
   navbarContainedLeftItems: {
-    flex: "auto",
+    flex: "1",
     justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  navbarContainedRightItems: {
-    display: "flex",
-    justifyContent: "flex-end",
     alignItems: "center",
   },
   navbarProfilePicture: {
@@ -105,7 +96,7 @@ function NavBar(props) {
       </Link>
     )
     rightNavBarContents = (
-      <NavBarLoggedInContents isMobileView={isMobileView} className={classes.navbarContainedRightItems} />
+      <NavBarLoggedInContents isMobileView={isMobileView} />
     )
   }
 
@@ -123,7 +114,7 @@ function NavBar(props) {
     )
     middleNavBarContents = null
     rightNavBarContents = (
-      <div className={classes.navbarContainedRightItems}>
+      <div>
         <Button
           variant="contained"
           size="small"
@@ -149,7 +140,7 @@ function NavBar(props) {
       position="fixed"
       className={classes.appBar}
     >
-      <Toolbar className={classes.navbarContainer}>
+      <Toolbar>
         {leftNavBarContents}
         {middleNavBarContents}
         {rightNavBarContents}

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  navbarContainedRightItems: {
+  navbarContents: {
     flex: "1",
     justifyContent: "flex-end",
     alignItems: "center",
@@ -62,7 +62,7 @@ function NavBarLoggedInContents(props) {
 
   // Desktop Menu (will rendered when in desktop mode / width >= 600px)
   const renderDesktopMenu = (
-    <Grid container className={classes.navbarContainedRightItems}>
+    <Grid container className={classes.navbarContents}>
       <LightTooltip title={user.name}>
         <IconButton onClick={handleProfileMenu}>
             <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
@@ -101,7 +101,7 @@ function NavBarLoggedInContents(props) {
 
   // Mobile menu (will rendered when in mobile mode / width < 600px)
   const renderMobileMenu = (
-    <Grid container className={classes.navbarContainedRightItems}>
+    <Grid container className={classes.navbarContents}>
       <IconButton
         edge="end"
         color="inherit"

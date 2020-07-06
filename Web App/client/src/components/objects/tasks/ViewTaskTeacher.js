@@ -8,7 +8,7 @@ import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
 import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, ListItemIcon, Paper, Typography } from "@material-ui/core";
+import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, ListItemIcon, Paper, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -94,18 +94,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   downloadIconButton: {
-    width: theme.spacing(3.5),
-    height: theme.spacing(3.5),
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.primary.main,
     },
-  },
-  downloadIcon: {
-    width: theme.spacing(2),
-    height: theme.spacing(2),
   },
   wordFileTypeIcon: {
     backgroundColor: "#16B0DD",
@@ -142,7 +136,7 @@ function LampiranFile(props) {
     displayedName = filename
 
   return(
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem
           button
@@ -199,10 +193,11 @@ function LampiranFile(props) {
             secondary={filetype}
           />
           <IconButton
+            size="small"
             className={classes.downloadIconButton}
             onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran") }}
           >
-            <CloudDownloadIcon className={classes.downloadIcon} />
+            <CloudDownloadIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
@@ -343,12 +338,9 @@ function ViewTaskTeacher(props) {
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paperBox}>
-        <Grid
-          container
-          spacing={2}
-        >
-          <Grid item xs={6} style={{marginBottom: "30px"}}>
-            <Typography variant="h4" >
+        <Grid container spacing={2} style={{marginBottom: "30px"}}>
+          <Grid item xs={12} md={8}>
+            <Typography variant="h4">
               {tasksCollection.name}
             </Typography>
             <Typography variant="caption" color="textSecondary">
@@ -358,13 +350,23 @@ function ViewTaskTeacher(props) {
               Penanggung Jawab: <b>{user.name}</b>
             </Typography>
           </Grid>
-          <Grid item xs={6} container direction="column" alignItems="flex-end">
-            <Typography variant="overline" className={classes.deadlineWarningText}>
-              Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Nilai Maksimum: 100
-            </Typography>
+          <Grid item xs={12} md={4}>
+            <Hidden mdUp implementation="css">
+              <Typography variant="overline" className={classes.deadlineWarningText}>
+                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Nilai Maksimum: 100
+              </Typography>
+            </Hidden>
+            <Hidden smDown implementation="css" style={{display: "flex"}}>
+              <Typography variant="overline" align="right" className={classes.deadlineWarningText}>
+                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
+              </Typography>
+              <Typography variant="body2" align="right" color="textSecondary">
+                Nilai Maksimum: 100
+              </Typography>
+            </Hidden>
           </Grid>
           <Grid item xs={12} style={{marginBottom: "30px"}}>
             <Typography color="primary" gutterBottom>

@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
+import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
 import { viewSelectedClasses } from "../../../actions/ClassActions"
@@ -13,9 +16,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import CloseIcon from "@material-ui/icons/Close";
 import CancelIcon from "@material-ui/icons/Cancel";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import moment from "moment";
-import "moment/locale/id";
-import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
+import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
 
@@ -74,6 +75,15 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  downloadIconButton: {
+    marginLeft: "5px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
   deleteAnnouncementButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
@@ -82,32 +92,102 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  wordFileTypeIcon: {
+    backgroundColor: "#16B0DD",
+  },
+  excelFileTypeIcon: {
+    backgroundColor: "#68C74F",
+  },
+  imageFileTypeIcon: {
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    backgroundColor: "#FD931D",
+  },
+  otherFileTypeIcon: {
+    backgroundColor: "#808080",
+  },
 }));
 
 
 function LampiranFile(props) {
   const classes = useStyles();
+
   const {file_id, filename, filetype, onDownloadFile, onPreviewFile} = props;
 
+  let displayedName = ""
+  filename.length >= 26 ?
+    displayedName = `${filename.slice(0,25)}..${path.extname(filename)}`
+  :
+    displayedName = filename
+
   return (
-    <Grid item xs={6}>
+    <Grid item xs={12} sm={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem button disableRipple className={classes.listItem}
-        onClick={() => {onPreviewFile(file_id, "lampiran_announcement")}}>
+          onClick={() => {onPreviewFile(file_id, "lampiran_announcement")}}
+        >
           <ListItemAvatar>
-            <Avatar />
+            {filetype === "Word" ?
+                <Avatar className={classes.wordFileTypeIcon}>
+                  <FaFileWord />
+                </Avatar>
+              :
+              filetype === "Excel" ?
+                <Avatar className={classes.excelFileTypeIcon}>
+                  <FaFileExcel />
+                </Avatar>
+              :
+              filetype === "Gambar" ?
+                <Avatar className={classes.imageFileTypeIcon}>
+                  <FaFileImage />
+                </Avatar>
+              :
+              filetype === "PDF" ?
+                <Avatar className={classes.pdfFileTypeIcon}>
+                  <FaFilePdf />
+                </Avatar>
+              :
+              filetype === "Teks" ?
+                <Avatar className={classes.textFileTypeIcon}>
+                  <FaFileAlt />
+                </Avatar>
+              :
+              filetype === "Presentasi" ?
+                <Avatar className={classes.presentationFileTypeIcon}>
+                  <FaFilePowerpoint />
+                </Avatar>
+              :
+              filetype === "File Lainnya" ?
+                <Avatar className={classes.otherFileTypeIcon}>
+                  <FaFile />
+                </Avatar>
+              : null
+            }
           </ListItemAvatar>
           <ListItemText
-            primary={filename}
+            primary={
+              <LightToolTip title={filename} placement="top">
+                <Typography variant="subtitle2">
+                  {displayedName}
+                </Typography>
+              </LightToolTip>
+            }
             secondary={filetype}
           />
-          <ListItemIcon>
-            <IconButton onClick={(e) => {
-              e.stopPropagation()
-              onDownloadFile(file_id, "lampiran_announcement")}}>
-              <CloudDownloadIcon />
-            </IconButton>
-          </ListItemIcon>
+          <IconButton
+            size="small"
+            className={classes.downloadIconButton}
+            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran_announcement") }}
+          >
+            <CloudDownloadIcon fontSize="small" />
+          </IconButton>
         </ListItem>
       </Paper>
     </Grid>
@@ -138,8 +218,8 @@ function ViewAnnouncement(props) {
       case ".xlsx" :
       case ".csv"  : return "Excel"
 
-      case ".png":
-      case ".jpg":
+      case ".png" :
+      case ".jpg" :
       case ".jpeg" : return "Gambar"
 
       case ".pdf" : return "PDF"
@@ -148,9 +228,9 @@ function ViewAnnouncement(props) {
       case ".rtf" : return "Teks"
 
       case ".ppt" :
-      case ".pptx": return "Presentasi"
+      case ".pptx" : return "Presentasi"
 
-      default: return "File lainnya"
+      default: return "File Lainnya"
     }
   }
 
@@ -252,19 +332,39 @@ function ViewAnnouncement(props) {
       <Paper className={classes.paper}>
         <Grid container direction="column" spacing={3}>
           <Grid item container direction="row">
-            <ListItemText
-              primary={selectedAnnouncements.title}
-              secondary={selectedAnnouncements.author_name}
-            />
-            <ListItemText
-              align="right"
-              primary={`Tanggal diumumkan: ${moment(selectedAnnouncements.date_announced).locale("id").format("DD-MM-YYYY")}`}
-              secondary={`Pukul: ${moment(selectedAnnouncements.date_announced).locale("id").format("HH:mm:ss")}`}
-            />
+            <Grid item xs={12} md={6}>
+              <ListItemText
+                primary={
+                  <Typography variant="h4">
+                    {selectedAnnouncements.title}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="h6" color="textSecondary">
+                    {selectedAnnouncements.author_name}
+                  </Typography>
+                }
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Hidden mdUp implementation="css">
+                <ListItemText
+                  primary={`Tanggal diumumkan: ${moment(selectedAnnouncements.date_announced).locale("id").format("DD-MM-YYYY")}`}
+                  secondary={`Pukul: ${moment(selectedAnnouncements.date_announced).locale("id").format("HH:mm:ss")}`}
+                />
+              </Hidden>
+              <Hidden smDown implementation="css">
+                <ListItemText
+                  align="right"
+                  primary={`Tanggal diumumkan: ${moment(selectedAnnouncements.date_announced).locale("id").format("DD-MM-YYYY")}`}
+                  secondary={`Pukul: ${moment(selectedAnnouncements.date_announced).locale("id").format("HH:mm:ss")}`}
+                />
+              </Hidden>
+            </Grid>
           </Grid>
           <Grid item>
             <Typography variant="h6" color="primary" gutterBottom>
-              Deskripsi: 
+              Deskripsi:
             </Typography>
             <Typography variant="body1">
             {selectedAnnouncements.description}
@@ -275,14 +375,16 @@ function ViewAnnouncement(props) {
               Lampiran Berkas:
             </Typography>
             <Grid item container spacing={1}>
-              {!selectedAnnouncements.lampiran ? null : 
+              {!selectedAnnouncements.lampiran ? null
+              :
               selectedAnnouncements.lampiran.map((lampiran) => (
                 <LampiranFile
                   file_id={lampiran.id}
                   onPreviewFile={onPreviewFile}
                   onDownloadFile ={onDownloadFile}
                   filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}/>
+                  filetype={fileType(lampiran.filename)}
+                />
               ))}
             </Grid>
           </Grid>
@@ -329,6 +431,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, getAnnouncement, deleteAnnouncement, getAllAnnouncements, 
+  mapStateToProps, { getOneAnnouncement, getAnnouncement, deleteAnnouncement, getAllAnnouncements,
     previewLampiranAnnouncement, downloadLampiranAnnouncement, viewSelectedClasses}
 ) (ViewAnnouncement);

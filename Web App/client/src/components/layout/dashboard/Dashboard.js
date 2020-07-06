@@ -8,7 +8,7 @@ import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -32,59 +32,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NotificationItemList(props) {
-  const classes = useStyles();
-
-  return(
-    <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
-        <ListItemAvatar>
-          <Avatar>
-            {props.sender_avatar}
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          primary={props.notification_title}
-          secondary={props.sender_name}
-        />
-        <ListItemText
-          align="right"
-          primary={
-            <Typography variant="subtitle" color="textSecondary">
-              {props.time}
-            </Typography>}
-        />
-      </ListItem>
-    </Paper>
-  )
-}
-
-
 function WorkListItem(props) {
   const classes = useStyles()
 
   return(
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-        <ListItemAvatar>
-          {props.work_category_avatar}
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Typography variant="h6">
-              {props.work_title}
-            </Typography>
-          }
-          secondary={props.work_sender}
-        />
-        <ListItemText style={{textAlign: "right"}}
-          primary={
-            <Typography variant="h6" className={classes.warningText}>
-              Batas Waktu: {props.work_deadline}
-            </Typography>
-          }
-          secondary={props.work_status}
-        />
+        <Grid container alignItems="center">
+          <Grid item xs={8}>
+            <ListItemText
+              primary={
+                <Typography variant="h6">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={props.work_sender}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="h7" className={classes.warningText}>
+                  Batas Waktu:
+                </Typography>
+              }
+              secondary={props.work_deadline}
+            />
+          </Grid>
+        </Grid>
       </ListItem>
     </Paper>
   )
@@ -226,7 +202,7 @@ class Dashboard extends Component {
 
     let tasksByClass = []
     if(Boolean(tasksCollection.length)) {
-      if(user.role == "Student"){
+      if(user.role === "Student"){
         tasksCollection.map((task) => {
           let class_assigned = task.class_assigned
           for (var i = 0; i < class_assigned.length; i++){
@@ -235,7 +211,7 @@ class Dashboard extends Component {
           }
         })
       } else if(user.role === "Teacher"){
-        // in untuk si guru
+        // For Teacher
         console.log("Ini untuk guru")
       }
     }
@@ -252,7 +228,7 @@ class Dashboard extends Component {
                   <Typography variant="h3">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
-                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                  <Typography variant="h5" style={{marginBottom: "20px"}}>
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
@@ -264,7 +240,7 @@ class Dashboard extends Component {
                   <Typography variant="h3">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
-                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                  <Typography variant="h5" style={{marginBottom: "20px"}}>
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
@@ -276,7 +252,7 @@ class Dashboard extends Component {
                   <Typography variant="h3">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
-                  <Typography variant="h5" style={{marginBottom: "40px"}}>
+                  <Typography variant="h5" style={{marginBottom: "20px"}}>
                     Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
                   </Typography>
                   <Typography variant="h6">
@@ -320,30 +296,23 @@ class Dashboard extends Component {
                 </div>
               </div>
               <List>
-              {tasksByClass.map((task) => {
-            let workCategoryAvatar = (
-              <Avatar className={classes.assignmentLate}>
-                <AssignmentLateIcon/>
-              </Avatar>
-            )
-            let workStatus = "Belum Dikumpulkan"
-            for(var i = 0; i < all_user_files.length; i++) {
-              if(all_user_files[i].for_task_object === task._id){
-                workStatus = "Telah Dikumpulkan"
-                return null;
-              }
-            }
-            return(
-              <WorkListItem
-                work_title={task.name}
-                work_category_avatar={workCategoryAvatar}
-                work_sender={`Mata Pelajaran: ${task.subject}`}
-                work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                work_link={`/tugas-murid/${task._id}`}
-              />
-            )
-          })}
+                {tasksByClass.map((task) => {
+                  let workStatus = "Belum Dikumpulkan"
+                  for(var i = 0; i < all_user_files.length; i++) {
+                    if(all_user_files[i].for_task_object === task._id){
+                      workStatus = "Telah Dikumpulkan"
+                      return null;
+                    }
+                  }
+                  return(
+                    <WorkListItem
+                      work_title={task.name}
+                      work_sender={`Mata Pelajaran: ${task.subject}`}
+                      work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+                      work_link={`/tugas-murid/${task._id}`}
+                    />
+                  )
+                })}
               </List>
             </Paper>
           :
@@ -372,7 +341,7 @@ Dashboard.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
-  getAllTaskFilesByUser: PropTypes.func.isRequired
+  getAllTaskFilesByUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -380,7 +349,7 @@ const mapStateToProps = state => ({
   tasksCollection: state.tasksCollection,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
-  filesCollection: state.filesCollection
+  filesCollection: state.filesCollection,
 });
 
 export default withRouter(

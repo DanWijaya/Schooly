@@ -9,7 +9,7 @@ import { viewOneTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Divider, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+import { Avatar, Button, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
    Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -26,9 +26,6 @@ const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
@@ -92,8 +89,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   downloadIconButton: {
-    width: theme.spacing(3.5),
-    height: theme.spacing(3.5),
     marginLeft: "5px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -103,8 +98,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   deleteIconButton: {
-    width: theme.spacing(3.5),
-    height: theme.spacing(3.5),
     marginLeft: "7.5px",
     backgroundColor: theme.palette.error.dark,
     color: "white",
@@ -112,10 +105,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "white",
       color: theme.palette.error.dark,
     },
-  },
-  actionIcon: {
-    width: theme.spacing(2),
-    height: theme.spacing(2),
   },
   wordFileTypeIcon: {
     backgroundColor: "#16B0DD",
@@ -156,7 +145,7 @@ function LampiranFile(props) {
     displayedName = filename
 
   return(
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem
           button
@@ -213,10 +202,11 @@ function LampiranFile(props) {
             secondary={filetype}
           />
           <IconButton
+            size="small"
             className={classes.downloadIconButton}
             onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran") }}
           >
-            <CloudDownloadIcon className={classes.actionIcon} />
+            <CloudDownloadIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
@@ -291,17 +281,20 @@ function WorkFile(props) {
           }
           secondary={file_type}
         />
-        <IconButton className={classes.downloadIconButton}
-          onClick={(e) => { e.stopPropagation()
-            onDownloadFile(file_id, "tugas")}}
+        <IconButton
+          size="small"
+          className={classes.downloadIconButton}
+          onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "tugas") }}
          >
-          <CloudDownloadIcon className={classes.actionIcon} />
+          <CloudDownloadIcon fontSize="small" />
         </IconButton>
-        <IconButton className={classes.deleteIconButton}
+        <IconButton
+          size="small"
+          className={classes.deleteIconButton}
           onClick={(e) => { e.stopPropagation()
             handleOpenDeleteDialog(props.file_id, props.file_name)}}
          >
-          <DeleteIcon className={classes.actionIcon} />
+          <DeleteIcon fontSize="small" />
         </IconButton>
       </ListItem>
     </Paper>
@@ -539,9 +532,9 @@ function ViewTaskStudent(props) {
       >
         <Grid item xs={12} md={8}>
           <Paper className={classes.paperBox}>
-            <Grid container style={{marginBottom: "30px"}}>
-              <Grid item xs={6}>
-                <Typography variant="h4" >
+            <Grid container spacing={2} style={{marginBottom: "30px"}}>
+              <Grid item xs={12} md={8}>
+                <Typography variant="h4">
                   {tasksCollection.name}
                 </Typography>
                 <Typography variant="caption" color="textSecondary">
@@ -551,13 +544,23 @@ function ViewTaskStudent(props) {
                   Penanggung Jawab: <b>{selectedUser.name}</b>
                 </Typography>
               </Grid>
-              <Grid item xs={6} container direction="column" alignItems="flex-end">
-                <Typography variant="overline" color="textSecondary" className={classes.deadlineWarningText}>
-                  Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Nilai Maksimum: 100
-                </Typography>
+              <Grid item xs={12} md={4}>
+                <Hidden mdUp implementation="css">
+                  <Typography variant="overline" color="textSecondary" className={classes.deadlineWarningText}>
+                    Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Nilai Maksimum: 100
+                  </Typography>
+                </Hidden>
+                <Hidden smDown implementation="css">
+                  <Typography variant="overline" align="right" color="textSecondary" className={classes.deadlineWarningText}>
+                    Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
+                  </Typography>
+                  <Typography variant="body2" align="right" color="textSecondary">
+                    Nilai Maksimum: 100
+                  </Typography>
+                </Hidden>
               </Grid>
             </Grid>
             <div style={{marginBottom: "30px"}}>

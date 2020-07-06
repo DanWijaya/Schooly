@@ -154,17 +154,16 @@ class CreateClass extends Component {
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                  <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
                       <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
                       <Select
-                      value={this.state.walikelas}
-                      onChange={(event) => {this.onChange(event, "walikelas")}}
-                    >
+                        value={this.state.walikelas}
+                        onChange={(event) => {this.onChange(event, "walikelas")}}
+                      >
                       {options.map((walikelas) => (
                         <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
                       ))}
                     </Select>
-
                   </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>

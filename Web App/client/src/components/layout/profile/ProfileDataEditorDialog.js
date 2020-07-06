@@ -52,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  inputLabel: {
+    color: theme.palette.primary.main,
+    fontSize: "15px",
+  },
 }));
 
 function TabPanel(props) {
@@ -94,24 +98,17 @@ function ProfileDataItemEdit(props) {
             {props.profile_data_icon}
           </Avatar>
         </ListItemAvatar>
-        <Grid container spacing={2} justify="space-between" alignItems="center">
-          <Grid item xs={6}>
-            <Typography variant="button">
-              {props.profile_data_category}
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            { props.is_textfield ?
-              <OutlinedTextField
-                value={props.value}
-                id={props.id}
-                on_change={props.on_change}
-              />
-              :
-              props.non_textfield_content
-            }
-          </Grid>
-        </Grid>
+        { props.is_textfield ?
+          <OutlinedTextField
+            labelname={props.profile_data_category}
+            value={props.value}
+            id={props.id}
+            on_change={props.on_change}
+            width
+          />
+          :
+          props.non_textfield_content
+        }
     </ListItem>
   )
 }
@@ -266,6 +263,7 @@ function ProfileDataEditorDialog(props) {
                   profile_data_category="Tanggal Lahir"
                   non_textfield_content={
                     <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                      <label id="tanggal_lahir" className={classes.inputLabel}>Tanggal Lahir</label>
                       <KeyboardDatePicker
                         fullWidth
                         disableFuture
@@ -367,7 +365,7 @@ function ProfileDataEditorDialog(props) {
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<ColorLensIcon />}
-                  profile_data_category="Keterampilan non-teknis"
+                  profile_data_category="Keterampilan Non-Akademik"
                   is_textfield
                   value={dataProfil.ket_non_teknis}
                   id="ket_non_teknis"

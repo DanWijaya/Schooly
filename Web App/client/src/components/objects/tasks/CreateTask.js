@@ -433,7 +433,6 @@ class CreateTask extends Component {
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                      <label id="class_assigned" className={classes.inputLabel}>Batas Waktu</label>
                       <KeyboardDatePicker
                         fullWidth
                         disablePast
