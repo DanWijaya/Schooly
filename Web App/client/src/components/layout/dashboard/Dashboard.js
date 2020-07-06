@@ -123,7 +123,7 @@ const styles = (theme) => ({
   createTaskButton: {
     backgroundColor: "#61BD4F",
     color: "white",
-    "&:focus, &:hover": {
+  "&:focus, &:hover": {
       backgroundColor: "white",
       color: "#61BD4F",
     },

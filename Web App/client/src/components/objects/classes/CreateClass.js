@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { clearErrors } from "../../../actions/ErrorActions"
 import { createClass } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, Grid, MenuItem,Paper, Select, Typography } from "@material-ui/core";
+import { Button, FormControl, FormHelperText, Grid, MenuItem,Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
   root: {
@@ -61,8 +63,9 @@ class CreateClass extends Component {
   onChange = (e, otherfield) => {
     if(otherfield === "walikelas")
       this.setState({ walikelas: e.target.value});
-    else
+    else{
       this.setState({ [e.target.id]: e.target.value});
+    }
   }
 
   onSubmit = (e) => {
@@ -106,6 +109,7 @@ class CreateClass extends Component {
   }
 
   componentDidMount() {
+    this.props.clearErrors()
     this.props.getTeachers()
   }
 
@@ -154,7 +158,7 @@ class CreateClass extends Component {
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}} error={Boolean(errors.walikelas) && !this.state.walikelas}>
                       <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
                       <Select
                         value={this.state.walikelas}
@@ -164,6 +168,10 @@ class CreateClass extends Component {
                         <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
                       ))}
                     </Select>
+                    <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.walikelas) && !this.state.walikelas ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.walikelas) && !this.state.walikelas ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.walikelas}</Typography> : null}
+                    </FormHelperText>
                   </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
@@ -215,6 +223,7 @@ CreateClass.propTypes = {
   createClass: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   getTeachers: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -223,5 +232,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createClass, getTeachers }
+  mapStateToProps, { createClass, getTeachers, clearErrors }
 ) (withStyles(styles)(CreateClass));

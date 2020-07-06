@@ -1,12 +1,12 @@
-import { GET_ERRORS } from "../actions/Types";
+import { GET_ERRORS, UPDATE_ERRORS } from "../actions/Types";
 
 const initialState = {};
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case GET_ERRORS:
-      console.log(action.payload)
       return action.payload;
+
     default:
       return state;
   }

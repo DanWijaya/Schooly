@@ -4,13 +4,14 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography, FormHelperText } from "@material-ui/core";
+import { Button, Chip, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { createAnnouncement } from "../../../actions/AnnouncementActions"
 import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
+import { clearErrors } from "../../../actions/ErrorActions"
 import ErrorIcon from "@material-ui/icons/Error";
 
 const path = require("path");
@@ -127,8 +128,9 @@ class CreateAnnouncement extends Component {
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { viewClass, setCurrentClass} = this.props;
+    const { viewClass, setCurrentClass, clearErrors} = this.props;
 
+    clearErrors()
     viewClass()
     if(user.role === "Student")
       setCurrentClass(user.kelas)
@@ -397,6 +399,7 @@ CreateAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
   createAnnouncement: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -408,5 +411,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createAnnouncement, viewClass , setCurrentClass}
+  mapStateToProps, { createAnnouncement, viewClass , setCurrentClass, clearErrors}
  ) (withStyles(styles)(CreateAnnouncement))

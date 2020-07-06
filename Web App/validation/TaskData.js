@@ -11,20 +11,19 @@ module.exports = function validateTaskInput(data) {
     data.grade = isEmpty(data.grade) ? "" : data.grade;
 
     console.log(data.description, "Description")
-    console.log(isEmpty(data.description))
+    
     if (Validator.isEmpty(data.name)) {
         errors.name = "Nama tugas belum diisi"
     }
-
-    // if (data.class_assigned.length == 0) {
-    //     errors.class_assigned = "Kelas yang ditugaskan belum diisi"
-    // }
 
     if(Validator.isEmpty(data.subject)){
         errors.subject = "Mata Pelajaran belum diisi"
     }
     if(Validator.isEmpty(data.description)) {
         errors.description = "Deskripsi belum diberikan"
+    }
+    if(data.class_assigned.length === 0) {
+        errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
     if(data.grade > 100 && data.grade < 0){
         errors = { grade : "Nilai harus diantara 0 dan 100"}

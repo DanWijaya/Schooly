@@ -13,9 +13,7 @@ const mongoose = require("mongoose");
 const User= require("../../models/user_model/User");
 const Task = require("../../models/Task");
 const Announcement = require("../../models/Announcement");
-const { reject } = require("async");
-const { resolve } = require("path");
-const { Console } = require("console");
+const Material = require("../../models/Material");
 
 // Create Mongo Connection
 mongoose.set('useUnifiedTopology', true);
@@ -23,7 +21,7 @@ mongoose.set('useNewUrlParser', true)
 const conn = mongoose.createConnection(keys.mongoURI)
 
 // Initialize gfs
-let gfsAvatar, gfsTugas, gfsLampiran, gfsLampiranAnnouncement;
+let gfsAvatar, gfsTugas, gfsLampiranTugas, gfsLampiranAnnouncement, gfsLampiranMateri;
 
 conn.once("open", () => {
   // Initialize Stream
@@ -33,11 +31,14 @@ conn.once("open", () => {
   gfsTugas = GridFsStream(conn.db, mongoose.mongo);
   gfsTugas.collection("tugas")
 
-  gfsLampiran = GridFsStream(conn.db, mongoose.mongo);
-  gfsLampiran.collection("lampiran")
+  gfsLampiranTugas = GridFsStream(conn.db, mongoose.mongo);
+  gfsLampiranTugas.collection("lampiran_tugas")
 
   gfsLampiranAnnouncement = GridFsStream(conn.db, mongoose.mongo);
   gfsLampiranAnnouncement.collection("lampiran_announcement")
+
+  gfsLampiranMateri = GridFsStream(conn.db, mongoose.mongo)
+  gfsLampiranMateri.collection("lampiran_materi")
 })
 
 // Storage Engine initialization function
@@ -71,14 +72,16 @@ function storageEngine(bucketName, random=false){
 // Create storage engine
 var avatar_storage = storageEngine("avatar", true)
 var tugas_storage = storageEngine("tugas")
-var lampiran_storage = storageEngine("lampiran")
+var lampiran_tugas_storage = storageEngine("lampiran_tugas")
 var lampiran_announcement_storage = storageEngine("lampiran_announcement")
+var lampiran_materi_storage = storageEngine("lampiran_materi");
 
 // Create the middleware which facilitates file uploads
 const uploadAvatar = multer({ storage: avatar_storage });
 const uploadTugas = multer({ storage: tugas_storage });
-const uploadLampiran = multer({ storage: lampiran_storage});
+const uploadLampiranTugas= multer({ storage: lampiran_tugas_storage});
 const uploadLampiranAnnouncement = multer({ storage: lampiran_announcement_storage});
+const uploadLampiranMateri = multer({ storage: lampiran_materi_storage});
 
 // ------------------------------ Part for Avatar uploads ------------------------------- //
 //Uploading for Avatar
@@ -127,22 +130,7 @@ router.get("/image-upload", (req,res) => {
   // @route POST /upload
   // @desc Upload files to DB
   // This part where it uploads the avatar is done on users.js (because want to update the user data at the same time)
-  /* router.post("/upload/:id", uploadAvatar.single("avatar"), (req,res) => {
-    let id = req.params.id
-    User.findById(id, (err, userData) => {
-      if(!userData)
-        res.status(404).send("User data is not found");
-      else{
-        userData.avatar = req.file.filename;
-        userData
-              .save()
-              .then()
-              .catch(err => res.status(400).send("Unable to update user"))
-      }
-    })
-    res.redirect("/image-upload");
-    console.log(req.file.filename)
-  }); */
+  /* router.post("/upload/:id", uploadAvatar.single("avatar"), (req,res) => {*/
 
   router.get("/image/:filename", (req, res) => {
     if(Boolean(gfsAvatar)){
@@ -317,7 +305,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 // When uploading the lampiran, it is done tgt when creating the task object
 // So, this implementation is on router.post("/create") in tasks.js file
 
-router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (req,res) => {
+router.post("/upload_lampiran/:task_id", uploadLampiranTugas.array("lampiran_tugas", 5), (req,res) => {
   let task_id = req.params.task_id;
   console.log("Upload lampiran is runned")
   console.log('Task Id is:', task_id)
@@ -357,8 +345,8 @@ router.post("/upload_lampiran/:task_id", uploadLampiran.array("lampiran", 5), (r
 
 router.get("/lampiran/:task_id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.task_id)
-  if(Boolean(gfsLampiran)){
-    gfsLampiran.files.findOne({_id: id}, (err, file) => {
+  if(Boolean(gfsLampiranTugas)){
+    gfsLampiranTugas.files.findOne({_id: id}, (err, file) => {
       // Check if files
       if (!file || file.length === 0) {
         return res.status(404).json({
@@ -371,7 +359,7 @@ router.get("/lampiran/:task_id", (req,res) => {
       res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
 
       // Files exist
-      const readStream = gfsLampiran.createReadStream(filename);
+      const readStream = gfsLampiranTugas.createReadStream(filename);
       readStream.pipe(res)
     })
   }
@@ -380,8 +368,8 @@ router.get("/lampiran/:task_id", (req,res) => {
 router.get("/previewlampiran/:task_id", (req,res) => {
   console.log("Previewing lampiran")
   id = new mongoose.mongo.ObjectId(req.params.task_id)
-  if(Boolean(gfsLampiran)){
-    gfsLampiran.files.findOne({_id: id}, (err, file) => {
+  if(Boolean(gfsLampiranTugas)){
+    gfsLampiranTugas.files.findOne({_id: id}, (err, file) => {
       // Check if files
       if (!file || file.length === 0) {
         return res.status(404).json({
@@ -394,7 +382,7 @@ router.get("/previewlampiran/:task_id", (req,res) => {
       res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
 
       // Files exist
-      const readStream = gfsLampiran.createReadStream(filename);
+      const readStream = gfsLampiranTugas.createReadStream(filename);
       readStream.pipe(res)
     })
   }
@@ -406,7 +394,7 @@ router.delete("/lampiran/:task_id", (req,res) => {
   for(var i = 0; i < lampiran_to_delete.length; i++){
     lampiran_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // di rootnya, masukkin collection namenya..
-    gfsLampiran.remove({ _id: lampiran_id, root: "lampiran"}, (err) => {
+    gfsLampiranTugas.remove({ _id: lampiran_id, root: "lampiran_tugas"}, (err) => {
       if(err) {
         console.log("error occured")
         return res.status(404).json({err: "Error in removing the files"});
@@ -556,4 +544,124 @@ router.get("/previewlampiran_announcement/:id", (req,res) => {
   }
 })
 
-module.exports = {router, uploadAvatar, uploadTugas, uploadLampiran};
+// Router for handling the upload lampiran Materi... 
+router.post("/upload_lampiran_materi/:id", uploadLampiranMateri.array("lampiran_announcement", 5), (req,res) => {
+  let material_id = req.params.id;
+  console.log("Upload lampiran is runned")
+
+  Material.findById(material_id, (err, material) => {
+
+    if(!material){
+      return res.status(404).json({notfound: "Material not found"});
+    } else {
+      let temp = [];
+      console.log("Files are here: ", req.files)
+      // console.log("Files are here: ", req.files)
+      for(var i = 0; i< req.files.length; i++){
+        console.log(req.files[i])
+        temp.push({
+          id: req.files[i].id,
+          filename: req.files[i].filename,
+        })
+      }
+      console.log("Temp: ", temp)
+
+      // kalau udah ada lampiran, push aja.
+      if(material.lampiran != undefined && material.lampiran.length > 0){
+        let temp2 = [...material.lampiran, ...temp]
+        material.lampiran = temp2
+      } else{
+        material.lampiran = temp;
+      }
+
+      material.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
+                  .then(material => console.log("Lampiran material"))
+                  .catch(err => {console.log("error kan ini")})
+
+        }
+    })
+  res.json({success: "Successfully uploaded the lampiran file"})
+})
+
+router.delete("/lampiran_materi/:id", (req,res) => {
+  let material_id = req.params.id;
+  const {lampiran_to_delete, current_lampiran} = req.body;
+  for(var i = 0; i < lampiran_to_delete.length; i++){
+    id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
+    // di rootnya, masukkin collection namenya.. 
+    gfsLampiranMateri.remove({ _id: id, root: "lampiran_materi"}, (err) => {
+      if(err) {
+        console.log("error occured")
+        return res.status(404).json({err: "Error in removing the files"});
+      }
+      else {
+        console.log("Sucessful, lampiran kenadelete")
+      }
+    })
+
+    for(var j =0; j < current_lampiran.length; j++) {
+      if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+        current_lampiran.splice(j,1)
+        break;
+      }
+    }
+  }
+
+  console.log("Deleted alr")
+  Material.findById(material_id, (err, ann) => {
+    if(!ann){
+      return res.status(404).json("Ann object is not found in the Database")
+    } else {
+      ann.lampiran = current_lampiran;
+      ann.save()
+          .then((ann) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
+          .catch((err) => console.log("Error happened in updating task lampiran field"))
+    }
+  })
+})
+
+router.get("/lampiran_materi/:id", (req,res) => {
+  id = new mongoose.mongo.ObjectId(req.params.id)
+  if(Boolean(gfsLampiranMaterial)){
+    gfsLampiranMaterial.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
+
+      // Files exist
+      const readStream = gfsLampiranMaterial.createReadStream(filename);
+      readStream.pipe(res)
+    })
+  }
+})
+
+router.get("/previewlampiran_materi/:id", (req,res) => {
+  console.log("Previewing lampiran")
+  id = new mongoose.mongo.ObjectId(req.params.id)
+  if(Boolean(gfsLampiranMaterial)){
+    gfsLampiranMaterial.files.findOne({_id: id}, (err, file) => {
+      // Check if files
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: "Tugas tidak ada"
+        });
+      }
+      var type = file.contentType;
+      var filename = file.filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
+
+      // Files exist
+      const readStream = gfsLampiranMaterial.createReadStream(filename);
+      readStream.pipe(res)
+    })
+  }
+})
+module.exports = {router, uploadAvatar, uploadTugas, uploadLampiranTugas};

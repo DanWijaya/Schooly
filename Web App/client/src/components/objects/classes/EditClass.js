@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getTeachers , getStudents} from "../../../actions/UserActions";
+import { clearErrors } from "../../../actions/ErrorActions"
 import { setCurrentClass, updateClass } from "../../../actions/ClassActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography } from "@material-ui/core";
@@ -140,8 +141,11 @@ class EditClass extends Component {
   }
 
   componentDidMount() {
-    this.props.getTeachers()
-    this.props.getStudents()
+    const { getTeachers, getStudents, clearErrors} = this.props;
+    
+    clearErrors()
+    getTeachers()
+    getStudents()
   }
 
   render() {
@@ -341,6 +345,7 @@ EditClass.propTypes = {
     errors: PropTypes.object.isRequired,
     getTeachers: PropTypes.func.isRequired,
     getStudents: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     classesCollection: PropTypes.object.isRequired
 };
@@ -352,5 +357,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { setCurrentClass, updateClass, getTeachers, getStudents }
+    mapStateToProps, { setCurrentClass, updateClass, getTeachers, getStudents, clearErrors}
 ) (withStyles(styles)(EditClass));

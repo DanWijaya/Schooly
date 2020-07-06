@@ -27,6 +27,7 @@ export const GRADE_TASKS = "GRADE_TASKS"
 
 //ERROR ACTION TYPES
 export const GET_ERRORS = "GET_ERRORS";
+export const UPDATE_ERRORS = "UPDATE_ERRORS";
 
 //UPLOAD ACTION TYPES
 //TASK_FILES ACTION TYPES
@@ -41,6 +42,10 @@ export const GET_ALL_LAMPIRAN_BY_TASK = "GET_ALL_LAMPIRAN_BY_TASK";
 //SUBJECT ACTION TYPES
 export const GET_SUBJECT = "GET_SUBJECT";
 export const GET_ALL_SUBJECTS = "GET_ALL_SUBJECT";
+
+//Material Action types
+export const GET_MATERIAL = "GET_MATERIAL"
+export const GET_ALL_MATERIALS = "GET_ALL_MATERIALS"
 
 //Announcement action types
 export const GET_ANNOUNCEMENT = "GET_ANNOUNCEMENT";

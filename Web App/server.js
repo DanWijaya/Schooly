@@ -11,6 +11,7 @@ const otps = require("./routes/api/otps");
 const subjects = require("./routes/api/subjects");
 const authentication = require('./routes/api/authentication');
 const announcements = require("./routes/api/announcements");
+const materials = require('./routes/api/materials');
 
 const app = express();
 
@@ -42,7 +43,6 @@ mongoose
     )
   .catch(err => console.log(err));
 
-
 // Mutler Middleware
 app.use(express.static("public"))
 
@@ -63,7 +63,7 @@ app.use("/api/otps", otps)
 app.use("/api/subjects", subjects);
 app.use("/api/authentication", authentication)
 app.use("/api/announcements", announcements)
-
+app.use("/api/materials", materials)
 // Always put this in the end
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
