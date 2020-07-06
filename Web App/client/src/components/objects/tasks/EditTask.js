@@ -12,7 +12,7 @@ import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Chip, FormControl,FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -251,7 +251,7 @@ class EditTask extends Component {
         console.log(temp[i].name, tempToAdd[j].name)
         if(tempToAdd[j].name === temp[i].name){
           tempToAdd.splice(j,1)
-        } 
+        }
       }
     }
     temp.splice(i, 1);
@@ -508,10 +508,10 @@ class EditTask extends Component {
                   <Grid item className={classes.gridItem}>
                     <label id="class_assigned" className={classes.inputLabel}>Batas Waktu</label>
                     <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                      <KeyboardDatePicker
+                      <KeyboardDateTimePicker
                         fullWidth
                         disablePast
-                        format="dd/MM/yyyy"
+                        format="dd/MM/yyyy HH:mm"
                         margin="normal"
                         okLabel="Simpan"
                         cancelLabel="Batal"

@@ -189,8 +189,7 @@ function SubmittedTaskList(props) {
     let gradeMap = grade
     gradeMap.set(id, e.target.value)
     setGrade(gradeMap)
-
-  }
+  };
 
   const onDownloadFile = (id, fileCategory = "none") => {
     if(fileCategory === "lampiran")

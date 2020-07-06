@@ -54,6 +54,8 @@ function NavBarLoggedInContents(props) {
   const handleProfileMenuClose = () => {
     setProfileAnchorEl(null);
   };
+
+  // Logout Click
   const onLogoutClick = (e) => {
     e.preventDefault();
     handleProfileMenuClose()
@@ -69,8 +71,8 @@ function NavBarLoggedInContents(props) {
         </IconButton>
       </LightTooltip>
       <Menu
-        anchorEl={profileAnchorEl}
         keepMounted
+        anchorEl={profileAnchorEl}
         open={Boolean(profileAnchorEl)}
         onClose={handleProfileMenuClose}
         getContentAnchorEl={null}
@@ -83,18 +85,18 @@ function NavBarLoggedInContents(props) {
             horizontal: "center",
         }}
       >
-          <MenuItem className={classes.menuItem} button component="a" href="/profil">
-            <ListItemIcon>
-              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
-            </ListItemIcon>
-            <ListItemText primary="Profil Saya" />
-          </MenuItem>
-          <MenuItem className={classes.menuItem} onClick={onLogoutClick}>
-            <ListItemIcon>
-              <ExitToAppIcon fontSize="medium" />
-            </ListItemIcon>
-            <ListItemText primary="Keluar" />
-          </MenuItem>
+        <MenuItem button component="a" href="/profil" className={classes.menuItem}>
+          <ListItemIcon>
+            <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+          </ListItemIcon>
+          <ListItemText primary="Profil Saya" />
+        </MenuItem>
+        <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
+          <ListItemIcon>
+            <ExitToAppIcon fontSize="medium" />
+          </ListItemIcon>
+          <ListItemText primary="Keluar" />
+        </MenuItem>
       </Menu>
     </Grid>
   )
@@ -110,25 +112,25 @@ function NavBarLoggedInContents(props) {
         <MoreIcon />
       </IconButton>
       <Menu
-        anchorEl={mobileAnchorEl}
-        anchorOrigin={{vertical: "top", horizontal: "right"}}
         keepMounted
-        transformOrigin={{vertical: "top", horizontal: "right"}}
+        anchorEl={mobileAnchorEl}
         open={Boolean(mobileAnchorEl)}
         onClose={handleMobileMenuClose}
+        anchorOrigin={{vertical: "top", horizontal: "right"}}
+        transformOrigin={{vertical: "top", horizontal: "right"}}
       >
-          <MenuItem className={classes.menuItem} button component="a" href="/profil">
-            <ListItemIcon>
-              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
-            </ListItemIcon>
-            <ListItemText primary="Profil Saya" />
-          </MenuItem>
-          <MenuItem className={classes.menuItem} onClick={onLogoutClick}>
-            <ListItemIcon>
-              <ExitToAppIcon fontSize="medium" />
-            </ListItemIcon>
-            <ListItemText primary="Keluar" />
-          </MenuItem>
+        <MenuItem button component="a" href="/profil" className={classes.menuItem}>
+          <ListItemIcon>
+            <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+          </ListItemIcon>
+          <ListItemText primary="Profil Saya" />
+        </MenuItem>
+        <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
+          <ListItemIcon>
+            <ExitToAppIcon fontSize="medium" />
+          </ListItemIcon>
+          <ListItemText primary="Keluar" />
+        </MenuItem>
       </Menu>
     </Grid>
   )

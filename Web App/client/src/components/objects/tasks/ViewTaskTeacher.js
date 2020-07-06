@@ -353,7 +353,7 @@ function ViewTaskTeacher(props) {
           <Grid item xs={12} md={4}>
             <Hidden mdUp implementation="css">
               <Typography variant="body2" className={classes.deadlineWarningText} gutterBottom>
-                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
+                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY - HH.mm")}
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Nilai Maksimum: 100
@@ -361,7 +361,7 @@ function ViewTaskTeacher(props) {
             </Hidden>
             <Hidden smDown implementation="css" style={{display: "flex"}}>
               <Typography variant="body2" align="right" className={classes.deadlineWarningText} gutterBottom>
-                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
+                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY - HH.mm")}
               </Typography>
               <Typography variant="body2" align="right" color="textSecondary">
                 Nilai Maksimum: 100
@@ -400,7 +400,7 @@ function ViewTaskTeacher(props) {
           <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
             <Fab variant="extended" className={classes.seeAllTaskButton}>
               <AssignmentIcon style={{marginRight: "10px"}} />
-              Lihat Hasil Pekerjaan
+              Lihat Hasil
             </Fab>
           </Link>
         </Grid>

@@ -6,7 +6,6 @@ Botak:
 3. lihat mata pelajaran button
 4. Tambahin desktop version pas create task
 5. dialog dan snackbar
-6. datepicker jadi timepicker buat deadline.
 7. Spacing nda rata di profile picture editor
 8. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
 9. Drawernya dia render duluan pas login
@@ -14,6 +13,7 @@ Botak:
 11. Create Task, Edit Task dll desktop version
 12. Field Berkas
 13. Manage Users
+14. IMPORTANT loading buat upload file, Dashboard background jadiin img aja
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

@@ -15,6 +15,7 @@ import { clearErrors } from "../../../actions/ErrorActions"
 import ErrorIcon from "@material-ui/icons/Error";
 
 const path = require("path");
+
 const StyledMenu = withStyles({
   paper: {
     border: "1px solid #D3D4D5",
@@ -152,7 +153,7 @@ class CreateAnnouncement extends Component {
     } else if(otherfield === "kelas") {
       console.log(e.target.value)
       this.setState({ class_assigned: e.target.value})
-    } else { 
+    } else {
       this.setState({ [e.target.id] : e.target.value })
     }
   }
@@ -205,7 +206,7 @@ class CreateAnnouncement extends Component {
 
   render() {
     document.title = "Schooly | Buat Pengumuman"
-    
+
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -216,7 +217,7 @@ class CreateAnnouncement extends Component {
         },
       },
     };
-    
+
     const {classesCollection,  classes, setCurrentClass, viewClass, subjectsCollection} = this.props;
     const { all_classes, kelas } = this.props.classesCollection
     const{ class_assigned, fileLampiran, errors} = this.state;
@@ -291,8 +292,8 @@ class CreateAnnouncement extends Component {
                     error1={errors.description}
                   />
                 </Grid>
-                {user.role === "Student" // berarti dia ketua kelas 
-                ? null : 
+                {user.role === "Student" // berarti dia ketua kelas
+                ? null :
                 <Grid item className={classes.gridItem}>
                     <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
                     <label id="class_assigned" className={classes.inputLabel}>Kelas yang diumumkan</label>

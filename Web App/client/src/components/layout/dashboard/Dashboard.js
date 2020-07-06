@@ -2,21 +2,24 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { viewTask } from "../../../actions/TaskActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import moment from "moment";
-import "moment/locale/id";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   listItemPaper: {
@@ -117,21 +120,21 @@ const styles = (theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
   },
-  buatTugasButton: {
-    marginRight: "20px",
-  },
-  createTaskButton: {
+  createButton: {
     backgroundColor: "#61BD4F",
     color: "white",
-  "&:focus, &:hover": {
+    "&:focus, &:hover": {
       backgroundColor: "white",
       color: "#61BD4F",
     },
   },
-  createTaskIcon: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    marginRight: "7.5px",
+  menuItem: {
+    "&:hover": {
+      backgroundColor: "#61BD4F",
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
+    },
   },
   manageTaskButton: {
     backgroundColor: theme.palette.primary.main,
@@ -165,7 +168,8 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: new Date()
+      time: new Date(),
+      anchorEl: null,
     };
   }
 
@@ -191,6 +195,14 @@ class Dashboard extends Component {
       time: new Date()
     });
   }
+
+  // Create Button Menu
+  handleMenuOpen = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
 
   render() {
     const { classes, tasksCollection, classesCollection, viewTask, getAllTaskFilesByUser,  } = this.props;
@@ -263,15 +275,7 @@ class Dashboard extends Component {
           </Grid>
           <Grid item>
             {user.role === "Teacher" ?
-            <Grid item container direction="row" justify="flex-end">
-              <Grid item className={classes.buatTugasButton}>
-                <Link to ="/buat-tugas">
-                  <Fab variant="extended" className={classes.createTaskButton}>
-                    <AssignmentIcon className={classes.createTaskIcon} />
-                    Buat Tugas
-                  </Fab>
-                </Link>
-              </Grid>
+            <Grid item container direction="row" spacing={2} justify="flex-end" alignItems="center">
               <Grid item>
                 <Link to ="/daftar-tugas">
                   <Fab variant="extended" className={classes.manageTaskButton}>
@@ -279,6 +283,46 @@ class Dashboard extends Component {
                     Lihat Tugas
                   </Fab>
                 </Link>
+              </Grid>
+              <Grid item>
+                <Fab className={classes.createButton} onClick={(event) => this.handleMenuOpen(event)}>
+                  <AddIcon />
+                </Fab>
+                <Menu
+                  keepMounted
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleMenuClose}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  style={{marginTop: "10px"}}
+                >
+                  <MenuItem button component="a" href="/buat-pengumuman" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <AnnouncementIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Pengumuman" />
+                  </MenuItem>
+                  <MenuItem button component="a" href="/buat-materi" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <MenuBookIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Materi" />
+                  </MenuItem>
+                  <MenuItem button component="a" href="/buat-tugas" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <AssignmentIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Tugas" />
+                  </MenuItem>
+                </Menu>
               </Grid>
             </Grid>
           : user.role === "Student" ?

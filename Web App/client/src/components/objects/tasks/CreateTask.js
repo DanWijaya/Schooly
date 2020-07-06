@@ -14,7 +14,7 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Chip, FormControl, FormHelperText, Grid, IconButton,
    ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -436,10 +436,10 @@ class CreateTask extends Component {
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                      <KeyboardDatePicker
+                      <KeyboardDateTimePicker
                         fullWidth
                         disablePast
-                        format="dd/MM/yyyy"
+                        format="dd/MM/yyyy HH:mm"
                         margin="normal"
                         okLabel="Simpan"
                         cancelLabel="Batal"

@@ -176,8 +176,7 @@ function Profile(props) {
   }
 
   // Initially classesCollection.kelas.name === undefined
-  if(user.role === "Student" && !classesCollection.kelas.name
-  ){
+  if(user.role === "Student" && !classesCollection.kelas.name) {
     setCurrentClass(user.kelas)
   }
 
@@ -185,7 +184,6 @@ function Profile(props) {
 
   return(
     <div className={classes.root}>
-
       {/* ProfilePictureEditorDialog Snackbar */}
       <Snackbar
         open={openAlert}
@@ -197,7 +195,6 @@ function Profile(props) {
           Foto profil berhasil diganti!
         </Alert>
       </Snackbar>
-
       {/* ProfileDataEditorDialog Snackbar */}
       <Snackbar
         open={openDataEditorAlert}
@@ -209,7 +206,6 @@ function Profile(props) {
           Data profil berhasil diganti!
         </Alert>
       </Snackbar>
-
       {/* ProfilePasswordEditorDialog Snackbar */}
       <Snackbar
         open={openPasswordEditorAlert}
@@ -221,7 +217,6 @@ function Profile(props) {
           Kata sandi berhasil diganti!
         </Alert>
       </Snackbar>
-
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container direction="column" alignItems="center">
           {user.avatar
