@@ -52,10 +52,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  inputLabel: {
-    color: theme.palette.primary.main,
-    fontSize: "15px",
-  },
 }));
 
 function TabPanel(props) {
@@ -93,22 +89,28 @@ function ProfileDataItemEdit(props) {
 
   return(
     <ListItem>
-        <ListItemAvatar>
-          <Avatar className={classes.profileDataItemAvatar}>
-            {props.profile_data_icon}
-          </Avatar>
-        </ListItemAvatar>
-        { props.is_textfield ?
-          <OutlinedTextField
-            labelname={props.profile_data_category}
-            value={props.value}
-            id={props.id}
-            on_change={props.on_change}
-            width
-          />
-          :
-          props.non_textfield_content
-        }
+      <Grid container alignItems="center">
+        <Grid item xs={2}>
+          <ListItemAvatar>
+            <Avatar className={classes.profileDataItemAvatar}>
+              {props.profile_data_icon}
+            </Avatar>
+          </ListItemAvatar>
+        </Grid>
+        <Grid item xs={10}>
+          { props.is_textfield ?
+            <OutlinedTextField
+              labelname={props.profile_data_category}
+              value={props.value}
+              id={props.id}
+              on_change={props.on_change}
+              width
+            />
+            :
+            props.non_textfield_content
+          }
+        </Grid>
+      </Grid>
     </ListItem>
   )
 }
@@ -231,7 +233,7 @@ function ProfileDataEditorDialog(props) {
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item style={{marginBottom: "20px"}}>
+          <Grid item style={{marginBottom: "10px"}}>
             <Typography variant="h5" gutterBottom>
               <b>Sunting Profil</b>
             </Typography>
@@ -262,49 +264,58 @@ function ProfileDataEditorDialog(props) {
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
                   non_textfield_content={
-                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                      <label id="tanggal_lahir" className={classes.inputLabel}>Tanggal Lahir</label>
-                      <KeyboardDatePicker
-                        fullWidth
-                        disableFuture
-                        inputVariant="outlined"
-                        format="dd/MM/yyyy"
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        id="tanggal_lahir"
-                        onChange={(date) => handleDateChange(date)}
-                        value={dataProfil.tanggal_lahir instanceof Date ?
-                          dataProfil.tanggal_lahir
-                          :
-                          null
-                        }
-                        inputProps={{
-                          style: {
-                            borderBottom: "none",
-                            boxShadow: "none",
-                            margin: 0,
-                            paddingLeft: "11px",
-                          },
-                        }}
-                      />
-                    </MuiPickersUtilsProvider>
+                    <div style={{marginBottom: 3.5}}>
+                      <label id="tanggal_lahir">
+                        Tanggal Lahir
+                      </label>
+                      <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                          fullWidth
+                          disableFuture
+                          inputVariant="outlined"
+                          format="dd/MM/yyyy"
+                          okLabel="Simpan"
+                          cancelLabel="Batal"
+                          id="tanggal_lahir"
+                          onChange={(date) => handleDateChange(date)}
+                          value={dataProfil.tanggal_lahir instanceof Date ?
+                            dataProfil.tanggal_lahir
+                            :
+                            null
+                          }
+                          inputProps={{
+                            style: {
+                              borderBottom: "none",
+                              boxShadow: "none",
+                              margin: 0,
+                              paddingLeft: "11px",
+                            },
+                          }}
+                        />
+                      </MuiPickersUtilsProvider>
+                    </div>
                   }
                 />
                 <ProfileDataItemEdit
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
                   non_textfield_content={
-                    <Select
-                      fullWidth
-                      variant="outlined"
-                      color="primary"
-                      id="jenis_kelamin"
-                      value={dataProfil.jenis_kelamin}
-                      onChange={(event) => {handleChangeDataProfil(event, "jenis_kelamin")}}
-                    >
-                      <MenuItem value="Pria">Pria</MenuItem>
-                      <MenuItem value="Wanita">Wanita</MenuItem>
-                    </Select>
+                    <div style={{marginBottom: 1.85}}>
+                      <label id="jenis_kelamin">
+                        Jenis kelamin
+                      </label>
+                      <Select
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        id="jenis_kelamin"
+                        value={dataProfil.jenis_kelamin}
+                        onChange={(event) => {handleChangeDataProfil(event, "jenis_kelamin")}}
+                      >
+                        <MenuItem value="Pria">Pria</MenuItem>
+                        <MenuItem value="Wanita">Wanita</MenuItem>
+                      </Select>
+                    </div>
                   }
                 />
                 <ProfileDataItemEdit

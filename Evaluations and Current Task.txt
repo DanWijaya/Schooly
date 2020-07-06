@@ -13,6 +13,7 @@ Botak:
 10. Update OutlinedTextField jadi TextField
 11. Create Task, Edit Task dll desktop version
 12. Field Berkas
+13. Manage Users
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

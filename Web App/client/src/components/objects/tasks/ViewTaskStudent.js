@@ -532,7 +532,7 @@ function ViewTaskStudent(props) {
       >
         <Grid item xs={12} md={8}>
           <Paper className={classes.paperBox}>
-            <Grid container spacing={2} style={{marginBottom: "30px"}}>
+            <Grid container spacing={2}>
               <Grid item xs={12} md={8}>
                 <Typography variant="h4">
                   {tasksCollection.name}
@@ -546,7 +546,7 @@ function ViewTaskStudent(props) {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Hidden mdUp implementation="css">
-                  <Typography variant="overline" color="textSecondary" className={classes.deadlineWarningText}>
+                  <Typography variant="body2" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
                     Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
@@ -554,7 +554,7 @@ function ViewTaskStudent(props) {
                   </Typography>
                 </Hidden>
                 <Hidden smDown implementation="css">
-                  <Typography variant="overline" align="right" color="textSecondary" className={classes.deadlineWarningText}>
+                  <Typography variant="body2" align="right" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
                     Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
                   </Typography>
                   <Typography variant="body2" align="right" color="textSecondary">
@@ -563,7 +563,7 @@ function ViewTaskStudent(props) {
                 </Hidden>
               </Grid>
             </Grid>
-            <div style={{marginBottom: "30px"}}>
+            <div style={{marginTop: "30px"}}>
               <Typography color="primary" gutterBottom>
                 Deskripsi Tugas:
               </Typography>
@@ -571,7 +571,7 @@ function ViewTaskStudent(props) {
                 {tasksCollection.description}
               </Typography>
             </div>
-            <div>
+            <div style={{marginTop: "30px"}}>
               <Typography color="primary" gutterBottom>
                 Lampiran Berkas:
               </Typography>
