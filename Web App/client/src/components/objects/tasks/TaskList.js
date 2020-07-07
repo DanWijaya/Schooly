@@ -408,7 +408,7 @@ function TaskList(props) {
                           return (`${kelas.name}`)
                         return (`${kelas.name}, `)})}
                       </TableCell>
-                      <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY - HH-mm")}</TableCell>
+                      <TableCell align="center">{moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}</TableCell>
                       {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>
                   );

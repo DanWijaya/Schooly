@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dialog, Grid, IconButton, Snackbar, TextField, Typography } from "@material-ui/core"
+import { Button, CircularProgress, Dialog, Grid, IconButton, Snackbar, TextField, Typography } from "@material-ui/core"
 import MuiAlert from '@material-ui/lab/Alert';
 import OutlinedTextField from "../components/misc/text-field/OutlinedTextField";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,12 +10,12 @@ import StandardTextField from "../components/misc/text-field/StandardTextField";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: "auto",
-    maxWidth: "1000px",
+    // margin: "auto",
+    // maxWidth: "1000px",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-    padding: "10px",
+    // justifyContent: "center",
+    // padding: "10px",
   },
 }));
 
@@ -53,75 +53,29 @@ export default function Tester(props) {
           This is a success message!
         </MuiAlert>
       </Snackbar>
+
       <Button variant="outlined" onClick={handleOpenDeleteDialog}>
         Dialog Button
       </Button>
       <Dialog
         open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
         className={classes.root}
       >
-        <Grid container justify="center" style={{padding: "15px"}}>
-          <Grid item
-            container
-            justify="flex-end"
-            alignItems="flex-start"
-            style={{marginBottom: "10px"}}
-          >
-            <IconButton
-              size="small"
-              disableRipple
-              onClick={handleCloseDeleteDialog}
-              className={classes.iconButtonClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus tugas berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+        <Grid container spacing={2} direction="column" alignItems="center" style={{padding: "20px"}}>
+          <Grid item container justify="center">
             <Typography variant="h6" align="center" gutterBottom>
-              <b>Test</b>
+              File sedang diunggah.
             </Typography>
           </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "20px"}}
-          >
-            <Grid item>
-              <Button
-                startIcon={<DeleteOutlineIcon />}
-                style={{
-                  backgroundColor: "#B22222",
-                  color: "white",
-                  width: "150px",
-                }}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                style={{
-                  backgroundColor: "#2196F3",
-                  color: "white",
-                  width: "150px",
-                }}
-              >
-                Batalkan
-              </Button>
-            </Grid>
+          <Grid item>
+            <CircularProgress />
           </Grid>
+          <Grid item container justify="center">
+            <Typography variant="body1" align="center" gutterBottom>
+              <b>Mohon halaman ini jangan diperbarui.</b>
+            </Typography>
           </Grid>
+        </Grid>
       </Dialog>
       <div>
       <OutlinedTextField
