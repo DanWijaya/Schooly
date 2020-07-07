@@ -339,7 +339,7 @@ function ViewTaskTeacher(props) {
       {DeleteDialog()}
       <Paper className={classes.paperBox}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={7}>
             <Typography variant="h4">
               {tasksCollection.name}
             </Typography>
@@ -350,10 +350,10 @@ function ViewTaskTeacher(props) {
               Penanggung Jawab: <b>{user.name}</b>
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={5}>
             <Hidden mdUp implementation="css">
               <Typography variant="body2" className={classes.deadlineWarningText} gutterBottom>
-                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY - HH.mm")}
+                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD/MM/YYYY - HH.mm")}
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Nilai Maksimum: 100
@@ -361,7 +361,7 @@ function ViewTaskTeacher(props) {
             </Hidden>
             <Hidden smDown implementation="css" style={{display: "flex"}}>
               <Typography variant="body2" align="right" className={classes.deadlineWarningText} gutterBottom>
-                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY - HH.mm")}
+                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD/MM/YYYY - HH.mm")}
               </Typography>
               <Typography variant="body2" align="right" color="textSecondary">
                 Nilai Maksimum: 100

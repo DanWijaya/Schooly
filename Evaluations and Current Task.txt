@@ -12,8 +12,11 @@ Botak:
 10. Update OutlinedTextField jadi TextField
 11. Create Task, Edit Task dll desktop version
 12. Field Berkas
-13. Manage Users
-14. IMPORTANT loading buat upload file, Dashboard background jadiin img aja
+IMPORTANT:
+1. Dashboard background jadiin img aja
+2. Register scheme / Manage users (View profile student and teacher)?
+3. Batas Waktu kumpul (Late or not Late)
+4. betulin table ASAP
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

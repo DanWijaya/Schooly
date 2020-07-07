@@ -9,10 +9,9 @@ import { viewOneTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
-   Paper, Snackbar, Typography } from "@material-ui/core";
+import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+   Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import MuiAlert from "@material-ui/lab/Alert";
 import AddIcon from "@material-ui/icons/Add";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -128,10 +127,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
 }));
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 function LampiranFile(props) {
   const classes = useStyles();
@@ -311,7 +306,6 @@ function ViewTaskStudent(props) {
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
-  const [open, setOpen] = React.useState(false);
   const [fileTugas, setFileTugas] = React.useState(null);
   const [tasksContents, setTaskContents] = React.useState([]);
 
@@ -397,17 +391,6 @@ function ViewTaskStudent(props) {
     return temp
   }
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
-
   const handleTugasUpload = (e) => {
     const files = e.target.files;
     setFileTugas(files)
@@ -424,7 +407,6 @@ function ViewTaskStudent(props) {
     console.log(formData, fileTugas)
     uploadTugas(formData, user, tugasId)
     setFileTugas(null)
-    handleClick()
   }
 
   const onDeleteTugas = (id) => {
@@ -450,13 +432,12 @@ function ViewTaskStudent(props) {
       console.log("File Category is not specified")
   }
 
-  //Delete Dialog box
+  // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true);
     setSelectedFileId(fileid)
     setSelectedFileName(filename)
   };
-
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
@@ -466,7 +447,6 @@ function ViewTaskStudent(props) {
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
-        className={classes.root}
       >
         <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
           <Grid item container justify="flex-end" alignItems="flex-start">
@@ -519,11 +499,46 @@ function ViewTaskStudent(props) {
     )
   }
 
+  // Upload Dialog
+  const [openUploadDialog, setOpenUploadDialog] = React.useState(null);
+  const handleOpenUploadDialog = () => {
+    setOpenUploadDialog(true);
+  };
+  const handleCloseUploadDialog = () => {
+    setOpenUploadDialog(false);
+  };
+
+  function UploadDialog(){
+    return(
+      <Dialog
+        open={openUploadDialog}
+        style={{display: "flex", flexDirection: "column"}}
+      >
+        <Grid container spacing={2} direction="column" alignItems="center" style={{padding: "15px"}}>
+          <Grid item container justify="center">
+            <Typography variant="h6" align="center" gutterBottom>
+              File sedang diunggah.
+            </Typography>
+          </Grid>
+          <Grid item>
+            <CircularProgress />
+          </Grid>
+          <Grid item container justify="center">
+            <Typography variant="body1" align="center" gutterBottom>
+              <b>Mohon halaman ini jangan diperbarui.</b>
+            </Typography>
+          </Grid>
+        </Grid>
+      </Dialog>
+    )
+  }
+
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
 
   return(
     <div className={classes.root}>
       {DeleteDialog()}
+      {UploadDialog()}
       <Grid container
         spacing={2}
         justify="space-between"
@@ -533,7 +548,7 @@ function ViewTaskStudent(props) {
         <Grid item xs={12} md={8}>
           <Paper className={classes.paperBox}>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={7}>
                 <Typography variant="h4">
                   {tasksCollection.name}
                 </Typography>
@@ -544,10 +559,10 @@ function ViewTaskStudent(props) {
                   Penanggung Jawab: <b>{selectedUser.name}</b>
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={5}>
                 <Hidden mdUp implementation="css">
                   <Typography variant="body2" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY - HH.mm")}
+                    Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD/MM/YYYY - HH.mm")}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     Nilai Maksimum: 100
@@ -555,7 +570,7 @@ function ViewTaskStudent(props) {
                 </Hidden>
                 <Hidden smDown implementation="css">
                   <Typography variant="body2" align="right" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY - HH.mm")}
+                    Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD/MM/YYYY - HH.mm")}
                   </Typography>
                   <Typography variant="body2" align="right" color="textSecondary">
                     Nilai Maksimum: 100
@@ -647,14 +662,10 @@ function ViewTaskStudent(props) {
                     className={classes.submitWorkButton}
                     type="submit"
                     disabled={!fileTugas}
+                    onClick={handleOpenUploadDialog}
                   >
                     Kumpul Tugas
                   </Button>
-                  <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success">
-                      File Berhasil Dikumpulkan!
-                    </Alert>
-                  </Snackbar>
                 </div>
               </form>
             </Grid>
