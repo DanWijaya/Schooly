@@ -4,19 +4,17 @@ Botak:
 1. Delete tester di akhir
 2. nama sekolah di profil
 3. lihat mata pelajaran button
-4. Tambahin desktop version pas create task
 5. dialog dan snackbar
 7. Spacing nda rata di profile picture editor
 8. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
-9. Drawernya dia render duluan pas login
 10. Update OutlinedTextField jadi TextField
 11. Create Task, Edit Task dll desktop version
 12. Field Berkas
 IMPORTANT:
-1. Dashboard background jadiin img aja
 2. Register scheme / Manage users (View profile student and teacher)?
 3. Batas Waktu kumpul (Late or not Late)
 4. betulin table ASAP
+5. Pas login page ke dashboard jadi href masih muncul text error sama sidedrawernya
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

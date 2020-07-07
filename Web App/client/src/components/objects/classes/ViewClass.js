@@ -9,8 +9,9 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
-import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Grid,Paper,
-   List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography, ListItemIcon } from "@material-ui/core";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
+   List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
@@ -18,6 +19,7 @@ import BallotIcon from "@material-ui/icons/Ballot";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 
@@ -30,26 +32,22 @@ const useStyles = makeStyles((theme) => ({
   subjectDivider: {
     backgroundColor: theme.palette.primary.main,
   },
+  // tabPanel: {
+  //   padding: "20px",
+  // },
   expansionPanelList: {
     margin: "20px",
-  },
-  paperBox: {
-    padding: "20px",
   },
   listItemPaper: {
     marginBottom: "20px",
   },
   listItem: {
+    minHeight: "70px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
   },
-  lookAllButtonContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-    padding: "5px",
-  },
-  lookAllButton: {
+  lookSubjectButton: {
     "&:focus, &:hover": {
       color: theme.palette.primary.main,
     },
@@ -69,11 +67,6 @@ const useStyles = makeStyles((theme) => ({
   personListDivider: {
     backgroundColor: theme.palette.primary.main,
   },
-  expansionPanelList: {
-    marginLeft: "20px",
-    marginRight: "15px",
-    marginBottom: "10px",
-  },
 }));
 
 function TabPanel(props) {
@@ -87,7 +80,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -110,29 +103,67 @@ function AssignmentListItem(props) {
   const classes = useStyles()
 
   return(
-    <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-        <ListItemAvatar>
-          {props.work_category_avatar}
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Typography variant="h6">
-              {props.work_title}
-            </Typography>
-          }
-          secondary={props.work_subject}
-        />
-        <ListItemText style={{textAlign: "right"}}
-          primary={
-            <Typography variant="h6" className={classes.warningText}>
-              Batas Waktu: {props.work_deadline}
-            </Typography>
-          }
-          secondary={props.work_status}
-        />
-      </ListItem>
-    </Paper>
+    <div>
+      <Hidden smUp implementation="css">
+        <Paper variant="outlined" className={classes.listItemPaper}>
+          <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+            <Grid container alignItems="center">
+              <Grid item xs={7}>
+                <ListItemText
+                  primary={
+                    <Typography variant="h6">
+                      {props.work_title}
+                    </Typography>
+                  }
+                  secondary={props.work_subject}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="body2" className={classes.warningText}>
+                      Batas Waktu: <br /> {props.work_deadline}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="caption">
+                      {props.work_status}
+                    </Typography>
+                  }
+                />
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Paper>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <Paper variant="outlined" className={classes.listItemPaper}>
+          <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+            <ListItemAvatar>
+              {props.work_category_avatar}
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography variant="h6">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={props.work_subject}
+            />  
+            <ListItemText
+              align="right"
+              primary={
+                <Typography className={classes.warningText}>
+                  Batas Waktu: {props.work_deadline}
+                </Typography>
+              }
+              secondary={props.work_status}
+            />
+          </ListItem>
+        </Paper>
+      </Hidden>
+    </div>
   )
 }
 
@@ -140,7 +171,7 @@ function MaterialListitem(props){
   const classes = useStyles()
 
   return(
-    <Paper variant="outlined" className={classes.listItemPaper}>
+    <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
       <ListItem button component="a" href={props.work_link} className={classes.listItem}>
         <ListItemAvatar>
           {props.work_category_avatar}
@@ -151,7 +182,7 @@ function MaterialListitem(props){
               {props.work_title}
             </Typography>
           }
-          secondary={props.work_subject}
+          secondary={!props.work_subject ? " " : props.work_subject}
         />
       </ListItem>
     </Paper>
@@ -160,25 +191,48 @@ function MaterialListitem(props){
 
 function PersonListItem(props) {
   return(
-    <ListItem>
-      <ListItemAvatar>
-        <Avatar src={props.person_avatar}/>
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Typography variant="h6">
-            {props.person_name}
-          </Typography>
-        }
-      />
-      <ListItemText
-        primary={
-          <Typography align="right">
-            {props.person_role}
-          </Typography>
-        }
-      />
-    </ListItem>
+    <div>
+      <Hidden smUp implementation="css">
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar src={props.person_avatar}/>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="h6">
+                {props.person_name}
+              </Typography>
+            }
+            secondary={
+              <Typography variant="caption">
+                {props.person_role}
+              </Typography>
+            }
+          />
+        </ListItem>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar src={props.person_avatar}/>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="h6">
+                {props.person_name}
+              </Typography>
+            }
+          />
+          <ListItemText
+            primary={
+              <Typography align="right">
+                {props.person_role}
+              </Typography>
+            }
+          />
+        </ListItem>
+      </Hidden>
+    </div>
   )
 }
 
@@ -232,7 +286,7 @@ function ViewClass(props) {
   return(
     <div className={classes.root}>
       <Paper square>
-        <Typography variant="h3" align="center" gutterBottom>
+        <Typography variant="h3" align="center" style={{paddingTop: "10px"}} gutterBottom>
           {kelas.name}
         </Typography>
         <Tabs
@@ -247,8 +301,7 @@ function ViewClass(props) {
           <Tab icon={<SupervisorAccountIcon />} label="Peserta" {...TabIndex(2)} />
         </Tabs>
       </Paper>
-      <TabPanel value={value} index={0}>
-        <div className={classes.paperBox} style={{marginBottom: "40px"}}>
+      <TabPanel value={value} index={0} >
           <Grid item>
             <ExpansionPanel defaultExpanded>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -270,7 +323,7 @@ function ViewClass(props) {
                 <MaterialListitem
                   work_title={material.name}
                   work_category_avatar={workCategoryAvatar}
-                  work_subject={`Mata Pelajaran: ${material.subject}`}
+                  work_subject={material.subject}
                   work_status={workStatus}
                   work_link={`/materi/${material._id}`}
                 />
@@ -308,7 +361,7 @@ function ViewClass(props) {
                 <AssignmentListItem
                   work_title={task.name}
                   work_category_avatar={workCategoryAvatar}
-                  work_subject={`Mata Pelajaran: ${task.subject}`}
+                  work_subject={task.subject}
                   work_status={workStatus}
                   work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
                   work_link={`/tugas-murid/${task._id}`}
@@ -333,18 +386,29 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
           </ExpansionPanel>
           </Grid>
-        </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {all_subjects.length === 0 ? null :
+        <div className={classes.tabPanel}>
+          {all_subjects.length === 0 ? null :
           all_subjects.map((subject) => {
             let isEmpty = true
             return(
               <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h5">
-                    {subject.name}
-                  </Typography>
+                <ExpansionPanelSummary>
+                  <Grid container justify="space-between" alignItems="center">
+                    <Typography variant="h5">
+                      {subject.name}
+                    </Typography>
+                    <LightTooltip title="Lihat Lebih Lanjut" placement="right">
+                      <IconButton
+                        className={classes.lookSubjectButton}
+                        href={`/mata-pelajaran/${subject.name}`}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <PageviewIcon />
+                      </IconButton>
+                    </LightTooltip>
+                  </Grid>
                 </ExpansionPanelSummary>
                 <Divider className={classes.subjectDivider} />
                 <List className={classes.expansionPanelList}>
@@ -359,11 +423,11 @@ function ViewClass(props) {
                       </Avatar>
                     )
                     let workStatus = "Belum Dikumpulkan"
+                    isEmpty = false
                     return(
                       <MaterialListitem
                         work_title={material.name}
                         work_category_avatar={workCategoryAvatar}
-                        work_subject={`Mata Pelajaran: ${material.subject}`}
                         work_status={workStatus}
                         work_link={`/materi/${material._id}`}
                       />
@@ -394,7 +458,6 @@ function ViewClass(props) {
                         <AssignmentListItem
                           work_title={task.name}
                           work_category_avatar={workCategoryAvatar}
-                          work_subject={`Mata Pelajaran: ${task.subject}`}
                           work_status={workStatus}
                           work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
                           work_link={`/tugas-murid/${task._id}`}
@@ -403,57 +466,49 @@ function ViewClass(props) {
                     }
                   })}
                   {isEmpty ?
-                    <Typography variant="h5" align="center" gutterBottom>
+                    <Typography variant="h5" color="primary" align="center" gutterBottom>
                       Kosong
                     </Typography>
                   : null}
                 </List>
-                <div className={classes.lookAllButtonContainer}>
-                  <Button
-                    disableRipple
-                    variant="contained"
-                    endIcon={<ChevronRightIcon />}
-                    href={`/mata-pelajaran/${subject.name}`}
-                    className={classes.lookAllButton}
-                  >
-                    Lihat Mata Pelajaran
-                  </Button>
-                </div>
               </ExpansionPanel>
             )
           })
         }
+        </div>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Paper className={classes.paperBox} style={{marginBottom: "40px"}}>
-          <Typography variant="h4" gutterBottom>
-            Wali Kelas
-          </Typography>
-          <Divider className={classes.personListDivider} />
-          <List className={classes.listContainer}>
-            <PersonListItem
-              person_avatar={kelas.walikelas ?
-                `/api/uploads/image/${kelas.walikelas.avatar}` : null}
-              person_name={kelas.walikelas ? kelas.walikelas.name : null}
-              person_role={kelas.walikelas ? kelas.walikelas.subject_teached : null}
-            />
-          </List>
-        </Paper>
-        <Paper className={classes.paperBox}>
-          <Typography variant="h4" gutterBottom>
-            Murid
-          </Typography>
-          <Divider className={classes.personListDivider} />
-          <List className={classes.listContainer}>
-            {all_students.map((student) => (
+        <div className={classes.tabPanel}>
+          <Paper style={{padding: "20px", marginBottom: "40px"}}>
+            <Typography variant="h4" gutterBottom>
+              Wali Kelas
+            </Typography>
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
               <PersonListItem
-                person_avatar={`/api/uploads/image/${student.avatar}`}
-                person_name={student.name}
-                person_role={student.role}
+                person_avatar={kelas.walikelas ?
+                  `/api/uploads/image/${kelas.walikelas.avatar}` : null}
+                person_name={kelas.walikelas ? kelas.walikelas.name : null}
+                person_role={kelas.walikelas ? kelas.walikelas.subject_teached : null}
               />
-            ))}
-          </List>
-        </Paper>
+            </List>
+          </Paper>
+          <Paper style={{padding: "20px"}}>
+            <Typography variant="h4" gutterBottom>
+              Murid
+            </Typography>
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
+              {all_students.map((student) => (
+                <PersonListItem
+                  person_avatar={`/api/uploads/image/${student.avatar}`}
+                  person_name={student.name}
+                  person_role={student.role}
+                />
+              ))}
+            </List>
+          </Paper>
+        </div>
       </TabPanel>
     </div>
   )
