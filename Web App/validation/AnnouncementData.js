@@ -17,7 +17,7 @@ module.exports = function validateAnnouncementInput(data) {
         errors.description = "Deskripsi Pengumuman belum diisi"
     }
 
-    if(data.class_assigned.length === 0 || !data.class_assigned.length){
+    if(!data.class_assigned.length){
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
 

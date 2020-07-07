@@ -630,8 +630,8 @@ router.delete("/lampiran_materi/:id", (req,res) => {
 
 router.get("/lampiran_materi/:id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.id)
-  if(Boolean(gfsLampiranMaterial)){
-    gfsLampiranMaterial.files.findOne({_id: id}, (err, file) => {
+  if(Boolean(gfsLampiranMateri)){
+    gfsLampiranMateri.files.findOne({_id: id}, (err, file) => {
       // Check if files
       if (!file || file.length === 0) {
         return res.status(404).json({
@@ -644,7 +644,7 @@ router.get("/lampiran_materi/:id", (req,res) => {
       res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment untuk download.
 
       // Files exist
-      const readStream = gfsLampiranMaterial.createReadStream(filename);
+      const readStream = gfsLampiranMateri.createReadStream(filename);
       readStream.pipe(res)
     })
   }
@@ -653,8 +653,8 @@ router.get("/lampiran_materi/:id", (req,res) => {
 router.get("/previewlampiran_materi/:id", (req,res) => {
   console.log("Previewing lampiran")
   id = new mongoose.mongo.ObjectId(req.params.id)
-  if(Boolean(gfsLampiranMaterial)){
-    gfsLampiranMaterial.files.findOne({_id: id}, (err, file) => {
+  if(Boolean(gfsLampiranMateri)){
+    gfsLampiranMateri.files.findOne({_id: id}, (err, file) => {
       // Check if files
       if (!file || file.length === 0) {
         return res.status(404).json({
@@ -667,7 +667,7 @@ router.get("/previewlampiran_materi/:id", (req,res) => {
       res.set("Content-Disposition", "inline;filename=" + filename) // harus pakai inline untuk preview.
 
       // Files exist
-      const readStream = gfsLampiranMaterial.createReadStream(filename);
+      const readStream = gfsLampiranMateri.createReadStream(filename);
       readStream.pipe(res)
     })
   }

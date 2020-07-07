@@ -112,6 +112,20 @@ router.get("/viewByClass/:id", (req,res) => {
     })
 })
 
+router.get("/viewByAuthor/:id", (req,res) => {
+    let id = req.params.id;
+    console.log("View material by author is runned")
+
+    Material.find({ author_id: id}, (err, materials) => {
+        if(!materials){
+            console.log("Not found")
+            return res.status(400).json("Material with that author_id is not found in DB");
+        }
+        console.log("materials : ,",  materials)
+        return res.json(materials)
+    })
+})
+
 //Define delete routes
 router.delete("/delete/:id", (req, res) => {
     Material.findByIdAndRemove(req.params.id)
