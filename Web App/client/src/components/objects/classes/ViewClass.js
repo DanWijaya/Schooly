@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   tabPanel: {
-    padding: "20px",
+    // padding: "20px",
   },
   expansionPanelList: {
     margin: "20px",
@@ -73,7 +73,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box>
+        <Box p={3}>
           {children}
         </Box>
       )}

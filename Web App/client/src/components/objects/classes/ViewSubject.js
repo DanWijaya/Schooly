@@ -84,7 +84,7 @@ function ViewSubject(props) {
 
   const { user } = props.auth;
   const { subject_name } = props.match.params
-  const{ setCurrentClass, viewTask, tasksCollection, getAllTaskFilesByUser} = props;
+  const { setCurrentClass, viewTask, tasksCollection, getAllTaskFilesByUser } = props;
   const { selectedClasses, kelas } = props.classesCollection
   const {all_user_files} = props.filesCollection
 
