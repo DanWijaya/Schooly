@@ -190,6 +190,19 @@ function ViewSubject(props) {
       </Grid>
       </Paper>
       <Grid container direction="column" style={{marginTop: "20px"}}>
+      <Grid item>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="h6">
+                Materi
+              </Typography>
+            </ExpansionPanelSummary>
+            <Divider />
+            <List className={classes.expansionPanelList}>
+            {tasksBySubjectClass}
+            </List>
+          </ExpansionPanel>
+        </Grid>
         <Grid item>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
