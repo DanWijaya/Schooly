@@ -30,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
   subjectDivider: {
     backgroundColor: theme.palette.primary.main,
   },
+  tabPanel: {
+    padding: "20px",
+  },
   expansionPanelList: {
     margin: "20px",
-  },
-  paperBox: {
-    padding: "20px",
   },
   listItemPaper: {
     marginBottom: "20px",
@@ -274,7 +274,7 @@ function ViewClass(props) {
         </Tabs>
       </Paper>
       <TabPanel value={value} index={0}>
-        <div className={classes.paperBox} style={{marginBottom: "40px"}}>
+        <div className={classes.tabPanel}>
           <List>
             {tasksByClass.map((task) => {
               let workCategoryAvatar = (
@@ -309,7 +309,8 @@ function ViewClass(props) {
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {all_subjects.length === 0 ? null :
+        <div className={classes.tabPanel}>
+          {all_subjects.length === 0 ? null :
           all_subjects.map((subject) => {
             let isEmpty = true
             return(
@@ -373,37 +374,40 @@ function ViewClass(props) {
             )
           })
         }
+        </div>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Paper className={classes.paperBox} style={{marginBottom: "40px"}}>
-          <Typography variant="h4" gutterBottom>
-            Wali Kelas
-          </Typography>
-          <Divider className={classes.personListDivider} />
-          <List className={classes.listContainer}>
-            <PersonListItem
-              person_avatar={kelas.walikelas ?
-                `/api/uploads/image/${kelas.walikelas.avatar}` : null}
-              person_name={kelas.walikelas ? kelas.walikelas.name : null}
-              person_role={kelas.walikelas ? kelas.walikelas.subject_teached : null}
-            />
-          </List>
-        </Paper>
-        <Paper className={classes.paperBox}>
-          <Typography variant="h4" gutterBottom>
-            Murid
-          </Typography>
-          <Divider className={classes.personListDivider} />
-          <List className={classes.listContainer}>
-            {all_students.map((student) => (
+        <div className={classes.tabPanel}>
+          <Paper style={{padding: "20px", marginBottom: "40px"}}>
+            <Typography variant="h4" gutterBottom>
+              Wali Kelas
+            </Typography>
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
               <PersonListItem
-                person_avatar={`/api/uploads/image/${student.avatar}`}
-                person_name={student.name}
-                person_role={student.role}
+                person_avatar={kelas.walikelas ?
+                  `/api/uploads/image/${kelas.walikelas.avatar}` : null}
+                person_name={kelas.walikelas ? kelas.walikelas.name : null}
+                person_role={kelas.walikelas ? kelas.walikelas.subject_teached : null}
               />
-            ))}
-          </List>
-        </Paper>
+            </List>
+          </Paper>
+          <Paper style={{padding: "20px"}}>
+            <Typography variant="h4" gutterBottom>
+              Murid
+            </Typography>
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
+              {all_students.map((student) => (
+                <PersonListItem
+                  person_avatar={`/api/uploads/image/${student.avatar}`}
+                  person_name={student.name}
+                  person_role={student.role}
+                />
+              ))}
+            </List>
+          </Paper>
+        </div>
       </TabPanel>
     </div>
   )
