@@ -6,6 +6,7 @@ import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
+import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Grid,
    IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
@@ -14,6 +15,7 @@ import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,10 +48,36 @@ const useStyles = makeStyles((theme) => ({
   },
   warningText: {
     color: theme.palette.warning.main,
+  },
+  material: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  listItem: {
+    minHeight: "70px"
   }
 }));
 
-function WorkListItem(props) {
+function MaterialListitem(props){
+  const classes = useStyles()
+
+  return(
+      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+        <ListItemAvatar>
+          {props.work_category_avatar}
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <Typography variant="h6">
+              {props.work_title}
+            </Typography>
+          }
+          secondary={!props.work_subject ? " " : props.work_subject}
+        />
+      </ListItem>
+  )
+}
+
+function AssignmentListItem(props) {
 const classes = useStyles()
   return(
     <ListItem button component="a" href={props.work_link}>
@@ -84,12 +112,16 @@ function ViewSubject(props) {
 
   const { user } = props.auth;
   const { subject_name } = props.match.params
-  const { setCurrentClass, viewTask, tasksCollection, getAllTaskFilesByUser } = props;
+  const{ setCurrentClass, viewTask, tasksCollection, getAllTaskFilesByUser, getMaterial} = props;
   const { selectedClasses, kelas } = props.classesCollection
   const {all_user_files} = props.filesCollection
+  const { selectedMaterials } = props.materialsCollection
 
   console.log(props.classesCollection)
   React.useEffect(() => {
+    if(user.role === "Student"){
+      getMaterial(user.kelas, "by_class")
+    }
     setCurrentClass(user.kelas)
     viewTask()
     getAllTaskFilesByUser(user.id)
@@ -97,6 +129,7 @@ function ViewSubject(props) {
 
   let tasksByClass = [] // Tasks on specific class.
 
+  console.log(selectedMaterials)
   // All actions to retrive datas from Database...
   if(tasksCollection.length !== undefined){
     tasksCollection.map((task) => {
@@ -132,7 +165,7 @@ function ViewSubject(props) {
 
       if(task.subject === subject_name) {
       tasksBySubjectClass.push(
-        <WorkListItem
+        <AssignmentListItem
           work_title={task.name}
           work_category_avatar={workCategoryAvatar}
           work_sender={`Mata Pelajaran: ${task.subject}`}
@@ -156,7 +189,7 @@ function ViewSubject(props) {
     }
   }
 
-
+  generateTaskBySubject()
   document.title = `Schooly | ${subject_name}`
 
   return(
@@ -170,6 +203,34 @@ function ViewSubject(props) {
         </Typography>
       </Paper>
       <Grid container direction="column" style={{marginTop: "20px"}}>
+      <Grid item>
+          <ExpansionPanel>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="h6">
+                Materi
+              </Typography>
+            </ExpansionPanelSummary>
+            <Divider />
+            <List className={classes.expansionPanelList}>
+
+            {!selectedMaterials.length ? null :
+            selectedMaterials.map((material, i) => {
+              if(material.subject === subject_name){
+
+                return( <MaterialListitem
+                  work_title={material.name}
+                  work_category_avatar={
+                  <Avatar className={classes.material}>
+                    <MenuBookIcon/>
+                  </Avatar>}
+                  work_sender={material.subject}
+                  work_link={`/materi/${material._id}`}
+                />)
+              }
+            })}
+            </List>
+          </ExpansionPanel>
+        </Grid>
         <Grid item>
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -192,14 +253,14 @@ function ViewSubject(props) {
             </ExpansionPanelSummary>
             <Divider />
             <List className={classes.expansionPanelList}>
-              <WorkListItem
+              <AssignmentListItem
                 work_title=""
                 work_category_avatar=""
                 work_sender=""
                 work_status=""
                 work_link=""
               />
-              <WorkListItem
+              <AssignmentListItem
                 work_title=""
                 work_category_avatar=""
                 work_sender=""
@@ -218,14 +279,14 @@ function ViewSubject(props) {
             </ExpansionPanelSummary>
             <Divider />
             <List className={classes.expansionPanelList}>
-              <WorkListItem
+              <AssignmentListItem
                 work_title=""
                 work_category_avatar=""
                 work_sender=""
                 work_status=""
                 work_link=""
               />
-              <WorkListItem
+              <AssignmentListItem
                 work_title=""
                 work_category_avatar=""
                 work_sender=""
@@ -245,11 +306,13 @@ ViewSubject.propTypes = {
   auth: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
+  materialsCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
+  getMaterial: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -257,10 +320,11 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   tasksCollection: state.tasksCollection,
+  materialsCollection: state.materialsCollection,
   filesCollection: state.filesCollection,
 })
 
 export default connect(
   mapStateToProps, {setCurrentClass,
-    getAllSubjects, viewTask, getAllTaskFilesByUser}
+    getAllSubjects, viewTask, getAllTaskFilesByUser, getMaterial}
 ) (ViewSubject)

@@ -15,6 +15,7 @@ IMPORTANT:
 3. Batas Waktu kumpul (Late or not Late)
 4. betulin table ASAP
 5. Pas login page ke dashboard jadi href masih muncul text error sama sidedrawernya
+6. disable route link buat yang rolenya nda bisa akses
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

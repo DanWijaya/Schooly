@@ -8,6 +8,7 @@ import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import { getMaterial } from "../../../actions/MaterialActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
    List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
@@ -20,6 +21,7 @@ import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
   subjectDivider: {
     backgroundColor: theme.palette.primary.main,
   },
-  tabPanel: {
-    // padding: "20px",
-  },
   expansionPanelList: {
     margin: "20px",
   },
@@ -40,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "20px",
   },
   listItem: {
+    minHeight: "70px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       color: theme.palette.primary.main,
     },
+  },
+  material: {
+    backgroundColor: theme.palette.primary.main,
   },
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
@@ -93,7 +96,7 @@ function TabIndex(index) {
   };
 };
 
-function WorkListItem(props) {
+function AssignmentListItem(props) {
   const classes = useStyles()
 
   return(
@@ -161,6 +164,28 @@ function WorkListItem(props) {
   )
 }
 
+function MaterialListitem(props){
+  const classes = useStyles()
+
+  return(
+    <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+        <ListItemAvatar>
+          {props.work_category_avatar}
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <Typography variant="h6">
+              {props.work_title}
+            </Typography>
+          }
+          secondary={!props.work_subject ? " " : props.work_subject}
+        />
+      </ListItem>
+    </Paper>
+  )
+}
+
 function PersonListItem(props) {
   return(
     <div>
@@ -212,9 +237,10 @@ function ViewClass(props) {
   const classes = useStyles();
 
   const { setCurrentClass, getStudentsByClass, getAllSubjects,
-     tasksCollection, getTeachers, getAllTaskFilesByUser, viewTask } = props;
+     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, viewTask } = props;
   const { all_user_files } = props.filesCollection;
   const { all_subjects } = props.subjectsCollection;
+  const { selectedMaterials} = props.materialsCollection
   const { selectedClasses, kelas } = props.classesCollection
   const { all_students, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
@@ -222,10 +248,7 @@ function ViewClass(props) {
   let tasksByClass = []
   console.log(props.classesCollection)
   // All actions to retrive datas from Database
-  if(tasksCollection.length === undefined){
-    viewTask()
-  }
-  else{
+  if(Boolean(tasksCollection.length)){
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++){
@@ -235,24 +258,26 @@ function ViewClass(props) {
     })
   }
 
-  if(Object.keys(kelas).length === 0)
-    setCurrentClass(classId)
-  if(all_subjects.length === 0)
-    getAllSubjects()
-  if(all_students.length === 0)
-    getStudentsByClass(props.match.params.id)
-  if(all_teachers.length === 0)
-    getTeachers()
-  if(all_user_files.length === 0){
-    getAllTaskFilesByUser(user.id)
-  }
+  React.useEffect(() => {
+    if(Object.keys(kelas).length === 0){
+      setCurrentClass(classId) // get the kelas object
+    }
+    if(user.role === "Student"){
+      getMaterial(user.kelas, "by_class")
+    }
+    viewTask() // get the tasksCollection
+    getAllSubjects() // get the all_subjects
+    getStudentsByClass(props.match.params.id) // get the all_students
+    getTeachers() // get the all_teachers
+    getAllTaskFilesByUser(user.id) // get the all_user_files
+  }, [all_teachers.length ])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-
+  console.log(selectedMaterials)
   document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
 
   return(
@@ -273,9 +298,44 @@ function ViewClass(props) {
           <Tab icon={<SupervisorAccountIcon />} label="Peserta" {...TabIndex(2)} />
         </Tabs>
       </Paper>
-      <TabPanel value={value} index={0}>
-        <div className={classes.tabPanel}>
-          <List>
+      <TabPanel value={value} index={0} >
+          <Grid item>
+            <ExpansionPanel defaultExpanded>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  Materi
+                </Typography>
+              </ExpansionPanelSummary>
+              <Divider />
+              <List className={classes.expansionPanelList}>
+            {!selectedMaterials.length ? null :
+            selectedMaterials.map((material) => {
+              let workCategoryAvatar = (
+                <Avatar className={classes.material}>
+                  <MenuBookIcon/>
+                </Avatar>
+              )
+              let workStatus = "Belum Dikumpulkan"
+              return(
+                <MaterialListitem
+                  work_title={material.name}
+                  work_category_avatar={workCategoryAvatar}
+                  work_subject={material.subject}
+                  work_status={workStatus}
+                  work_link={`/materi/${material._id}`}
+                />
+              )
+            })}
+            </List>
+          </ExpansionPanel>
+          <ExpansionPanel defaultExpanded>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  Tugas
+                </Typography>
+              </ExpansionPanelSummary>
+              <Divider />
+              <List className={classes.expansionPanelList}>
             {tasksByClass.map((task) => {
               let workCategoryAvatar = (
                 <Avatar className={classes.assignmentLate}>
@@ -295,7 +355,7 @@ function ViewClass(props) {
                 }
               }
               return(
-                <WorkListItem
+                <AssignmentListItem
                   work_title={task.name}
                   work_category_avatar={workCategoryAvatar}
                   work_subject={task.subject}
@@ -305,8 +365,24 @@ function ViewClass(props) {
                 />
               )
             })}
-          </List>
-        </div>
+            </List>
+          </ExpansionPanel>
+          <ExpansionPanel disabled>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  Kuis (Coming Soon)
+                </Typography>
+              </ExpansionPanelSummary>
+              <Divider />
+          </ExpansionPanel>
+          <ExpansionPanel disabled>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  Ujian (Coming Soon)
+                </Typography>
+              </ExpansionPanelSummary>
+          </ExpansionPanel>
+          </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <div className={classes.tabPanel}>
@@ -333,6 +409,28 @@ function ViewClass(props) {
                 </ExpansionPanelSummary>
                 <Divider className={classes.subjectDivider} />
                 <List className={classes.expansionPanelList}>
+                {!selectedMaterials.length ? null :
+                  selectedMaterials.map((material) => {
+                    if(material.subject !== subject.name){
+                      return null
+                    }
+                    let workCategoryAvatar = (
+                      <Avatar className={classes.material}>
+                        <MenuBookIcon/>
+                      </Avatar>
+                    )
+                    let workStatus = "Belum Dikumpulkan"
+                    isEmpty = false
+                    return(
+                      <MaterialListitem
+                        work_title={material.name}
+                        work_category_avatar={workCategoryAvatar}
+                        work_status={workStatus}
+                        work_link={`/materi/${material._id}`}
+                      />
+                    )
+                  })
+                  }
                   {tasksByClass.map((task) => {
                     let workCategoryAvatar = (
                       <Avatar className={classes.assignmentLate}>
@@ -354,7 +452,7 @@ function ViewClass(props) {
                     if(task.subject === subject.name){
                       isEmpty = false
                       return(
-                        <WorkListItem
+                        <AssignmentListItem
                           work_title={task.name}
                           work_category_avatar={workCategoryAvatar}
                           work_status={workStatus}
@@ -415,15 +513,16 @@ function ViewClass(props) {
 
 ViewClass.propTypes = {
   classesCollection: PropTypes.object.isRequired,
-  getStudentsByClass: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
+  materialsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
+  getMaterial: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
 }
 
@@ -432,10 +531,11 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
   tasksCollection: state.tasksCollection,
+  materialsCollection: state.materialsCollection,
   filesCollection: state.filesCollection,
 });
 
 export default connect(
   mapStateToProps, { setCurrentClass, getStudentsByClass,
-    getAllSubjects, viewTask, getTeachers, getAllTaskFilesByUser }
+    getAllSubjects, viewTask, getTeachers, getMaterial, getAllTaskFilesByUser }
 ) (ViewClass);
