@@ -7,7 +7,6 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Grid,
    IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -147,7 +146,7 @@ function ViewSubject(props) {
   })
   if(target == "length")
     return tasksBySubjectClass.length;
-  
+
   else{
       return tasksBySubjectClass.length === 0 ?
       (<Typography variant="h5" align="center" gutterBottom>
@@ -156,38 +155,19 @@ function ViewSubject(props) {
       : tasksBySubjectClass
     }
   }
-  
+
 
   document.title = `Schooly | ${subject_name}`
 
   return(
     <div className={classes.root}>
       <Paper className={classes.subjectCardPaper}>
-      <Grid container>
-        <Grid item xs={12} container direction="column" spacing={3}>
-          <Grid item xs>
-            <Typography variant="subtitle1" color="primary">
-              <h3><b>{subject_name}</b></h3>
-            </Typography>
-            <Typography variant="body2">
-              <h5>Kelas: {kelas.name}</h5>
-            </Typography>
-          </Grid>
-          <Grid item>
-            <LightTooltip title="Tugas">
-              <IconButton
-                size="medium"
-                disableRipple
-                className={classes.workIconButton}
-              >
-                <Badge badgeContent={generateTaskBySubject("length")} color="secondary">
-                  <AssignmentIcon fontSize="large" className={classes.workIcon} />
-                </Badge>
-              </IconButton>
-            </LightTooltip>
-          </Grid>
-        </Grid>
-      </Grid>
+        <Typography variant="subtitle1" color="primary">
+          <h3><b>{subject_name}</b></h3>
+        </Typography>
+        <Typography variant="body2">
+          <h5>Kelas: {kelas.name}</h5>
+        </Typography>
       </Paper>
       <Grid container direction="column" style={{marginTop: "20px"}}>
         <Grid item>

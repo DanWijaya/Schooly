@@ -8,7 +8,8 @@ import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Paper,
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
    List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
@@ -17,6 +18,7 @@ import BallotIcon from "@material-ui/icons/Ballot";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,12 +44,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
-  lookAllButtonContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-    padding: "5px",
-  },
-  lookAllButton: {
+  lookSubjectButton: {
     "&:focus, &:hover": {
       color: theme.palette.primary.main,
     },
@@ -76,8 +73,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box>
+          {children}
         </Box>
       )}
     </div>
@@ -100,53 +97,114 @@ function WorkListItem(props) {
   const classes = useStyles()
 
   return(
-    <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-        <ListItemAvatar>
-          {props.work_category_avatar}
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Typography variant="h6">
-              {props.work_title}
-            </Typography>
-          }
-          secondary={props.work_sender}
-        />
-        <ListItemText style={{textAlign: "right"}}
-          primary={
-            <Typography variant="h6" className={classes.warningText}>
-              Batas Waktu: {props.work_deadline}
-            </Typography>
-          }
-          secondary={props.work_status}
-        />
-      </ListItem>
-    </Paper>
+    <div>
+      <Hidden smUp implementation="css">
+        <Paper variant="outlined" className={classes.listItemPaper}>
+          <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+            <Grid container alignItems="center">
+              <Grid item xs={7}>
+                <ListItemText
+                  primary={
+                    <Typography variant="h6">
+                      {props.work_title}
+                    </Typography>
+                  }
+                  secondary={props.work_subject}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="body2" className={classes.warningText}>
+                      Batas Waktu: <br /> {props.work_deadline}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="caption">
+                      {props.work_status}
+                    </Typography>
+                  }
+                />
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Paper>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <Paper variant="outlined" className={classes.listItemPaper}>
+          <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+            <ListItemAvatar>
+              {props.work_category_avatar}
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography variant="h6">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={props.work_subject}
+            />
+            <ListItemText
+              align="right"
+              primary={
+                <Typography className={classes.warningText}>
+                  Batas Waktu: {props.work_deadline}
+                </Typography>
+              }
+              secondary={props.work_status}
+            />
+          </ListItem>
+        </Paper>
+      </Hidden>
+    </div>
   )
 }
 
 function PersonListItem(props) {
   return(
-    <ListItem>
-      <ListItemAvatar>
-        <Avatar src={props.person_avatar}/>
-      </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Typography variant="h6">
-            {props.person_name}
-          </Typography>
-        }
-      />
-      <ListItemText
-        primary={
-          <Typography align="right">
-            {props.person_role}
-          </Typography>
-        }
-      />
-    </ListItem>
+    <div>
+      <Hidden smUp implementation="css">
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar src={props.person_avatar}/>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="h6">
+                {props.person_name}
+              </Typography>
+            }
+            secondary={
+              <Typography variant="caption">
+                {props.person_role}
+              </Typography>
+            }
+          />
+        </ListItem>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar src={props.person_avatar}/>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="h6">
+                {props.person_name}
+              </Typography>
+            }
+          />
+          <ListItemText
+            primary={
+              <Typography align="right">
+                {props.person_role}
+              </Typography>
+            }
+          />
+        </ListItem>
+      </Hidden>
+    </div>
   )
 }
 
@@ -200,7 +258,7 @@ function ViewClass(props) {
   return(
     <div className={classes.root}>
       <Paper square>
-        <Typography variant="h3" align="center" gutterBottom>
+        <Typography variant="h3" align="center" style={{paddingTop: "10px"}} gutterBottom>
           {kelas.name}
         </Typography>
         <Tabs
@@ -240,7 +298,7 @@ function ViewClass(props) {
                 <WorkListItem
                   work_title={task.name}
                   work_category_avatar={workCategoryAvatar}
-                  work_sender={`Mata Pelajaran: ${task.subject}`}
+                  work_subject={task.subject}
                   work_status={workStatus}
                   work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
                   work_link={`/tugas-murid/${task._id}`}
@@ -256,10 +314,21 @@ function ViewClass(props) {
             let isEmpty = true
             return(
               <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h5">
-                    {subject.name}
-                  </Typography>
+                <ExpansionPanelSummary>
+                  <Grid container justify="space-between" alignItems="center">
+                    <Typography variant="h5">
+                      {subject.name}
+                    </Typography>
+                    <LightTooltip title="Lihat Lebih Lanjut" placement="right">
+                      <IconButton
+                        className={classes.lookSubjectButton}
+                        href={`/mata-pelajaran/${subject.name}`}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <PageviewIcon />
+                      </IconButton>
+                    </LightTooltip>
+                  </Grid>
                 </ExpansionPanelSummary>
                 <Divider className={classes.subjectDivider} />
                 <List className={classes.expansionPanelList}>
@@ -287,7 +356,6 @@ function ViewClass(props) {
                         <WorkListItem
                           work_title={task.name}
                           work_category_avatar={workCategoryAvatar}
-                          work_sender={`Mata Pelajaran: ${task.subject}`}
                           work_status={workStatus}
                           work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
                           work_link={`/tugas-murid/${task._id}`}
@@ -296,22 +364,11 @@ function ViewClass(props) {
                     }
                   })}
                   {isEmpty ?
-                    <Typography variant="h5" align="center" gutterBottom>
+                    <Typography variant="h5" color="primary" align="center" gutterBottom>
                       Kosong
                     </Typography>
                   : null}
                 </List>
-                <div className={classes.lookAllButtonContainer}>
-                  <Button
-                    disableRipple
-                    variant="contained"
-                    endIcon={<ChevronRightIcon />}
-                    href={`/mata-pelajaran/${subject.name}`}
-                    className={classes.lookAllButton}
-                  >
-                    Lihat Mata Pelajaran
-                  </Button>
-                </div>
               </ExpansionPanel>
             )
           })

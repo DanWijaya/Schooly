@@ -237,7 +237,7 @@ class Dashboard extends Component {
           <Grid item>
             { user.role === "Student" ?
                 <Paper elevation={0} className={classes.timePaperStudent}>
-                  <Typography variant="h3">
+                  <Typography variant="h4">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
                   <Typography variant="h5" style={{marginBottom: "20px"}}>
@@ -249,7 +249,7 @@ class Dashboard extends Component {
                 </Paper>
               : user.role === "Teacher" ?
                 <Paper elevation={0} className={classes.timePaperTeacher}>
-                  <Typography variant="h3">
+                  <Typography variant="h4">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
                   <Typography variant="h5" style={{marginBottom: "20px"}}>
@@ -261,7 +261,7 @@ class Dashboard extends Component {
                 </Paper>
               :
                 <Paper elevation={0} className={classes.timePaperAdmin}>
-                  <Typography variant="h3">
+                  <Typography variant="h4">
                     <b>Selamat Datang, {user.name}</b>
                   </Typography>
                   <Typography variant="h5" style={{marginBottom: "20px"}}>
