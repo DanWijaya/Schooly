@@ -403,7 +403,11 @@ function TaskList(props) {
                         {row.tasktitle}
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
-                      <TableCell align="center">{row.class_assigned.map((kelas) => `${kelas.name}, `)}</TableCell>
+                      <TableCell align="center">{row.class_assigned.map((kelas,i) => {
+                        if(i === row.class_assigned.length - 1)
+                          return (`${kelas.name}`)
+                        return (`${kelas.name}, `)})}
+                      </TableCell>
                       <TableCell align="center">{moment(row.deadline).locale("id").format("DD-MMM-YYYY - HH-mm")}</TableCell>
                       {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>

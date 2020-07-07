@@ -451,10 +451,12 @@ function MaterialList(props) {
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{!row.author ? null : row.author.name}</TableCell>
-                      <TableCell align="center">{!selectedClasses.size ? null : row.class_assigned.map((kelas,i) => {
-                        if(i === row.class_assigned.length - 1)
-                          return (`${selectedClasses.get(kelas).name}`)
-                      return (`${selectedClasses.get(kelas).name}, `)})}</TableCell>
+                      <TableCell align="center">{!selectedClasses.size ? null : 
+                        row.class_assigned.map((kelas,i) => {
+                          if(i === row.class_assigned.length - 1)
+                            return (`${selectedClasses.get(kelas).name}`)
+                          return (`${selectedClasses.get(kelas).name}, `)})}
+                      </TableCell>
                       {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>
                   );

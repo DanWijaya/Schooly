@@ -30,7 +30,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
       })
 }
 
-export const getAllAnnouncements = (announcementId, history) => dispatch => {
+export const getAllAnnouncements = () => dispatch => {
     axios
         .get('/api/announcements/viewall')
         .then((res) => {

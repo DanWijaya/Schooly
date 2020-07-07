@@ -245,9 +245,12 @@ class CreateMaterial extends Component {
     const { classesCollection, classes, subjectsCollection}  = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
+    const { success } = this.props.materialsCollection;
     const { class_assigned, fileLampiran, errors}  = this.state;
     const { user } = this.props.auth
 
+    success ? console.log("Successfully created lahh") : console.log("Not successful")
+    console.log(class_assigned)
     console.log(errors)
     const listFileChosen = () => {
       let temp = []

@@ -1,8 +1,10 @@
-import {GET_ALL_MATERIALS, GET_MATERIAL } from "../actions/Types";
+import {GET_ALL_MATERIALS, GET_MATERIAL, SUCCESS_MATERIAL } from "../actions/Types";
+import { FaCloudShowersHeavy } from "react-icons/fa";
 
 const initialState = {
     selectedMaterials: [],
-    all_materials: []
+    all_materials: [],
+    success: false
 }
 
 export default function(state=initialState, action) {
@@ -17,6 +19,12 @@ export default function(state=initialState, action) {
             return {
             ...state,
             selectedMaterials: action.payload
+            }
+        }
+        case SUCCESS_MATERIAL: {
+            return {
+            ...state,
+            success: action.payload
             }
         }
         default: 

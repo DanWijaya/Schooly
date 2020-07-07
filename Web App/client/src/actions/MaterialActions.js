@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_MATERIALS, GET_MATERIAL } from "./Types"
+import { GET_ERRORS, GET_ALL_MATERIALS, GET_MATERIAL, SUCCESS_MATERIAL } from "./Types"
 
 // Add material
 export const createMaterial = (formData, materialData, history) => dispatch => {
@@ -18,8 +18,12 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
               return "Successfully created material with no lampiran"
       })
       .then(res => {
-              alert("material is created")
-              window.location.href="/daftar-materi"
+            //   alert("material is created")
+            dispatch({
+                type: SUCCESS_MATERIAL,
+                payload: true
+            })
+            //   window.location.href="/daftar-materi"
             //   history.push("/daftar-materi")
           })
       .catch(err =>{
