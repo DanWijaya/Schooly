@@ -2,11 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
-import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
-import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
+import { downloadLampiranMateri, previewLampiranMateri } from "../../../actions/UploadActions";
+import { viewSelectedClasses } from "../../../actions/ClassActions";
 import { getOneUser } from "../../../actions/UserActions";
+import { getOneMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, ListItemIcon, Paper, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -19,7 +18,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
-
 
 const path = require("path");
 
@@ -69,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
       color: "#61BD4F",
     },
   },
-  editTaskButton: {
+  editButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -77,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  deleteTaskButton: {
+  deleteButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
     "&:focus, &:hover": {
@@ -148,7 +146,7 @@ function LampiranFile(props) {
           button
           disableRipple
           className={classes.listItem}
-          onClick={() => {onPreviewFile(file_id, "lampiran")}}
+          onClick={() => {onPreviewFile(file_id, "lampiran_materi")}}
         >
           <ListItemAvatar>
             {filetype === "Word" ?
@@ -200,7 +198,7 @@ function LampiranFile(props) {
           />
           <IconButton
             className={classes.downloadIconButton}
-            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran") }}
+            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran_materi") }}
           >
             <CloudDownloadIcon className={classes.downloadIcon} />
           </IconButton>
@@ -213,14 +211,21 @@ function LampiranFile(props) {
 function ViewMaterial(props) {
   const classes = useStyles();
 
-  const { user } = props.auth;
-  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask } = props;
-  const task_id = props.match.params.id
+  const { user, selectedUser} = props.auth;
+  const { deleteMaterial, getOneUser, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewSelectedClasses } = props;
+  const { selectedMaterials } = props.materialsCollection;
+  const { selectedClasses } = props.classesCollection;
+  const materi_id = props.match.params.id
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
   React.useEffect(() => {
-    viewOneTask(task_id)
-  }, [tasksCollection._id])
+    // viewOneTask(materi_id)
+    getOneMaterial(materi_id)
+    if(Boolean(selectedMaterials.class_assigned)){
+      viewSelectedClasses(selectedMaterials.class_assigned)
+    }
+    getOneUser(selectedMaterials.author_id)
+  }, [selectedMaterials._id])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -246,22 +251,22 @@ function ViewMaterial(props) {
   }
 
   const onDownloadFile = (id, fileCategory="none") => {
-    if(fileCategory === "lampiran")
-      downloadLampiran(id)
+    if(fileCategory === "lampiran_materi")
+      downloadLampiranMateri(id)
     else
       console.log("File Category is not specified")
   }
 
   const onPreviewFile = (id, fileCategory="none") => {
-   if(fileCategory === "lampiran")
-      previewLampiran(id)
+   if(fileCategory === "lampiran_materi")
+      previewLampiranMateri(id)
     else
       console.log("File Category is not specified")
   }
 
   const onDeleteTask = (id) => {
-    deleteTask(id)
-    // setFileTugas(null)
+    deleteMaterial(id)
+    // setFileMateri(null)
   }
 
   // Delete Dialog
@@ -297,12 +302,12 @@ function ViewMaterial(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Hapus tugas berikut?
+              Hapus Materi berikut?
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h6" align="center" gutterBottom>
-              <b>{tasksCollection.name}</b>
+              <b>{selectedMaterials.name}</b>
             </Typography>
           </Grid>
           <Grid
@@ -315,7 +320,7 @@ function ViewMaterial(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteTask(task_id)}}
+                onClick={() => { onDeleteTask(materi_id)}}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -337,7 +342,7 @@ function ViewMaterial(props) {
     )
   }
 
-  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
+  document.title = !selectedMaterials.name ? "Schooly | Lihat Materi" : `Schooly | ${selectedMaterials.name}`
 
   return(
     <div className={classes.root}>
@@ -347,40 +352,48 @@ function ViewMaterial(props) {
           container
           spacing={2}
         >
-          <Grid item xs={6} style={{marginBottom: "30px"}}>
+          <Grid item xs={12} style={{marginBottom: "30px"}}>
             <Typography variant="h4" >
-              {tasksCollection.name}
+              {selectedMaterials.name}
             </Typography>
             <Typography variant="caption" color="textSecondary">
-              <h6>Mata Pelajaran: {tasksCollection.subject}</h6>
+              <h6>Mata Pelajaran: {selectedMaterials.subject}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Penanggung Jawab: <b>{user.name}</b>
+              Penanggung Jawab: <b>{selectedUser.name}</b>
             </Typography>
           </Grid>
-          <Grid item xs={6} container direction="column" alignItems="flex-end">
-            <Typography variant="overline" className={classes.deadlineWarningText}>
-              Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD-MM-YYYY")}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Nilai Maksimum: 100
-            </Typography>
-          </Grid>
-          <Grid item xs={12} style={{marginBottom: "30px"}}>
-            <Typography color="primary" gutterBottom>
-              Deskripsi Tugas:
-            </Typography>
-            <Typography>
-              {tasksCollection.description}
-            </Typography>
-          </Grid>
+          {user.role === "Teacher" ? 
           <Grid item xs={12}>
             <Typography color="primary" gutterBottom>
-              Lampiran Berkas:
+              Kelas yang diberikan:
+            </Typography>
+            <Typography>
+              {!selectedMaterials.class_assigned || !selectedClasses.size? null : 
+              selectedMaterials.class_assigned.map((kelas, i) => {
+                if(i === selectedMaterials.class_assigned.length - 1)
+                  return `${selectedClasses.get(kelas).name}`
+                return (`${selectedClasses.get(kelas).name}, `)
+              })}
+            </Typography>
+          </Grid> : null
+          }
+          <Grid item xs={12} style={{marginBottom: "30px"}}>
+            <Typography color="primary" gutterBottom>
+              Deskripsi Materi:
+            </Typography>
+            <Typography>
+              {selectedMaterials.description}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Typography color="primary" gutterBottom>
+              Lampiran Materi:
             </Typography>
             <Grid container spacing={1}>
-            {!tasksCollection.lampiran ? null :
-              tasksCollection.lampiran.map((lampiran) => (
+            {!selectedMaterials.lampiran ? null :
+              selectedMaterials.lampiran.map((lampiran) => (
                 <LampiranFile
                   file_id={lampiran.id}
                   onPreviewFile ={onPreviewFile}
@@ -393,54 +406,51 @@ function ViewMaterial(props) {
           </Grid>
         </Grid>
       </Paper>
+      {user.role === "Teacher" ? 
       <Grid container spacing={2} justify="flex-end" alignItems="center">
         <Grid item>
-          <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
-            <Fab variant="extended" className={classes.seeAllTaskButton}>
-              <AssignmentIcon style={{marginRight: "10px"}} />
-              Lihat Hasil Pekerjaan
-            </Fab>
-          </Link>
         </Grid>
         <Grid item>
-          <Link to={`/sunting-tugas/${task_id}`}>
-            <LightToolTip title="Sunting Tugas" placement="bottom">
-              <Fab className={classes.editTaskButton}>
+          <Link to={`/sunting-materi/${materi_id}`}>
+            <LightToolTip title="Sunting Materi" placement="bottom">
+              <Fab className={classes.editButton}>
                 <EditIcon />
               </Fab>
             </LightToolTip>
           </Link>
         </Grid>
         <Grid item>
-          <LightToolTip title="Buang Tugas" placement="bottom">
-            <Fab className={classes.deleteTaskButton} onClick={(e) => handleOpenDeleteDialog(e,task_id)}>
+          <LightToolTip title="Buang Materi" placement="bottom">
+            <Fab className={classes.deleteButton} onClick={(e) => handleOpenDeleteDialog(e,materi_id)}>
               <DeleteIcon />
             </Fab>
           </LightToolTip>
         </Grid>
-      </Grid>
+      </Grid> : null
+      }
     </div>
   )
 }
 
 ViewMaterial.propTypes = {
    auth: PropTypes.object.isRequired,
-   tasksCollection: PropTypes.object.isRequired,
-   downloadLampiran: PropTypes.func.isRequired,
-   previewLampiran: PropTypes.func.isRequired,
-   deleteTask: PropTypes.func.isRequired,
-   updateUserData: PropTypes.func.isRequired,
+   materialsCollection: PropTypes.object.isRequired,
+   classesCollection: PropTypes.object.isRequired,
+   downloadLampiranMateri: PropTypes.func.isRequired,
+   previewLampiranMateri: PropTypes.func.isRequired,
+   deleteMaterial: PropTypes.func.isRequired,
    getOneUser: PropTypes.func.isRequired, // For the person in charge task
-   getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
-   viewOneTask: PropTypes.func.isRequired,
+   getOneMaterial: PropTypes.func.isRequired,
+   viewSelectedClasses: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({
    auth: state.auth,
-   tasksCollection: state.tasksCollection,
+   materialsCollection: state.materialsCollection,
+   classesCollection: state.classesCollection
  });
 
 export default connect(
-   mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, viewOneTask, getOneUser }
+   mapStateToProps,  {downloadLampiranMateri,
+    previewLampiranMateri, getOneMaterial, deleteMaterial, getOneUser, viewSelectedClasses }
  ) (ViewMaterial);

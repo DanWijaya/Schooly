@@ -159,16 +159,6 @@ class EditMaterial extends Component {
 
   }
 
-  // shouldComponentUpdate(nextProps) {
-  //   const { materialsCollection } = this.props;
-  //   return materialsCollection.selectedMaterial.length != nextProps.materialsCollection.selectedMaterial.length
-  // }
-
-  // componentDidUpdate(props) {
-  //   const { selectedMaterial} = this.props.materialsCollection;
-  //   this.props.viewSelectedClasses(selectedMaterial.class_assigned)
-  // }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { name } = this.state;
@@ -217,6 +207,7 @@ class EditMaterial extends Component {
     deadline: this.state.deadline,
     subject: this.state.subject,
     description: this.state.description,
+    class_assigned: this.state.class_assigned,
     lampiran: Array.from(this.state.fileLampiran),
     errors: {}
   }
@@ -295,7 +286,7 @@ class EditMaterial extends Component {
   onChange = (e, otherfield) => {
     if(otherfield === "kelas"){
       console.log(this.state.class_assigned, e.target.value)
-      this.setState({ class_assigned: e.target.value, classChanged: true})
+      this.setState({ class_assigned: e.target.value})
     }
     else if(otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
@@ -320,7 +311,7 @@ class EditMaterial extends Component {
     const { classesCollection, classes, subjectsCollection, updateMaterial}  = this.props;
     const { all_classes, selectedClasses } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { selectedMaterial} = this.props.materialsCollection;
+    const { selectedMaterials} = this.props.materialsCollection;
     const { class_assigned, fileLampiran, errors}  = this.state;
     const { user } = this.props.auth
 
@@ -329,7 +320,7 @@ class EditMaterial extends Component {
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
 
     console.log(all_classes)
-    console.log(selectedMaterial);
+    console.log(selectedMaterials);
 
     let classIds = []
     const ITEM_HEIGHT = 48;

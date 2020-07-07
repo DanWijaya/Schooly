@@ -10,8 +10,7 @@ module.exports = function validateMaterialInput(data) {
     data.subject = isEmpty(data.subject) ? "" : data.subject;
     data.description = isEmpty(data.description) ? "" : data.description;
 
-    console.log(data.description, "Description")
-    console.log(isEmpty(data.description))
+    console.log(data.class_assigned)
     if (Validator.isEmpty(data.name)) {
         errors.name = "Nama materi belum diisi"
     }
@@ -22,10 +21,10 @@ module.exports = function validateMaterialInput(data) {
     if(Validator.isEmpty(data.description)) {
         errors.description = "Deskripsi belum diberikan"
     }
-    if(data.class_assigned.length === 0){
+    if(!data.class_assigned.length){
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
-    if(data.lampiran.length === 0) {
+    if(!data.lampiran.length) {
         errors.lampiran_materi = "Lampiran belum ditambahkan ke Materi"
     }
 

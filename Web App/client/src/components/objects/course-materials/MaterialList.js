@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getAllMaterials, deleteMaterial } from "../../../actions/MaterialActions";
+import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
+import { viewSelectedClasses } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
@@ -17,7 +18,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import { viewSelectedClasses } from "../../../actions/ClassActions";
+
 
 function createData(_id, tasktitle, subject, author, class_assigned, action) {
   console.log(author)
@@ -25,7 +26,7 @@ function createData(_id, tasktitle, subject, author, class_assigned, action) {
     : { _id, tasktitle, subject, author, class_assigned, action});
 }
 
-var rows = [];
+var rows = []; // initially will be empty
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -220,28 +221,40 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
 
-  const {getAllMaterials, deleteMaterial, getUsers, viewSelectedClasses } = props;
+  const {getAllMaterials, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
   const {all_materials, selectedMaterials} = props.materialsCollection;
   const { selectedClasses, all_classes} = props.classesCollection;
   const { user, retrieved_users } = props.auth;
 
   React.useEffect(() => {
-    console.log(all_materials)
-    getAllMaterials()
+    let materialsRetrieved = []
+
+    if(user.role === "Admin"){
+      materialsRetrieved = all_materials
+      getAllMaterials()
+    } else {
+      materialsRetrieved = selectedMaterials;
+      if(user.role === "Teacher"){
+        getMaterial(user.id, "by_author")
+      } else { // for student
+        getMaterial(user.kelas, "by_class")
+      }
+    }
 
     let userIds = []
     let classIds = new Set()
-    for(var i = 0; i < all_materials.length; i++){
-      let material = all_materials[i]
+    for(var i = 0; i < materialsRetrieved.length; i++){
+      let material = materialsRetrieved[i]
       userIds.push(material.author_id)
 
       for(var j = 0; j < material.class_assigned.length; j++){
         classIds.add(material.class_assigned[j])
       }
     }
-    getUsers(userIds)
-    viewSelectedClasses(Array.from(classIds))
-  }, [all_materials.length])
+
+    getUsers(userIds) // to get the authors objects.
+    viewSelectedClasses(Array.from(classIds)) // to get the classes objects.
+  }, [selectedMaterials.length, all_materials.length])
 
   const materialRowItem = (data) => {
     console.log(data)
@@ -249,7 +262,7 @@ function MaterialList(props) {
     rows.push(
       createData(data._id, data.name,
         data.subject,
-        !(retrieved_users).size ? {}: retrieved_users.get(user.id),
+        !(retrieved_users).size ? {}: retrieved_users.get(data.author_id),
         data.class_assigned,
         user.role === "Student" ? null :
         [
@@ -275,38 +288,46 @@ function MaterialList(props) {
     )
   }
 
-  console.log(retrieved_users)
-  console.log(selectedClasses)
   const retrieveMaterials = () => {
-    console.log(all_materials)
+    console.log(selectedMaterials)
     console.log(retrieved_users)
     // If all_materials is not undefined or an empty array
-    if(all_materials.length) {
-        rows = []
-        if(user.role === "Teacher") {
-        all_materials.map((data) => {
-          if(data.author_id === user.id) {
-            materialRowItem(data)
-            }
-          })
-        }
-        else if (user.role === "Student"){
-          all_materials.map((data) => {
-            let class_assigned = data.class_assigned;
-            for (var i = 0; i < class_assigned.length; i++) {
-              if(class_assigned[i]._id === user.kelas) {
-                materialRowItem(data)
-                break;
-              }
-            }
-          })
-        }
-        else { //Admin
-          all_materials.map((data) => {
-            materialRowItem(data)
-          })
-        }
-      }
+    rows = []
+    if(user.role === "Admin"){
+      all_materials.map((data) => { materialRowItem(data)})
+    }else {
+    if(selectedMaterials.length) {
+      selectedMaterials.map((data) => materialRowItem(data))
+    }
+  }
+    
+
+    // if(selectedMaterials.length) {
+    //     rows = []
+    //     if(user.role === "Teacher") {
+    //     selectedMaterials.map((data) => {
+    //       if(data.author_id === user.id) {
+    //         materialRowItem(data)
+    //         }
+    //       })
+    //     }
+    //     else if (user.role === "Student"){
+    //       selectedMaterials.map((data) => {
+    //         let class_assigned = data.class_assigned;
+    //         for (var i = 0; i < class_assigned.length; i++) {
+    //           if(class_assigned[i]._id === user.kelas) {
+    //             materialRowItem(data)
+    //             break;
+    //           }
+    //         }
+    //       })
+    //     }
+    //     else { //Admin
+    //       all_materials.map((data) => {
+    //         materialRowItem(data)
+    //       })
+    //     }
+    //   }
   }
 
   const handleRequestSort = (event, property) => {
@@ -415,7 +436,7 @@ function MaterialList(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
+                  let viewpage = user.role === "Student" ? `/materi/${row._id}` : `/materi/${row._id}`
                   return(
                     <TableRow
                       className={classes.tableRow}
@@ -429,9 +450,11 @@ function MaterialList(props) {
                         {row.tasktitle}
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
-                      {console.log(row.author.name)}
-                      <TableCell align="center">{row.author.name}</TableCell>
-                      <TableCell align="center">{!selectedClasses.size ? null : row.class_assigned.map(kelas => `${selectedClasses.get(kelas).name}, `)}</TableCell>
+                      <TableCell align="center">{!row.author ? null : row.author.name}</TableCell>
+                      <TableCell align="center">{!selectedClasses.size ? null : row.class_assigned.map((kelas,i) => {
+                        if(i === row.class_assigned.length - 1)
+                          return (`${selectedClasses.get(kelas).name}`)
+                      return (`${selectedClasses.get(kelas).name}, `)})}</TableCell>
                       {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
                     </TableRow>
                   );
@@ -447,6 +470,7 @@ function MaterialList(props) {
 MaterialList.propTypes = {
   deleteMaterial: PropTypes.func.isRequired,
   getAllMaterials: PropTypes.func.isRequired,
+  getMaterial: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   viewSelectedClasses: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
@@ -464,5 +488,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { deleteMaterial, getAllMaterials, getUsers, viewSelectedClasses }
+  { deleteMaterial, getAllMaterials, getMaterial, getUsers, viewSelectedClasses }
 )(MaterialList);

@@ -176,7 +176,7 @@ export const previewLampiranAnnouncement = (lampiran_id) => dispatch => {
     window.open(`http://localhost:5000/api/uploads/previewlampiran_announcement/${lampiran_id}`, "_blank") // previously has "_blank"
 }
 
-export const deleteLampiranAnn = (lampiran_to_delete, task_id)  => {
+export const deleteLampiranAnnouncement = (lampiran_to_delete, task_id)  => {
     console.log("Delete lampiran is runned")
     axios
         .delete(`/api/uploads/lampiran/${task_id}`, lampiran_to_delete)
@@ -186,3 +186,27 @@ export const deleteLampiranAnn = (lampiran_to_delete, task_id)  => {
             console.log(err)
         })
 }
+
+// Deal with the lampiran on Materials
+export const downloadLampiranMateri = (materi_id) => dispatch => {
+    console.log("Downloading lampiran", materi_id)
+    console.log(materi_id)
+    window.open(`http://localhost:5000/api/uploads/lampiran_materi/${materi_id}` , "_blank")
+}
+
+export const previewLampiranMateri = (materi_id) => dispatch => {
+    console.log("Previewing lampiran")
+    console.log(materi_id)
+    window.open(`http://localhost:5000/api/uploads/previewlampiran_materi/${materi_id}` , "_blank")
+}
+
+// export const deleteLampiranAnn = (lampiran_to_delete, task_id)  => {
+//     console.log("Delete lampiran is runned")
+//     axios
+//         .delete(`/api/uploads/lampiran/${task_id}`, lampiran_to_delete)
+//         .then(res => console.log(res.data))
+//         .catch(err => {
+//             console.log("error in deleting lampiran file")
+//             console.log(err)
+//         })
+// }
