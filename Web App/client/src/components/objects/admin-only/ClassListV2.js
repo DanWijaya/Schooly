@@ -234,7 +234,11 @@ function ClassListV2(props) {
   const { viewClass, deleteClass, classesCollection } = props;
   const { user } = props.auth;
 
-  const taskRowItem = (data) => {
+  const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
+  const colorMap = new Map();
+
+  const taskRowItem = (data,i) => {
+    colorMap.set(data._id, colorList[i%(colorList.length)])
     rows.push(
       createData(
         data._id,
@@ -250,8 +254,8 @@ function ClassListV2(props) {
   const retrieveClasses = () => {
     if(classesCollection.all_classes.length > 0) {
       rows = []
-      classesCollection.all_classes.map((data) => {
-        taskRowItem(data)
+      classesCollection.all_classes.map((data,i) => {
+        taskRowItem(data,i)
       })
     }
   }
@@ -399,7 +403,7 @@ function ClassListV2(props) {
             const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = `/kelas/${row._id}`
-            var colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
+            // var colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
             return(
               <Grid item xs={6} md={4}
                 aria-checked={isItemSelected}
@@ -414,7 +418,7 @@ function ClassListV2(props) {
                   <Avatar
                     variant="square"
                     style={{
-                      backgroundColor: colorList[index%5],
+                      backgroundColor: colorMap.get(row._id),
                       width: "100%",
                       height: "120px",
                     }}
