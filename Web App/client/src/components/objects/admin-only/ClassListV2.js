@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
+import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -75,14 +75,25 @@ function ClassListV2Toolbar(props) {
       <Typography variant="h4" align="left">
         <b>Daftar Kelas</b>
       </Typography>
-      <div>
-        <Link to="/buat-kelas">
-          <Fab size="medium" variant="extended" className={classes.newClassButton}>
-            <FaChalkboardTeacher className={classes.newClassIcon} />
-            Buat Kelas
-          </Fab>
-        </Link>
-        <LightToolTip title="Urutkan Kelas" placement="right">
+      <div style={{display: "flex"}}>
+        <Hidden smUp implementation="css">
+          <LightToolTip title="Buat Kelas">
+            <Link to="/buat-kelas">
+              <Fab size="small" className={classes.newClassButton}>
+                <FaChalkboardTeacher className={classes.newClassIconMobile} />
+              </Fab>
+            </Link>
+          </LightToolTip>
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <Link to="/buat-kelas">
+            <Fab size="medium" variant="extended" className={classes.newClassButton}>
+              <FaChalkboardTeacher className={classes.newClassIconDesktop} />
+              Buat Kelas
+            </Fab>
+          </Link>
+        </Hidden>
+        <LightToolTip title="Urutkan Kelas">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
           </Fab>
@@ -144,7 +155,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   toolbar: {
-    display: "auto",
+    display: "flex",
     justifyContent: "space-between",
     padding: "15px",
   },
@@ -157,10 +168,14 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newClassIcon: {
+  newClassIconDesktop: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     marginRight: "7.5px",
+  },
+  newClassIconMobile: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
   },
   sortButton: {
     backgroundColor: "white",
@@ -401,7 +416,7 @@ function ClassListV2(props) {
             let viewpage = `/kelas/${row._id}`
             var colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
             return(
-              <Grid item xs={6} md={4}
+              <Grid item xs={12} sm={6} md={4}
                 aria-checked={isItemSelected}
                 key={row.classroom}
                 selected={isItemSelected}
