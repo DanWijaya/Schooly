@@ -8,14 +8,13 @@ Botak:
 5. Create Task, Edit Task dll desktop version
 6. Field Berkas
 7. Notification
+8. betulin table ASAP
 IMPORTANT:
 1. Dialog upload
-2. Viewclass buat teacher
 2. Register scheme / Manage users (View profile student and teacher)?
 3. Batas Waktu kumpul (Late or not Late)
-4. betulin table ASAP
-5. Pas login page ke dashboard jadi href masih muncul text error sama sidedrawernya
-6. disable route link buat yang rolenya nda bisa akses
+4. disable route link buat yang rolenya nda bisa akses
+5. Jumlah murid dan absen di kelas
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
