@@ -363,20 +363,22 @@ function ViewMaterial(props) {
               Penanggung Jawab: <b>{selectedUser.name}</b>
             </Typography>
           </Grid>
-          {user.role === "Teacher" ? 
-          <Grid item xs={12}>
-            <Typography color="primary" gutterBottom>
-              Kelas yang diberikan:
-            </Typography>
-            <Typography>
-              {!selectedMaterials.class_assigned || !selectedClasses.size? null : 
-              selectedMaterials.class_assigned.map((kelas, i) => {
-                if(i === selectedMaterials.class_assigned.length - 1)
-                  return `${selectedClasses.get(kelas).name}`
-                return (`${selectedClasses.get(kelas).name}, `)
-              })}
-            </Typography>
-          </Grid> : null
+          {user.role === "Teacher" ?
+            <Grid item xs={12} style={{marginBottom: "30px"}}>
+              <Typography color="primary" gutterBottom>
+                Kelas yang Diberikan:
+              </Typography>
+              <Typography>
+                {!selectedMaterials.class_assigned || !selectedClasses.size? null :
+                selectedMaterials.class_assigned.map((kelas, i) => {
+                  if(i === selectedMaterials.class_assigned.length - 1)
+                    return `${selectedClasses.get(kelas).name}`
+                  return (`${selectedClasses.get(kelas).name}, `)
+                })}
+              </Typography>
+            </Grid>
+          :
+            null
           }
           <Grid item xs={12} style={{marginBottom: "30px"}}>
             <Typography color="primary" gutterBottom>
@@ -386,7 +388,6 @@ function ViewMaterial(props) {
               {selectedMaterials.description}
             </Typography>
           </Grid>
-
           <Grid item xs={12}>
             <Typography color="primary" gutterBottom>
               Lampiran Materi:
@@ -406,7 +407,7 @@ function ViewMaterial(props) {
           </Grid>
         </Grid>
       </Paper>
-      {user.role === "Teacher" ? 
+      {user.role === "Teacher" ?
       <Grid container spacing={2} justify="flex-end" alignItems="center">
         <Grid item>
         </Grid>

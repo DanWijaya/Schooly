@@ -212,7 +212,7 @@ function ViewSubject(props) {
             </ExpansionPanelSummary>
             <Divider />
             <List className={classes.expansionPanelList}>
-            
+
             {!selectedMaterials.length ? null :
             selectedMaterials.map((material, i) => {
               if(material.subject === subject_name){

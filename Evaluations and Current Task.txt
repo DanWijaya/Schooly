@@ -3,18 +3,18 @@ Current Task
 Botak:
 1. Delete tester di akhir
 2. nama sekolah di profil
-3. lihat mata pelajaran button
-5. dialog dan snackbar
-7. Spacing nda rata di profile picture editor
-8. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
-10. Update OutlinedTextField jadi TextField
-11. Create Task, Edit Task dll desktop version
-12. Field Berkas
+3. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
+4. Update OutlinedTextField jadi TextField
+5. Create Task, Edit Task dll desktop version
+6. Field Berkas
+7. Notification
+8. betulin table ASAP
 IMPORTANT:
+1. Dialog upload
 2. Register scheme / Manage users (View profile student and teacher)?
 3. Batas Waktu kumpul (Late or not Late)
-4. betulin table ASAP
-5. Pas login page ke dashboard jadi href masih muncul text error sama sidedrawernya
+4. disable route link buat yang rolenya nda bisa akses
+5. Jumlah murid dan absen di kelas
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -40,9 +40,9 @@ Daniel:
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 26. Buat pas si student buka announcement, mereka ndak bisa create announcement (cuma ketua kelasnya)
 27. Select untuk yang edit class masih bermasalah...
-28. Upload tugas masih ada masalah.
 Penting untuk diimplemen:
-
+2. (Diganti dengan announcement) Buat Notification functionality (Schema Notif dan explore cara handlenya?)
+3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
 
 Error:
 1. classlist pas klik ke satu class terus back error buat tekan button lain

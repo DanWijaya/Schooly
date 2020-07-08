@@ -51,6 +51,7 @@ import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
+import ClassListV2 from "./components/objects/admin-only/ClassListV2";
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 //Prototypes
 import Tester from "./prototypes/Tester";
@@ -178,6 +179,7 @@ class App extends Component {
                     <PrivateRoute exact path="/daftar-tugas" component={TaskList} />
                     {/* Route Admin-Only  */}
                     <PrivateRoute exact path="/daftar-kelas" component={ClassList} />
+                    <PrivateRoute exact path="/classlistv2" component={ClassListV2} />
                     <PrivateRoute exact path="/atur-pengguna" component={ManageUsers} />
                     {/* Not Found  */}
                     <Route

@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
   subjectDivider: {
     backgroundColor: theme.palette.primary.main,
   },
-  // tabPanel: {
-  //   padding: "20px",
-  // },
   expansionPanelList: {
     margin: "20px",
   },
@@ -150,7 +147,7 @@ function AssignmentListItem(props) {
                 </Typography>
               }
               secondary={props.work_subject}
-            />  
+            />
             <ListItemText
               align="right"
               primary={
@@ -329,7 +326,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <List className={classes.expansionPanelList}>
-            {!selectedMaterials.length ? null : 
+            {!selectedMaterials.length ? null :
             selectedMaterials.map((material) => {
               let workCategoryAvatar = (
                 <Avatar className={classes.material}>
@@ -430,7 +427,7 @@ function ViewClass(props) {
                 </ExpansionPanelSummary>
                 <Divider className={classes.subjectDivider} />
                 <List className={classes.expansionPanelList}>
-                {!selectedMaterials.length ? null : 
+                {!selectedMaterials.length ? null :
                   selectedMaterials.map((material) => {
                     if(material.subject !== subject.name){
                       return null

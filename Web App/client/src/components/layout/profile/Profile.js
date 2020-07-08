@@ -278,7 +278,7 @@ function Profile(props) {
                   Informasi Pribadi
                 </Typography>
                 <Typography variant="subtitle1">
-                  Beberapa informasi profil dapat dilihat oleh orang sepersekolahan anda.
+                  Beberapa informasi profil dapat dilihat oleh pengelola sekolah anda.
                 </Typography>
                 <List>
                   <ProfileDataItem

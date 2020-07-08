@@ -6,7 +6,7 @@ import { clearErrors } from "../../../actions/ErrorActions"
 import { createClass } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, FormHelperText, Grid, MenuItem,Paper, Select, Typography } from "@material-ui/core";
+import { Button, FormControl, FormHelperText, Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import ErrorIcon from "@material-ui/icons/Error";
 
