@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
+import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -12,11 +12,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import SortIcon from "@material-ui/icons/Sort";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
 
-// Source of the tables codes are from here : https://material-ui.com/components/tables/
-function createData(_id, classroom, homeroomTeacher, size, absent, action) {
-  return { _id, classroom, homeroomTeacher, size, absent, action };
+function createData(_id, classroom, homeroomTeacher, size, absent) {
+  return { _id, classroom, homeroomTeacher, size, absent };
 }
 
 var rows=[];
@@ -47,8 +48,8 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function ClassListHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
+function ClassListToolbar(props) {
+  const { classes, item, deleteClass, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -58,40 +59,87 @@ function ClassListHead(props) {
     { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
     { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
     { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
-    { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
   ];
 
-  return(
-    <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="center"
-            padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <b>{headCell.label}</b>
-              {orderBy === headCell.id ?
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-                : null
-              }
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
+  // Sort Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
 
-ClassListHead.propTypes = {
+  return(
+    <Toolbar className={classes.toolbar}>
+      <Typography variant="h4" align="left">
+        <b>Daftar Kelas</b>
+      </Typography>
+      <div style={{display: "flex"}}>
+        <Hidden smUp implementation="css">
+          <LightToolTip title="Buat Kelas">
+            <Link to="/buat-kelas">
+              <Fab size="small" className={classes.newClassButton}>
+                <FaChalkboardTeacher className={classes.newClassIconMobile} />
+              </Fab>
+            </Link>
+          </LightToolTip>
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <Link to="/buat-kelas">
+            <Fab size="medium" variant="extended" className={classes.newClassButton}>
+              <FaChalkboardTeacher className={classes.newClassIconDesktop} />
+              Buat Kelas
+            </Fab>
+          </Link>
+        </Hidden>
+        <LightToolTip title="Urutkan Kelas">
+          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </Fab>
+        </LightToolTip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              padding={headCell.disablePadding ? "none" : "default"}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ?
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </span>
+                  : null
+                }
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    </Toolbar>
+  );
+};
+
+ClassListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -100,13 +148,19 @@ ClassListHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
+  },
   toolbar: {
-    display: "auto",
+    display: "flex",
     justifyContent: "space-between",
     padding: "15px",
   },
   newClassButton: {
+    marginRight: "10px",
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
@@ -114,42 +168,37 @@ const useToolbarStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newClassIcon: {
+  newClassIconDesktop: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     marginRight: "7.5px",
-  }
-}));
-
-const ClassListToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { item, deleteClass } = props;
-
-  return(
-    <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" align="left">
-        <b>Daftar Kelas</b>
-      </Typography>
-      <Link to="/buat-kelas">
-        <Fab variant="extended" className={classes.newClassButton}>
-          <FaChalkboardTeacher className={classes.newClassIcon} />
-          Buat Kelas
-        </Fab>
-      </Link>
-    </Toolbar>
-  );
-};
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: "auto",
-    maxWidth: "1000px",
-    padding: "10px",
   },
-  tableEditIcon: {
+  newClassIconMobile: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+  },
+  sortButton: {
+    backgroundColor: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+    },
+  },
+  classPaper: {
+    "&:focus, &:hover": {
+      border: "1px solid #2196F3",
+      cursor: "pointer",
+    },
+  },
+  classActionContainer: {
+    padding: "20px 10px 20px 10px"
+  },
+  classPersonIcon: {
+    color: theme.palette.text.disabled,
+  },
+  classEditIcon: {
     color: theme.palette.primary.main,
   },
-  tableDeleteIcon: {
+  classDeleteIcon: {
     color: theme.palette.error.dark,
   },
   dialogBox: {
@@ -173,10 +222,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2),
-  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -187,12 +232,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
-  },
-  tableRow: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
-      cursor: "pointer",
-    },
   },
 }));
 
@@ -210,33 +249,18 @@ function ClassList(props) {
   const { viewClass, deleteClass, classesCollection } = props;
   const { user } = props.auth;
 
-  const taskRowItem = (data) => {
+  const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
+  const colorMap = new Map();
+
+  const taskRowItem = (data,i) => {
+    colorMap.set(data._id, colorList[i%(colorList.length)])
     rows.push(
-      createData(data._id, data.name,
+      createData(
+        data._id,
+        data.name,
         data.walikelas.name,
         data.ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
-        [
-        <LightToolTip title="Sunting">
-          <Link to ={`/sunting-kelas/${data._id}`}>
-            <IconButton
-              size="small"
-              style={{marginRight: "5px"}}
-              onClick={(e) =>  e.stopPropagation()}
-            >
-              <EditIcon className={classes.tableEditIcon} />
-            </IconButton>
-          </Link>
-        </LightToolTip>,
-        <LightToolTip title="Hapus">
-          <IconButton
-            size="small"
-            onClick={(e) =>{
-              handleOpenDeleteDialog(e, data._id, data.name)}}>
-            <DeleteIcon className={classes.tableDeleteIcon} />
-          </IconButton>
-        </LightToolTip>
-        ]
       )
     )
   }
@@ -245,8 +269,8 @@ function ClassList(props) {
   const retrieveClasses = () => {
     if(classesCollection.all_classes.length > 0) {
       rows = []
-      classesCollection.all_classes.map((data) => {
-        taskRowItem(data)
+      classesCollection.all_classes.map((data,i) => {
+        taskRowItem(data,i)
       })
     }
   }
@@ -375,51 +399,114 @@ function ClassList(props) {
       </div>
     )
   }
+
   return(
     <div className={classes.root}>
       {DeleteDialog()}
-      <Paper className={classes.paper}>
-        <ClassListToolbar deleteClass={deleteClass}/>
-        <TableContainer>
-          <Table>
-            <ClassListHead
-              classes={classes}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
-              onRequestSort={handleRequestSort}
-              rowCount={rows ?
-              rows.length : 0}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row._id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = `/kelas/${row._id}`
-                  return(
-                    <TableRow
-                      className={classes.tableRow}
-                      onClick={() => window.location.href = viewpage}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.classroom}
-                      selected={isItemSelected}
-                    >
-                      <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
-                        {row.classroom}
-                      </TableCell>
-                      <TableCell align="center">{row.homeroomTeacher}</TableCell>
-                      <TableCell align="center">{row.size}</TableCell>
-                      <TableCell align="center">{row.absent}</TableCell>
-                      <TableCell align="center">{row.action}</TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+      <ClassListToolbar
+        classes={classes}
+        deleteClass={deleteClass}
+        order={order}
+        orderBy={orderBy}
+        onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
+        onRequestSort={handleRequestSort}
+        rowCount={rows ? rows.length : 0}
+      />
+      <Grid container spacing={2}>
+        {stableSort(rows, getComparator(order, orderBy))
+          .map((row, index) => {
+            const isItemSelected = isSelected(row._id);
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = `/kelas/${row._id}`
+            // var colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
+            return(
+              <Grid item xs={12} sm={6} md={4}
+                aria-checked={isItemSelected}
+                key={row.classroom}
+                selected={isItemSelected}
+                onClick={() => window.location.href = viewpage}
+              >
+                <Paper button square
+                  variant="outlined"
+                  className={classes.classPaper}
+                >
+                  <Avatar
+                    variant="square"
+                    style={{
+                      backgroundColor: colorMap.get(row._id),
+                      width: "100%",
+                      height: "120px",
+                    }}
+                  >
+                    <FaChalkboardTeacher
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                      }}
+                    />
+                  </Avatar>
+                  <Divider />
+                  <div style={{padding: "10px 20px 20px 10px"}}>
+                    <Typography id={labelId} variant="h5" align="center">
+                      {row.classroom}
+                    </Typography>
+                    <Typography variant="body1" color="textSecondary" align="center">
+                      Wali Kelas: <b>{row.homeroomTeacher}</b>
+                    </Typography>
+                  </div>
+                  <Divider />
+                  <Grid container direction="row" justify="space-between" alignItems="center" className={classes.classActionContainer}>
+                    <Grid item xs>
+                      <Typography variant="overline">
+                        {row.absent}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
+                      <Grid item>
+                        <LightToolTip title="Jumlah Peserta">
+                          <Badge
+                            badgeContent={row.size}
+                            color="secondary"
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                          >
+                            <IconButton size="small">
+                              <SupervisorAccountIcon className={classes.classPersonIcon} />
+                            </IconButton>
+                          </Badge>
+                        </LightToolTip>
+                      </Grid>
+                      <Grid item>
+                        <LightToolTip title="Sunting">
+                          <Link to={`/sunting-kelas/${row._id}`}>
+                            <IconButton
+                              size="small"
+                              onClick={(e) =>  e.stopPropagation()}
+                            >
+                              <EditIcon className={classes.classEditIcon} />
+                            </IconButton>
+                          </Link>
+                        </LightToolTip>
+                      </Grid>
+                      <Grid item>
+                        <LightToolTip title="Hapus">
+                          <IconButton
+                            size="small"
+                            onClick={(e) =>{ handleOpenDeleteDialog(e, row._id, row.classroom) }}
+                          >
+                            <DeleteIcon className={classes.classDeleteIcon} />
+                          </IconButton>
+                        </LightToolTip>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
+            );
+          })}
+      </Grid>
     </div>
   )
 };
