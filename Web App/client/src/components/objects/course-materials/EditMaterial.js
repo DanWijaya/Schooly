@@ -11,7 +11,7 @@ import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl, FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Chip, CircularProgress, Dialog, FormControl, FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -19,6 +19,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import ErrorIcon from "@material-ui/icons/Error";
 import { getOneMaterial } from "../../../actions/MaterialActions";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const path = require("path");
 
@@ -103,6 +104,28 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  finishButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
+  successIcon: {
+    color: "green",
+    padding: 0,
+    margin: 0,
+    height: "45px",
+    width: "45px"
+  },
+  uplaodDialogGrid: {
+    padding: "10px",
+    width: "275px", 
+    height: "175px"
+  }
 });
 
 function LampiranFile(props) {
@@ -166,9 +189,8 @@ class EditMaterial extends Component {
     const { selectedMaterials } = nextProps.materialsCollection;
 
     // console.log(selectedMaterials.deadline);
-    if(nextProps.errors){
-      console.log(nextProps.errors)
-      this.setState({ errors: nextProps.errors})
+    if(!nextProps.errors){
+      this.handleOpenUploadDialog()
     }
     if(!name){
       this.setState({
@@ -283,6 +305,10 @@ class EditMaterial extends Component {
     this.setState({ anchorEl: null}) 
   }
 
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true})
+  };
+
   onChange = (e, otherfield) => {
     if(otherfield === "kelas"){
       console.log(this.state.class_assigned, e.target.value)
@@ -308,11 +334,11 @@ class EditMaterial extends Component {
   }
 
   render() {
-    const { classesCollection, classes, subjectsCollection, updateMaterial}  = this.props;
+    const { classesCollection, classes, errors, success, subjectsCollection, updateMaterial}  = this.props;
     const { all_classes, selectedClasses } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedMaterials} = this.props.materialsCollection;
-    const { class_assigned, fileLampiran, errors}  = this.state;
+    const { class_assigned, fileLampiran}  = this.state;
     const { user } = this.props.auth
 
     console.log("FileLampiran:", this.state.fileLampiran)
@@ -334,24 +360,57 @@ class EditMaterial extends Component {
       },
     };
 
-    const listFileChosen = () => {
-      let temp = []
-      if(fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++) {
-          temp.push(
-            <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
-              name={fileLampiran[i].filename === undefined?
-                fileLampiran[i].name :
-                fileLampiran[i].filename
+    const UploadDialog = () => {
+      return(
+        <Dialog
+          open={this.state.openUploadDialog}
+          style={{display: "flex", flexDirection: "column"}}
+        >
+          <Grid container className={classes.uplaodDialogGrid} direction="column" alignItems="center" justify="space-between">
+            <Grid item>
+              <Typography variant="h6" align="center" gutterBottom>
+                {!success ? "Materi sedang disunting" : "Materi berhasil disunting"}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
+            </Grid>
+            <Grid item >
+              {!success ? 
+              <Typography variant="body1" align="center" gutterBottom>
+                <b>Mohon tetap tunggu di halaman ini.</b>
+              </Typography> : 
+                <Button
+                href={`/materi/${this.props.match.params.id}`}
+                variant="contained"
+                className={classes.finishButton}>
+                OKE
+              </Button>
               }
-              handleLampiranDelete={this.handleLampiranDelete}
-              i={i}
-            />
-          )
-        }
+            </Grid>
+          </Grid>
+        </Dialog>
+      )
+  }
+
+  const listFileChosen = () => {
+    let temp = []
+    if(fileLampiran.length > 0) {
+      for (var i = 0; i < fileLampiran.length; i++) {
+        temp.push(
+          <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
+            name={fileLampiran[i].filename === undefined?
+              fileLampiran[i].name :
+              fileLampiran[i].filename
+            }
+            handleLampiranDelete={this.handleLampiranDelete}
+            i={i}
+          />
+        )
       }
-      return temp;
     }
+    return temp;
+  }
 
     if(this.state.class_assigned != null) //When firstly received.
       this.state.class_assigned.map((kelas) => {
@@ -367,6 +426,7 @@ class EditMaterial extends Component {
     if(user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
+          {UploadDialog()}
           <Paper>
             <div className={classes.mainGrid}>
               <Typography variant="h5" className={classes.formTitle}>
@@ -555,11 +615,12 @@ class EditMaterial extends Component {
 
 EditMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
+  success: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   updateMaterial: PropTypes.func.isRequired,
   getOneMaterial: PropTypes.func.isRequired,
   viewClass: PropTypes.func.isRequired,
@@ -569,6 +630,7 @@ EditMaterial.propTypes = {
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
+  success: state.success,
   materialsCollection: state.materialsCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,

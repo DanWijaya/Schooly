@@ -94,6 +94,18 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  successIcon: {
+    color: "green",
+    padding: 0,
+    margin: 0,
+    height: "45px",
+    width: "45px"
+  },
+  uplaodDialogGrid: {
+    padding: "10px",
+    width: "275px", 
+    height: "175px"
+  }
 });
 
 function LampiranFile(props) {
@@ -219,14 +231,12 @@ class EditAnnouncement extends Component {
       this.setState({ anchorEl: event.currentTarget})
   }
 
-  handleCloseMenu = () => { this.setState({ anchorEl: null}) }
+  handleCloseMenu = () => { 
+    this.setState({ anchorEl: null}) 
+  }
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true})
-  };
-
-  handleCloseUploadDialog = () => {
-    this.setState({ openUploadDialog: false });
   };
 
   onChange = (e, otherfield) => {
@@ -293,16 +303,16 @@ class EditAnnouncement extends Component {
           open={this.state.openUploadDialog}
           style={{display: "flex", flexDirection: "column"}}
         >
-          <Grid container direction="column" alignItems="center" justify="space-between" style={{ padding: "10px", width: "275px", height: "175px"}}>
-            <Grid item justify="center">
+          <Grid container className={classes.uplaodDialogGrid} direction="column" alignItems="center" justify="space-between">
+            <Grid item>
               <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Pengumuman sedang disunting" : "Pengumuman telah dibuat"}
+                {!success ? "Pengumuman sedang disunting" : "Pengumuman berhasil disunting"}
               </Typography>
             </Grid>
             <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon style={{color: "green", padding: 0, margin: 0, height: "45px", width: "45px"}}/>}
+              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
             </Grid>
-            <Grid item justify="center">
+            <Grid item >
               {!success ? 
               <Typography variant="body1" align="center" gutterBottom>
                 <b>Mohon tetap tunggu di halaman ini.</b>
@@ -320,8 +330,6 @@ class EditAnnouncement extends Component {
       )
   }
 
-    console.log(selectedAnnouncements)
-    console.log(all_classes)
     const listFileChosen = () => {
       let temp = []
       if(fileLampiran.length > 0) {

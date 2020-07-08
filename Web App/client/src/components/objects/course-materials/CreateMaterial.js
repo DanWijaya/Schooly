@@ -114,6 +114,18 @@ const styles = (theme) => ({
       backgroundColor: "#61BD4F",
       color: "white",
     },
+  },
+  successIcon: {
+    color: "green",
+    padding: 0,
+    margin: 0,
+    height: "45px",
+    width: "45px"
+  },
+  uplaodDialogGrid: {
+    padding: "10px",
+    width: "275px", 
+    height: "175px"
   }
 });
 
@@ -262,7 +274,8 @@ class CreateMaterial extends Component {
     const { classesCollection, classes, subjectsCollection, success}  = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran, errors}  = this.state;
+    const { class_assigned, fileLampiran}  = this.state;
+    const { errors } = this.props;
     const { user } = this.props.auth
 
     console.log(class_assigned)
@@ -291,19 +304,19 @@ class CreateMaterial extends Component {
           open={this.state.openUploadDialog}
           style={{display: "flex", flexDirection: "column"}}
         >
-          <Grid container spacing={2} direction="column" alignItems="center" justify="center" style={{padding: "15px", width: "350px", height: "210px"}}>
+          <Grid container className={classes.uplaodDialogGrid} direction="column" alignItems="center" justify="space-betweeen">
             <Grid item justify="center">
               <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Materi sedang dibuat" : "Materi telah dibuat"}
+                {!success ? "Materi sedang dibuat" : "Materi berhasil dibuat"}
               </Typography>
             </Grid>
             <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon fontSize="large" style={{color: "green"}}/>}
+              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
             </Grid>
             <Grid item justify="center">
               {!success ? 
               <Typography variant="body1" align="center" gutterBottom>
-                <b>Mohon halaman ini jangan diperbarui.</b>
+                <b>Mohon tetap tunggu di halaman ini.</b>
               </Typography> : 
                 <Button
                 href="/daftar-materi"
@@ -411,9 +424,9 @@ class CreateMaterial extends Component {
                         )})}
                       </Select>
                       <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
-                    </FormHelperText>
+                        {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                        {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                      </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>

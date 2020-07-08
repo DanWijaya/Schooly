@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER, GRADE_TASKS} from "./Types";
+import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER, GRADE_TASKS, GET_SUCCESS_RESPONSE} from "./Types";
 
 // Add Task
 export const createTask = (formData, taskData, history) => dispatch => {
@@ -9,20 +9,26 @@ export const createTask = (formData, taskData, history) => dispatch => {
         console.log("this is the res" , res.data._id)
         console.log("Will run this")
         console.log(formData.has('lampiran_tugas'))
+        dispatch({
+            type: GET_ERRORS,
+            payload: false
+        })
         if(formData.has('lampiran_tugas'))
             return axios.post(`/api/uploads/upload_lampiran/${res.data._id}`, formData);
         else // Must return something, if false it won't continue to the next "then"
             return "Successfully created task with no lampiran"
     })
     .then(res => { console.log("Lampiran tugas is uploaded")
-            alert("Task is created")
-            history.push("/daftar-tugas")
+            dispatch({
+                type: GET_SUCCESS_RESPONSE,
+                payload: true
+            })
         })
     .catch(err =>{
         console.log("error happened")
         dispatch({
             type: GET_ERRORS,
-            payload: err
+            payload: err.response.data
         })
     })
 }
@@ -74,6 +80,10 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     .then(res => {
         console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_tugas'))
+        dispatch({
+            type: GET_ERRORS,
+            payload: false
+        })
         if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran/${taskId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         else
@@ -90,8 +100,10 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     })
     .then(res => {
         console.log("Lampiran file is uploaded")
-        alert("Task is created")
-        history.push("/daftar-tugas");
+        dispatch({
+            type: GET_SUCCESS_RESPONSE,
+            payload: true
+        })
     })
 
     .catch(err => {

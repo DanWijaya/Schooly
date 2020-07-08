@@ -116,6 +116,18 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  successIcon: {
+    color: "green",
+    padding: 0,
+    margin: 0,
+    height: "45px",
+    width: "45px"
+  },
+  uplaodDialogGrid: {
+    padding: "10px",
+    width: "275px", 
+    height: "175px"
+  }
 });
 
 class CreateAnnouncement extends Component {
@@ -259,14 +271,14 @@ class CreateAnnouncement extends Component {
             open={this.state.openUploadDialog}
             style={{display: "flex", flexDirection: "column"}}
           >
-            <Grid container spacing={2} direction="column" alignItems="center" justify="center" style={{padding: "15px", width: "350px", height: "210px"}}>
+            <Grid container direction="column" alignItems="center" justify="space-between" className={classes.uplaodDialogGrid}>
               <Grid item justify="center">
                 <Typography variant="h6" align="center" gutterBottom>
-                  {!success ? "Pengumuman sedang dibuat" : "Pengumuman telah dibuat"}
+                  {!success ? "Pengumuman sedang dibuat" : "Pengumuman berhasil dibuat"}
                 </Typography>
               </Grid>
               <Grid item>
-                {!success ? <CircularProgress /> : <CheckCircleIcon fontSize="large" style={{color: "green"}}/>}
+                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
               </Grid>
               <Grid item justify="center">
                 {!success ? 

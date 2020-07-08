@@ -173,7 +173,7 @@ router.get("/image-upload", (req,res) => {
 // // @route DELETE /files/:id
 // // @desc Delete File
 // Upload Tugas
-router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (req,res) => {
+router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 10), (req,res) => {
   // To get the file details, use req.file
 
   let id = req.params.user_id
@@ -317,7 +317,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 // When uploading the lampiran, it is done tgt when creating the task object
 // So, this implementation is on router.post("/create") in tasks.js file
 
-router.post("/upload_lampiran/:task_id", uploadLampiranTugas.array("lampiran_tugas", 5), (req,res) => {
+router.post("/upload_lampiran/:task_id", uploadLampiranTugas.array("lampiran_tugas", 10), (req,res) => {
   let task_id = req.params.task_id;
   console.log("Upload lampiran is runned")
   console.log('Task Id is:', task_id)
@@ -436,7 +436,7 @@ router.delete("/lampiran/:task_id", (req,res) => {
 })
 
 // Router for handling the upload lampiran announcement... 
-router.post("/upload_lampiran_announcement/:id", uploadLampiranAnnouncement.array("lampiran_announcement", 5), (req,res) => {
+router.post("/upload_lampiran_announcement/:id", uploadLampiranAnnouncement.array("lampiran_announcement", 10), (req,res) => {
   let announcement_id = req.params.id;
   console.log("Upload lampiran is runned")
 
@@ -557,7 +557,7 @@ router.get("/previewlampiran_announcement/:id", (req,res) => {
 })
 
 // Router for handling the upload lampiran Materi... 
-router.post("/upload_lampiran_materi/:id", uploadLampiranMateri.array("lampiran_materi", 5), (req,res) => {
+router.post("/upload_lampiran_materi/:id", uploadLampiranMateri.array("lampiran_materi", 10), (req,res) => {
   let material_id = req.params.id;
   console.log("Upload lampiran is runned")
 

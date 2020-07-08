@@ -171,8 +171,10 @@ console.log("Update material is runned")
     })
     .then(res => {
         console.log("Lampiran file is uploaded")
-        alert("material is created")
-        history.push("/daftar-materi");
+        dispatch({
+            type: GET_SUCCESS_RESPONSE,
+            payload: true
+        })
     })
 
     .catch(err => {

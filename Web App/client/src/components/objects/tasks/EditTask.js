@@ -267,6 +267,9 @@ class EditTask extends Component {
   handleCloseMenu = () => { this.setState({ anchorEl: null}) }
 
   onChange = (e, otherfield) => {
+    if(Object.keys(this.props.errors).length !== 0){
+      this.props.clearErrors()
+    }
     if(otherfield === "kelas"){
       console.log(this.state.class_assigned, e.target.value)
       this.setState({ class_assigned: e.target.value, classChanged: true})
@@ -291,8 +294,8 @@ class EditTask extends Component {
   }
 
   render() {
-    const { errors , fileLampiran } = this.state;
-    const { classes } = this.props;
+    const { fileLampiran } = this.state;
+    const { classes, errors } = this.props;
     const { all_classes, selectedClasses } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection
     const { user } = this.props.auth;
@@ -376,7 +379,7 @@ class EditTask extends Component {
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject)}>
                       <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
                       <Select
                         value={this.state.subject}
@@ -387,13 +390,13 @@ class EditTask extends Component {
                         ))}
                       </Select>
                       <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.subject) && !this.state.subject ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.subject) && !this.state.subject ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
+                      {Boolean(errors.subject) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.subject) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
                     </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl variant="outlined" fullWidth>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
                       <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
                       <Select
                         error={errors.class_assigned !== undefined}
@@ -424,22 +427,28 @@ class EditTask extends Component {
                             <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
                         ))}
                       </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                        {Boolean(errors.class_assigned)? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                        {Boolean(errors.class_assigned)? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                      </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
                     <OutlinedTextField
                       on_change={(e) => this.onChange(e, "description")}
                       value={this.state.description}
+                      error={errors.description}
                       id="descripton"
                       type="textarea"
                       className={classnames("", {
-                        invalid: errors.name
+                        invalid: errors.description
                       })}
                       labelname="Deskripsi"
                       html_for="description"
                       label_classname={classes.inputLabel}
                       span_classname={classes.errorInfo}
                       multiline={true}
+                      error1={errors.description}
                     />
                   </Grid>
                   <Grid item container direction="row" className={classes.gridItem} alignItems="center">
@@ -497,7 +506,7 @@ class EditTask extends Component {
                     <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                       <KeyboardDateTimePicker
                         fullWidth
-                        disablePast
+                        // disablePast
                         format="dd/MM/yyyy HH:mm"
                         margin="normal"
                         okLabel="Simpan"

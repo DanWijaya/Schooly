@@ -9,6 +9,7 @@ module.exports = function validateTaskInput(data) {
     data.subject = isEmpty(data.subject) ? "" : data.subject;
     data.description = isEmpty(data.description) ? "" : data.description;
     data.grade = isEmpty(data.grade) ? "" : data.grade;
+    data.deadline = isEmpty(data.deadline) ? "" : data.deadline;
 
     console.log(data.description, "Description")
     
@@ -20,9 +21,12 @@ module.exports = function validateTaskInput(data) {
         errors.subject = "Mata Pelajaran belum diisi"
     }
     if(Validator.isEmpty(data.description)) {
-        errors.description = "Deskripsi belum diberikan"
+        errors.description = "Deskripsi belum diisi"
     }
-    if(data.class_assigned.length === 0) {
+    if(Validator.isEmpty(data.deadline)){
+        errors.deadline = "Batas waktu belum diisi"
+    }
+    if(!data.class_assigned.length) {
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
     if(data.grade > 100 && data.grade < 0){
