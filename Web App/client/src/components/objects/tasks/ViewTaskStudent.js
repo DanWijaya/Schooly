@@ -399,12 +399,14 @@ function ViewTaskStudent(props) {
 
   const onSubmitTugas = (e) => {
     console.log("Submit tugas")
+    console.log("File Tugas: ", fileTugas)
     e.preventDefault();
     let formData = new FormData()
     for (var i = 0; i < fileTugas.length; i++) {
       formData.append("tugas", fileTugas[i])
     }
-    console.log(formData, fileTugas)
+    console.log(formData.get("tugas"), fileTugas)
+    handleOpenUploadDialog()
     uploadTugas(formData, user, tugasId)
     setFileTugas(null)
   }
@@ -662,7 +664,7 @@ function ViewTaskStudent(props) {
                     className={classes.submitWorkButton}
                     type="submit"
                     disabled={!fileTugas}
-                    onClick={handleOpenUploadDialog}
+                    // onClick={handleOpenUploadDialog}
                   >
                     Kumpul Tugas
                   </Button>

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Chip, CircularProgress, Dialog, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -13,6 +13,7 @@ import { createAnnouncement } from "../../../actions/AnnouncementActions"
 import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import ErrorIcon from "@material-ui/icons/Error";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const path = require("path");
 
@@ -91,7 +92,21 @@ const styles = (theme) => ({
     color: "red",
     fontSize: "10px",
   },
+  successIcon: {
+    color: "green",
+    fontSize: "large"
+  },
   createAnnouncementButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
+  finishButton: {
     width: "100%",
     marginTop: "20px",
     backgroundColor: "#61BD4F",
@@ -111,7 +126,8 @@ class CreateAnnouncement extends Component {
       description: "",
       fileLampiran: [],
       class_assigned: [],
-      errors: {}
+      errors: {},
+      openUploadDialog: null
     };
   }
 
@@ -120,10 +136,12 @@ class CreateAnnouncement extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps){
     console.log(nextProps.errors)
-    if(nextProps.errors){
-      this.setState({
-        errors: nextProps.errors
-      });
+    if(!nextProps.errors){ // kalau success bakal return false nextProps.errorsnya.
+      this.handleOpenUploadDialog()
+      // this.setState({
+      //   // errors: nextProps.errors,
+      //   openUploadDialog: false
+      // });
     }
   }
 
@@ -147,6 +165,15 @@ class CreateAnnouncement extends Component {
     this.setState({ anchorEl: null})
   }
 
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true})
+  };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  };
+
+  
   onChange = (e, otherfield) => {
     if(otherfield === "deadline"){
       this.setState({ description: e.target.value })
@@ -156,6 +183,7 @@ class CreateAnnouncement extends Component {
     } else {
       this.setState({ [e.target.id] : e.target.value })
     }
+    console.log(this.props.errors)
   }
 
   handleLampiranUpload = (e) => {
@@ -201,6 +229,7 @@ class CreateAnnouncement extends Component {
         formData.append("lampiran_announcement", this.state.fileLampiran[i])
       }
       console.log(formData.getAll("lampiran_announcement"), this.state.fileLampiran)
+      // this.handleOpenUploadDialog()
       this.props.createAnnouncement(formData, announcementData, this.props.history)
   }
 
@@ -218,10 +247,44 @@ class CreateAnnouncement extends Component {
       },
     };
 
-    const {classesCollection,  classes, setCurrentClass, viewClass, subjectsCollection} = this.props;
+    const {classesCollection,  classes, setCurrentClass, viewClass, subjectsCollection, success} = this.props;
     const { all_classes, kelas } = this.props.classesCollection
-    const{ class_assigned, fileLampiran, errors} = this.state;
+    const{ class_assigned, fileLampiran} = this.state;
+    const { errors } = this.props;
     const { user } = this.props.auth
+
+    const UploadDialog = () => {
+        return(
+          <Dialog
+            open={this.state.openUploadDialog}
+            style={{display: "flex", flexDirection: "column"}}
+          >
+            <Grid container spacing={2} direction="column" alignItems="center" justify="center" style={{padding: "15px", width: "350px", height: "210px"}}>
+              <Grid item justify="center">
+                <Typography variant="h6" align="center" gutterBottom>
+                  {!success ? "Pengumuman sedang dibuat" : "Pengumuman telah dibuat"}
+                </Typography>
+              </Grid>
+              <Grid item>
+                {!success ? <CircularProgress /> : <CheckCircleIcon fontSize="large" style={{color: "green"}}/>}
+              </Grid>
+              <Grid item justify="center">
+                {!success ? 
+                <Typography variant="body1" align="center" gutterBottom>
+                  <b>Mohon halaman ini jangan diperbarui.</b>
+                </Typography> : 
+                  <Button
+                  href="/daftar-pengumuman"
+                  variant="contained"
+                  className={classes.finishButton}>
+                  OKE
+                </Button>
+                }
+              </Grid>
+            </Grid>
+          </Dialog>
+        )
+    }
 
     const listFileChosen = () => {
       let temp = []
@@ -240,8 +303,10 @@ class CreateAnnouncement extends Component {
       return temp;
     }
 
+    console.log(Object.keys(errors).length)
     return(
       <div className={classes.root}>
+        {UploadDialog()}
         <Paper>
           <div className={classes.mainGrid}>
             <Typography variant="h5" align="center" gutterBottom>
@@ -398,6 +463,7 @@ class CreateAnnouncement extends Component {
 CreateAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
   createAnnouncement: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired
@@ -406,6 +472,7 @@ CreateAnnouncement.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  success: state.success,
   viewClass: PropTypes.func.isRequired,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,

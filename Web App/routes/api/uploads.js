@@ -187,14 +187,26 @@ router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 5), (re
     }
 
     else{
-      for(var i = 0; i < req.files.length; i++) {
-        user.tugas.push({id: req.files[i].id,
+      if(!user.tugas){
+        let tugas_user = []
+        for(var i = 0; i < req.files.length; i++){
+          tugas_user.push({
+            id: req.files[i].id,
             filename: req.files[i].filename,
-            for_task_object: task_id})
+            for_task_object: task_id
+          })
+        }
+        user.tugas = tugas_user
+      } else{
+        for(var i = 0; i < req.files.length; i++) {
+          user.tugas.push({id: req.files[i].id,
+              filename: req.files[i].filename,
+              for_task_object: task_id})
+        }
       }
       user
         .save()
-        .then(console.log("Successfully upload the task in user data"))
+        .then(res.json("Successfully upload the task in user data"))
         .catch(err => console.log(err))
     }
   })

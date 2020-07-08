@@ -171,21 +171,39 @@ function MaterialListitem(props){
   const classes = useStyles()
 
   return(
-    <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
-      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-        <ListItemAvatar>
-          {props.work_category_avatar}
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Typography variant="h6">
-              {props.work_title}
-            </Typography>
-          }
-          secondary={!props.work_subject ? " " : props.work_subject}
-        />
-      </ListItem>
-    </Paper>
+    <div>
+    <Hidden smUp implementation="css">
+      <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+        <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+          <ListItemText
+            primary={
+              <Typography variant="h6">
+                {props.work_title}
+              </Typography>
+            }
+            secondary={!props.work_subject ? " " : props.work_subject}
+          />
+        </ListItem>
+      </Paper>
+    </Hidden>
+    <Hidden xsDown implementation="css">
+      <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+        <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+          <ListItemAvatar>
+            {props.work_category_avatar}
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="h6">
+                {props.work_title}
+              </Typography>
+            }
+            secondary={!props.work_subject ? " " : props.work_subject}
+          />
+        </ListItem>
+      </Paper>
+    </Hidden>
+    </div>
   )
 }
 

@@ -8,6 +8,7 @@ import MaterialReducer from "./MaterialReducer";
 import UserReducer from "./UserReducer";
 import AuthReducer from "./AuthReducer";
 import AnnouncementReducer from "./AnnouncementReducer"
+import SuccessReducer from "./SuccessReducer";
 
 export default combineReducers({
   auth: UserReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
   filesCollection: UploadReducer,
   subjectsCollection: SubjectReducer,
   passwordMatters: AuthReducer,
-  announcementsCollection : AnnouncementReducer
+  announcementsCollection : AnnouncementReducer,
+  success: SuccessReducer,
 });

@@ -124,9 +124,7 @@ class App extends Component {
                   style={{
                     flexGrow: "1",
                     overflowX: "hidden",
-                    marginTop: `${this.state.marginTopValue}px`,
-                  }}
-                >
+                    marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
                   <Switch>
                     <Route exact path="/"

@@ -119,7 +119,8 @@ function DrawerContent(props) {
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
     ]
-  else
+  else{
+    
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
@@ -129,6 +130,12 @@ function DrawerContent(props) {
       [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],
       [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
     ]
+    if(user.role === "Teacher"){ 
+      /*ini untuk hilangin yang untuk ke class 
+      di side drawer pas logged in jdi guru*/
+      ListItemContents.splice(1,1)
+    }
+  }
 
   return(
     <div>
