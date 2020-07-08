@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_ANNOUNCEMENTS, GET_ANNOUNCEMENT } from "./Types"
+import { GET_ERRORS, GET_ALL_ANNOUNCEMENTS, GET_ANNOUNCEMENT, GET_SUCCESS_RESPONSE } from "./Types"
 
 // Add Announcement
 export const createAnnouncement = (formData, announcementData, history) => dispatch => {
@@ -10,6 +10,10 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
           console.log("this is the res" , res.data)
           console.log("Will run this")
           console.log(formData.get('lampiran_announcement'))
+          dispatch({
+              type: GET_ERRORS,
+              payload: false
+          })
           if(formData.has('lampiran_announcement')){
               console.log("Post lampiran announcement is running")
               return axios.post(`/api/uploads/upload_lampiran_announcement/${res.data._id}`, formData);
@@ -18,8 +22,13 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
               return "Successfully created announcement with no lampiran"
       })
       .then(res => {
-              alert("Announcement is created")
-              history.push("/daftar-pengumuman")
+          console.log("Announcement is Created!!!!")
+          dispatch({
+              type: GET_SUCCESS_RESPONSE,
+              payload: true       
+            })
+            //   alert("Announcement is created")
+            //   history.push("/daftar-pengumuman")
           })
       .catch(err =>{
           console.log("error happened")
@@ -116,6 +125,10 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
     .then(res => {
         console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_announcement'))
+        dispatch({
+            type: GET_ERRORS,
+            payload: false
+        })
         if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
             return axios.delete(`/api/uploads/lampiran_announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
@@ -135,8 +148,12 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
     })
     .then(res => {
         console.log("Lampiran file is uploaded")
-        alert("Announcement is created")
-        history.push("/daftar-pengumuman");
+        dispatch({
+            type: GET_SUCCESS_RESPONSE,
+            payload: true
+        })
+        // alert("Announcement is created")
+        // history.push("/daftar-pengumuman");
     })
 
     .catch(err => {

@@ -6,8 +6,9 @@ export const uploadTugas = (tugas, userData, taskId) => dispatch => {
     axios
         .post(`/api/uploads/uploadtugas/${userData.id}/${taskId}`, tugas)
         .then(res => {
+            console.log(res.data)
             console.log("Run woi")
-            window.location.reload()
+            // window.location.reload()
         })
         .catch(err => {
             console.log("error in uploading")

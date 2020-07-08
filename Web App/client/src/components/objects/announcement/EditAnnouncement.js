@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button,Chip, FormControl, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button,Chip, CircularProgress,Dialog, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
 import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
@@ -13,6 +13,8 @@ import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { GET_ERRORS } from "../../../actions/Types";
+import ErrorIcon from "@material-ui/icons/Error";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const path = require("path");
 
@@ -82,6 +84,16 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  finishButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
 });
 
 function LampiranFile(props) {
@@ -115,6 +127,7 @@ class EditAnnouncement extends Component {
       fileLampiranToDelete: [],
       class_assigned: [],
       anchorEl: null,
+      openUploadDialog: null,
       errors: {}
     };
   }
@@ -139,7 +152,10 @@ class EditAnnouncement extends Component {
     const { name } = this.state;
     const { selectedAnnouncements } = nextProps.announcements;
     // console.log(nextProps.tasksCollection.deadline);
-    if(!name){
+    if(!nextProps.errors){
+      this.handleOpenUploadDialog()
+    }
+    if(!name && nextProps.errors){ // if edited, nextProps.errors is false, supaya ndak run ini..
         this.setState({
             title: selectedAnnouncements.title,
             description: selectedAnnouncements.description,
@@ -205,6 +221,14 @@ class EditAnnouncement extends Component {
 
   handleCloseMenu = () => { this.setState({ anchorEl: null}) }
 
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true})
+  };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  };
+
   onChange = (e, otherfield) => {
     if(otherfield === "description") {
       this.setState({ description : e.target.value})
@@ -258,9 +282,43 @@ class EditAnnouncement extends Component {
 
     const { classes, updateAnnouncement, getOneAnnouncement } = this.props;
     const { selectedAnnouncements} = this.props.announcements;
-    const{ errors, fileLampiran, class_assigned} = this.state
+    const{ fileLampiran, class_assigned} = this.state
+    const { errors, success } = this.props;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
+
+    const UploadDialog = () => {
+      return(
+        <Dialog
+          open={this.state.openUploadDialog}
+          style={{display: "flex", flexDirection: "column"}}
+        >
+          <Grid container direction="column" alignItems="center" justify="space-between" style={{ padding: "10px", width: "275px", height: "175px"}}>
+            <Grid item justify="center">
+              <Typography variant="h6" align="center" gutterBottom>
+                {!success ? "Pengumuman sedang disunting" : "Pengumuman telah dibuat"}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {!success ? <CircularProgress /> : <CheckCircleIcon style={{color: "green", padding: 0, margin: 0, height: "45px", width: "45px"}}/>}
+            </Grid>
+            <Grid item justify="center">
+              {!success ? 
+              <Typography variant="body1" align="center" gutterBottom>
+                <b>Mohon tetap tunggu di halaman ini.</b>
+              </Typography> : 
+                <Button
+                href={`/pengumuman/${this.props.match.params.id}`}
+                variant="contained"
+                className={classes.finishButton}>
+                OKE
+              </Button>
+              }
+            </Grid>
+          </Grid>
+        </Dialog>
+      )
+  }
 
     console.log(selectedAnnouncements)
     console.log(all_classes)
@@ -285,6 +343,7 @@ class EditAnnouncement extends Component {
 
     return(
       <div className={classes.root}>
+        {UploadDialog()}
         <Paper>
           <div className={classes.mainGrid}>
             <Typography variant="h5" align="center" gutterBottom>
@@ -335,7 +394,7 @@ class EditAnnouncement extends Component {
                 {user.role === "Student" // berarti dia ketua kelas 
                 ? null : 
                 <Grid item className={classes.gridItem}>
-                    <FormControl variant="outlined" fullWidth>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
                     <label id="class_assigned" className={classes.inputLabel}>Kelas yang diumumkan</label>
                     <Select
                       id="class_assigned"
@@ -369,6 +428,10 @@ class EditAnnouncement extends Component {
                           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                       )})}
                     </Select>
+                    <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.class_assigned) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.class_assigned) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                    </FormHelperText>
                   </FormControl>
                 </Grid>
                 }
@@ -443,6 +506,7 @@ class EditAnnouncement extends Component {
 EditAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
   getAnnouncement: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
@@ -456,6 +520,7 @@ EditAnnouncement.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  success: state.success,
   announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
 })

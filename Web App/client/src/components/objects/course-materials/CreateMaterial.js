@@ -12,7 +12,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl, FormHelperText, Grid, IconButton,
+import { Button, Chip, CircularProgress, Dialog, FormControl, FormHelperText, Grid, IconButton,
    ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
@@ -21,6 +21,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ErrorIcon from "@material-ui/icons/Error";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const path = require("path");
 
@@ -104,6 +105,16 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  finishButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  }
 });
 
 function LampiranFile(props) {
@@ -137,6 +148,7 @@ class CreateMaterial extends Component {
       description: "",
       errors: {},
       fileLampiran: [],
+      openUploadDialog: null,
       anchorEl: null
     }
   }
@@ -153,6 +165,14 @@ class CreateMaterial extends Component {
   handleCloseMenu = () => {
     this.setState({ anchorEl: null})
   }
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true})
+  };
+
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  };
 
   onChange = (e, otherfield) => {
     console.log("On change : ", e.target.value)
@@ -205,11 +225,8 @@ class CreateMaterial extends Component {
   // using this.setState() in this method.
 
   UNSAFE_componentWillReceiveProps(nextProps){
-    if(nextProps.errors){
-        console.log(nextProps.errors)
-      this.setState({
-        errors: nextProps.errors
-      });
+    if(!nextProps.errors){
+        this.handleOpenUploadDialog()
     }
   }
 
@@ -242,7 +259,7 @@ class CreateMaterial extends Component {
   }
 
   render() {
-    const { classesCollection, classes, subjectsCollection}  = this.props;
+    const { classesCollection, classes, subjectsCollection, success}  = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran, errors}  = this.state;
@@ -250,6 +267,7 @@ class CreateMaterial extends Component {
 
     console.log(class_assigned)
     console.log(errors)
+
     const listFileChosen = () => {
       let temp = []
       if(fileLampiran.length > 0) {
@@ -267,6 +285,39 @@ class CreateMaterial extends Component {
       return temp;
     }
 
+    const UploadDialog = () => {
+      return(
+        <Dialog
+          open={this.state.openUploadDialog}
+          style={{display: "flex", flexDirection: "column"}}
+        >
+          <Grid container spacing={2} direction="column" alignItems="center" justify="center" style={{padding: "15px", width: "350px", height: "210px"}}>
+            <Grid item justify="center">
+              <Typography variant="h6" align="center" gutterBottom>
+                {!success ? "Materi sedang dibuat" : "Materi telah dibuat"}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {!success ? <CircularProgress /> : <CheckCircleIcon fontSize="large" style={{color: "green"}}/>}
+            </Grid>
+            <Grid item justify="center">
+              {!success ? 
+              <Typography variant="body1" align="center" gutterBottom>
+                <b>Mohon halaman ini jangan diperbarui.</b>
+              </Typography> : 
+                <Button
+                href="/daftar-materi"
+                variant="contained"
+                className={classes.finishButton}>
+                OKE
+              </Button>
+              }
+            </Grid>
+          </Grid>
+        </Dialog>
+      )
+  }
+
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -283,6 +334,7 @@ class CreateMaterial extends Component {
     if(user.role === "Teacher") {
       return(
         <div className={classes.root}>
+          {UploadDialog()}
           <Paper>
             <div className={classes.mainGrid}>
               <Typography variant="h5" align="center" gutterBottom>
@@ -464,16 +516,18 @@ class CreateMaterial extends Component {
 
 CreateMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   createMaterial: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
+  success: state.success,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
 })

@@ -55,7 +55,7 @@ export const updateUserData = (userData, userId, history) => dispatch => {
 }
 
 export const updateAvatar = (userData, userId, formData) => dispatch => {
-  if(userData.avatar !== undefined) {
+  if(Boolean(userData.avatar)) {
     axios.delete(`/api/uploads/image/${userData.avatar}`)
       .then(res => {
         return axios
@@ -76,7 +76,10 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
 
       })
       .catch(err => {
-        console.log("No Profile picture set previously or error occured in removing old Profile picture")
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
       })
   }
   else {

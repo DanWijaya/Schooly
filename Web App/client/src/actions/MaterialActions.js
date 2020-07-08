@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_MATERIALS, GET_MATERIAL, SUCCESS_MATERIAL } from "./Types"
+import { GET_ERRORS, GET_ALL_MATERIALS, GET_MATERIAL, GET_SUCCESS_RESPONSE } from "./Types"
 
 // Add material
 export const createMaterial = (formData, materialData, history) => dispatch => {
@@ -10,6 +10,10 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
           console.log("this is the res" , res.data)
           console.log("Will run this")
           console.log(formData.getAll('lampiran_materi'))
+          dispatch({
+              type: GET_ERRORS,
+              payload: false
+          })
           if(formData.has('lampiran_materi')){
               console.log("Post lampiran material is running")
               return axios.post(`/api/uploads/upload_lampiran_materi/${res.data._id}`, formData);
@@ -18,9 +22,9 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
               return "Successfully created material with no lampiran"
       })
       .then(res => {
-            //   alert("material is created")
+          console.log('Successfully created material.')
             dispatch({
-                type: SUCCESS_MATERIAL,
+                type: GET_SUCCESS_RESPONSE,
                 payload: true
             })
             //   window.location.href="/daftar-materi"
@@ -144,6 +148,10 @@ console.log("Update material is runned")
     .then(res => {
         console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_materi'))
+        dispatch({
+            type: GET_ERRORS,
+            payload: false
+        })
         if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
             return axios.delete(`/api/uploads/lampiran_materi/${materialId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
