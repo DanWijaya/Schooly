@@ -182,6 +182,17 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "white",
     },
   },
+  visuallyHidden: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  },
   classPaper: {
     "&:focus, &:hover": {
       border: "1px solid #2196F3",
@@ -230,17 +241,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
   },
 }));
 
@@ -432,7 +432,6 @@ function ClassList(props) {
             return(
               <Grid item xs={12} sm={6} md={4}
                 aria-checked={isItemSelected}
-                key={row.classroom}
                 selected={isItemSelected}
                 onClick={() => window.location.href = viewpage}
               >

@@ -47,8 +47,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AnnouncementItemList(props) {
-  document.title="Schooly | Notifikasi";
-
   const classes = useStyles();
 
   return(
@@ -80,12 +78,12 @@ function AnnouncementList(props) {
   document.title = "Schooly | Daftar Pengumuman"
 
   const classes = useStyles();
-  const { selectedAnnouncements, all_announcements} = props.announcements;
-  const{ getAnnouncement, getAllAnnouncement, getUsers, setCurrentClass } = props;
-  const { kelas, selectedClass} = props.classesCollection
+  const { selectedAnnouncements, all_announcements } = props.announcements;
+  const { getAnnouncement, getAllAnnouncement, getUsers, setCurrentClass } = props;
+  const { kelas, selectedClass } = props.classesCollection
   const { user, retrieved_users } = props.auth;
   const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false)
-  
+
 
   React.useEffect(() => {
     if(user.role == "Teacher" && !annIsRetrieved){
@@ -110,13 +108,13 @@ function AnnouncementList(props) {
       console.log()
       annList.push(
         <AnnouncementItemList
-            sender_icon={<AccountCircleIcon />}
-            author_name={selectedAnnouncements[i].author_name}
-            notification_title={selectedAnnouncements[i].title}
-            notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
-            date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MM-YYYY")}
-            time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
-          />
+          sender_icon={<AccountCircleIcon />}
+          author_name={selectedAnnouncements[i].author_name}
+          notification_title={selectedAnnouncements[i].title}
+          notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
+          date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MM-YYYY")}
+          time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
+        />
       )
     }
     return annList;
@@ -140,13 +138,13 @@ function AnnouncementList(props) {
             </Typography>
           </Grid>
           <Grid item>
-            {canAnnounce() ?  
+            {canAnnounce() ?
             <Link to="/buat-pengumuman">
               <Fab variant="Extended" className={classes.newAnnouncementButton}>
                 <AnnouncementIcon className={classes.newAnnouncementIcon} />
                 Buat Pengumuman
               </Fab>
-            </Link> : 
+            </Link> :
             null}
           </Grid>
         </Grid>
@@ -164,15 +162,15 @@ AnnouncementList.propTypes = {
   getAnnouncement: PropTypes.func.isRequired,
   getAllAnnouncements: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
-  getUsers: PropTypes.func.isRequired
+  getUsers: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   announcements: state.announcementsCollection,
-  classesCollection: state.classesCollection
+  classesCollection: state.classesCollection,
 });
 
 export default connect(
-  mapStateToProps, { getAnnouncement, getAllAnnouncements, getUsers, setCurrentClass}
+  mapStateToProps, { getAnnouncement, getAllAnnouncements, getUsers, setCurrentClass }
 ) (AnnouncementList);

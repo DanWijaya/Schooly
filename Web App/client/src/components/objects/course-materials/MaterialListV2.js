@@ -4,22 +4,24 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { viewTask, deleteTask } from "../../../actions/TaskActions";
+import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
+import { viewSelectedClasses } from "../../../actions/ClassActions";
+import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Fab, Grid, Hidden, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
+   TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
 
-function createData(_id, tasktitle, subject, deadline, class_assigned) {
-  return { _id, tasktitle, subject, deadline, class_assigned };
+function createData(_id, materialtitle, subject, author, class_assigned) {
+  return { _id, materialtitle, subject, author, class_assigned };
 }
 
 var rows = [];
@@ -50,7 +52,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function TaskListV2Toolbar(props) {
+function MaterialListV2Toolbar(props) {
   const { classes, order, orderBy, onRequestSort, role } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -58,10 +60,10 @@ function TaskListV2Toolbar(props) {
   };
 
   const headCells = [
-    { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
+    { id: "materialtitle", numeric: false, disablePadding: true, label: "Nama Materi" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
-    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
+    { id: "author", numeric: false, disablePadding: false, label: "Pemberi Materi" },
+    { id: "class_assigned", numeric: false, disablePadding: false, label: "Kelas yang diberikan" },
   ];
 
   if(role === "Student") {
@@ -80,17 +82,17 @@ function TaskListV2Toolbar(props) {
   return(
     <Toolbar className={classes.toolbar}>
       <Typography variant="h4">
-        <b>Daftar Tugas</b>
+        <b>Daftar Materi</b>
       </Typography>
       <div style={{display: "flex"}}>
         <Hidden smUp implementation="css">
           {role === "Student" ?
             null
           :
-            <LightTooltip title="Buat Tugas">
-              <Link to="/buat-tugas">
-                <Fab size="small" className={classes.newTaskButton}>
-                  <AssignmentIcon className={classes.newTaskIconMobile} />
+            <LightTooltip title="Buat Materi">
+              <Link to="/buat-materi">
+                <Fab size="small" className={classes.newMaterialButton}>
+                  <MenuBookIcon className={classes.newMaterialIconMobile} />
                 </Fab>
               </Link>
             </LightTooltip>
@@ -100,15 +102,15 @@ function TaskListV2Toolbar(props) {
           {role === "Student" ?
             null
           :
-            <Link to="/buat-tugas">
-              <Fab size="medium" variant="extended" className={classes.newTaskButton}>
-                <AssignmentIcon className={classes.newTaskIconDesktop} />
-                Buat Tugas
+            <Link to="/buat-materi">
+              <Fab size="medium" variant="extended" className={classes.newMaterialButton}>
+                <MenuBookIcon className={classes.newMaterialIconDesktop} />
+                Buat Materi
               </Fab>
             </Link>
           }
         </Hidden>
-        <LightTooltip title="Urutkan Tugas">
+        <LightTooltip title="Urutkan Materi">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
           </Fab>
@@ -154,7 +156,7 @@ function TaskListV2Toolbar(props) {
   );
 };
 
-TaskListV2Toolbar.propTypes = {
+MaterialListV2Toolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -174,7 +176,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     padding: "15px",
   },
-  newTaskButton: {
+  newMaterialButton: {
     marginRight: "10px",
     backgroundColor: "#61BD4F",
     color: "white",
@@ -183,12 +185,12 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newTaskIconDesktop: {
+  newMaterialIconDesktop: {
     width: theme.spacing(3),
     height: theme.spacing(3),
     marginRight: "7.5px",
   },
-  newTaskIconMobile: {
+  newMaterialIconMobile: {
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
@@ -209,10 +211,7 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
-  },
-  viewTaskButton: {
+  viewMaterialButton: {
     backgroundColor: theme.palette.warning.main,
     color: "white",
     "&:focus, &:hover": {
@@ -220,7 +219,7 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.warning.main,
     },
   },
-  editTaskButton: {
+  editMaterialButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -228,7 +227,7 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  deleteTaskButton: {
+  deleteMaterialButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
     "&:focus, &:hover": {
@@ -257,15 +256,15 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  taskPanelDivider: {
+  materialPanelDivider: {
     backgroundColor: theme.palette.primary.main,
   },
-  taskPanelSummary: {
+  materialPanelSummary: {
     "&:hover": {
       backgroundColor: theme.palette.button.main,
     },
   },
-  taskPaper: {
+  materialPaper: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -276,7 +275,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TaskListV2(props) {
+function MaterialListV2(props) {
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
@@ -287,49 +286,65 @@ function TaskListV2(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
 
-  const { tasksCollection, viewTask, deleteTask } = props;
-  const { user } = props.auth;
+  const { getAllMaterials, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
+  const { all_materials, selectedMaterials } = props.materialsCollection;
+  const { selectedClasses, all_classes } = props.classesCollection;
+  const { user, retrieved_users } = props.auth;
 
-  const taskRowItem = (data) => {
+  const materialRowItem = (data) => {
     rows.push(
       createData(
         data._id,
         data.name,
         data.subject,
-        data.deadline,
+        !(retrieved_users).size ? {}: retrieved_users.get(data.author_id),
         data.class_assigned,
       )
     )
   }
 
-  React.useEffect(() => {viewTask()}, [tasksCollection.length])
+  React.useEffect(() => {
+    let materialsRetrieved = []
 
-  const retrieveTasks = () => {
-    // If tasksCollection is not undefined or an empty array
-    if(tasksCollection.length) {
-      rows = []
-      if(user.role === "Teacher") {
-      tasksCollection.map((data) => {
-        if(data.person_in_charge_id === user.id) {
-          taskRowItem(data)
-          }
-        })
+    if(user.role === "Admin"){
+      materialsRetrieved = all_materials
+      getAllMaterials()
+    }
+    else {
+      materialsRetrieved = selectedMaterials;
+      if(user.role === "Teacher"){
+        getMaterial(user.id, "by_author")
       }
-      else if (user.role === "Student"){
-        tasksCollection.map((data) => {
-          let class_assigned = data.class_assigned;
-          for (var i = 0; i < class_assigned.length; i++) {
-            if(class_assigned[i]._id === user.kelas) {
-              taskRowItem(data)
-              break;
-            }
-          }
-        })
+      else { // for student
+        getMaterial(user.kelas, "by_class")
       }
-      else { //Admin
-        tasksCollection.map((data) => {
-          taskRowItem(data)
-        })
+    }
+
+    let userIds = []
+    let classIds = new Set()
+    for(var i = 0; i < materialsRetrieved.length; i++) {
+      let material = materialsRetrieved[i]
+      userIds.push(material.author_id)
+      for(var j = 0; j < material.class_assigned.length; j++) {
+        classIds.add(material.class_assigned[j])
+      }
+    }
+
+    getUsers(userIds) // to get the authors objects.
+    viewSelectedClasses(Array.from(classIds)) // to get the classes objects.
+  }, [selectedMaterials.length, all_materials.length])
+
+  const retrieveMaterials = () => {
+    console.log(selectedMaterials)
+    console.log(retrieved_users)
+    // If all_materials is not undefined or an empty array
+    rows = []
+    if(user.role === "Admin") {
+      all_materials.map((data) => { materialRowItem(data)})
+    }
+    else {
+      if(selectedMaterials.length) {
+        selectedMaterials.map((data) => materialRowItem(data))
       }
     }
   }
@@ -342,11 +357,11 @@ function TaskListV2(props) {
 
   // Call the function to view the tasks on tablerows.
   // This function is defined above.
-  retrieveTasks()
+  retrieveMaterials()
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const onDeleteTask = (id) => {
-    deleteTask(id)
+  const onDeleteMaterial = (id) => {
+    deleteMaterial(id)
   }
 
   // Delete Dialog
@@ -371,14 +386,13 @@ function TaskListV2(props) {
           <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              onClick={handleCloseDeleteDialog}
-            >
+              onClick={handleCloseDeleteDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Hapus Tugas berikut?
+              Hapus Materi berikut?
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -396,7 +410,7 @@ function TaskListV2(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteTask(selectedTaskId) }}
+                onClick={() => { onDeleteMaterial(selectedTaskId) }}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -418,36 +432,26 @@ function TaskListV2(props) {
     )
   }
 
-  // Task Expansion Panel
-  const [expanded, setExpanded] = React.useState(false);
-  const handleTogglePanel = () => {
-    setExpanded();
-  };
-  const handleClosePanel = () => {
-    setExpanded(false);
-  };
-
-  document.title = "Schooly | Daftar Tugas";
+  document.title = "Schooly | Daftar Materi";
 
   return(
     <div className={classes.root}>
       {DeleteDialog()}
-      <TaskListV2Toolbar
+      <MaterialListV2Toolbar
         role={user.role}
-        deleteTask={deleteTask}
+        deleteMaterial={deleteMaterial}
         classes={classes}
         order={order}
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-        handleClosePanel={handleClosePanel}
       />
-        <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
             const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
+            let viewpage = user.role === "Student" ? `/materi/${row._id}` : `/materi/${row._id}`
             return(
               <Grid item>
                 {user.role === "Teacher" ?
@@ -457,12 +461,12 @@ function TaskListV2(props) {
                     aria-checked={isItemSelected}
                     selected={isItemSelected}
                   >
-                    <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                    <ExpansionPanelSummary className={classes.materialPanelSummary}>
                       <Grid container spacing={1} justify="space-between" alignItems="center">
                         <Grid item>
                           <Hidden smUp implementation="css">
                             <Typography variant="subtitle1" id={labelId}>
-                              {row.tasktitle}
+                              {row.materialtitle}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
                               {row.subject}
@@ -470,7 +474,7 @@ function TaskListV2(props) {
                           </Hidden>
                           <Hidden xsDown implementation="css">
                             <Typography variant="h6" id={labelId}>
-                              {row.tasktitle}
+                              {row.materialtitle}
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
                               {row.subject}
@@ -483,7 +487,7 @@ function TaskListV2(props) {
                               <IconButton
                                 size="small"
                                 href={viewpage}
-                                className={classes.viewTaskButton}
+                                className={classes.viewMaterialButton}
                                 onClick={(event) => event.stopPropagation()}
                               >
                                 <PageviewIcon fontSize="small" />
@@ -495,7 +499,7 @@ function TaskListV2(props) {
                               <Link to={`/sunting-tugas/${row._id}`}>
                                 <IconButton
                                   size="small"
-                                  className={classes.editTaskButton}
+                                  className={classes.editMaterialButton}
                                   onClick={(e)=> e.stopPropagation()}
                                 >
                                   <EditIcon fontSize="small" />
@@ -507,8 +511,8 @@ function TaskListV2(props) {
                             <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
-                                className={classes.deleteTaskButton}
-                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.tasktitle)}}
+                                className={classes.deleteMaterialButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.materialtitle)}}
                               >
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
@@ -517,21 +521,22 @@ function TaskListV2(props) {
                         </Grid>
                       </Grid>
                     </ExpansionPanelSummary>
-                    <Divider className={classes.taskPanelDivider} />
+                    <Divider className={classes.materialPanelDivider} />
                     <ExpansionPanelDetails>
                       <Grid conntainer direction="column">
                         <Grid item>
                           <Typography variant="body1" gutterBottom>
-                            <b>Kelas yang Ditugaskan:</b> {row.class_assigned.map((kelas,i) => {
-                              if(i === row.class_assigned.length - 1)
-                                return (`${kelas.name}`)
-                              return (`${kelas.name}, `)})
+                            <b>Kelas yang Diberikan:</b> {!selectedClasses.size ? null :
+                              row.class_assigned.map((kelas,i) => {
+                                if(i === row.class_assigned.length - 1)
+                                  return (`${selectedClasses.get(kelas).name}`)
+                                return (`${selectedClasses.get(kelas).name}, `)})
                             }
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="overline" className={classes.deadlineWarningText}>
-                             Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                          <Typography variant="body1" color="textSecondary">
+                             Pemberi Materi: {!row.author ? null : row.author.name}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -542,11 +547,11 @@ function TaskListV2(props) {
                     button component="a"
                     href={viewpage}
                     variant="outlined"
-                    className={classes.taskPaper}
+                    className={classes.materialPaper}
                   >
                     <div>
                       <Typography variant="h6" id={labelId}>
-                        {row.tasktitle}
+                        {row.materialtitle}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
                         {row.subject}
@@ -554,16 +559,16 @@ function TaskListV2(props) {
                     </div>
                     <div>
                       <Hidden smUp implementation="css">
-                        <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
-                          Batas Waktu:
+                        <Typography variant="body2" color="textSecondary" align="right">
+                          Pemberi Materi:
                         </Typography>
-                        <Typography variant="caption" align="right" className={classes.deadlineWarningText}>
-                          {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        <Typography variant="caption" color="textSecondary" align="right">
+                          {!row.author ? null : row.author.name}
                         </Typography>
                       </Hidden>
                       <Hidden xsDown implementation="css">
-                        <Typography variant="overline" align="right" className={classes.deadlineWarningText}>
-                          Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        <Typography variant="overline" color="textSecondary" align="right">
+                          Pemberi Materi: {!row.author ? null : row.author.name}
                         </Typography>
                       </Hidden>
                     </div>
@@ -572,15 +577,19 @@ function TaskListV2(props) {
               </Grid>
             );
           })}
-        </Grid>
+      </Grid>
     </div>
   );
 }
 
-TaskListV2.propTypes = {
-  viewTask: PropTypes.func.isRequired,
-  deleteTask: PropTypes.func.isRequired,
-  tasksCollection: PropTypes.object.isRequired,
+MaterialListV2.propTypes = {
+  deleteMaterial: PropTypes.func.isRequired,
+  getAllMaterials: PropTypes.func.isRequired,
+  getMaterial: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
+  viewSelectedClasses: PropTypes.func.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  materialsCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
@@ -588,9 +597,11 @@ TaskListV2.propTypes = {
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-  tasksCollection: state.tasksCollection,
+  classesCollection: state.classesCollection,
+  materialsCollection: state.materialsCollection,
 })
 
 export default connect(
-  mapStateToProps, { viewTask, deleteTask }
-)(TaskListV2);
+  mapStateToProps,
+  { deleteMaterial, getAllMaterials, getMaterial, getUsers, viewSelectedClasses }
+)(MaterialListV2);

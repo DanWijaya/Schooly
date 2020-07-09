@@ -37,6 +37,7 @@ import CreateMaterial from "./components/objects/course-materials/CreateMaterial
 import EditMaterial from "./components/objects/course-materials/EditMaterial";
 import ViewMaterial from "./components/objects/course-materials/ViewMaterial";
 import MaterialList from "./components/objects/course-materials/MaterialList";
+import MaterialListV2 from "./components/objects/course-materials/MaterialListV2";
 //Announcement
 import CreateAnnouncement from "./components/objects/announcement/CreateAnnouncement";
 import EditAnnouncement from "./components/objects/announcement/EditAnnouncement";
@@ -165,6 +166,7 @@ class App extends Component {
                     <PrivateRoute exact path="/sunting-materi/:id" component={EditMaterial} />
                     <PrivateRoute exact path="/materi/:id" component={ViewMaterial} />
                     <PrivateRoute exact path="/daftar-materi" component={MaterialList} />
+                    <PrivateRoute exact path="/materiallistv2" component={MaterialListV2} />
                     {/* Route Announcement  */}
                     <PrivateRoute exact path="/buat-pengumuman" component={CreateAnnouncement} />
                     <PrivateRoute exact path="/sunting-pengumuman/:id" component={EditAnnouncement} />
