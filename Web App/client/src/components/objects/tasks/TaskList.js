@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
@@ -228,7 +228,7 @@ function TaskList(props) {
         data.deadline,
         user.role === "Student" ? null :
         [
-          <LightToolTip title="Sunting">
+          <LightTooltip title="Sunting">
             <Link to={`/sunting-tugas/${data._id}`}>
               <IconButton
                 size="small"
@@ -237,14 +237,14 @@ function TaskList(props) {
                 <EditIcon className={classes.tableEditIcon} />
               </IconButton>
             </Link>
-          </LightToolTip>,
-          <LightToolTip title="Hapus">
+          </LightTooltip>,
+          <LightTooltip title="Hapus">
             <IconButton
               size="small"
               onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}>
               <DeleteIcon className={classes.tableDeleteIcon} />
             </IconButton>
-          </LightToolTip>
+          </LightTooltip>
         ]
       )
     )

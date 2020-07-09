@@ -49,6 +49,7 @@ import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
+import TaskListV2 from "./components/objects/tasks/TaskListV2";
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
@@ -176,6 +177,7 @@ class App extends Component {
                     <PrivateRoute exact path="/tugas-guru/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
                     <PrivateRoute exact path="/daftar-tugas" component={TaskList} />
+                    <PrivateRoute exact path="/tasklistv2" component={TaskListV2} />
                     {/* Route Admin-Only  */}
                     <PrivateRoute exact path="/daftar-kelas" component={ClassList} />
                     <PrivateRoute exact path="/atur-pengguna" component={ManageUsers} />

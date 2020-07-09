@@ -8,7 +8,7 @@ import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampira
 import { viewOneTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
    Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -188,11 +188,11 @@ function LampiranFile(props) {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <LightToolTip title={filename} placement="top">
+              <LightTooltip title={filename} placement="top">
                 <Typography>
                   {displayedName}
                 </Typography>
-              </LightToolTip>
+              </LightTooltip>
             }
             secondary={filetype}
           />
@@ -268,11 +268,11 @@ function WorkFile(props) {
         </ListItemAvatar>
         <ListItemText
           primary={
-            <LightToolTip title={file_name} placement="top">
+            <LightTooltip title={file_name} placement="top">
               <Typography variant="subtitle2">
                 {displayedName}
               </Typography>
-            </LightToolTip>
+            </LightTooltip>
           }
           secondary={file_type}
         />

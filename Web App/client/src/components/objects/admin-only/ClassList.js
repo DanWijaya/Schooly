@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
-   TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper,
+   TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -72,18 +72,18 @@ function ClassListToolbar(props) {
 
   return(
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" align="left">
+      <Typography variant="h4">
         <b>Daftar Kelas</b>
       </Typography>
       <div style={{display: "flex"}}>
         <Hidden smUp implementation="css">
-          <LightToolTip title="Buat Kelas">
+          <LightTooltip title="Buat Kelas">
             <Link to="/buat-kelas">
               <Fab size="small" className={classes.newClassButton}>
                 <FaChalkboardTeacher className={classes.newClassIconMobile} />
               </Fab>
             </Link>
-          </LightToolTip>
+          </LightTooltip>
         </Hidden>
         <Hidden xsDown implementation="css">
           <Link to="/buat-kelas">
@@ -93,11 +93,11 @@ function ClassListToolbar(props) {
             </Fab>
           </Link>
         </Hidden>
-        <LightToolTip title="Urutkan Kelas">
+        <LightTooltip title="Urutkan Kelas">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
           </Fab>
-        </LightToolTip>
+        </LightTooltip>
         <Menu
           keepMounted
           anchorEl={anchorEl}
@@ -115,7 +115,6 @@ function ClassListToolbar(props) {
           {headCells.map((headCell, i) => (
             <MenuItem
               key={headCell.id}
-              padding={headCell.disablePadding ? "none" : "default"}
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
@@ -195,11 +194,21 @@ const useStyles = makeStyles((theme) => ({
   classPersonIcon: {
     color: theme.palette.text.disabled,
   },
-  classEditIcon: {
-    color: theme.palette.primary.main,
+  editClassButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
   },
-  classDeleteIcon: {
-    color: theme.palette.error.dark,
+  deleteClassButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
   },
   dialogBox: {
     padding: "15px",
@@ -237,7 +246,9 @@ const useStyles = makeStyles((theme) => ({
 
 function ClassList(props) {
   document.title = "Schooly | Daftar Kelas"
+
   const classes = useStyles();
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
   const [selected, setSelected] = React.useState([]);
@@ -252,7 +263,7 @@ function ClassList(props) {
   const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
   const colorMap = new Map();
 
-  const taskRowItem = (data,i) => {
+  const classItem = (data,i) => {
     colorMap.set(data._id, colorList[i%(colorList.length)])
     rows.push(
       createData(
@@ -270,7 +281,7 @@ function ClassList(props) {
     if(classesCollection.all_classes.length > 0) {
       rows = []
       classesCollection.all_classes.map((data,i) => {
-        taskRowItem(data,i)
+        classItem(data,i)
       })
     }
   }
@@ -393,7 +404,7 @@ function ClassList(props) {
   if(user.role === "Student") {
     return(
       <div className={classes.root}>
-        <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
+        <Typography variant="h5" align="center" className={classes.title}>
           <b>Anda tidak mempunyai izin akses halaman ini.</b>
         </Typography>
       </div>
@@ -417,8 +428,7 @@ function ClassList(props) {
           .map((row, index) => {
             const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = `/kelas/${row._id}`
-            // var colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
+            let viewpage = `/kelas/${row._id}`;
             return(
               <Grid item xs={12} sm={6} md={4}
                 aria-checked={isItemSelected}
@@ -463,7 +473,7 @@ function ClassList(props) {
                     </Grid>
                     <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
                       <Grid item>
-                        <LightToolTip title="Jumlah Peserta">
+                        <LightTooltip title="Jumlah Peserta">
                           <Badge
                             badgeContent={row.size}
                             color="secondary"
@@ -476,29 +486,31 @@ function ClassList(props) {
                               <SupervisorAccountIcon className={classes.classPersonIcon} />
                             </IconButton>
                           </Badge>
-                        </LightToolTip>
+                        </LightTooltip>
                       </Grid>
                       <Grid item>
-                        <LightToolTip title="Sunting">
+                        <LightTooltip title="Sunting">
                           <Link to={`/sunting-kelas/${row._id}`}>
                             <IconButton
                               size="small"
+                              className={classes.editClassButton}
                               onClick={(e) =>  e.stopPropagation()}
                             >
-                              <EditIcon className={classes.classEditIcon} />
+                              <EditIcon fontSize="small" />
                             </IconButton>
                           </Link>
-                        </LightToolTip>
+                        </LightTooltip>
                       </Grid>
                       <Grid item>
-                        <LightToolTip title="Hapus">
+                        <LightTooltip title="Hapus">
                           <IconButton
                             size="small"
+                            className={classes.deleteClassButton}
                             onClick={(e) =>{ handleOpenDeleteDialog(e, row._id, row.classroom) }}
                           >
-                            <DeleteIcon className={classes.classDeleteIcon} />
+                            <DeleteIcon fontSize="small" />
                           </IconButton>
-                        </LightToolTip>
+                        </LightTooltip>
                       </Grid>
                     </Grid>
                   </Grid>

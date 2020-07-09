@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import { viewSelectedClasses } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
@@ -266,7 +266,7 @@ function MaterialList(props) {
         data.class_assigned,
         user.role === "Student" ? null :
         [
-          <LightToolTip title="Sunting">
+          <LightTooltip title="Sunting">
             <Link to={`/sunting-materi/${data._id}`}>
               <IconButton
                 size="small"
@@ -275,14 +275,14 @@ function MaterialList(props) {
                 <EditIcon className={classes.tableEditIcon} />
               </IconButton>
             </Link>
-          </LightToolTip>,
-          <LightToolTip title="Hapus">
+          </LightTooltip>,
+          <LightTooltip title="Hapus">
             <IconButton
               size="small"
               onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}>
               <DeleteIcon className={classes.tableDeleteIcon} />
             </IconButton>
-          </LightToolTip>
+          </LightTooltip>
         ]
       )
     )
@@ -300,7 +300,7 @@ function MaterialList(props) {
       selectedMaterials.map((data) => materialRowItem(data))
     }
   }
-    
+
 
     // if(selectedMaterials.length) {
     //     rows = []
@@ -451,7 +451,7 @@ function MaterialList(props) {
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{!row.author ? null : row.author.name}</TableCell>
-                      <TableCell align="center">{!selectedClasses.size ? null : 
+                      <TableCell align="center">{!selectedClasses.size ? null :
                         row.class_assigned.map((kelas,i) => {
                           if(i === row.class_assigned.length - 1)
                             return (`${selectedClasses.get(kelas).name}`)

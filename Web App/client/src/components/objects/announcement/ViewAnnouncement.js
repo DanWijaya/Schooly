@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
@@ -173,11 +173,11 @@ function LampiranFile(props) {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <LightToolTip title={filename} placement="top">
+              <LightTooltip title={filename} placement="top">
                 <Typography variant="subtitle2">
                   {displayedName}
                 </Typography>
-              </LightToolTip>
+              </LightTooltip>
             }
             secondary={filetype}
           />
@@ -393,17 +393,17 @@ function ViewAnnouncement(props) {
       { user.role === "Admin" || user.id === selectedAnnouncements.author_id? // kalau studentnya ketua kelas yang buat pengumumannya
           <div className={classes.teacherButtonContainer}>
             <Link to={`/sunting-pengumuman/${announcement_id}`}>
-              <LightToolTip title="Sunting Pengumuman" placement="bottom">
+              <LightTooltip title="Sunting Pengumuman" placement="bottom">
                 <Fab className={classes.editAnnouncementButton}>
                   <EditIcon />
                 </Fab>
-              </LightToolTip>
+              </LightTooltip>
             </Link>
-            <LightToolTip title="Hapus Pengumuman" placement="bottom">
+            <LightTooltip title="Hapus Pengumuman" placement="bottom">
               <Fab className={classes.deleteAnnouncementButton} onClick={(e) => handleOpenDeleteDialog(e,announcement_id)}>
                 <DeleteIcon />
               </Fab>
-            </LightToolTip>
+            </LightTooltip>
           </div>
       : null
     }

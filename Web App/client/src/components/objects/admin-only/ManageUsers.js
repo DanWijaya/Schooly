@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
@@ -195,14 +195,14 @@ function ManageUsers(props) {
         data.ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
         [
-        <LightToolTip title="Hapus Akun">
+        <LightTooltip title="Hapus Akun">
           <IconButton
             size="small"
             onClick={(e) =>{
               handleOpenDeleteDialog(e, data._id, data.name)}}>
             <DeleteIcon className={classes.tableDeleteIcon} />
           </IconButton>
-        </LightToolTip>
+        </LightTooltip>
         ]
       )
     )
