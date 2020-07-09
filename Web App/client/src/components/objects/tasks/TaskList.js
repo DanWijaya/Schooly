@@ -53,6 +53,7 @@ function TaskListHead(props) {
   const { classes, order, orderBy, onRequestSort, role } = props;
 
   const createSortHandler = (property) => (event) => {
+    console.log("createSort handler is runned")
     onRequestSort(event, property);
   };
 

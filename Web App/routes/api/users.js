@@ -310,11 +310,12 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
       res.status(404).send("User data is not found");
     else {
       user.avatar = req.file.filename;
-
+      console.log("Avatarnya: ", req.file.filename)
+      console.log("User avatarnya: ", user.avatar)
       user
           .save()
           .then()
-          .catch(err => res.status(400).send("Unable to update user"))
+          .catch(err => console.log(err))
 
       var payload = {
         id: user.id,
@@ -418,10 +419,18 @@ router.get("/getstudentsbyclass/:id", (req,res) => {
   let id = req.params.id
   Student.find({ kelas: id}).then((users, err) => {
     if(!users)
-      console.log("No students yet in Schooly System")
+      console.log("No students with this class ID")
     else
       return res.json(users)
   })
 })
 
+router.get("/all_users", (req,res) => {
+  User.find({}).then((users, err) => {
+    if(!users)
+      return res.status(404).json("No students yet in Schooly system")
+    else
+      return res.json(users)
+  })
+})
 module.exports = router;

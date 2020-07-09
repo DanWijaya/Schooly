@@ -204,9 +204,10 @@ router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 10), (r
               for_task_object: task_id})
         }
       }
+      console.log(user.tugas)
       user
         .save()
-        .then(res.json("Successfully upload the task in user data"))
+        .then()
         .catch(err => console.log(err))
     }
   })
@@ -284,7 +285,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
     if(err) {
       return res.status(404).json({err: err});
     } else{
-      console.log("Successful")
+      console.log("Successful: ", res.data)
       // return res.json("Successful")
      }
 
@@ -304,7 +305,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
 
       user
           .save()
-          .then(res.json("Successfully delete the task in user data"))
+          .then(res.json(user.tugas))
           .catch(err => res.status(400).send("Unable to update user"))
 
     }
@@ -477,11 +478,13 @@ router.post("/upload_lampiran_announcement/:id", uploadLampiranAnnouncement.arra
 router.delete("/lampiran_announcement/:id", (req,res) => {
   let announcement_id = req.params.id;
   const {lampiran_to_delete, current_lampiran} = req.body;
+  console.log(lampiran_to_delete)
+  
   for(var i = 0; i < lampiran_to_delete.length; i++){
-    id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
-    // di rootnya, masukkin collection namenya.. 
+    let id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
+    // // di rootnya, masukkin collection namenya.. 
     gfsLampiranAnnouncement.remove({ _id: id, root: "lampiran_announcement"}, (err) => {
-      if(err) {
+      if(err){
         console.log("error occured")
         return res.status(404).json({err: "Error in removing the files"});
       }
@@ -489,26 +492,28 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
         console.log("Sucessful, lampiran kenadelete")
       }
     })
-
-    for(var j =0; j < current_lampiran.length; j++) {
-      if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
-        current_lampiran.splice(j,1)
-        break;
+    
+    if(announcement_id !== "deleteall") {
+      for(var j =0; j < current_lampiran.length; j++) {
+        if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+          current_lampiran.splice(j,1)
+          break;
+        }
       }
-    }
-  }
 
-  console.log("Deleted alr")
-  Announcement.findById(announcement_id, (err, ann) => {
-    if(!ann){
-      return res.status(404).json("Ann object is not found in the Database")
-    } else {
-      ann.lampiran = current_lampiran;
-      ann.save()
-          .then((ann) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
-          .catch((err) => console.log("Error happened in updating task lampiran field"))
-    }
-  })
+    Announcement.findById(announcement_id, (err, ann) => {
+      if(!ann){
+        return res.status(404).json("Ann object is not found in the Database")
+      } else {
+        ann.lampiran = current_lampiran;
+        ann.save()
+            .then((ann) => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
+            .catch((err) => console.log("Error happened in updating task lampiran field"))
+          }
+        })
+      }
+  }
+  return res.json({success: "Succesfully deleted all lampiran materi"})
 })
 
 router.get("/lampiran_announcement/:id", (req,res) => {
@@ -633,11 +638,9 @@ router.delete("/lampiran_materi/:id", (req,res) => {
             .catch((err) => console.log("Error happened in updating task lampiran field"))
         }
       })
-    }
-    else{
-      return res.json({success: "Succesfully deleted all lampiran materi"})
-    }
+    } 
   } 
+  return res.json({success: "Succesfully deleted all lampiran materi"})
 })
 
 router.get("/lampiran_materi/:id", (req,res) => {

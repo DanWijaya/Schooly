@@ -1,4 +1,4 @@
-import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK } from "./Types";
+import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK, GET_SUCCESS_RESPONSE } from "./Types";
 import axios from "axios";
 
 export const uploadTugas = (tugas, userData, taskId) => dispatch => {
@@ -7,6 +7,10 @@ export const uploadTugas = (tugas, userData, taskId) => dispatch => {
         .post(`/api/uploads/uploadtugas/${userData.id}/${taskId}`, tugas)
         .then(res => {
             console.log(res.data)
+            dispatch({
+                type: GET_SUCCESS_RESPONSE,
+                payload: true
+            })
             console.log("Run woi")
             // window.location.reload()
         })
@@ -20,7 +24,7 @@ export const uploadTugas = (tugas, userData, taskId) => dispatch => {
     }
 }
 
-export const deleteTugas = (tugas_id, userData) => {
+export const deleteTugas = (tugas_id, userData) => dispatch => {
     console.log("Delete tugas is runned")
 
     if(userData.role === "Student") {

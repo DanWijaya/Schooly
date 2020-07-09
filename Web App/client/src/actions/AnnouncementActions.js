@@ -106,7 +106,14 @@ export const deleteAnnouncement = (announcementId, history) => dispatch => {
     axios
         .delete(`/api/announcements/delete/${announcementId}`)
         .then((res) => {
-            console.log(res.data)
+            console.log("Deleted: ", res.data)
+            let lampiran_to_delete = Array.from(res.data.lampiran)
+            if(lampiran_to_delete.length > 0)
+                return axios.delete(`/api/uploads/lampiran_announcement/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
+            return "Announcement deleted has no lampiran"
+        })
+        .then((res) => {
+            console.log(res)
             window.location.href="/daftar-pengumuman"
         })
         .catch(err => {
@@ -129,6 +136,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
             type: GET_ERRORS,
             payload: false
         })
+        console.log("From actions: ", lampiran_to_delete)
         if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
             return axios.delete(`/api/uploads/lampiran_announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }

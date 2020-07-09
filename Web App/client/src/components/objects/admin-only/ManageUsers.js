@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { viewClass, deleteClass } from "../../../actions/ClassActions";
+import moment from "moment";
+import "moment/locale/id";
 import LightToolTip from "../../misc/light-tooltip/LightTooltip";
 import { Button, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
@@ -13,10 +14,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { getStudents, getTeachers } from "../../../actions/UserActions"
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
-function createData(_id, classroom, homeroomTeacher, size, absent, action) {
-  return { _id, classroom, homeroomTeacher, size, absent, action };
+function createData(_id, name, email, phone, tanggal_lahir, action) {
+  return { _id, name, email, phone, tanggal_lahir, action };
 }
 
 var rows=[];
@@ -54,11 +56,11 @@ function ManageUsersHead(props) {
   };
 
   const headCells = [
-    { id: "classroom", numeric: false, disablePadding: true, label: "Nama" },
-    { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Email" },
-    { id: "size", numeric: true, disablePadding: false, label: "Nomor Telepon" },
-    { id: "absent", numeric: false, disablePadding: false, label: "Tanggal Lahir" },
-    { id: "action", numeric: false, disablePadding: false, label: "Atur Kelas" },
+    { id: "name", numeric: false, disablePadding: true, label: "Nama" },
+    { id: "email", numeric: false, disablePadding: false, label: "Email" },
+    { id: "phone", numeric: true, disablePadding: false, label: "Nomor Telepon" },
+    { id: "tanggal_lahir", numeric: false, disablePadding: false, label: "Tanggal Lahir" },
+    { id: "action", numeric: false, disablePadding: false, label: "Atur Pengguna" },
   ];
 
   return(
@@ -103,22 +105,33 @@ ManageUsersHead.propTypes = {
 const useToolbarStyles = makeStyles((theme) => ({
   toolbar: {
     display: "auto",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: "15px",
   },
 }));
 
 const ManageUsersToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { item, deleteClass } = props;
+  const { role, deleteClass } = props;
 
-  return(
-    <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" align="left">
-        <b>Daftar Pengguna</b>
-      </Typography>
-    </Toolbar>
-  );
+  if(role === "Student"){
+    return(
+      <Toolbar className={classes.toolbar}>
+        <Typography variant="h4">
+          <b>Daftar Siswa</b>
+        </Typography>
+      </Toolbar>
+    );
+  }
+  else if(role === "Teacher"){
+    return(
+      <Toolbar className={classes.toolbar}>
+        <Typography variant="h4">
+          <b>Daftar Guru</b>
+        </Typography>
+      </Toolbar>
+    );
+  }
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -185,15 +198,15 @@ function ManageUsers(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  const { viewClass, deleteClass, classesCollection } = props;
-  const { user } = props.auth;
+  const { deleteClass, getTeachers, getStudents, classesCollection } = props;
+  const { user, all_students, all_teachers } = props.auth;
 
   const taskRowItem = (data) => {
     rows.push(
       createData(data._id, data.name,
-        data.walikelas.name,
-        data.ukuran,
-        !data.nihil ? "Nihil" : "Tidak Nihil",
+        data.email,
+        data.phone,
+        data.tanggal_lahir,
         [
         <LightToolTip title="Hapus Akun">
           <IconButton
@@ -207,16 +220,25 @@ function ManageUsers(props) {
       )
     )
   }
-  React.useEffect(() => {viewClass()}, [classesCollection.length])
+  React.useEffect(() => {
+    getStudents() 
+    getTeachers()
+  }, [all_students.length, all_teachers.length])
 
-  const retrieveClasses = () => {
-    if(classesCollection.all_classes.length > 0) {
+  const retrieveStudents = () => {
+    if(all_students.length > 0) {
       rows = []
-      classesCollection.all_classes.map((data) => {
+      all_students.map((data) => {
         taskRowItem(data)
       })
     }
   }
+
+  // const retrieveTeachers = () => {
+  //   if(all_teachers.length > 0) {
+  //     rows
+  //   }
+  // }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -258,7 +280,7 @@ function ManageUsers(props) {
 
   // Call the function to get the classes from DB
   // this function is defined above
-  retrieveClasses()
+  retrieveStudents()
 
   const onDeleteClass = (id) => {
     deleteClass(id)
@@ -333,7 +355,7 @@ function ManageUsers(props) {
     )
   }
 
-  if(user.role === "Student") {
+  if(user.tanggal_lahir === "Student") {
     return(
       <div className={classes.root}>
         <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
@@ -346,7 +368,7 @@ function ManageUsers(props) {
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>
-        <ManageUsersToolbar deleteClass={deleteClass}/>
+        <ManageUsersToolbar role="Student" deleteClass={deleteClass}/>
         <TableContainer>
           <Table>
             <ManageUsersHead
@@ -370,15 +392,15 @@ function ManageUsers(props) {
                       onClick={() => window.location.href = viewpage}
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.classroom}
+                      key={row.name}
                       selected={isItemSelected}
                     >
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
-                        {row.classroom}
+                        {row.name}
                       </TableCell>
-                      <TableCell align="center">{row.homeroomTeacher}</TableCell>
-                      <TableCell align="center">{row.size}</TableCell>
-                      <TableCell align="center">{row.absent}</TableCell>
+                      <TableCell align="center">{row.email}</TableCell>
+                      <TableCell align="center">{row.phone}</TableCell>
+                      <TableCell align="center">{moment(row.tanggal_lahir).locale("id").format("DD/MMM/YYYY")}</TableCell>
                       <TableCell align="center">{row.action}</TableCell>
                     </TableRow>
                   );
@@ -392,8 +414,9 @@ function ManageUsers(props) {
 };
 
 ManageUsers.propTypes = {
-  viewClass: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
+  getStudents: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
@@ -406,5 +429,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { viewClass, deleteClass }
+  mapStateToProps, {getStudents, getTeachers }
 ) (ManageUsers);

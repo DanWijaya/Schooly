@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_TEACHERS, GET_STUDENTS, GET_ONE_USER } from "../actions/Types";
+import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_ALL_TEACHERS, GET_ALL_STUDENTS, GET_ONE_USER, GET_ALL_USERS } from "../actions/Types";
 
 const isEmpty = require("is-empty");
 
@@ -25,12 +25,12 @@ export default function(state = initialState, action) {
         ...state,
         loading: true
       };
-    case GET_TEACHERS:
+    case GET_ALL_TEACHERS:
       return{
         ...state,
         all_teachers: action.payload
       }
-    case GET_STUDENTS:
+    case GET_ALL_STUDENTS:
       return{
         ...state,
         all_students: action.payload

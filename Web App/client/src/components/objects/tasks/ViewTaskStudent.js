@@ -20,6 +20,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import PublishIcon from "@material-ui/icons/Publish";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const path = require("path");
 
@@ -126,6 +127,28 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
+  finishButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
+  successIcon: {
+    color: "green",
+    padding: 0,
+    margin: 0,
+    height: "45px",
+    width: "45px"
+  },
+  uplaodDialogGrid: {
+    padding: "10px",
+    width: "275px", 
+    height: "175px"
+  }
 }));
 
 function LampiranFile(props) {
@@ -300,7 +323,7 @@ function ViewTaskStudent(props) {
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
-  const { uploadTugas, getTaskFilesByUser, tasksCollection,
+  const { uploadTugas, success, getTaskFilesByUser, tasksCollection,
     filesCollection, downloadTugas, previewTugas,
     viewOneTask, getOneUser, downloadLampiran, previewLampiran } = props;
 
@@ -440,6 +463,7 @@ function ViewTaskStudent(props) {
     setSelectedFileId(fileid)
     setSelectedFileName(filename)
   };
+
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
@@ -516,24 +540,32 @@ function ViewTaskStudent(props) {
         open={openUploadDialog}
         style={{display: "flex", flexDirection: "column"}}
       >
-        <Grid container spacing={2} direction="column" alignItems="center" style={{padding: "15px"}}>
-          <Grid item container justify="center">
+        <Grid container className={classes.uplaodDialogGrid} direction="column" alignItems="center" justify="space-betweeen">
+          <Grid item justify="center">
             <Typography variant="h6" align="center" gutterBottom>
-              File sedang diunggah.
+              {!success ? "Tugas sedang dikumpul" : "Tugas berhasil dikumpul"}
             </Typography>
           </Grid>
           <Grid item>
-            <CircularProgress />
+            {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
           </Grid>
-          <Grid item container justify="center">
+          <Grid item justify="center">
+            {!success ? 
             <Typography variant="body1" align="center" gutterBottom>
-              <b>Mohon halaman ini jangan diperbarui.</b>
-            </Typography>
+              <b>Mohon tetap tunggu di halaman ini.</b>
+            </Typography> : 
+              <Button
+              onClick={() => window.location.reload()}
+              variant="contained"
+              className={classes.finishButton}>
+              OKE
+            </Button>
+            }
           </Grid>
         </Grid>
       </Dialog>
     )
-  }
+}
 
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
 
@@ -688,6 +720,7 @@ function ViewTaskStudent(props) {
 
 ViewTaskStudent.propTypes = {
   auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
   uploadTugas: PropTypes.func.isRequired,
@@ -704,6 +737,7 @@ ViewTaskStudent.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  success: state.success,
   tasksCollection: state.tasksCollection,
   filesCollection: state.filesCollection
 });

@@ -20,10 +20,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 
-function createData(_id, tasktitle, subject, author, class_assigned, action) {
+function createData(_id, materialtitle, subject, author, class_assigned, action) {
   console.log(author)
-  return(action === null ? { _id, tasktitle, subject, author, class_assigned }
-    : { _id, tasktitle, subject, author, class_assigned, action});
+  return(action === null ? { _id, materialtitle, subject, author, class_assigned }
+    : { _id, materialtitle, subject, author, class_assigned, action});
 }
 
 var rows = []; // initially will be empty
@@ -58,14 +58,15 @@ function MaterialListHead(props) {
   const { classes, order, orderBy, onRequestSort, role } = props;
 
   const createSortHandler = (property) => (event) => {
+    console.log("createSorthandler is runned")
     onRequestSort(event, property);
   };
 
   const headCells = [
     { id: "materialtitle", numeric: false, disablePadding: true, label: "Nama Materi" },
-    { id: "material", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
+    { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
     { id: "author", numeric: false, disablePadding: false, label: "Pemberi Materi" },
-    { id: "class_given", numeric: false, disablePadding: false, label: "Kelas yang diberikan" },
+    { id: "class_assigned", numeric: false, disablePadding: false, label: "Kelas yang diberikan" },
     { id: "action", numeric: false, disablePadding: false, label: "Atur Materi" },
   ];
 
@@ -84,7 +85,7 @@ function MaterialListHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
+              active={orderBy === headCell}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
@@ -240,7 +241,6 @@ function MaterialList(props) {
         getMaterial(user.kelas, "by_class")
       }
     }
-
     let userIds = []
     let classIds = new Set()
     for(var i = 0; i < materialsRetrieved.length; i++){
@@ -251,14 +251,11 @@ function MaterialList(props) {
         classIds.add(material.class_assigned[j])
       }
     }
-
     getUsers(userIds) // to get the authors objects.
     viewSelectedClasses(Array.from(classIds)) // to get the classes objects.
   }, [selectedMaterials.length, all_materials.length])
 
   const materialRowItem = (data) => {
-    console.log(data)
-    console.log(retrieved_users.get(user.id))
     rows.push(
       createData(data._id, data.name,
         data.subject,
@@ -289,8 +286,6 @@ function MaterialList(props) {
   }
 
   const retrieveMaterials = () => {
-    console.log(selectedMaterials)
-    console.log(retrieved_users)
     // If all_materials is not undefined or an empty array
     rows = []
     if(user.role === "Admin"){
@@ -331,6 +326,7 @@ function MaterialList(props) {
   }
 
   const handleRequestSort = (event, property) => {
+    console.log("HAHHA")
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -434,6 +430,7 @@ function MaterialList(props) {
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .map((row, index) => {
+                  console.log("stable sort")
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   let viewpage = user.role === "Student" ? `/materi/${row._id}` : `/materi/${row._id}`
@@ -447,14 +444,18 @@ function MaterialList(props) {
                       selected={isItemSelected}
                     >
                       <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
-                        {row.tasktitle}
+                        {row.materialtitle}
                       </TableCell>
                       <TableCell align="center">{row.subject}</TableCell>
                       <TableCell align="center">{!row.author ? null : row.author.name}</TableCell>
                       <TableCell align="center">{!selectedClasses.size ? null : 
                         row.class_assigned.map((kelas,i) => {
+                          if(!selectedClasses.get(kelas))
+                            return null;
+
                           if(i === row.class_assigned.length - 1)
                             return (`${selectedClasses.get(kelas).name}`)
+
                           return (`${selectedClasses.get(kelas).name}, `)})}
                       </TableCell>
                       {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}

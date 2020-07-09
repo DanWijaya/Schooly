@@ -122,14 +122,10 @@ export const deleteMaterial = (materialId, history) => dispatch => {
             console.log("Deleted: ", res.data)
             let lampiran_to_delete = Array.from(res.data.lampiran)
             return axios.delete(`/api/uploads/lampiran_materi/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
-            // if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
-            // return axios.delete(`/api/uploads/lampiran_materi/${materialId}`, {data: {lampiran_to_delete: lampiran_to_delete} })
-            // }
-            
         })
         .then((res) => {
-        console.log(res)
-        window.location.href="/daftar-materi"
+            console.log(res)
+            window.location.href="/daftar-materi"
         })
         .catch(err => {
             console.log(err);
