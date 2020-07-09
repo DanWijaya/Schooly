@@ -11,13 +11,14 @@ import { getAllSubjects } from "../../../actions/SubjectActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, FormControl,FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Chip, CircularProgress, Dialog, FormControl,FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import ErrorIcon from "@material-ui/icons/Error";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const path = require("path");
 
@@ -102,6 +103,28 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  finishButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
+  successIcon: {
+    color: "green",
+    padding: 0,
+    margin: 0,
+    height: "45px",
+    width: "45px"
+  },
+  uplaodDialogGrid: {
+    padding: "10px",
+    width: "275px", 
+    height: "175px"
+  }
 });
 
 function LampiranFile(props) {
@@ -140,6 +163,7 @@ class EditTask extends Component {
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
       anchorEl: null,
+      openUploadDialog: null,
       errors: {},
     }
   }
@@ -157,6 +181,10 @@ class EditTask extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { name } = this.state;
+
+    if(!nextProps.errors){
+      this.handleOpenUploadDialog()
+    }
 
     if(!name){
       this.setState({
@@ -264,7 +292,13 @@ class EditTask extends Component {
       this.setState({ anchorEl: event.currentTarget})
   }
 
-  handleCloseMenu = () => { this.setState({ anchorEl: null}) }
+  handleCloseMenu = () => { 
+    this.setState({ anchorEl: null}) 
+  }
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true})
+  };
 
   onChange = (e, otherfield) => {
     if(Object.keys(this.props.errors).length !== 0){
@@ -295,14 +329,49 @@ class EditTask extends Component {
 
   render() {
     const { fileLampiran } = this.state;
-    const { classes, errors } = this.props;
+    const { classes, errors, success } = this.props;
     const { all_classes, selectedClasses } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection
     const { user } = this.props.auth;
 
+    const task_id = this.props.match.params.id;
+
     console.log("FileLampiran:", this.state.fileLampiran)
     console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
+
+    const UploadDialog = () => {
+      return(
+        <Dialog
+          open={this.state.openUploadDialog}
+          style={{display: "flex", flexDirection: "column"}}
+        >
+          <Grid container className={classes.uplaodDialogGrid} direction="column" alignItems="center" justify="space-betweeen">
+            <Grid item justify="center">
+              <Typography variant="h6" align="center" gutterBottom>
+                {!success ? "Tugas sedang disunting" : "Tugas berhasil disunting"}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
+            </Grid>
+            <Grid item justify="center">
+              {!success ? 
+              <Typography variant="body1" align="center" gutterBottom>
+                <b>Mohon tetap tunggu di halaman ini.</b>
+              </Typography> : 
+                <Button
+                href={`/tugas-guru/${task_id}`}
+                variant="contained"
+                className={classes.finishButton}>
+                OKE
+              </Button>
+              }
+            </Grid>
+          </Grid>
+        </Dialog>
+      )
+  }
 
     let classIds = []
     const ITEM_HEIGHT = 48;
@@ -349,6 +418,7 @@ class EditTask extends Component {
     if(user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
+          {UploadDialog()}
           <Paper>
             <div className={classes.mainGrid}>
               <Typography variant="h5" className={classes.formTitle}>
@@ -553,20 +623,22 @@ class EditTask extends Component {
 
 EditTask.propTypes = {
   errors: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   viewOneTask : PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  tasksCollection: PropTypes.object.isRequired,
-  classesCollection: PropTypes.object.isRequired,
-  subjectsCollection: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
+  success: state.success,
   tasksCollection: state.tasksCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
