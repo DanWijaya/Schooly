@@ -196,7 +196,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "5px 5px"
+    padding: "15px"
   },
   taskPaper: {
     display: "flex",
