@@ -11,6 +11,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
@@ -111,10 +112,11 @@ function DrawerContent(props) {
       directedTo = "/daftar-kelas"
   }
 
-  let ListItemContents;
+  let ListItemContents ;
   if(user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
+      ["/atur-pengguna", <SupervisedUserCircleIcon className={classes.drawerListItemMuiIcons}/>, "Daftar Akun", null, false],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
