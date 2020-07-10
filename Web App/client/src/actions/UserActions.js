@@ -140,6 +140,20 @@ export const loginUser = (userData) => dispatch => {
     })
 };
 
+// Log user out
+export const logoutUser = () => dispatch => {
+  // Remove token from local storage
+  localStorage.removeItem("jwtToken");
+  // Remove auth header for future requests
+  setAuthToken(false);
+  console.log("test")
+  // Set current user to empty object {} which will set isAuthenticated to false
+  dispatch(setCurrentUser({}));
+  // if(history !== undefined)
+  //   history.push("/masuk")
+  window.location.href ="./masuk"
+};
+
 // Set logged in user
 export const setCurrentUser = decoded => {
   console.log("The role is: ", decoded.role)
@@ -230,16 +244,14 @@ export const getStudentsByClass = (classId) => dispatch => {
       })
 }
 
-// Log user out
-export const logoutUser = () => dispatch => {
-  // Remove token from local storage
-  localStorage.removeItem("jwtToken");
-  // Remove auth header for future requests
-  setAuthToken(false);
-  console.log("test")
-  // Set current user to empty object {} which will set isAuthenticated to false
-  dispatch(setCurrentUser({}));
-  // if(history !== undefined)
-  //   history.push("/masuk")
-  window.location.href ="./masuk"
-};
+export const deleteUser = (userId) => dispatch => {
+  axios
+      .delete(`/api/users/delete/${userId}`)
+      .then(res => {
+        console.log(res.data)
+        window.location.reload()
+      })
+      .catch(err => {
+        console.log("Error in deleting students")
+      })
+}

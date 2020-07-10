@@ -4,24 +4,25 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
-   TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import LightTooltip  from "../../misc/light-tooltip/LightTooltip";
+import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+  Fab, Grid, Hidden, ListItem, ListItemAvatar, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import SortIcon from "@material-ui/icons/Sort";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { getStudents, getTeachers } from "../../../actions/UserActions"
+import { getStudents, getTeachers, deleteUser } from "../../../actions/UserActions"
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
-function createData(_id, name, email, phone, tanggal_lahir, action) {
-  return { _id, name, email, phone, tanggal_lahir, action };
+function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
+  return { _id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action };
 }
-
-var rows=[];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -49,10 +50,11 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function ManageUsersHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
+function ManageUsersToolbar(props) {
+  const { classes, order, orderBy, onRequestSort, role, heading } = props;
+
   const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+    onRequestSort(event, property, role);
   };
 
   const headCells = [
@@ -60,78 +62,70 @@ function ManageUsersHead(props) {
     { id: "email", numeric: false, disablePadding: false, label: "Email" },
     { id: "phone", numeric: true, disablePadding: false, label: "Nomor Telepon" },
     { id: "tanggal_lahir", numeric: false, disablePadding: false, label: "Tanggal Lahir" },
-    { id: "action", numeric: false, disablePadding: false, label: "Atur Pengguna" },
+    { id: "address", numeric: false, disablePadding: false, label: "Alamat" },
+    { id: "emergency_phone", numeric: false, disablePadding: false, label: "Nomor Telepon Darurat"}
   ];
 
+  // Sort Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
+
   return(
-    <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="center"
-            padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+    <Toolbar className={classes.toolbar}>
+      <Typography variant="h4">
+        <b>{heading}</b>
+      </Typography>
+      <div style={{display: "flex"}}>
+        <LightTooltip title="Urutkan Akun">
+          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </Fab>
+        </LightTooltip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+              onClick={props.handleClosePanel}
             >
-              <b>{headCell.label}</b>
-              {orderBy === headCell.id ?
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-                : null
-              }
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ?
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </span>
+                  : null
+                }
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    </Toolbar>
+    
   );
-}
-
-ManageUsersHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const useToolbarStyles = makeStyles((theme) => ({
-  toolbar: {
-    display: "auto",
-    justifyContent: "flex-start",
-    padding: "15px",
-  },
-}));
-
-const ManageUsersToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { role, deleteClass } = props;
-
-  if(role === "Student"){
-    return(
-      <Toolbar className={classes.toolbar}>
-        <Typography variant="h4">
-          <b>Daftar Siswa</b>
-        </Typography>
-      </Toolbar>
-    );
-  }
-  else if(role === "Teacher"){
-    return(
-      <Toolbar className={classes.toolbar}>
-        <Typography variant="h4">
-          <b>Daftar Guru</b>
-        </Typography>
-      </Toolbar>
-    );
-  }
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -142,6 +136,14 @@ const useStyles = makeStyles((theme) => ({
   },
   tableDeleteIcon: {
     color: theme.palette.error.dark,
+  },
+  deleteButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
   },
   dialogBox: {
     padding: "15px",
@@ -168,6 +170,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginBottom: theme.spacing(2),
   },
+  sortButton: {
+    backgroundColor: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+    },
+  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -185,70 +193,86 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "5px 5px"
+  },
+  taskPaper: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
+  },
 }));
 
 function ManageUsers(props) {
   document.title = "Schooly | Daftar Kelas"
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
+  const [order_student, setOrderStudent] = React.useState("asc");
+  const [order_teacher, setOrderTeacher] = React.useState("asc");
+
+  const [orderBy_student, setOrderByStudent] = React.useState("name");
+  const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
+
   const [selected, setSelected] = React.useState([]);
-
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedClassId, setSelectedClassId] = React.useState(null)
-  const [selectedClassName, setSelectedClassName] = React.useState(null);
+  const [selectedUserId, setSelectedUserId] = React.useState(null)
+  const [selectedUserName, setSelectedUserName] = React.useState(null);
 
-  const { deleteClass, getTeachers, getStudents, classesCollection } = props;
+  const { deleteUser, getTeachers, getStudents, classesCollection } = props;
   const { user, all_students, all_teachers } = props.auth;
 
-  const taskRowItem = (data) => {
-    rows.push(
-      createData(data._id, data.name,
-        data.email,
-        data.phone,
-        data.tanggal_lahir,
-        [
-        <LightToolTip title="Hapus Akun">
-          <IconButton
-            size="small"
-            onClick={(e) =>{
-              handleOpenDeleteDialog(e, data._id, data.name)}}>
-            <DeleteIcon className={classes.tableDeleteIcon} />
-          </IconButton>
-        </LightToolTip>
-        ]
-      )
-    )
+  let student_rows = []
+  let teacher_rows = []
+
+  const userRowItem = (data) => {
+    let temp = createData(data._id, data.avatar, data.name,
+                data.email,
+                data.phone,
+                data.emergency_phone,
+                data.tanggal_lahir,
+                data.address
+            )
+      if(data.role === "Student"){
+        student_rows.push(temp)
+      }else if(data.role === "Teacher"){
+        teacher_rows.push(temp)
+      }
   }
+
   React.useEffect(() => {
     getStudents() 
     getTeachers()
   }, [all_students.length, all_teachers.length])
 
-  const retrieveStudents = () => {
-    if(all_students.length > 0) {
-      rows = []
-      all_students.map((data) => {
-        taskRowItem(data)
-      })
-    }
+  const retrieveUsers = () => {
+    student_rows = []
+    teacher_rows = []
+    all_students.map((data) => userRowItem(data, "Student"))
+    all_teachers.map((data) => userRowItem(data, "Teacher"))
   }
 
-  // const retrieveTeachers = () => {
-  //   if(all_teachers.length > 0) {
-  //     rows
-  //   }
-  // }
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+  const handleRequestSort = (event, property, role) => {
+    if(role === "Student"){
+      const isAsc = orderBy_student === property && order_student === "asc";
+      setOrderStudent(isAsc ? "desc" : "asc");
+      setOrderByStudent(property);
+    }
+    else if(role === "Teacher"){
+      const isAsc = orderBy_teacher === property && order_teacher === "asc";
+      setOrderTeacher(isAsc ? "desc" : "asc");
+      setOrderByTeacher(property);
+    }
   };
-
+  // Belum dipakai sih.
+/*
   const handleSelectAllClick = (event, checked) => {
     if (checked) {
-      const newSelected = rows.map((n) => n._id);
+      const newSelected = student_rows.map((n) => n._id);
       setSelected(newSelected);
       return;
     }
@@ -274,24 +298,22 @@ function ManageUsers(props) {
       );
     }
     setSelected(newSelected);
-  };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  };*/
 
   // Call the function to get the classes from DB
   // this function is defined above
-  retrieveStudents()
+  retrieveUsers()
 
-  const onDeleteClass = (id) => {
-    deleteClass(id)
+  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const onDeleteUser = (id) => {
+    deleteUser(id)
   }
-
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedClassId(id)
-    setSelectedClassName(name)
+    setSelectedUserId(id)
+    setSelectedUserName(name)
   };
 
   const handleCloseDeleteDialog = () => {
@@ -315,12 +337,12 @@ function ManageUsers(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Hapus Kelas berikut?
+              Hapus Pengguna berikut?
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedClassName}</b>
+              <b>{selectedUserName}</b>
             </Typography>
           </Grid>
           <Grid
@@ -333,7 +355,7 @@ function ManageUsers(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteClass(selectedClassId) }}
+                onClick={() => { onDeleteUser(selectedUserId) }}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -355,7 +377,7 @@ function ManageUsers(props) {
     )
   }
 
-  if(user.tanggal_lahir === "Student") {
+  if(user.role !== "Admin") {
     return(
       <div className={classes.root}>
         <Typography className={classes.title} variant="h5" id="tableTitle" align="center">
@@ -367,58 +389,211 @@ function ManageUsers(props) {
   return(
     <div className={classes.root}>
       {DeleteDialog()}
-      <Paper className={classes.paper}>
-        <ManageUsersToolbar role="Student" deleteClass={deleteClass}/>
-        <TableContainer>
-          <Table>
-            <ManageUsersHead
-              classes={classes}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
-              onRequestSort={handleRequestSort}
-              rowCount={rows ?
-              rows.length : 0}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row._id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = `/kelas/${row._id}`
-                  return(
-                    <TableRow
-                      className={classes.tableRow}
-                      onClick={() => window.location.href = viewpage}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
+      <ManageUsersToolbar
+        heading="Daftar Murid"
+        role="Student"
+        deleteUser={deleteUser}
+        classes={classes}
+        order={order_student}
+        orderBy={orderBy_student}
+        onRequestSort={handleRequestSort}
+        rowCount={student_rows ? student_rows.length : 0}
+      />
+        <Grid container direction="column" spacing={2}>
+        {stableSort(student_rows, getComparator(order_student, orderBy_student))
+          .map((row, index) => {
+            const isItemSelected = isSelected(row._id);
+            const labelId = `enhanced-table-checkbox-${index}`;
+            return(
+              <ExpansionPanel
+              button
+              variant="outlined"
+              aria-checked={isItemSelected}
+              selected={isItemSelected}
+            >
+              <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                <Grid container spacing={1} justify="space-between" alignItems="center">
+                  <Grid item>
+                    {!row.avatar ? 
+                      <ListItemAvatar>
+                        <Avatar />
+                      </ListItemAvatar> :
+                      <ListItemAvatar>
+                        <Avatar src={`/api/uploads/image/${row.avatar}`}/>
+                      </ListItemAvatar>
+                    }
+                  </Grid>
+                  <Grid item>
+                    <Hidden smUp implementation="css">
+                      <Typography variant="subtitle1" id={labelId}>
                         {row.name}
-                      </TableCell>
-                      <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.phone}</TableCell>
-                      <TableCell align="center">{moment(row.tanggal_lahir).locale("id").format("DD/MMM/YYYY")}</TableCell>
-                      <TableCell align="center">{row.action}</TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+                      </Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        {row.email}
+                      </Typography>
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                      <Typography variant="h6" id={labelId}>
+                        {row.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {row.email}
+                      </Typography>
+                    </Hidden>
+                  </Grid>
+                  <Grid item xs container spacing={1} justify="flex-end">
+                    <Grid item>
+                      <LightTooltip title="Hapus">
+                        <IconButton
+                          size="small"
+                          className={classes.deleteButton}
+                          onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </LightTooltip>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <Divider className={classes.taskPanelDivider} />
+              <ExpansionPanelDetails>
+                <Grid conntainer direction="column">
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                      Kontak: {row.phone}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                       Kontak Darurat: {row.emergency_phone}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                       Alamat: {row.address}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                       Tanggal lahir: {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            )
+          })}
+        </Grid>
+        <div style={{marginTop: "20px"}}>
+        <ManageUsersToolbar
+        heading={"Daftar Guru"}
+        role="Teacher"
+        deleteUser={deleteUser}
+        classes={classes}
+        order={order_teacher}
+        orderBy={orderBy_teacher}
+        onRequestSort={handleRequestSort}
+        rowCount={student_rows ? student_rows.length : 0}
+      />
+        <Grid container direction="column" spacing={2}>
+        {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
+          .map((row, index) => {
+            const isItemSelected = isSelected(row._id);
+            const labelId = `enhanced-table-checkbox-${index}`;
+            return(
+              <ExpansionPanel
+              button
+              variant="outlined"
+              aria-checked={isItemSelected}
+              selected={isItemSelected}
+            >
+              <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                <Grid container spacing={1} justify="space-between" alignItems="center">
+                  <Grid item>
+                    {!row.avatar ? 
+                      <ListItemAvatar>
+                        <Avatar />
+                      </ListItemAvatar> :
+                      <ListItemAvatar>
+                        <Avatar src={`/api/uploads/image/${row.avatar}`}/>
+                      </ListItemAvatar>
+                    }
+                  </Grid>
+                  <Grid item>
+                    <Hidden smUp implementation="css">
+                      <Typography variant="subtitle1" id={labelId}>
+                        {row.name}
+                      </Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        {row.email}
+                      </Typography>
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                      <Typography variant="h6" id={labelId}>
+                        {row.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {row.email}
+                      </Typography>
+                    </Hidden>
+                  </Grid>
+                  <Grid item xs container spacing={1} justify="flex-end">
+                    <Grid item>
+                      <LightTooltip title="Hapus">
+                        <IconButton
+                          size="small"
+                          className={classes.deleteButton}
+                          onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </LightTooltip>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <Divider className={classes.taskPanelDivider} />
+              <ExpansionPanelDetails>
+                <Grid conntainer direction="column">
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                      Kontak: {row.phone}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                       Kontak Darurat: {row.emergency_phone}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                       Alamat: {row.address}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1" gutterBottom>
+                       Tanggal lahir: {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            )
+          })}
+        </Grid>
+        </div>
     </div>
-  )
-};
+  );
+}
+
 
 ManageUsers.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  deleteClass: PropTypes.func.isRequired,
+  deleteUser: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
 
@@ -429,5 +604,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, {getStudents, getTeachers }
+  mapStateToProps, {getStudents, getTeachers, deleteUser }
 ) (ManageUsers);

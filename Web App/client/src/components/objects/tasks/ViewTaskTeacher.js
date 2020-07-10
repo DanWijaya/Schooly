@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
 import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
-import LightToolTip from "../../misc/light-tooltip/LightTooltip";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, ListItemIcon, Paper, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -184,11 +184,11 @@ function LampiranFile(props) {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <LightToolTip title={filename} placement="top">
+              <LightTooltip title={filename} placement="top">
                 <Typography>
                   {displayedName}
                 </Typography>
-              </LightToolTip>
+              </LightTooltip>
             }
             secondary={filetype}
           />
@@ -406,19 +406,19 @@ function ViewTaskTeacher(props) {
         </Grid>
         <Grid item>
           <Link to={`/sunting-tugas/${task_id}`}>
-            <LightToolTip title="Sunting Tugas" placement="bottom">
+            <LightTooltip title="Sunting Tugas" placement="bottom">
               <Fab className={classes.editTaskButton}>
                 <EditIcon />
               </Fab>
-            </LightToolTip>
+            </LightTooltip>
           </Link>
         </Grid>
         <Grid item>
-          <LightToolTip title="Buang Tugas" placement="bottom">
+          <LightTooltip title="Buang Tugas" placement="bottom">
             <Fab className={classes.deleteTaskButton} onClick={(e) => handleOpenDeleteDialog(e,task_id)}>
               <DeleteIcon />
             </Fab>
-          </LightToolTip>
+          </LightTooltip>
         </Grid>
       </Grid>
     </div>

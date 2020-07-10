@@ -433,4 +433,14 @@ router.get("/all_users", (req,res) => {
       return res.json(users)
   })
 })
+
+router.delete("/delete/:id", (req,res) => {
+  let userId = req.params.id;
+  User.findByIdAndDelete(userId, (err,user) => {
+    if(!user)
+      return res.status(404).json("User to delete is not found")
+    else 
+      return res.json(user)
+  })
+})
 module.exports = router;

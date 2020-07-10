@@ -44,9 +44,12 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
-  lookSubjectButton: {
+  viewSubjectButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
     "&:focus, &:hover": {
-      color: theme.palette.primary.main,
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
     },
   },
   material: {
@@ -354,35 +357,35 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <List className={classes.expansionPanelList}>
-            {tasksByClass.map((task) => {
-              let workCategoryAvatar = (
-                <Avatar className={classes.assignmentLate}>
-                  <AssignmentLateIcon/>
-                </Avatar>
-              )
-              let workStatus = "Belum Dikumpulkan"
-              for(var i = 0; i < all_user_files.length; i++) {
-                if(all_user_files[i].for_task_object === task._id){
-                  workStatus = "Telah Dikumpulkan"
-                  workCategoryAvatar = (
-                    <Avatar className={classes.assignmentTurnedIn}>
-                      <AssignmentTurnedInIcon/>
+                {tasksByClass.map((task) => {
+                  let workCategoryAvatar = (
+                    <Avatar className={classes.assignmentLate}>
+                      <AssignmentLateIcon/>
                     </Avatar>
                   )
-                  break;
-                }
-              }
-              return(
-                <AssignmentListItem
-                  work_title={task.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={task.subject}
-                  work_status={workStatus}
-                  work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                  work_link={`/tugas-murid/${task._id}`}
-                />
-              )
-            })}
+                  let workStatus = "Belum Dikumpulkan"
+                  for(var i = 0; i < all_user_files.length; i++) {
+                    if(all_user_files[i].for_task_object === task._id){
+                      workStatus = "Telah Dikumpulkan"
+                      workCategoryAvatar = (
+                        <Avatar className={classes.assignmentTurnedIn}>
+                          <AssignmentTurnedInIcon/>
+                        </Avatar>
+                      )
+                      break;
+                    }
+                  }
+                  return(
+                    <AssignmentListItem
+                      work_title={task.name}
+                      work_category_avatar={workCategoryAvatar}
+                      work_subject={task.subject}
+                      work_status={workStatus}
+                      work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+                      work_link={`/tugas-murid/${task._id}`}
+                    />
+                  )
+                })}
             </List>
           </ExpansionPanel>
           <ExpansionPanel disabled>
@@ -416,11 +419,12 @@ function ViewClass(props) {
                     </Typography>
                     <LightTooltip title="Lihat Lebih Lanjut" placement="right">
                       <IconButton
-                        className={classes.lookSubjectButton}
+                        size="small"
+                        className={classes.viewSubjectButton}
                         href={`/mata-pelajaran/${subject.name}`}
                         onClick={(event) => event.stopPropagation()}
                       >
-                        <PageviewIcon />
+                        <PageviewIcon fontSize="small" />
                       </IconButton>
                     </LightTooltip>
                   </Grid>
