@@ -20,9 +20,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
-  paperBox: {
-    padding: "20px",
-  },
   listItemPaper: {
     marginBottom: "10px",
   },
@@ -130,28 +127,26 @@ function AnnouncementList(props) {
 
   return(
     <div className={classes.root}>
-      <Paper className={classes.paperBox}>
-        <Grid container justify="space-between">
-          <Grid item>
-            <Typography variant="subtitle2" color="primary">
-              <h5>Daftar Pengumuman</h5>
-            </Typography>
-          </Grid>
-          <Grid item>
-            {canAnnounce() ?
-            <Link to="/buat-pengumuman">
-              <Fab variant="Extended" className={classes.newAnnouncementButton}>
-                <AnnouncementIcon className={classes.newAnnouncementIcon} />
-                Buat Pengumuman
-              </Fab>
-            </Link> :
-            null}
-          </Grid>
+      <Grid container justify="space-between">
+        <Grid item>
+          <Typography variant="subtitle2" color="primary">
+            <h5>Daftar Pengumuman</h5>
+          </Typography>
         </Grid>
-        <List>
-          {listAnnouncements()}
-        </List>
-      </Paper>
+        <Grid item>
+          {canAnnounce() ?
+          <Link to="/buat-pengumuman">
+            <Fab variant="Extended" className={classes.newAnnouncementButton}>
+              <AnnouncementIcon className={classes.newAnnouncementIcon} />
+              Buat Pengumuman
+            </Fab>
+          </Link> :
+          null}
+        </Grid>
+      </Grid>
+      <List>
+        {listAnnouncements()}
+      </List>
     </div>
   )
 }

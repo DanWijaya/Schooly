@@ -80,7 +80,6 @@ function ManageUsersToolbar(props) {
       <Typography variant="h4">
         <b>{heading}</b>
       </Typography>
-      <div style={{display: "flex"}}>
         <LightTooltip title="Urutkan Akun">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
@@ -122,9 +121,7 @@ function ManageUsersToolbar(props) {
             </MenuItem>
           ))}
         </Menu>
-      </div>
     </Toolbar>
-    
   );
 };
 
@@ -134,10 +131,12 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
-  tableDeleteIcon: {
-    color: theme.palette.error.dark,
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "15px",
   },
-  deleteButton: {
+  profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
     "&:focus, &:hover": {
@@ -166,10 +165,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2),
-  },
   sortButton: {
     backgroundColor: "white",
     "&:focus, &:hover": {
@@ -187,31 +182,21 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  tableRow: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
-      cursor: "pointer",
-    },
+  profilePanelDivider: {
+    backgroundColor: theme.palette.primary.main,
   },
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "5px 5px"
-  },
-  taskPaper: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
-    "&:focus, &:hover": {
+  profilePanelSummary: {
+    "&:hover": {
       backgroundColor: theme.palette.button.main,
     },
   },
 }));
 
 function ManageUsers(props) {
-  document.title = "Schooly | Daftar Kelas"
+  document.title = "Schooly | Daftar Pengguna"
+
   const classes = useStyles();
+
   const [order_student, setOrderStudent] = React.useState("asc");
   const [order_teacher, setOrderTeacher] = React.useState("asc");
 
@@ -230,22 +215,25 @@ function ManageUsers(props) {
   let teacher_rows = []
 
   const userRowItem = (data) => {
-    let temp = createData(data._id, data.avatar, data.name,
-                data.email,
-                data.phone,
-                data.emergency_phone,
-                data.tanggal_lahir,
-                data.address
-            )
-      if(data.role === "Student"){
-        student_rows.push(temp)
-      }else if(data.role === "Teacher"){
-        teacher_rows.push(temp)
-      }
+    let temp = createData(
+      data._id,
+      data.avatar,
+      data.name,
+      data.email,
+      data.phone,
+      data.emergency_phone,
+      data.tanggal_lahir,
+      data.address
+    )
+    if(data.role === "Student"){
+      student_rows.push(temp)
+    }else if(data.role === "Teacher"){
+      teacher_rows.push(temp)
+    }
   }
 
   React.useEffect(() => {
-    getStudents() 
+    getStudents()
     getTeachers()
   }, [all_students.length, all_teachers.length])
 
@@ -399,95 +387,97 @@ function ManageUsers(props) {
         onRequestSort={handleRequestSort}
         rowCount={student_rows ? student_rows.length : 0}
       />
-        <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={2} style={{marginBottom: "50px"}}>
         {stableSort(student_rows, getComparator(order_student, orderBy_student))
           .map((row, index) => {
             const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             return(
-              <ExpansionPanel
-              button
-              variant="outlined"
-              aria-checked={isItemSelected}
-              selected={isItemSelected}
-            >
-              <ExpansionPanelSummary className={classes.taskPanelSummary}>
-                <Grid container spacing={1} justify="space-between" alignItems="center">
-                  <Grid item>
-                    {!row.avatar ? 
-                      <ListItemAvatar>
-                        <Avatar />
-                      </ListItemAvatar> :
-                      <ListItemAvatar>
-                        <Avatar src={`/api/uploads/image/${row.avatar}`}/>
-                      </ListItemAvatar>
-                    }
-                  </Grid>
-                  <Grid item>
-                    <Hidden smUp implementation="css">
-                      <Typography variant="subtitle1" id={labelId}>
-                        {row.name}
-                      </Typography>
-                      <Typography variant="caption" color="textSecondary">
-                        {row.email}
-                      </Typography>
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <Typography variant="h6" id={labelId}>
-                        {row.name}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {row.email}
-                      </Typography>
-                    </Hidden>
-                  </Grid>
-                  <Grid item xs container spacing={1} justify="flex-end">
-                    <Grid item>
-                      <LightTooltip title="Hapus">
-                        <IconButton
-                          size="small"
-                          className={classes.deleteButton}
-                          onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </LightTooltip>
+              <Grid item>
+                <ExpansionPanel
+                  button
+                  variant="outlined"
+                  aria-checked={isItemSelected}
+                  selected={isItemSelected}
+                >
+                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
+                    <Grid container spacing={1} justify="space-between" alignItems="center">
+                      <Grid item>
+                        {!row.avatar ?
+                          <ListItemAvatar>
+                            <Avatar />
+                          </ListItemAvatar>
+                        :
+                          <ListItemAvatar>
+                            <Avatar src={`/api/uploads/image/${row.avatar}`}/>
+                          </ListItemAvatar>
+                        }
+                      </Grid>
+                      <Grid item>
+                        <Hidden smUp implementation="css">
+                          <Typography variant="subtitle1" id={labelId}>
+                            {row.name}
+                          </Typography>
+                          <Typography variant="caption" color="textSecondary">
+                            {row.email}
+                          </Typography>
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <Typography variant="h6" id={labelId}>
+                            {row.name}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            {row.email}
+                          </Typography>
+                        </Hidden>
+                      </Grid>
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.profileDeleteButton}
+                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Grid>
-              </ExpansionPanelSummary>
-              <Divider className={classes.taskPanelDivider} />
-              <ExpansionPanelDetails>
-                <Grid conntainer direction="column">
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                      Kontak: {row.phone}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                       Kontak Darurat: {row.emergency_phone}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                       Alamat: {row.address}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                       Tanggal lahir: {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+                  </ExpansionPanelSummary>
+                  <Divider className={classes.profilePanelDivider} />
+                  <ExpansionPanelDetails>
+                    <Grid conntainer direction="column">
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Kontak:</b> {row.phone}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Kontak Darurat:</b> {row.emergency_phone}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Alamat:</b> {row.address}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </Grid>
             )
           })}
-        </Grid>
-        <div style={{marginTop: "20px"}}>
-        <ManageUsersToolbar
-        heading={"Daftar Guru"}
+      </Grid>
+      <ManageUsersToolbar
+        heading="Daftar Guru"
         role="Teacher"
         deleteUser={deleteUser}
         classes={classes}
@@ -496,93 +486,95 @@ function ManageUsers(props) {
         onRequestSort={handleRequestSort}
         rowCount={student_rows ? student_rows.length : 0}
       />
-        <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={2}>
         {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
           .map((row, index) => {
             const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             return(
-              <ExpansionPanel
-              button
-              variant="outlined"
-              aria-checked={isItemSelected}
-              selected={isItemSelected}
-            >
-              <ExpansionPanelSummary className={classes.taskPanelSummary}>
-                <Grid container spacing={1} justify="space-between" alignItems="center">
-                  <Grid item>
-                    {!row.avatar ? 
-                      <ListItemAvatar>
-                        <Avatar />
-                      </ListItemAvatar> :
-                      <ListItemAvatar>
-                        <Avatar src={`/api/uploads/image/${row.avatar}`}/>
-                      </ListItemAvatar>
-                    }
-                  </Grid>
-                  <Grid item>
-                    <Hidden smUp implementation="css">
-                      <Typography variant="subtitle1" id={labelId}>
-                        {row.name}
-                      </Typography>
-                      <Typography variant="caption" color="textSecondary">
-                        {row.email}
-                      </Typography>
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <Typography variant="h6" id={labelId}>
-                        {row.name}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {row.email}
-                      </Typography>
-                    </Hidden>
-                  </Grid>
-                  <Grid item xs container spacing={1} justify="flex-end">
-                    <Grid item>
-                      <LightTooltip title="Hapus">
-                        <IconButton
-                          size="small"
-                          className={classes.deleteButton}
-                          onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </LightTooltip>
+              <Grid item>
+                <ExpansionPanel
+                  button
+                  variant="outlined"
+                  aria-checked={isItemSelected}
+                  selected={isItemSelected}
+                >
+                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
+                    <Grid container spacing={1} justify="space-between" alignItems="center">
+                      <Grid item>
+                        {!row.avatar ?
+                          <ListItemAvatar>
+                            <Avatar />
+                          </ListItemAvatar>
+                        :
+                          <ListItemAvatar>
+                            <Avatar src={`/api/uploads/image/${row.avatar}`}/>
+                          </ListItemAvatar>
+                        }
+                      </Grid>
+                      <Grid item>
+                        <Hidden smUp implementation="css">
+                          <Typography variant="subtitle1" id={labelId}>
+                            {row.name}
+                          </Typography>
+                          <Typography variant="caption" color="textSecondary">
+                            {row.email}
+                          </Typography>
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <Typography variant="h6" id={labelId}>
+                            {row.name}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            {row.email}
+                          </Typography>
+                        </Hidden>
+                      </Grid>
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.profileDeleteButton}
+                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Grid>
-              </ExpansionPanelSummary>
-              <Divider className={classes.taskPanelDivider} />
-              <ExpansionPanelDetails>
-                <Grid conntainer direction="column">
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                      Kontak: {row.phone}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                       Kontak Darurat: {row.emergency_phone}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                       Alamat: {row.address}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body1" gutterBottom>
-                       Tanggal lahir: {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+                  </ExpansionPanelSummary>
+                  <Divider className={classes.profilePanelDivider} />
+                  <ExpansionPanelDetails>
+                    <Grid conntainer direction="column">
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Kontak:</b> {row.phone}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Kontak Darurat:</b> {row.emergency_phone}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Alamat:</b> {row.address}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </Grid>
             )
           })}
-        </Grid>
-        </div>
+      </Grid>
     </div>
   );
 }
@@ -604,5 +596,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, {getStudents, getTeachers, deleteUser }
+  mapStateToProps, { getStudents, getTeachers, deleteUser }
 ) (ManageUsers);

@@ -11,11 +11,10 @@ Botak:
 8. betulin table ASAP
 9. Pengumuman dan catata buat ganti-ganti data type
 IMPORTANT:
-1. Dialog upload
-2. Register scheme / Manage users (View profile student and teacher)?
-3. Batas Waktu kumpul (Late or not Late)
-4. disable route link buat yang rolenya nda bisa akses
-5. Jumlah murid dan absen di kelas
+1. Batas Waktu kumpul (Late or not Late)
+2. disable route link buat yang rolenya nda bisa akses
+3. Jumlah murid dan absen di kelas
+4. Close all panel sort (ManageUsers, Material List, Task List)
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
