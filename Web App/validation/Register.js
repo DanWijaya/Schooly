@@ -12,6 +12,7 @@ module.exports = function validateRegisterInput(data) {
   data.address = !isEmpty(data.address) ? data.address : "";
   data.password = !isEmpty(data.password) ? data.password : "";
   data.password2 = !isEmpty(data.password2) ? data.password2 : "";
+  data.role = !isEmpty(data.role) ? data.role : "";
 
   // Name checks
   if (Validator.isEmpty(data.name)) {
@@ -23,6 +24,19 @@ module.exports = function validateRegisterInput(data) {
     errors.email = "Email belum diisi";
   } else if (!Validator.isEmail(data.email)) {
     errors.email = "Email tidak benar";
+  }
+
+  //Role checks
+  if(Validator.isEmpty(data.role)) {
+    errors.role = "Peran belum diisi";
+  }
+
+  // Check for student class field
+  if(data.role === "Student" && Validator.isEmpty(data.kelas)) {
+    errors.kelas = "Kelas belum dipilih";
+  }
+  if(data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
+    errors.subject_teached = "Mata pelajaran belum dipilih"
   }
 
   // Phone checks
@@ -56,6 +70,7 @@ module.exports = function validateRegisterInput(data) {
   if (!Validator.equals(data.password, data.password2)) {
     errors.password2 = "Kata sandi harus sama";
   }
+
 
   return {
     errors,

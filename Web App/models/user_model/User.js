@@ -25,7 +25,7 @@ const UserSchema = new Schema({
   },
   tanggal_lahir: {
     type: Date,
-    default: undefined
+    default: new Date()
   },
   jenis_kelamin: {
     type: String,

@@ -12,8 +12,10 @@ import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, FormControl, Grid, Link, MenuItem, Paper, Select, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
+import { Button, Dialog, FormControl, FormHelperText, Grid, Link, MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import ErrorIcon from "@material-ui/icons/Error";
+import MuiAlert from '@material-ui/lab/Alert';
 
 const styles = (theme) => ({
   root: {
@@ -103,6 +105,7 @@ class Register extends Component {
       kelas: "", // Student Data
       subject_teached: "", // Teacher Data
       activeStep: 0,
+      snackbarOpen: false,
       dialogOpen: false,
       submitButtonClicked: false,
     };
@@ -118,9 +121,11 @@ class Register extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
+    if(Object.keys(nextProps.errors).length > 0) {
+      console.log(this.state.snackbarOpen)
       this.setState({
-        errors: nextProps.errors
+        errors: nextProps.errors,
+        snackbarOpen: true
       });
     }
   }
@@ -260,7 +265,7 @@ class Register extends Component {
               alignItems="center"
             >
               <Grid item className={classes.inputField}>
-                <FormControl id="role" variant="outlined" color="primary" fullWidth>
+                <FormControl id="role" variant="outlined" color="primary" fullWidth error={Boolean(errors.role)}>
                   <label id="role">Daftar Sebagai</label>
                   <Select
                     value={this.state.role}
@@ -270,6 +275,10 @@ class Register extends Component {
                     <MenuItem value={"Teacher"}>Guru</MenuItem>
                     <MenuItem value={"Admin"}>Pengelola</MenuItem>
                   </Select>
+                  <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.role) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.role) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
+                    </FormHelperText>
                 </FormControl>
               </Grid>
               <Grid item className={classes.inputField}>
@@ -290,7 +299,7 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item className={classes.inputField}>
-                  <FormControl id="kelas" variant="outlined" color="primary" fullWidth>
+                  <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
                     <label id="kelas">Kelas</label>
                     <Select
                     value={this.state.kelas._id}
@@ -300,12 +309,16 @@ class Register extends Component {
                         <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                       ))}
                   </Select>
+                  <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                    {Boolean(errors.kelas) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                    {Boolean(errors.kelas) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
+                  </FormHelperText>
                 </FormControl>
                 </Grid>
               :
               this.state.role === "Teacher" ?
                 <Grid item className={classes.inputField}>
-                  <FormControl id="subject" variant="outlined" color="primary" fullWidth>
+                  <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject_teached)}>
                     <label id="subject">Mata Pelajaran</label>
                     <Select
                     value={this.state.subject_teached}
@@ -315,6 +328,10 @@ class Register extends Component {
                         <MenuItem value={subject.name}>{subject.name}</MenuItem>
                       ))}
                   </Select>
+                  <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                  {Boolean(errors.subject_teached) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                  {Boolean(errors.subject_teached) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
+                </FormHelperText>
                 </FormControl>
                 </Grid>
               : null
@@ -433,11 +450,20 @@ class Register extends Component {
       )
     }
 
+    const handleCloseSnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      this.setState({snackbarOpen: false});
+    };
+
     document.title = "Daftar ke Schooly";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return(
       <div className={classes.root}>
+      {/* ProfileDataEditorDialog Snackbar */}
+
         <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt"/>
         <Paper>
           <Grid
@@ -500,6 +526,16 @@ class Register extends Component {
             </Link>
           </Grid>
         </Paper>
+        <Snackbar 
+          open={this.state.snackbarOpen} 
+          autoHideDuration={6000} 
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{vertical : "bottom", horizontal: "center"}}
+        >
+          <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="error">
+            Terdapat kesalahan dalam pengisian!
+          </MuiAlert>
+        </Snackbar>
       </div>
     );
   }

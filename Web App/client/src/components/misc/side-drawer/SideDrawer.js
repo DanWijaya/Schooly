@@ -10,8 +10,8 @@ import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 
@@ -116,13 +116,10 @@ function DrawerContent(props) {
   if(user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
-      ["/atur-pengguna", <SupervisedUserCircleIcon className={classes.drawerListItemMuiIcons}/>, "Daftar Akun", null, false],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
-      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
-      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
+      ["/atur-pengguna", <SupervisedUserCircleIcon className={classes.drawerListItemMuiIcons}/>, "Pengguna", null, false],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false]
     ]
-  else{
-    
+  else {
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
@@ -132,8 +129,8 @@ function DrawerContent(props) {
       [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],
       [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
     ]
-    if(user.role === "Teacher"){ 
-      /*ini untuk hilangin yang untuk ke class 
+    if(user.role === "Teacher") {
+      /*ini untuk hilangin yang untuk ke class
       di side drawer pas logged in jdi guru*/
       ListItemContents.splice(1,1)
     }

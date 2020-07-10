@@ -5,6 +5,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../actions/UserActions";
+import { clearErrors} from "../../../actions/ErrorActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar, MenuItem, Select, Tab, Tabs, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
@@ -26,6 +27,8 @@ import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
+const Validator = require("validator");
+const isEmpty = require("is-empty");
 
 const useStyles = makeStyles((theme) => ({
   editProfileButton: {
@@ -51,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
+  },
+  errorInfo: {
+    color: "red",
+    fontSize: "10px",
   },
 }));
 
@@ -86,6 +93,7 @@ function TabIndex(index) {
 
 function ProfileDataItemEdit(props) {
   const classes = useStyles();
+  const { errors } = props;
 
   return(
     <ListItem>
@@ -104,6 +112,9 @@ function ProfileDataItemEdit(props) {
               value={props.value}
               id={props.id}
               on_change={props.on_change}
+              error={!errors ? null : errors.email}
+              error1={!errors ? null : errors.email}
+              span_classname={classes.errorInfo}
               width
             />
             :
@@ -119,7 +130,7 @@ function ProfileDataEditorDialog(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { updateUserData } = props;
+  const { updateUserData, clearErrors, errors } = props;
 
   //Dialog
   const [open, setOpen] = React.useState(false);
@@ -130,12 +141,14 @@ function ProfileDataEditorDialog(props) {
     console.log(simpan)
     if(simpan !== "simpan")
       setDataProfil(defaultUserData)
+    clearErrors()
     setOpen(false);
   };
 
   //Tabs
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
+    clearErrors()
     setValue(newValue);
   };
 
@@ -165,9 +178,6 @@ function ProfileDataEditorDialog(props) {
   //pas submit formnya
   const onSubmit = (e) => {
     e.preventDefault()
-    props.handleOpenAlert()
-    handleClose("simpan")
-
     let userId = user.id;
 
     let userData = {
@@ -189,11 +199,15 @@ function ProfileDataEditorDialog(props) {
       uni_impian: dataProfil.uni_impian
     }
 
+    if(!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
+      props.handleOpenAlert()
+
     updateUserData(userData, userId, props.history)
   }
 
   const handleChangeDataProfil = (e, otherfield) => {
     let { id, value } = e.target
+    clearErrors()
     if (otherfield === "jenis_kelamin") {
       setDataProfil((prev) => ({
         ...prev,
@@ -335,6 +349,7 @@ function ProfileDataEditorDialog(props) {
                   profile_data_category="Email"
                   is_textfield
                   value={dataProfil.email}
+                  errors={errors}
                   id="email"
                   on_change={handleChangeDataProfil}
                 />
@@ -420,12 +435,15 @@ function ProfileDataEditorDialog(props) {
 ProfileDataEditorDialog.propTypes = {
   auth: PropTypes.object.isRequired,
   updateUserData: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  errors: state.errors
 });
 
 export default connect(
-  mapStateToProps, { updateUserData }
+  mapStateToProps, { updateUserData, clearErrors }
 ) (ProfileDataEditorDialog);

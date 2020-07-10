@@ -62,7 +62,7 @@ function ProfilePasswordEditorDialog(props) {
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
   const [new_password2, setNewPassword2] = React.useState("");
-  const {changePassword, logoutUser, errors} = props;
+  const {changePassword, logoutUser, success, errors, handleOpenAlert} = props;
   const [errorMessage, setErrorMessage] = React.useState({})
   const {user} = props.auth;
 
@@ -70,6 +70,10 @@ function ProfilePasswordEditorDialog(props) {
 
   useEffect(() => {
     setErrorMessage(errors)
+    if(success){
+      console.log("handle open alert is runned")
+      handleOpenAlert()
+    }
   }, [errors])
 
   const [open, setOpen] = React.useState(false);
@@ -108,6 +112,8 @@ function ProfilePasswordEditorDialog(props) {
         break;
     }
   }
+  console.log(success)
+  
 
   return(
     <div>
@@ -184,11 +190,13 @@ function ProfilePasswordEditorDialog(props) {
 ProfilePasswordEditorDialog.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
   changePassword: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
+  success: state.success,
   auth: state.auth,
   errors: state.errors,
 })

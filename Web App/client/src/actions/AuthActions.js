@@ -3,7 +3,7 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router";
 import { logoutUser } from "./UserActions"
-import {PWD_RESET_HASH_CREATED, GET_ERRORS, PWD_SAVE_SUCCESS } from "./Types"
+import {PWD_RESET_HASH_CREATED, GET_ERRORS, PWD_SAVE_SUCCESS, GET_SUCCESS_RESPONSE } from "./Types"
 
 // SEND EMAIL TO API FOR HASHING
 export const createHash = (email) => {
@@ -109,14 +109,20 @@ export const changePassword = (passwordData, history) => dispatch => {
   axios
       .post("/api/authentication/changepassword", passwordData)
       .then(res => {
-        alert("Kata sandi telah berhasil diganti, silahkan diingat kata sandi baru anda.")
-        window.location.reload()
+        dispatch({
+          type: GET_SUCCESS_RESPONSE,
+          payload: true
+        })
+        // alert("Kata sandi telah berhasil diganti, silahkan diingat kata sandi baru anda.")
+        // window.location.reload()
       })
       .catch(err => {
         console.log(err);
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
+        if(Boolean(err.response)){
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+          })
+        }
       })
 }
