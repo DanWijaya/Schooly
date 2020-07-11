@@ -129,8 +129,8 @@ function AnnouncementList(props) {
     <div className={classes.root}>
       <Grid container justify="space-between">
         <Grid item>
-          <Typography variant="subtitle2" color="primary">
-            <h5>Daftar Pengumuman</h5>
+          <Typography variant="h4" color="primary">
+            <b>Daftar Pengumuman</b>
           </Typography>
         </Grid>
         <Grid item>

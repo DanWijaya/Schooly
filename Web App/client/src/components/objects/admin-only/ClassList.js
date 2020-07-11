@@ -72,7 +72,7 @@ function ClassListToolbar(props) {
 
   return(
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4">
+      <Typography variant="h4" color="primary">
         <b>Daftar Kelas</b>
       </Typography>
       <div style={{display: "flex"}}>

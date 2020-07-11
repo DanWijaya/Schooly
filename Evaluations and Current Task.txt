@@ -12,9 +12,9 @@ Botak:
 9. Pengumuman dan catata buat ganti-ganti data type
 IMPORTANT:
 1. Batas Waktu kumpul (Late or not Late)
-2. disable route link buat yang rolenya nda bisa akses
 3. Jumlah murid dan absen di kelas
-4. Close all panel sort (ManageUsers, Material List, Task List)
+5. Samain warna judul daftar pengguna, daftar kelas dkk.
+6. tambahin button2 lagi buat guru dan admin di dashboard
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -43,10 +43,6 @@ Daniel:
 Penting untuk diimplemen:
 2. (Diganti dengan announcement) Buat Notification functionality (Schema Notif dan explore cara handlenya?)
 3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
-
-Error:
-1. classlist pas klik ke satu class terus back error buat tekan button lain
-2. error upload image banyak2
 
 Possibly will implement these features:
 - Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)

@@ -139,9 +139,8 @@ const MaterialListToolbar = (props) => {
   // The item stores the id directly
   return(
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" align="left">
+      <Typography variant="h4" color="primary">
         <b>Daftar Materi</b>
-        {/* Nanti buat untuk yang admin juga */}
       </Typography>
       {role === "Student" ? <div style={{display: "none"}} /> :
         <Link to="/buat-materi">

@@ -65,7 +65,7 @@ function TaskListV2Toolbar(props) {
   ];
 
   if(role === "Student") {
-    // Don't include the class_assigned basically. 
+    // Don't include the class_assigned basically.
     headCells.pop()
   }
 
@@ -80,7 +80,7 @@ function TaskListV2Toolbar(props) {
 
   return(
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4">
+      <Typography variant="h4" color="primary">
         <b>Daftar Tugas</b>
       </Typography>
       <div style={{display: "flex"}}>
@@ -303,7 +303,7 @@ function TaskListV2(props) {
     )
   }
 
-  React.useEffect(() => {viewTask()}, 
+  React.useEffect(() => {viewTask()},
   [tasksCollection.length])
 
   const retrieveTasks = () => {

@@ -134,7 +134,7 @@ const TaskListToolbar = (props) => {
   // The item stores the id directly
   return(
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" align="left">
+      <Typography variant="h4" color="primary">
         {role === "Teacher" ? <b>Daftar Tugas</b> :
           <b>Daftar Tugas</b>}
         {/* Nanti buat untuk yang admin juga */}
