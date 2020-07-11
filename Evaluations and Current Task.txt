@@ -8,7 +8,8 @@ Botak:
 8. Sort mapping dkk
 IMPORTANT:
 3. Jumlah murid dan absen di kelas
-4. Cek yang warna batas waktu kayak di tugas dll
+5. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
+6. cek Tabs scrollable
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -33,6 +34,7 @@ Daniel:
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 26. Buat pas si student buka announcement, mereka ndak bisa create announcement (cuma ketua kelasnya)
 27. Select untuk yang edit class masih bermasalah...
+28. Pengumuman authornya dan task belum id, (Materi dan kelas udah semua)
 
 Penting untuk diimplemen:
 2. (Diganti dengan announcement) Buat Notification functionality (Schema Notif dan explore cara handlenya?)

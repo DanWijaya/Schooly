@@ -95,11 +95,15 @@ const classes = useStyles()
       <ListItemText
         align="right"
         primary={
-          <Typography variant="h6" className={classes.warningText}>
+          <Typography variant="body2" className={classes.warningText}>
             Batas Waktu: {props.work_deadline}
           </Typography>
         }
-        secondary={props.work_status}
+        secondary={
+          <Typography variant="body2" className={classes.warningText}>
+            {props.work_status}
+          </Typography>
+        }
       />
     </ListItem>
   )
