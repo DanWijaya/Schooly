@@ -7,7 +7,8 @@ import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
 import { getUsers } from "../../../actions/UserActions";
-import { Fab, Grid, List, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Fab, Grid, Hidden, List, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -34,11 +35,15 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newAnnouncementIcon: {
+  newAnnouncementIconDesktop: {
     width: theme.spacing(3),
     height: theme.spacing(3),
     marginRight: "7.5px",
-  }
+  },
+  newAnnouncementIconMobile: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
 }));
 
 function AnnouncementItemList(props) {
@@ -125,7 +130,7 @@ function AnnouncementList(props) {
 
   return(
     <div className={classes.root}>
-      <Grid container justify="space-between">
+      <Grid container justify="space-between" alignItems="center" style={{padding: "5px"}}>
         <Grid item>
           <Typography variant="h4" color="primary">
             <b>Daftar Pengumuman</b>
@@ -133,13 +138,28 @@ function AnnouncementList(props) {
         </Grid>
         <Grid item>
           {canAnnounce() ?
-          <Link to="/buat-pengumuman">
-            <Fab variant="Extended" className={classes.newAnnouncementButton}>
-              <AnnouncementIcon className={classes.newAnnouncementIcon} />
-              Buat Pengumuman
-            </Fab>
-          </Link> :
-          null}
+            <div>
+              <Hidden smUp implementation="css">
+                <LightTooltip title="Buat Pengumuman">
+                  <Link to="/buat-pengumuman">
+                    <Fab size="small" className={classes.newAnnouncementButton}>
+                      <AnnouncementIcon className={classes.newAnnouncementIconMobile} />
+                    </Fab>
+                  </Link>
+                </LightTooltip>
+              </Hidden>
+              <Hidden xsDown implementation="css">
+                <Link to="/buat-pengumuman">
+                  <Fab variant="extended" size="medium" className={classes.newAnnouncementButton}>
+                    <AnnouncementIcon className={classes.newAnnouncementIconDesktop} />
+                    Buat Pengumuman
+                  </Fab>
+                </Link>
+              </Hidden>
+            </div>
+          :
+            null
+          }
         </Grid>
       </Grid>
       <List>

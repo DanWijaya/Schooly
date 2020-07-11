@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   dialogBox: {
+    width: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {
@@ -127,7 +128,17 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  finishButton: {
+  uploadDialogGrid: {
+    width: "300px",
+    minHeight: "200px",
+    padding: "15px",
+  },
+  uploadSuccessIcon: {
+    color: "green",
+    height: "45px",
+    width: "45px"
+  },
+  uploadFinishButton: {
     width: "100%",
     marginTop: "20px",
     backgroundColor: "#61BD4F",
@@ -137,18 +148,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  successIcon: {
-    color: "green",
-    padding: 0,
-    margin: 0,
-    height: "45px",
-    width: "45px"
-  },
-  uplaodDialogGrid: {
-    padding: "10px",
-    width: "275px",
-    height: "175px"
-  }
 }));
 
 function LampiranFile(props) {
@@ -488,7 +487,7 @@ function ViewTaskStudent(props) {
               Hapus file berikut?
             </Typography>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px", textAlign:"center"}}>
+          <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h6" align="center" gutterBottom>
               <b>{selectedFileName}</b>
             </Typography>
@@ -499,7 +498,7 @@ function ViewTaskStudent(props) {
             justify="center"
             alignItems="center"
             spacing={2}
-            style={{marginBottom: "20px"}}
+            style={{marginBottom: "10px"}}
           >
             <Grid item>
               <Button
@@ -536,30 +535,29 @@ function ViewTaskStudent(props) {
 
   function UploadDialog(){
     return(
-      <Dialog
-        open={openUploadDialog}
-        style={{display: "flex", flexDirection: "column"}}
-      >
-        <Grid container className={classes.uplaodDialogGrid} direction="column" alignItems="center" justify="space-betweeen">
+      <Dialog open={openUploadDialog}>
+        <Grid container direction="column" justify="space-betweeen" alignItems="center" className={classes.uploadDialogGrid}>
           <Grid item justify="center">
             <Typography variant="h6" align="center" gutterBottom>
               {!success ? "Tugas sedang dikumpul" : "Tugas berhasil dikumpul"}
             </Typography>
           </Grid>
           <Grid item>
-            {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
+            {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
           </Grid>
-          <Grid item justify="center">
+          <Grid item>
             {!success ?
-            <Typography variant="body1" align="center" gutterBottom>
-              <b>Mohon tetap tunggu di halaman ini.</b>
-            </Typography> :
+              <Typography variant="body1" align="center" gutterBottom>
+                <b>Mohon tetap tunggu di halaman ini.</b>
+              </Typography>
+            :
               <Button
-              onClick={() => window.location.reload()}
-              variant="contained"
-              className={classes.finishButton}>
-              OKE
-            </Button>
+                variant="contained"
+                onClick={() => window.location.reload()}
+                className={classes.uploadFinishButton}
+              >
+                Selesai
+              </Button>
             }
           </Grid>
         </Grid>

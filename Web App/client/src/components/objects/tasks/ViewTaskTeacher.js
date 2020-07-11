@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogBox: {
     width: "350px",
-    padding: "10px",
+    padding: "15px",
   },
   dialogDeleteButton: {
     width: "150px",
@@ -273,18 +273,11 @@ function ViewTaskTeacher(props) {
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
       >
-        <Grid container justify="center" className={classes.dialogBox}>
-          <Grid item
-            container
-            justify="flex-end"
-            alignItems="flex-start"
-            style={{marginBottom: "10px"}}
-          >
+        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+          <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              disableRipple
               onClick={handleCloseDeleteDialog}
-              className={classes.iconButtonClose}
             >
               <CloseIcon />
             </IconButton>
@@ -305,7 +298,7 @@ function ViewTaskTeacher(props) {
             justify="center"
             alignItems="center"
             spacing={2}
-            style={{marginBottom: "20px"}}
+            style={{marginBottom: "10px"}}
           >
             <Grid item>
               <Button

@@ -140,6 +140,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogBox: {
+    width: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {

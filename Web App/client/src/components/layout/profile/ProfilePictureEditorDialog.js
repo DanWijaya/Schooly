@@ -218,7 +218,7 @@ function ProfilePictureEditorDialog(props) {
             </Typography>
           </Grid>
           <Grid item style={{marginBottom: "40px"}}>
-            <form onSubmit={onSubmitForm}>
+            <form onSubmit={onSubmitForm} style={{width: "100%"}}>
               <input
                 accept="image/*"
                 type="file"

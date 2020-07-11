@@ -236,6 +236,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogBox: {
+    width: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {
@@ -386,7 +387,8 @@ function MaterialList(props) {
           <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              onClick={handleCloseDeleteDialog}>
+              onClick={handleCloseDeleteDialog}
+            >
               <CloseIcon />
             </IconButton>
           </Grid>
