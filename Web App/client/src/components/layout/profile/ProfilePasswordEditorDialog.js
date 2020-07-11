@@ -112,7 +112,7 @@ function ProfilePasswordEditorDialog(props) {
     }
   }
   console.log(success)
-  
+
 
   return(
     <div>
@@ -146,7 +146,7 @@ function ProfilePasswordEditorDialog(props) {
                Kata sandi adalah informasi pribadi yang tidak boleh diketahui oleh orang lain.
             </Typography>
           </Grid>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} style={{width: "100%"}}>
             <List>
               <EditPasswordField
                 id="old_password"

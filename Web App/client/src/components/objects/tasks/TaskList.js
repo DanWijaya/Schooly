@@ -238,6 +238,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogBox: {
+    width: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {
@@ -532,7 +533,7 @@ function TaskList(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="overline" className={classes.deadlineWarningText}>
+                          <Typography variant="body2" className={classes.deadlineWarningText}>
                              Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
                           </Typography>
                         </Grid>
@@ -564,7 +565,7 @@ function TaskList(props) {
                         </Typography>
                       </Hidden>
                       <Hidden xsDown implementation="css">
-                        <Typography variant="overline" align="right" className={classes.deadlineWarningText}>
+                        <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
                           Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
                         </Typography>
                       </Hidden>

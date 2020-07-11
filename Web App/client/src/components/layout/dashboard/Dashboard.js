@@ -54,11 +54,15 @@ function WorkListItem(props) {
             <ListItemText
               align="right"
               primary={
-                <Typography variant="h7" className={classes.warningText}>
+                <Typography variant="body2" className={classes.warningText}>
                   Batas Waktu:
                 </Typography>
               }
-              secondary={props.work_deadline}
+              secondary={
+                <Typography variant="body2" className={classes.warningText}>
+                  {props.work_deadline}
+                </Typography>
+              }
             />
           </Grid>
         </Grid>
@@ -330,11 +334,13 @@ class Dashboard extends Component {
                   Pekerjaan Anda
                 </Typography>
                 <div style={{display: "flex", justifyContent: "flex-end"}}>
-                <LightTooltip title="Lihat Semua" placement="top">
-                  <IconButton>
-                    <ChevronRightIcon />
-                  </IconButton>
-                </LightTooltip>
+                  <Link to="/daftar-tugas">
+                    <LightTooltip title="Lihat Semua" placement="top">
+                      <IconButton>
+                        <ChevronRightIcon />
+                      </IconButton>
+                    </LightTooltip>
+                  </Link>
                 </div>
               </div>
               <List>
@@ -350,7 +356,7 @@ class Dashboard extends Component {
                     <WorkListItem
                       work_title={task.name}
                       work_sender={`Mata Pelajaran: ${task.subject}`}
-                      work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+                      work_deadline={moment(task.deadline).locale("id").format("DD/MM/YYYY - HH:mm ")}
                       work_link={`/tugas-murid/${task._id}`}
                     />
                   )

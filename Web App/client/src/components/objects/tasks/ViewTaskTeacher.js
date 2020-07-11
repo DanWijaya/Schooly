@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogBox: {
     width: "350px",
-    padding: "10px",
+    padding: "15px",
   },
   dialogDeleteButton: {
     width: "150px",
@@ -273,18 +273,11 @@ function ViewTaskTeacher(props) {
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
       >
-        <Grid container justify="center" className={classes.dialogBox}>
-          <Grid item
-            container
-            justify="flex-end"
-            alignItems="flex-start"
-            style={{marginBottom: "10px"}}
-          >
+        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+          <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              disableRipple
               onClick={handleCloseDeleteDialog}
-              className={classes.iconButtonClose}
             >
               <CloseIcon />
             </IconButton>
@@ -305,7 +298,7 @@ function ViewTaskTeacher(props) {
             justify="center"
             alignItems="center"
             spacing={2}
-            style={{marginBottom: "20px"}}
+            style={{marginBottom: "10px"}}
           >
             <Grid item>
               <Button
@@ -352,7 +345,7 @@ function ViewTaskTeacher(props) {
           <Grid item xs={12} md={5}>
             <Hidden mdUp implementation="css">
               <Typography variant="body2" className={classes.deadlineWarningText} gutterBottom>
-                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Nilai Maksimum: 100
@@ -360,7 +353,7 @@ function ViewTaskTeacher(props) {
             </Hidden>
             <Hidden smDown implementation="css" style={{display: "flex"}}>
               <Typography variant="body2" align="right" className={classes.deadlineWarningText} gutterBottom>
-                Tanggal Kumpul: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
               </Typography>
               <Typography variant="body2" align="right" color="textSecondary">
                 Nilai Maksimum: 100

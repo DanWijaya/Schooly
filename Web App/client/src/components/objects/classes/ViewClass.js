@@ -153,7 +153,7 @@ function AssignmentListItem(props) {
             <ListItemText
               align="right"
               primary={
-                <Typography className={classes.warningText}>
+                <Typography variant="body2" className={classes.warningText}>
                   Batas Waktu: {props.work_deadline}
                 </Typography>
               }

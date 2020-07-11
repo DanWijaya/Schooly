@@ -1,9 +1,6 @@
-Current Task
-
 Botak:
 1. Delete tester di akhir
 2. nama sekolah di profil
-3. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
 4. Update OutlinedTextField jadi TextField
 5. Create Task, Edit Task dll desktop version
 6. Field Berkas
@@ -11,11 +8,11 @@ Botak:
 8. betulin table ASAP
 9. Pengumuman dan catata buat ganti-ganti data type
 
+8. Sort mapping dkk
 IMPORTANT:
-1. Batas Waktu kumpul (Late or not Late)
 3. Jumlah murid dan absen di kelas
-5. Samain warna judul daftar pengguna, daftar kelas dkk.
-6. tambahin button2 lagi buat guru dan admin di dashboard
+5. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
+6. cek Tabs scrollable
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -29,6 +26,7 @@ Daniel:
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 27. Select untuk yang edit class masih bermasalah...
 28. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya. 
+28. Pengumuman authornya dan task belum id, (Materi dan kelas udah semua)
 
 Penting untuk diimplemen:
 
@@ -53,7 +51,6 @@ Error and To be Fixed:
 - Kalau usernya edit profilenya di browser lain/device lain. session yang sebelumnya masih dilogged in itu masih ndak bakal update data usernya
 - Kalau page yang mau dikunjungi ada error, lalu tekan back di browserm biasanya pagenya bakal putih semua
 
-
-Drafted:
+To be done in the future:
+- Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
 - Comments
-- Implemen cropping for profile pictire (https://www.kurzor.net/blog/uploading-and-resizing-images-part1)

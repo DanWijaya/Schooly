@@ -5,7 +5,7 @@ module.exports = function validateTaskInput(data) {
     let errors = {}
     // isEmpty method is used for string, so don't use it for class_assigned data bcs it is array.
     data.name = isEmpty(data.name) ? "" : data.name;
-    // data.deadline, there is no need? 
+    // data.deadline, there is no need?
     data.subject = isEmpty(data.subject) ? "" : data.subject;
     data.description = isEmpty(data.description) ? "" : data.description;
     data.grade = isEmpty(data.grade) ? "" : data.grade;

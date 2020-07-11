@@ -103,7 +103,17 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  finishButton: {
+  uploadDialogGrid: {
+    width: "300px",
+    minHeight: "200px",
+    padding: "15px",
+  },
+  uploadSuccessIcon: {
+    color: "green",
+    height: "45px",
+    width: "45px"
+  },
+  uploadFinishButton: {
     width: "100%",
     marginTop: "20px",
     backgroundColor: "#61BD4F",
@@ -113,18 +123,6 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  successIcon: {
-    color: "green",
-    padding: 0,
-    margin: 0,
-    height: "45px",
-    width: "45px"
-  },
-  uplaodDialogGrid: {
-    padding: "10px",
-    width: "275px",
-    height: "175px"
-  }
 });
 
 class CreateAnnouncement extends Component {
@@ -265,30 +263,29 @@ class CreateAnnouncement extends Component {
     const UploadDialog = () => {
       
         return(
-          <Dialog
-            open={this.state.openUploadDialog}
-            style={{display: "flex", flexDirection: "column"}}
-          >
-            <Grid container direction="column" alignItems="center" justify="space-between" className={classes.uplaodDialogGrid}>
-              <Grid item justify="center">
+          <Dialog open={this.state.openUploadDialog}>
+            <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
+              <Grid item>
                 <Typography variant="h6" align="center" gutterBottom>
                   {!success ? "Pengumuman sedang dibuat" : "Pengumuman berhasil dibuat"}
                 </Typography>
               </Grid>
               <Grid item>
-                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
+                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
               </Grid>
-              <Grid item justify="center">
+              <Grid item>
                 {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon halaman ini jangan diperbarui.</b>
-                </Typography> :
+                  <Typography variant="body1" align="center" gutterBottom>
+                    <b>Mohon tetap tunggu di halaman ini.</b>
+                  </Typography>
+                :
                   <Button
-                  href="/daftar-pengumuman"
-                  variant="contained"
-                  className={classes.finishButton}>
-                  OKE
-                </Button>
+                    variant="contained"
+                    href="/daftar-pengumuman"
+                    className={classes.uploadFinishButton}
+                  >
+                    Selesai
+                  </Button>
                 }
               </Grid>
             </Grid>
