@@ -330,11 +330,13 @@ class Dashboard extends Component {
                   Pekerjaan Anda
                 </Typography>
                 <div style={{display: "flex", justifyContent: "flex-end"}}>
-                <LightTooltip title="Lihat Semua" placement="top">
-                  <IconButton>
-                    <ChevronRightIcon />
-                  </IconButton>
-                </LightTooltip>
+                  <Link to="/daftar-tugas">
+                    <LightTooltip title="Lihat Semua" placement="top">
+                      <IconButton>
+                        <ChevronRightIcon />
+                      </IconButton>
+                    </LightTooltip>
+                  </Link>
                 </div>
               </div>
               <List>

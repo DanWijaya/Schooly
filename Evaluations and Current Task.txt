@@ -1,24 +1,17 @@
-Current Task
-
 Botak:
 1. Delete tester di akhir
 2. nama sekolah di profil
-3. Select sort (https://stackoverflow.com/questions/57348616/how-can-i-sort-drop-down-menu-items-alphabetically)
 4. Update OutlinedTextField jadi TextField
 5. Create Task, Edit Task dll desktop version
 6. Field Berkas
 7. Notification
-8. betulin table ASAP
-9. Pengumuman dan catata buat ganti-ganti data type
+8. Sort mapping dkk
 IMPORTANT:
-1. Batas Waktu kumpul (Late or not Late)
 3. Jumlah murid dan absen di kelas
-5. Samain warna judul daftar pengguna, daftar kelas dkk.
-6. tambahin button2 lagi buat guru dan admin di dashboard
+4. Cek yang warna batas waktu kayak di tugas dll
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
-23. Snackbar error pas register
 2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
 3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
 4. Notifications page dan listnya (previewnya muncul di Dashboard)
@@ -40,14 +33,22 @@ Daniel:
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 26. Buat pas si student buka announcement, mereka ndak bisa create announcement (cuma ketua kelasnya)
 27. Select untuk yang edit class masih bermasalah...
+
 Penting untuk diimplemen:
 2. (Diganti dengan announcement) Buat Notification functionality (Schema Notif dan explore cara handlenya?)
 3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
 
-Possibly will implement these features:
-- Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
-- Mungkin buat page utk si Admin utk bisa manage users
+Error and To be Fixed:
+- Disable buat dan sunting pengumunan (Ketua kelas)
+- View class admin (cuma bisa liat daftar orang)
+- Snackbar mobile dan desktop, atas bawah
+- Ganti copylink di landing dan link insta di about
+- Hash id tugas, Improve register Scheme
+- Nama sekolah (retrieve cluster name)? register choose cluster?
+- Error di form create dan edit kelas, tugas
+- Kalau usernya edit profilenya di browser lain/device lain. session yang sebelumnya masih dilogged in itu masih ndak bakal update data usernya
+- Kalau page yang mau dikunjungi ada error, lalu tekan back di browserm biasanya pagenya bakal putih semua
 
-Drafted:
+To be done in the future:
+- Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
 - Comments
-- Implemen cropping for profile pictire (https://www.kurzor.net/blog/uploading-and-resizing-images-part1)

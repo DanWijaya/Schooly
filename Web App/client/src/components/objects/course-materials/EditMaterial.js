@@ -370,7 +370,7 @@ class EditMaterial extends Component {
             <Grid item>
               {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
             </Grid>
-            <Grid item >
+            <Grid item>
               {!success ?
                 <Typography variant="body1" align="center" gutterBottom>
                   <b>Mohon tetap tunggu di halaman ini.</b>
