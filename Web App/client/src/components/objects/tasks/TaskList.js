@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+   Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -132,6 +132,7 @@ function TaskListToolbar(props) {
             <MenuItem
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
+              onClick={props.handleClosePanel}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
@@ -419,6 +420,15 @@ function TaskList(props) {
     )
   }
 
+  // Task Expansion Panel
+  const [expanded, setExpanded] = React.useState(false);
+  const handleTogglePanel = () => {
+    setExpanded();
+  };
+  const handleClosePanel = () => {
+    setExpanded(false);
+  };
+
   document.title = "Schooly | Daftar Tugas";
 
   return(
@@ -432,6 +442,7 @@ function TaskList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
+        handleClosePanel={handleClosePanel}
       />
         <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))

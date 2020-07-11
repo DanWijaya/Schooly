@@ -81,7 +81,6 @@ class CreateClass extends Component {
       errors: {}
     };
     this.props.createClass(classObject, this.props.history);
-    this.setState({name: "", nihil: true, walikelas: "", ukuran: 0})
   }
 
   onSelect = (selectedList, selectedItem) => {

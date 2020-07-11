@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 const Schema = mongoose.Schema;
 
 // Create Schema
@@ -8,7 +9,7 @@ const ClassSchema = new Schema({
     required: true
   },
   walikelas: {
-      type: Object,
+      type: ObjectId,
       required: true
   },
   ukuran: {
@@ -20,19 +21,19 @@ const ClassSchema = new Schema({
       default: true
   }, 
   ketua_kelas: {
-    type: Object,
+    type: ObjectId,
     ref: "users"
   },
   bendahara: {
-    type: Object,
+    type: ObjectId,
     ref: "users"
   },
   sekretaris: {
-    type: Object,
+    type: ObjectId,
     ref: "users"
   },
   semua_murid : [{
-    type: Object,
+    type: ObjectId,
     ref: "users"
   }]
 

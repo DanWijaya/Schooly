@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { Redirect } from "react-router-dom";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button,Chip, CircularProgress,Dialog, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
@@ -103,7 +104,7 @@ const styles = (theme) => ({
   },
   uplaodDialogGrid: {
     padding: "10px",
-    width: "275px",
+    width: "300px",
     height: "175px"
   }
 });
@@ -167,7 +168,7 @@ class EditAnnouncement extends Component {
     if(!nextProps.errors){
       this.handleOpenUploadDialog()
     }
-    if(!name && nextProps.errors){ // if edited, nextProps.errors is false, supaya ndak run ini..
+    if(Boolean(nextProps.errors)){ // if edited, nextProps.errors is false, supaya ndak run ini..
         this.setState({
             title: selectedAnnouncements.title,
             description: selectedAnnouncements.description,
@@ -348,6 +349,11 @@ class EditAnnouncement extends Component {
         }
       }
       return temp;
+    }
+
+    if(user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id){
+      console.log(kelas.ketua_kelas, user.id)
+      return(<Redirect to="/tidak-ditemukan"/>)
     }
 
     return(

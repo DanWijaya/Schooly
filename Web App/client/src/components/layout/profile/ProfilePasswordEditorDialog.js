@@ -71,7 +71,6 @@ function ProfilePasswordEditorDialog(props) {
   useEffect(() => {
     setErrorMessage(errors)
     if(success){
-      console.log("handle open alert is runned")
       handleOpenAlert()
     }
   }, [errors])

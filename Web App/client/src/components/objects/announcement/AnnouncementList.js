@@ -98,8 +98,8 @@ function AnnouncementList(props) {
 
   const listAnnouncements = () => {
     let annList = [];
-
-    for(var i = 0; i < selectedAnnouncements.length; i++){
+    // let announcements = selectedAnnouncements.reverse()
+    for(var i = selectedAnnouncements.length-1; i >= 0; i--){
       console.log()
       annList.push(
         <AnnouncementItemList
@@ -107,7 +107,7 @@ function AnnouncementList(props) {
           author_name={selectedAnnouncements[i].author_name}
           notification_title={selectedAnnouncements[i].title}
           notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
-          date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MM-YYYY")}
+          date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}
           time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
         />
       )
@@ -118,7 +118,7 @@ function AnnouncementList(props) {
   const canAnnounce = () => {
     console.log(user.role)
     if(Object.keys(kelas).length > 0){
-      return user.id === kelas.ketua_kelas._id
+      return user.id === kelas.ketua_kelas
     }
     return user.role === "Teacher"
   }

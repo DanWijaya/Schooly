@@ -103,7 +103,7 @@ router.post("/update/:id", (req, res) => {
 
     const { errors, isValid } = validateTaskInput(req.body)
 
-    if(!isValid && !grade) { 
+    if(!isValid) { 
         console.log("Not Valid");
         return res.status(400).json(errors);
     }

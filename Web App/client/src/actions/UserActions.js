@@ -4,7 +4,8 @@ import jwt_decode from "jwt-decode";
 import { Redirect } from "react-router";
 
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
-   GET_USERS, GET_ALL_STUDENTS, GET_ALL_TEACHERS, GET_ONE_USER} from "./Types";
+   GET_USERS, GET_ALL_STUDENTS, GET_ALL_TEACHERS, 
+   GET_ONE_USER, GET_STUDENTS_BY_CLASS} from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -235,7 +236,7 @@ export const getStudentsByClass = (classId) => dispatch => {
       .then(res => {
         console.log(res.data)
         dispatch({
-          type: GET_ALL_STUDENTS,
+          type: GET_STUDENTS_BY_CLASS,
           payload: res.data
         })
       })
