@@ -81,7 +81,7 @@ function MaterialListToolbar(props) {
 
   return(
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4">
+      <Typography variant="h4" color="primary">
         <b>Daftar Materi</b>
       </Typography>
       <div style={{display: "flex"}}>

@@ -80,7 +80,7 @@ function TaskListToolbar(props) {
 
   return(
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h4">
+      <Typography variant="h4" color="primary">
         <b>Daftar Tugas</b>
       </Typography>
       <div style={{display: "flex"}}>
