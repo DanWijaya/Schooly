@@ -116,10 +116,8 @@ function DrawerContent(props) {
   if(user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
-      ["/atur-pengguna", <SupervisedUserCircleIcon className={classes.drawerListItemMuiIcons}/>, "Atur Pengguna", null, false],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false],
-      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
-      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
+      ["/atur-pengguna", <SupervisedUserCircleIcon className={classes.drawerListItemMuiIcons}/>, "Pengguna", null, false],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false]
     ]
   else {
     ListItemContents = [

@@ -6,8 +6,8 @@ import moment from "moment";
 import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
-   TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+   Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -15,10 +15,11 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import SortIcon from "@material-ui/icons/Sort";
 
-function createData(_id, tasktitle, subject, class_assigned, deadline, action) {
-  return(action === null ? { _id, tasktitle, subject, class_assigned, deadline }
-    : { _id, tasktitle, subject, class_assigned, deadline, action});
+function createData(_id, tasktitle, subject, deadline, class_assigned) {
+  return { _id, tasktitle, subject, deadline, class_assigned };
 }
 
 var rows = [];
@@ -49,56 +50,111 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function TaskListHead(props) {
+function TaskListToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role } = props;
 
   const createSortHandler = (property) => (event) => {
-    console.log("createSort handler is runned")
     onRequestSort(event, property);
   };
 
   const headCells = [
     { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
     { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
-    { id: "action", numeric: false, disablePadding: false, label: "Atur Tugas" },
+    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
   if(role === "Student") {
+    // Don't include the class_assigned basically.
     headCells.pop()
   }
 
-  return(
-    <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="center"
-            padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <b>{headCell.label}</b>
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
+  // Sort Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
 
-TaskListHead.propTypes = {
+  return(
+    <Toolbar className={classes.toolbar}>
+      <Typography variant="h4">
+        <b>Daftar Tugas</b>
+      </Typography>
+      <div style={{display: "flex"}}>
+        <Hidden smUp implementation="css">
+          {role === "Student" ?
+            null
+          :
+            <LightTooltip title="Buat Tugas">
+              <Link to="/buat-tugas">
+                <Fab size="small" className={classes.newTaskButton}>
+                  <AssignmentIcon className={classes.newTaskIconMobile} />
+                </Fab>
+              </Link>
+            </LightTooltip>
+          }
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          {role === "Student" ?
+            null
+          :
+            <Link to="/buat-tugas">
+              <Fab size="medium" variant="extended" className={classes.newTaskButton}>
+                <AssignmentIcon className={classes.newTaskIconDesktop} />
+                Buat Tugas
+              </Fab>
+            </Link>
+          }
+        </Hidden>
+        <LightTooltip title="Urutkan Tugas">
+          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </Fab>
+        </LightTooltip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ?
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </span>
+                  : null
+                }
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    </Toolbar>
+  );
+};
+
+TaskListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -107,13 +163,19 @@ TaskListHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
+  },
   toolbar: {
-    display: "auto",
+    display: "flex",
     justifyContent: "space-between",
     padding: "15px",
   },
   newTaskButton: {
+    marginRight: "10px",
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
@@ -121,47 +183,58 @@ const useToolbarStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newTaskIcon: {
+  newTaskIconDesktop: {
     width: theme.spacing(3),
     height: theme.spacing(3),
     marginRight: "7.5px",
-  }
-}));
-
-const TaskListToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { role } = props;
-  // The item stores the id directly
-  return(
-    <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" color="primary">
-        {role === "Teacher" ? <b>Daftar Tugas</b> :
-          <b>Daftar Tugas</b>}
-        {/* Nanti buat untuk yang admin juga */}
-      </Typography>
-      {role === "Student" ? <div style={{display: "none"}} /> :
-        <Link to="/buat-tugas">
-          <Fab variant="extended" className={classes.newTaskButton}>
-            <AssignmentIcon className={classes.newTaskIcon} />
-              Buat Tugas
-          </Fab>
-        </Link>
-      }
-    </Toolbar>
-  );
-};
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: "auto",
-    maxWidth: "1000px",
-    padding: "10px",
   },
-  tableEditIcon: {
-    color: theme.palette.primary.main,
+  newTaskIconMobile: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
   },
-  tableDeleteIcon: {
-    color: theme.palette.error.dark,
+  sortButton: {
+    backgroundColor: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+    },
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  },
+  deadlineWarningText: {
+    color: theme.palette.warning.main,
+  },
+  viewTaskButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
+  },
+  editTaskButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  deleteTaskButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
   },
   dialogBox: {
     padding: "15px",
@@ -184,25 +257,21 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2),
+  taskPanelDivider: {
+    backgroundColor: theme.palette.primary.main,
   },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
+  taskPanelSummary: {
+    "&:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
   },
-  tableRow: {
+  taskPaper: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
-      cursor: "pointer",
     },
   },
 }));
@@ -223,64 +292,47 @@ function TaskList(props) {
 
   const taskRowItem = (data) => {
     rows.push(
-      createData(data._id, data.name,
+      createData(
+        data._id,
+        data.name,
         data.subject,
-        data.class_assigned,
         data.deadline,
-        user.role === "Student" ? null :
-        [
-          <LightTooltip title="Sunting">
-            <Link to={`/sunting-tugas/${data._id}`}>
-              <IconButton
-                size="small"
-                style={{marginRight: "5px"}}
-                onClick={(e)=> e.stopPropagation()}>
-                <EditIcon className={classes.tableEditIcon} />
-              </IconButton>
-            </Link>
-          </LightTooltip>,
-          <LightTooltip title="Hapus">
-            <IconButton
-              size="small"
-              onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}>
-              <DeleteIcon className={classes.tableDeleteIcon} />
-            </IconButton>
-          </LightTooltip>
-        ]
+        data.class_assigned,
       )
     )
   }
 
-  React.useEffect(() => {viewTask()}, [tasksCollection.length])
+  React.useEffect(() => {viewTask()},
+  [tasksCollection.length])
 
   const retrieveTasks = () => {
     // If tasksCollection is not undefined or an empty array
     if(tasksCollection.length) {
-        rows = []
-        if(user.role === "Teacher") {
-        tasksCollection.map((data) => {
-          if(data.person_in_charge_id === user.id) {
-            taskRowItem(data)
-            }
-          })
-        }
-        else if (user.role === "Student"){
-          tasksCollection.map((data) => {
-            let class_assigned = data.class_assigned;
-            for (var i = 0; i < class_assigned.length; i++) {
-              if(class_assigned[i]._id === user.kelas) {
-                taskRowItem(data)
-                break;
-              }
-            }
-          })
-        }
-        else { //Admin
-          tasksCollection.map((data) => {
-            taskRowItem(data)
-          })
-        }
+      rows = []
+      if(user.role === "Teacher") {
+      tasksCollection.map((data) => {
+        if(data.person_in_charge_id === user.id) {
+          taskRowItem(data)
+          }
+        })
       }
+      else if (user.role === "Student"){
+        tasksCollection.map((data) => {
+          let class_assigned = data.class_assigned;
+          for (var i = 0; i < class_assigned.length; i++) {
+            if(class_assigned[i]._id === user.kelas) {
+              taskRowItem(data)
+              break;
+            }
+          }
+        })
+      }
+      else { //Admin
+        tasksCollection.map((data) => {
+          taskRowItem(data)
+        })
+      }
+    }
   }
 
   const handleRequestSort = (event, property) => {
@@ -372,52 +424,146 @@ function TaskList(props) {
   return(
     <div className={classes.root}>
       {DeleteDialog()}
-      <Paper className={classes.paper}>
-        <TaskListToolbar role={user.role} deleteTask={deleteTask} handleOpenDeleteDialog={handleOpenDeleteDialog} />
-        <TableContainer>
-          <Table>
-            <TaskListHead
-              role={user.role}
-              classes={classes}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows ?
-              rows.length: 0}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row._id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
-                  return(
-                    <TableRow
-                      className={classes.tableRow}
-                      onClick={() => window.location.href = viewpage}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.classroom}
-                      selected={isItemSelected}
-                    >
-                      <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
+      <TaskListToolbar
+        role={user.role}
+        deleteTask={deleteTask}
+        classes={classes}
+        order={order}
+        orderBy={orderBy}
+        onRequestSort={handleRequestSort}
+        rowCount={rows ? rows.length : 0}
+      />
+        <Grid container direction="column" spacing={2}>
+        {stableSort(rows, getComparator(order, orderBy))
+          .map((row, index) => {
+            const isItemSelected = isSelected(row._id);
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
+            return(
+              <Grid item>
+                {user.role === "Teacher" ?
+                  <ExpansionPanel
+                    button
+                    variant="outlined"
+                    aria-checked={isItemSelected}
+                    selected={isItemSelected}
+                  >
+                    <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                      <Grid container spacing={1} justify="space-between" alignItems="center">
+                        <Grid item>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.tasktitle}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {row.subject}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <Typography variant="h6" id={labelId}>
+                              {row.tasktitle}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {row.subject}
+                            </Typography>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <IconButton
+                                size="small"
+                                href={viewpage}
+                                className={classes.viewTaskButton}
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <Link to={`/sunting-tugas/${row._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.editTaskButton}
+                                  onClick={(e)=> e.stopPropagation()}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.deleteTaskButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.tasktitle)}}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </ExpansionPanelSummary>
+                    <Divider className={classes.taskPanelDivider} />
+                    <ExpansionPanelDetails>
+                      <Grid conntainer direction="column">
+                        <Grid item>
+                          <Typography variant="body1" gutterBottom>
+                            <b>Kelas yang Ditugaskan:</b> {row.class_assigned.map((kelas,i) => {
+                              if(i === row.class_assigned.length - 1)
+                                return (`${kelas.name}`)
+                              return (`${kelas.name}, `)})
+                            }
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="overline" className={classes.deadlineWarningText}>
+                             Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                :
+                  <Paper
+                    button component="a"
+                    href={viewpage}
+                    variant="outlined"
+                    className={classes.taskPaper}
+                  >
+                    <div>
+                      <Typography variant="h6" id={labelId}>
                         {row.tasktitle}
-                      </TableCell>
-                      <TableCell align="center">{row.subject}</TableCell>
-                      <TableCell align="center">{row.class_assigned.map((kelas,i) => {
-                        if(i === row.class_assigned.length - 1)
-                          return (`${kelas.name}`)
-                        return (`${kelas.name}, `)})}
-                      </TableCell>
-                      <TableCell align="center">{moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}</TableCell>
-                      {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {row.subject}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
+                          Batas Waktu:
+                        </Typography>
+                        <Typography variant="caption" align="right" className={classes.deadlineWarningText}>
+                          {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        </Typography>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="overline" align="right" className={classes.deadlineWarningText}>
+                          Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        </Typography>
+                      </Hidden>
+                    </div>
+                  </Paper>
+                }
+              </Grid>
+            );
+          })}
+        </Grid>
     </div>
   );
 }
@@ -437,6 +583,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps,
-  { viewTask, deleteTask }
+  mapStateToProps, { viewTask, deleteTask }
 )(TaskList);

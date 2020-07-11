@@ -18,6 +18,8 @@ const Teacher = require("../../models/user_model/Teacher");
 const Admin = require("../../models/user_model/Admin");
 const Class = require("../../models/Class")
 const { ObjectId } = require("mongodb");
+const Validator = require("validator");
+const isEmpty = require("is-empty");
 
 // @route POST api/users/register
 // @desc Register user
@@ -33,17 +35,10 @@ router.post("/register", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  var reg_user
-  if(req.body.role == "Student")
-    reg_user = Student
-  else if(req.body.role == "Teacher")
-    reg_user = Teacher
-  else
-    reg_user = Admin
 
-  reg_user.findOne({ email: req.body.email }).then(user => {
+  User.findOne({ email: req.body.email }).then(user => {
     if (user) {
-      return res.status(400).json({ email: "Email already exists" });
+      return res.status(400).json({ email: "Email sudah terdaftar" });
     }
     else {
         var newUser
@@ -180,8 +175,16 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/update/data/:id", (req,res) => {
+  let email = req.body.email;
+  if(isEmpty(email)){
+    return res.status(404).json({ email : "Email belum diisi"})
+  }
+  if(!Validator.isEmail(email)){
+    console.log("Email is not valid")
+    return res.status(404).json({ email : "Email tidak benar"})
+  }
+  
   let id = req.params.id
-
   User.findById(id, (err, user) => {
         if(!user){
           return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});

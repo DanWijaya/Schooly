@@ -150,7 +150,7 @@ function Profile(props) {
   }
   console.log(user.avatar)
 
-  // Alert control for ProfilePasswordEditorDialog
+  // Alert control for ProfileDataEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
     setOpenDataEditorAlert(true);
@@ -167,11 +167,11 @@ function Profile(props) {
   const handleOpenPasswordEditorAlert = () => {
     setOpenPasswordEditorAlert(true);
   }
-
   const handleClosePasswordEditorAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
     }
+    console.log(openPasswordEditorAlert)
     setOpenPasswordEditorAlert(false);
   }
 
@@ -189,9 +189,9 @@ function Profile(props) {
         open={openAlert}
         autoHideDuration={4000}
         onClose={handleCloseAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
+        anchorOrigin={{vertical : "center", horizontal: "center"}}
       >
-        <Alert onClose={handleCloseAlert} severity="info" >
+        <Alert onClose={handleCloseAlert} severity="success" >
           Foto profil berhasil diganti!
         </Alert>
       </Snackbar>
@@ -200,9 +200,9 @@ function Profile(props) {
         open={openDataEditorAlert}
         autoHideDuration={4000}
         onClose={handleCloseDataEditorAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
+        anchorOrigin={{vertical : "center", horizontal: "center"}}
       >
-        <Alert onClose={handleCloseDataEditorAlert} severity="info" >
+        <Alert onClose={handleCloseDataEditorAlert} severity="success" >
           Data profil berhasil diganti!
         </Alert>
       </Snackbar>
@@ -211,9 +211,9 @@ function Profile(props) {
         open={openPasswordEditorAlert}
         autoHideDuration={4000}
         onClose={handleClosePasswordEditorAlert}
-        anchorOrigin={{vertical : "top", horizontal: "center"}}
+        anchorOrigin={{vertical : "center", horizontal: "center"}}
       >
-        <Alert onClose={handleClosePasswordEditorAlert} severity="info" >
+        <Alert onClose={handleClosePasswordEditorAlert} severity="success" >
           Kata sandi berhasil diganti!
         </Alert>
       </Snackbar>
@@ -268,7 +268,7 @@ function Profile(props) {
              null : classesCollection.kelas.name}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
-          <ProfilePasswordEditorDialog handleOpenAlert={handleOpenAlert}/>
+          <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
         </Grid>
         <Grid item container direction="column" spacing={4}>
           <Grid item>

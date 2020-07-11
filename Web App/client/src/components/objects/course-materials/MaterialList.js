@@ -8,25 +8,23 @@ import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/M
 import { viewSelectedClasses } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Fab, Grid, Paper, Table, TableBody, TableCell, TableContainer,
+import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Fab, Grid, Hidden, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
    TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
-import MenuBookIcon from '@material-ui/icons/MenuBook';
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import SortIcon from "@material-ui/icons/Sort";
 
-
-function createData(_id, materialtitle, subject, author, class_assigned, action) {
-  console.log(author)
-  return(action === null ? { _id, materialtitle, subject, author, class_assigned }
-    : { _id, materialtitle, subject, author, class_assigned, action});
+function createData(_id, materialtitle, subject, author, class_assigned) {
+  return { _id, materialtitle, subject, author, class_assigned };
 }
 
-var rows = []; // initially will be empty
+var rows = [];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -54,11 +52,10 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function MaterialListHead(props) {
+function MaterialListToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role } = props;
 
   const createSortHandler = (property) => (event) => {
-    console.log("createSorthandler is runned")
     onRequestSort(event, property);
   };
 
@@ -67,43 +64,99 @@ function MaterialListHead(props) {
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
     { id: "author", numeric: false, disablePadding: false, label: "Pemberi Materi" },
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Kelas yang diberikan" },
-    { id: "action", numeric: false, disablePadding: false, label: "Atur Materi" },
   ];
 
   if(role === "Student") {
     headCells.pop()
   }
 
-  return(
-    <TableHead style={{backgroundColor: "rgba(0,0,0,0.05)"}}>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="center"
-            padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <b>{headCell.label}</b>
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
+  // Sort Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
 
-MaterialListHead.propTypes = {
+  return(
+    <Toolbar className={classes.toolbar}>
+      <Typography variant="h4">
+        <b>Daftar Materi</b>
+      </Typography>
+      <div style={{display: "flex"}}>
+        <Hidden smUp implementation="css">
+          {role === "Student" ?
+            null
+          :
+            <LightTooltip title="Buat Materi">
+              <Link to="/buat-materi">
+                <Fab size="small" className={classes.newMaterialButton}>
+                  <MenuBookIcon className={classes.newMaterialIconMobile} />
+                </Fab>
+              </Link>
+            </LightTooltip>
+          }
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          {role === "Student" ?
+            null
+          :
+            <Link to="/buat-materi">
+              <Fab size="medium" variant="extended" className={classes.newMaterialButton}>
+                <MenuBookIcon className={classes.newMaterialIconDesktop} />
+                Buat Materi
+              </Fab>
+            </Link>
+          }
+        </Hidden>
+        <LightTooltip title="Urutkan Materi">
+          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </Fab>
+        </LightTooltip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+              onClick={props.handleClosePanel}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ?
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </span>
+                  : null
+                }
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    </Toolbar>
+  );
+};
+
+MaterialListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -112,13 +165,19 @@ MaterialListHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
+  },
   toolbar: {
-    display: "auto",
+    display: "flex",
     justifyContent: "space-between",
     padding: "15px",
   },
-  newTaskButton: {
+  newMaterialButton: {
+    marginRight: "10px",
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
@@ -126,45 +185,55 @@ const useToolbarStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  newTaskIcon: {
+  newMaterialIconDesktop: {
     width: theme.spacing(3),
     height: theme.spacing(3),
     marginRight: "7.5px",
-  }
-}));
-
-const MaterialListToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { role } = props;
-  // The item stores the id directly
-  return(
-    <Toolbar className={classes.toolbar}>
-      <Typography variant="h4" color="primary">
-        <b>Daftar Materi</b>
-      </Typography>
-      {role === "Student" ? <div style={{display: "none"}} /> :
-        <Link to="/buat-materi">
-          <Fab variant="extended" className={classes.newTaskButton}>
-            <MenuBookIcon className={classes.newTaskIcon} />
-              Buat Materi
-          </Fab>
-        </Link>
-      }
-    </Toolbar>
-  );
-};
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: "auto",
-    maxWidth: "1000px",
-    padding: "10px",
   },
-  tableEditIcon: {
-    color: theme.palette.primary.main,
+  newMaterialIconMobile: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
   },
-  tableDeleteIcon: {
-    color: theme.palette.error.dark,
+  sortButton: {
+    backgroundColor: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+    },
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  },
+  viewMaterialButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
+  },
+  editMaterialButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  deleteMaterialButton: {
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
   },
   dialogBox: {
     padding: "15px",
@@ -187,25 +256,21 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2),
+  materialPanelDivider: {
+    backgroundColor: theme.palette.primary.main,
   },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
+  materialPanelSummary: {
+    "&:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
   },
-  tableRow: {
+  materialPaper: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
-      cursor: "pointer",
     },
   },
 }));
@@ -221,10 +286,22 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
 
-  const {getAllMaterials, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
-  const {all_materials, selectedMaterials} = props.materialsCollection;
-  const { selectedClasses, all_classes} = props.classesCollection;
+  const { getAllMaterials, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
+  const { all_materials, selectedMaterials } = props.materialsCollection;
+  const { selectedClasses, all_classes } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
+
+  const materialRowItem = (data) => {
+    rows.push(
+      createData(
+        data._id,
+        data.name,
+        data.subject,
+        !(retrieved_users).size ? {}: retrieved_users.get(data.author_id),
+        data.class_assigned,
+      )
+    )
+  }
 
   React.useEffect(() => {
     let materialsRetrieved = []
@@ -232,100 +309,47 @@ function MaterialList(props) {
     if(user.role === "Admin"){
       materialsRetrieved = all_materials
       getAllMaterials()
-    } else {
+    }
+    else {
       materialsRetrieved = selectedMaterials;
       if(user.role === "Teacher"){
         getMaterial(user.id, "by_author")
-      } else { // for student
+      }
+      else { // for student
         getMaterial(user.kelas, "by_class")
       }
     }
+
     let userIds = []
     let classIds = new Set()
-    for(var i = 0; i < materialsRetrieved.length; i++){
+    for(var i = 0; i < materialsRetrieved.length; i++) {
       let material = materialsRetrieved[i]
       userIds.push(material.author_id)
-
-      for(var j = 0; j < material.class_assigned.length; j++){
+      for(var j = 0; j < material.class_assigned.length; j++) {
         classIds.add(material.class_assigned[j])
       }
     }
+
     getUsers(userIds) // to get the authors objects.
     viewSelectedClasses(Array.from(classIds)) // to get the classes objects.
   }, [selectedMaterials.length, all_materials.length])
 
-  const materialRowItem = (data) => {
-    rows.push(
-      createData(data._id, data.name,
-        data.subject,
-        !(retrieved_users).size ? {}: retrieved_users.get(data.author_id),
-        data.class_assigned,
-        user.role === "Student" ? null :
-        [
-          <LightTooltip title="Sunting">
-            <Link to={`/sunting-materi/${data._id}`}>
-              <IconButton
-                size="small"
-                style={{marginRight: "5px"}}
-                onClick={(e)=> e.stopPropagation()}>
-                <EditIcon className={classes.tableEditIcon} />
-              </IconButton>
-            </Link>
-          </LightTooltip>,
-          <LightTooltip title="Hapus">
-            <IconButton
-              size="small"
-              onClick={(e) =>{handleOpenDeleteDialog(e, data._id, data.name)}}>
-              <DeleteIcon className={classes.tableDeleteIcon} />
-            </IconButton>
-          </LightTooltip>
-        ]
-      )
-    )
-  }
-
   const retrieveMaterials = () => {
+    console.log(selectedMaterials)
+    console.log(retrieved_users)
     // If all_materials is not undefined or an empty array
     rows = []
-    if(user.role === "Admin"){
+    if(user.role === "Admin") {
       all_materials.map((data) => { materialRowItem(data)})
-    }else {
-    if(selectedMaterials.length) {
-      selectedMaterials.map((data) => materialRowItem(data))
+    }
+    else {
+      if(selectedMaterials.length) {
+        selectedMaterials.map((data) => materialRowItem(data))
+      }
     }
   }
 
-
-    // if(selectedMaterials.length) {
-    //     rows = []
-    //     if(user.role === "Teacher") {
-    //     selectedMaterials.map((data) => {
-    //       if(data.author_id === user.id) {
-    //         materialRowItem(data)
-    //         }
-    //       })
-    //     }
-    //     else if (user.role === "Student"){
-    //       selectedMaterials.map((data) => {
-    //         let class_assigned = data.class_assigned;
-    //         for (var i = 0; i < class_assigned.length; i++) {
-    //           if(class_assigned[i]._id === user.kelas) {
-    //             materialRowItem(data)
-    //             break;
-    //           }
-    //         }
-    //       })
-    //     }
-    //     else { //Admin
-    //       all_materials.map((data) => {
-    //         materialRowItem(data)
-    //       })
-    //     }
-    //   }
-  }
-
   const handleRequestSort = (event, property) => {
-    console.log("HAHHA")
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -413,58 +437,147 @@ function MaterialList(props) {
   return(
     <div className={classes.root}>
       {DeleteDialog()}
-      <Paper className={classes.paper}>
-        <MaterialListToolbar role={user.role} deleteMaterial={deleteMaterial} handleOpenDeleteDialog={handleOpenDeleteDialog} />
-        <TableContainer>
-          <Table>
-            <MaterialListHead
-              role={user.role}
-              classes={classes}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows ?
-              rows.length: 0}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .map((row, index) => {
-                  console.log("stable sort")
-                  const isItemSelected = isSelected(row._id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  let viewpage = user.role === "Student" ? `/materi/${row._id}` : `/materi/${row._id}`
-                  return(
-                    <TableRow
-                      className={classes.tableRow}
-                      onClick={() => window.location.href = viewpage}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.classroom}
-                      selected={isItemSelected}
-                    >
-                      <TableCell component="th" id={labelId} scope="row" padding="none" align="center">
+      <MaterialListToolbar
+        role={user.role}
+        deleteMaterial={deleteMaterial}
+        classes={classes}
+        order={order}
+        orderBy={orderBy}
+        onRequestSort={handleRequestSort}
+        rowCount={rows ? rows.length : 0}
+      />
+      <Grid container direction="column" spacing={2}>
+        {stableSort(rows, getComparator(order, orderBy))
+          .map((row, index) => {
+            const isItemSelected = isSelected(row._id);
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = user.role === "Student" ? `/materi/${row._id}` : `/materi/${row._id}`
+            return(
+              <Grid item>
+                {user.role === "Teacher" ?
+                  <ExpansionPanel
+                    button
+                    variant="outlined"
+                    aria-checked={isItemSelected}
+                    selected={isItemSelected}
+                  >
+                    <ExpansionPanelSummary className={classes.materialPanelSummary}>
+                      <Grid container spacing={1} justify="space-between" alignItems="center">
+                        <Grid item>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.materialtitle}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {row.subject}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <Typography variant="h6" id={labelId}>
+                              {row.materialtitle}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {row.subject}
+                            </Typography>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <IconButton
+                                size="small"
+                                href={viewpage}
+                                className={classes.viewMaterialButton}
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <Link to={`/sunting-tugas/${row._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.editMaterialButton}
+                                  onClick={(e)=> e.stopPropagation()}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.deleteMaterialButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.materialtitle)}}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </ExpansionPanelSummary>
+                    <Divider className={classes.materialPanelDivider} />
+                    <ExpansionPanelDetails>
+                      <Grid conntainer direction="column">
+                        <Grid item>
+                          <Typography variant="body1" gutterBottom>
+                            <b>Kelas yang Diberikan:</b> {!selectedClasses.size ? null :
+                              row.class_assigned.map((kelas,i) => {
+                                if(i === row.class_assigned.length - 1)
+                                  return (`${selectedClasses.get(kelas).name}`)
+                                return (`${selectedClasses.get(kelas).name}, `)})
+                            }
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body1" color="textSecondary">
+                             Pemberi Materi: {!row.author ? null : row.author.name}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                :
+                  <Paper
+                    button component="a"
+                    href={viewpage}
+                    variant="outlined"
+                    className={classes.materialPaper}
+                  >
+                    <div>
+                      <Typography variant="h6" id={labelId}>
                         {row.materialtitle}
-                      </TableCell>
-                      <TableCell align="center">{row.subject}</TableCell>
-                      <TableCell align="center">{!row.author ? null : row.author.name}</TableCell>
-                      <TableCell align="center">{!selectedClasses.size ? null :
-                        row.class_assigned.map((kelas,i) => {
-                          if(!selectedClasses.get(kelas))
-                            return null;
-
-                          if(i === row.class_assigned.length - 1)
-                            return (`${selectedClasses.get(kelas).name}`)
-
-                          return (`${selectedClasses.get(kelas).name}, `)})}
-                      </TableCell>
-                      {user.role === "Student" ? null : <TableCell align="center">{row.action}</TableCell>}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {row.subject}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="body2" color="textSecondary" align="right">
+                          Pemberi Materi:
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary" align="right">
+                          {!row.author ? null : row.author.name}
+                        </Typography>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="overline" color="textSecondary" align="right">
+                          Pemberi Materi: {!row.author ? null : row.author.name}
+                        </Typography>
+                      </Hidden>
+                    </div>
+                  </Paper>
+                }
+              </Grid>
+            );
+          })}
+      </Grid>
     </div>
   );
 }
