@@ -25,7 +25,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
           console.log("Announcement is Created!!!!")
           dispatch({
               type: GET_SUCCESS_RESPONSE,
-              payload: true       
+              payload: true
             })
             //   alert("Announcement is created")
             //   history.push("/daftar-pengumuman")
@@ -52,7 +52,7 @@ export const getAllAnnouncements = () => dispatch => {
 }
 
 export const getAnnouncement = (Id, category) => dispatch => {
-    if(category == "by_author"){
+    if(category === "by_author"){
         axios
             .get(`/api/announcements/view/${Id}`)
             .then((res) => {
@@ -69,7 +69,7 @@ export const getAnnouncement = (Id, category) => dispatch => {
                     payload: err.response.data
                 })
             })
-    } else if (category == "by_class"){
+    } else if (category === "by_class"){
         axios
             .get(`/api/announcements/viewByClass/${Id}`)
             .then((res) => {
@@ -137,7 +137,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
             payload: false
         })
         console.log("From actions: ", lampiran_to_delete)
-        if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
+        if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran_announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
         else
@@ -151,7 +151,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
             console.log("Lampiran announcement going to be uploaded")
             return axios.post(`/api/uploads/upload_lampiran_announcement/${annId}`, formData);
         }
-        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
+        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"
     })
     .then(res => {

@@ -299,7 +299,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
     }
     else {
       for (var i = 0; i < user.tugas.length; i++){
-        if(user.tugas[i].id == tugas_id)
+        if(user.tugas[i].id === tugas_id)
           user.tugas.splice(i,1)
       }
 
@@ -417,7 +417,7 @@ router.delete("/lampiran/:task_id", (req,res) => {
     })
 
     for(var j =0; j < current_lampiran.length; j++) {
-      if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+      if(current_lampiran[j].filename === lampiran_to_delete[i].filename){
         current_lampiran.splice(j,1)
         break;
       }
@@ -436,7 +436,7 @@ router.delete("/lampiran/:task_id", (req,res) => {
   })
 })
 
-// Router for handling the upload lampiran announcement... 
+// Router for handling the upload lampiran announcement...
 router.post("/upload_lampiran_announcement/:id", uploadLampiranAnnouncement.array("lampiran_announcement", 10), (req,res) => {
   let announcement_id = req.params.id;
   console.log("Upload lampiran is runned")
@@ -479,10 +479,10 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
   let announcement_id = req.params.id;
   const {lampiran_to_delete, current_lampiran} = req.body;
   console.log(lampiran_to_delete)
-  
+
   for(var i = 0; i < lampiran_to_delete.length; i++){
     let id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
-    // // di rootnya, masukkin collection namenya.. 
+    // // di rootnya, masukkin collection namenya..
     gfsLampiranAnnouncement.remove({ _id: id, root: "lampiran_announcement"}, (err) => {
       if(err){
         console.log("error occured")
@@ -492,10 +492,10 @@ router.delete("/lampiran_announcement/:id", (req,res) => {
         console.log("Sucessful, lampiran kenadelete")
       }
     })
-    
+
     if(announcement_id !== "deleteall") {
       for(var j =0; j < current_lampiran.length; j++) {
-        if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+        if(current_lampiran[j].filename === lampiran_to_delete[i].filename){
           current_lampiran.splice(j,1)
           break;
         }
@@ -561,7 +561,7 @@ router.get("/previewlampiran_announcement/:id", (req,res) => {
   }
 })
 
-// Router for handling the upload lampiran Materi... 
+// Router for handling the upload lampiran Materi...
 router.post("/upload_lampiran_materi/:id", uploadLampiranMateri.array("lampiran_materi", 10), (req,res) => {
   let material_id = req.params.id;
   console.log("Upload lampiran is runned")
@@ -608,7 +608,7 @@ router.delete("/lampiran_materi/:id", (req,res) => {
   console.log("Material ID: ",Boolean(material_id))
   for(var i = 0; i < lampiran_to_delete.length; i++){
     id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
-    // di rootnya, masukkin collection namenya.. 
+    // di rootnya, masukkin collection namenya..
     gfsLampiranMateri.remove({ _id: id, root: "lampiran_materi"}, (err) => {
       if(err) {
         console.log("error occured")
@@ -619,9 +619,9 @@ router.delete("/lampiran_materi/:id", (req,res) => {
       }
     })
 
-    if(material_id!=="deleteall"){
+    if(material_id !== "deleteall"){
       for(var j =0; j < current_lampiran.length; j++) {
-        if(current_lampiran[j].filename == lampiran_to_delete[i].filename){
+        if(current_lampiran[j].filename === lampiran_to_delete[i].filename){
           current_lampiran.splice(j,1)
           break;
         }
@@ -638,8 +638,8 @@ router.delete("/lampiran_materi/:id", (req,res) => {
             .catch((err) => console.log("Error happened in updating task lampiran field"))
         }
       })
-    } 
-  } 
+    }
+  }
   return res.json({success: "Succesfully deleted all lampiran materi"})
 })
 

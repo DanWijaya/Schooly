@@ -42,7 +42,7 @@ router.post("/register", (req, res) => {
     }
     else {
         var newUser
-        if(req.body.role == "Student")
+        if(req.body.role === "Student")
           newUser = new Student({
             name: req.body.name,
             email: req.body.email,
@@ -53,7 +53,7 @@ router.post("/register", (req, res) => {
             kelas: req.body.kelas,
           });
 
-        else if(req.body.role == "Teacher")
+        else if(req.body.role === "Teacher")
           newUser = new Teacher({
             name: req.body.name,
             email: req.body.email,
@@ -142,12 +142,12 @@ router.post("/login", (req, res) => {
           uni_impian: user.uni_impian
 
         };
-        if(user.role == "Student") {
+        if(user.role === "Student") {
           payload.kelas = user.kelas
           payload.tugas = user.tugas
         }
 
-        else if(user.role == "Teacher") {
+        else if(user.role === "Teacher") {
           payload.subject_teached = user.subject_teached
         }
         // Sign token
@@ -183,7 +183,7 @@ router.post("/update/data/:id", (req,res) => {
     console.log("Email is not valid")
     return res.status(404).json({ email : "Email tidak benar"})
   }
-  
+
   let id = req.params.id
   User.findById(id, (err, user) => {
         if(!user){
@@ -243,12 +243,12 @@ router.post("/update/data/:id", (req,res) => {
             uni_impian : user.uni_impian
           }
 
-          if(user.role == "Student") {
+          if(user.role === "Student") {
             payload.kelas = user.kelas
             payload.tugas = user.tugas
           }
 
-          else if(user.role == "Teacher") {
+          else if(user.role === "Teacher") {
             payload.subject_teached = user.subject_teached
           }
 
@@ -279,9 +279,9 @@ router.get("/gettask/:id/:task_id", (req, res) => {
       res.status(404).send("User data is not found");
     else {
       let tugasList = []
-      if(user.role == "Student"){ //Student are the ones has tugas field...
+      if(user.role === "Student"){ //Student are the ones has tugas field...
       user.tugas.map((item) => {
-      if(item.for_task_object == tugasId)
+      if(item.for_task_object === tugasId)
         tugasList.push(item)
         }
       )}
@@ -344,11 +344,11 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
             uni_impian : user.uni_impian
       }
 
-      if(user.role == "Student") {
+      if(user.role === "Student") {
         payload.kelas = user.kelas
       }
 
-      else if(user.role == "Teacher") {
+      else if(user.role === "Teacher") {
         payload.subject_teached = user.subject_teached
       }
       // Sign token
@@ -396,7 +396,7 @@ router.get("/getOneUser/:id", (req,res) => {
   User.findById(id, (err, user) => {
     if(!user)
       return res.status(404).json("No user is found in Database")
-    else 
+    else
       return res.json(user)
   })
 })
@@ -442,7 +442,7 @@ router.delete("/delete/:id", (req,res) => {
   User.findByIdAndDelete(userId, (err,user) => {
     if(!user)
       return res.status(404).json("User to delete is not found")
-    else 
+    else
       return res.json(user)
   })
 })

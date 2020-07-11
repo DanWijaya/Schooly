@@ -8,8 +8,8 @@ import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/M
 import { viewSelectedClasses } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Fab, Grid, Hidden, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer,
-   TableHead, TableRow, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+   Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";

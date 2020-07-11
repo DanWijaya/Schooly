@@ -123,7 +123,7 @@ const styles = (theme) => ({
   },
   uplaodDialogGrid: {
     padding: "10px",
-    width: "275px", 
+    width: "275px",
     height: "175px"
   }
 });
@@ -301,8 +301,8 @@ class EditMaterial extends Component {
       this.setState({ anchorEl: event.currentTarget})
   }
 
-  handleCloseMenu = () => { 
-    this.setState({ anchorEl: null}) 
+  handleCloseMenu = () => {
+    this.setState({ anchorEl: null})
   }
 
   handleOpenUploadDialog = () => {
@@ -376,10 +376,10 @@ class EditMaterial extends Component {
               {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
             </Grid>
             <Grid item >
-              {!success ? 
+              {!success ?
               <Typography variant="body1" align="center" gutterBottom>
                 <b>Mohon tetap tunggu di halaman ini.</b>
-              </Typography> : 
+              </Typography> :
                 <Button
                 href={`/materi/${this.props.match.params.id}`}
                 variant="contained"
@@ -487,7 +487,7 @@ class EditMaterial extends Component {
                           <div className={classes.chips}>
                             {selected.map((id) => {
                               let name
-                              if(all_classes.length == 0)
+                              if(all_classes.length === 0)
                                 return null;
                               else{
                                 for(var i in all_classes){

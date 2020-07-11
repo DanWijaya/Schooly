@@ -1,18 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import StandardTextField from "../../misc/text-field/StandardTextField";
-import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import SearchIcon from "@material-ui/icons/Search";
-import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
-import { getUsers } from "../../../actions/UserActions";
+import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import PropTypes from "prop-types";
 import { setCurrentClass } from "../../../actions/ClassActions";
+import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
+import { getUsers } from "../../../actions/UserActions";
+import { Fab, Grid, List, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,11 +81,11 @@ function AnnouncementList(props) {
 
 
   React.useEffect(() => {
-    if(user.role == "Teacher" && !annIsRetrieved){
+    if(user.role === "Teacher" && !annIsRetrieved){
       getAnnouncement(user.id, "by_author")
       setAnnIsRetrieved(true)
     }
-    else if(user.role == "Student" && !annIsRetrieved){
+    else if(user.role === "Student" && !annIsRetrieved){
       getAnnouncement(user.kelas, "by_class")
       setCurrentClass(user.kelas)
       setAnnIsRetrieved(true)

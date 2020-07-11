@@ -8,10 +8,8 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import { Avatar, Badge, Divider, ExpansionPanel, ExpansionPanelSummary, Grid,
-   IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -177,7 +175,7 @@ function ViewSubject(props) {
     }
 
   })
-  if(target == "length")
+  if(target === "length")
     return tasksBySubjectClass.length;
 
   else{

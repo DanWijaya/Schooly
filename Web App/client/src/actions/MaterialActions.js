@@ -53,7 +53,7 @@ export const getAllMaterials = () => dispatch => {
 }
 
 export const getMaterial = (Id, category) => dispatch => {
-    if(category == "by_author"){
+    if(category === "by_author"){
         // the id will be author's id
         axios
             .get(`/api/materials/viewByAuthor/${Id}`)
@@ -71,7 +71,7 @@ export const getMaterial = (Id, category) => dispatch => {
                     payload: err.response.data
                 })
             })
-    } else if (category == "by_class"){
+    } else if (category === "by_class"){
         // the id will be the class id.
         axios
             .get(`/api/materials/viewByClass/${Id}`)
@@ -148,7 +148,7 @@ console.log("Update material is runned")
             type: GET_ERRORS,
             payload: false
         })
-        if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different.. 
+        if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran_materi/${materialId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
         else
@@ -162,7 +162,7 @@ console.log("Update material is runned")
             console.log("Lampiran material going to be uploaded")
             return axios.post(`/api/uploads/upload_lampiran_materi/${materialId}`, formData);
         }
-        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya.. 
+        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"
     })
     .then(res => {

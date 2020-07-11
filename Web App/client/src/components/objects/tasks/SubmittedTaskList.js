@@ -284,7 +284,7 @@ function SubmittedTaskList(props) {
         for(var j = 0; j < all_students.length; j++){
           // check if the id of the class is the same or not (means student is inside)
           student_task_files_id = []
-          if(all_students[j].kelas == tasksCollection.class_assigned[i]._id){
+          if(all_students[j].kelas === tasksCollection.class_assigned[i]._id){
             let student = all_students[j]
             let student_task = all_students[j].tugas
             let task_list_on_panel = []
@@ -310,7 +310,7 @@ function SubmittedTaskList(props) {
                   <Avatar src={`/api/uploads/image/${student.avatar}`} style={{marginRight: "10px"}}/>}
                 </ListItemAvatar>
                 <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
-                //  secondary={task_list_on_panel.length == 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
+                //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
                  secondary={!tasksCollection.grades ? "Not graded" : !gradeStatus.has(student._id) && !tasksCollection.grades[student._id] ? "Not Graded" : "Graded"}/>
             </ListItem>
             </ExpansionPanelSummary>
@@ -323,7 +323,7 @@ function SubmittedTaskList(props) {
                 <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
                   <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
                     <StandardTextField
-                    defaultValue={grade.has(student._id) || tasksCollection.grades == null ? grade.get(student._id) : tasksCollection.grades[student._id]}
+                    defaultValue={grade.has(student._id) || tasksCollection.grades === null ? grade.get(student._id) : tasksCollection.grades[student._id]}
                     on_change={(e) => {handleChangeGrade(e, student._id)}}
                     width="35px" borderBottom="1px solid #CCC"/>
                     <StandardTextField disabled={true} value="/ 100" width="40px" />

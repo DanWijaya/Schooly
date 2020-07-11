@@ -103,7 +103,7 @@ const styles = (theme) => ({
   },
   uplaodDialogGrid: {
     padding: "10px",
-    width: "275px", 
+    width: "275px",
     height: "175px"
   }
 });
@@ -231,8 +231,8 @@ class EditAnnouncement extends Component {
       this.setState({ anchorEl: event.currentTarget})
   }
 
-  handleCloseMenu = () => { 
-    this.setState({ anchorEl: null}) 
+  handleCloseMenu = () => {
+    this.setState({ anchorEl: null})
   }
 
   handleOpenUploadDialog = () => {
@@ -261,7 +261,7 @@ class EditAnnouncement extends Component {
     const announcementObject = {
       title: this.state.title,
       description: this.state.description,
-      class_assigned: user.role == "Student" ? [kelas] : this.state.class_assigned,
+      class_assigned: user.role === "Student" ? [kelas] : this.state.class_assigned,
       errors: {}
     }
 
@@ -314,10 +314,10 @@ class EditAnnouncement extends Component {
               {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
             </Grid>
             <Grid item >
-              {!success ? 
+              {!success ?
               <Typography variant="body1" align="center" gutterBottom>
                 <b>Mohon tetap tunggu di halaman ini.</b>
-              </Typography> : 
+              </Typography> :
                 <Button
                 href={`/pengumuman/${this.props.match.params.id}`}
                 variant="contained"
@@ -400,8 +400,8 @@ class EditAnnouncement extends Component {
                     error1={errors.description}
                   />
                 </Grid>
-                {user.role === "Student" // berarti dia ketua kelas 
-                ? null : 
+                {user.role === "Student" // berarti dia ketua kelas
+                ? null :
                 <Grid item className={classes.gridItem}>
                     <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
                     <label id="class_assigned" className={classes.inputLabel}>Kelas yang diumumkan</label>
@@ -416,7 +416,7 @@ class EditAnnouncement extends Component {
                         <div className={classes.chips}>
                           {selected.map((id) => {
                             let name
-                            if(all_classes.length == 0)
+                            if(all_classes.length === 0)
                               return null;
                             else {
                               for (var i in all_classes){

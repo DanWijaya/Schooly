@@ -10,12 +10,10 @@ import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography } from "@material-ui/core";
+import { Fab, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
-import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -178,7 +176,7 @@ class Dashboard extends Component {
     const { user} = this.props.auth;
 
     viewTask()
-    if(user.role == "Student")
+    if(user.role === "Student")
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
     this.intervalID = setInterval(
       () => this.tick(),

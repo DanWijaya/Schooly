@@ -92,10 +92,6 @@ const styles = (theme) => ({
     color: "red",
     fontSize: "10px",
   },
-  successIcon: {
-    color: "green",
-    fontSize: "large"
-  },
   createAnnouncementButton: {
     width: "100%",
     marginTop: "20px",
@@ -125,7 +121,7 @@ const styles = (theme) => ({
   },
   uplaodDialogGrid: {
     padding: "10px",
-    width: "275px", 
+    width: "275px",
     height: "175px"
   }
 });
@@ -185,7 +181,7 @@ class CreateAnnouncement extends Component {
     this.setState({ openUploadDialog: false });
   };
 
-  
+
   onChange = (e, otherfield) => {
     if(otherfield === "deadline"){
       this.setState({ description: e.target.value })
@@ -230,7 +226,7 @@ class CreateAnnouncement extends Component {
       title: this.state.title,
       description: this.state.description,
       author_name: user.name,
-      class_assigned: user.role == "Student" ? [kelas] : this.state.class_assigned,
+      class_assigned: user.role === "Student" ? [kelas] : this.state.class_assigned,
       author_id: user.id,
       errors: {}
     };
@@ -281,10 +277,10 @@ class CreateAnnouncement extends Component {
                 {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
               </Grid>
               <Grid item justify="center">
-                {!success ? 
+                {!success ?
                 <Typography variant="body1" align="center" gutterBottom>
                   <b>Mohon halaman ini jangan diperbarui.</b>
-                </Typography> : 
+                </Typography> :
                   <Button
                   href="/daftar-pengumuman"
                   variant="contained"

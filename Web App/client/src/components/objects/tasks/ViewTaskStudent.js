@@ -9,7 +9,7 @@ import { viewOneTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListItemIcon,
+import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText,
    Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -146,7 +146,7 @@ const useStyles = makeStyles((theme) => ({
   },
   uplaodDialogGrid: {
     padding: "10px",
-    width: "275px", 
+    width: "275px",
     height: "175px"
   }
 }));
@@ -550,10 +550,10 @@ function ViewTaskStudent(props) {
             {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.successIcon}/>}
           </Grid>
           <Grid item justify="center">
-            {!success ? 
+            {!success ?
             <Typography variant="body1" align="center" gutterBottom>
               <b>Mohon tetap tunggu di halaman ini.</b>
-            </Typography> : 
+            </Typography> :
               <Button
               onClick={() => window.location.reload()}
               variant="contained"

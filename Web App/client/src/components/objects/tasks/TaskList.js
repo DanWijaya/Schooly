@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";

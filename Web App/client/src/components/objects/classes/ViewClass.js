@@ -10,13 +10,12 @@ import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
+import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
    List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import BallotIcon from "@material-ui/icons/Ballot";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import PageviewIcon from "@material-ui/icons/Pageview";
