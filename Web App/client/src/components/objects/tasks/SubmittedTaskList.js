@@ -11,6 +11,7 @@ import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, Ic
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DescriptionIcon from "@material-ui/icons/Description";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
@@ -233,7 +234,6 @@ function SubmittedTaskList(props) {
   const [grade, setGrade] = React.useState(new Map());
   const [gradeStatus, setGradeStatus] = React.useState(new Map());
   const [openAlert, setOpenAlert] = React.useState(false);
-  const [classes_map, setClassesMap] = React.useState(new Map());
 
   console.log(grade)
   console.log(all_students)
@@ -255,12 +255,7 @@ function SubmittedTaskList(props) {
     if(success){
       handleOpenAlert()
     }
-    if(all_classes.length){
-      let temp = new Map()
-      all_classes.map((kelas) => temp.set(kelas._id, kelas))
-      setClassesMap(temp)
-    }
-  }, [tasksCollection._id, success, all_classes])
+  }, [tasksCollection._id, success])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -333,14 +328,19 @@ function SubmittedTaskList(props) {
     }
   }
 
+  let temp = new Map()
+  if(all_classes.length){
+    all_classes.map((kelas) => temp.set(kelas._id, kelas))
+  }
+
   const listClassTab = () => {
     let class_assigned = []
     if(!tasksCollection.class_assigned){
       return null;
     }else {
-      if(classes_map.size){
+      if(temp.size){
         for (var i = 0; i < tasksCollection.class_assigned.length; i++){
-          class_assigned.push(<Tab label={classes_map.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
+          class_assigned.push(<Tab label={temp.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
         }
         return(
           <Tabs
@@ -388,7 +388,7 @@ function SubmittedTaskList(props) {
             }
             students_in_class.push(
               <ExpansionPanel>
-              <ExpansionPanelSummary>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <ListItem className={classes.personListContainer}>
                 <ListItemAvatar>
                   {!student.avatar ? <Avatar style={{marginRight: "10px"}}/> :
