@@ -428,8 +428,8 @@ function ViewTaskStudent(props) {
       formData.append("tugas", fileTugas[i])
     }
     console.log(formData.get("tugas"), fileTugas)
-    
-    
+
+
     handleOpenUploadDialog()
     uploadTugas(formData, user, tugasId, new Date() < new Date(tasksCollection.deadline))
     setFileTugas(null)
@@ -539,7 +539,7 @@ function ViewTaskStudent(props) {
   function UploadDialog(){
     return(
       <Dialog open={openUploadDialog}>
-        <Grid container direction="column" justify="space-betweeen" alignItems="center" className={classes.uploadDialogGrid}>
+        <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
           <Grid item justify="center">
             <Typography variant="h6" align="center" gutterBottom>
               {!success ? "Tugas sedang dikumpul" : "Tugas berhasil dikumpul"}
