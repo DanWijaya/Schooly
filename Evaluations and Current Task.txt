@@ -57,4 +57,3 @@ Error and To be Fixed:
 To be done in the future:
 - Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
 - Comments
-- Satukan reducer buat realtime

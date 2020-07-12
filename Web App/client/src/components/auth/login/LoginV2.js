@@ -110,6 +110,23 @@ class LoginV2 extends Component {
                     <TextField
                       fullWidth
                       variant="outlined"
+                      id="email"
+                      onChange={this.onChange}
+                      value={this.state.email}
+                      error={errors.email}
+                      type="email"
+                      helperText={
+                        <div style={{ display:"flex", alignItems: "center"}}>
+                          {errors.email || errors.emailnotfound ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          <Typography variant="h8" style={{marginLeft: "4px"}}>
+                            {errors.email}
+                            {errors.emailnotfound}
+                          </Typography>
+                        </div>
+                      }
+                      className={classnames("", {
+                        invalid: errors.email || errors.emailnotfound
+                      })}
                     />
                   </Grid>
                   <Grid item container>
@@ -119,6 +136,7 @@ class LoginV2 extends Component {
                       id="password"
                       onChange={this.onChange}
                       value={this.state.password}
+                      type={passwordIsMasked ? "password" : "text"}
                       error={errors.password}
                       helperText={
                         <div style={{ display:"flex", alignItems: "center"}}>
@@ -129,7 +147,6 @@ class LoginV2 extends Component {
                           </Typography>
                         </div>
                       }
-                      type={passwordIsMasked ? "password" : "text"}
                       className={classnames("", {
                         invalid: errors.password || errors.passwordincorrect
                       })}
