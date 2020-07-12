@@ -121,10 +121,10 @@ export const gradeTask = (taskId, gradingData, student_name) => dispatch => {
         .post(`/api/tasks/update/${taskId}`, gradingData)
         .then(res => {
             console.log("Grade task is added")
-            alert(`Tugas ${student_name} berhasil dinilai `);
+            // alert(`Tugas ${student_name} berhasil dinilai `);
             dispatch({
-                type: GRADE_TASKS,
-                payload: res.data
+                type: GET_SUCCESS_RESPONSE,
+                payload: [true, gradingData.grade, student_name ]
             })
         })
         .catch(err => {

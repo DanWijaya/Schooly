@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getTeachers , getStudents} from "../../../actions/UserActions";
+import { getTeachers , getStudentsByClass} from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import { setCurrentClass, updateClass } from "../../../actions/ClassActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, MenuItem, Grid, Select,Paper, Typography } from "@material-ui/core";
+import { Button, FormControl, FormHelperText, MenuItem, Grid, Select,Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
   root: {
@@ -72,6 +73,7 @@ class EditClass extends Component {
   }
 
   onChange = (e, otherfield) => {
+    console.log(this.state.walikelas)
     switch(otherfield){
       case "bendahara":
         this.setState({ bendahara: e.target.value})
@@ -93,34 +95,34 @@ class EditClass extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Class props is received")
     const { name } = this.state;
-    var next_ketua_kelas = {}
-    var next_bendahara = {}
-    var next_sekretaris = {}
-    var next_walikelas = {}
+    // var next_ketua_kelas = {}
+    // var next_bendahara = {}
+    // var next_sekretaris = {}
+    // var next_walikelas = {}
 
     const {kelas} = nextProps.classesCollection
     //classesCollection.kelas = individual class, .all_classes = all classes
-    if(kelas.ketua_kelas)
-      next_ketua_kelas = kelas.ketua_kelas._id
+    // if(kelas.ketua_kelas)
+    //   next_ketua_kelas = kelas.ketua_kelas
 
-    if(kelas.sekretaris)
-      next_sekretaris = kelas.sekretaris._id
+    // if(kelas.sekretaris)
+    //   next_sekretaris = kelas.sekretaris
 
-    if(kelas.bendahara)
-      next_bendahara = kelas.bendahara._id
+    // if(kelas.bendahara)
+    //   next_bendahara = kelas.bendahara
 
-    if(kelas.walikelas)
-      next_walikelas = kelas.walikelas._id
+    // if(kelas.walikelas)
+    //   next_walikelas = kelas.walikelas
 
-    if(!name){
+    if(Boolean(kelas)){
       this.setState({
         name: kelas.name,
         nihil: kelas.nihil,
-        walikelas: next_walikelas,
+        walikelas: kelas.walikelas,
         ukuran: kelas.ukuran,
-        ketua_kelas: next_ketua_kelas,
-        sekretaris: next_sekretaris,
-        bendahara: next_bendahara,
+        ketua_kelas: kelas.ketua_kelas,
+        sekretaris: kelas.sekretaris,
+        bendahara: kelas.bendahara
       });
     }
   }
@@ -142,51 +144,51 @@ class EditClass extends Component {
   }
 
   componentDidMount() {
-    const { getTeachers, getStudents, clearErrors} = this.props;
+    const { getTeachers, getStudentsByClass, clearErrors} = this.props;
     
     clearErrors()
     getTeachers()
-    getStudents()
+    getStudentsByClass(this.props.match.params.id)
   }
 
   render() {
     const { classes, classesCollection } = this.props;
-    const { errors } = this.state;
+    const { errors } = this.props;
     const { user } = this.props.auth;
     const { all_teachers} = this.props.auth;
-    const { all_students } = this.props.auth;
+    const { students_by_class } = this.props.auth;
     const { sekretaris, bendahara, ketua_kelas, walikelas} = this.state;
     var teacher_options = all_teachers
-    var student_options = all_students
+    var student_options = students_by_class
 
-    console.log(classesCollection.kelas.walikelas)
-    const returnId = (user_id, arr) => {
+    const returnId = (user, arr) => {
       if(arr === "student") {
         for (var i = 0; i < student_options.length; i++) {
-          if(student_options[i]._id === user_id._id){
-            return user_id._id
+          if(student_options[i]._id === user._id){
+            return user._id
           }
         }
       }
       else {
         for (var i = 0; i < teacher_options.length; i++) {
           // console.log(student_options[i]._id)
-          if(teacher_options[i]._id === user_id._id){
-            return user_id._id
+          if(teacher_options[i]._id === user._id){
+            return user._id
           }
         }
       }
     }
 
+
     const showValue = (options, arr) => {
       let items = []
-      options.map((student) => {
-        console.log(student, this.state.sekretaris)
+      options.map((user) => {
+        console.log(user, this.state.sekretaris)
         items.push(
           <MenuItem
-            value={returnId(student, arr)}
+            value={returnId(user, arr)}
           >
-            {student.name}
+            {user.name}
           </MenuItem>
         )
       })
@@ -194,7 +196,7 @@ class EditClass extends Component {
     }
 
     document.title = "Schooly | Sunting Kelas";
-
+    console.log(this.state.walikelas)
     if(user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
@@ -238,7 +240,7 @@ class EditClass extends Component {
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    {this.state.name === "" ?
+                    {/* {this.state.name === "" ?
                       <label htmlFor="ukuran">
                         <div className={classes.inputLabel}>
                           Jumlah Murid
@@ -250,7 +252,7 @@ class EditClass extends Component {
                           Jumlah Murid
                         </div>
                       </label>
-                    }
+                    } */}
                     <OutlinedTextField
                       on_change={this.onChange}
                       value={this.state.ukuran}
@@ -260,12 +262,14 @@ class EditClass extends Component {
                       classname={classnames("", {
                           invalid: errors.ukuran
                       })}
+                      html_for="ukuran"
+                      label_classname={classes.inputLabel}
                       span_classname={classes.errorInfo}
-                      error1={errors.name}
+                      error1={errors.ukuran}
                     />
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}}>
+                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}} error={Boolean(errors.walikelas)}>
                       <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
                       <Select
                         value={walikelas}
@@ -274,6 +278,10 @@ class EditClass extends Component {
                       >
                         {showValue(teacher_options, "teacher")}
                       </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.walikelas) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.walikelas) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.walikelas}</Typography> : null}
+                    </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
@@ -345,8 +353,8 @@ EditClass.propTypes = {
     updateClass: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     getTeachers: PropTypes.func.isRequired,
-    getStudents: PropTypes.func.isRequired,
     clearErrors: PropTypes.func.isRequired,
+    getStudentsByClass: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     classesCollection: PropTypes.object.isRequired
 };
@@ -358,5 +366,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { setCurrentClass, updateClass, getTeachers, getStudents, clearErrors}
+    mapStateToProps, { setCurrentClass, updateClass, getStudentsByClass, getTeachers, clearErrors}
 ) (withStyles(styles)(EditClass));

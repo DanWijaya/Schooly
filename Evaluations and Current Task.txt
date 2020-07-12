@@ -5,6 +5,9 @@ Botak:
 5. Create Task, Edit Task dll desktop version
 6. Field Berkas
 7. Notification
+8. betulin table ASAP
+9. Pengumuman dan catata buat ganti-ganti data type
+
 8. Sort mapping dkk
 IMPORTANT:
 3. Jumlah murid dan absen di kelas
@@ -15,32 +18,29 @@ IMPORTANT:
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
-2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
-3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
-4. Notifications page dan listnya (previewnya muncul di Dashboard)
-5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-10. Reset Kata Sandi functionality (done)
-11. Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
-13. Perlu fix Edit Task yang MenuItemnya ndak muncul dibold pas dibuka. Anjeng
-14. Buat Task objectnya munculin file uploaded sesuai usernya upload di tugas OBject itu saja. (DONE)
+11. (On going) Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
 15. Buat task object cuma acessible sama student yang ada di kelas yang diassigned itu.
 16. Do auto complete field untuk subject punya
-17. Buat class pagenya munculin tasks, students, dll. (done)
-18. Masih perlu perbaiki viewTask untuk si student (tablenya agak aneh)
-19. Untuk pas udah kelogin, pas buka login pagenya dia ndak immediately ke Dashboard lol. (fixed already)
-20. Have to handle if the user not uploading an image, it gives error message.
 21. Handle this stupid warning (not so urgent)
     (node:3857) DeprecationWarning: GridStore is deprecated, and will be removed in a future version. Please use GridFSBucket instead
     (node:3857) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
     (node:3857) DeprecationWarning: collection.remove is deprecated. Use deleteOne, deleteMany, or bulkWrite instead.
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
-26. Buat pas si student buka announcement, mereka ndak bisa create announcement (cuma ketua kelasnya)
 27. Select untuk yang edit class masih bermasalah...
+28. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya. 
 28. Pengumuman authornya dan task belum id, (Materi dan kelas udah semua)
 
 Penting untuk diimplemen:
-2. (Diganti dengan announcement) Buat Notification functionality (Schema Notif dan explore cara handlenya?)
-3. (UDAH SELESAI) Forgot Password (reset password function) -> Cari cara untuk connect ke email dan send token link untuk reset password? (Look at Closebrace website)
+
+
+Will implement these features next time:
+- Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
+- Mungkin buat page utk si Admin utk bisa manage users
+2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
+3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
+4. Notifications page dan listnya (previewnya muncul di Dashboard)
+5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
+20. Have to handle if the user not uploading an image, it gives error message.
 
 Error and To be Fixed:
 - Disable buat dan sunting pengumunan (Ketua kelas)

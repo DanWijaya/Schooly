@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { Redirect } from "react-router-dom";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button, Chip, CircularProgress, Dialog, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
@@ -260,6 +261,7 @@ class CreateAnnouncement extends Component {
     const { user } = this.props.auth
 
     const UploadDialog = () => {
+      
         return(
           <Dialog open={this.state.openUploadDialog}>
             <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
@@ -309,6 +311,12 @@ class CreateAnnouncement extends Component {
     }
 
     console.log(Object.keys(errors).length)
+    // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja. 
+    if(user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id){
+      console.log(kelas.ketua_kelas, user.id)
+      return(<Redirect to="/tidak-ditemukan"/>)
+    }
+
     return(
       <div className={classes.root}>
         {UploadDialog()}
@@ -478,7 +486,6 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   success: state.success,
-  viewClass: PropTypes.func.isRequired,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
 })

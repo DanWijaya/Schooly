@@ -262,8 +262,10 @@ function ViewClass(props) {
   const { all_subjects } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
   const { selectedClasses, kelas } = props.classesCollection
-  const { all_students, all_teachers, user } = props.auth;
+  const { students_by_class, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
+
+  const [teachers_map, setTeachersMap] = React.useState(new Map());
 
   let tasksByClass = []
   console.log(props.classesCollection)
@@ -287,8 +289,13 @@ function ViewClass(props) {
     }
     viewTask() // get the tasksCollection
     getAllSubjects() // get the all_subjects
-    getStudentsByClass(props.match.params.id) // get the all_students
+    getStudentsByClass(props.match.params.id) // get the students_by_class
     getTeachers() // get the all_teachers
+    if(Boolean(all_teachers.length)){
+      let temp = new Map()
+      all_teachers.map((teacher) => temp.set(teacher._id, teacher))
+      setTeachersMap(temp)
+    }
     getAllTaskFilesByUser(user.id) // get the all_user_files
   }, [all_teachers.length ])
 
@@ -316,10 +323,10 @@ function ViewClass(props) {
           <Divider className={classes.personListDivider} />
           <List className={classes.listContainer}>
             <PersonListItem
-              person_avatar={kelas.walikelas ?
-                `/api/uploads/image/${kelas.walikelas.avatar}` : null}
-              person_name={kelas.walikelas ? kelas.walikelas.name : null}
-              person_role={kelas.walikelas ? kelas.walikelas.subject_teached : null}
+              person_avatar={teachers_map.get(kelas.walikelas) ?
+                `/api/uploads/image/${teachers_map.get(kelas.walikelas).avatar}` : null}
+              person_name={teachers_map.get(kelas.walikelas)? teachers_map.get(kelas.walikelas).name : null}
+              person_role={teachers_map.get(kelas.walikelas) ? teachers_map.get(kelas.walikelas).subject_teached : null}
             />
           </List>
         </Paper>
@@ -329,7 +336,7 @@ function ViewClass(props) {
           </Typography>
           <Divider className={classes.personListDivider} />
           <List className={classes.listContainer}>
-            {all_students.map((student) => (
+            {students_by_class.map((student) => (
               <PersonListItem
                 person_avatar={`/api/uploads/image/${student.avatar}`}
                 person_name={student.name}
@@ -540,10 +547,10 @@ function ViewClass(props) {
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
               <PersonListItem
-                person_avatar={kelas.walikelas ?
-                  `/api/uploads/image/${kelas.walikelas.avatar}` : null}
-                person_name={kelas.walikelas ? kelas.walikelas.name : null}
-                person_role={kelas.walikelas ? kelas.walikelas.subject_teached : null}
+                person_avatar={teachers_map.get(kelas.walikelas) ?
+                  `/api/uploads/image/${teachers_map.get(kelas.walikelas).avatar}` : null}
+                person_name={teachers_map.get(kelas.walikelas)? teachers_map.get(kelas.walikelas).name : null}
+                person_role={teachers_map.get(kelas.walikelas) ? teachers_map.get(kelas.walikelas).subject_teached : null}
               />
             </List>
           </Paper>
@@ -553,7 +560,7 @@ function ViewClass(props) {
             </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
-              {all_students.map((student) => (
+              {students_by_class.map((student) => (
                 <PersonListItem
                   person_avatar={`/api/uploads/image/${student.avatar}`}
                   person_name={student.name}

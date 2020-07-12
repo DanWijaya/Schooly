@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_ALL_TEACHERS, GET_ALL_STUDENTS, GET_ONE_USER, GET_ALL_USERS } from "../actions/Types";
+import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_ALL_TEACHERS, GET_ALL_STUDENTS, GET_ONE_USER, GET_STUDENTS_BY_CLASS } from "../actions/Types";
 
 const isEmpty = require("is-empty");
 
@@ -7,6 +7,7 @@ const initialState = {
   user: {},
   all_teachers: [],
   all_students: [],
+  students_by_class: [],
   loading: false,
   selectedUser: {},
   retrieved_users: new Map()
@@ -34,6 +35,11 @@ export default function(state = initialState, action) {
       return{
         ...state,
         all_students: action.payload
+      }
+    case GET_STUDENTS_BY_CLASS:
+      return{
+        ...state,
+        students_by_class: action.payload
       }
     case GET_ONE_USER: //teacher or student or anyone lah.
       return {

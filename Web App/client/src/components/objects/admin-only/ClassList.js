@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { getTeachers } from "../../../actions/UserActions";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper,
@@ -258,8 +259,10 @@ function ClassList(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  const { viewClass, deleteClass, classesCollection } = props;
-  const { user } = props.auth;
+  const [teachers_map, setTeachersMap] = React.useState(new Map());
+
+  const { viewClass, deleteClass, classesCollection, getTeachers } = props;
+  const { user, all_teachers } = props.auth;
 
   const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
   const colorMap = new Map();
@@ -270,14 +273,23 @@ function ClassList(props) {
       createData(
         data._id,
         data.name,
-        data.walikelas.name,
+        !teachers_map.size ? null : teachers_map.get(data.walikelas).name,
         data.ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
       )
     )
   }
-  React.useEffect(() => {viewClass()}, [classesCollection.length])
+  React.useEffect(() => {
+    viewClass()
+    getTeachers()
+    if(Boolean(all_teachers.length)){
+      let temp = new Map()
+      all_teachers.map((teacher) => temp.set(teacher._id, teacher))
+      setTeachersMap(temp);
+    }
+  },[classesCollection.length, all_teachers.length])
 
+  console.log(all_teachers)
   const retrieveClasses = () => {
     if(classesCollection.all_classes.length > 0) {
       rows = []
@@ -525,6 +537,7 @@ function ClassList(props) {
 
 ClassList.propTypes = {
   viewClass: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
@@ -538,5 +551,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { viewClass, deleteClass }
+  mapStateToProps, { viewClass, deleteClass, getTeachers }
 ) (ClassList);

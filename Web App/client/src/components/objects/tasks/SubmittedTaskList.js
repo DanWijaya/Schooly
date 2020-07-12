@@ -6,12 +6,14 @@ import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../action
 import { getStudents } from "../../../actions/UserActions";
 import StandardTextField from "../../misc/text-field/StandardTextField";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
-   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Tabs, Tab, Typography } from "@material-ui/core";
+   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import DescriptionIcon from "@material-ui/icons/Description";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import MuiAlert from "@material-ui/lab/Alert";
 
 const path = require("path");
 
@@ -37,14 +39,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
-  downloadAllButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main
-    }
-  },
   checkCircleIcon: {
     marginRight: "10px",
     backgroundColor: "#61BD4F",
@@ -57,7 +51,49 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: theme.palette.primary.dark
   },
+  downloadAllButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main
+    }
+  },
+  downloadIconButton: {
+    marginLeft: "5px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  wordFileTypeIcon: {
+    backgroundColor: "#16B0DD",
+  },
+  excelFileTypeIcon: {
+    backgroundColor: "#68C74F",
+  },
+  imageFileTypeIcon: {
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    backgroundColor: "#FD931D",
+  },
+  otherFileTypeIcon: {
+    backgroundColor: "#808080",
+  },
 }));
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -99,20 +135,45 @@ function WorkFile(props) {
       <ListItem button disableRipple className={classes.listItem}
       onClick={() => {onPreviewFile(file_id, "lampiran")}}>
         <ListItemAvatar>
-          {file_type === "File lainnya" ?
-          <Avatar className={classes.otherFileTypeIcon}>
-            <DescriptionIcon/>
-          </Avatar>
-          :
-          <Avatar/>
+          {file_type === "Word" ?
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            :
+            file_type === "Excel" ?
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            :
+            file_type === "Gambar" ?
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            :
+            file_type === "PDF" ?
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            :
+            file_type === "Teks" ?
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            :
+            file_type === "Presentasi" ?
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            :
+            file_type === "File Lainnya" ?
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            : null
           }
         </ListItemAvatar>
         <ListItemText
-          primary={
-            <Typography>
-              {file_name}
-            </Typography>
-          }
+          primary={file_name}
           secondary={
             <Typography variant="caption" color="textSecondary">
               {file_type}
@@ -120,9 +181,9 @@ function WorkFile(props) {
           }
         />
         <ListItemIcon>
-          <IconButton onClick={(e) => { e.stopPropagation()
+          <IconButton size="small" className={classes.downloadIconButton} onClick={(e) => { e.stopPropagation()
             onDownloadFile(file_id, "lampiran")}}>
-            <CloudDownloadIcon />
+            <CloudDownloadIcon fontSize="small"/>
           </IconButton>
         </ListItemIcon>
       </ListItem>
@@ -163,22 +224,36 @@ function UnduhSemuaButton(props) {
 function SubmittedTaskList(props) {
   const classes = useStyles();
 
-  const { viewOneTask, tasksCollection, classesCollection, getStudents, downloadTugas, previewTugas, gradeTask } = props;
+  const { viewOneTask, tasksCollection, classesCollection, getStudents, downloadTugas, previewTugas, gradeTask, success } = props;
   const { all_students } = props.auth;
   const task_id = props.match.params.id;
 
   const [grade, setGrade] = React.useState(new Map());
   const [gradeStatus, setGradeStatus] = React.useState(new Map());
-
-  console.log()
+  const [openAlert, setOpenAlert] = React.useState(false);
+  
   console.log(grade)
   console.log(all_students)
+
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  }
+  const handleCloseAlert = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenAlert(false);
+  }
+
   React.useEffect(() => {
     viewOneTask(task_id)
     getStudents()
     console.log(all_students)
     console.log(tasksCollection)
-  }, [tasksCollection._id])
+    if(success){
+      handleOpenAlert()
+    }
+  }, [tasksCollection._id, success])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -247,7 +322,7 @@ function SubmittedTaskList(props) {
       case ".ppt" :
       case ".pptx": return "Presentasi"
 
-      default: return "File lainnya"
+      default: return "File Lainnya"
     }
   }
 
@@ -295,7 +370,8 @@ function SubmittedTaskList(props) {
                 task_list_on_panel.push(
                 <WorkFile
                   file_id={task.id}
-                  file_name={task.filename}
+                  file_name={!task.ontime ? <div> {task.filename}  <Typography display="inline" color="error">(TELAT)</Typography></div> : task.filename}
+                  on_time = {task.ontime}
                   file_type={fileType(task.filename)}
                   onPreviewFile={onPreviewFile}
                   onDownloadFile={onDownloadFile}/>)
@@ -351,10 +427,20 @@ function SubmittedTaskList(props) {
   }
 
   document.title = "Schooly | Daftar Tugas Terkumpul"
-
+  console.log(success)
   // Before that, run this :
   return(
     <div className={classes.root}>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{vertical : "center", horizontal: "center"}}
+      >
+        <Alert onClose={handleCloseAlert} severity="success" >
+          Nilai  {!success ? null : success[2]} berhasil diganti menjadi {!success ? null : success[1]}
+        </Alert>
+      </Snackbar>
       <Paper>
         <Typography variant="h4" style={{textAlign: "center"}} gutterBottom>
         <b>{tasksCollection.name}</b>
@@ -370,6 +456,7 @@ SubmittedTaskList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
   getTaskFilesByUser:PropTypes.func.isRequired,
   viewOneTask: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
@@ -381,6 +468,7 @@ SubmittedTaskList.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   tasksCollection: state.tasksCollection,
+  success: state.success,
   classesCollection: state.classesCollection,
 });
 

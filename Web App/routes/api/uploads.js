@@ -173,11 +173,13 @@ router.get("/image-upload", (req,res) => {
 // // @route DELETE /files/:id
 // // @desc Delete File
 // Upload Tugas
-router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 10), (req,res) => {
+router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas", 10), (req,res) => {
   // To get the file details, use req.file
 
   let id = req.params.user_id
   let task_id = req.params.task_id;
+  let ontime = req.params.ontime;
+  console.log("Body: ", req.body)
   console.log("Uploading the task file")
 
   User.findById(id, (err, user) => {
@@ -187,13 +189,15 @@ router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 10), (r
     }
 
     else{
+      console.log(ontime)
       if(!user.tugas){
         let tugas_user = []
         for(var i = 0; i < req.files.length; i++){
           tugas_user.push({
             id: req.files[i].id,
             filename: req.files[i].filename,
-            for_task_object: task_id
+            for_task_object: task_id,
+            ontime: ontime
           })
         }
         user.tugas = tugas_user
@@ -201,7 +205,8 @@ router.post("/uploadtugas/:user_id/:task_id", uploadTugas.array("tugas", 10), (r
         for(var i = 0; i < req.files.length; i++) {
           user.tugas.push({id: req.files[i].id,
               filename: req.files[i].filename,
-              for_task_object: task_id})
+              for_task_object: task_id,
+              ontime: ontime})
         }
       }
       console.log(user.tugas)

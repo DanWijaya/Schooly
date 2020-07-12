@@ -184,7 +184,7 @@ class EditTask extends Component {
       this.handleOpenUploadDialog()
     }
 
-    if(!name){
+    if(Boolean(nextProps.tasksCollection)){
       this.setState({
           name: nextProps.tasksCollection.name,
           subject: nextProps.tasksCollection.subject,

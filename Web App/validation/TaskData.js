@@ -12,7 +12,16 @@ module.exports = function validateTaskInput(data) {
     data.deadline = isEmpty(data.deadline) ? "" : data.deadline;
 
     console.log(data.description, "Description")
-
+    
+    if(!isEmpty(data.grade)){
+        if(data.grade > 100 || data.grade < 0){
+            errors = { grade : "Nilai harus diantara 0 dan 100"}
+        }
+        return {
+            errors,
+            isValid: isEmpty(errors)
+        }
+    }
     if (Validator.isEmpty(data.name)) {
         errors.name = "Nama tugas belum diisi"
     }
@@ -28,16 +37,6 @@ module.exports = function validateTaskInput(data) {
     }
     if(!data.class_assigned.length) {
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
-    }
-    if(data.grade > 100 && data.grade < 0){
-        errors = { grade : "Nilai harus diantara 0 dan 100"}
-    }
-
-    if(!isEmpty(data.grade)){
-        return {
-            errors,
-            isValid: isEmpty(errors)
-        }
     }
 
     return{

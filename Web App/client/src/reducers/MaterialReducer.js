@@ -4,7 +4,6 @@ import { FaCloudShowersHeavy } from "react-icons/fa";
 const initialState = {
     selectedMaterials: [],
     all_materials: [],
-    success: false
 }
 
 export default function(state=initialState, action) {
@@ -19,12 +18,6 @@ export default function(state=initialState, action) {
             return {
             ...state,
             selectedMaterials: action.payload
-            }
-        }
-        case SUCCESS_MATERIAL: {
-            return {
-            ...state,
-            success: action.payload
             }
         }
         default: 

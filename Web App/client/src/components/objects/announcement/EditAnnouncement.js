@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { Redirect } from "react-router-dom";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Button,Chip, CircularProgress,Dialog, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
@@ -104,6 +105,21 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+<<<<<<< HEAD
+  successIcon: {
+    color: "green",
+    padding: 0,
+    margin: 0,
+    height: "45px",
+    width: "45px"
+  },
+  uplaodDialogGrid: {
+    padding: "10px",
+    width: "300px",
+    height: "175px"
+  }
+=======
+>>>>>>> 862f372aa8d0e63a4c58f59a4d66247f5211b5e3
 });
 
 function LampiranFile(props) {
@@ -165,7 +181,7 @@ class EditAnnouncement extends Component {
     if(!nextProps.errors){
       this.handleOpenUploadDialog()
     }
-    if(!name && nextProps.errors){ // if edited, nextProps.errors is false, supaya ndak run ini..
+    if(Boolean(nextProps.errors)){ // if edited, nextProps.errors is false, supaya ndak run ini..
         this.setState({
             title: selectedAnnouncements.title,
             description: selectedAnnouncements.description,
@@ -345,6 +361,11 @@ class EditAnnouncement extends Component {
         }
       }
       return temp;
+    }
+
+    if(user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id){
+      console.log(kelas.ketua_kelas, user.id)
+      return(<Redirect to="/tidak-ditemukan"/>)
     }
 
     return(

@@ -238,7 +238,7 @@ function WorkFile(props) {
 
   let displayedName = ""
   file_name.length >= 10 ?
-    displayedName = `${file_name.slice(0,9)}..${path.extname(file_name)}`
+    displayedName = `${file_name.slice(0,7)}..${path.extname(file_name)}`
   :
     displayedName = file_name
 
@@ -322,7 +322,7 @@ function ViewTaskStudent(props) {
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
-  const { uploadTugas, success, getTaskFilesByUser, tasksCollection,
+  const { uploadTugas, deleteTugas, success, getTaskFilesByUser, tasksCollection,
     filesCollection, downloadTugas, previewTugas,
     viewOneTask, getOneUser, downloadLampiran, previewLampiran } = props;
 
@@ -428,12 +428,15 @@ function ViewTaskStudent(props) {
       formData.append("tugas", fileTugas[i])
     }
     console.log(formData.get("tugas"), fileTugas)
+    
+    
     handleOpenUploadDialog()
-    uploadTugas(formData, user, tugasId)
+    uploadTugas(formData, user, tugasId, new Date() < new Date(tasksCollection.deadline))
     setFileTugas(null)
   }
 
   const onDeleteTugas = (id) => {
+    console.log("On delete tugass")
     deleteTugas(id, user)
     setFileTugas(null)
   }
@@ -566,7 +569,7 @@ function ViewTaskStudent(props) {
 }
 
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
-
+  console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
   return(
     <div className={classes.root}>
       {DeleteDialog()}
