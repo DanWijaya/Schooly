@@ -7,14 +7,15 @@ Botak:
 7. Notification
 8. betulin table ASAP
 9. Pengumuman dan catata buat ganti-ganti data type
-
 8. Sort mapping dkk
+
 IMPORTANT:
 3. Jumlah murid dan absen di kelas
 5. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
 6. cek Tabs scrollable
 7. View task studnet telat dan badge
 8. Perbaiki grading dan kasi snackbar
+9. Create subject
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -27,7 +28,7 @@ Daniel:
     (node:3857) DeprecationWarning: collection.remove is deprecated. Use deleteOne, deleteMany, or bulkWrite instead.
 22. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 27. Select untuk yang edit class masih bermasalah...
-28. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya. 
+28. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya.
 28. Pengumuman authornya dan task belum id, (Materi dan kelas udah semua)
 
 Penting untuk diimplemen:
@@ -56,3 +57,4 @@ Error and To be Fixed:
 To be done in the future:
 - Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
 - Comments
+- Satukan reducer buat realtime

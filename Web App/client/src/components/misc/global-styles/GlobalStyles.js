@@ -61,21 +61,12 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
     MuiTab: {
       disableRipple: true,
     },
-    MuiSelect: {
-      SelectDisplayProps: {
-        style: {
-          paddingTop: "13.5px",
-          paddingBottom: "13.5px"
-        },
-      },
-    },
     MuiTextField: {
       inputProps: {
         style: {
           borderBottom: "none",
           boxShadow: "none",
-          marginLeft: 10,
-          marginRight: 10,
+          margin: "0px 15px 0px 15px",
         },
       },
     },

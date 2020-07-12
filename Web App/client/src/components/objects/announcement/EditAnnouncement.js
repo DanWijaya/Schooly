@@ -105,21 +105,6 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-<<<<<<< HEAD
-  successIcon: {
-    color: "green",
-    padding: 0,
-    margin: 0,
-    height: "45px",
-    width: "45px"
-  },
-  uplaodDialogGrid: {
-    padding: "10px",
-    width: "300px",
-    height: "175px"
-  }
-=======
->>>>>>> 862f372aa8d0e63a4c58f59a4d66247f5211b5e3
 });
 
 function LampiranFile(props) {
