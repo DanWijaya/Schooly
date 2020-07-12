@@ -530,7 +530,7 @@ function MaterialList(props) {
                           <Typography variant="body1" gutterBottom>
                             <b>Kelas yang Diberikan:</b> {!selectedClasses.size ? null :
                               row.class_assigned.map((kelas,i) => {
-                                if(i === row.class_assigned.length - 1)
+                                if(i === row.class_assigned.length - 1 && Boolean(selectedClasses.get(kelas)))
                                   return (`${selectedClasses.get(kelas).name}`)
                                 return (`${selectedClasses.get(kelas).name}, `)})
                             }

@@ -224,7 +224,6 @@ class CreateAnnouncement extends Component {
     const announcementData = {
       title: this.state.title,
       description: this.state.description,
-      author_name: user.name,
       class_assigned: user.role === "Student" ? [kelas] : this.state.class_assigned,
       author_id: user.id,
       errors: {}

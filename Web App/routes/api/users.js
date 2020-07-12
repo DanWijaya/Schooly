@@ -403,14 +403,15 @@ router.get("/getOneUser/:id", (req,res) => {
 
 router.get("/getUsers", (req,res) => {
   const{ userIds } = req.query;
-
+  console.log("User ids : ", userIds)
   let ids_to_find
 
   if(userIds !== undefined){
     ids_to_find = userIds.map((id) => new ObjectId(id))
   }
 
-  User.find({_id : { $in : ids_to_find}}, (err, users) => {
+  User.find({_id : { $in : userIds}}, (err, users) => {
+    console.log("usernya ini : ", users)
     if(!users)
       return res.status(400).json("Users to update not found")
     else

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
+import { viewClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
@@ -284,12 +285,12 @@ function TaskList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
   const [selected, setSelected] = React.useState([]);
-
+  const [classes_map, setClassesMap] = React.useState(new Map());
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
-
-  const { tasksCollection, viewTask, deleteTask } = props;
+  const { tasksCollection, viewTask, deleteTask, viewClass } = props;
+  const { all_classes } = props.classesCollection;
   const { user } = props.auth;
 
   const taskRowItem = (data) => {
@@ -304,8 +305,16 @@ function TaskList(props) {
     )
   }
 
-  React.useEffect(() => {viewTask()},
-  [tasksCollection.length])
+  React.useEffect(() => {
+    viewTask()
+    viewClass()
+    if(all_classes.length){
+      let temp = new Map()
+      all_classes.map((kelas) => temp.set(kelas._id, kelas))
+      setClassesMap(temp);
+    }
+  },
+  [tasksCollection.length, all_classes.length])
 
   const retrieveTasks = () => {
     // If tasksCollection is not undefined or an empty array
@@ -321,11 +330,8 @@ function TaskList(props) {
       else if (user.role === "Student"){
         tasksCollection.map((data) => {
           let class_assigned = data.class_assigned;
-          for (var i = 0; i < class_assigned.length; i++) {
-            if(class_assigned[i]._id === user.kelas) {
-              taskRowItem(data)
-              break;
-            }
+          if(class_assigned.indexOf(user.kelas) !== -1){
+            taskRowItem(data)
           }
         })
       }
@@ -525,10 +531,11 @@ function TaskList(props) {
                       <Grid conntainer direction="column">
                         <Grid item>
                           <Typography variant="body1" gutterBottom>
-                            <b>Kelas yang Ditugaskan:</b> {row.class_assigned.map((kelas,i) => {
+                            <b>Kelas yang Ditugaskan:</b> {!classes_map.size ? null :
+                             row.class_assigned.map((id,i) => {
                               if(i === row.class_assigned.length - 1)
-                                return (`${kelas.name}`)
-                              return (`${kelas.name}, `)})
+                                return (`${classes_map.get(id).name}`)
+                              return (`${classes_map.get(id).name}, `)})
                             }
                           </Typography>
                         </Grid>
@@ -582,8 +589,10 @@ function TaskList(props) {
 
 TaskList.propTypes = {
   viewTask: PropTypes.func.isRequired,
+  viewClass: PropTypes.func.isRequired,
   deleteTask: PropTypes.func.isRequired,
   tasksCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
@@ -592,8 +601,9 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   tasksCollection: state.tasksCollection,
+  classesCollection: state.classesCollection
 })
 
 export default connect(
-  mapStateToProps, { viewTask, deleteTask }
+  mapStateToProps, { viewTask, deleteTask, viewClass}
 )(TaskList);

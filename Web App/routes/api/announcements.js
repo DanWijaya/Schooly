@@ -25,7 +25,6 @@ router.post("/create", (req, res) => {
     const newAnnouncement = new Announcement({
         title: req.body.title,
         description: req.body.description,
-        author_name: req.body.author_name,
         class_assigned: class_assigned_ids,
         author_id: req.body.author_id,
         date_announced: new Date()
