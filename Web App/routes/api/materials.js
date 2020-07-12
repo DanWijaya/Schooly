@@ -25,6 +25,7 @@ router.post("/create", (req,res) => {
          class_assigned_ids.push(kelas._id))
     }
 
+    console.log("author id : ", req.body.author_id)
     const newMaterial = new Material({
         name: req.body.name,
         subject: req.body.subject,

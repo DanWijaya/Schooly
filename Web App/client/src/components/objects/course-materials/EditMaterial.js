@@ -190,7 +190,7 @@ class EditMaterial extends Component {
     if(!nextProps.errors){
       this.handleOpenUploadDialog()
     }
-    if(!name){
+    if(Boolean(selectedMaterials) && nextProps.errors){
       this.setState({
           name: selectedMaterials.name,
           subject: selectedMaterials.subject,
@@ -210,43 +210,33 @@ class EditMaterial extends Component {
     const { id } = this.props.match.params;
     const { class_assigned, classChanged, fileLampiranToAdd, fileLampiranToDelete } = this.state;
 
-    let classesSelected = [];
     console.log(class_assigned)
 
-    class_assigned.map((id) => {
-      for( var i = 0; i < classesOptions.length; i++) {
-        if(classesOptions[i]._id === id) {
-          classesSelected.push(classesOptions[i])
-          break;
-      }
+    const materialObject = {
+      name: this.state.name,
+      deadline: this.state.deadline,
+      subject: this.state.subject,
+      description: this.state.description,
+      class_assigned: this.state.class_assigned,
+      lampiran: Array.from(this.state.fileLampiran),
+      errors: {}
     }
-  })
 
-  const materialObject = {
-    name: this.state.name,
-    deadline: this.state.deadline,
-    subject: this.state.subject,
-    description: this.state.description,
-    class_assigned: this.state.class_assigned,
-    lampiran: Array.from(this.state.fileLampiran),
-    errors: {}
-  }
+    // if(classChanged)
+    //   materialObject.class_assigned = classesSelected // When the classes is changed
+    // else
+    //   materialObject.class_assigned = class_assigned // When it has no change
 
-  if(classChanged)
-    materialObject.class_assigned = classesSelected // When the classes is changed
-  else
-    materialObject.class_assigned = class_assigned // When it has no change
+    let formData = new FormData()
+    for(var i = 0; i< fileLampiranToAdd.length; i++) {
+      console.log(this.state.fileLampiran[i])
+      formData.append("lampiran_materi", this.state.fileLampiranToAdd[i])
+    }
 
-  let formData = new FormData()
-  for(var i = 0; i< fileLampiranToAdd.length; i++) {
-    console.log(this.state.fileLampiran[i])
-    formData.append("lampiran_materi", this.state.fileLampiranToAdd[i])
-  }
-
-  const {selectedMaterials} = this.props.materialsCollection;
-  console.log(materialObject)
-  this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
-  }
+    const {selectedMaterials} = this.props.materialsCollection;
+    console.log(materialObject)
+    this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
+    }
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
@@ -471,7 +461,7 @@ class EditMaterial extends Component {
                     </FormControl>
                   </Grid>
                   <Grid item className={classes.gridItem}>
-                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
                       <label id="class_assigned" className={classes.inputLabel}>Kelas yang Diberikan</label>
                       <Select
                         multiple
@@ -507,8 +497,8 @@ class EditMaterial extends Component {
                         )})}
                       </Select>
                       <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                      {Boolean(errors.class_assigned) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.class_assigned) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
                     </FormHelperText>
                     </FormControl>
                   </Grid>

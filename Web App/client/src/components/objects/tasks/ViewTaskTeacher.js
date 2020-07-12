@@ -7,6 +7,7 @@ import "moment/locale/id";
 import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
 import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
+import { viewClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -208,13 +209,21 @@ function ViewTaskTeacher(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask } = props;
+  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask, viewClass } = props;
+  const { all_classes } = props.classesCollection;
   const task_id = props.match.params.id
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [classes_map, setClassesMap] = React.useState(new Map());
 
   React.useEffect(() => {
     viewOneTask(task_id)
-  }, [tasksCollection._id])
+    viewClass()
+    if(all_classes.length){
+      let temp = new Map()
+      all_classes.map((kelas) => temp.set(kelas._id, kelas))
+      setClassesMap(temp);
+    }
+  }, [tasksCollection._id, all_classes.length])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -362,6 +371,20 @@ function ViewTaskTeacher(props) {
           </Grid>
           <Grid item xs={12} style={{marginTop: "30px"}}>
             <Typography color="primary" gutterBottom>
+              Kelas yang Diberikan:
+            </Typography>
+            <Typography>
+              {!tasksCollection.class_assigned || !classes_map.size? null :
+              tasksCollection.class_assigned.map((kelas, i) => {
+                if(i === tasksCollection.class_assigned.length - 1)
+                  return `${classes_map.get(kelas).name}`
+                return (`${classes_map.get(kelas).name}, `)
+              })}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} style={{marginTop: "30px"}}>
+            <Typography color="primary" gutterBottom>
               Deskripsi Tugas:
             </Typography>
             <Typography>
@@ -420,6 +443,8 @@ function ViewTaskTeacher(props) {
 ViewTaskTeacher.propTypes = {
    auth: PropTypes.object.isRequired,
    tasksCollection: PropTypes.object.isRequired,
+   classesCollection: PropTypes.object.isRequired,
+
    downloadLampiran: PropTypes.func.isRequired,
    previewLampiran: PropTypes.func.isRequired,
    deleteTask: PropTypes.func.isRequired,
@@ -432,9 +457,10 @@ ViewTaskTeacher.propTypes = {
 const mapStateToProps = (state) => ({
    auth: state.auth,
    tasksCollection: state.tasksCollection,
+   classesCollection: state.classesCollection
  });
 
 export default connect(
    mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, viewOneTask, getOneUser }
+    previewLampiran, viewOneTask, getOneUser, viewClass }
  ) (ViewTaskTeacher);

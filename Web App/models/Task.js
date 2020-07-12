@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const { ObjectId } = require("mongoose");
 
 // Create Task Schema
 const TaskSchema = new Schema({
@@ -16,7 +17,7 @@ const TaskSchema = new Schema({
         required: true
     },
     class_assigned: [{
-        type: Object,
+        type: ObjectId,
         required: true
     }],
     person_in_charge_id: {

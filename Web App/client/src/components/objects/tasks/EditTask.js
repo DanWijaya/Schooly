@@ -153,7 +153,7 @@ class EditTask extends Component {
       subject: "",
       deadline: new Date(),
       tasksCollection: [],
-      class_assigned: null,
+      class_assigned: [],
       classChanged: false,
       focused: false,
       description: "",
@@ -180,18 +180,22 @@ class EditTask extends Component {
     console.log("Tasks props is received");
     const { name } = this.state;
 
+    const { tasksCollection, errors } = nextProps;
+
+    // pass errorsnya false makanya berhasil
     if(!nextProps.errors){
       this.handleOpenUploadDialog()
     }
 
-    if(Boolean(nextProps.tasksCollection)){
+    console.log(tasksCollection.class_assigned)
+    if(Boolean(tasksCollection) && errors){
       this.setState({
-          name: nextProps.tasksCollection.name,
-          subject: nextProps.tasksCollection.subject,
-          deadline: nextProps.tasksCollection.deadline,
-          class_assigned: nextProps.tasksCollection.class_assigned,
-          description: nextProps.tasksCollection.description,
-          fileLampiran: Boolean(nextProps.tasksCollection.lampiran) ? nextProps.tasksCollection.lampiran : []
+          name: tasksCollection.name,
+          subject: tasksCollection.subject,
+          deadline: tasksCollection.deadline,
+          class_assigned: Boolean(tasksCollection.class_assigned) ? tasksCollection.class_assigned : [],
+          description: tasksCollection.description,
+          fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
           // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
           // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
       })
@@ -299,6 +303,7 @@ class EditTask extends Component {
   };
 
   onChange = (e, otherfield) => {
+    console.log(this.state.class_assigned)
     if(Object.keys(this.props.errors).length !== 0){
       this.props.clearErrors()
     }
@@ -326,7 +331,7 @@ class EditTask extends Component {
   }
 
   render() {
-    const { fileLampiran } = this.state;
+    const { fileLampiran, class_assigned } = this.state;
     const { classes, errors, success } = this.props;
     const { all_classes, selectedClasses } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection
@@ -337,7 +342,7 @@ class EditTask extends Component {
     console.log("FileLampiran:", this.state.fileLampiran)
     console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
-
+    console.log(class_assigned)
     const UploadDialog = () => {
       return(
         <Dialog open={this.state.openUploadDialog}>
@@ -401,8 +406,8 @@ class EditTask extends Component {
       return temp;
     }
 
-    if(this.state.class_assigned != null) //When firstly received.
-      this.state.class_assigned.map((kelas) => {
+    if(class_assigned != null) //When firstly received.
+      class_assigned.map((kelas) => {
         if(kelas._id != undefined)
           classIds.push(kelas._id)
         else
@@ -466,11 +471,10 @@ class EditTask extends Component {
                     <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
                       <label id="class_assigned" className={classes.inputLabel}>Kelas yang dipilih</label>
                       <Select
-                        error={errors.class_assigned !== undefined}
                         id="class_assigned"
                         multiple
                         MenuProps={MenuProps}
-                        value={classIds}
+                        value={class_assigned}
                         onChange={(event) => {this.onChange(event, "kelas")}}
                         renderValue={(selected) => {
                           return(
@@ -490,7 +494,7 @@ class EditTask extends Component {
                             </div>
                         )}}
                       >
-                        {all_classes.map((kelas) => (
+                        {!all_classes.length ? null : all_classes.map((kelas) => (
                             <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
                         ))}
                       </Select>
@@ -573,10 +577,13 @@ class EditTask extends Component {
                     <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                       <KeyboardDateTimePicker
                         fullWidth
-                        // disablePast
+                        disablePast
                         format="dd/MM/yyyy HH:mm"
+                        ampm={false}
                         margin="normal"
                         okLabel="Simpan"
+                        minDateMessage="Batas waktu harus waktu yang akan datang"
+                        invalidDateMessage="Format tanggal tidak benar"
                         cancelLabel="Batal"
                         id="date-picker-inline"
                         value={this.state.deadline}

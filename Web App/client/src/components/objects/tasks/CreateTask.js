@@ -181,7 +181,7 @@ class CreateTask extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log(this.state.deadline)
+    console.log(this.state.class_assigned, e.target.value)
     if(Object.keys(this.props.errors).length !== 0)
       this.props.clearErrors()
     if(otherfield === "kelas") {
@@ -274,6 +274,8 @@ class CreateTask extends Component {
   render() {
     const { classesCollection, classes, errors, success, viewClass, subjectsCollection}  = this.props;
     const { class_assigned, fileLampiran}  = this.state;
+    const { all_classes } = this.props.classesCollection
+    const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth
     console.log(errors)
 
@@ -324,17 +326,6 @@ class CreateTask extends Component {
         }
       }
       return temp;
-    }
-
-    var options = []
-    var subjectOptions = []
-
-    if(Object.keys(classesCollection).length !== 0) {
-      options = classesCollection.all_classes
-    }
-
-    if(Object.keys(subjectsCollection).length !== 0) {
-      subjectOptions = subjectsCollection.all_subjects
     }
 
     const ITEM_HEIGHT = 48;
@@ -393,7 +384,7 @@ class CreateTask extends Component {
                         value={this.state.subject}
                         onChange={(event) => {this.onChange(event, "subject")}}
                       >
-                        {subjectOptions.map((subject) => (
+                        {all_subjects.map((subject) => (
                           <MenuItem value={subject.name}>{subject.name}</MenuItem>
                         ))}
                       </Select>
@@ -414,19 +405,24 @@ class CreateTask extends Component {
                         onChange={(event) => {this.onChange(event, "kelas")}}
                         renderValue={(selected) => (
                           <div className={classes.chips}>
-                            {selected.map((kelas) => {
-                              console.log(selected)
-                              console.log(kelas, class_assigned)
+                            {selected.map((id) => {
+                              let name
+                              for (var i in all_classes){ // i is the index
+                                if(all_classes[i]._id === id){
+                                  name = all_classes[i].name
+                                  break;
+                                }
+                              }
                               return(
-                                <Chip key={kelas} label={kelas.name} className={classes.chip} />
+                                <Chip key={id} label={name} className={classes.chip} />
                               )
                             })}
                           </div>
                         )}
                       >
-                        {options.map((kelas) => { console.log(kelas, class_assigned)
+                        {all_classes.map((kelas) => { console.log(kelas, class_assigned)
                           return(
-                            <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
+                            <MenuItem value={kelas._id} key={kelas._id} selected>{kelas.name}</MenuItem>
                         )})}
                       </Select>
                       <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
@@ -512,6 +508,8 @@ class CreateTask extends Component {
                         margin="normal"
                         okLabel="Simpan"
                         cancelLabel="Batal"
+                        minDateMessage="Batas waktu harus waktu yang akan datang"
+                        invalidDateMessage="Format tanggal tidak benar"
                         id="date-picker-inline"
                         value={this.state.deadline}
                         onChange={(date) => this.onDateChange(date)}

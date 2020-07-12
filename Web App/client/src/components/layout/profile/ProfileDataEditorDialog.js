@@ -287,6 +287,8 @@ function ProfileDataEditorDialog(props) {
                           fullWidth
                           disableFuture
                           inputVariant="outlined"
+                          maxDateMessage="Batas waktu harus waktu yang akan datang"
+                          invalidDateMessage="Format tanggal tidak benar"
                           format="dd/MM/yyyy"
                           okLabel="Simpan"
                           cancelLabel="Batal"

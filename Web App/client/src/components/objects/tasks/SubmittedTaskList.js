@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { viewOneTask, gradeTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
+import { viewClass } from "../../../actions/ClassActions";
 import StandardTextField from "../../misc/text-field/StandardTextField";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
    List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, Typography } from "@material-ui/core";
@@ -224,14 +225,16 @@ function UnduhSemuaButton(props) {
 function SubmittedTaskList(props) {
   const classes = useStyles();
 
-  const { viewOneTask, tasksCollection, classesCollection, getStudents, downloadTugas, previewTugas, gradeTask, success } = props;
+  const { viewOneTask, viewClass, tasksCollection, getStudents, downloadTugas, previewTugas, gradeTask, success } = props;
+  const { all_classes } = props.classesCollection;
   const { all_students } = props.auth;
   const task_id = props.match.params.id;
 
   const [grade, setGrade] = React.useState(new Map());
   const [gradeStatus, setGradeStatus] = React.useState(new Map());
   const [openAlert, setOpenAlert] = React.useState(false);
-  
+  const [classes_map, setClassesMap] = React.useState(new Map());
+
   console.log(grade)
   console.log(all_students)
 
@@ -248,12 +251,16 @@ function SubmittedTaskList(props) {
   React.useEffect(() => {
     viewOneTask(task_id)
     getStudents()
-    console.log(all_students)
-    console.log(tasksCollection)
+    viewClass()
     if(success){
       handleOpenAlert()
     }
-  }, [tasksCollection._id, success])
+    if(all_classes.length){
+      let temp = new Map()
+      all_classes.map((kelas) => temp.set(kelas._id, kelas))
+      setClassesMap(temp)
+    }
+  }, [tasksCollection._id, success, all_classes])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -331,20 +338,22 @@ function SubmittedTaskList(props) {
     if(!tasksCollection.class_assigned){
       return null;
     }else {
-      for (var i = 0; i < tasksCollection.class_assigned.length; i++){
-        class_assigned.push(<Tab label={tasksCollection.class_assigned[i].name} {...TabIndex(i)}/>)
+      if(classes_map.size){
+        for (var i = 0; i < tasksCollection.class_assigned.length; i++){
+          class_assigned.push(<Tab label={classes_map.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
+        }
+        return(
+          <Tabs
+            value={value}
+            variant="scrollable"
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            >
+              {class_assigned}
+          </Tabs>
+        )
       }
-      return(
-        <Tabs
-          value={value}
-          variant="scrollable"
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          >
-            {class_assigned}
-        </Tabs>
-      )
     }
   }
 
@@ -359,7 +368,7 @@ function SubmittedTaskList(props) {
         for(var j = 0; j < all_students.length; j++){
           // check if the id of the class is the same or not (means student is inside)
           student_task_files_id = []
-          if(all_students[j].kelas === tasksCollection.class_assigned[i]._id){
+          if(all_students[j].kelas === tasksCollection.class_assigned[i]){
             let student = all_students[j]
             let student_task = all_students[j].tugas
             let task_list_on_panel = []
@@ -463,6 +472,7 @@ SubmittedTaskList.propTypes = {
   downloadTugas: PropTypes.func.isRequired,
   previewTugas: PropTypes.func.isRequired,
   gradeTask: PropTypes.func.isRequired,
+  viewClass: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -475,5 +485,5 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps, { getStudents,
     getTaskFilesByUser, viewOneTask, downloadTugas,
-    previewTugas, gradeTask }
+    previewTugas, gradeTask, viewClass }
 ) (SubmittedTaskList);

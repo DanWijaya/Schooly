@@ -1,5 +1,6 @@
 // Require Mongoose
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 
 // Define a Schema
 const Schema = mongoose.Schema;
@@ -19,15 +20,11 @@ const AnnoucementSchema = new Schema({
         default: []
     }],
     class_assigned: [{
-        type: Object,
+        type: ObjectId,
         required: true
     }],
-    author_name: {
-        type: String,
-        required: true
-    },
     author_id: {
-        type: String,
+        type: ObjectId,
         required: true
     },
     date_announced: {

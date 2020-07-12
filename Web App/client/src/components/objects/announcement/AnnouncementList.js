@@ -84,7 +84,7 @@ function AnnouncementList(props) {
   const { user, retrieved_users } = props.auth;
   const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false)
 
-
+  console.log(retrieved_users)
   React.useEffect(() => {
     if(user.role === "Teacher" && !annIsRetrieved){
       getAnnouncement(user.id, "by_author")
@@ -95,7 +95,16 @@ function AnnouncementList(props) {
       setCurrentClass(user.kelas)
       setAnnIsRetrieved(true)
     }
-  }, props.announcements)
+    console.log(selectedAnnouncements.length)
+    if(selectedAnnouncements.length){
+      let author_id_set = new Set();
+      selectedAnnouncements.map((ann) => {
+        author_id_set.add(ann.author_id)
+      })
+      console.log("get users is runned")
+      getUsers(Array.from(author_id_set))
+    }
+  }, [selectedAnnouncements.length])
 
   // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
 
@@ -109,7 +118,7 @@ function AnnouncementList(props) {
       annList.push(
         <AnnouncementItemList
           sender_icon={<AccountCircleIcon />}
-          author_name={selectedAnnouncements[i].author_name}
+          author_name={retrieved_users.size ? retrieved_users.get(selectedAnnouncements[i].author_id).name : null}
           notification_title={selectedAnnouncements[i].title}
           notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
           date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}

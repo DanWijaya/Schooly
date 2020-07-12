@@ -8,8 +8,9 @@ import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../..
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
+import { getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
 import { viewSelectedClasses } from "../../../actions/ClassActions"
+import { getUsers } from "../../../actions/UserActions";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -198,9 +199,9 @@ function ViewAnnouncement(props) {
   document.title = "Schooly | Lihat Pengumuman"
 
   const classes = useStyles();
-  const { selectedAnnouncements, all_announcements } = props.announcements;
-  const { classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, viewSelectedClasses } = props;
-  const { user } = props.auth;
+  const { selectedAnnouncements } = props.announcements;
+  const { getUsers, classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, viewSelectedClasses } = props;
+  const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const announcement_id = props.match.params.id;
 
@@ -208,7 +209,12 @@ function ViewAnnouncement(props) {
     getOneAnnouncement(announcement_id)
     viewSelectedClasses(selectedAnnouncements.class_assigned)
     console.log(selectedAnnouncements)
-  }, selectedAnnouncements._id) // beacause only receive one announcement.
+    if(selectedAnnouncements._id){
+      console.log("getusers is runned")
+      getUsers([selectedAnnouncements.author_id])
+    }
+
+  }, [selectedAnnouncements._id]) // beacause only receive one announcement.
 
   console.log(classesCollection)
   const fileType = (filename) => {
@@ -319,6 +325,7 @@ function ViewAnnouncement(props) {
       console.log("File Category is not specified")
   }
 
+  console.log(retrieved_users)
   return(
     <div className={classes.root}>
       {DeleteDialog()}
@@ -334,7 +341,7 @@ function ViewAnnouncement(props) {
                 }
                 secondary={
                   <Typography variant="h6" color="textSecondary">
-                    {selectedAnnouncements.author_name}
+                    {retrieved_users.size ?  retrieved_users.get(selectedAnnouncements.author_id).name : null}
                   </Typography>
                 }
               />
@@ -408,13 +415,12 @@ ViewAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
-  getAnnouncement: PropTypes.func.isRequired,
-  getAllAnnouncements: PropTypes.func.isRequired,
   getOneAnnouncement: PropTypes.func.isRequired,
   deleteAnnouncement: PropTypes.func.isRequired,
   downloadLampiranAnnouncement: PropTypes.func.isRequired,
   previewLampiranAnnouncement: PropTypes.func.isRequired,
-  viewSelectedClasses: PropTypes.func.isRequired
+  viewSelectedClasses: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -424,6 +430,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, getAnnouncement, deleteAnnouncement, getAllAnnouncements,
+  mapStateToProps, { getOneAnnouncement, getUsers, deleteAnnouncement,
     previewLampiranAnnouncement, downloadLampiranAnnouncement, viewSelectedClasses}
 ) (ViewAnnouncement);
