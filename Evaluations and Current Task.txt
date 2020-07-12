@@ -10,6 +10,8 @@ IMPORTANT:
 3. Jumlah murid dan absen di kelas
 5. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
 6. cek Tabs scrollable
+7. View task studnet telat dan badge
+8. Perbaiki grading dan kasi snackbar
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
