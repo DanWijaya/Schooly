@@ -12,16 +12,6 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const styles = (theme) => ({
-  rootDesktop: {
-    margin: "auto",
-    maxWidth: "1000px",
-    height: "500px",
-    padding: "10px",
-    backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
-  },
   rootMobile: {
     margin: "auto",
     maxWidth: "1000px",
@@ -32,7 +22,17 @@ const styles = (theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   },
-  container: {
+  rootDesktop: {
+    margin: "auto",
+    maxWidth: "1000px",
+    minHeight: "500px",
+    padding: "10px",
+    backgroundImage: `url(${authBackground})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+  },
+  mainPaper: {
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
@@ -109,7 +109,7 @@ class LoginV2 extends Component {
       <div>
         <Hidden smUp implementation="css">
           <div className={classes.rootMobile}>
-            <Paper className={classes.container}>
+            <Paper className={classes.mainPaper}>
               <Grid container direction="column" spacing={5}>
                 <Grid item>
                   <Typography variant="h6" align="center">
@@ -120,7 +120,7 @@ class LoginV2 extends Component {
                   <form noValidate onSubmit={this.onSubmit}>
                     <Grid container direction="column" spacing={4} alignItems="stretch">
                       <Grid item>
-                        <label>Email</label>
+                        <label for="email">Email</label>
                         <TextField
                           fullWidth
                           variant="outlined"
@@ -130,7 +130,7 @@ class LoginV2 extends Component {
                           error={errors.email}
                           type="email"
                           helperText={
-                            <div style={{ display:"flex", alignItems: "center"}}>
+                            <div style={{display: "flex", alignItems: "center"}}>
                               {errors.email || errors.emailnotfound ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
                               <Typography variant="h8" style={{marginLeft: "4px"}}>
                                 {errors.email}
@@ -144,7 +144,7 @@ class LoginV2 extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <label>Kata Sandi</label>
+                        <label for="password">Kata Sandi</label>
                         <TextField
                           fullWidth
                           variant="outlined"
@@ -154,7 +154,7 @@ class LoginV2 extends Component {
                           type={passwordIsMasked ? "password" : "text"}
                           error={errors.password}
                           helperText={
-                            <div style={{ display:"flex", alignItems: "center"}}>
+                            <div style={{display: "flex", alignItems: "center"}}>
                               {errors.password || errors.passwordincorrect ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
                               <Typography variant="h8" style={{marginLeft: "4px"}}>
                                 {errors.password}
@@ -210,7 +210,7 @@ class LoginV2 extends Component {
         </Hidden>
         <Hidden xsDown implementation="css">
           <div className={classes.rootDesktop}>
-            <Paper className={classes.container}>
+            <Paper className={classes.mainPaper}>
               <Grid container direction="column" spacing={5}>
                 <Grid item>
                   <Typography variant="h6" align="center">

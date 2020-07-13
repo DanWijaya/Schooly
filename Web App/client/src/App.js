@@ -11,6 +11,7 @@ import { setCurrentUser, logoutUser } from "./actions/UserActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 //Auth
 import Register from "./components/auth/register/Register";
+import RegisterV2 from "./components/auth/register/RegisterV2";
 import Login from "./components/auth/login/Login";
 import LoginV2 from "./components/auth/login/LoginV2";
 import LoginForgot from "./components/auth/login/LoginForgot";
@@ -149,6 +150,7 @@ class App extends Component {
                       )}
                     />
                     <Route exact path="/daftar" component={Register} />
+                    <Route exact path="/registerv2" component={RegisterV2} />
                     <Route exact path="/masuk" component={Login} />
                     <Route exact path="/loginv2" component={LoginV2} />
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
