@@ -3,6 +3,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import DateFnsUtils from "@date-io/date-fns";
+import lokal from "date-fns/locale/id";
 import { registerUser } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
@@ -12,24 +14,15 @@ import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, Divider, FormControl, FormHelperText, Grid, Hidden, Link,
+import { Button, Dialog, Divider, FormControl, FormHelperText, Grid, Link,
    MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, TextField, Typography } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
-  rootMobile: {
-    margin: "auto",
-    maxWidth: "1000px",
-    height: "500px",
-    padding: "10px",
-    backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-  },
-  rootDesktop: {
+  root: {
     margin: "auto",
     maxWidth: "1000px",
     minHeight: "500px",
@@ -37,7 +30,10 @@ const styles = (theme) => ({
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
+    [theme.breakpoints.up("sm")]: {
+      backgroundSize: "contain",
+    },
   },
   mainPaper: {
     margin: "auto",
@@ -113,6 +109,7 @@ class RegsiterV2 extends Component {
       errors: {},
       kelas: "", // Student Data
       subject_teached: "", // Teacher Data
+      tanggal_lahir: new Date(),
       activeStep: 0,
       snackbarOpen: false,
       dialogOpen: false,
@@ -139,6 +136,10 @@ class RegsiterV2 extends Component {
     }
   }
 
+  handleDateChange = (date) => {
+    this.setState({ tanggal_lahir: date })
+  }
+
   onChange = (e, otherfield) => {
     if(otherfield === "kelas")
       this.setState({kelas: e.target.value});
@@ -161,6 +162,7 @@ class RegsiterV2 extends Component {
       address: this.state.address,
       password: this.state.password,
       password2: this.state.password2,
+      tanggal_lahir: this.state.tanggal_lahir,
     };
 
     const role = this.state.role;
@@ -218,7 +220,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.email ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="h8" style={{marginLeft: "4px"}}>
+                      <Typography style={{marginLeft: "4px"}}>
                         {errors.email}
                       </Typography>
                     </div>
@@ -241,7 +243,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.password ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="h8" style={{marginLeft: "4px"}}>
+                      <Typography style={{marginLeft: "4px"}}>
                         {errors.password}
                       </Typography>
                     </div>
@@ -264,7 +266,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.password2 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="h8" style={{marginLeft: "4px"}}>
+                      <Typography style={{marginLeft: "4px"}}>
                         {errors.password2}
                       </Typography>
                     </div>
@@ -292,7 +294,7 @@ class RegsiterV2 extends Component {
                   </Select>
                   <FormHelperText style={{display: "flex", alignItems: "center"}}>
                     {Boolean(errors.role) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.role) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
+                    {Boolean(errors.role) ? <Typography style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -309,7 +311,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.name ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="h8" style={{marginLeft: "4px"}}>
+                      <Typography style={{marginLeft: "4px"}}>
                         {errors.name}
                       </Typography>
                     </div>
@@ -333,7 +335,7 @@ class RegsiterV2 extends Component {
                   </Select>
                   <FormHelperText style={{display:"flex", alignItems:"center"}}>
                     {Boolean(errors.kelas) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.kelas) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
+                    {Boolean(errors.kelas) ? <Typography style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
                   </FormHelperText>
                 </FormControl>
                 </Grid>
@@ -351,7 +353,7 @@ class RegsiterV2 extends Component {
                   </Select>
                   <FormHelperText style={{display:"flex", alignItems:"center"}}>
                     {Boolean(errors.subject_teached) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.subject_teached) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
+                    {Boolean(errors.subject_teached) ? <Typography style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
                   </FormHelperText>
                 </FormControl>
                 </Grid>
@@ -371,7 +373,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="h8" style={{marginLeft: "4px"}}>
+                      <Typography style={{marginLeft: "4px"}}>
                         {errors.phone}
                       </Typography>
                     </div>
@@ -394,7 +396,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.emergency_phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="h8" style={{marginLeft: "4px"}}>
+                      <Typography style={{marginLeft: "4px"}}>
                         {errors.emergency_phone}
                       </Typography>
                     </div>
@@ -417,7 +419,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.address ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="h8" style={{marginLeft: "4px"}}>
+                      <Typography style={{marginLeft: "4px"}}>
                         {errors.address}
                       </Typography>
                     </div>
@@ -426,6 +428,24 @@ class RegsiterV2 extends Component {
                     invalid: errors.address
                   })}
                 />
+              </Grid>
+              <Grid item className={classes.inputField}>
+                <label for="tanggal_lahir">Tanggal Lahir</label>
+                <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    fullWidth
+                    disableFuture
+                    inputVariant="outlined"
+                    maxDateMessage="Batas waktu harus waktu yang akan datang"
+                    invalidDateMessage="Format tanggal tidak benar"
+                    format="dd/MMMM/yyyy"
+                    okLabel="Simpan"
+                    cancelLabel="Batal"
+                    id="tanggal_lahir"
+                    onChange={(date) => this.handleDateChange(date)}
+                    value={this.state.tanggal_lahir}
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
             </Grid>
           );
@@ -494,7 +514,6 @@ class RegsiterV2 extends Component {
       this.setState(prevState => ({dialogOpen: !prevState.dialogOpen }))
     };
 
-
     // Error Snackbar
     const handleCloseSnackbar = (event, reason) => {
       if (reason === "clickaway") {
@@ -507,155 +526,77 @@ class RegsiterV2 extends Component {
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return(
-      <div>
-        <Hidden smUp implementation="css">
-          <div className={classes.rootMobile}>
-            <Paper className={classes.mainPaper}>
-              <Grid container direction="column" spacing={5}>
-                <Grid item>
-                  <Typography variant="h6" align="center">
-                    <b>Daftar ke Schooly</b>
-                  </Typography>
+      <div className={classes.root}>
+        <Paper className={classes.mainPaper}>
+          <Grid container direction="column" spacing={5}>
+            <Grid item>
+              <Typography variant="h6" align="center">
+                <b>Daftar ke Schooly</b>
+              </Typography>
+            </Grid>
+            <Stepper alternativeLabel activeStep={this.state.activeStep} connector={<RegisterStepConnector />}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={RegisterStepIcon}>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Grid item>
+              <form noValidate onSubmit={this.onSubmit} style={{width: "100%"}}>
+                {getStepContent(this.state.activeStep)}
+                <Grid container justify="space-between" style={{marginTop: "40px"}}>
+                  <Grid item>
+                    {this.state.activeStep === 0 ?
+                      null
+                      :
+                        <Button
+                          onClick={handleBack}
+                          className={classes.backButton}
+                        >
+                          Kembali
+                        </Button>
+                    }
+                  </Grid>
+                  <Grid item>
+                    {this.state.activeStep === steps.length - 1 ?
+                        <Button
+                          type="submit"
+                          className={classes.registerButton}
+                        >
+                          Daftar
+                        </Button>
+                      :
+                        <Button
+                          onClick={handleNext}
+                          className={classes.continueButton}
+                        >
+                          Lanjut
+                        </Button>
+                    }
+                  </Grid>
                 </Grid>
-                <Stepper alternativeLabel activeStep={this.state.activeStep} connector={<RegisterStepConnector />}>
-                  {steps.map((label) => (
-                    <Step key={label}>
-                      <StepLabel StepIconComponent={RegisterStepIcon}>{label}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-                <Grid item>
-                  <form noValidate onSubmit={this.onSubmit} style={{width: "100%"}}>
-                    {getStepContent(this.state.activeStep)}
-                    <Grid container justify="space-between" style={{marginTop: "40px"}}>
-                      <Grid item>
-                        {this.state.activeStep === 0 ?
-                          null
-                          :
-                            <Button
-                              onClick={handleBack}
-                              className={classes.backButton}
-                            >
-                              Kembali
-                            </Button>
-                        }
-                      </Grid>
-                      <Grid item>
-                        {this.state.activeStep === steps.length - 1 ?
-                            <Button
-                              type="submit"
-                              className={classes.registerButton}
-                            >
-                              Daftar
-                            </Button>
-                          :
-                            <Button
-                              onClick={handleNext}
-                              className={classes.continueButton}
-                            >
-                              Lanjut
-                            </Button>
-                        }
-                      </Grid>
-                    </Grid>
-                  </form>
-                </Grid>
-                <Divider />
-                <Grid item>
-                  <Link href="/masuk" style={{marginTop: "20px"}}>
-                    <Typography align="center">
-                      Sudah ada Akun?
-                    </Typography>
-                  </Link>
-                </Grid>
-              </Grid>
-            </Paper>
-            <Snackbar
-              open={this.state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={handleCloseSnackbar}
-              anchorOrigin={{vertical : "bottom", horizontal: "center"}}
-            >
-              <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="error">
-                Terdapat kesalahan dalam pengisian!
-              </MuiAlert>
-            </Snackbar>
-          </div>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <div className={classes.rootDesktop}>
-            <Paper className={classes.mainPaper}>
-              <Grid container direction="column" spacing={5}>
-                <Grid item>
-                  <Typography variant="h6" align="center">
-                    <b>Daftar ke Schooly</b>
-                  </Typography>
-                </Grid>
-                <Stepper alternativeLabel activeStep={this.state.activeStep} connector={<RegisterStepConnector />}>
-                  {steps.map((label) => (
-                    <Step key={label}>
-                      <StepLabel StepIconComponent={RegisterStepIcon}>{label}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-                <Grid item>
-                  <form noValidate onSubmit={this.onSubmit} style={{width: "100%"}}>
-                    {getStepContent(this.state.activeStep)}
-                    <Grid container justify="space-between" style={{marginTop: "40px"}}>
-                      <Grid item>
-                        {this.state.activeStep === 0 ?
-                          null
-                          :
-                            <Button
-                              onClick={handleBack}
-                              className={classes.backButton}
-                            >
-                              Kembali
-                            </Button>
-                        }
-                      </Grid>
-                      <Grid item>
-                        {this.state.activeStep === steps.length - 1 ?
-                            <Button
-                              type="submit"
-                              className={classes.registerButton}
-                            >
-                              Daftar
-                            </Button>
-                          :
-                            <Button
-                              onClick={handleNext}
-                              className={classes.continueButton}
-                            >
-                              Lanjut
-                            </Button>
-                        }
-                      </Grid>
-                    </Grid>
-                  </form>
-                </Grid>
-                <Divider />
-                <Grid item>
-                  <Link href="/masuk" style={{marginTop: "20px"}}>
-                    <Typography align="center">
-                      Sudah ada Akun?
-                    </Typography>
-                  </Link>
-                </Grid>
-              </Grid>
-            </Paper>
-            <Snackbar
-              open={this.state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={handleCloseSnackbar}
-              anchorOrigin={{vertical : "bottom", horizontal: "center"}}
-            >
-              <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="error">
-                Terdapat kesalahan dalam pengisian!
-              </MuiAlert>
-            </Snackbar>
-          </div>
-        </Hidden>
+              </form>
+            </Grid>
+            <Divider />
+            <Grid item>
+              <Link href="/masuk" style={{marginTop: "20px"}}>
+                <Typography align="center">
+                  Sudah ada Akun?
+                </Typography>
+              </Link>
+            </Grid>
+          </Grid>
+        </Paper>
+        <Snackbar
+          open={this.state.snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{vertical : "bottom", horizontal: "center"}}
+        >
+          <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="error">
+            Terdapat kesalahan dalam pengisian!
+          </MuiAlert>
+        </Snackbar>
       </div>
     );
   }

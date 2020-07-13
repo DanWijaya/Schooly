@@ -7,7 +7,7 @@ import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../actions/UserActions";
 import { clearErrors} from "../../../actions/ErrorActions";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Avatar, Button, Box, Dialog, Grid, IconButton, List, ListItem, ListItemAvatar, MenuItem, Select, Tab, Tabs, Typography } from "@material-ui/core";
+import { Avatar, Button, Box, Dialog, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
@@ -27,6 +27,7 @@ import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
+
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 
@@ -98,26 +99,40 @@ function ProfileDataItemEdit(props) {
   return(
     <ListItem>
       <Grid container alignItems="center">
-        <Grid item xs={2}>
-          <ListItemAvatar>
-            <Avatar className={classes.profileDataItemAvatar}>
-              {props.profile_data_icon}
-            </Avatar>
-          </ListItemAvatar>
+        <Grid item sm={2}>
+          <Hidden xsDown implementation="css">
+            <ListItemAvatar>
+              <Avatar className={classes.profileDataItemAvatar}>
+                {props.profile_data_icon}
+              </Avatar>
+            </ListItemAvatar>
+          </Hidden>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={12} sm={10}>
           { props.is_textfield ?
-            <OutlinedTextField
-              labelname={props.profile_data_category}
-              value={props.value}
-              id={props.id}
-              on_change={props.on_change}
-              error={!errors ? null : errors.email}
-              error1={!errors ? null : errors.email}
-              span_classname={classes.errorInfo}
-              width
-            />
-            :
+            <div>
+              <label for={props.id}>{props.profile_data_category}</label>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id={props.id}
+                onChange={props.on_change}
+                value={props.value}
+                error={!errors ? null : errors.email}
+                // error={!errors ? null : errors.email}
+                // error1={!errors ? null : errors.email}
+                // helperText={
+                //   <div style={{display: "flex", alignItems: "center"}}>
+                //     {errors.email || errors.emailnotfound ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                //     <Typography style={{marginLeft: "4px"}}>
+                //       {errors.email}
+                //       {errors.emailnotfound}
+                //     </Typography>
+                //   </div>
+                // }
+              />
+            </div>
+          :
             props.non_textfield_content
           }
         </Grid>
@@ -252,7 +267,7 @@ function ProfileDataEditorDialog(props) {
               <b>Sunting Profil</b>
             </Typography>
           </Grid>
-          <form onSubmit={onSubmit} style={{width: "100%"}}>
+          <form onSubmit={onSubmit}>
             <Tabs
               variant="fullWidth"
               indicatorColor="primary"
@@ -278,10 +293,8 @@ function ProfileDataEditorDialog(props) {
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
                   non_textfield_content={
-                    <div style={{marginBottom: 3.5}}>
-                      <label id="tanggal_lahir">
-                        Tanggal Lahir
-                      </label>
+                    <div>
+                      <label for="tanggal_lahir">Tanggal Lahir</label>
                       <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                         <KeyboardDatePicker
                           fullWidth
@@ -296,17 +309,9 @@ function ProfileDataEditorDialog(props) {
                           onChange={(date) => handleDateChange(date)}
                           value={dataProfil.tanggal_lahir instanceof Date ?
                             dataProfil.tanggal_lahir
-                            :
+                          :
                             null
                           }
-                          inputProps={{
-                            style: {
-                              borderBottom: "none",
-                              boxShadow: "none",
-                              margin: 0,
-                              paddingLeft: "11px",
-                            },
-                          }}
                         />
                       </MuiPickersUtilsProvider>
                     </div>
@@ -316,10 +321,8 @@ function ProfileDataEditorDialog(props) {
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
                   non_textfield_content={
-                    <div style={{marginBottom: 1.85}}>
-                      <label id="jenis_kelamin">
-                        Jenis kelamin
-                      </label>
+                    <div>
+                      <label for="jenis_kelamin">Jenis kelamin</label>
                       <Select
                         fullWidth
                         variant="outlined"
@@ -417,7 +420,7 @@ function ProfileDataEditorDialog(props) {
                 />
               </List>
             </TabPanel>
-            <Grid container justify="center" style={{marginTop: "15px"}}>
+            <Grid container justify="center" style={{marginTop: "10px"}}>
               <Button
                 type="submit"
                 variant="contained"
