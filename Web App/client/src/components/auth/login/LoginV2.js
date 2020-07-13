@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
 import authBackground from "../AuthBackground.png";
-import { Button, Divider, Grid, Hidden, IconButton, InputAdornment, Link, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, Divider, FormControl, FormHelperText, Grid, Hidden, IconButton, InputAdornment, Link, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import ErrorIcon from "@material-ui/icons/Error";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -100,11 +100,10 @@ class LoginV2 extends Component {
   render() {
     const { classes } = this.props;
 
-    const { errors, passwordIsMasked, icon } = this.state;
-
+    const { passwordIsMasked, icon , errors} = this.state;
     document.title = "Masuk ke Schooly";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
-
+    console.log(Boolean(errors.password || errors.passwordincorrect))
     return(
       <div>
         <Hidden smUp implementation="css">
@@ -127,7 +126,7 @@ class LoginV2 extends Component {
                           id="email"
                           onChange={this.onChange}
                           value={this.state.email}
-                          error={errors.email}
+                          error={Boolean(errors.email || errors.emailnotfound)}
                           type="email"
                           helperText={
                             <div style={{ display:"flex", alignItems: "center"}}>
@@ -144,6 +143,7 @@ class LoginV2 extends Component {
                         />
                       </Grid>
                       <Grid item>
+                        <FormControl variant="outlined" fullWidth error={true}>
                         <label>Kata Sandi</label>
                         <TextField
                           fullWidth
@@ -152,16 +152,16 @@ class LoginV2 extends Component {
                           onChange={this.onChange}
                           value={this.state.password}
                           type={passwordIsMasked ? "password" : "text"}
-                          error={errors.password}
-                          helperText={
-                            <div style={{ display:"flex", alignItems: "center"}}>
-                              {errors.password || errors.passwordincorrect ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                              <Typography variant="h8" style={{marginLeft: "4px"}}>
-                                {errors.password}
-                                {errors.passwordincorrect}
-                              </Typography>
-                            </div>
-                          }
+                          error={true}
+                          // helperText={
+                          //   <div style={{ display:"flex", alignItems: "center"}}>
+                          //     {errors.password || errors.passwordincorrect ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          //     <Typography variant="h8" style={{marginLeft: "4px"}}>
+                          //       {errors.password}
+                          //       {errors.passwordincorrect}
+                          //     </Typography>
+                          //   </div>
+                          // }
                           className={classnames("", {
                             invalid: errors.password || errors.passwordincorrect
                           })}
@@ -177,6 +177,11 @@ class LoginV2 extends Component {
                               </InputAdornment>,
                           }}
                         />
+                        <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                      {Boolean(errors.password || errors.passwordincorrect) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      {Boolean(errors.password || errors.passwordincorrect) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.password} {errors.passwordincorrect}</Typography> : null}
+                    </FormHelperText>
+                        </FormControl>
                       </Grid>
                       <Grid item>
                         <Button

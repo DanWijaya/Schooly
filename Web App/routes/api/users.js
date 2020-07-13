@@ -43,35 +43,11 @@ router.post("/register", (req, res) => {
     else {
         var newUser
         if(req.body.role === "Student")
-          newUser = new Student({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            phone: req.body.phone,
-            emergency_phone: req.body.emergency_phone,
-            address: req.body.address,
-            kelas: req.body.kelas,
-          });
-
+          newUser = new Student(req.body)
         else if(req.body.role === "Teacher")
-          newUser = new Teacher({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            phone: req.body.phone,
-            emergency_phone: req.body.emergency_phone,
-            address: req.body.address,
-            subject_teached: req.body.subject_teached
-          });
+          newUser = new Teacher(req.body)
         else {
-          newUser = new Admin({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            phone: req.body.phone,
-            emergency_phone: req.body.emergency_phone,
-            address: req.body.address,
-          })
+          newUser = new Admin(req.body)
         }
 
       // Hash password before saving in database

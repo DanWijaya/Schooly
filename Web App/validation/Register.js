@@ -49,7 +49,7 @@ module.exports = function validateRegisterInput(data) {
     errors.emergency_phone = "Nomor telepon darurat belum diisi"
   }
 
-  // Emergency phone checks
+  // Address checks
   if (Validator.isEmpty(data.address)) {
     errors.address = "Alamat belum diisi"
   }

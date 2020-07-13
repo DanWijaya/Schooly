@@ -21,8 +21,8 @@ const TaskSchema = new Schema({
         required: true
     }],
     person_in_charge_id: {
-        type: String,
-        default: ""
+        type: ObjectId,
+        required: true
     },
     description: {
         type: String,

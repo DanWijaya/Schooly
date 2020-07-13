@@ -166,13 +166,15 @@ function Profile(props) {
   const [openPasswordEditorAlert, setOpenPasswordEditorAlert] = React.useState(false);
   const handleOpenPasswordEditorAlert = () => {
     setOpenPasswordEditorAlert(true);
+    
   }
   const handleClosePasswordEditorAlert = (e, reason) => {
     if (reason === "clickaway") {
+      window.location.reload()
       return;
     }
-    console.log(openPasswordEditorAlert)
     setOpenPasswordEditorAlert(false);
+    window.location.reload()
   }
 
   // Initially classesCollection.kelas.name === undefined
