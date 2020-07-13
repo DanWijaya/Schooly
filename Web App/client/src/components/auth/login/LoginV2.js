@@ -122,7 +122,7 @@ class LoginV2 extends Component {
                       helperText={
                         <div style={{display: "flex", alignItems: "center"}}>
                           {errors.email || errors.emailnotfound ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                          <Typography style={{marginLeft: "4px"}}>
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
                             {errors.email}
                             {errors.emailnotfound}
                           </Typography>
@@ -146,7 +146,7 @@ class LoginV2 extends Component {
                       helperText={
                         <div style={{ display:"flex", alignItems: "center"}}>
                           {errors.password || errors.passwordincorrect ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                          <Typography variant="h8" style={{marginLeft: "4px"}}>
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
                             {errors.password}
                             {errors.passwordincorrect}
                           </Typography>

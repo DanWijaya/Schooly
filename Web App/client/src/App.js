@@ -46,6 +46,7 @@ import ViewAnnouncement from "./components/objects/announcement/ViewAnnouncement
 import AnnouncementList from "./components/objects/announcement/AnnouncementList";
 //Task
 import CreateTask from "./components/objects/tasks/CreateTask";
+import CreateTaskV2 from "./components/objects/tasks/CreateTaskV2";
 import EditTask from "./components/objects/tasks/EditTask";
 import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
@@ -175,6 +176,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher", "Student"]} path="/daftar-pengumuman" component={AnnouncementList} />
                     {/* Route Task  */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-tugas" component={CreateTask} />
+                    <PrivateRoute exact access={["Teacher"]} path="/createtaskv2" component={CreateTaskV2} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-tugas/:id" component={EditTask} />
                     <PrivateRoute exact access={["Student"]} path="/tugas-murid/:id" component={ViewTaskStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />

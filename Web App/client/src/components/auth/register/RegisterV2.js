@@ -220,7 +220,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.email ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography style={{marginLeft: "4px"}}>
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
                         {errors.email}
                       </Typography>
                     </div>
@@ -243,7 +243,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.password ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography style={{marginLeft: "4px"}}>
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
                         {errors.password}
                       </Typography>
                     </div>
@@ -266,7 +266,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.password2 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography style={{marginLeft: "4px"}}>
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
                         {errors.password2}
                       </Typography>
                     </div>
@@ -294,7 +294,7 @@ class RegsiterV2 extends Component {
                   </Select>
                   <FormHelperText style={{display: "flex", alignItems: "center"}}>
                     {Boolean(errors.role) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.role) ? <Typography style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
+                    {Boolean(errors.role) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -311,7 +311,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.name ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography style={{marginLeft: "4px"}}>
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
                         {errors.name}
                       </Typography>
                     </div>
@@ -335,7 +335,7 @@ class RegsiterV2 extends Component {
                   </Select>
                   <FormHelperText style={{display:"flex", alignItems:"center"}}>
                     {Boolean(errors.kelas) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.kelas) ? <Typography style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
+                    {Boolean(errors.kelas) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
                   </FormHelperText>
                 </FormControl>
                 </Grid>
@@ -353,7 +353,7 @@ class RegsiterV2 extends Component {
                   </Select>
                   <FormHelperText style={{display:"flex", alignItems:"center"}}>
                     {Boolean(errors.subject_teached) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.subject_teached) ? <Typography style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
+                    {Boolean(errors.subject_teached) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
                   </FormHelperText>
                 </FormControl>
                 </Grid>
@@ -373,7 +373,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography style={{marginLeft: "4px"}}>
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
                         {errors.phone}
                       </Typography>
                     </div>
@@ -396,7 +396,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.emergency_phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography style={{marginLeft: "4px"}}>
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
                         {errors.emergency_phone}
                       </Typography>
                     </div>
@@ -419,7 +419,7 @@ class RegsiterV2 extends Component {
                   helperText={
                     <div style={{display: "flex", alignItems: "center"}}>
                       {errors.address ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography style={{marginLeft: "4px"}}>
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
                         {errors.address}
                       </Typography>
                     </div>
