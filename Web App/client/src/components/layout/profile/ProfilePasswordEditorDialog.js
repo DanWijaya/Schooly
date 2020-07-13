@@ -8,6 +8,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { changePassword } from "../../../actions/AuthActions"
 import { logoutUser } from "../../../actions/UserActions"
+import { clearErrors} from "../../../actions/ErrorActions"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "15px",
@@ -62,26 +64,25 @@ function ProfilePasswordEditorDialog(props) {
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
   const [new_password2, setNewPassword2] = React.useState("");
-  const {changePassword, logoutUser, success, errors, handleOpenAlert} = props;
-  const [errorMessage, setErrorMessage] = React.useState({})
+  const {changePassword, logoutUser, success, errors, handleOpenAlert, clearErrors} = props;
+  // const [errorMessage, setErrorMessage] = React.useState({})
   const {user} = props.auth;
 
   const classes = useStyles();
 
   useEffect(() => {
-    setErrorMessage(errors)
     if(success){
       handleOpenAlert()
     }
-  }, [errors])
+  }, [success])
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
+    clearErrors()
     setOpen(true);
   };
   const handleClose = (e) => {
     setOpen(false);
-    setErrorMessage({})
   };
 
   const onSubmit = (e) => {
@@ -97,6 +98,9 @@ function ProfilePasswordEditorDialog(props) {
   }
 
   const onChange = e => {
+    if(Object.keys(errors).length)
+      clearErrors()
+
     switch(e.target.id) {
       case "old_password":
         setOldPassword(e.target.value)
@@ -150,7 +154,7 @@ function ProfilePasswordEditorDialog(props) {
             <List>
               <EditPasswordField
                 id="old_password"
-                errors={errorMessage.old_password}
+                errors={errors.old_password}
                 value={old_password}
                 on_change={onChange}
                 edit_password_requirement="Masukkan kata sandi saat ini"
@@ -158,7 +162,7 @@ function ProfilePasswordEditorDialog(props) {
               <EditPasswordField
                 id="new_password"
                 value={new_password}
-                errors={errorMessage.new_password}
+                errors={errors.new_password}
                 on_change={onChange}
                 edit_password_requirement="Masukkan kata sandi baru"
               />
@@ -166,7 +170,7 @@ function ProfilePasswordEditorDialog(props) {
                 id="new_password2"
                 value={new_password2}
                 on_change={onChange}
-                errors={errorMessage.new_password}
+                errors={errors.new_password}
                 edit_password_requirement="Konfirmasi kata sandi baru"
               />
             </List>
@@ -191,6 +195,7 @@ ProfilePasswordEditorDialog.propTypes = {
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   changePassword: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
 }
 
@@ -201,5 +206,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { changePassword, logoutUser })
+  mapStateToProps, { changePassword, logoutUser, clearErrors })
 (ProfilePasswordEditorDialog);

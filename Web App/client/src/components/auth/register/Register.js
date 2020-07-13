@@ -3,6 +3,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import DateFnsUtils from "@date-io/date-fns";
+import lokal from "date-fns/locale/id";
 import { registerUser } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
@@ -16,6 +18,7 @@ import { Button, Dialog, FormControl, FormHelperText, Grid, Link, MenuItem, Pape
 import { withStyles } from "@material-ui/core/styles";
 import ErrorIcon from "@material-ui/icons/Error";
 import MuiAlert from '@material-ui/lab/Alert';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 const styles = (theme) => ({
   root: {
@@ -104,6 +107,7 @@ class Register extends Component {
       errors: {},
       kelas: "", // Student Data
       subject_teached: "", // Teacher Data
+      tanggal_lahir: new Date(),
       activeStep: 0,
       snackbarOpen: false,
       dialogOpen: false,
@@ -141,6 +145,9 @@ class Register extends Component {
       this.setState({ [e.target.id]: e.target.value });
   };
 
+  handleDateChange = (date) => {
+    this.setState({ tanggal_lahir: date })
+  }
   onSubmit = e => {
     e.preventDefault();
     var newUser = {
@@ -152,6 +159,7 @@ class Register extends Component {
       address: this.state.address,
       password: this.state.password,
       password2: this.state.password2,
+      tanggal_lahir: this.state.tanggal_lahir
     };
 
     const role = this.state.role;
@@ -383,6 +391,32 @@ class Register extends Component {
                   error1={errors.address}
                 />
               </Grid>
+              <Grid item className={classes.inputField}>
+                <label id="tanggal_lahir">Tanggal Lahir</label>
+                <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    fullWidth
+                    disableFuture
+                    inputVariant="outlined"
+                    maxDateMessage="Batas waktu harus waktu yang akan datang"
+                    invalidDateMessage="Format tanggal tidak benar"
+                    format="dd/MMMM/yyyy"
+                    okLabel="Simpan"
+                    cancelLabel="Batal"
+                    id="tanggal_lahir"
+                    onChange={(date) => this.handleDateChange(date)}
+                    value={this.state.tanggal_lahir}
+                    inputProps={{
+                      style: {
+                        borderBottom: "none",
+                        boxShadow: "none",
+                        margin: 0,
+                        paddingLeft: "11px",
+                      },
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+                </Grid>
             </Grid>
           );
         case 2:
