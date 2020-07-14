@@ -27,6 +27,7 @@ import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const Validator = require("validator");
 const isEmpty = require("is-empty");
@@ -95,7 +96,7 @@ function TabIndex(index) {
 function ProfileDataItemEdit(props) {
   const classes = useStyles();
   const { errors } = props;
-
+  console.log(errors)
   return(
     <ListItem>
       <Grid container alignItems="center">
@@ -119,17 +120,14 @@ function ProfileDataItemEdit(props) {
                 onChange={props.on_change}
                 value={props.value}
                 error={!errors ? null : errors.email}
-                // error={!errors ? null : errors.email}
-                // error1={!errors ? null : errors.email}
-                // helperText={
-                //   <div style={{display: "flex", alignItems: "center"}}>
-                //     {errors.email || errors.emailnotfound ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                //     <Typography style={{marginLeft: "4px"}}>
-                //       {errors.email}
-                //       {errors.emailnotfound}
-                //     </Typography>
-                //   </div>
-                // }
+                helperText={
+                  <div style={{display: "flex", alignItems: "center"}}>
+                    {!errors ? null : <ErrorIcon style={{ height: "5%", width:"5%"}} />}
+                    <Typography style={{marginLeft: "4px"}}>
+                      {!errors ? null : errors.email}
+                    </Typography>
+                  </div>
+                }
               />
             </div>
           :
@@ -267,7 +265,7 @@ function ProfileDataEditorDialog(props) {
               <b>Sunting Profil</b>
             </Typography>
           </Grid>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} style={{width: "90%"}}>
             <Tabs
               variant="fullWidth"
               indicatorColor="primary"
@@ -275,7 +273,7 @@ function ProfileDataEditorDialog(props) {
               value={value}
               onChange={handleChange}
             >
-              <Tab icon={<ContactsIcon />} label="Informasi Pribadi" {...TabIndex(0)} />
+              <Tab icon={<ContactsIcon />} label="Info Saya" {...TabIndex(0)} />
               <Tab icon={<ContactMailIcon />} label="Kontak" {...TabIndex(1)} />
               <Tab icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(2)} />
             </Tabs>
