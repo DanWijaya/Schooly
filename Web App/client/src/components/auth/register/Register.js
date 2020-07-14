@@ -40,13 +40,6 @@ const styles = (theme) => ({
     maxWidth: "350px",
     padding: "40px",
   },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px",
-  },
-  inputField: {
-    width: "300px",
-  },
   schoolyLogo: {
     width: "30%",
     height: "30%",
@@ -198,7 +191,7 @@ class Register extends Component {
       switch (stepIndex) {
         case 0:
           return(
-            <Grid container direction="column" spacing={4} alignItems="stretch">
+            <Grid container direction="column" spacing={4}>
               <Grid item>
                 <label for="email">Email</label>
                 <TextField
@@ -272,10 +265,10 @@ class Register extends Component {
           );
         case 1:
           return(
-            <Grid container direction="column" spacing={4} alignItems="stretch">
+            <Grid container direction="column" spacing={4}>
               <Grid item>
+                <label id="role">Daftar Sebagai</label>
                 <FormControl id="role" variant="outlined" color="primary" fullWidth error={Boolean(errors.role)}>
-                  <label id="role">Daftar Sebagai</label>
                   <Select
                     value={this.state.role}
                     onChange={(event) => {this.onChange(event, "role")}}
@@ -314,9 +307,9 @@ class Register extends Component {
                 />
               </Grid>
               {this.state.role === "Student" ?
-                <Grid item className={classes.inputField}>
+                <Grid item>
+                  <label id="kelas">Kelas</label>
                   <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
-                    <label id="kelas">Kelas</label>
                     <Select
                       value={this.state.kelas}
                       onChange={(event) => {this.onChange(event, "kelas")}}
@@ -332,9 +325,9 @@ class Register extends Component {
                 </FormControl>
                 </Grid>
               : this.state.role === "Teacher" ?
-                <Grid item className={classes.inputField}>
+                <Grid item>
+                  <label id="subject">Mata Pelajaran</label>
                   <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject_teached)}>
-                    <label id="subject">Mata Pelajaran</label>
                     <Select
                       value={this.state.subject_teached}
                       onChange={(event) => {this.onChange(event, "subject")}}
@@ -421,7 +414,7 @@ class Register extends Component {
                   })}
                 />
               </Grid>
-              <Grid item className={classes.inputField}>
+              <Grid item>
                 <label for="tanggal_lahir">Tanggal Lahir</label>
                 <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                   <KeyboardDatePicker
@@ -434,8 +427,8 @@ class Register extends Component {
                     okLabel="Simpan"
                     cancelLabel="Batal"
                     id="tanggal_lahir"
-                    onChange={(date) => this.handleDateChange(date)}
                     value={this.state.tanggal_lahir}
+                    onChange={(date) => this.handleDateChange(date)}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
@@ -443,7 +436,7 @@ class Register extends Component {
           );
         case 2:
           return(
-            <Grid container direction="column" spacing={4} alignItems="stretch">
+            <Grid container direction="column" spacing={4}>
               <Grid item>
                 <Typography align="center">
                   Dengan mendaftar, berarti anda dan sekolah anda telah membaca dan
