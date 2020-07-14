@@ -3,17 +3,18 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../../../actions/UserActions";
+import { getPendingStudents, getPendingTeachers, deleteUser, setUserActive } from "../../../actions/UserActions";
 import LightTooltip  from "../../misc/light-tooltip/LightTooltip";
 import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
   Fab, Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
+import CancelIcon from '@material-ui/icons/Cancel';
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SortIcon from "@material-ui/icons/Sort";
-import BlockIcon from '@material-ui/icons/Block';
+import { FaChalkboardTeacher, FaUserCheck, FaUserClock  } from "react-icons/fa";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -132,6 +133,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     padding: "15px",
   },
+  profileApproveButton: {
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.success.main,
+    },
+  },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
@@ -140,24 +149,25 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
-  profileDisableButton: {
-    backgroundColor: theme.palette.warning.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.dark,
-    },
-  },
   dialogBox: {
     width: "350px",
     padding: "15px",
   },
-  dialogDisableButton: {
+  dialogApproveButton: {
     width: "150px",
-    backgroundColor: theme.palette.warning.dark,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.warning.dark,
+      backgroundColor: theme.palette.success.main,
+      color: "white",
+    },
+  },
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
       color: "white",
     },
   },
@@ -209,13 +219,13 @@ function ManageUsers(props) {
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
 
   const [selected, setSelected] = React.useState([]);
+  const [openApproveDialog, setOpenApproveDialog] = React.useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [openDisableDialog, setOpenDisableDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null)
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
-  const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
-  const { user, all_students, all_teachers, pending_users } = props.auth;
+  const { deleteUser, setUserActive, getPendingTeachers, getPendingStudents, getPendingUsers } = props;
+  const { user, pending_students, pending_teachers, pending_users } = props.auth;
 
   let student_rows = []
   let teacher_rows = []
@@ -238,15 +248,17 @@ function ManageUsers(props) {
     }
   }
   React.useEffect(() => {
-    getStudents()
-    getTeachers()
-  }, [all_students.length, all_teachers.length])
+    getPendingStudents()
+    getPendingTeachers()
+    // getPendingStudents()
+    // getPendingTeachers()
+  }, [pending_students.length, pending_teachers.length])
 
   const retrieveUsers = () => {
     student_rows = []
     teacher_rows = []
-    all_students.map((data) => userRowItem(data, "Student"))
-    all_teachers.map((data) => userRowItem(data, "Teacher"))
+    pending_students.map((data) => userRowItem(data, "Student"))
+    pending_teachers.map((data) => userRowItem(data, "Teacher"))
   }
 
   const handleRequestSort = (event, property, role) => {
@@ -301,9 +313,10 @@ function ManageUsers(props) {
   const onDeleteUser = (id) => {
     deleteUser(id)
   }
-  const onDisableUser = (id) => {
-    setUserDisabled(id)
+  const onApproveUser = (id) => {
+      setUserActive(id)
   }
+
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
@@ -312,9 +325,9 @@ function ManageUsers(props) {
     setSelectedUserName(name)
   };
 
-  const handleOpenDisableDialog = (e, id, name) => {
+  const handleOpenApproveDialog = (e, id, name) => {
     e.stopPropagation();
-    setOpenDisableDialog(true);
+    setOpenApproveDialog(true);
     setSelectedUserId(id)
     setSelectedUserName(name)
   };
@@ -323,8 +336,8 @@ function ManageUsers(props) {
     setOpenDeleteDialog(false);
   };
 
-  const handleCloseDisableDialog = () => {
-    setOpenDisableDialog(false);
+  const handleCloseApproveDialog = () => {
+    setOpenApproveDialog(false);
   };
 
   function DeleteDialog(){
@@ -384,24 +397,22 @@ function ManageUsers(props) {
     )
   }
 
-  function DisableDialog(){
+  function ApproveDialog(){
     return(
       <Dialog
-        open={openDisableDialog}
-        onClose={handleCloseDisableDialog}
-      >
+        open={openApproveDialog}
+        onClose={handleCloseApproveDialog}>
         <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
           <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              onClick={handleCloseDisableDialog}
-            >
+              onClick={handleCloseApproveDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Nonaktifkan pengguna berikut?
+              Aktifkan pengguna berikut?
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -419,16 +430,16 @@ function ManageUsers(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDisableUser(selectedUserId) }}
-                startIcon={<BlockIcon />}
-                className={classes.dialogDisableButton}
+                onClick={() => { onApproveUser(selectedUserId) }}
+                startIcon={<CheckCircleIcon />}
+                className={classes.dialogApproveButton}
               >
-                Nonaktifkan
+                Aktifkan
               </Button>
             </Grid>
             <Grid item>
               <Button
-                onClick={handleCloseDisableDialog}
+                onClick={handleCloseApproveDialog}
                 startIcon={< CancelIcon/>}
                 className={classes.dialogCancelButton}
               >
@@ -444,10 +455,10 @@ function ManageUsers(props) {
   console.log(pending_users)
   return(
     <div className={classes.root}>
-      {DisableDialog()}
+      {ApproveDialog()}
       {DeleteDialog()}
       <Typography variant="h4" align="center" gutterBottom>
-        Daftar Pengguna Aktif
+        Daftar Pengguna Pending
       </Typography>
       <Divider style={{marginBottom: "20px", backgroundColor: "#2196f3"}}/>
       <ManageUsersToolbar
@@ -506,13 +517,13 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Nonaktifkan">
+                          <LightTooltip title="Hapus">
                             <IconButton
                               size="small"
-                              className={classes.profileDisableButton}
-                              onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
+                              className={classes.profileApproveButton}
+                              onClick={(e) =>{handleOpenApproveDialog(e, row._id, row.name)}}
                             >
-                              <BlockIcon fontSize="small" />
+                              <CheckCircleIcon fontSize="small" />
                             </IconButton>
                           </LightTooltip>
                         </Grid>
@@ -615,14 +626,14 @@ function ManageUsers(props) {
                         </Hidden>
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Nonaktifkan">
+                      <Grid item>
+                          <LightTooltip title="Hapus">
                             <IconButton
                               size="small"
-                              className={classes.profileDisableButton}
-                              onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
+                              className={classes.profileApproveButton}
+                              onClick={(e) =>{handleOpenApproveDialog(e, row._id, row.name)}}
                             >
-                              <BlockIcon fontSize="small" />
+                              <CheckCircleIcon fontSize="small" />
                             </IconButton>
                           </LightTooltip>
                         </Grid>
@@ -677,11 +688,11 @@ function ManageUsers(props) {
 
 ManageUsers.propTypes = {
   classesCollection: PropTypes.object.isRequired,
-  getStudents: PropTypes.func.isRequired,
-  getTeachers: PropTypes.func.isRequired,
-  setUserDisabled: PropTypes.func.isRequired,
+  getPendingStudents: PropTypes.func.isRequired,
+  getPendingTeachers: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  deleteUser: PropTypes.object.isRequired,
+  deleteUser: PropTypes.func.isRequired,
+  setUserActive: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 }
 
@@ -692,5 +703,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { setUserDisabled, getStudents, getTeachers, deleteUser }
+  mapStateToProps, { getPendingStudents, getPendingTeachers, deleteUser, setUserActive }
 ) (ManageUsers);

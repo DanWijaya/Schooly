@@ -32,10 +32,6 @@ const ClassSchema = new Schema({
     type: ObjectId,
     ref: "users"
   },
-  semua_murid : [{
-    type: ObjectId,
-    ref: "users"
-  }]
 
 });
 

@@ -53,6 +53,7 @@ import TaskList from "./components/objects/tasks/TaskList";
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
+import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 //Prototypes
 import Tester from "./prototypes/Tester";
 
@@ -181,6 +182,7 @@ class App extends Component {
                     {/* Route Admin-Only  */}
                     <PrivateRoute exact access={["Admin"]} path="/daftar-kelas" component={ClassList} />
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
+                    <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />
                     {/* Not Found  */}
                     <Route
                     exact path="/tidak-ditemukan"

@@ -5,7 +5,8 @@ import { Redirect } from "react-router";
 
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
    GET_USERS, GET_ALL_STUDENTS, GET_ALL_TEACHERS, 
-   GET_ONE_USER, GET_STUDENTS_BY_CLASS} from "./Types";
+   GET_ONE_USER, GET_STUDENTS_BY_CLASS, GET_SUCCESS_RESPONSE,
+    GET_PENDING_STUDENTS, GET_PENDING_TEACHERS} from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -242,6 +243,61 @@ export const getStudentsByClass = (classId) => dispatch => {
       })
       .catch(err => {
         console.log("Error in getting Students by class");
+      })
+}
+
+// actions for admin only
+export const getPendingStudents = () => dispatch => {
+  axios
+      .get("/api/users/getpendingstudents/")
+      .then(res => {
+        console.log(res.data)
+        dispatch({
+          type: GET_PENDING_STUDENTS,
+          payload: res.data
+        })
+      })
+      .catch(err => {
+        console.log("Error in getting Students by class");
+      })
+}
+
+export const getPendingTeachers = () => dispatch => {
+  axios
+      .get("/api/users/getpendingteachers/")
+      .then(res => {
+        console.log(res.data)
+        dispatch({
+          type: GET_PENDING_TEACHERS,
+          payload: res.data
+        })
+      })
+      .catch(err => {
+        console.log("Error in getting Students by class");
+      })
+}
+
+export const setUserActive = (userId) => dispatch => {
+  axios
+      .post(`/api/users/setuseractive/${userId}`)
+      .then(res => {
+        console.log(res.data)
+        window.location.reload()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+}
+
+export const setUserDisabled = (userId) => dispatch => {
+  axios
+      .post(`/api/users/setuserdisabled/${userId}`)
+      .then(res => {
+        console.log(res.data)
+        window.location.reload()
+      })
+      .catch(err => {
+        console.log(err)
       })
 }
 

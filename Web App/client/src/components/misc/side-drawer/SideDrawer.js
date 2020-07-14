@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import { Divider, Drawer, Hidden, List, ListSubheader, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -12,8 +12,10 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
-import { FaChalkboardTeacher } from "react-icons/fa";
+import { FaChalkboardTeacher, FaUserCheck, FaUserClock  } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 const drawerWidth = 240;
 
@@ -53,13 +55,12 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(2.70),
     height: theme.spacing(2.70),
   },
-  drawerListItemReactIcons: {
+  drawerListItemReactIconsFa: {
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
   },
-  drawerListItemReactIconsGo: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
+  nested: {
+    paddingLeft: theme.spacing(4),
   },
 }));
 
@@ -71,10 +72,23 @@ const StyledListItem = withStyles((theme) => ({
   },
 }))(ListItem);
 
-const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
-  return(
-    !isDisabled ?
-      <Link to={linkto}>
+const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=false) => {
+  if(!isDisabled && linkto) {
+    return(
+        <Link to={linkto}>
+          <StyledListItem button disabled={isDisabled}>
+            <ListItemIcon>
+              {icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={<Typography color="textPrimary">{itemText1}</Typography>}
+              secondary={itemText2}
+            />
+          </StyledListItem>
+        </Link>
+    )
+  } else {
+    return(
         <StyledListItem button disabled={isDisabled}>
           <ListItemIcon>
             {icon}
@@ -84,18 +98,8 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled) => {
             secondary={itemText2}
           />
         </StyledListItem>
-      </Link>
-    :
-      <StyledListItem button disabled={isDisabled}>
-        <ListItemIcon>
-          {icon}
-        </ListItemIcon>
-        <ListItemText
-          primary={<Typography color="textPrimary">{itemText1}</Typography>}
-          secondary={itemText2}
-        />
-      </StyledListItem>
-  )
+      )
+  }
 }
 
 function DrawerContent(props) {
@@ -116,8 +120,9 @@ function DrawerContent(props) {
   if(user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
-      ["/atur-pengguna", <SupervisedUserCircleIcon className={classes.drawerListItemMuiIcons}/>, "Pengguna", null, false],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIcons} />, "Kelas", null, false]
+      ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemReactIconsFa}/>, "Pengguna Aktif", null, false],
+      ["/pending-users", <FaUserClock className={classes.drawerListItemReactIconsFa}/>, "Pengguna Pending", null, false],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIconsFa} />, "Kelas", null, false]
     ]
   else {
     ListItemContents = [
@@ -129,6 +134,7 @@ function DrawerContent(props) {
       [null, <GrNotes className={classes.drawerListItemReactIcons} />, "Kuis", "Coming Soon", true],
       [null, <GrDocumentPerformance className={classes.drawerListItemReactIcons} />, "Ujian", "Coming Soon", true],
     ]
+
     if(user.role === "Teacher") {
       /*ini untuk hilangin yang untuk ke class
       di side drawer pas logged in jdi guru*/
@@ -139,6 +145,7 @@ function DrawerContent(props) {
   return(
     <div>
       <List>
+
         {ListItemContents.map((item) => (
           generateList(item[0],item[1],item[2],item[3],item[4]))
         )}

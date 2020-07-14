@@ -8,7 +8,7 @@ const options = {discriminatorKey: "role"};
 
 // Create Schema (New way)
 
-const UserSchema = new Schema({
+const PendingUserSchema = new Schema({
   password: {
     type: String,
     required: true
@@ -17,6 +17,7 @@ const UserSchema = new Schema({
     type: String,
     default: ""
   },
+
   // Informasi Pribadi
   name: {
     type: String,
@@ -52,31 +53,10 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-
-  //Karir
-  hobi_minat: {
-    type: String,
-    default: null
-  },
-  ket_non_teknis: {
-    type: String,
-    default: null
-  },
-  cita_cita: {
-    type: String,
-    default: null
-  },
-  uni_impian: {
-    type: String,
-    default: null
-  },
-  active: {
-    type: Boolean,
-    default: false
-  },
-  passwordReset: { type: String, select: false },
-  passwordResetTime: { type: Date, select: true}
+  role: {
+      
+  }
 }, options )
 
-const User = mongoose.model("users", UserSchema);
-module.exports = User;
+const PendingUser = mongoose.model("pendingusers", PendingUserSchema);
+module.exports = PendingUser;

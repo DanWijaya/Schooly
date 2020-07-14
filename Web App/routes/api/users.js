@@ -87,6 +87,9 @@ router.post("/login", (req, res) => {
     if (!user) {
       return res.status(404).json({ emailnotfound: "Email tidak ditemukan" });
     }
+    if (!user.active) {
+      return res.status(404).json({ notactive: "Akun ini belum aktif"})
+    }
 
     // Check password
     bcrypt.compare(password, user.password).then(isMatch => {
@@ -251,7 +254,7 @@ router.get("/gettask/:id/:task_id", (req, res) => {
   let tugasId = req.params.task_id;
 
   User.findById(id, (err, user) => {
-    if(!user)
+    if(!user || !user.active)
       res.status(404).send("User data is not found");
     else {
       let tugasList = []
@@ -270,7 +273,7 @@ router.get("/getalltask/:user_id", (req,res) => {
   let id = req.params.user_id;
 
   User.findById(id, (err, user) => {
-    if(!user)
+    if(!user || !user.active)
       res.status(404).send("User data is not found");
     else {
       let allFilesList = []
@@ -285,7 +288,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
   let id = req.params.id;
 
   User.findById(id , (err, user) => {
-    if(!user)
+    if(!user || !user.active)
       res.status(404).send("User data is not found");
     else {
       user.avatar = req.file.filename;
@@ -348,7 +351,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
 
 router.get("/getteachers", (req, res) => {
   // console.log("GET teachers runned")
-  User.find({ role: "Teacher" }).then((users, err) => {
+  User.find({ role: "Teacher", active: true }).then((users, err) => {
     if(!users)
       console.log("No teachers yet in Schooly System")
     else
@@ -357,7 +360,7 @@ router.get("/getteachers", (req, res) => {
 })
 
 router.get("/getstudents", (req,res) => {
-  User.find({ role: "Student"}).then((users, err) => {
+  User.find({ role: "Student", active: true}).then((users, err) => {
     if(!users)
       console.log("No students yet in Schooly System")
 
@@ -370,7 +373,7 @@ router.get("/getOneUser/:id", (req,res) => {
   console.log("getOneUser is runned")
   let id = req.params.id;
   User.findById(id, (err, user) => {
-    if(!user)
+    if(!user || !user.active)
       return res.status(404).json("No user is found in Database")
     else
       return res.json(user)
@@ -386,7 +389,7 @@ router.get("/getUsers", (req,res) => {
     ids_to_find = userIds.map((id) => new ObjectId(id))
   }
 
-  User.find({_id : { $in : userIds}}, (err, users) => {
+  User.find({_id : { $in : userIds}, active: true}, (err, users) => {
     console.log("usernya ini : ", users)
     if(!users)
       return res.status(400).json("Users to update not found")
@@ -397,7 +400,7 @@ router.get("/getUsers", (req,res) => {
 
 router.get("/getstudentsbyclass/:id", (req,res) => {
   let id = req.params.id
-  Student.find({ kelas: id}).then((users, err) => {
+  Student.find({ kelas: id, active: true}).then((users, err) => {
     if(!users)
       console.log("No students with this class ID")
     else
@@ -406,11 +409,60 @@ router.get("/getstudentsbyclass/:id", (req,res) => {
 })
 
 router.get("/all_users", (req,res) => {
-  User.find({}).then((users, err) => {
+  User.find({ active: true }).then((users, err) => {
     if(!users)
       return res.status(404).json("No students yet in Schooly system")
     else
       return res.json(users)
+  })
+})
+
+// for admin only
+router.get("/getpendingstudents", (req,res) => {
+  User.find({ role: "Student", active: false }).then((users, err) => {
+    if(!users)
+      return res.json([])
+    else
+      return res.json(users)
+  })
+})
+
+router.get("/getpendingteachers", (req,res) => {
+  User.find({ role: "Teacher", active: false }).then((users, err) => {
+    if(!users)
+      return res.json([])
+    else
+      return res.json(users)
+  })
+})
+
+router.post("/setuseractive/:id", (req,res) => {
+  let id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if(!user)
+      return res.status(404).json("User to be activated is not found")
+    
+    user.active = true;
+    user
+        .save()
+        .then(res.json(user))
+        .catch(err => console.log(err))
+  })
+})
+
+router.post("/setuserdisabled/:id", (req,res) => {
+  let id = req.params.id;
+
+  User.findById(id, (err, user) => {
+    if(!user)
+      return res.status(404).json("User to be disabled is not found")
+    
+    user.active = false;
+    user
+        .save()
+        .then(res.json(user))
+        .catch(err => console.log(err))
   })
 })
 

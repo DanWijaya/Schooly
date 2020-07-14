@@ -8,7 +8,6 @@ const validateClassInput = require("../../validation/ClassData");
 
 // Load the required Model
 const Class = require("../../models/Class");
-const User = require("../../models/user_model/User");
 const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {

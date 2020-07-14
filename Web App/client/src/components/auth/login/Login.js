@@ -117,14 +117,15 @@ class Login extends Component {
                       id="email"
                       onChange={this.onChange}
                       value={this.state.email}
-                      error={Boolean(errors.email || errors.emailnotfound)}
+                      error={Boolean(errors.email || errors.emailnotfound || errors.notactive)}
                       type="email"
                       helperText={
                         <div style={{display: "flex", alignItems: "center"}}>
-                          {errors.email || errors.emailnotfound ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          {errors.email || errors.emailnotfound || errors.notactive ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
                           <Typography variant="caption" style={{marginLeft: "4px"}}>
                             {errors.email}
                             {errors.emailnotfound}
+                            {errors.notactive}
                           </Typography>
                         </div>
                       }

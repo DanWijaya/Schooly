@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
+    marginTop: "20px"
   },
   listItemPaper: {
     marginBottom: "10px",
