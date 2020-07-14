@@ -299,7 +299,7 @@ class RegsiterV2 extends Component {
                 </FormControl>
               </Grid>
               <Grid item>
-                <label for="name">Konfirmasi Kata Sandi</label>
+                <label for="name">Nama</label>
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -407,7 +407,7 @@ class RegsiterV2 extends Component {
                 />
               </Grid>
               <Grid item>
-                <label for="address">Nomor Telepon Darurat</label>
+                <label for="address">Alamat</label>
                 <TextField
                   fullWidth
                   variant="outlined"

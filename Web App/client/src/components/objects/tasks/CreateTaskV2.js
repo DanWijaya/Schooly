@@ -12,8 +12,8 @@ import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, CircularProgress, Chip,Dialog, FormControl, FormHelperText, Grid, IconButton,
-   ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Chip, Dialog, Divider, FormControl, FormHelperText, Grid, IconButton,
+   ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Toolbar, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -56,10 +56,9 @@ const StyledMenuItem = withStyles((theme) => ({
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px"
   },
   mainGrid: {
     width: "450px",
@@ -95,8 +94,6 @@ const styles = (theme) => ({
     height: "50%"
   },
   createTaskButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
@@ -346,6 +343,144 @@ class CreateTaskV2 extends Component {
         <div className={classes.root}>
           {UploadDialog()}
           <Paper>
+            <div style={{padding: "40px"}}>
+              <Typography variant="h5" gutterBottom>
+                <b>Buat Tugas</b>
+              </Typography>
+              <Typography color="textSecondary">
+                Tambahkan keterangan tugas untuk membuat tugas.
+              </Typography>
+            </div>
+            <Divider />
+            <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
+              <Grid container spacing={2}>
+                <Grid item xs={6} container direction="column" spacing={4} alignItems="stretch">
+                  <Grid item>
+                    <label for="title">Judul</label>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="title"
+                      onChange={this.onChange}
+                      value={this.state.name}
+                      error={errors.name}
+                      type="text"
+                      helperText={
+                        <div style={{display: "flex", alignItems: "center"}}>
+                          {errors.name ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
+                            {errors.name}
+                          </Typography>
+                        </div>
+                      }
+                      className={classnames("", {
+                        invalid: errors.name
+                      })}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <label for="description">Deskripsi</label>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="description"
+                      onChange={(e) => this.onChange(e, "description")}
+                      value={this.state.description}
+                      error={errors.description}
+                      type="text"
+                      helperText={
+                        <div style={{display: "flex", alignItems: "center"}}>
+                          {errors.description ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
+                            {errors.description}
+                          </Typography>
+                        </div>
+                      }
+                      className={classnames("", {
+                        invalid: errors.description
+                      })}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={6} container direction="column" spacing={4}>
+                  <Grid item>
+                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject)}>
+                      <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
+                      <Select
+                        value={this.state.subject}
+                        onChange={(event) => {this.onChange(event, "subject")}}
+                      >
+                        {all_subjects.map((subject) => (
+                          <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                        {Boolean(errors.subject) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                        {Boolean(errors.subject) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
+                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang Ditugaskan</label>
+                      <Select
+                        multiple
+                        id="class_assigned"
+                        MenuProps={MenuProps}
+                        value={class_assigned}
+                        onChange={(event) => {this.onChange(event, "kelas")}}
+                        renderValue={(selected) => (
+                          <div className={classes.chips}>
+                            {selected.map((id) => {
+                              let name
+                              for (var i in all_classes){ // i is the index
+                                if(all_classes[i]._id === id){
+                                  name = all_classes[i].name
+                                  break;
+                                }
+                              }
+                              return(
+                                <Chip key={id} label={name} className={classes.chip} />
+                              )
+                            })}
+                          </div>
+                        )}
+                      >
+                        {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                          return(
+                            <MenuItem value={kelas._id} key={kelas._id} selected>{kelas.name}</MenuItem>
+                        )})}
+                      </Select>
+                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                        {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                        {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                      <KeyboardDateTimePicker
+                        fullWidth
+                        disablePast
+                        inputVariant="outlined"
+                        format="dd/MM/yyyy HH:mm"
+                        margin="normal"
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        minDateMessage="Batas waktu harus waktu yang akan datang"
+                        invalidDateMessage="Format tanggal tidak benar"
+                        id="date-picker-inline"
+                        value={this.state.deadline}
+                        onChange={(date) => this.onDateChange(date)}
+                      />
+                    </MuiPickersUtilsProvider>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </form>
+          </Paper>
+
+          <Paper>
             <div className={classes.mainGrid}>
               <Typography variant="h5" align="center" gutterBottom>
                 <b>Buat Tugas</b>
@@ -436,7 +571,7 @@ class CreateTaskV2 extends Component {
                       on_change={(e) => this.onChange(e, "description")}
                       value={this.state.description}
                       error={errors.description}
-                      id="descripton"
+                      id="description"
                       type="textarea"
                       className={classnames("", {
                         invalid: errors.description
