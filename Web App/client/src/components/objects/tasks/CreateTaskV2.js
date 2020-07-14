@@ -12,91 +12,82 @@ import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, CircularProgress, Chip,Dialog, FormControl, FormHelperText, Grid, IconButton,
-   ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Avatar, Button, CircularProgress, Chip, Dialog, Divider, FormControl, FormHelperText, Grid, IconButton,
+   ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, Toolbar, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import DescriptionIcon from "@material-ui/icons/Description";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import DeleteIcon from "@material-ui/icons/Delete";
 import ErrorIcon from "@material-ui/icons/Error";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
 
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #D3D4D5",
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    cursor: "default",
-    width: "300px",
-    "&:focus, &:hover": {
-      backgroundColor: "transparent",
-    },
-  },
-}))(MenuItem);
-
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
   },
-  mainGrid: {
-    width: "450px",
-    padding: "30px",
+  content: {
+    padding: "20px",
   },
-  gridItem: {
-    width: "350px",
+  divider: {
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      height: "1px",
+    },
   },
-  formTitle: {
-    textAlign: "center",
-    marginBottom: "30px",
+  addFileButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
   },
-  inputField: {
-    width: "400px",
+  listItemPaper: {
+    marginBottom: "10px"
   },
-  inputLabel: {
-    color: theme.palette.primary.main,
-    fontSize: "15px",
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
   },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px"
+  deleteIconButton: {
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
   },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap",
+  wordFileTypeIcon: {
+    backgroundColor: "#16B0DD",
   },
-  chip: {
-    margin: 2,
+  excelFileTypeIcon: {
+    backgroundColor: "#68C74F",
   },
-  uploadButton: {
-    width: "5px",
-    height: "50%"
+  imageFileTypeIcon: {
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    backgroundColor: "#FD931D",
+  },
+  otherFileTypeIcon: {
+    backgroundColor: "#808080",
   },
   createTaskButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
@@ -127,22 +118,74 @@ const styles = (theme) => ({
 });
 
 function LampiranFile(props) {
-  const {name, i, handleLampiranDelete} = props;
+  const { classes, name, filetype, i, handleLampiranDelete } = props;
 
   return(
-  <StyledMenuItem disableRipple>
-    <ListItemIcon>
-      <DescriptionIcon/>
-    </ListItemIcon>
-    <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
-    <IconButton>
-      <HighlightOffIcon
-        fontSize="small"
-        style={{color:"#B22222"}}
-        onClick={(e) => {handleLampiranDelete(e, i)}}
-      />
-    </IconButton>
-  </StyledMenuItem>
+    <Grid item xs={12}>
+      <Paper variant="outlined" className={classes.listItemPaper}>
+        <ListItem
+          button
+          disableRipple
+          className={classes.listItem}
+        >
+          <ListItemAvatar>
+            {filetype === "Word" ?
+                <Avatar className={classes.wordFileTypeIcon}>
+                  <FaFileWord />
+                </Avatar>
+              :
+              filetype === "Excel" ?
+                <Avatar className={classes.excelFileTypeIcon}>
+                  <FaFileExcel />
+                </Avatar>
+              :
+              filetype === "Gambar" ?
+                <Avatar className={classes.imageFileTypeIcon}>
+                  <FaFileImage />
+                </Avatar>
+              :
+              filetype === "PDF" ?
+                <Avatar className={classes.pdfFileTypeIcon}>
+                  <FaFilePdf />
+                </Avatar>
+              :
+              filetype === "Teks" ?
+                <Avatar className={classes.textFileTypeIcon}>
+                  <FaFileAlt />
+                </Avatar>
+              :
+              filetype === "Presentasi" ?
+                <Avatar className={classes.presentationFileTypeIcon}>
+                  <FaFilePowerpoint />
+                </Avatar>
+              :
+              filetype === "File Lainnya" ?
+                <Avatar className={classes.otherFileTypeIcon}>
+                  <FaFile />
+                </Avatar>
+              : null
+            }
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <LightTooltip title={name} placement="top">
+                <Typography>
+                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                </Typography>
+              </LightTooltip>
+            }
+            secondary={filetype}
+          />
+          <IconButton
+            size="small"
+            className={classes.deleteIconButton}
+            onClick={(e) => {handleLampiranDelete(e, i)}}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </ListItem>
+      </Paper>
+    </Grid>
   )
 }
 
@@ -309,17 +352,42 @@ class CreateTaskV2 extends Component {
           </Grid>
         </Dialog>
       )
-  }
+    }
+
+    const fileType = (filename) => {
+      let ext_file = path.extname(filename)
+      switch(ext_file) {
+        case ".docx" : return "Word"
+        case ".xlsx" :
+        case ".csv"  : return "Excel"
+
+        case ".png" :
+        case ".jpg" :
+        case ".jpeg" : return "Gambar"
+
+        case ".pdf" : return "PDF"
+
+        case ".txt" :
+        case ".rtf" : return "Teks"
+
+        case ".ppt" :
+        case ".pptx" : return "Presentasi"
+
+        default: return "File Lainnya"
+      }
+    }
 
     const listFileChosen = () => {
       let temp = []
       if(fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++){
+        for (var i = 0; i < fileLampiran.length; i++) {
           console.log(i)
           temp.push(
             <LampiranFile
+              classes={classes}
               name={fileLampiran[i].name}
               handleLampiranDelete={this.handleLampiranDelete}
+              filetype={fileType(fileLampiran[i].name)}
               i={i}
             />
           )
@@ -346,57 +414,120 @@ class CreateTaskV2 extends Component {
         <div className={classes.root}>
           {UploadDialog()}
           <Paper>
-            <div className={classes.mainGrid}>
-              <Typography variant="h5" align="center" gutterBottom>
+            <div className={classes.content}>
+              <Typography variant="h5" gutterBottom>
                 <b>Buat Tugas</b>
               </Typography>
-              <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
+              <Typography color="textSecondary">
                 Tambahkan keterangan tugas untuk membuat tugas.
               </Typography>
-              <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
-                <Grid
-                  container
-                  direction="column"
-                  alignItems="center"
-                  spacing={4}
-                >
-                  <Grid item className={classes.gridItem}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
+            </div>
+            <Divider />
+            <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
+              <Grid container>
+                <Grid item xs={12} md container direction="column" spacing={4} className={classes.content}>
+                  <Grid item>
+                    <Typography component="label" for="name" color="primary">
+                      Judul
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="name"
+                      onChange={this.onChange}
                       value={this.state.name}
                       error={errors.name}
-                      id="name"
                       type="text"
+                      helperText={
+                        <div style={{display: "flex", alignItems: "center"}}>
+                          {errors.name ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
+                            {errors.name}
+                          </Typography>
+                        </div>
+                      }
                       className={classnames("", {
                         invalid: errors.name
                       })}
-                      labelname="Nama Tugas"
-                      html_for="tugas"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      error1={errors.name}
                     />
                   </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject)}>
-                      <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
-                      <Select
-                        value={this.state.subject}
-                        onChange={(event) => {this.onChange(event, "subject")}}
-                      >
-                        {all_subjects.map((subject) => (
-                          <MenuItem value={subject.name}>{subject.name}</MenuItem>
-                        ))}
-                      </Select>
-                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                        {Boolean(errors.subject) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                        {Boolean(errors.subject) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
-                      </FormHelperText>
-                    </FormControl>
+                  <Grid item>
+                    <Typography component="label" for="description" color="primary">
+                      Deskripsi
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows="5"
+                      rowsMax="25"
+                      variant="outlined"
+                      id="description"
+                      onChange={(e) => this.onChange(e, "description")}
+                      value={this.state.description}
+                      error={errors.description}
+                      type="text"
+                      helperText={
+                        <div style={{display: "flex", alignItems: "center"}}>
+                          {errors.description ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
+                            {errors.description}
+                          </Typography>
+                        </div>
+                      }
+                      className={classnames("", {
+                        invalid: errors.description
+                      })}
+                    />
                   </Grid>
-                  <Grid item className={classes.gridItem}>
+                </Grid>
+                <Divider flexItem orientation="vertical" className={classes.divider} />
+                <Grid item xs={12} md container direction="column" spacing={4} className={classes.content}>
+                  <Grid item container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <Typography component="label" for="subject" color="primary">
+                        Mata Pelajaran
+                      </Typography>
+                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject)}>
+                        <Select
+                          value={this.state.subject}
+                          onChange={(event) => {this.onChange(event, "subject")}}
+                        >
+                          {all_subjects.map((subject) => (
+                            <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                          {Boolean(errors.subject) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          {Boolean(errors.subject) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography component="label" for="deadline" color="primary">
+                        Batas Waktu
+                      </Typography>
+                      <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                        <KeyboardDateTimePicker
+                          fullWidth
+                          disablePast
+                          inputVariant="outlined"
+                          format="dd/MM/yyyy HH:mm"
+                          okLabel="Simpan"
+                          cancelLabel="Batal"
+                          minDateMessage="Batas waktu harus waktu yang akan datang"
+                          invalidDateMessage="Format tanggal tidak benar"
+                          id="deadline"
+                          value={this.state.deadline}
+                          onChange={(date) => this.onDateChange(date)}
+                        />
+                      </MuiPickersUtilsProvider>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Typography component="label" for="class_assigned" color="primary">
+                      Kelas yang Ditugaskan
+                    </Typography>
                     <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
-                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang Ditugaskan</label>
                       <Select
                         multiple
                         id="class_assigned"
@@ -431,25 +562,7 @@ class CreateTaskV2 extends Component {
                       </FormHelperText>
                     </FormControl>
                   </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <OutlinedTextField
-                      on_change={(e) => this.onChange(e, "description")}
-                      value={this.state.description}
-                      error={errors.description}
-                      id="descripton"
-                      type="textarea"
-                      className={classnames("", {
-                        invalid: errors.description
-                      })}
-                      labelname="Deskripsi"
-                      html_for="description"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      multiline={true}
-                      error1={errors.description}
-                    />
-                  </Grid>
-                  <Grid item container direction="row" className={classes.gridItem}>
+                  <Grid item>
                     <input
                       type="file"
                       multiple={true}
@@ -467,71 +580,30 @@ class CreateTaskV2 extends Component {
                       ref={this.uploadedLampiran}
                       style={{display: "none"}}
                     />
-                    <Grid item container direction="row" alignItems="center">
-                      <Grid item xs={11} onClick={this.handleClickMenu}>
-                        <OutlinedTextField
-                          disabled={true}
-                          value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
-                          id="file_tugas"
-                          type="text"
-                          width="100%"
-                          labelname="Lampiran Berkas"
-                          html_for="Berkas lampiran"
-                          label_classname={classes.inputLabel}
-                          pointer= {fileLampiran.length > 0}
-                        />
-                      </Grid>
-                      <StyledMenu
-                        id="fade-menu"
-                        anchorEl={this.state.anchorEl}
-                        keepMounted
-                        open={Boolean(this.state.anchorEl)}
-                        onClose={this.handleCloseMenu}
-                      >
-                        {listFileChosen()}
-                      </StyledMenu>
-                      <Grid item xs={1}>
-                        <LightTooltip title="Tambahkan Lampiran Berkas">
-                          <IconButton onClick={() => {this.lampiranUploader.current.click()}}>
-                            <AttachFileIcon />
-                           </IconButton>
-                         </LightTooltip>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                      <KeyboardDateTimePicker
-                        fullWidth
-                        disablePast
-                        format="dd/MM/yyyy HH:mm"
-                        margin="normal"
-                        okLabel="Simpan"
-                        cancelLabel="Batal"
-                        minDateMessage="Batas waktu harus waktu yang akan datang"
-                        invalidDateMessage="Format tanggal tidak benar"
-                        id="date-picker-inline"
-                        value={this.state.deadline}
-                        onChange={(date) => this.onDateChange(date)}
-                        inputProps={{
-                          style: {
-                            borderBottom: "none",
-                            boxShadow: "none",
-                          },
-                        }}
-                      />
-                    </MuiPickersUtilsProvider>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
                     <Button
-                      type="submit"
-                      className={classes.createTaskButton}
+                      variant="contained"
+                      startIcon={<AttachFileIcon />}
+                      onClick={() => {this.lampiranUploader.current.click()}}
+                      className={classes.addFileButton}
                     >
-                      Buat Tugas
-                  </Button>
+                      Tambah Lampiran Berkas
+                     </Button>
+                     <Grid container spacing={1} style={{marginTop: "10px"}}>
+                       {listFileChosen()}
+                     </Grid>
                   </Grid>
                 </Grid>
-              </form>
+              </Grid>
+            </form>
+            <Divider />
+            <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+              <Button
+                variant="contained"
+                type="submit"
+                className={classes.createTaskButton}
+              >
+                Buat Tugas
+              </Button>
             </div>
           </Paper>
         </div>

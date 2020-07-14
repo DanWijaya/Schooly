@@ -14,13 +14,13 @@ import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconBu
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import CancelIcon from "@material-ui/icons/Cancel";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import PublishIcon from "@material-ui/icons/Publish";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const path = require("path");
 
@@ -634,7 +634,7 @@ function ViewTaskStudent(props) {
                     onDownloadFile ={onDownloadFile}
                     filename={lampiran.filename}
                     filetype={fileType(lampiran.filename)}
-                    />
+                  />
                 ))}
               </Grid>
             </div>

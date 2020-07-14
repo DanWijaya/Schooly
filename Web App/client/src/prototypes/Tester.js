@@ -28,44 +28,8 @@ class Tester extends Component {
     const { classes } = this.props;
 
     return(
-      <div className={classes.root}>
-        <Paper className={classes.container}>
-          <Typography variant="h6" align="center">
-            <b>Masuk ke Schooly</b>
-          </Typography>
-          <form>
-            <Grid container direction="column" spacing={3} alignItems="stretch">
-              <Grid item>
-                <TextField fullWidth variant="outlined" />
-              </Grid>
-              <Grid item container>
-                <TextField
-                  label="Kata Sandi"
-                  variant="outlined"
-                  InputProps={{
-                    endAdornment:
-                      <InputAdornment position="end">
-                        Test
-                      </InputAdornment>,
-                  }}
-                />
-              </Grid>
-              <Grid item>
-                <Button
-                  type="submit"
-                  style={{
-                    backgroundColor: "#61BD4F",
-                    color: "white",
-                    width: "100%",
-                  }}
-                >
-                  Masuk
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-          <Divider fullWidth style={{marginTop: "20px"}} />
-        </Paper>
+      <div style={{display: "flex", margin: "auto", flexDirection: "column"}}>
+        <TextField variant="outlined" /><Select variant="outlined" />
       </div>
     )
   }

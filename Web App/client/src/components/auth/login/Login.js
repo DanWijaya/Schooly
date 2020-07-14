@@ -30,10 +30,6 @@ const styles = (theme) => ({
     maxWidth: "350px",
     padding: "40px",
   },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px",
-  }
 });
 
 class Login extends Component {
@@ -108,7 +104,7 @@ class Login extends Component {
             </Grid>
             <Grid item>
               <form noValidate onSubmit={this.onSubmit}>
-                <Grid container direction="column" spacing={4} alignItems="stretch">
+                <Grid container direction="column" spacing={4}>
                   <Grid item>
                     <label for="email">Email</label>
                     <TextField
