@@ -14,25 +14,31 @@ import PolicyContent from "../../layout/policy/PolicyContent";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, FormControl, FormHelperText, Grid, Link, MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, Typography } from "@material-ui/core";
+import { Button, Dialog, Divider, FormControl, FormHelperText, Grid, Link,
+   MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, TextField, Typography } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
 import ErrorIcon from "@material-ui/icons/Error";
-import MuiAlert from '@material-ui/lab/Alert';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
     maxWidth: "1000px",
+    minHeight: "500px",
     padding: "10px",
     backgroundImage: `url(${authBackground})`,
-    backgroundPosition: "fixed",
+    backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
+    [theme.breakpoints.up("sm")]: {
+      backgroundSize: "contain",
+    },
+  },
+  mainPaper: {
+    margin: "auto",
+    maxWidth: "350px",
+    padding: "40px",
   },
   errorInfo: {
     color: "red",
@@ -40,10 +46,6 @@ const styles = (theme) => ({
   },
   inputField: {
     width: "300px",
-  },
-  mainGrid: {
-    width: "400px",
-    padding: "40px",
   },
   schoolyLogo: {
     width: "30%",
@@ -134,9 +136,15 @@ class Register extends Component {
     }
   }
 
+  handleDateChange = (date) => {
+    this.setState({ tanggal_lahir: date })
+  }
+
   onChange = (e, otherfield) => {
-    if(otherfield === "kelas")
-      this.setState({kelas: e.target.value});
+    if(otherfield === "kelas"){
+      console.log(e.target.value)
+      this.setState({ kelas: e.target.value});
+    }
     else if(otherfield === "role")
       this.setState({ role: e.target.value})
     else if(otherfield === "subject")
@@ -145,9 +153,6 @@ class Register extends Component {
       this.setState({ [e.target.id]: e.target.value });
   };
 
-  handleDateChange = (date) => {
-    this.setState({ tanggal_lahir: date })
-  }
   onSubmit = e => {
     e.preventDefault();
     var newUser = {
@@ -159,7 +164,7 @@ class Register extends Component {
       address: this.state.address,
       password: this.state.password,
       password2: this.state.password2,
-      tanggal_lahir: this.state.tanggal_lahir
+      tanggal_lahir: this.state.tanggal_lahir,
     };
 
     const role = this.state.role;
@@ -179,27 +184,12 @@ class Register extends Component {
       this.props.registerUser(newUser, this.props.history);
   };
 
-  // Policy Dialog
-  handleToggleDialog = () => {
-    this.setState(prevState => ({dialogOpen: !prevState.dialogOpen }))
-  };
-
   render() {
     const { classes, classesCollection, subjectsCollection } = this.props;
+    const { all_classes} = this.props.classesCollection;
+    const { all_subjects } = this.props.subjectsCollection;
     const { errors } = this.state;
 
-    var classesOptions = []
-    var subjectOptions = []
-
-    if(Object.keys(classesCollection).length !== 0){
-      classesOptions = classesCollection.all_classes
-    }
-
-    if(Object.keys(subjectsCollection).length !== 0){
-      subjectOptions = subjectsCollection.all_subjects
-    }
-
-    console.log(subjectOptions)
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Registrasi"];
     }
@@ -208,71 +198,82 @@ class Register extends Component {
       switch (stepIndex) {
         case 0:
           return(
-            <Grid
-              container
-              direction="column"
-              spacing={3}
-              alignItems="center"
-            >
-              <Grid item className={classes.inputField}>
-                <OutlinedTextField
-                  on_change={this.onChange}
+            <Grid container direction="column" spacing={4} alignItems="stretch">
+              <Grid item>
+                <label for="email">Email</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="email"
+                  onChange={this.onChange}
                   value={this.state.email}
                   error={errors.email}
-                  id="email"
                   type="email"
+                  helperText={
+                    <div style={{display: "flex", alignItems: "center"}}>
+                      {errors.email ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
+                        {errors.email}
+                      </Typography>
+                    </div>
+                  }
                   className={classnames("", {
                     invalid: errors.email
                   })}
-                  html_for="email"
-                  labelname="Email"
-                  span_classname={classes.errorInfo}
-                  error1={errors.email}
                 />
               </Grid>
-              <Grid item className={classes.inputField}>
-                <OutlinedTextField
-                  on_change={this.onChange}
+              <Grid item>
+                <label for="password">Kata Sandi</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="password"
+                  onChange={this.onChange}
                   value={this.state.password}
                   error={errors.password}
-                  id="password"
                   type="password"
+                  helperText={
+                    <div style={{display: "flex", alignItems: "center"}}>
+                      {errors.password ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
+                        {errors.password}
+                      </Typography>
+                    </div>
+                  }
                   className={classnames("", {
                     invalid: errors.password
                   })}
-                  html_for="password"
-                  labelname="Kata Sandi"
-                  span_classname={classes.errorInfo}
-                  error1={errors.password}
                 />
               </Grid>
-              <Grid item className={classes.inputField}>
-                <OutlinedTextField
-                  on_change={this.onChange}
+              <Grid item>
+                <label for="password2">Konfirmasi Kata Sandi</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="password2"
+                  onChange={this.onChange}
                   value={this.state.password2}
                   error={errors.password2}
-                  id="password2"
                   type="password"
+                  helperText={
+                    <div style={{display: "flex", alignItems: "center"}}>
+                      {errors.password2 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
+                        {errors.password2}
+                      </Typography>
+                    </div>
+                  }
                   className={classnames("", {
                     invalid: errors.password2
                   })}
-                  html_for="password2"
-                  labelname="Konfirmasi Kata Sandi"
-                  span_classname={classes.errorInfo}
-                  error1={errors.password2}
                 />
               </Grid>
             </Grid>
           );
         case 1:
           return(
-            <Grid
-              container
-              direction="column"
-              spacing={3}
-              alignItems="center"
-            >
-              <Grid item className={classes.inputField}>
+            <Grid container direction="column" spacing={4} alignItems="stretch">
+              <Grid item>
                 <FormControl id="role" variant="outlined" color="primary" fullWidth error={Boolean(errors.role)}>
                   <label id="role">Daftar Sebagai</label>
                   <Select
@@ -283,26 +284,33 @@ class Register extends Component {
                     <MenuItem value={"Teacher"}>Guru</MenuItem>
                     <MenuItem value={"Admin"}>Pengelola</MenuItem>
                   </Select>
-                  <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.role) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.role) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
-                    </FormHelperText>
+                  <FormHelperText style={{display: "flex", alignItems: "center"}}>
+                    {Boolean(errors.role) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                    {Boolean(errors.role) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
+                  </FormHelperText>
                 </FormControl>
               </Grid>
-              <Grid item className={classes.inputField}>
-                <OutlinedTextField
-                  on_change={this.onChange}
+              <Grid item>
+                <label for="name">Nama</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="name"
+                  onChange={this.onChange}
                   value={this.state.name}
                   error={errors.name}
-                  id="name"
                   type="text"
-                  classname={classnames("", {
+                  helperText={
+                    <div style={{display: "flex", alignItems: "center"}}>
+                      {errors.name ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
+                        {errors.name}
+                      </Typography>
+                    </div>
+                  }
+                  className={classnames("", {
                     invalid: errors.name
                   })}
-                  html_for="name"
-                  labelname="Nama"
-                  span_classname={classes.errorInfo}
-                  error1={errors.name}
                 />
               </Grid>
               {this.state.role === "Student" ?
@@ -310,89 +318,111 @@ class Register extends Component {
                   <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
                     <label id="kelas">Kelas</label>
                     <Select
-                    value={this.state.kelas._id}
-                    onChange={(event) => {this.onChange(event, "kelas")}}
+                      value={this.state.kelas}
+                      onChange={(event) => {this.onChange(event, "kelas")}}
                     >
-                      {classesOptions.map((kelas) => (
+                      {all_classes.map((kelas) => (
                         <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                       ))}
                   </Select>
-                  <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
+                  <FormHelperText style={{display:"flex", alignItems:"center"}}>
                     {Boolean(errors.kelas) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.kelas) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
+                    {Boolean(errors.kelas) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
                   </FormHelperText>
                 </FormControl>
                 </Grid>
-              :
-              this.state.role === "Teacher" ?
+              : this.state.role === "Teacher" ?
                 <Grid item className={classes.inputField}>
                   <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject_teached)}>
                     <label id="subject">Mata Pelajaran</label>
                     <Select
-                    value={this.state.subject_teached}
-                    onChange={(event) => {this.onChange(event, "subject")}}
+                      value={this.state.subject_teached}
+                      onChange={(event) => {this.onChange(event, "subject")}}
                     >
-                      {subjectOptions.map((subject) => (
+                      {all_subjects.map((subject) => (
                         <MenuItem value={subject.name}>{subject.name}</MenuItem>
                       ))}
                   </Select>
-                  <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                  {Boolean(errors.subject_teached) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                  {Boolean(errors.subject_teached) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
-                </FormHelperText>
+                  <FormHelperText style={{display:"flex", alignItems:"center"}}>
+                    {Boolean(errors.subject_teached) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                    {Boolean(errors.subject_teached) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
+                  </FormHelperText>
                 </FormControl>
                 </Grid>
-              : null
+              :
+                null
               }
-              <Grid item className={classes.inputField}>
-                <OutlinedTextField
-                  on_change={this.onChange}
-                  value={this.state.phone}
+              <Grid item>
+                <label for="phone">Nomor Telepon</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
                   id="phone"
-                  type="text"
+                  onChange={this.onChange}
+                  value={this.state.phone}
+                  error={errors.phone}
+                  type="tel"
+                  helperText={
+                    <div style={{display: "flex", alignItems: "center"}}>
+                      {errors.phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
+                        {errors.phone}
+                      </Typography>
+                    </div>
+                  }
                   className={classnames("", {
                     invalid: errors.phone
                   })}
-                  html_for="phone"
-                  labelname="Nomor Telepon"
-                  span_classname={classes.errorInfo}
-                  error1={errors.phone}
                 />
               </Grid>
-              <Grid item className={classes.inputField}>
-                <OutlinedTextField
-                  on_change={this.onChange}
+              <Grid item>
+                <label for="emergency_phone">Nomor Telepon Darurat</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="emergency_phone"
+                  onChange={this.onChange}
                   value={this.state.emergency_phone}
                   error={errors.emergency_phone}
-                  id="emergency_phone"
-                  type="text"
+                  type="tel"
+                  helperText={
+                    <div style={{display: "flex", alignItems: "center"}}>
+                      {errors.emergency_phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
+                        {errors.emergency_phone}
+                      </Typography>
+                    </div>
+                  }
                   className={classnames("", {
                     invalid: errors.emergency_phone
                   })}
-                  html_for="emergency_phone"
-                  labelname="Nomor Telepon Darurat"
-                  span_classname={classes.errorInfo}
-                  error1={errors.emergency_phone}
                 />
               </Grid>
-              <Grid item className={classes.inputField}>
-                <OutlinedTextField
-                  on_change={this.onChange}
+              <Grid item>
+                <label for="address">Alamat</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="address"
+                  onChange={this.onChange}
                   value={this.state.address}
                   error={errors.address}
-                  id="address"
                   type="text"
+                  helperText={
+                    <div style={{display: "flex", alignItems: "center"}}>
+                      {errors.address ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                      <Typography variant="caption" style={{marginLeft: "4px"}}>
+                        {errors.address}
+                      </Typography>
+                    </div>
+                  }
                   className={classnames("", {
                     invalid: errors.address
                   })}
-                  html_for="address"
-                  labelname="Alamat"
-                  span_classname={classes.errorInfo}
-                  error1={errors.address}
                 />
               </Grid>
               <Grid item className={classes.inputField}>
-                <label id="tanggal_lahir">Tanggal Lahir</label>
+                <label for="tanggal_lahir">Tanggal Lahir</label>
                 <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     fullWidth
@@ -406,38 +436,25 @@ class Register extends Component {
                     id="tanggal_lahir"
                     onChange={(date) => this.handleDateChange(date)}
                     value={this.state.tanggal_lahir}
-                    inputProps={{
-                      style: {
-                        borderBottom: "none",
-                        boxShadow: "none",
-                        margin: 0,
-                        paddingLeft: "11px",
-                      },
-                    }}
                   />
                 </MuiPickersUtilsProvider>
-                </Grid>
+              </Grid>
             </Grid>
           );
         case 2:
           return(
-            <Grid
-              container
-              direction="column"
-              spacing={3}
-              alignItems="center"
-            >
-              <Grid item className={classes.inputField}>
+            <Grid container direction="column" spacing={4} alignItems="stretch">
+              <Grid item>
                 <Typography align="center">
                   Dengan mendaftar, berarti anda dan sekolah anda telah membaca dan
-                  menyetujui <Link onClick={this.handleToggleDialog} style={{cursor: "pointer"}}>
+                  menyetujui <Link onClick={handleToggleDialog} style={{cursor: "pointer"}}>
                   Kebijakan Penggunaan Schooly</Link>.
                 </Typography>
                 <Dialog
                   fullWidth
                   maxWidth="lg"
                   open={this.state.dialogOpen}
-                  onClose={this.handleToggleDialog}
+                  onClose={handleToggleDialog}
                 >
                   <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
                     <Grid item>
@@ -447,7 +464,7 @@ class Register extends Component {
                       <Button
                         size="large"
                         className={classes.closeDialogButton}
-                        onClick={this.handleToggleDialog}
+                        onClick={handleToggleDialog}
                       >
                         Tutup
                       </Button>
@@ -484,8 +501,14 @@ class Register extends Component {
       )
     }
 
+    // Policy Dialog
+     const handleToggleDialog = () => {
+      this.setState(prevState => ({dialogOpen: !prevState.dialogOpen }))
+    };
+
+    // Error Snackbar
     const handleCloseSnackbar = (event, reason) => {
-      if (reason === 'clickaway') {
+      if (reason === "clickaway") {
         return;
       }
       this.setState({snackbarOpen: false});
@@ -496,19 +519,10 @@ class Register extends Component {
 
     return(
       <div className={classes.root}>
-      {/* ProfileDataEditorDialog Snackbar */}
-
-        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo alt"/>
-        <Paper>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            spacing={4}
-            className={classes.mainGrid}
-          >
+        <Paper className={classes.mainPaper}>
+          <Grid container direction="column" spacing={5}>
             <Grid item>
-              <Typography variant="h6">
+              <Typography variant="h6" align="center">
                 <b>Daftar ke Schooly</b>
               </Typography>
             </Grid>
@@ -520,10 +534,10 @@ class Register extends Component {
               ))}
             </Stepper>
             <Grid item>
-              <form noValidate onSubmit={this.onSubmit}>
+              <form noValidate onSubmit={this.onSubmit} style={{width: "100%"}}>
                 {getStepContent(this.state.activeStep)}
-                <div style={{display: "flex", justifyContent: "space-between", width: "100%", marginTop: "40px"}}>
-                  <div style={{display: "flex", justifyContent: "flex-start"}}>
+                <Grid container justify="space-between" style={{marginTop: "40px"}}>
+                  <Grid item>
                     {this.state.activeStep === 0 ?
                       null
                       :
@@ -534,8 +548,8 @@ class Register extends Component {
                           Kembali
                         </Button>
                     }
-                  </div>
-                  <div style={{display: "flex", justifyContent: "flex-end"}}>
+                  </Grid>
+                  <Grid item>
                     {this.state.activeStep === steps.length - 1 ?
                         <Button
                           type="submit"
@@ -551,18 +565,23 @@ class Register extends Component {
                           Lanjut
                         </Button>
                     }
-                  </div>
-                </div>
+                  </Grid>
+                </Grid>
               </form>
             </Grid>
-            <Link href="/masuk" style={{marginTop: "20px"}}>
-              Sudah ada Akun?
-            </Link>
+            <Divider />
+            <Grid item>
+              <Link href="/masuk" style={{marginTop: "20px"}}>
+                <Typography align="center">
+                  Sudah ada Akun?
+                </Typography>
+              </Link>
+            </Grid>
           </Grid>
         </Paper>
-        <Snackbar 
-          open={this.state.snackbarOpen} 
-          autoHideDuration={6000} 
+        <Snackbar
+          open={this.state.snackbarOpen}
+          autoHideDuration={6000}
           onClose={handleCloseSnackbar}
           anchorOrigin={{vertical : "bottom", horizontal: "center"}}
         >

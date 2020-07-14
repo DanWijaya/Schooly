@@ -4,39 +4,31 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Divider, Grid, Link, Paper, Typography } from "@material-ui/core";
+import { Button, Divider, FormControl, FormHelperText, Grid, IconButton, InputAdornment, Link, OutlinedInput, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import ErrorIcon from "@material-ui/icons/Error";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    maxWidth: "1000px",
     margin: "auto",
+    maxWidth: "1000px",
+    minHeight: "500px",
     padding: "10px",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
+    [theme.breakpoints.up("sm")]: {
+      backgroundSize: "contain",
+    },
   },
-  mainGrid: {
-    maxWidth: "400px",
+  mainPaper: {
+    margin: "auto",
+    maxWidth: "350px",
     padding: "40px",
-  },
-  gridContent: {
-    width: "300px",
-  },
-  schoolyLogo: {
-    width: "30%",
-    height: "30%",
-    marginBottom: "30px",
   },
   errorInfo: {
     color: "red",
@@ -101,88 +93,98 @@ class Login extends Component {
   render() {
     const { classes } = this.props;
 
-    const { errors, passwordIsMasked, icon } = this.state;
-
+    const { passwordIsMasked, icon , errors} = this.state;
     document.title = "Masuk ke Schooly";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
-
+    console.log(Boolean(errors.password || errors.passwordincorrect))
     return(
       <div className={classes.root}>
-        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
-        <Paper>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="space-between"
-            spacing={3}
-            className={classes.mainGrid}
-          >
+        <Paper className={classes.mainPaper}>
+          <Grid container direction="column" spacing={5}>
             <Grid item>
-              <Typography variant="h6">
+              <Typography variant="h6" align="center">
                 <b>Masuk ke Schooly</b>
               </Typography>
             </Grid>
-            <Grid item className={classes.gridContent}>
-              <form noValidate onSubmit={this.onSubmit} style={{marginBottom: "20px"}}>
-                <div style={{marginBottom: "20px"}}>
-                  <OutlinedTextField
-                    on_change={this.onChange}
-                    value={this.state.email}
-                    error={errors.email}
-                    id="email"
-                    type="email"
-                    classname={classnames("", {
-                      invalid: errors.email || errors.emailnotfound
-                    })}
-                    html_for="email"
-                    labelname="Email"
-                    span_classname={classes.errorInfo}
-                    error1={errors.email}
-                    error2={errors.emailnotfound}
-                  />
-                </div>
-                <OutlinedTextField
-                  on_change={this.onChange}
-                  value={this.state.password}
-                  error={errors.password}
-                  id="password"
-                  type={passwordIsMasked ? "password" : "text"}
-                  classname={classnames("", {
-                    invalid: errors.password || errors.passwordincorrect
-                  })}
-                  html_for="password"
-                  labelname="Kata Sandi"
-                  span_classname={classes.errorInfo}
-                  error1={errors.password}
-                  error2={errors.passwordincorrect}
-                />
-                <Button
-                  disableRipple
-                  startIcon={icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  onClick={this.togglePasswordVisibility}
-                  style={{
-                    backgroundColor: "transparent",
-                    textTransform: "none",
-                    fontSize: "12px",
-                  }}
-                >
-                  {this.state.passwordIsMasked ? "Tampilkan Kata Sandi" : "Sembunyikan Kata Sandi"}
-                </Button>
-                <Button
-                  type="submit"
-                  style={{
-                    backgroundColor: "#61BD4F",
-                    color: "white",
-                    width: "100%",
-                    marginTop: "25px"
-                  }}
-                >
-                  Masuk
-                </Button>
+            <Grid item>
+              <form noValidate onSubmit={this.onSubmit}>
+                <Grid container direction="column" spacing={4} alignItems="stretch">
+                  <Grid item>
+                    <label for="email">Email</label>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="email"
+                      onChange={this.onChange}
+                      value={this.state.email}
+                      error={Boolean(errors.email || errors.emailnotfound)}
+                      type="email"
+                      helperText={
+                        <div style={{display: "flex", alignItems: "center"}}>
+                          {errors.email || errors.emailnotfound ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
+                            {errors.email}
+                            {errors.emailnotfound}
+                          </Typography>
+                        </div>
+                      }
+                      className={classnames("", {
+                        invalid: errors.email || errors.emailnotfound
+                      })}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <label>Kata Sandi</label>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="password"
+                      onChange={this.onChange}
+                      value={this.state.password}
+                      error={Boolean(errors.password || errors.passwordincorrect)}
+                      type={passwordIsMasked ? "password" : "text"}
+                      helperText={
+                        <div style={{ display:"flex", alignItems: "center"}}>
+                          {errors.password || errors.passwordincorrect ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          <Typography variant="caption" style={{marginLeft: "4px"}}>
+                            {errors.password}
+                            {errors.passwordincorrect}
+                          </Typography>
+                        </div>
+                      }
+                      className={classnames("", {
+                        invalid: errors.password || errors.passwordincorrect
+                      })}
+                      InputProps={{
+                        endAdornment:
+                          <InputAdornment position="end">
+                            <IconButton
+                              size="small"
+                              onClick={this.togglePasswordVisibility}
+                            >
+                              {icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                            </IconButton>
+                          </InputAdornment>,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      style={{
+                        backgroundColor: "#61BD4F",
+                        color: "white",
+                        width: "100%",
+                      }}
+                    >
+                      Masuk
+                    </Button>
+                  </Grid>
+                </Grid>
               </form>
             </Grid>
-            <Divider className={classes.gridContent} />
+            <Divider />
             <Grid item container justify="space-around">
               <Link href="/akun/lupa-katasandi">
                 Lupa Kata Sandi?
@@ -195,9 +197,9 @@ class Login extends Component {
           </Grid>
         </Paper>
       </div>
-    );
-  };
-};
+    )
+  }
+}
 
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
@@ -207,7 +209,7 @@ Login.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
-  errors: state.errors
+  errors: state.errors,
 });
 
 export default withRouter(
