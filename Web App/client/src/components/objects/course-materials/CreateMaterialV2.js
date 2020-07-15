@@ -7,13 +7,14 @@ import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions"
-import { getOneUser } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { createMaterial } from "../../../actions/MaterialActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, CircularProgress, Chip, Dialog, Divider, FormControl, FormHelperText, Grid, IconButton,
-   ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, Toolbar, TextField, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
+import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
+import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
+   Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -82,7 +83,9 @@ const styles = (theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  createTaskButton: {
+  createMaterialButton: {
+    width: "100%",
+    marginTop: "20px",
     backgroundColor: "#61BD4F",
     color: "white",
     "&:focus, &:hover": {
@@ -180,13 +183,12 @@ function LampiranFile(props) {
   )
 }
 
-class CreateTaskV2 extends Component {
+class CreateMaterialV2 extends Component {
   constructor() {
     super();
     this.state = {
       name: "",
       subject: "",
-      deadline: new Date(),
       focused: false,
       class_assigned: [],
       description: "",
@@ -214,10 +216,13 @@ class CreateTaskV2 extends Component {
     this.setState({ openUploadDialog: true})
   };
 
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  };
+
   onChange = (e, otherfield) => {
-    console.log(this.state.class_assigned, e.target.value)
-    // if(Object.keys(this.props.errors).length !== 0)
-    //   this.props.clearErrors()
+    console.log("On change : ", e.target.value)
+    console.log(Array.from(this.state.fileLampiran))
     if(otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
@@ -232,36 +237,31 @@ class CreateTaskV2 extends Component {
     }
     else
       this.setState({ [e.target.id]: e.target.value});
-      console.log(this.state.fileLampiran)
-  }
-
-  onDateChange = (date) => {
-    console.log(date)
-    this.setState({ deadline: date})
   }
 
   onSubmit = (e, id) => {
     e.preventDefault();
     let formData = new FormData()
-    const taskData = {
-      name: this.state.name,
-      deadline: this.state.deadline,
-      subject: this.state.subject,
-      class_assigned: this.state.class_assigned,
-      person_in_charge_id: id,
-      description: this.state.description,
-      errors: {},
-    };
 
-    //Check if there is any lampiran_tugas uploaded or not.
+    //Check if there is any lampiran uploaded or not.
     if(this.state.fileLampiran)
       for(var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
-        formData.append("lampiran_tugas", this.state.fileLampiran[i])
+        formData.append("lampiran_materi", this.state.fileLampiran[i])
       }
-      console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran)
-      console.log(taskData)
-      this.props.createTask(formData, taskData, this.props.history);
+      console.log(formData.getAll("lampiran_materi"), this.state.fileLampiran)
+
+      const materialData = {
+        name: this.state.name,
+        subject: this.state.subject,
+        class_assigned: this.state.class_assigned,
+        description: this.state.description,
+        lampiran: Array.from(this.state.fileLampiran),
+        author_id: id,
+        errors: {},
+      };
+
+      this.props.createMaterial(formData, materialData, this.props.history);
   }
 
   // UNSAFE_componentWillReceiveProps() is invoked before
@@ -277,10 +277,9 @@ class CreateTaskV2 extends Component {
   }
 
   componentDidMount() {
-    const { clearErrors, viewClass, getAllSubjects} = this.props;
-    clearErrors()
-    viewClass()
-    getAllSubjects()
+    this.props.clearErrors()
+    this.props.viewClass()
+    this.props.getAllSubjects()
   }
 
   handleLampiranUpload = (e) => {
@@ -306,44 +305,15 @@ class CreateTaskV2 extends Component {
   }
 
   render() {
-    const { classesCollection, classes, errors, success, viewClass, subjectsCollection}  = this.props;
-    const { class_assigned, fileLampiran}  = this.state;
-    const { all_classes } = this.props.classesCollection
+    const { classesCollection, classes, subjectsCollection, success}  = this.props;
+    const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
+    const { class_assigned, fileLampiran}  = this.state;
+    const { errors } = this.props;
     const { user } = this.props.auth
-    console.log(errors)
 
-    const UploadDialog = () => {
-      return(
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-betweeen" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item justify="center">
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Tugas sedang dibuat" : "Tugas berhasil dibuat"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-                <Button
-                  variant="contained"
-                  href="/daftar-tugas"
-                  className={classes.uploadFinishButton}
-                >
-                  Selesai
-                </Button>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-    }
+    console.log(class_assigned)
+    console.log(errors)
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename)
@@ -371,7 +341,7 @@ class CreateTaskV2 extends Component {
     const listFileChosen = () => {
       let temp = []
       if(fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++) {
+        for (var i = 0; i < fileLampiran.length; i++){
           console.log(i)
           temp.push(
             <LampiranFile
@@ -387,6 +357,38 @@ class CreateTaskV2 extends Component {
       return temp;
     }
 
+    const UploadDialog = () => {
+      return(
+        <Dialog open={this.state.openUploadDialog}>
+          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
+            <Grid item>
+              <Typography variant="h6" align="center" gutterBottom>
+                {!success ? "Materi sedang dibuat" : "Materi berhasil dibuat"}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon}/>}
+            </Grid>
+            <Grid item>
+              {!success ?
+                <Typography variant="body1" align="center" gutterBottom>
+                  <b>Mohon tetap tunggu di halaman ini.</b>
+                </Typography>
+              :
+                <Button
+                  variant="contained"
+                  href="/daftar-materi"
+                  className={classes.uploadFinishButton}
+                >
+                  Selesai
+              </Button>
+              }
+            </Grid>
+          </Grid>
+        </Dialog>
+      )
+  }
+
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -398,7 +400,7 @@ class CreateTaskV2 extends Component {
       },
     };
 
-    document.title = "Schooly | Buat Tugas";
+    document.title = "Schooly | Buat Materi";
 
     if(user.role === "Teacher") {
       return(
@@ -407,10 +409,10 @@ class CreateTaskV2 extends Component {
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
-                <b>Buat Tugas</b>
+                <b>Buat Materi</b>
               </Typography>
               <Typography color="textSecondary">
-                Tambahkan keterangan tugas untuk membuat tugas.
+                Tambahkan keterangan materi untuk membuat materi.
               </Typography>
             </div>
             <Divider />
@@ -462,50 +464,27 @@ class CreateTaskV2 extends Component {
                 <Divider flexItem orientation="vertical" className={classes.divider} />
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
-                    <Grid item container spacing={2}>
-                      <Grid item xs={12} md={6}>
-                        <Typography component="label" for="subject" color="primary">
-                          Mata Pelajaran
-                        </Typography>
-                        <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject)}>
-                          <Select
-                            value={this.state.subject}
-                            onChange={(event) => {this.onChange(event, "subject")}}
-                          >
-                            {all_subjects.map((subject) => (
-                              <MenuItem value={subject.name}>{subject.name}</MenuItem>
-                            ))}
-                          </Select>
-                          <FormHelperText>
-                            {Boolean(errors.subject) ? errors.subject : null}
-                          </FormHelperText>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Typography component="label" for="deadline" color="primary">
-                          Batas Waktu
-                        </Typography>
-                        <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                          <KeyboardDateTimePicker
-                            fullWidth
-                            disablePast
-                            inputVariant="outlined"
-                            format="dd/MM/yyyy - HH:mm"
-                            ampm={false}
-                            okLabel="Simpan"
-                            cancelLabel="Batal"
-                            minDateMessage="Batas waktu harus waktu yang akan datang"
-                            invalidDateMessage="Format tanggal tidak benar"
-                            id="deadline"
-                            value={this.state.deadline}
-                            onChange={(date) => this.onDateChange(date)}
-                          />
-                        </MuiPickersUtilsProvider>
-                      </Grid>
+                    <Grid item>
+                      <Typography component="label" for="subject" color="primary">
+                        Mata Pelajaran
+                      </Typography>
+                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                        <Select
+                          value={this.state.subject}
+                          onChange={(event) => {this.onChange(event, "subject")}}
+                        >
+                          {all_subjects.map((subject) => (
+                            <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>
+                          {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
+                        </FormHelperText>
+                      </FormControl>
                     </Grid>
                     <Grid item>
                       <Typography component="label" for="class_assigned" color="primary">
-                        Kelas yang Ditugaskan
+                        Kelas yang Diberikan
                       </Typography>
                       <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
                         <Select
@@ -516,24 +495,19 @@ class CreateTaskV2 extends Component {
                           onChange={(event) => {this.onChange(event, "kelas")}}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
-                              {selected.map((id) => {
-                                let name
-                                for (var i in all_classes){ // i is the index
-                                  if(all_classes[i]._id === id){
-                                    name = all_classes[i].name
-                                    break;
-                                  }
-                                }
+                              {selected.map((kelas) => {
+                                console.log(selected)
+                                console.log(kelas, class_assigned)
                                 return(
-                                  <Chip key={id} label={name} className={classes.chip} />
+                                  <Chip key={kelas} label={kelas.name} className={classes.chip} />
                                 )
                               })}
                             </div>
                           )}
                         >
-                          {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                          {all_classes.map((kelas) => {
                             return(
-                              <MenuItem value={kelas._id} key={kelas._id} selected>{kelas.name}</MenuItem>
+                              <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                           )})}
                         </Select>
                         <FormHelperText>
@@ -576,13 +550,15 @@ class CreateTaskV2 extends Component {
               </Grid>
               <Divider />
               <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.createTaskButton}
-                >
-                  Buat Tugas
-                </Button>
+                <div>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.createMaterialButton}
+                  >
+                    Buat Materi
+                  </Button>
+                </div>
               </div>
             </form>
           </Paper>
@@ -601,15 +577,14 @@ class CreateTaskV2 extends Component {
   }
 }
 
-CreateTaskV2.propTypes = {
-  createTask: PropTypes.func.isRequired,
+CreateMaterialV2.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   viewClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  getOneUser: PropTypes.func.isRequired,
+  createMaterial: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -621,5 +596,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createTask, viewClass, getAllSubjects, getOneUser, clearErrors }
-) (withStyles(styles)(CreateTaskV2))
+  mapStateToProps, { viewClass, getAllSubjects, createMaterial, clearErrors }
+) (withStyles(styles)(CreateMaterialV2))

@@ -5,14 +5,13 @@ import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
 import classnames from "classnames";
-import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
+import { viewOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
-import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, CircularProgress, Chip, Dialog, Divider, FormControl, FormHelperText, Grid, IconButton,
-   ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, Toolbar, TextField, Typography } from "@material-ui/core";
+import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
+  Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -24,9 +23,10 @@ const path = require("path");
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
+    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
-    padding: "10px",
   },
   content: {
     padding: "20px",
@@ -87,6 +87,16 @@ const styles = (theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
+  editTaskButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
       color: "white",
     },
   },
@@ -180,29 +190,152 @@ function LampiranFile(props) {
   )
 }
 
-class CreateTaskV2 extends Component {
-  constructor() {
-    super();
+class EditTaskV2 extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
       name: "",
       subject: "",
       deadline: new Date(),
-      focused: false,
+      tasksCollection: [],
       class_assigned: [],
+      classChanged: false,
+      focused: false,
       description: "",
-      errors: {},
       fileLampiran: [],
+      fileLampiranToAdd: [],
+      fileLampiranToDelete: [],
+      anchorEl: null,
       openUploadDialog: null,
-      anchorEl: null
+      errors: {},
     }
   }
 
-  lampiranUploader = React.createRef(null)
-  uploadedLampiran = React.createRef(null)
+  tugasUploader = React.createRef(null)
+  uploadedTugas = React.createRef(null)
+
+  componentDidMount() {
+    this.props.clearErrors()
+    this.props.viewOneTask(this.props.match.params.id)
+    this.props.viewClass()
+    this.props.getAllSubjects()
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    console.log("Tasks props is received");
+    const { name } = this.state;
+
+    const { tasksCollection, errors } = nextProps;
+
+    // pass errorsnya false makanya berhasil
+    if(!nextProps.errors){
+      this.handleOpenUploadDialog()
+    }
+
+    console.log(tasksCollection.class_assigned)
+    if(Boolean(tasksCollection) && errors){
+      this.setState({
+          name: tasksCollection.name,
+          subject: tasksCollection.subject,
+          deadline: tasksCollection.deadline,
+          class_assigned: Boolean(tasksCollection.class_assigned) ? tasksCollection.class_assigned : [],
+          description: tasksCollection.description,
+          fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
+          // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
+          // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      })
+    }
+  }
+
+  onSubmit = (e, classesOptions) => {
+    e.preventDefault();
+
+    const { id } = this.props.match.params;
+    const { class_assigned, classChanged, fileLampiranToAdd, fileLampiranToDelete } = this.state;
+
+    let classesSelected = [];
+    console.log(class_assigned)
+
+    class_assigned.map((id) => {
+      for( var i = 0; i < classesOptions.length; i++) {
+      if(classesOptions[i]._id === id) {
+        classesSelected.push(classesOptions[i])
+        break;
+      }
+    }
+  })
+
+  const taskObject = {
+    name: this.state.name,
+    deadline: this.state.deadline,
+    subject: this.state.subject,
+    description: this.state.description,
+    errors: {}
+  }
+
+  if(classChanged)
+    taskObject.class_assigned = classesSelected // When the classes is changed
+  else
+    taskObject.class_assigned = class_assigned // When it has no change
+
+  let formData = new FormData()
+  for(var i = 0; i< fileLampiranToAdd.length; i++) {
+    console.log(this.state.fileLampiran[i])
+    formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i])
+  }
+  this.props.updateTask(formData, fileLampiranToDelete,
+    this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
+  }
+
+  handleLampiranUpload = (e) => {
+    const files = e.target.files;
+    console.log(this.state.fileLampiran)
+    let temp;
+    let tempToAdd;
+
+    if(this.state.fileLampiran.length === 0)
+      this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
+    else{
+      console.log(files)
+      if(files.length !== 0) {
+        temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
+        tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
+        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+      }
+    }
+  }
+
+  handleLampiranDelete = (e, i, name) => {
+    e.preventDefault()
+    console.log("Index is: ", i)
+    let temp = Array.from(this.state.fileLampiran);
+    let tempToDelete = this.state.fileLampiranToDelete;
+    let tempToAdd = this.state.fileLampiranToAdd;
+    // For the one that has already been uploaded, there will be a filename field (yang belum adanya name)
+    // For the one that has already in DB
+    if(this.state.fileLampiran[i].filename !== undefined) {
+      // Remove the file in fileLampiranToDelete
+      tempToDelete.push(temp[i])
+    }
+    else { // For the one that"s not yet in DB
+      // Remove the file in fileLampiranToAdd
+      for(var j = 0; j < tempToAdd.length; j++) {
+        console.log(temp[i].name, tempToAdd[j].name)
+        if(tempToAdd[j].name === temp[i].name){
+          tempToAdd.splice(j,1)
+        }
+      }
+    }
+    temp.splice(i, 1);
+    console.log(tempToDelete)
+    if(temp.length === 0)
+      this.handleCloseMenu()
+    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
+      fileLampiranToDelete: tempToDelete})
+  }
 
   handleClickMenu = (event) => {
-    //Needed so it will not be run when filetugas = null or filetugas array is empty
-    if(this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
+    if(!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
       this.setState({ anchorEl: event.currentTarget})
   }
 
@@ -215,11 +348,13 @@ class CreateTaskV2 extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log(this.state.class_assigned, e.target.value)
-    // if(Object.keys(this.props.errors).length !== 0)
-    //   this.props.clearErrors()
-    if(otherfield === "kelas") {
-      this.setState({ class_assigned: e.target.value})
+    console.log(this.state.class_assigned)
+    if(Object.keys(this.props.errors).length !== 0){
+      this.props.clearErrors()
+    }
+    if(otherfield === "kelas"){
+      console.log(this.state.class_assigned, e.target.value)
+      this.setState({ class_assigned: e.target.value, classChanged: true})
     }
     else if(otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
@@ -228,11 +363,11 @@ class CreateTaskV2 extends Component {
       this.setState({ description : e.target.value})
     }
     else if(otherfield === "subject") {
-      this.setState({ subject: e.target.value})
+      console.log(e.target.value)
+      this.setState({subject: e.target.value })
     }
     else
       this.setState({ [e.target.id]: e.target.value});
-      console.log(this.state.fileLampiran)
   }
 
   onDateChange = (date) => {
@@ -240,86 +375,26 @@ class CreateTaskV2 extends Component {
     this.setState({ deadline: date})
   }
 
-  onSubmit = (e, id) => {
-    e.preventDefault();
-    let formData = new FormData()
-    const taskData = {
-      name: this.state.name,
-      deadline: this.state.deadline,
-      subject: this.state.subject,
-      class_assigned: this.state.class_assigned,
-      person_in_charge_id: id,
-      description: this.state.description,
-      errors: {},
-    };
-
-    //Check if there is any lampiran_tugas uploaded or not.
-    if(this.state.fileLampiran)
-      for(var i = 0; i < this.state.fileLampiran.length; i++) {
-        console.log(this.state.fileLampiran[i])
-        formData.append("lampiran_tugas", this.state.fileLampiran[i])
-      }
-      console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran)
-      console.log(taskData)
-      this.props.createTask(formData, taskData, this.props.history);
-  }
-
-  // UNSAFE_componentWillReceiveProps() is invoked before
-  // a mounted component receives new props. If you need
-  // update the state in response to prop changes (for example, to reset it),
-  // you may compare this.props and nextProps and perform state transitions
-  // using this.setState() in this method.
-
-  UNSAFE_componentWillReceiveProps(nextProps){
-    if(!nextProps.errors){
-        this.handleOpenUploadDialog()
-    }
-  }
-
-  componentDidMount() {
-    const { clearErrors, viewClass, getAllSubjects} = this.props;
-    clearErrors()
-    viewClass()
-    getAllSubjects()
-  }
-
-  handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    if(this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files})
-    else {
-      if(files.length !== 0) {
-        let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
-        this.setState({ fileLampiran: temp})
-      }
-    }
-  }
-
-  handleLampiranDelete = (e, i) => {
-    e.preventDefault()
-    console.log("Index is: ", i)
-    let temp = Array.from(this.state.fileLampiran);
-    temp.splice(i,1);
-    if(temp.length === 0) //If it is empty.
-      this.handleCloseMenu()
-    this.setState({ fileLampiran: temp})
-  }
-
   render() {
-    const { classesCollection, classes, errors, success, viewClass, subjectsCollection}  = this.props;
-    const { class_assigned, fileLampiran}  = this.state;
-    const { all_classes } = this.props.classesCollection
-    const { all_subjects } = this.props.subjectsCollection;
-    const { user } = this.props.auth
-    console.log(errors)
+    const { fileLampiran, class_assigned } = this.state;
+    const { classes, errors, success } = this.props;
+    const { all_classes, selectedClasses } = this.props.classesCollection;
+    const { all_subjects } = this.props.subjectsCollection
+    const { user } = this.props.auth;
 
+    const task_id = this.props.match.params.id;
+
+    console.log("FileLampiran:", this.state.fileLampiran)
+    console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
+    console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
+    console.log(class_assigned)
     const UploadDialog = () => {
       return(
         <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-betweeen" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item justify="center">
+          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
+            <Grid item>
               <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Tugas sedang dibuat" : "Tugas berhasil dibuat"}
+                {!success ? "Tugas sedang disunting" : "Tugas berhasil disunting"}
               </Typography>
             </Grid>
             <Grid item>
@@ -333,7 +408,7 @@ class CreateTaskV2 extends Component {
               :
                 <Button
                   variant="contained"
-                  href="/daftar-tugas"
+                  href={`/tugas-guru/${task_id}`}
                   className={classes.uploadFinishButton}
                 >
                   Selesai
@@ -343,7 +418,19 @@ class CreateTaskV2 extends Component {
           </Grid>
         </Dialog>
       )
-    }
+  }
+
+    let classIds = []
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+      PaperProps: {
+        style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 250,
+        },
+      },
+    };
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename)
@@ -372,11 +459,10 @@ class CreateTaskV2 extends Component {
       let temp = []
       if(fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
-          console.log(i)
           temp.push(
-            <LampiranFile
+            <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
               classes={classes}
-              name={fileLampiran[i].name}
+              name={fileLampiran[i].filename === undefined ? fileLampiran[i].name : fileLampiran[i].filename}
               filetype={fileType(fileLampiran[i].name)}
               handleLampiranDelete={this.handleLampiranDelete}
               i={i}
@@ -387,34 +473,29 @@ class CreateTaskV2 extends Component {
       return temp;
     }
 
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-      PaperProps: {
-        style: {
-          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-          width: 250,
-        },
-      },
-    };
+    if(class_assigned != null) //When firstly received.
+      class_assigned.map((kelas) => {
+        if(kelas._id != undefined)
+          classIds.push(kelas._id)
+        else
+          classIds.push(kelas)
+      }
+    )
 
-    document.title = "Schooly | Buat Tugas";
+    document.title = "Schooly | Sunting Tugas";
 
-    if(user.role === "Teacher") {
+    if(user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
           {UploadDialog()}
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
-                <b>Buat Tugas</b>
-              </Typography>
-              <Typography color="textSecondary">
-                Tambahkan keterangan tugas untuk membuat tugas.
+                <b>Sunting Tugas</b>
               </Typography>
             </div>
             <Divider />
-            <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
+            <form noValidate onSubmit={(e) => {this.onSubmit(e, all_classes)}}>
               <Grid container>
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
@@ -498,7 +579,7 @@ class CreateTaskV2 extends Component {
                             invalidDateMessage="Format tanggal tidak benar"
                             id="deadline"
                             value={this.state.deadline}
-                            onChange={(date) => this.onDateChange(date)}
+                            onChange={(date) => this.onChange(date, "deadline")}
                           />
                         </MuiPickersUtilsProvider>
                       </Grid>
@@ -531,10 +612,9 @@ class CreateTaskV2 extends Component {
                             </div>
                           )}
                         >
-                          {all_classes.map((kelas) => { console.log(kelas, class_assigned)
-                            return(
-                              <MenuItem value={kelas._id} key={kelas._id} selected>{kelas.name}</MenuItem>
-                          )})}
+                          {!all_classes.length ? null : all_classes.map((kelas) => (
+                              <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
+                          ))}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
@@ -547,7 +627,7 @@ class CreateTaskV2 extends Component {
                         multiple={true}
                         name="lampiran"
                         onChange={this.handleLampiranUpload}
-                        ref={this.lampiranUploader}
+                        ref={this.tugasUploader}
                         accept="file/*"
                         style={{display: "none"}}
                       />
@@ -556,13 +636,13 @@ class CreateTaskV2 extends Component {
                         multiple={true}
                         name="file"
                         id="file"
-                        ref={this.uploadedLampiran}
+                        ref={this.uploadedTugas}
                         style={{display: "none"}}
                       />
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}
-                        onClick={() => {this.lampiranUploader.current.click()}}
+                        onClick={() => {this.tugasUploader.current.click()}}
                         className={classes.addFileButton}
                       >
                         Tambah Lampiran Berkas
@@ -574,16 +654,16 @@ class CreateTaskV2 extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Divider />
-              <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.createTaskButton}
-                >
-                  Buat Tugas
-                </Button>
-              </div>
+            <Divider />
+            <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+              <Button
+                variant="contained"
+                type="submit"
+                className={classes.editTaskButton}
+              >
+                Buat Tugas
+              </Button>
+            </div>
             </form>
           </Paper>
         </div>
@@ -596,30 +676,34 @@ class CreateTaskV2 extends Component {
             <b>Anda tidak mempunyai izin akses halaman ini.</b>
           </Typography>
         </div>
-      )
+      );
     }
   }
 }
 
-CreateTaskV2.propTypes = {
-  createTask: PropTypes.func.isRequired,
+EditTaskV2.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  viewClass: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  getOneUser: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  viewOneTask : PropTypes.func.isRequired,
+  updateTask: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  viewClass: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth,
+const mapStateToProps = (state) => ({
   errors: state.errors,
+  auth: state.auth,
   success: state.success,
-  subjectsCollection: state.subjectsCollection,
+  tasksCollection: state.tasksCollection,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
 })
 
 export default connect(
-  mapStateToProps, { createTask, viewClass, getAllSubjects, getOneUser, clearErrors }
-) (withStyles(styles)(CreateTaskV2))
+    mapStateToProps, { viewOneTask, updateTask, viewClass, getAllSubjects, clearErrors }
+) (withStyles(styles)(EditTaskV2))
