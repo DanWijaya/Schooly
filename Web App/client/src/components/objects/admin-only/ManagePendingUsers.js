@@ -517,7 +517,7 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Hapus">
+                          <LightTooltip title="Aktifkan">
                             <IconButton
                               size="small"
                               className={classes.profileApproveButton}
@@ -627,7 +627,7 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
                       <Grid item>
-                          <LightTooltip title="Hapus">
+                          <LightTooltip title="Aktifkan">
                             <IconButton
                               size="small"
                               className={classes.profileApproveButton}

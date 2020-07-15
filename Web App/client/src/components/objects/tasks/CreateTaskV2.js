@@ -49,14 +49,6 @@ const styles = (theme) => ({
       color: "white",
     },
   },
-  listItemPaper: {
-    marginBottom: "10px"
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
-    },
-  },
   deleteIconButton: {
     marginLeft: "7.5px",
     backgroundColor: theme.palette.error.dark,
@@ -122,9 +114,8 @@ function LampiranFile(props) {
 
   return(
     <Grid item xs={12}>
-      <Paper variant="outlined" className={classes.listItemPaper}>
+      <Paper variant="outlined" >
         <ListItem
-          button
           disableRipple
           className={classes.listItem}
         >
@@ -225,8 +216,8 @@ class CreateTaskV2 extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.class_assigned, e.target.value)
-    if(Object.keys(this.props.errors).length !== 0)
-      this.props.clearErrors()
+    // if(Object.keys(this.props.errors).length !== 0)
+    //   this.props.clearErrors()
     if(otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
@@ -594,7 +585,6 @@ class CreateTaskV2 extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-            </form>
             <Divider />
             <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
               <Button
@@ -605,6 +595,7 @@ class CreateTaskV2 extends Component {
                 Buat Tugas
               </Button>
             </div>
+            </form>
           </Paper>
         </div>
       );
