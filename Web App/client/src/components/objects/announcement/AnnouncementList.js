@@ -8,7 +8,7 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Fab, Grid, Hidden, List, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Fab, Grid, Hidden, List, ListItem, ListItemText, Paper, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -18,15 +18,11 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
-    marginTop: "20px"
   },
-  listItemPaper: {
-    marginBottom: "10px",
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
-    },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "15px",
   },
   newAnnouncementButton: {
     backgroundColor: "#61BD4F",
@@ -45,33 +41,43 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
+  listItemPaper: {
+    marginBottom: "10px",
+  },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
+  },
 }));
 
 function AnnouncementItemList(props) {
   const classes = useStyles();
 
   return(
-    <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
-        <ListItemText
-          primary={
-            <Typography>
-              {props.notification_title}
-            </Typography>
-          }
-          secondary={props.author_name}
-        />
-        <ListItemText
-          align="right"
-          primary={
-            <Typography variant="subtitle" color="textSecondary">
-              {props.date}
-            </Typography>
-          }
-          secondary={`Pukul ${props.time}`}
-        />
-      </ListItem>
-    </Paper>
+    <Grid item>
+      <Paper variant="outlined" className={classes.listItemPaper}>
+        <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
+          <ListItemText
+            primary={
+              <Typography>
+                {props.notification_title}
+              </Typography>
+            }
+            secondary={props.author_name}
+          />
+          <ListItemText
+            align="right"
+            primary={
+              <Typography variant="subtitle" color="textSecondary">
+                {props.date}
+              </Typography>
+            }
+            secondary={`Pukul ${props.time}`}
+          />
+        </ListItem>
+      </Paper>
+    </Grid>
   )
 }
 
@@ -140,14 +146,11 @@ function AnnouncementList(props) {
 
   return(
     <div className={classes.root}>
-      <Grid container justify="space-between" alignItems="center" style={{padding: "5px"}}>
-        <Grid item>
-          <Typography variant="h4" color="primary">
-            <b>Daftar Pengumuman</b>
-          </Typography>
-        </Grid>
-        <Grid item>
-          {canAnnounce() ?
+      <div className={classes.toolbar}>
+        <Typography variant="h4" color="primary">
+          <b>Daftar Pengumuman</b>
+        </Typography>
+        {canAnnounce() ?
             <div>
               <Hidden smUp implementation="css">
                 <LightTooltip title="Buat Pengumuman">
@@ -170,11 +173,10 @@ function AnnouncementList(props) {
           :
             null
           }
-        </Grid>
-      </Grid>
-      <List>
+      </div>
+      <Grid container direction="column" spacing={2}>
         {listAnnouncements()}
-      </List>
+      </Grid>
     </div>
   )
 }

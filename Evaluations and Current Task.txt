@@ -15,8 +15,10 @@ IMPORTANT:
 6. cek Tabs scrollable
 7. View task studnet badge?
 9. Create subject
-10. Daftar pengumuman agak ke atas
 11. Delete handle menu di createtaskv2
+14. di register akhir buat kasi tau perlu approval admin
+15. Wali kelas field is required
+16. Cek formcontrol, dan penempatan mui style
 
 Daniel:
 24. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

@@ -7,7 +7,6 @@ import { loginUser } from "../../../actions/UserActions";
 import authBackground from "../AuthBackground.png";
 import { Button, Divider, FormControl, FormHelperText, Grid, IconButton, InputAdornment, Link, OutlinedInput, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import ErrorIcon from "@material-ui/icons/Error";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
@@ -115,16 +114,7 @@ class Login extends Component {
                       value={this.state.email}
                       error={Boolean(errors.email || errors.emailnotfound || errors.notactive)}
                       type="email"
-                      helperText={
-                        <div style={{display: "flex", alignItems: "center"}}>
-                          {errors.email || errors.emailnotfound || errors.notactive ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                          <Typography variant="caption" style={{marginLeft: "4px"}}>
-                            {errors.email}
-                            {errors.emailnotfound}
-                            {errors.notactive}
-                          </Typography>
-                        </div>
-                      }
+                      helperText={errors.email || errors.emailnotfound || errors.notactive}
                       className={classnames("", {
                         invalid: errors.email || errors.emailnotfound
                       })}
@@ -140,15 +130,7 @@ class Login extends Component {
                       value={this.state.password}
                       error={Boolean(errors.password || errors.passwordincorrect)}
                       type={passwordIsMasked ? "password" : "text"}
-                      helperText={
-                        <div style={{ display:"flex", alignItems: "center"}}>
-                          {errors.password || errors.passwordincorrect ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                          <Typography variant="caption" style={{marginLeft: "4px"}}>
-                            {errors.password}
-                            {errors.passwordincorrect}
-                          </Typography>
-                        </div>
-                      }
+                      helperText={errors.password || errors.passwordincorrect}
                       className={classnames("", {
                         invalid: errors.password || errors.passwordincorrect
                       })}

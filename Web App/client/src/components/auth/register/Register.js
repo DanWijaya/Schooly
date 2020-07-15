@@ -11,7 +11,6 @@ import { getAllSubjects } from "../../../actions/SubjectActions"
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField"
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
 import { Button, Dialog, Divider, FormControl, FormHelperText, Grid, Link,
@@ -19,7 +18,6 @@ import { Button, Dialog, Divider, FormControl, FormHelperText, Grid, Link,
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
-import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
   root: {
@@ -202,14 +200,7 @@ class Register extends Component {
                   value={this.state.email}
                   error={errors.email}
                   type="email"
-                  helperText={
-                    <div style={{display: "flex", alignItems: "center"}}>
-                      {errors.email ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="caption" style={{marginLeft: "4px"}}>
-                        {errors.email}
-                      </Typography>
-                    </div>
-                  }
+                  helperText={errors.email}
                   className={classnames("", {
                     invalid: errors.email
                   })}
@@ -225,14 +216,7 @@ class Register extends Component {
                   value={this.state.password}
                   error={errors.password}
                   type="password"
-                  helperText={
-                    <div style={{display: "flex", alignItems: "center"}}>
-                      {errors.password ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="caption" style={{marginLeft: "4px"}}>
-                        {errors.password}
-                      </Typography>
-                    </div>
-                  }
+                  helperText={errors.password}
                   className={classnames("", {
                     invalid: errors.password
                   })}
@@ -248,14 +232,7 @@ class Register extends Component {
                   value={this.state.password2}
                   error={errors.password2}
                   type="password"
-                  helperText={
-                    <div style={{display: "flex", alignItems: "center"}}>
-                      {errors.password2 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="caption" style={{marginLeft: "4px"}}>
-                        {errors.password2}
-                      </Typography>
-                    </div>
-                  }
+                  helperText={errors.password2}
                   className={classnames("", {
                     invalid: errors.password2
                   })}
@@ -277,9 +254,8 @@ class Register extends Component {
                     <MenuItem value={"Teacher"}>Guru</MenuItem>
                     <MenuItem value={"Admin"}>Pengelola</MenuItem>
                   </Select>
-                  <FormHelperText style={{display: "flex", alignItems: "center"}}>
-                    {Boolean(errors.role) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.role) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.role}</Typography> : null}
+                  <FormHelperText>
+                    {Boolean(errors.role) ? errors.role : null}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -293,14 +269,7 @@ class Register extends Component {
                   value={this.state.name}
                   error={errors.name}
                   type="text"
-                  helperText={
-                    <div style={{display: "flex", alignItems: "center"}}>
-                      {errors.name ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="caption" style={{marginLeft: "4px"}}>
-                        {errors.name}
-                      </Typography>
-                    </div>
-                  }
+                  helperText={errors.name}
                   className={classnames("", {
                     invalid: errors.name
                   })}
@@ -318,9 +287,8 @@ class Register extends Component {
                         <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                       ))}
                   </Select>
-                  <FormHelperText style={{display:"flex", alignItems:"center"}}>
-                    {Boolean(errors.kelas) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.kelas) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.kelas}</Typography> : null}
+                  <FormHelperText>
+                    {Boolean(errors.kelas) ? errors.kelas : null}
                   </FormHelperText>
                 </FormControl>
                 </Grid>
@@ -336,9 +304,8 @@ class Register extends Component {
                         <MenuItem value={subject.name}>{subject.name}</MenuItem>
                       ))}
                   </Select>
-                  <FormHelperText style={{display:"flex", alignItems:"center"}}>
-                    {Boolean(errors.subject_teached) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                    {Boolean(errors.subject_teached) ? <Typography variant="caption" style={{marginLeft: "4px"}}>{errors.subject_teached}</Typography> : null}
+                  <FormHelperText>
+                    {Boolean(errors.subject_teached) ? errors.subject_teached : null}
                   </FormHelperText>
                 </FormControl>
                 </Grid>
@@ -355,14 +322,7 @@ class Register extends Component {
                   value={this.state.phone}
                   error={errors.phone}
                   type="tel"
-                  helperText={
-                    <div style={{display: "flex", alignItems: "center"}}>
-                      {errors.phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="caption" style={{marginLeft: "4px"}}>
-                        {errors.phone}
-                      </Typography>
-                    </div>
-                  }
+                  helperText={errors.phone}
                   className={classnames("", {
                     invalid: errors.phone
                   })}
@@ -378,14 +338,7 @@ class Register extends Component {
                   value={this.state.emergency_phone}
                   error={errors.emergency_phone}
                   type="tel"
-                  helperText={
-                    <div style={{display: "flex", alignItems: "center"}}>
-                      {errors.emergency_phone ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="caption" style={{marginLeft: "4px"}}>
-                        {errors.emergency_phone}
-                      </Typography>
-                    </div>
-                  }
+                  helperText={errors.emergency_phone}
                   className={classnames("", {
                     invalid: errors.emergency_phone
                   })}
@@ -401,14 +354,7 @@ class Register extends Component {
                   value={this.state.address}
                   error={errors.address}
                   type="text"
-                  helperText={
-                    <div style={{display: "flex", alignItems: "center"}}>
-                      {errors.address ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      <Typography variant="caption" style={{marginLeft: "4px"}}>
-                        {errors.address}
-                      </Typography>
-                    </div>
-                  }
+                  helperText={errors.address}
                   className={classnames("", {
                     invalid: errors.address
                   })}
@@ -470,6 +416,9 @@ class Register extends Component {
                 <Typography variant="body2" color="textSecondary" align="center" style={{marginTop: "20px"}}>
                   Jangan lupa untuk melengkapi profil anda pada halaman profil yang dapat diakses pada
                   menekan foto profil pada bagian kanan atas aplikasi.
+                </Typography>
+                <Typography variant="body2" align="center" style={{marginTop: "20px"}}>
+                  Silahkan hubungi pengelola sekolah anda untuk mengaktifkan akun anda, setalah registrasi selesai.
                 </Typography>
               </Grid>
             </Grid>

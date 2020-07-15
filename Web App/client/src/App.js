@@ -28,24 +28,31 @@ import NavBar from "./components/misc/nav-bar/NavBar";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer";
 import Footer from "./components/misc/footer/Footer";
 //Class
-import CreateClass from "./components/objects/classes/CreateClass"
+import CreateClass from "./components/objects/classes/CreateClass";
+import CreateClassV2 from "./components/objects/classes/CreateClassV2";
 import EditClass from "./components/objects/classes/EditClass";
+import EditClassV2 from "./components/objects/classes/EditClassV2";
 import ViewClass from "./components/objects/classes/ViewClass";
 import ViewSubject from "./components/objects/classes/ViewSubject";
 //Material
 import CreateMaterial from "./components/objects/course-materials/CreateMaterial";
+import CreateMaterialV2 from "./components/objects/course-materials/CreateMaterialV2";
 import EditMaterial from "./components/objects/course-materials/EditMaterial";
+import EditMaterialV2 from "./components/objects/course-materials/EditMaterialV2";
 import ViewMaterial from "./components/objects/course-materials/ViewMaterial";
 import MaterialList from "./components/objects/course-materials/MaterialList";
 //Announcement
 import CreateAnnouncement from "./components/objects/announcement/CreateAnnouncement";
+import CreateAnnouncementV2 from "./components/objects/announcement/CreateAnnouncementV2";
 import EditAnnouncement from "./components/objects/announcement/EditAnnouncement";
+import EditAnnouncementV2 from "./components/objects/announcement/EditAnnouncementV2";
 import ViewAnnouncement from "./components/objects/announcement/ViewAnnouncement";
 import AnnouncementList from "./components/objects/announcement/AnnouncementList";
 //Task
 import CreateTask from "./components/objects/tasks/CreateTask";
 import CreateTaskV2 from "./components/objects/tasks/CreateTaskV2";
 import EditTask from "./components/objects/tasks/EditTask";
+import EditTaskV2 from "./components/objects/tasks/EditTaskV2";
 import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
@@ -158,23 +165,30 @@ class App extends Component {
                     <PrivateRoute exact path="/profil" component={Profile} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
+                    <PrivateRoute exact access={["Admin"]} path="/createclassv2" component={CreateClassV2} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />
+                    <PrivateRoute exact access={["Admin"]} path="/editclassv2" component={EditClassV2} />
                     <PrivateRoute exact access={["Student", "Admin"]} path="/kelas/:id" component={ViewClass} />
                     <PrivateRoute exact access={["Student"]} path="/mata-pelajaran/:subject_name" component={ViewSubject} />
                     {/* Route Course Materials */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-materi" component={CreateMaterial} />
+                    <PrivateRoute exact access={["Teacher"]} path="/creatematerialv2" component={CreateMaterialV2} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-materi/:id" component={EditMaterial} />
+                    <PrivateRoute exact access={["Teacher"]} path="/editmaterialv2" component={EditMaterialV2} />
                     <PrivateRoute exact access={["Teacher", "Student"]} path="/materi/:id" component={ViewMaterial} />
                     <PrivateRoute exact access={["Teacher", "Student"]} path="/daftar-materi" component={MaterialList} />
                     {/* Route Announcement  */}
                     <PrivateRoute exact access={["Teacher", "Student"]} path="/buat-pengumuman" component={CreateAnnouncement} />
+                    <PrivateRoute exact access={["Teacher", "Student"]} path="/createannouncementv2" component={CreateAnnouncementV2} />
                     <PrivateRoute exact access={["Teacher", "Student"]} path="/sunting-pengumuman/:id" component={EditAnnouncement} />
+                    <PrivateRoute exact access={["Teacher", "Student"]} path="/editannouncementv2" component={EditAnnouncementV2} />
                     <PrivateRoute exact access={["Teacher", "Student"]} path="/pengumuman/:id" component={ViewAnnouncement} />
                     <PrivateRoute exact access={["Teacher", "Student"]} path="/daftar-pengumuman" component={AnnouncementList} />
                     {/* Route Task  */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-tugas" component={CreateTask} />
                     <PrivateRoute exact access={["Teacher"]} path="/createtaskv2" component={CreateTaskV2} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-tugas/:id" component={EditTask} />
+                    <PrivateRoute exact access={["Teacher"]} path="/edittaskv2" component={EditTaskV2} />
                     <PrivateRoute exact access={["Student"]} path="/tugas-murid/:id" component={ViewTaskStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />

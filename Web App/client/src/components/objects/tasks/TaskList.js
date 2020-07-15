@@ -8,7 +8,7 @@ import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import { viewClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+   Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -80,7 +80,7 @@ function TaskListToolbar(props) {
   };
 
   return(
-    <Toolbar className={classes.toolbar}>
+    <div className={classes.toolbar}>
       <Typography variant="h4" color="primary">
         <b>Daftar Tugas</b>
       </Typography>
@@ -152,7 +152,7 @@ function TaskListToolbar(props) {
           ))}
         </Menu>
       </div>
-    </Toolbar>
+    </div>
   );
 };
 
