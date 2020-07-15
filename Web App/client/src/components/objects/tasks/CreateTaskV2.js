@@ -497,7 +497,7 @@ class CreateTaskV2 extends Component {
                           ))}
                         </Select>
                         <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                          {Boolean(errors.subject) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
+                          {Boolean(errors.subject) ? <ErrorIcon style={{height: "5%", width:"5%"}} /> : null}
                           {Boolean(errors.subject) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
                         </FormHelperText>
                       </FormControl>
