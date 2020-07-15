@@ -1,4 +1,4 @@
-import { GET_SUBJECT, GET_ALL_SUBJECTS} from "./Types";
+import { GET_SUBJECT, GET_ALL_SUBJECTS, GET_ERRORS} from "./Types";
 import axios from "axios";
 
 export const getSubject = (subjectId) => dispatch => {
@@ -40,9 +40,25 @@ export const createSubject = (subjectData) => dispatch => {
         .post("/api/subjects/create", subjectData)
         .then(res => {
             console.log("Run create subject")
-            res.json("Successfully runned")
+            window.location.reload()
         })
         .catch(err => {
-            console.log(err, "Error in creating the subject")
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })
+}
+
+export const deleteSubject = (subjectId) => dispatch => {
+
+    axios
+        .delete(`/api/subjects/delete/${subjectId}`)
+        .then(res => {
+            console.log("Deleted subject", res.data)
+            window.location.reload()
+        })
+        .catch(err => {
+            console.log(err, "Error in deleting the subject")
         })
 }

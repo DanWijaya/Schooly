@@ -216,7 +216,8 @@ function ViewAnnouncement(props) {
 
   }, [selectedAnnouncements._id]) // beacause only receive one announcement.
 
-  console.log(classesCollection)
+  console.log(new Date(), classesCollection)
+  console.log("selected announcement: ", selectedAnnouncements)
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
     switch(ext_file) {
@@ -341,7 +342,7 @@ function ViewAnnouncement(props) {
                 }
                 secondary={
                   <Typography variant="h6" color="textSecondary">
-                    {retrieved_users.size ?  retrieved_users.get(selectedAnnouncements.author_id).name : null}
+                    {retrieved_users.size && selectedAnnouncements.author_id ?  retrieved_users.get(selectedAnnouncements.author_id).name : null}
                   </Typography>
                 }
               />

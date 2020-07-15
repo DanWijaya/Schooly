@@ -5,17 +5,24 @@ import classnames from "classnames";
 import { getTeachers , getStudentsByClass} from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import { setCurrentClass, updateClass } from "../../../actions/ClassActions";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, FormHelperText, MenuItem, Grid, Select,Paper, Typography } from "@material-ui/core";
+import { Button, Divider, FormControl, FormHelperText, MenuItem, Grid, Select, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
+  },
+  content: {
+    padding: "20px",
+  },
+  divider: {
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      height: "1px",
+    },
   },
   mainGrid: {
     width: "450px",
@@ -145,7 +152,7 @@ class EditClass extends Component {
 
   componentDidMount() {
     const { getTeachers, getStudentsByClass, clearErrors} = this.props;
-    
+
     clearErrors()
     getTeachers()
     getStudentsByClass(this.props.match.params.id)
@@ -201,137 +208,132 @@ class EditClass extends Component {
       return(
         <div className={classes.root}>
           <Paper>
-            <div className={classes.mainGrid}>
-              <Typography variant="h5" className={classes.formTitle}>
+            <div className={classes.content}>
+              <Typography variant="h5" gutterBottom>
                 <b>Sunting Kelas</b>
               </Typography>
-              <form noValidate onSubmit={this.onSubmit}>
-                <Grid
-                  container
-                  direction="column"
-                  alignItems="center"
-                  spacing={4}
-                >
-                  <Grid item className={classes.gridItem}>
-                    {this.state.name === "" ?
-                      <label htmlFor="name">
-                        <div className={classes.inputLabel}>
-                          Nama Kelas
-                        </div>
-                      </label>
-                    :
-                      <label htmlFor="name" class="active">
-                        <div className={classes.inputLabel}>
-                          Nama Kelas
-                        </div>
-                      </label>
-                    }
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={this.state.name}
-                      error={errors.name}
-                      id="name"
-                      type="text"
-                      classname={classnames("", {
+            </div>
+            <Divider />
+            <form noValidate onSubmit={this.onSubmit}>
+              <Grid container>
+                <Grid item xs={12} md className={classes.content}>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography component="label" for="name" color="primary">
+                        Judul
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="name"
+                        onChange={this.onChange}
+                        value={this.state.name}
+                        error={errors.name}
+                        type="text"
+                        helperText={errors.name}
+                        className={classnames("", {
                           invalid: errors.name
-                      })}
-                      span_classname={classes.errorInfo}
-                      error1={errors.name}
-                    />
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    {/* {this.state.name === "" ?
-                      <label htmlFor="ukuran">
-                        <div className={classes.inputLabel}>
-                          Jumlah Murid
-                        </div>
-                      </label>
-                    :
-                      <label htmlFor="ukuran" class="active">
-                        <div className={classes.inputLabel}>
-                          Jumlah Murid
-                        </div>
-                      </label>
-                    } */}
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={this.state.ukuran}
-                      error={errors.ukuran}
-                      id="ukuran"
-                      type="number"
-                      classname={classnames("", {
+                        })}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Typography component="label" for="walikelas" color="primary">
+                        Wali Kelas
+                      </Typography>
+                      <FormControl id="walikelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.walikelas) && !this.state.walikelas}>
+                        <Select
+                          value={walikelas}
+                          displayEmpty
+                          onChange={(event) => {this.onChange(event, "walikelas")}}
+                        >
+                          {showValue(teacher_options, "teacher")}
+                        </Select>
+                        <FormHelperText>
+                          {Boolean(errors.walikelas) ? errors.walikelas : null}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <Typography component="label" for="ukuran" color="primary">
+                        Jumlah Murid
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="ukuran"
+                        onChange={this.onChange}
+                        value={this.state.ukuran}
+                        error={errors.ukuran}
+                        type="number"
+                        helperText={errors.ukuran}
+                        className={classnames("", {
                           invalid: errors.ukuran
-                      })}
-                      html_for="ukuran"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      error1={errors.ukuran}
-                    />
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}} error={Boolean(errors.walikelas)}>
-                      <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
-                      <Select
-                        value={walikelas}
-                        displayEmpty
-                        onChange={(event) => {this.onChange(event, "walikelas")}}
-                      >
-                        {showValue(teacher_options, "teacher")}
-                      </Select>
-                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.walikelas) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.walikelas) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.walikelas}</Typography> : null}
-                    </FormHelperText>
-                    </FormControl>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl id="ketua_kelas" variant="outlined" color="primary" style={{width: "100%"}}>
-                      <label id="ketua_kelas" className={classes.inputLabel}>Ketua Kelas</label>
-                      <Select
-                        value={ketua_kelas}
-                        displayEmpty
-                        onChange={(event) => {this.onChange(event, "ketua_kelas")}}
-                      >
-                        {showValue(student_options, "student")}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl id="sekretaris" variant="outlined" color="primary" style={{width: "100%"}}>
-                      <label id="sekretaris" className={classes.inputLabel}>Sekretaris</label>
-                      <Select
-                        value={sekretaris}
-                        displayEmpty
-                        onChange={(event) => {this.onChange(event, "sekretaris")}}
-                      >
-                        {showValue(student_options, "student")}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl id="bendahara" variant="outlined" color="primary" style={{width: "100%"}}>
-                      <label id="bendahara" className={classes.inputLabel}>Bendahara</label>
-                      <Select
-                        value={bendahara}
-                        displayEmpty
-                        onChange={(event) => {this.onChange(event, "bendahara")}}
-                      >
-                        {showValue(student_options, "student")}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      className={classes.editClassButton}
-                    >
-                      Sunting Kelas
-                    </Button>
+                        })}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </form>
-            </div>
+                <Divider flexItem orientation="vertical" className={classes.divider} />
+                <Grid item xs={12} md className={classes.content}>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography component="label" for="ketua_kelas" color="primary">
+                        Ketua Kelas
+                      </Typography>
+                      <FormControl id="ketua_kelas" variant="outlined" color="primary" fullWidth>
+                        <Select
+                          value={ketua_kelas}
+                          displayEmpty
+                          onChange={(event) => {this.onChange(event, "ketua_kelas")}}
+                        >
+                          {showValue(student_options, "student")}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <Typography component="label" for="sekretaris" color="primary">
+                        Sekretaris
+                      </Typography>
+                      <FormControl id="sekretaris" variant="outlined" color="primary" fullWidth>
+                        <Select
+                          value={sekretaris}
+                          displayEmpty
+                          onChange={(event) => {this.onChange(event, "sekretaris")}}
+                        >
+                          {showValue(student_options, "student")}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <Typography component="label" for="bendahara" color="primary">
+                        Bendahara
+                      </Typography>
+                      <FormControl id="bendahara" variant="outlined" color="primary" fullWidth>
+                        <Select
+                          value={bendahara}
+                          displayEmpty
+                          onChange={(event) => {this.onChange(event, "bendahara")}}
+                        >
+                          {showValue(student_options, "student")}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Divider />
+              <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+                <div>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.editClassButton}
+                  >
+                    Sunting Kelas
+                  </Button>
+                </div>
+              </div>
+            </form>
           </Paper>
         </div>
       )
@@ -339,7 +341,7 @@ class EditClass extends Component {
     else {
       return(
         <div className={classes.root}>
-          <Typography variant="h5" className={classes.formTitle}>
+          <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>
           </Typography>
         </div>

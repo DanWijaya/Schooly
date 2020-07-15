@@ -41,9 +41,6 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
-  listItemPaper: {
-    marginBottom: "10px",
-  },
   listItem: {
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
@@ -56,8 +53,9 @@ function AnnouncementItemList(props) {
 
   return(
     <Grid item>
-      <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
+      <Paper variant="outlined">
+        <Link to={props.notification_link}>
+        <ListItem button component="a" className={classes.listItem}>
           <ListItemText
             primary={
               <Typography>
@@ -76,6 +74,7 @@ function AnnouncementItemList(props) {
             secondary={`Pukul ${props.time}`}
           />
         </ListItem>
+        </Link>
       </Paper>
     </Grid>
   )
