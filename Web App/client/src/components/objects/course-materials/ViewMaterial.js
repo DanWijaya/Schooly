@@ -219,7 +219,7 @@ function ViewMaterial(props) {
   React.useEffect(() => {
     // viewOneTask(materi_id)
     getOneMaterial(materi_id)
-    if(Boolean(selectedMaterials.class_assigned)){
+    if (Boolean(selectedMaterials.class_assigned)) {
       viewSelectedClasses(selectedMaterials.class_assigned)
     }
     getOneUser(selectedMaterials.author_id)
@@ -249,14 +249,14 @@ function ViewMaterial(props) {
   }
 
   const onDownloadFile = (id, fileCategory="none") => {
-    if(fileCategory === "lampiran_materi")
+    if (fileCategory === "lampiran_materi")
       downloadLampiranMateri(id)
     else
       console.log("File Category is not specified")
   }
 
   const onPreviewFile = (id, fileCategory="none") => {
-   if(fileCategory === "lampiran_materi")
+   if (fileCategory === "lampiran_materi")
       previewLampiranMateri(id)
     else
       console.log("File Category is not specified")
@@ -276,7 +276,7 @@ function ViewMaterial(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -362,11 +362,17 @@ function ViewMaterial(props) {
               <Typography>
                 {!selectedMaterials.class_assigned || !selectedClasses.size? null :
                 selectedMaterials.class_assigned.map((kelas, i) => {
+<<<<<<< HEAD
                   if(selectedClasses.get(kelas)){
                     if(i === selectedMaterials.class_assigned.length - 1)
                       return `${selectedClasses.get(kelas).name}`
                     return (`${selectedClasses.get(kelas).name}, `)
                   }
+=======
+                  if (i === selectedMaterials.class_assigned.length - 1)
+                    return `${selectedClasses.get(kelas).name}`
+                  return (`${selectedClasses.get(kelas).name}, `)
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
                 })}
               </Typography>
             </Grid>

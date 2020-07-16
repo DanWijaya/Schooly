@@ -34,7 +34,8 @@ module.exports = {
       mailgun.messages().send(mail, function(err) {
         if (err) {
           return reject(err);
-        } else {
+        }
+        else {
           return resolve();
         }
       });

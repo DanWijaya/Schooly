@@ -10,14 +10,14 @@ const Announcement = require("../../models/Announcement");
 router.post("/create", (req, res) => {
     // Form Validation
     const { errors, isValid } = validateAnnouncementInput(req.body);
-    if(!isValid){
+    if (!isValid) {
         console.log(errors)
         return res.status(400).json(errors);
     }
 
     let class_assigned = req.body.class_assigned;
     let class_assigned_ids = []
-    if(class_assigned.length > 0){
+    if (class_assigned.length > 0) {
         class_assigned.map((kelas) =>
          class_assigned_ids.push(kelas._id))
     }
@@ -39,10 +39,10 @@ router.post("/create", (req, res) => {
 
 //Define Update routing.
 router.post("/update/:id", (req,res) => {
-    
+
     const { errors, isValid } = validateAnnouncementInput(req.body);
 
-    if(!isValid){
+    if (!isValid) {
         console.log("Not valid lahhh");
         return res.status(400).json(errors);
     }
@@ -51,7 +51,7 @@ router.post("/update/:id", (req,res) => {
 
     console.log(req.body);
     Announcement.findById(id, (err, announcementData) => {
-        if(!announcementData)
+        if (!announcementData)
             return res.status(404).send("Announcement data is not found");
         else{
             announcementData.title = req.body.title;
@@ -71,7 +71,7 @@ router.get("/viewOne/:id", (req,res) => {
     console.log("view one is runned")
     let id = req.params.id;
     Announcement.findById(id, (err, announcementData) => {
-        if(!announcementData)
+        if (!announcementData)
             return res.status(404).send("Announcement data is not found");
         else {
             console.log("Announcementnya yang ini: ", announcementData)
@@ -83,9 +83,9 @@ router.get("/viewOne/:id", (req,res) => {
 //Define View classes route
 router.get("/viewall", (req, res) => {
     Announcement.find({}).then((announcements, err) => {
-        if(!announcements)
+        if (!announcements)
             return res.status(400).json("Announcements are not found");
-        else 
+        else
             return res.json(announcements);
     })
 })
@@ -95,7 +95,7 @@ router.get("/view/:id", (req, res) => {
     console.log("View announcement is runned")
     let id = req.params.id;
     Announcement.find({author_id: id }).then((announcements, err) => {
-        if(!announcements){
+        if (!announcements) {
             console.log("announcement is not found")
             return res.status(400).json("Announcements are not found")
         }
@@ -112,7 +112,7 @@ router.get("/viewByClass/:id", (req,res) => {
     console.log("View announcement by class is runned")
     // if want to get the MongoDB object that has id element in the array.
     Announcement.find({ class_assigned: id }, (err, announcements) => {
-        if(!announcements){
+        if (!announcements) {
             console.log("Not found")
             return res.status(400).json("Announcement with that class is not found");
         }
@@ -125,9 +125,10 @@ router.get("/viewByClass/:id", (req,res) => {
 router.delete("/delete/:id", (req, res) => {
     Announcement.findByIdAndRemove(req.params.id)
         .then((announcements, err) => {
-            if(!announcements) {
+            if (!announcements) {
                 res.status(400).json(err);
-            } else {
+            }
+            else {
                 res.json(announcements);
             }
         })

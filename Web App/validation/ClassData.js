@@ -16,7 +16,7 @@ module.exports = function validateClassInput(data) {
     }
 
 
-    if(Object.keys(data.walikelas).length == 0){
+    if (Object.keys(data.walikelas).length == 0) {
         errors.walikelas = "Wali kelas belum diisi" 
     }
 

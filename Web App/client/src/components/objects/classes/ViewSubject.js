@@ -56,7 +56,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+<<<<<<< HEAD
 function SubjectListitem(props){
+=======
+function MaterialListitem(props) {
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
   const classes = useStyles()
 
   return(
@@ -126,7 +130,7 @@ function ViewSubject(props) {
 
   console.log(props.classesCollection)
   React.useEffect(() => {
-    if(user.role === "Student"){
+    if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
     }
     setCurrentClass(user.kelas)
@@ -138,11 +142,15 @@ function ViewSubject(props) {
 
   console.log(selectedMaterials)
   // All actions to retrive datas from Database...
-  if(tasksCollection.length !== undefined){
+  if (tasksCollection.length !== undefined) {
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++) {
+<<<<<<< HEAD
         if(class_assigned[i] === user.kelas)
+=======
+        if (class_assigned[i]._id === user.kelas)
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
           tasksByClass.push(task)
       }
     })
@@ -159,7 +167,7 @@ function ViewSubject(props) {
 
       let workStatus = "Belum Dikumpulkan"
       for(var i = 0; i < all_user_files.length; i++) {
-        if(all_user_files[i].for_task_object === task._id){
+        if (all_user_files[i].for_task_object === task._id) {
           workStatus = "Telah Dikumpulkan"
           workCategoryAvatar = (
             <Avatar className={classes.assignmentTurnedIn}>
@@ -170,7 +178,7 @@ function ViewSubject(props) {
         }
       }
 
-      if(task.subject === subject_name) {
+      if (task.subject === subject_name) {
       tasksBySubjectClass.push(
         <AssignmentListItem
           work_title={task.name}
@@ -184,10 +192,10 @@ function ViewSubject(props) {
     }
 
   })
-  if(target === "length")
+  if (target === "length")
     return tasksBySubjectClass.length;
 
-  else{
+  else {
       return tasksBySubjectClass.length === 0 ?
       (<Typography variant="h5" align="center" gutterBottom>
         Kosong
@@ -222,7 +230,7 @@ function ViewSubject(props) {
 
             {!selectedMaterials.length ? null :
             selectedMaterials.map((material, i) => {
-              if(material.subject === subject_name){
+              if (material.subject === subject_name) {
 
                 return( <SubjectListitem
                   work_title={material.name}

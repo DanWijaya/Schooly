@@ -12,7 +12,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
-  Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+  Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -229,12 +229,12 @@ class EditTask extends Component {
     const { tasksCollection, errors } = nextProps;
 
     // pass errorsnya false makanya berhasil
-    if(!nextProps.errors){
+    if (!nextProps.errors) {
       this.handleOpenUploadDialog()
     }
 
     console.log(tasksCollection.class_assigned)
-    if(Boolean(tasksCollection) && errors){
+    if (Boolean(tasksCollection) && errors) {
       this.setState({
           name: tasksCollection.name,
           subject: tasksCollection.subject,
@@ -259,7 +259,7 @@ class EditTask extends Component {
 
     class_assigned.map((id) => {
       for( var i = 0; i < classesOptions.length; i++) {
-      if(classesOptions[i]._id === id) {
+      if (classesOptions[i]._id === id) {
         classesSelected.push(classesOptions[i])
         break;
       }
@@ -274,7 +274,7 @@ class EditTask extends Component {
     errors: {}
   }
 
-  if(classChanged)
+  if (classChanged)
     taskObject.class_assigned = classesSelected // When the classes is changed
   else
     taskObject.class_assigned = class_assigned // When it has no change
@@ -286,7 +286,7 @@ class EditTask extends Component {
   }
   this.props.updateTask(formData, fileLampiranToDelete,
     this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
-  
+
     this.setState({ fileLampiranToDelete: []})
   }
 
@@ -296,11 +296,11 @@ class EditTask extends Component {
     let temp;
     let tempToAdd;
 
-    if(this.state.fileLampiran.length === 0)
+    if (this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
-    else{
+    else {
       console.log(files)
-      if(files.length !== 0) {
+      if (files.length !== 0) {
         temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
         tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
@@ -316,7 +316,7 @@ class EditTask extends Component {
     let tempToAdd = this.state.fileLampiranToAdd;
     // For the one that has already been uploaded, there will be a filename field (yang belum adanya name)
     // For the one that has already in DB
-    if(this.state.fileLampiran[i].filename !== undefined) {
+    if (this.state.fileLampiran[i].filename !== undefined) {
       // Remove the file in fileLampiranToDelete
       tempToDelete.push(temp[i])
     }
@@ -324,21 +324,21 @@ class EditTask extends Component {
       // Remove the file in fileLampiranToAdd
       for(var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
-        if(tempToAdd[j].name === temp[i].name){
+        if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)
         }
       }
     }
     temp.splice(i, 1);
     console.log(tempToDelete)
-    if(temp.length === 0)
+    if (temp.length === 0)
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
       fileLampiranToDelete: tempToDelete})
   }
 
   handleClickMenu = (event) => {
-    if(!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
+    if (!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
       this.setState({ anchorEl: event.currentTarget})
   }
 
@@ -352,20 +352,20 @@ class EditTask extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.class_assigned)
-    if(Object.keys(this.props.errors).length !== 0){
+    if (Object.keys(this.props.errors).length !== 0) {
       this.props.clearErrors()
     }
-    if(otherfield === "kelas"){
+    if (otherfield === "kelas") {
       console.log(this.state.class_assigned, e.target.value)
       this.setState({ class_assigned: e.target.value, classChanged: true})
     }
-    else if(otherfield === "deadline") {
+    else if (otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
     }
-    else if(otherfield === "description") {
+    else if (otherfield === "description") {
       this.setState({ description : e.target.value})
     }
-    else if(otherfield === "subject") {
+    else if (otherfield === "subject") {
       console.log(e.target.value)
       this.setState({subject: e.target.value })
     }
@@ -461,7 +461,7 @@ class EditTask extends Component {
 
     const listFileChosen = () => {
       let temp = []
-      if(fileLampiran.length > 0) {
+      if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
           temp.push(
             <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
@@ -477,9 +477,9 @@ class EditTask extends Component {
       return temp;
     }
 
-    if(class_assigned != null) //When firstly received.
+    if (class_assigned !== null) //When firstly received.
       class_assigned.map((kelas) => {
-        if(kelas._id != undefined)
+        if (kelas._id !== undefined)
           classIds.push(kelas._id)
         else
           classIds.push(kelas)
@@ -488,7 +488,7 @@ class EditTask extends Component {
 
     document.title = "Schooly | Sunting Tugas";
 
-    if(user.role === "Teacher" || user.role === "Admin") {
+    if (user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
           {UploadDialog()}
@@ -603,8 +603,8 @@ class EditTask extends Component {
                             <div className={classes.chips}>
                               {selected.map((id) => {
                                 let name
-                                for (var i in all_classes){ // i is the index
-                                  if(all_classes[i]._id === id){
+                                for (var i in all_classes) { // i is the index
+                                  if (all_classes[i]._id === id) {
                                     name = all_classes[i].name
                                     break;
                                   }

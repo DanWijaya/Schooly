@@ -14,7 +14,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
               type: GET_ERRORS,
               payload: false
           })
-          if(formData.has('lampiran_announcement')){
+          if (formData.has('lampiran_announcement')) {
               console.log("Post lampiran announcement is running")
               return axios.post(`/api/uploads/upload_lampiran_announcement/${res.data._id}`, formData);
           }
@@ -52,7 +52,7 @@ export const getAllAnnouncements = () => dispatch => {
 }
 
 export const getAnnouncement = (Id, category) => dispatch => {
-    if(category === "by_author"){
+    if (category === "by_author") {
         axios
             .get(`/api/announcements/view/${Id}`)
             .then((res) => {
@@ -69,7 +69,8 @@ export const getAnnouncement = (Id, category) => dispatch => {
                     payload: err.response.data
                 })
             })
-    } else if (category === "by_class"){
+    }
+    else if (category === "by_class") {
         axios
             .get(`/api/announcements/viewByClass/${Id}`)
             .then((res) => {
@@ -108,7 +109,7 @@ export const deleteAnnouncement = (announcementId, history) => dispatch => {
         .then((res) => {
             console.log("Deleted: ", res.data)
             let lampiran_to_delete = Array.from(res.data.lampiran)
-            if(lampiran_to_delete.length > 0)
+            if (lampiran_to_delete.length > 0)
                 return axios.delete(`/api/uploads/lampiran_announcement/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
             return "Announcement deleted has no lampiran"
         })
@@ -137,7 +138,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
             payload: false
         })
         console.log("From actions: ", lampiran_to_delete)
-        if(lampiran_to_delete.length > 0){// axios.delete put the data is quite different..
+        if (lampiran_to_delete.length > 0) {// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran_announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
         else
@@ -147,7 +148,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
     .then(res => {
         console.log("Update the lampiran files, upload some new lampiran files")
         console.log(formData.has("lampiran_announcement"), formData.getAll("lampiran_announcement"))
-        if(formData.has('lampiran_announcement')){
+        if (formData.has('lampiran_announcement')) {
             console.log("Lampiran announcement going to be uploaded")
             return axios.post(`/api/uploads/upload_lampiran_announcement/${annId}`, formData);
         }

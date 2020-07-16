@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import DateFnsUtils from "@date-io/date-fns";
-import "date-fns";
-import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
@@ -12,10 +9,8 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
-   Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+   Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -205,7 +200,7 @@ class CreateMaterial extends Component {
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
-    if(this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
+    if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
       this.setState({ anchorEl: event.currentTarget})
   }
 
@@ -224,16 +219,16 @@ class CreateMaterial extends Component {
   onChange = (e, otherfield) => {
     console.log("On change : ", e.target.value)
     console.log(Array.from(this.state.fileLampiran))
-    if(otherfield === "kelas") {
+    if (otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
-    else if(otherfield === "deadline") {
+    else if (otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
     }
-    else if(otherfield === "description") {
+    else if (otherfield === "description") {
       this.setState({ description : e.target.value})
     }
-    else if(otherfield === "subject") {
+    else if (otherfield === "subject") {
       this.setState({ subject: e.target.value})
     }
     else
@@ -245,7 +240,7 @@ class CreateMaterial extends Component {
     let formData = new FormData()
 
     //Check if there is any lampiran uploaded or not.
-    if(this.state.fileLampiran)
+    if (this.state.fileLampiran)
       for(var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
         formData.append("lampiran_materi", this.state.fileLampiran[i])
@@ -271,8 +266,8 @@ class CreateMaterial extends Component {
   // you may compare this.props and nextProps and perform state transitions
   // using this.setState() in this method.
 
-  UNSAFE_componentWillReceiveProps(nextProps){
-    if(!nextProps.errors){
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (!nextProps.errors) {
         this.handleOpenUploadDialog()
     }
   }
@@ -285,10 +280,10 @@ class CreateMaterial extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    if(this.state.fileLampiran.length === 0)
+    if (this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files})
     else {
-      if(files.length !== 0) {
+      if (files.length !== 0) {
         let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
         this.setState({ fileLampiran: temp})
       }
@@ -300,7 +295,7 @@ class CreateMaterial extends Component {
     console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     temp.splice(i,1);
-    if(temp.length === 0) //If it is empty.
+    if (temp.length === 0) //If it is empty.
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp})
   }
@@ -341,8 +336,8 @@ class CreateMaterial extends Component {
 
     const listFileChosen = () => {
       let temp = []
-      if(fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++){
+      if (fileLampiran.length > 0) {
+        for (var i = 0; i < fileLampiran.length; i++) {
           console.log(i)
           temp.push(
             <LampiranFile
@@ -404,7 +399,7 @@ class CreateMaterial extends Component {
 
     document.title = "Schooly | Buat Materi";
 
-    if(user.role === "Teacher") {
+    if (user.role === "Teacher") {
       return(
         <div className={classes.root}>
           {UploadDialog()}

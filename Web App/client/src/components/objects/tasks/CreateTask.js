@@ -13,7 +13,7 @@ import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, CircularProgress, Chip, Dialog, Divider, FormControl, FormHelperText, Grid, IconButton,
-   ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, Toolbar, TextField, Typography } from "@material-ui/core";
+   ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -203,7 +203,7 @@ class CreateTask extends Component {
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
-    if(this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
+    if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
       this.setState({ anchorEl: event.currentTarget})
   }
 
@@ -217,18 +217,18 @@ class CreateTask extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.class_assigned, e.target.value)
-    // if(Object.keys(this.props.errors).length !== 0)
+    // if (Object.keys(this.props.errors).length !== 0)
     //   this.props.clearErrors()
-    if(otherfield === "kelas") {
+    if (otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
-    else if(otherfield === "deadline") {
+    else if (otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
     }
-    else if(otherfield === "description") {
+    else if (otherfield === "description") {
       this.setState({ description : e.target.value})
     }
-    else if(otherfield === "subject") {
+    else if (otherfield === "subject") {
       this.setState({ subject: e.target.value})
     }
     else
@@ -255,7 +255,7 @@ class CreateTask extends Component {
     };
 
     //Check if there is any lampiran_tugas uploaded or not.
-    if(this.state.fileLampiran)
+    if (this.state.fileLampiran)
       for(var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
         formData.append("lampiran_tugas", this.state.fileLampiran[i])
@@ -271,8 +271,8 @@ class CreateTask extends Component {
   // you may compare this.props and nextProps and perform state transitions
   // using this.setState() in this method.
 
-  UNSAFE_componentWillReceiveProps(nextProps){
-    if(!nextProps.errors){
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (!nextProps.errors) {
         this.handleOpenUploadDialog()
     }
   }
@@ -286,10 +286,10 @@ class CreateTask extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    if(this.state.fileLampiran.length === 0)
+    if (this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files})
     else {
-      if(files.length !== 0) {
+      if (files.length !== 0) {
         let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
         this.setState({ fileLampiran: temp})
       }
@@ -301,7 +301,7 @@ class CreateTask extends Component {
     console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     temp.splice(i,1);
-    if(temp.length === 0) //If it is empty.
+    if (temp.length === 0) //If it is empty.
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp})
   }
@@ -372,7 +372,7 @@ class CreateTask extends Component {
 
     const listFileChosen = () => {
       let temp = []
-      if(fileLampiran.length > 0) {
+      if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
           console.log(i)
           temp.push(
@@ -402,7 +402,7 @@ class CreateTask extends Component {
 
     document.title = "Schooly | Buat Tugas";
 
-    if(user.role === "Teacher") {
+    if (user.role === "Teacher") {
       return(
         <div className={classes.root}>
           {UploadDialog()}
@@ -520,8 +520,8 @@ class CreateTask extends Component {
                             <div className={classes.chips}>
                               {selected.map((id) => {
                                 let name
-                                for (var i in all_classes){ // i is the index
-                                  if(all_classes[i]._id === id){
+                                for (var i in all_classes) { // i is the index
+                                  if (all_classes[i]._id === id) {
                                     name = all_classes[i].name
                                     break;
                                   }

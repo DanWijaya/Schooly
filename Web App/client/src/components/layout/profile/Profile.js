@@ -178,7 +178,7 @@ function Profile(props) {
   }
 
   // Initially classesCollection.kelas.name === undefined
-  if(user.role === "Student" && !classesCollection.kelas.name) {
+  if (user.role === "Student" && !classesCollection.kelas.name) {
     setCurrentClass(user.kelas)
   }
 

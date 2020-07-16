@@ -127,15 +127,15 @@ function ProfilePictureEditorDialog(props) {
   const imageUploadPreview = () => {
     let avatarImgClass;
 
-    if(avatarDimensions.width < avatarDimensions.height) {
+    if (avatarDimensions.width < avatarDimensions.height) {
       avatarImgClass = classes.avatarImg1
     }
     else {
       avatarImgClass = classes.avatarImg2
     }
 
-    if(!profileImg){
-      if(user.avatar){
+    if (!profileImg) {
+      if (user.avatar) {
         return(
           <Avatar className={classes.avatar}>
             <img

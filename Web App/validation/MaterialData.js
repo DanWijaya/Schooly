@@ -15,16 +15,16 @@ module.exports = function validateMaterialInput(data) {
         errors.name = "Nama materi belum diisi"
     }
 
-    if(Validator.isEmpty(data.subject)){
+    if (Validator.isEmpty(data.subject)) {
         errors.subject = "Mata Pelajaran belum diisi"
     }
-    if(Validator.isEmpty(data.description)) {
+    if (Validator.isEmpty(data.description)) {
         errors.description = "Deskripsi belum diberikan"
     }
-    if(!data.class_assigned.length){
+    if (!data.class_assigned.length) {
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
-    if(!data.lampiran.length) {
+    if (!data.lampiran.length) {
         errors.lampiran_materi = "Lampiran belum ditambahkan ke Materi"
     }
 

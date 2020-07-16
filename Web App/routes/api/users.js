@@ -42,9 +42,9 @@ router.post("/register", (req, res) => {
     }
     else {
         var newUser
-        if(req.body.role === "Student")
+        if (req.body.role === "Student")
           newUser = new Student(req.body)
-        else if(req.body.role === "Teacher")
+        else if (req.body.role === "Teacher")
           newUser = new Teacher(req.body)
         else {
           newUser = new Admin(req.body)
@@ -121,12 +121,12 @@ router.post("/login", (req, res) => {
           uni_impian: user.uni_impian
 
         };
-        if(user.role === "Student") {
+        if (user.role === "Student") {
           payload.kelas = user.kelas
           payload.tugas = user.tugas
         }
 
-        else if(user.role === "Teacher") {
+        else if (user.role === "Teacher") {
           payload.subject_teached = user.subject_teached
         }
         // Sign token
@@ -155,17 +155,17 @@ router.post("/login", (req, res) => {
 
 router.post("/update/data/:id", (req,res) => {
   let email = req.body.email;
-  if(isEmpty(email)){
+  if (isEmpty(email)) {
     return res.status(404).json({ email : "Email belum diisi"})
   }
-  if(!Validator.isEmail(email)){
+  if (!Validator.isEmail(email)) {
     console.log("Email is not valid")
     return res.status(404).json({ email : "Email tidak benar"})
   }
 
   let id = req.params.id
   User.findById(id, (err, user) => {
-        if(!user){
+        if (!user) {
           return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
         }
         else {
@@ -222,12 +222,12 @@ router.post("/update/data/:id", (req,res) => {
             uni_impian : user.uni_impian
           }
 
-          if(user.role === "Student") {
+          if (user.role === "Student") {
             payload.kelas = user.kelas
             payload.tugas = user.tugas
           }
 
-          else if(user.role === "Teacher") {
+          else if (user.role === "Teacher") {
             payload.subject_teached = user.subject_teached
           }
 
@@ -254,13 +254,13 @@ router.get("/gettask/:id/:task_id", (req, res) => {
   let tugasId = req.params.task_id;
 
   User.findById(id, (err, user) => {
-    if(!user || !user.active)
+    if (!user || !user.active)
       res.status(404).send("User data is not found");
     else {
       let tugasList = []
-      if(user.role === "Student"){ //Student are the ones has tugas field...
+      if (user.role === "Student") { //Student are the ones has tugas field...
       user.tugas.map((item) => {
-      if(item.for_task_object === tugasId)
+      if (item.for_task_object === tugasId)
         tugasList.push(item)
         }
       )}
@@ -273,11 +273,11 @@ router.get("/getalltask/:user_id", (req,res) => {
   let id = req.params.user_id;
 
   User.findById(id, (err, user) => {
-    if(!user || !user.active)
+    if (!user || !user.active)
       res.status(404).send("User data is not found");
     else {
       let allFilesList = []
-      if(Boolean(user.tugas) && Boolean(user.tugas.length))
+      if (Boolean(user.tugas) && Boolean(user.tugas.length))
         user.tugas.map((item) => allFilesList.push(item))
       res.json(allFilesList)
     }
@@ -288,7 +288,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
   let id = req.params.id;
 
   User.findById(id , (err, user) => {
-    if(!user || !user.active)
+    if (!user || !user.active)
       res.status(404).send("User data is not found");
     else {
       user.avatar = req.file.filename;
@@ -323,11 +323,11 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
             uni_impian : user.uni_impian
       }
 
-      if(user.role === "Student") {
+      if (user.role === "Student") {
         payload.kelas = user.kelas
       }
 
-      else if(user.role === "Teacher") {
+      else if (user.role === "Teacher") {
         payload.subject_teached = user.subject_teached
       }
       // Sign token
@@ -352,7 +352,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
 router.get("/getteachers", (req, res) => {
   // console.log("GET teachers runned")
   User.find({ role: "Teacher", active: true }).then((users, err) => {
-    if(!users)
+    if (!users)
       console.log("No teachers yet in Schooly System")
     else
       return res.json(users)
@@ -361,7 +361,7 @@ router.get("/getteachers", (req, res) => {
 
 router.get("/getstudents", (req,res) => {
   User.find({ role: "Student", active: true}).then((users, err) => {
-    if(!users)
+    if (!users)
       console.log("No students yet in Schooly System")
 
     else
@@ -373,7 +373,7 @@ router.get("/getOneUser/:id", (req,res) => {
   console.log("getOneUser is runned")
   let id = req.params.id;
   User.findById(id, (err, user) => {
-    if(!user || !user.active)
+    if (!user || !user.active)
       return res.status(404).json("No user is found in Database")
     else
       return res.json(user)
@@ -385,13 +385,13 @@ router.get("/getUsers", (req,res) => {
   console.log("User ids : ", userIds)
   let ids_to_find
 
-  if(userIds !== undefined){
+  if (userIds !== undefined) {
     ids_to_find = userIds.map((id) => new ObjectId(id))
   }
 
   User.find({_id : { $in : userIds}, active: true}, (err, users) => {
     console.log("usernya ini : ", users)
-    if(!users)
+    if (!users)
       return res.status(400).json("Users to update not found")
     else
       return res.json(users)
@@ -401,7 +401,7 @@ router.get("/getUsers", (req,res) => {
 router.get("/getstudentsbyclass/:id", (req,res) => {
   let id = req.params.id
   Student.find({ kelas: id, active: true}).then((users, err) => {
-    if(!users)
+    if (!users)
       console.log("No students with this class ID")
     else
       return res.json(users)
@@ -410,7 +410,7 @@ router.get("/getstudentsbyclass/:id", (req,res) => {
 
 router.get("/all_users", (req,res) => {
   User.find({ active: true }).then((users, err) => {
-    if(!users)
+    if (!users)
       return res.status(404).json("No students yet in Schooly system")
     else
       return res.json(users)
@@ -420,7 +420,7 @@ router.get("/all_users", (req,res) => {
 // for admin only
 router.get("/getpendingstudents", (req,res) => {
   User.find({ role: "Student", active: false }).then((users, err) => {
-    if(!users)
+    if (!users)
       return res.json([])
     else
       return res.json(users)
@@ -429,7 +429,7 @@ router.get("/getpendingstudents", (req,res) => {
 
 router.get("/getpendingteachers", (req,res) => {
   User.find({ role: "Teacher", active: false }).then((users, err) => {
-    if(!users)
+    if (!users)
       return res.json([])
     else
       return res.json(users)
@@ -440,7 +440,7 @@ router.post("/setuseractive/:id", (req,res) => {
   let id = req.params.id;
 
   User.findById(id, (err, user) => {
-    if(!user)
+    if (!user)
       return res.status(404).json("User to be activated is not found")
     
     user.active = true;
@@ -455,7 +455,7 @@ router.post("/setuserdisabled/:id", (req,res) => {
   let id = req.params.id;
 
   User.findById(id, (err, user) => {
-    if(!user)
+    if (!user)
       return res.status(404).json("User to be disabled is not found")
     
     user.active = false;
@@ -469,7 +469,7 @@ router.post("/setuserdisabled/:id", (req,res) => {
 router.delete("/delete/:id", (req,res) => {
   let userId = req.params.id;
   User.findByIdAndDelete(userId, (err,user) => {
-    if(!user)
+    if (!user)
       return res.status(404).json("User to delete is not found")
     else
       return res.json(user)

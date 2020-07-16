@@ -4,45 +4,30 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    maxWidth: "1000px",
     margin: "auto",
+    maxWidth: "1000px",
+    minHeight: "500px",
+    padding: "10px",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
+    [theme.breakpoints.up("sm")]: {
+      backgroundSize: "contain",
+    },
   },
-  loginForgotGrid: {
-    maxWidth: "400px",
+  mainPaper: {
+    margin: "auto",
+    maxWidth: "350px",
     padding: "40px",
   },
-  schoolyLogo: {
-    width: "30%",
-    height: "30%",
-    marginBottom: "30px",
-  },
-  infoTitle: {
-    textAlign: "center",
-  },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px"
-  },
-  inputField: {
-    width: "300px",
-  },
-  submitButton: {
+  changePasswordButton: {
     width: "100%",
     marginTop: "30px",
     backgroundColor: theme.palette.primary.main,
@@ -100,66 +85,61 @@ class ResetPassword extends Component {
 
     return(
       <div className={classes.root}>
-        <img
-          alt="schooly logo"
-          src={schoolyLogo}
-          className={classes.schoolyLogo}
-        />
-        <Paper>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="space-between"
-            spacing={4}
-            className={classes.loginForgotGrid}
-          >
-            <Grid item className={classes.infoTitle}>
-              <Typography variant="h6" gutterBottom>
+        <Paper className={classes.mainPaper}>
+          <Grid container direction="column" spacing={5}>
+            <Grid item>
+              <Typography variant="h6" align="center" gutterBottom>
                 <b>Ubah Kata Sandi</b>
               </Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" align="center" color="textSecondary">
                 Masukkan Kata Sandi baru anda
               </Typography>
             </Grid>
-            <Grid item className={classes.inputField}>
+            <Grid item>
               <form noValidate onSubmit={onSubmit}>
-              <div style={{marginBottom: "20px"}}>
-                <OutlinedTextField
-                  on_change={this.onChange}
-                  value={password}
-                  id="password"
-                  type="password"
-                  classname={classnames("", {
-                    invalid: errors.email || errors.emailnotfound
-                  })}
-                  html_for="password"
-                  labelname="Kata Sandi"
-                  span_classname={classes.errorInfo}
-                  error1={errors.password_entry}
-                />
-              </div>
-                <OutlinedTextField
-                  on_change={this.onChange}
-                  value={password2}
-                  error={errors.password_match}
-                  id="password2"
-                  type="password"
-                  classname={classnames("", {
-                    invalid: errors.email || errors.emailnotfound
-                  })}
-                  html_for="password2"
-                  labelname="Konfirmasi Kata Sandi"
-                  span_classname={classes.errorInfo}
-                  error1={errors.password_match}
-                  error2={errors.reset_problem}
-                />
-                <Button
-                  type="submit"
-                  className={classes.submitButton}
-                >
-                  Ubah Kata Sandi
-                </Button>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <label for="password">Kata Sandi</label>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="password"
+                      onChange={this.onChange}
+                      value={password}
+                      error={Boolean(errors.password_entry)}
+                      type="password"
+                      helperText={errors.password_entry}
+                      classname={classnames("", {
+                        invalid: errors.email || errors.emailnotfound
+                      })}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <label for="password2">Konfirmasi Kata Sandi</label>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="password2"
+                      onChange={this.onChange}
+                      value={password2}
+                      error={Boolean(errors.password_match)}
+                      type="password"
+                      helperText={errors.password_match}
+                      classname={classnames("", {
+                        invalid: errors.email || errors.emailnotfound
+                      })}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      className={classes.changePasswordButton}
+                    >
+                      Ubah Kata Sandi
+                    </Button>
+                  </Grid>
+                </Grid>
               </form>
             </Grid>
           </Grid>

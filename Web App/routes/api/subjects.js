@@ -12,7 +12,7 @@ router.post("/create", (req, res) => {
 
     const {errors, isValid} = validateSubjectInput(req.body)
 
-    if(!isValid){
+    if (!isValid) {
         console.log("not valid data");
         return res.status(404).json(errors)
     }
@@ -21,7 +21,8 @@ router.post("/create", (req, res) => {
         if(subject){
             return res.status(404).json({ name : "Nama mata pelajaran sudah dipakai"})
 
-        } else {
+        }
+        else {
             const newSubject = new Subject({
                 name: req.body.name
             })
@@ -63,9 +64,10 @@ router.post("/edit/:id", (req,res) => {
 })
 router.get("/view/:id", (req, res) => {
     Subject.findById(req.params.id).then(subject => {
-        if(!subject){
+        if (!subject) {
             return res.status(400).json("Class does not exist");
-        } else {
+        }
+        else {
             // console.log(kelas);
             res.json(subject);
         }
@@ -74,7 +76,7 @@ router.get("/view/:id", (req, res) => {
 
 router.get("/viewall", (req, res) => {
     Subject.find({}).then((subjects, err) => {
-        if(!subjects)
+        if (!subjects)
             res.status(400).json(err);
         else
             res.json(subjects);
@@ -85,7 +87,7 @@ router.delete("/delete/:id", (req,res) => {
     let id = req.params.id;
     Subject.findByIdAndRemove(id)
             .then((subject, err) => {
-        if(!subject)
+        if (!subject)
             return res.status(400).json(err);
         else{
             console.log(subject)

@@ -24,20 +24,21 @@ export const createHash = (email) => {
         },
       )
       .then((res) => {
-        if(res.status === 200) {
+        if (res.status === 200) {
           return res.json();
-        } else{
-         return null
+        }
+        else {
+          return null
         }
       })
       .then((json) => {
         console.log(json)
-        if( json.success) // If email is in database
+        if ( json.success) // If email is in database
           return dispatch({
             type: PWD_RESET_HASH_CREATED,
             payload: json
           })
-        else{
+        else {
           console.log("errornya di sini")
           return dispatch({
             type: GET_ERRORS,
@@ -85,7 +86,7 @@ export function savePassword(data) {
         window.location.href = "/masuk"
       }
         else {
-          if(json.expired === "yes"){
+          if (json.expired === "yes") {
             alert("Tautan ini sudah tidak berlaku, silahkan memohon ulang")
             window.location.href = '/akun/lupa-katasandi'
           }
@@ -118,7 +119,7 @@ export const changePassword = (passwordData, history) => dispatch => {
       })
       .catch(err => {
         console.log(err);
-        if(Boolean(err.response)){
+        if (Boolean(err.response)) {
           dispatch({
             type: GET_ERRORS,
             payload: err.response.data

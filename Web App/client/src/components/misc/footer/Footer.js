@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
+    marginTop: "100px",
     padding: "10px",
   },
   schoolySymbolDesktop: {

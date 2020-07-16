@@ -11,7 +11,7 @@ router.route("/visitor/:id").put((req,res, next) => {
     let visitorEmail = req.body.email;
     let latestOtp = [];
 
-    function findLatestOTP(mongoCollection, callback){
+    function findLatestOTP(mongoCollection, callback) {
         mongoCollection
             .find({ visitor_email: visitorEmail})
             .limit(1)
@@ -19,20 +19,22 @@ router.route("/visitor/:id").put((req,res, next) => {
             .exec((err, record) => {
                 if (err) {
                     console.log(err);
-                  } else {
+                }
+                else {
                     latestOtp.push(record[0].generated_otp);
                     callback();
-                  }
+                }
             });
     }
 
     findLatestOTP(OTP, function() {
-        if(req.body.otpReceivedByVisitor !== latestOtp[0]) {
+        if (req.body.otpReceivedByVisitor !== latestOtp[0]) {
             return res
                     .status(401)
                     .send({ success: false, msg: "Incorrect code was input"});
 
-        } else {
+        }
+        else {
             // Allow the user to register
         }
     })

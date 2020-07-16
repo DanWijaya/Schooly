@@ -218,7 +218,7 @@ function ViewTaskTeacher(props) {
   React.useEffect(() => {
     viewOneTask(task_id)
     viewClass()
-    if(all_classes.length){
+    if (all_classes.length) {
       let temp = new Map()
       all_classes.map((kelas) => temp.set(kelas._id, kelas))
       setClassesMap(temp);
@@ -249,14 +249,14 @@ function ViewTaskTeacher(props) {
   }
 
   const onDownloadFile = (id, fileCategory="none") => {
-    if(fileCategory === "lampiran")
+    if (fileCategory === "lampiran")
       downloadLampiran(id)
     else
       console.log("File Category is not specified")
   }
 
   const onPreviewFile = (id, fileCategory="none") => {
-   if(fileCategory === "lampiran")
+   if (fileCategory === "lampiran")
       previewLampiran(id)
     else
       console.log("File Category is not specified")
@@ -276,7 +276,7 @@ function ViewTaskTeacher(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -376,7 +376,7 @@ function ViewTaskTeacher(props) {
             <Typography>
               {!tasksCollection.class_assigned || !classes_map.size? null :
               tasksCollection.class_assigned.map((kelas, i) => {
-                if(i === tasksCollection.class_assigned.length - 1)
+                if (i === tasksCollection.class_assigned.length - 1)
                   return `${classes_map.get(kelas).name}`
                 return (`${classes_map.get(kelas).name}, `)
               })}

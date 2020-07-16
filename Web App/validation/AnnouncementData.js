@@ -13,11 +13,11 @@ module.exports = function validateAnnouncementInput(data) {
         errors.title = "Name Pengumuman belum diisi";
     }
 
-    if(Validator.isEmpty(data.description)) {
+    if (Validator.isEmpty(data.description)) {
         errors.description = "Deskripsi Pengumuman belum diisi"
     }
 
-    if(!data.class_assigned.length){
+    if (!data.class_assigned.length) {
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
 

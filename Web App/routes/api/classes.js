@@ -17,11 +17,18 @@ router.post("/create", (req, res) => {
         return res.status(400).json(errors);
     }
 
+<<<<<<< HEAD
     Class.findOne({ name: req.body.name }).then(kelas => {
         if (kelas) {
             return res.status(400).json({ name: "Class name already exists" });
+=======
+    Class.findOne({ name: req.body.name}).then(kelas => {
+        if (kelas) {
+            return res.status(400).json({ name: "Class name already exists"});
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
 
-        } else {
+        }
+        else {
             const newKelas = new Class({
                 name: req.body.name,
                 walikelas: req.body.walikelas._id,
@@ -41,7 +48,8 @@ router.get("/view/:id", (req, res) => {
     Class.findById(req.params.id).then(kelas => {
         if (!kelas) {
             return res.status(400).json("Class does not exist");
-        } else {
+        }
+        else {
             // console.log(kelas);
             res.json(kelas);
         }
@@ -50,7 +58,11 @@ router.get("/view/:id", (req, res) => {
 
 
 router.get("/viewall", (req, res) => {
+<<<<<<< HEAD
     Class.find({}).then((classes, err) => {
+=======
+    Class.find({ }).then((classes, err) => {
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
         if (!classes)
             res.status(400).json(err);
         else
@@ -64,7 +76,8 @@ router.delete("/delete/:id", (req, res) => {
         .then((classes, err) => {
             if (!classes) {
                 return res.status(400).json(err);
-            } else {
+            }
+            else {
                 console.log(classes)
                 return res.json("Successfully deleted the class")
             }
@@ -89,10 +102,17 @@ router.get("/viewSelectedClasses/", (req, res) => {
     let ids_to_find
 
     if (classes_ids !== undefined) {
+<<<<<<< HEAD
         ids_to_find = classes_ids.map((id) => new ObjectId(id))
 
     }
     Class.find({ _id: { $in: ids_to_find } }, (err, classes) => {
+=======
+        ids_to_find =  classes_ids.map((id) => new ObjectId(id))
+
+    }
+    Class.find({_id : { $in : ids_to_find}}, (err, classes) => {
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
         if (!classes)
             return res.status(400).json("Class to update not found");
 
@@ -100,6 +120,10 @@ router.get("/viewSelectedClasses/", (req, res) => {
 
     })
 })
+<<<<<<< HEAD
+=======
+
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
 
 
 router.post("/update/:id", (req, res) => {
@@ -135,7 +159,7 @@ router.post("/update/:id", (req, res) => {
         // var myPromise = (id) => {
         //     return new Promise((resolve, reject) => {
         //         User.findById(id, (err, user) => {
-        //             if(!user){
+        //             if (!user) {
         //                 reject(err)
         //             } else {
         //                 resolve(user);

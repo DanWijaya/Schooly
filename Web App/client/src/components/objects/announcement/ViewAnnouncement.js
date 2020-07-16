@@ -209,7 +209,7 @@ function ViewAnnouncement(props) {
     getOneAnnouncement(announcement_id)
     viewSelectedClasses(selectedAnnouncements.class_assigned)
     console.log(selectedAnnouncements)
-    if(selectedAnnouncements._id){
+    if (selectedAnnouncements._id) {
       console.log("getusers is runned")
       getUsers([selectedAnnouncements.author_id])
     }
@@ -255,7 +255,7 @@ function ViewAnnouncement(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -313,14 +313,14 @@ function ViewAnnouncement(props) {
   }
 
   const onDownloadFile = (id, fileCategory="none") => {
-    if(fileCategory === "lampiran_announcement")
+    if (fileCategory === "lampiran_announcement")
       downloadLampiranAnnouncement(id)
     else
       console.log("File Category is not specified")
   }
 
   const onPreviewFile = (id, fileCategory="none") => {
-   if(fileCategory === "lampiran_announcement")
+   if (fileCategory === "lampiran_announcement")
       previewLampiranAnnouncement(id)
     else
       console.log("File Category is not specified")

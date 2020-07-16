@@ -12,16 +12,11 @@ import { getOneMaterial } from "../../../actions/MaterialActions";
 import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
-   Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Select, TextField, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+   Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemText, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import DescriptionIcon from "@material-ui/icons/Description";
 import DeleteIcon from "@material-ui/icons/Delete";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
@@ -197,13 +192,11 @@ class EditMaterial extends Component {
       class_assigned: [],
       description: "",
       errors: {},
-      fileLampiran: [],
       anchorEl: null,
       classChanged: false,
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
-      errors: {},
     }
   }
 
@@ -228,10 +221,10 @@ class EditMaterial extends Component {
     const { selectedMaterials } = nextProps.materialsCollection;
 
     // console.log(selectedMaterials.deadline);
-    if(!nextProps.errors){
+    if (!nextProps.errors) {
       this.handleOpenUploadDialog()
     }
-    if(Boolean(selectedMaterials) && nextProps.errors){
+    if (Boolean(selectedMaterials) && nextProps.errors) {
       this.setState({
           name: selectedMaterials.name,
           subject: selectedMaterials.subject,
@@ -263,7 +256,7 @@ class EditMaterial extends Component {
       errors: {}
     }
 
-    // if(classChanged)
+    // if (classChanged)
     //   materialObject.class_assigned = classesSelected // When the classes is changed
     // else
     //   materialObject.class_assigned = class_assigned // When it has no change
@@ -286,11 +279,11 @@ class EditMaterial extends Component {
     let temp;
     let tempToAdd;
 
-    if(this.state.fileLampiran.length === 0)
+    if (this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
-    else{
+    else {
       console.log(files)
-      if(files.length !== 0) {
+      if (files.length !== 0) {
         temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
         tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
@@ -306,7 +299,7 @@ class EditMaterial extends Component {
     let tempToAdd = this.state.fileLampiranToAdd;
     // For the one that has already been uploaded, there will be a filename field (yang belum adanya name)
     // For the one that has already in DB
-    if(this.state.fileLampiran[i].filename !== undefined) {
+    if (this.state.fileLampiran[i].filename !== undefined) {
       // Remove the file in fileLampiranToDelete
       tempToDelete.push(temp[i])
     }
@@ -314,20 +307,20 @@ class EditMaterial extends Component {
       // Remove the file in fileLampiranToAdd
       for(var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
-        if(tempToAdd[j].name === temp[i].name){
+        if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)
         }
       }
     }
     temp.splice(i, 1);
     console.log(tempToDelete)
-    if(temp.length === 0)
+    if (temp.length === 0)
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd, fileLampiranToDelete: tempToDelete})
   }
 
   handleClickMenu = (event) => {
-    if(!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
+    if (!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
       this.setState({ anchorEl: event.currentTarget})
   }
 
@@ -341,17 +334,17 @@ class EditMaterial extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.fileLampiran)
-    if(otherfield === "kelas"){
+    if (otherfield === "kelas") {
       console.log(this.state.class_assigned, e.target.value)
       this.setState({ class_assigned: e.target.value})
     }
-    else if(otherfield === "deadline") {
+    else if (otherfield === "deadline") {
       this.setState({ deadline: e}) // e is the date value itself.
     }
-    else if(otherfield === "description") {
+    else if (otherfield === "description") {
       this.setState({ description : e.target.value})
     }
-    else if(otherfield === "subject") {
+    else if (otherfield === "subject") {
       console.log(e.target.value)
       this.setState({subject: e.target.value })
     }
@@ -449,7 +442,7 @@ class EditMaterial extends Component {
 
   const listFileChosen = () => {
     let temp = []
-    if(fileLampiran.length > 0) {
+    if (fileLampiran.length > 0) {
       for (var i = 0; i < fileLampiran.length; i++) {
         temp.push(
           <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
@@ -465,9 +458,9 @@ class EditMaterial extends Component {
     return temp;
   }
 
-    if(this.state.class_assigned != null) //When firstly received.
+    if (this.state.class_assigned !== null) //When firstly received.
       this.state.class_assigned.map((kelas) => {
-        if(kelas._id != undefined)
+        if (kelas._id !== undefined)
           classIds.push(kelas._id)
         else
           classIds.push(kelas)
@@ -476,7 +469,7 @@ class EditMaterial extends Component {
 
     document.title = "Schooly | Sunting Materi";
 
-    if(user.role === "Teacher" || user.role === "Admin") {
+    if (user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
           {UploadDialog()}
@@ -569,11 +562,11 @@ class EditMaterial extends Component {
                               <div className={classes.chips}>
                                 {selected.map((id) => {
                                   let name
-                                  if(all_classes.length === 0)
+                                  if (all_classes.length === 0)
                                     return null;
                                   else{
-                                    for(var i in all_classes){
-                                      if(all_classes[i]._id === id){
+                                    for(var i in all_classes) {
+                                      if (all_classes[i]._id === id) {
                                         name = all_classes[i].name
                                         break;
                                       }

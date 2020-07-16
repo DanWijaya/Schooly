@@ -115,10 +115,11 @@ const styles = (theme) => ({
 
 class Landing extends Component {
   componentDidMount() {
-    if(this.props.auth.isAuthenticated){
+    if (this.props.auth.isAuthenticated) {
       this.props.handleMarginTopValue(20)
       this.props.history.push("/beranda");
-    }else
+    }
+    else
       this.props.handleMarginTopValue(0);
   }
 
