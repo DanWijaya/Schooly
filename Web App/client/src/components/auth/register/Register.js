@@ -184,6 +184,7 @@ class Register extends Component {
       return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Registrasi"];
     }
 
+    console.log(all_subjects)
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
         case 0:
@@ -300,7 +301,7 @@ class Register extends Component {
                       onChange={(event) => {this.onChange(event, "subject")}}
                     >
                       {all_subjects.map((subject) => (
-                        <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                        <MenuItem value={subject._id}>{subject.name}</MenuItem>
                       ))}
                   </Select>
                   <FormHelperText>

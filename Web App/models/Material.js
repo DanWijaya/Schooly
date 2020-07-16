@@ -9,7 +9,7 @@ const MaterialSchema = new Schema({
         required: true
     },
     subject: {
-        type: String,
+        type: ObjectId,
         required: true
     },
     class_assigned: [{

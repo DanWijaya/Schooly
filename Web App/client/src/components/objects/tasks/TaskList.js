@@ -6,6 +6,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import { viewClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
@@ -289,8 +290,9 @@ function TaskList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
-  const { tasksCollection, viewTask, deleteTask, viewClass } = props;
+  const { tasksCollection, viewTask, deleteTask, viewClass, getAllSubjects } = props;
   const { all_classes } = props.classesCollection;
+  const { all_subjects_map} = props.subjectsCollection;
   const { user } = props.auth;
 
   const taskRowItem = (data) => {
@@ -308,13 +310,14 @@ function TaskList(props) {
   React.useEffect(() => {
     viewTask()
     viewClass()
+    getAllSubjects("map")
     if (all_classes.length) {
       let temp = new Map()
       all_classes.map((kelas) => temp.set(kelas._id, kelas))
       setClassesMap(temp);
     }
   },
-  [tasksCollection.length, all_classes.length])
+  [tasksCollection.length, all_classes.length, all_subjects_map.length])
 
   const retrieveTasks = () => {
     // If tasksCollection is not undefined or an empty array
@@ -474,7 +477,7 @@ function TaskList(props) {
                               {row.tasktitle}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
-                              {row.subject}
+                              {all_subjects_map.get(row.subject)}
                             </Typography>
                           </Hidden>
                           <Hidden xsDown implementation="css">
@@ -482,7 +485,7 @@ function TaskList(props) {
                               {row.tasktitle}
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                              {row.subject}
+                              {all_subjects_map.get(row.subject)}
                             </Typography>
                           </Hidden>
                         </Grid>
@@ -558,7 +561,7 @@ function TaskList(props) {
                         {row.tasktitle}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {row.subject}
+                        {all_subjects_map.get(row.subject)}
                       </Typography>
                     </div>
                     <div>
@@ -592,6 +595,7 @@ TaskList.propTypes = {
   viewClass: PropTypes.func.isRequired,
   deleteTask: PropTypes.func.isRequired,
   tasksCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -601,9 +605,10 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   tasksCollection: state.tasksCollection,
+  subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection
 })
 
 export default connect(
-  mapStateToProps, { viewTask, deleteTask, viewClass}
+  mapStateToProps, { viewTask, deleteTask, viewClass, getAllSubjects}
 )(TaskList);

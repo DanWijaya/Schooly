@@ -8,6 +8,7 @@ import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { viewOneTask } from "../../../actions/TaskActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -326,7 +327,8 @@ function ViewTaskStudent(props) {
   const { user, selectedUser } = props.auth;
   const { uploadTugas, deleteTugas, success, getTaskFilesByUser, tasksCollection,
     filesCollection, downloadTugas, previewTugas, clearSuccess,
-    viewOneTask, getOneUser, downloadLampiran, previewLampiran } = props;
+    viewOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
+  const { all_subjects_map} = props.subjectsCollection;
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -337,6 +339,7 @@ function ViewTaskStudent(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
+  
 
   let tugasId = props.match.params.id;
 
@@ -344,10 +347,11 @@ function ViewTaskStudent(props) {
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
     viewOneTask(tugasId)
+    getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
-    
-  }, [tasksCollection.person_in_charge_id, success])
+
+  }, [tasksCollection.person_in_charge_id, success, all_subjects_map.length])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -595,7 +599,7 @@ function ViewTaskStudent(props) {
                   {tasksCollection.name}
                 </Typography>
                 <Typography variant="caption" color="textSecondary">
-                  <h6>Mata Pelajaran: {tasksCollection.subject}</h6>
+                  <h6>Mata Pelajaran: {all_subjects_map.get(tasksCollection.subject)}</h6>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   Penanggung Jawab: <b>{selectedUser.name}</b>
@@ -731,8 +735,11 @@ ViewTaskStudent.propTypes = {
   success: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+
 
   uploadTugas: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
   deleteTugas: PropTypes.func.isRequired,
   downloadTugas: PropTypes.func.isRequired,
   previewTugas: PropTypes.func.isRequired,
@@ -749,11 +756,12 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   success: state.success,
   tasksCollection: state.tasksCollection,
+  subjectsCollection: state.subjectsCollection,
   filesCollection: state.filesCollection
 });
 
 export default connect(
    mapStateToProps, { uploadTugas, clearSuccess, deleteTugas, downloadTugas,
      previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
-     previewLampiran, viewOneTask }
+     previewLampiran, viewOneTask, getAllSubjects }
  ) (ViewTaskStudent);

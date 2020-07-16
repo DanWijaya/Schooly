@@ -1,4 +1,4 @@
-import { GET_SUBJECT, GET_ALL_SUBJECTS, GET_ERRORS} from "./Types";
+import { GET_SUBJECT, GET_ALL_SUBJECTS, GET_ERRORS, GET_ALL_SUBJECTS_MAP} from "./Types";
 import axios from "axios";
 
 export const getSubject = (subjectId) => dispatch => {
@@ -20,15 +20,23 @@ export const getSubject = (subjectId) => dispatch => {
         })
 }
 
-export const getAllSubjects = () => dispatch => {
+export const getAllSubjects = (data="array") => dispatch => {
     axios
         .get("/api/subjects/viewall")
         .then(res => {
             console.log("Run get all subjects")
+            if(data !== "map"){
             dispatch({
                 type: GET_ALL_SUBJECTS,
                 payload: res.data,
             })
+          }
+          else{
+            dispatch({
+              type: GET_ALL_SUBJECTS_MAP,
+              payload: res.data
+            })
+          }
         })
         .catch(err => {
             console.log(err , "Error in retrieving all subjects")

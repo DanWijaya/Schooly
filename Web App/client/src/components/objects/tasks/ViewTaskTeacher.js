@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
@@ -209,21 +210,23 @@ function ViewTaskTeacher(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask, viewClass } = props;
+  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask, viewClass, getAllSubjects } = props;
   const { all_classes } = props.classesCollection;
-  const task_id = props.match.params.id
+  const task_id = props.match.params.id;
+  const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [classes_map, setClassesMap] = React.useState(new Map());
 
   React.useEffect(() => {
     viewOneTask(task_id)
     viewClass()
+    getAllSubjects("map")
     if (all_classes.length) {
       let temp = new Map()
       all_classes.map((kelas) => temp.set(kelas._id, kelas))
       setClassesMap(temp);
     }
-  }, [tasksCollection._id, all_classes.length])
+  }, [tasksCollection._id, all_classes.length, all_subjects_map.length])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -345,7 +348,7 @@ function ViewTaskTeacher(props) {
               {tasksCollection.name}
             </Typography>
             <Typography variant="caption" color="textSecondary">
-              <h6>Mata Pelajaran: {tasksCollection.subject}</h6>
+              <h6>Mata Pelajaran: {all_subjects_map.get(tasksCollection.subject)}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Penanggung Jawab: <b>{user.name}</b>
@@ -444,10 +447,12 @@ ViewTaskTeacher.propTypes = {
    auth: PropTypes.object.isRequired,
    tasksCollection: PropTypes.object.isRequired,
    classesCollection: PropTypes.object.isRequired,
+   subjectsCollection: PropTypes.object.isRequired,
 
    downloadLampiran: PropTypes.func.isRequired,
    previewLampiran: PropTypes.func.isRequired,
    deleteTask: PropTypes.func.isRequired,
+   getAllSubjects: PropTypes.func.isRequired,
    updateUserData: PropTypes.func.isRequired,
    getOneUser: PropTypes.func.isRequired, // For the person in charge task
    getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
@@ -457,10 +462,11 @@ ViewTaskTeacher.propTypes = {
 const mapStateToProps = (state) => ({
    auth: state.auth,
    tasksCollection: state.tasksCollection,
-   classesCollection: state.classesCollection
+   classesCollection: state.classesCollection,
+   subjectsCollection: state.subjectsCollection,
  });
 
 export default connect(
    mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, viewOneTask, getOneUser, viewClass }
+    previewLampiran, viewOneTask, getOneUser, viewClass, getAllSubjects }
  ) (ViewTaskTeacher);

@@ -13,7 +13,7 @@ const TaskSchema = new Schema({
         required: [true, "The task has no deadline?"]
     },
     subject: {
-        type: String,
+        type: ObjectId,
         required: true
     },
     class_assigned: [{

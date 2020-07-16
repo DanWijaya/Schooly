@@ -179,7 +179,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Student"]} path="/tugas-murid/:id" component={ViewTaskStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
-                    <PrivateRoute exact path="/daftar-tugas" component={TaskList} />
+                    <PrivateRoute exact access={["Teacher", "Student"]} path="/daftar-tugas" component={TaskList} />
                     {/* Route Assessment - Prototype  */}
                     <PrivateRoute exact access={["Teacher"]} path="/kuis" component={CreateAssessment} />
                     {/* Route Admin-Only  */}

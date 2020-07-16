@@ -268,7 +268,7 @@ function ViewClass(props) {
   const { setCurrentClass, getStudentsByClass, getAllSubjects,
      tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, viewTask } = props;
   const { all_user_files } = props.filesCollection;
-  const { all_subjects } = props.subjectsCollection;
+  const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
   const { selectedClasses, kelas } = props.classesCollection
   const { students_by_class, all_teachers, user } = props.auth;
@@ -291,16 +291,17 @@ function ViewClass(props) {
   }
 
   React.useEffect(() => {
-    if(kelas._id !== classId){
-      setCurrentClass(classId) // get the kelas object
-    }
+    setCurrentClass(classId) 
+
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
       viewTask() // get the tasksCollection
     }
+    getAllSubjects("map") // get the all_subjects_map in map
     getAllSubjects() // get the all_subjects
     getStudentsByClass(props.match.params.id) // get the students_by_class
     getTeachers() // get the all_teachers
+
     if (Boolean(all_teachers.length)) {
       let temp = new Map()
       all_teachers.map((teacher) => temp.set(teacher._id, teacher))
@@ -399,7 +400,7 @@ function ViewClass(props) {
                   <MaterialListitem
                     work_title={material.name}
                     work_category_avatar={workCategoryAvatar}
-                    work_subject={material.subject}
+                    work_subject={all_subjects_map.get(material.subject)}
                     work_status={workStatus}
                     work_link={`/materi/${material._id}`}
                   />
@@ -437,7 +438,7 @@ function ViewClass(props) {
                       <AssignmentListItem
                         work_title={task.name}
                         work_category_avatar={workCategoryAvatar}
-                        work_subject={task.subject}
+                        work_subject={all_subjects_map.get(task.subject)}
                         work_status={workStatus}
                         work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
                         work_link={`/tugas-murid/${task._id}`}
@@ -490,7 +491,7 @@ function ViewClass(props) {
                   <List className={classes.expansionPanelList}>
                   {!selectedMaterials.length ? null :
                     selectedMaterials.map((material) => {
-                      if (material.subject !== subject.name) {
+                      if (material.subject !== subject._id) {
                         return null
                       }
                       let workCategoryAvatar = (
@@ -528,7 +529,7 @@ function ViewClass(props) {
                           break;
                         }
                       }
-                      if (task.subject === subject.name) {
+                      if (task.subject === subject._id) {
                         isEmpty = false
                         return(
                           <AssignmentListItem
