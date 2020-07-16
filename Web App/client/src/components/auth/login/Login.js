@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
 import authBackground from "../AuthBackground.png";
-import { Button, Divider, Grid, IconButton, InputAdornment, Link, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
@@ -170,11 +170,11 @@ class Login extends Component {
             </Grid>
             <Divider />
             <Grid item container justify="space-around">
-              <Link href="/akun/lupa-katasandi">
+              <Link to="/akun/lupa-katasandi">
                 Lupa Kata Sandi?
               </Link>
               |
-              <Link href="/daftar">
+              <Link to="/daftar">
                 Belum ada Akun?
               </Link>
             </Grid>

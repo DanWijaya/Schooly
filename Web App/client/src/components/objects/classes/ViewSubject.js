@@ -56,11 +56,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-<<<<<<< HEAD
 function SubjectListitem(props){
-=======
-function MaterialListitem(props) {
->>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
   const classes = useStyles()
 
   return(
@@ -146,11 +142,7 @@ function ViewSubject(props) {
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++) {
-<<<<<<< HEAD
         if(class_assigned[i] === user.kelas)
-=======
-        if (class_assigned[i]._id === user.kelas)
->>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
           tasksByClass.push(task)
       }
     })

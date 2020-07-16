@@ -540,12 +540,8 @@ function ViewTaskStudent(props) {
     clearSuccess()
   };
 
-<<<<<<< HEAD
   function UploadDialog(){
 
-=======
-  function UploadDialog() {
->>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
     return(
       <Dialog open={openUploadDialog}>
         <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>

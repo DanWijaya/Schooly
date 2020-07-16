@@ -249,15 +249,10 @@ function SubmittedTaskList(props) {
     viewOneTask(task_id)
     getStudents()
     viewClass()
-<<<<<<< HEAD
     // ini successnya bakal return 3 barang di list.
     if(success instanceof Array){
       if(success.length === 3)
         handleOpenAlert()
-=======
-    if (success) {
-      handleOpenAlert()
->>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
     }
   }, [tasksCollection._id, success])
 

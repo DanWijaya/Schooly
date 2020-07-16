@@ -117,7 +117,6 @@ function AnnouncementList(props) {
 
   const listAnnouncements = () => {
     let annList = [];
-<<<<<<< HEAD
     console.log(selectedAnnouncements, retrieved_users)
     if(selectedAnnouncements.length && retrieved_users.size){
       
@@ -135,21 +134,6 @@ function AnnouncementList(props) {
             />
           )
         }
-=======
-    // let announcements = selectedAnnouncements.reverse()
-    for(var i = selectedAnnouncements.length-1; i >= 0; i--) {
-      console.log()
-      annList.push(
-        <AnnouncementItemList
-          sender_icon={<AccountCircleIcon />}
-          author_name={retrieved_users.size ? retrieved_users.get(selectedAnnouncements[i].author_id).name : null}
-          notification_title={selectedAnnouncements[i].title}
-          notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
-          date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}
-          time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
-        />
-      )
->>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
     }
   }
     return annList;

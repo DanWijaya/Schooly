@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -12,7 +12,7 @@ import authBackground from "../AuthBackground.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, Divider, FormControl, FormHelperText, Grid, Link,
+import { Button, Dialog, Divider, FormControl, FormHelperText, Grid,
    MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -515,7 +515,7 @@ class Register extends Component {
             </Grid>
             <Divider />
             <Grid item>
-              <Link href="/masuk" style={{marginTop: "20px"}}>
+              <Link to="/masuk" style={{marginTop: "20px"}}>
                 <Typography align="center">
                   Sudah ada Akun?
                 </Typography>
