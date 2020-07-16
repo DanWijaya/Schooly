@@ -5,13 +5,15 @@ Botak:
 4. Sort mapping dkk
 5. Rename not graded jadi indo
 6. cek title daftar pengumuman dkk udah di vertical alignnya center atau belum
+7. Download as csv, txt
+8. Search
 
 IMPORTANT:
-3. Jumlah murid dan absen di kelas
-5. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
-7. View task student badge? (View task student file telat?)
-11. Delete handle menu di createtaskv2
-16. Cek formcontrol, dan penempatan mui style
+1. Jumlah murid dan absen di kelas
+2. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
+3. View task student badge? (View task student file telat?)
+4. Delete handle menu di createtaskv2
+5. Cek formcontrol, dan penempatan mui style
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -27,6 +29,7 @@ Daniel:
 8. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya.
 9. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 10. Select untuk yang edit class masih bermasalah...
+11. Window location reload href (delete) mau diganti
 
 Penting untuk diimplemen:
 Will implement these features next time:
