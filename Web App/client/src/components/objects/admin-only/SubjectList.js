@@ -89,7 +89,7 @@ function SubjectListToolbar(props) {
           <Fab size="medium" variant="extended" className={classes.newMaterialButton} onClick={handleOpenFormDialog}>
           <LibraryBooksIcon className={classes.newMaterialIconDesktop} />
           Buat Mata Pelajaran
-          </Fab> 
+          </Fab>
         </Hidden>
         <LightTooltip title="Urutkan Materi">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
@@ -351,12 +351,6 @@ function SubjectList(props) {
   // Delete Dialog
   const handleOpenFormDialog = (e, id, name, isEdit=false) => {
     e.stopPropagation();
-<<<<<<< HEAD
-    setOpenFormDialog(true);
-    if (action === "edit") {
-        setSelectedTaskId(id)
-        setSelectedSubjectName(name)
-=======
     if(isEdit){
       setSubject((prev) => ({
         ...prev,
@@ -366,7 +360,6 @@ function SubjectList(props) {
       setAction("Edit")
     }else{
       setAction("Create")
->>>>>>> e5105955a3afec2574ac70d26eb075910eb9d7e6
     }
     setOpenFormDialog(true);
   };
@@ -410,14 +403,14 @@ function SubjectList(props) {
           </Grid>
           <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
           <Grid item container justify="center" spacing={2}>
-            {action === "Edit" ? 
+            {action === "Edit" ?
               <Typography variant="h6" gutterBottom>
                 <b>Sunting Mata Pelajaran</b>
-              </Typography> : 
-            action === "Create" ? 
+              </Typography> :
+            action === "Create" ?
               <Typography variant="h6" gutterBottom>
               <b>Isi Nama Mata Pelajaran</b>
-              </Typography> : 
+              </Typography> :
               null}
             <TextField
             style={{margin: "20px 10px"}}
@@ -434,14 +427,14 @@ function SubjectList(props) {
             })}
             />
             <Grid item>
-              {action === "Edit" ? 
+              {action === "Edit" ?
               <Button
                 type="submit"
                 startIcon={<LibraryBooksIcon />}
                 className={classes.dialogEditButton}
               >
                 Sunting
-              </Button> : 
+              </Button> :
               <Button
               type="submit"
               startIcon={<LibraryBooksIcon />}
@@ -453,7 +446,7 @@ function SubjectList(props) {
             </Grid>
             <Grid item>
               <Button
-                
+
                 onClick={handleCloseFormDialog}
                 startIcon={< CancelIcon/>}
                 className={action === "Edit" ? classes.dialogCancelEdit : classes.dialogCancelButton}
