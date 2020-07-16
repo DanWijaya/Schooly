@@ -25,6 +25,18 @@ Daniel:
 6. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 7. Select untuk yang edit class masih bermasalah...
 8. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya.
+9. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
+10. Select untuk yang edit class masih bermasalah...
+
+Penting untuk diimplemen:
+Will implement these features next time:
+- Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
+- Mungkin buat page utk si Admin utk bisa manage users
+2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
+3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
+4. Notifications page dan listnya (previewnya muncul di Dashboard)
+5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
+20. Have to handle if the user not uploading an image, it gives error message.
 
 Error and To be Fixed:
 - Ganti copylink di landing dan link insta di about

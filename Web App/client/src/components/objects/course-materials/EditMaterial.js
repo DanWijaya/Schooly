@@ -7,92 +7,84 @@ import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getOneMaterial } from "../../../actions/MaterialActions";
 import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, CircularProgress, Dialog, FormControl, FormHelperText, Grid, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Paper, Select, Typography } from "@material-ui/core";
+import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
+   Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DescriptionIcon from "@material-ui/icons/Description";
+import DeleteIcon from "@material-ui/icons/Delete";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import ErrorIcon from "@material-ui/icons/Error";
-import { getOneMaterial } from "../../../actions/MaterialActions";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
 
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #D3D4D5",
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    cursor: "default",
-    width: "300px",
-    "&:focus, &:hover": {
-      backgroundColor: "transparent",
-    },
-  },
-}))(MenuItem);
-
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
   },
-  mainGrid: {
-    width: "450px",
-    padding: "30px",
+  content: {
+    padding: "20px",
   },
-  gridItem: {
-    width: "350px",
-  },
-  formTitle: {
-    textAlign: "center",
-    marginBottom: "30px",
-  },
-  inputField: {
-    width: "400px",
-  },
-  inputLabel: {
-    color: theme.palette.primary.main,
-    fontSize: "15px",
-  },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px"
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-    maxWidth: 300,
+  divider: {
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      height: "1px",
+    },
   },
   chips: {
     display: "flex",
     flexWrap: "wrap",
   },
   chip: {
-    margin: 2,
+    marginRight: 2,
+  },
+  addFileButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
+  deleteIconButton: {
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
+  wordFileTypeIcon: {
+    backgroundColor: "#16B0DD",
+  },
+  excelFileTypeIcon: {
+    backgroundColor: "#68C74F",
+  },
+  imageFileTypeIcon: {
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    backgroundColor: "#FD931D",
+  },
+  otherFileTypeIcon: {
+    backgroundColor: "#808080",
   },
   editMaterialButton: {
     width: "100%",
@@ -127,22 +119,70 @@ const styles = (theme) => ({
 });
 
 function LampiranFile(props) {
-  const { name, i, handleLampiranDelete} = props;
+  const { classes, name, filetype, i, handleLampiranDelete } = props;
 
   return(
-    <StyledMenuItem disableRipple>
-      <ListItemIcon>
-        <DescriptionIcon/>
-      </ListItemIcon>
-      <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
-      <IconButton>
-        <HighlightOffIcon
-          fontSize="small"
-          style={{color:"#B22222"}}
-          onClick={(e) => {handleLampiranDelete(e, i, name)}}
-        />
-      </IconButton>
-    </StyledMenuItem>
+    <Grid item xs={12}>
+      <Paper variant="outlined">
+        <ListItem disableRipple>
+          <ListItemAvatar>
+            {filetype === "Word" ?
+                <Avatar className={classes.wordFileTypeIcon}>
+                  <FaFileWord />
+                </Avatar>
+              :
+              filetype === "Excel" ?
+                <Avatar className={classes.excelFileTypeIcon}>
+                  <FaFileExcel />
+                </Avatar>
+              :
+              filetype === "Gambar" ?
+                <Avatar className={classes.imageFileTypeIcon}>
+                  <FaFileImage />
+                </Avatar>
+              :
+              filetype === "PDF" ?
+                <Avatar className={classes.pdfFileTypeIcon}>
+                  <FaFilePdf />
+                </Avatar>
+              :
+              filetype === "Teks" ?
+                <Avatar className={classes.textFileTypeIcon}>
+                  <FaFileAlt />
+                </Avatar>
+              :
+              filetype === "Presentasi" ?
+                <Avatar className={classes.presentationFileTypeIcon}>
+                  <FaFilePowerpoint />
+                </Avatar>
+              :
+              filetype === "File Lainnya" ?
+                <Avatar className={classes.otherFileTypeIcon}>
+                  <FaFile />
+                </Avatar>
+              : null
+            }
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <LightTooltip title={name} placement="top">
+                <Typography>
+                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                </Typography>
+              </LightTooltip>
+            }
+            secondary={filetype}
+          />
+          <IconButton
+            size="small"
+            className={classes.deleteIconButton}
+            onClick={(e) => {handleLampiranDelete(e, i)}}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </ListItem>
+      </Paper>
+    </Grid>
   )
 }
 
@@ -211,7 +251,7 @@ class EditMaterial extends Component {
     const { class_assigned, classChanged, fileLampiranToAdd, fileLampiranToDelete } = this.state;
 
     console.log(class_assigned)
-
+    console.log(Array.from(this.state.fileLampiran))
     const materialObject = {
       name: this.state.name,
       deadline: this.state.deadline,
@@ -236,6 +276,7 @@ class EditMaterial extends Component {
     const {selectedMaterials} = this.props.materialsCollection;
     console.log(materialObject)
     this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
+    this.setState({ fileLampiranToDelete: []})
     }
 
   handleLampiranUpload = (e) => {
@@ -268,7 +309,7 @@ class EditMaterial extends Component {
       // Remove the file in fileLampiranToDelete
       tempToDelete.push(temp[i])
     }
-    else { // For the one that's not yet in DB
+    else { // For the one that"s not yet in DB
       // Remove the file in fileLampiranToAdd
       for(var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
@@ -298,6 +339,7 @@ class EditMaterial extends Component {
   };
 
   onChange = (e, otherfield) => {
+    console.log(this.state.fileLampiran)
     if(otherfield === "kelas"){
       console.log(this.state.class_assigned, e.target.value)
       this.setState({ class_assigned: e.target.value})
@@ -380,16 +422,38 @@ class EditMaterial extends Component {
       )
   }
 
+  const fileType = (filename) => {
+    let ext_file = path.extname(filename)
+    switch(ext_file) {
+      case ".docx" : return "Word"
+      case ".xlsx" :
+      case ".csv"  : return "Excel"
+
+      case ".png" :
+      case ".jpg" :
+      case ".jpeg" : return "Gambar"
+
+      case ".pdf" : return "PDF"
+
+      case ".txt" :
+      case ".rtf" : return "Teks"
+
+      case ".ppt" :
+      case ".pptx" : return "Presentasi"
+
+      default: return "File Lainnya"
+    }
+  }
+
   const listFileChosen = () => {
     let temp = []
     if(fileLampiran.length > 0) {
       for (var i = 0; i < fileLampiran.length; i++) {
         temp.push(
           <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
-            name={fileLampiran[i].filename === undefined?
-              fileLampiran[i].name :
-              fileLampiran[i].filename
-            }
+            classes={classes}
+            name={!fileLampiran[i].filename  ? fileLampiran[i].name : fileLampiran[i].filename}
+            filetype={!fileLampiran[i].filename ? fileType(fileLampiran[i].name) : fileType(fileLampiran[i].filename)}
             handleLampiranDelete={this.handleLampiranDelete}
             i={i}
           />
@@ -415,175 +479,171 @@ class EditMaterial extends Component {
         <div className={classes.root}>
           {UploadDialog()}
           <Paper>
-            <div className={classes.mainGrid}>
-              <Typography variant="h5" className={classes.formTitle}>
-                <b>Sunting Materi</b>
+            <div className={classes.content}>
+              <Typography variant="h5" gutterBottom>
+                <b>Suntung Materi</b>
               </Typography>
-              <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
-                <Grid
-                  container
-                  direction="column"
-                  alignItems="center"
-                  spacing={4}
-                >
-                  <Grid item className={classes.gridItem}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={this.state.name}
-                      error={errors.name}
-                      id="name"
-                      type="text"
-                      className={classnames("", {
-                        invalid: errors.name
-                      })}
-                      labelname="Nama Materi"
-                      html_for="Materi"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      error1={errors.name}
-                    />
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
-                      <label id="subject" className={classes.inputLabel}>Mata Pelajaran</label>
-                      <Select
-                        value={this.state.subject}
-                        onChange={(event) => {this.onChange(event, "subject")}}
-                      >
-                        {all_subjects.map((subject) => (
-                          <MenuItem value={subject.name}>{subject.name}</MenuItem>
-                        ))}
-                      </Select>
-                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.subject) && !this.state.subject ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.subject) && !this.state.subject ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.subject}</Typography> : null}
-                    </FormHelperText>
-                    </FormControl>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
-                      <label id="class_assigned" className={classes.inputLabel}>Kelas yang Diberikan</label>
-                      <Select
-                        multiple
-                        id="class_assigned"
-                        MenuProps={MenuProps}
-                        value={class_assigned}
-                        onChange={(event) => {this.onChange(event, "kelas")}}
-                        renderValue={(selected) => {
-                          return(
-                          <div className={classes.chips}>
-                            {selected.map((id) => {
-                              let name
-                              if(all_classes.length === 0)
-                                return null;
-                              else{
-                                for(var i in all_classes){
-                                  if(all_classes[i]._id === id){
-                                    name = all_classes[i].name
-                                    break;
-                                  }
-                                }
-                              return(
-                                <Chip key={id} label={name} className={classes.chip} />
-                              )
-                            }
-                            })}
-                            </div>
-                        )
-                      }}>
-                        {all_classes.map((kelas) => {
-                          return(
-                            <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-                        )})}
-                      </Select>
-                      <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.class_assigned) ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.class_assigned) ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
-                    </FormHelperText>
-                    </FormControl>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <OutlinedTextField
-                      on_change={(e) => this.onChange(e, "description")}
-                      value={this.state.description}
-                      error={errors.description}
-                      id="descripton"
-                      type="textarea"
-                      className={classnames("", {
-                        invalid: errors.description
-                      })}
-                      labelname="Deskripsi"
-                      html_for="description"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      multiline={true}
-                      error1={errors.description}
-                    />
-                  </Grid>
-                  <Grid item container direction="row" className={classes.gridItem}>
-                    <input
-                      type="file"
-                      multiple={true}
-                      name="lampiran"
-                      onChange={this.handleLampiranUpload}
-                      ref={this.lampiranUploader}
-                      accept="file/*"
-                      style={{display: "none"}}
-                    />
-                    <input
-                      type="file"
-                      multiple={true}
-                      name="file"
-                      id="file"
-                      ref={this.uploadedLampiran}
-                      style={{display: "none"}}
-                    />
-                    <Grid item container direction="row" alignItems="center">
-                      <Grid item xs={11} onClick={this.handleClickMenu}>
-                        <OutlinedTextField
-                          disabled={true}
-                          value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
-                          error={errors.lampiran_materi}
-                          id="file_tugas"
-                          type="text"
-                          width="100%"
-                          labelname="Lampiran Berkas"
-                          html_for="Berkas lampiran"
-                          span_classname={classes.errorInfo}
-                          label_classname={classes.inputLabel}
-                          pointer= {fileLampiran.length > 0}
-                          error1={errors.lampiran_materi}
-                        />
-                      </Grid>
-                      <StyledMenu
-                        id="fade-menu"
-                        anchorEl={this.state.anchorEl}
-                        keepMounted
-                        open={Boolean(this.state.anchorEl)}
-                        onClose={this.handleCloseMenu}
-                      >
-                        {listFileChosen()}
-                      </StyledMenu>
-                      <Grid item xs={1}>
-                        <LightTooltip title="Tambahkan Lampiran Berkas">
-                          <IconButton onClick={() => {this.lampiranUploader.current.click()}}>
-                            <AttachFileIcon />
-                           </IconButton>
-                         </LightTooltip>
-                      </Grid>
+            </div>
+            <Divider />
+            <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
+              <Grid container>
+                <Grid item xs={12} md className={classes.content}>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography component="label" for="name" color="primary">
+                        Judul
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        id="name"
+                        onChange={this.onChange}
+                        value={this.state.name}
+                        error={errors.name}
+                        type="text"
+                        helperText={errors.name}
+                        className={classnames("", {
+                          invalid: errors.name
+                        })}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Typography component="label" for="description" color="primary">
+                        Deskripsi
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows="5"
+                        rowsMax="25"
+                        variant="outlined"
+                        id="description"
+                        onChange={(e) => this.onChange(e, "description")}
+                        value={this.state.description}
+                        error={errors.description}
+                        type="text"
+                        helperText={errors.description}
+                        className={classnames("", {
+                          invalid: errors.description
+                        })}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <Button
-                      type="submit"
-                      className={classes.editMaterialButton}
-                    >
-                      Sunting Materi
-                  </Button>
+                </Grid>
+                <Divider flexItem orientation="vertical" className={classes.divider} />
+                <Grid item xs={12} md className={classes.content}>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography component="label" for="subject" color="primary">
+                        Mata Pelajaran
+                      </Typography>
+                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                        <Select
+                          value={this.state.subject}
+                          onChange={(event) => {this.onChange(event, "subject")}}
+                        >
+                          {all_subjects.map((subject) => (
+                            <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>
+                          {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <Typography component="label" for="class_assigned" color="primary">
+                        Kelas yang Diberikan
+                      </Typography>
+                      <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
+                        <Select
+                          multiple
+                          id="class_assigned"
+                          MenuProps={MenuProps}
+                          value={class_assigned}
+                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          renderValue={(selected) => {
+                            return(
+                              <div className={classes.chips}>
+                                {selected.map((id) => {
+                                  let name
+                                  if(all_classes.length === 0)
+                                    return null;
+                                  else{
+                                    for(var i in all_classes){
+                                      if(all_classes[i]._id === id){
+                                        name = all_classes[i].name
+                                        break;
+                                      }
+                                    }
+                                  return(
+                                    <Chip key={id} label={name} className={classes.chip} />
+                                  )
+                                }
+                                })}
+                              </div>
+                            )
+                          }}
+                        >
+                          {all_classes.map((kelas) => {
+                            return(
+                              <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
+                          )})}
+                        </Select>
+                        <FormHelperText>
+                          {Boolean(errors.class_assigned) ? errors.class_assigned : null}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <input
+                        type="file"
+                        multiple={true}
+                        name="lampiran"
+                        onChange={this.handleLampiranUpload}
+                        ref={this.lampiranUploader}
+                        accept="file/*"
+                        style={{display: "none"}}
+                      />
+                      <input
+                        type="file"
+                        multiple={true}
+                        name="file"
+                        id="file"
+                        ref={this.uploadedLampiran}
+                        style={{display: "none"}}
+                      />
+                      <Button
+                        variant="contained"
+                        startIcon={<AttachFileIcon />}
+                        onClick={() => {this.lampiranUploader.current.click()}}
+                        className={classes.addFileButton}
+                      >
+                        Tambah Lampiran Berkas
+                       </Button>
+                       <FormHelperText error>
+                         {errors.lampiran_materi}
+                       </FormHelperText>
+                       <Grid container spacing={1} style={{marginTop: "10px"}}>
+                         {listFileChosen()}
+                       </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </form>
-            </div>
+              </Grid>
+              <Divider />
+              <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+                <div>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.editMaterialButton}
+                  >
+                    Sunting Materi
+                  </Button>
+                </div>
+              </div>
+            </form>
           </Paper>
         </div>
       );
@@ -591,7 +651,7 @@ class EditMaterial extends Component {
     else {
       return(
         <div className={classes.root}>
-          <Typography variant="h5" className={classes.formTitle}>
+          <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>
           </Typography>
         </div>

@@ -285,7 +285,7 @@ function MaterialList(props) {
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
-  const [selectedTaskName, setSelectedTaskName] = React.useState(null);
+  const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
   const { getAllMaterials, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
@@ -370,7 +370,7 @@ function MaterialList(props) {
     e.stopPropagation();
     setOpenDeleteDialog(true);
     setSelectedTaskId(id)
-    setSelectedTaskName(name)
+    setSelectedMaterialName(name)
   };
 
   const handleCloseDeleteDialog = () => {
@@ -399,7 +399,7 @@ function MaterialList(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedTaskName}</b>
+              <b>{selectedMaterialName}</b>
             </Typography>
           </Grid>
           <Grid
@@ -530,10 +530,12 @@ function MaterialList(props) {
                           <Typography variant="body1" gutterBottom>
                             <b>Kelas yang Diberikan:</b> {!selectedClasses.size ? null :
                               row.class_assigned.map((kelas,i) => {
-                                if(i === row.class_assigned.length - 1 && Boolean(selectedClasses.get(kelas)))
-                                  return (`${selectedClasses.get(kelas).name}`)
-                                return (`${selectedClasses.get(kelas).name}, `)})
-                            }
+                                if(Boolean(selectedClasses.get(kelas))){
+                                  if(i === row.class_assigned.length - 1)
+                                    return (`${selectedClasses.get(kelas).name}`)
+                                  return (`${selectedClasses.get(kelas).name}, `)}
+                                })
+                              }
                           </Typography>
                         </Grid>
                         <Grid item>

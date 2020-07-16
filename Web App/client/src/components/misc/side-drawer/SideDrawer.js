@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Divider, Drawer, Hidden, List, ListSubheader, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
@@ -11,11 +11,9 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import { FaChalkboardTeacher, FaUserCheck, FaUserClock  } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 const drawerWidth = 240;
 
@@ -122,7 +120,8 @@ function DrawerContent(props) {
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
       ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemReactIconsFa}/>, "Pengguna Aktif", null, false],
       ["/pending-users", <FaUserClock className={classes.drawerListItemReactIconsFa}/>, "Pengguna Pending", null, false],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIconsFa} />, "Kelas", null, false]
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIconsFa} />, "Kelas", null, false],
+      ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemMuiIcons}/>, "Mata Pelajaran", null, false]
     ]
   else {
     ListItemContents = [

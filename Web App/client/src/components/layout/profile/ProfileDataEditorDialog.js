@@ -185,29 +185,29 @@ function ProfileDataEditorDialog(props) {
     e.preventDefault()
     let userId = user.id;
 
-    let userData = {
-      nama: dataProfil.nama,
-      tanggal_lahir: dataProfil.tanggal_lahir,
-      jenis_kelamin: dataProfil.jenis_kelamin,
-      sekolah: dataProfil.sekolah,
+    // let userData = {
+    //   nama: dataProfil.nama,
+    //   tanggal_lahir: dataProfil.tanggal_lahir,
+    //   jenis_kelamin: dataProfil.jenis_kelamin,
+    //   sekolah: dataProfil.sekolah,
 
-      //Kontak
-      email: dataProfil.email,
-      no_telp: dataProfil.no_telp,
-      no_telp_darurat: dataProfil.no_telp_darurat,
-      alamat: dataProfil.alamat,
+    //   //Kontak
+    //   email: dataProfil.email,
+    //   no_telp: dataProfil.no_telp,
+    //   no_telp_darurat: dataProfil.no_telp_darurat,
+    //   alamat: dataProfil.alamat,
 
-      //Karir
-      hobi_minat: dataProfil.hobi_minat,
-      ket_non_teknis: dataProfil.ket_non_teknis,
-      cita_cita: dataProfil.cita_cita,
-      uni_impian: dataProfil.uni_impian
-    }
+    //   //Karir
+    //   hobi_minat: dataProfil.hobi_minat,
+    //   ket_non_teknis: dataProfil.ket_non_teknis,
+    //   cita_cita: dataProfil.cita_cita,
+    //   uni_impian: dataProfil.uni_impian
+    // }
 
     if(!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
       props.handleOpenAlert()
 
-    updateUserData(userData, userId, props.history)
+    updateUserData(dataProfil, userId, props.history)
   }
 
   const handleChangeDataProfil = (e, otherfield) => {

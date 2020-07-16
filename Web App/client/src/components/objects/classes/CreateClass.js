@@ -5,35 +5,18 @@ import classnames from "classnames";
 import { clearErrors } from "../../../actions/ErrorActions"
 import { createClass } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, FormControl, FormHelperText, Grid, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Button, Divider, FormControl, FormHelperText, Grid, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
   },
-  mainGrid: {
-    width: "450px",
-    padding: "30px",
-  },
-  gridItem: {
-    width: "350px",
-  },
-  inputField: {
-    width: "400px",
-  },
-  inputLabel: {
-    color: theme.palette.primary.main,
-    fontSize: "15px",
-  },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px",
+  content: {
+    padding: "20px",
   },
   createClassButton: {
     width: "100%",
@@ -117,6 +100,7 @@ class CreateClass extends Component {
 
     const { all_teachers, user } = this.props.auth
     const { errors } = this.state;
+    console.log(errors)
     var options = all_teachers;
 
     document.title = "Schooly | Buat Kelas";
@@ -125,83 +109,85 @@ class CreateClass extends Component {
       return(
         <div className={classes.root}>
           <Paper>
-            <div className={classes.mainGrid}>
-              <Typography variant="h5" align="center" gutterBottom>
+            <div className={classes.content}>
+              <Typography variant="h5" gutterBottom>
                 <b>Buat Kelas</b>
               </Typography>
-              <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
-                Tambahkan keterangan kelas untuk membuat kelas.
+              <Typography color="textSecondary">
+                Setelah semua murid masuk, jangan lupa untuk menyunting kelas dan menentukan ketua kelas, sekretaris, dan bendahara kelas.
               </Typography>
-              <form noValidate onSubmit={this.onSubmit}>
-                <Grid
-                  container
-                  direction="column"
-                  alignItems="center"
-                  spacing={4}
-                >
-                  <Grid item className={classes.gridItem}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={this.state.name}
-                      error={errors.name}
-                      id="name"
-                      type="text"
-                      classname={classnames("", {
-                          invalid: errors.name
-                      })}
-                      html_for="name"
-                      labelname="Nama Kelas"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      error1={errors.name}
-                    />
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <FormControl id="walikelas" variant="outlined" color="primary" style={{width: "100%"}} error={Boolean(errors.walikelas) && !this.state.walikelas}>
-                      <label id="walikelas" className={classes.inputLabel}>Walikelas</label>
-                      <Select
-                        value={this.state.walikelas}
-                        onChange={(event) => {this.onChange(event, "walikelas")}}
-                      >
+            </div>
+            <Divider />
+            <form noValidate onSubmit={this.onSubmit}>
+              <Grid container direction="column" spacing={4} className={classes.content}>
+                <Grid item>
+                  <Typography component="label" for="name" color="primary">
+                    Nama Kelas
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="name"
+                    onChange={this.onChange}
+                    value={this.state.name}
+                    error={errors.name}
+                    type="text"
+                    helperText={errors.name}
+                    className={classnames("", {
+                      invalid: errors.name
+                    })}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography component="label" for="walikelas" color="primary">
+                    Wali Kelas
+                  </Typography>
+                  <FormControl id="walikelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.walikelas)}>
+                    <Select
+                      value={this.state.walikelas}
+                      onChange={(event) => {this.onChange(event, "walikelas")}}
+                    >
                       {options.map((walikelas) => (
                         <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
                       ))}
                     </Select>
-                    <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.walikelas) && !this.state.walikelas ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.walikelas) && !this.state.walikelas ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.walikelas}</Typography> : null}
+                    <FormHelperText error>
+                      {Boolean(errors.walikelas) ? errors.walikelas : null}
                     </FormHelperText>
                   </FormControl>
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={this.state.ukuran}
-                      error={errors.ukuran}
-                      id="ukuran"
-                      type="number"
-                      classname={classnames("", {
-                          invalid: errors.ukuran
-                      })}
-                      html_for="ukuran"
-                      labelname="Jumlah Murid"
-                      label_classname={classes.inputLabel}
-                      span_classname={classes.errorInfo}
-                      error1={errors.ukuran}
-                    />
-                  </Grid>
-                  <Grid item className={classes.gridItem}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      className={classes.createClassButton}
-                    >
-                      Buat Kelas
-                    </Button>
-                  </Grid>
                 </Grid>
-              </form>
-            </div>
+                <Grid item>
+                  <Typography component="label" for="ukuran" color="primary">
+                    Jumlah Murid
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="ukuran"
+                    onChange={this.onChange}
+                    value={this.state.ukuran}
+                    error={errors.ukuran}
+                    type="number"
+                    helperText={errors.ukuran}
+                    className={classnames("", {
+                      invalid: errors.ukuran
+                    })}
+                  />
+                </Grid>
+              </Grid>
+              <Divider />
+              <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+                <div>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.createClassButton}
+                  >
+                    Buat Kelas
+                  </Button>
+                </div>
+              </div>
+            </form>
           </Paper>
         </div>
       )
@@ -209,7 +195,7 @@ class CreateClass extends Component {
     else {
       return(
         <div className={classes.root}>
-          <Typography variant="h5" className={classes.formTitle}>
+          <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>
           </Typography>
         </div>
@@ -222,7 +208,7 @@ CreateClass.propTypes = {
   createClass: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   getTeachers: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

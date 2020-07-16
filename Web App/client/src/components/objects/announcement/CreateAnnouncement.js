@@ -1,97 +1,81 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { Redirect } from "react-router-dom";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Chip, CircularProgress, Dialog, FormControl, FormHelperText, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Select, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
-import DescriptionIcon from "@material-ui/icons/Description";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { createAnnouncement } from "../../../actions/AnnouncementActions"
 import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
-import ErrorIcon from "@material-ui/icons/Error";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
+   Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
 
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #D3D4D5",
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    cursor: "default",
-    width: "300px",
-    "&:focus, &:hover": {
-      backgroundColor: "transparent",
-    },
-  },
-}))(MenuItem);
-
-function LampiranFile(props) {
-  const { name, i, handleLampiranDelete} = props;
-
-  return(
-  <StyledMenuItem disableRipple>
-    <ListItemIcon>
-      <DescriptionIcon/>
-    </ListItemIcon>
-    <ListItemText primary={name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}/>
-    <IconButton>
-      <HighlightOffIcon
-        fontSize="small"
-        style={{color:"#B22222"}}
-        onClick={(e) => {handleLampiranDelete(e, i)}}
-      />
-    </IconButton>
-  </StyledMenuItem>
-  )
-}
-
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "center",
     margin: "auto",
     maxWidth: "1000px",
+    padding: "10px",
   },
-  mainGrid: {
-    width: "450px",
-    padding: "30px",
+  content: {
+    padding: "20px",
   },
-  gridItem: {
-    width: "350px",
+  divider: {
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      height: "1px",
+    },
   },
-  inputField: {
-    width: "400px",
+  chips: {
+    display: "flex",
+    flexWrap: "wrap",
   },
-  inputLabel: {
-    color: theme.palette.primary.main,
-    fontSize: "15px",
+  chip: {
+    marginRight: 2,
   },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px",
+  addFileButton: {
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
+  deleteIconButton: {
+    marginLeft: "7.5px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+    },
+  },
+  wordFileTypeIcon: {
+    backgroundColor: "#16B0DD",
+  },
+  excelFileTypeIcon: {
+    backgroundColor: "#68C74F",
+  },
+  imageFileTypeIcon: {
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    backgroundColor: "#FD931D",
+  },
+  otherFileTypeIcon: {
+    backgroundColor: "#808080",
   },
   createAnnouncementButton: {
     width: "100%",
@@ -125,6 +109,74 @@ const styles = (theme) => ({
   },
 });
 
+function LampiranFile(props) {
+  const { classes, name, filetype, i, handleLampiranDelete } = props;
+
+  return(
+    <Grid item xs={12}>
+      <Paper variant="outlined">
+        <ListItem disableRipple>
+          <ListItemAvatar>
+            {filetype === "Word" ?
+                <Avatar className={classes.wordFileTypeIcon}>
+                  <FaFileWord />
+                </Avatar>
+              :
+              filetype === "Excel" ?
+                <Avatar className={classes.excelFileTypeIcon}>
+                  <FaFileExcel />
+                </Avatar>
+              :
+              filetype === "Gambar" ?
+                <Avatar className={classes.imageFileTypeIcon}>
+                  <FaFileImage />
+                </Avatar>
+              :
+              filetype === "PDF" ?
+                <Avatar className={classes.pdfFileTypeIcon}>
+                  <FaFilePdf />
+                </Avatar>
+              :
+              filetype === "Teks" ?
+                <Avatar className={classes.textFileTypeIcon}>
+                  <FaFileAlt />
+                </Avatar>
+              :
+              filetype === "Presentasi" ?
+                <Avatar className={classes.presentationFileTypeIcon}>
+                  <FaFilePowerpoint />
+                </Avatar>
+              :
+              filetype === "File Lainnya" ?
+                <Avatar className={classes.otherFileTypeIcon}>
+                  <FaFile />
+                </Avatar>
+              : null
+            }
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <LightTooltip title={name} placement="top">
+                <Typography>
+                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                </Typography>
+              </LightTooltip>
+            }
+            secondary={filetype}
+          />
+          <IconButton
+            size="small"
+            className={classes.deleteIconButton}
+            onClick={(e) => {handleLampiranDelete(e, i)}}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </ListItem>
+      </Paper>
+    </Grid>
+  )
+}
+
 class CreateAnnouncement extends Component {
   constructor() {
     super();
@@ -145,10 +197,6 @@ class CreateAnnouncement extends Component {
     console.log(nextProps.errors)
     if(!nextProps.errors){ // kalau success bakal return false nextProps.errorsnya.
       this.handleOpenUploadDialog()
-      // this.setState({
-      //   // errors: nextProps.errors,
-      //   openUploadDialog: false
-      // });
     }
   }
 
@@ -163,7 +211,7 @@ class CreateAnnouncement extends Component {
   }
 
   handleClickMenu = (event) => {
-    //Needed so it will not be run when filetugas = null or filetugas array is empty
+    // Needed so it will not be run when filetugas = null or filetugas array is empty
     if(this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
       this.setState({ anchorEl: event.currentTarget})
   }
@@ -260,7 +308,6 @@ class CreateAnnouncement extends Component {
     const { user } = this.props.auth
 
     const UploadDialog = () => {
-      
         return(
           <Dialog open={this.state.openUploadDialog}>
             <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
@@ -292,6 +339,29 @@ class CreateAnnouncement extends Component {
         )
     }
 
+    const fileType = (filename) => {
+      let ext_file = path.extname(filename)
+      switch(ext_file) {
+        case ".docx" : return "Word"
+        case ".xlsx" :
+        case ".csv"  : return "Excel"
+
+        case ".png" :
+        case ".jpg" :
+        case ".jpeg" : return "Gambar"
+
+        case ".pdf" : return "PDF"
+
+        case ".txt" :
+        case ".rtf" : return "Teks"
+
+        case ".ppt" :
+        case ".pptx" : return "Presentasi"
+
+        default: return "File Lainnya"
+      }
+    }
+
     const listFileChosen = () => {
       let temp = []
       if(fileLampiran.length > 0) {
@@ -299,7 +369,9 @@ class CreateAnnouncement extends Component {
           console.log(i)
           temp.push(
             <LampiranFile
+              classes={classes}
               name={fileLampiran[i].name}
+              filetype={fileType(fileLampiran[i].name)}
               handleLampiranDelete={this.handleLampiranDelete}
               i={i}
             />
@@ -310,7 +382,7 @@ class CreateAnnouncement extends Component {
     }
 
     console.log(Object.keys(errors).length)
-    // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja. 
+    // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja.
     if(user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id){
       console.log(kelas.ketua_kelas, user.id)
       return(<Redirect to="/tidak-ditemukan"/>)
@@ -320,152 +392,146 @@ class CreateAnnouncement extends Component {
       <div className={classes.root}>
         {UploadDialog()}
         <Paper>
-          <div className={classes.mainGrid}>
-            <Typography variant="h5" align="center" gutterBottom>
-              <b>Buat Pengumuman {user.role === "Student" ? `untuk kelas ${kelas.name}` : null}</b>
+          <div className={classes.content}>
+            <Typography variant="h5" gutterBottom>
+              <b>Buat Pengumuman</b>
             </Typography>
-            <Typography color="textSecondary" align="center" style={{marginBottom: "30px"}}>
+            <Typography color="textSecondary">
               Tambahkan keterangan pengumuman untuk membuat pengumuman.
             </Typography>
-            <form noValidate onSubmit={(e) => this.onSubmit(e, user.id)}>
-              <Grid
-                container
-                direction="column"
-                alignItems="center"
-                spacing={4}
-              >
-                <Grid item className={classes.gridItem}>
-                  <OutlinedTextField
-                    on_change={this.onChange}
-                    value={this.state.title}
-                    error={errors.title}
-                    id="title"
-                    type="text"
-                    classname={classnames("", {
+          </div>
+          <Divider />
+          <form noValidate onSubmit={(e) => this.onSubmit(e, user.id)}>
+            <Grid container>
+              <Grid item xs={12} md className={classes.content}>
+                <Grid container direction="column" spacing={4}>
+                  <Grid item>
+                    <Typography component="label" for="title" color="primary">
+                      Judul
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      id="title"
+                      onChange={this.onChange}
+                      value={this.state.title}
+                      error={errors.title}
+                      type="text"
+                      helperText={errors.title}
+                      className={classnames("", {
                         invalid: errors.title
-                    })}
-                    html_for="title"
-                    labelname="Judul"
-                    label_classname={classes.inputLabel}
-                    span_classname={classes.errorInfo}
-                    error1={errors.title}
-                  />
-                </Grid>
-                <Grid item className={classes.gridItem}>
-                  <OutlinedTextField
-                    multiline={true}
-                    on_change={(e) => this.onChange(e, "description")}
-                    value={this.state.description}
-                    error={errors.description}
-                    id="description"
-                    type="textarea"
-                    classname={classnames("", {
+                      })}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography component="label" for="description" color="primary">
+                      Deskripsi
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows="5"
+                      rowsMax="25"
+                      variant="outlined"
+                      id="description"
+                      onChange={(e) => this.onChange(e, "description")}
+                      value={this.state.description}
+                      error={errors.description}
+                      type="text"
+                      helperText={errors.description}
+                      className={classnames("", {
                         invalid: errors.description
-                    })}
-                    html_for="descripton"
-                    labelname="Deskripsi"
-                    label_classname={classes.inputLabel}
-                    span_classname={classes.errorInfo}
-                    error1={errors.description}
-                  />
-                </Grid>
-                {user.role === "Student" // berarti dia ketua kelas
-                ? null :
-                <Grid item className={classes.gridItem}>
-                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
-                    <label id="class_assigned" className={classes.inputLabel}>Kelas yang diumumkan</label>
-                    <Select
-                      id="class_assigned"
-                      multiple
-                      MenuProps={MenuProps}
-                      value={class_assigned}
-                      onChange={(event) => {this.onChange(event, "kelas")}}
-                      renderValue={(selected) => (
-                        <div className={classes.chips}>
-                          {selected.map((kelas) => {
-                            console.log(selected)
-                            console.log(kelas, class_assigned)
-                            return(
-                              <Chip key={kelas} label={kelas.name} className={classes.chip} />
-                            )
-                          })}
-                        </div>
-                      )}
-                    >
-                      {all_classes.map((kelas) => { console.log(kelas, class_assigned)
-                        return(
-                          <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
-                      )})}
-                    </Select>
-                    <FormHelperText style={{marginLeft: 0, paddingLeft: 0, display:"flex", alignItems:"center"}}>
-                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <ErrorIcon style={{ height: "5%", width:"5%"}} /> : null}
-                      {Boolean(errors.class_assigned) && class_assigned.length === 0 ? <Typography variant="h8" style={{marginLeft: "4px"}}>{errors.class_assigned}</Typography> : null}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-                }
-                <Grid item container direction="row" className={classes.gridItem}>
-                  <input
-                    type="file"
-                    multiple={true}
-                    name="lampiran"
-                    onChange={this.handleLampiranUpload}
-                    ref={this.lampiranUploader}
-                    accept="file/*"
-                    style={{display: "none"}}
-                  />
-                  <input
-                    type="file"
-                    multiple={true}
-                    name="file"
-                    id="file"
-                    ref={this.uploadedLampiran}
-                    style={{display: "none"}}
-                  />
-                  <Grid item container direction="row" alignItems="center">
-                    <Grid item xs={11} onClick={this.handleClickMenu}>
-                      <OutlinedTextField
-                        disabled={true}
-                        value={fileLampiran.length > 0 ? `${fileLampiran.length} berkas (Klik untuk melihat)` : "Kosong"}
-                        id="file_tugas"
-                        type="text"
-                        width="100%"
-                        labelname="Lampiran Berkas"
-                        html_for="Berkas lampiran"
-                        label_classname={classes.inputLabel}
-                        pointer= {fileLampiran.length > 0}
-                      />
-                    </Grid>
-                    <StyledMenu
-                      id="fade-menu"
-                      anchorEl={this.state.anchorEl}
-                      keepMounted
-                      open={Boolean(this.state.anchorEl)}
-                      onClose={this.handleCloseMenu}
-                    >
-                      {listFileChosen()}
-                    </StyledMenu>
-                    <Grid item xs={1}>
-                      <LightTooltip title="Tambahkan Lampiran Berkas">
-                        <IconButton onClick={() => {this.lampiranUploader.current.click()}}>
-                          <AttachFileIcon />
-                         </IconButton>
-                       </LightTooltip>
-                    </Grid>
+                      })}
+                    />
                   </Grid>
                 </Grid>
-                <Grid item className={classes.gridItem}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    className={classes.createAnnouncementButton}
-                  >
-                    Buat Pengumuman
-                  </Button>
+              </Grid>
+              <Divider flexItem orientation="vertical" className={classes.divider} />
+              <Grid item xs={12} md className={classes.content}>
+                <Grid container direction="column" spacing={4}>
+                  {user.role === "Student" ?
+                    null
+                  :
+                    <Grid item>
+                      <Typography component="label" for="class_assigned" color="primary">
+                        Kelas yang Diumumkan
+                      </Typography>
+                      <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
+                        <Select
+                          multiple
+                          id="class_assigned"
+                          MenuProps={MenuProps}
+                          value={class_assigned}
+                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          renderValue={(selected) => (
+                            <div className={classes.chips}>
+                              {selected.map((kelas) => {
+                                console.log(selected)
+                                console.log(kelas, class_assigned)
+                                return(
+                                  <Chip key={kelas} label={kelas.name} className={classes.chip} />
+                                )
+                              })}
+                            </div>
+                          )}
+                        >
+                          {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                            return(
+                              <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
+                          )})}
+                        </Select>
+                        <FormHelperText>
+                          {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                  }
+                  <Grid item>
+                    <input
+                      type="file"
+                      multiple={true}
+                      name="lampiran"
+                      onChange={this.handleLampiranUpload}
+                      ref={this.lampiranUploader}
+                      accept="file/*"
+                      style={{display: "none"}}
+                    />
+                    <input
+                      type="file"
+                      multiple={true}
+                      name="file"
+                      id="file"
+                      ref={this.uploadedLampiran}
+                      style={{display: "none"}}
+                    />
+                    <Button
+                      variant="contained"
+                      startIcon={<AttachFileIcon />}
+                      onClick={() => {this.lampiranUploader.current.click()}}
+                      className={classes.addFileButton}
+                    >
+                      Tambah Lampiran Berkas
+                     </Button>
+                     <Grid container spacing={1} style={{marginTop: "10px"}}>
+                       {listFileChosen()}
+                     </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
-            </form>
-          </div>
+            </Grid>
+            <Divider />
+            <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+              <div>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  className={classes.createAnnouncementButton}
+                >
+                  Buat Pengumuman
+                </Button>
+              </div>
+            </div>
+          </form>
         </Paper>
       </div>
     )
@@ -478,7 +544,7 @@ CreateAnnouncement.propTypes = {
   success: PropTypes.object.isRequired,
   createAnnouncement: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -490,5 +556,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createAnnouncement, viewClass , setCurrentClass, clearErrors}
+  mapStateToProps, { createAnnouncement, viewClass , setCurrentClass, clearErrors }
  ) (withStyles(styles)(CreateAnnouncement))

@@ -3,21 +3,20 @@ const router = express.Router();
 const keys = require("../../config/keys");
 const mongoose = require("mongoose");
 
-// const validateSubjectInput = require("../../validation/SubjectData")
+const validateSubjectInput = require("../../validation/SubjectData")
 
 // Load Subject model
 const Subject = require("../../models/Subject");
 
 router.post("/create", (req, res) => {
 
-    // const {errors, isValid} = validateSubjectInput
+    const {errors, isValid} = validateSubjectInput(req.body)
 
-    // if(!isValid){
-    //     console.log("not valid data");
-    //     return res.status(404).json(errors)
-    // }
+    if(!isValid){
+        console.log("not valid data");
+        return res.status(404).json(errors)
+    }
 
-    console.log(req.body.name)
     Subject.findOne({ name: req.body.name}).then(subject => {
         if(subject){
             return res.status(404).json({ name : "The subject with this name already in Database"})
@@ -54,5 +53,18 @@ router.get("/viewall", (req, res) => {
             res.json(subjects);
     });
 });
+
+router.delete("/delete/:id", (req,res) => {
+    let id = req.params.id;
+    Subject.findByIdAndRemove(id)
+            .then((subject, err) => {
+        if(!subject)
+            return res.status(400).json(err);
+        else{
+            console.log(subject)
+            return res.json(subject);
+        }
+    })
+})
 
 module.exports = router;

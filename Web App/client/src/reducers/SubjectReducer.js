@@ -2,7 +2,8 @@ import { GET_SUBJECT, GET_ALL_SUBJECTS } from "../actions/Types";
 
 const initialState = {
     all_subjects: [],
-    subject:{}
+    selectedSubjects:{},
+    subject: {}
 };
 
 export default function(state = initialState, action) {
