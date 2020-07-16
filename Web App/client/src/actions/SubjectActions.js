@@ -62,3 +62,20 @@ export const deleteSubject = (subjectId) => dispatch => {
             console.log(err, "Error in deleting the subject")
         })
 }
+export const editSubject = (subjectData) => dispatch => {
+
+    axios
+        .post(`/api/subjects/edit/${subjectData.id}`, subjectData)
+        .then(res => {
+            console.log("Edited subject", res.data)
+            window.location.reload()
+        })
+        .catch(err => {
+            console.log(err, "Error in editing the subject")
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        })
+}
+
