@@ -2,6 +2,7 @@ import React from "react";
 import notFoundBackground from "./NotFoundBackground.png";
 import { Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,14 +70,15 @@ function NotFound(props) {
         </div>
       </div>
       <div className={classes.buttonContainer}>
+        <Link to="/beranda">
         <Button
           variant="contained"
           size="large"
           className={classes.backButton}
-          href="/beranda"
         >
           Kembali ke Beranda
         </Button>
+        </Link>
       </div>
     </div>
   )

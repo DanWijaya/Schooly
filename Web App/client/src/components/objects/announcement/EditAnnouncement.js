@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -367,13 +367,14 @@ class EditAnnouncement extends Component {
                   <b>Mohon tetap tunggu di halaman ini.</b>
                 </Typography>
               :
-                <Button
-                  variant="contained"
-                  href={`/pengumuman/${this.props.match.params.id}`}
-                  className={classes.uploadFinishButton}
-                >
-                  Selesai
-                </Button>
+              <Link to={`/pengumuman/${this.props.match.params.id}`}>
+                  <Button
+                    variant="contained"
+                    className={classes.uploadFinishButton}
+                  >
+                    Selesai
+                  </Button>
+                </Link>
               }
             </Grid>
           </Grid>

@@ -17,9 +17,15 @@ router.post("/create", (req, res) => {
         return res.status(400).json(errors);
     }
 
+<<<<<<< HEAD
+    Class.findOne({ name: req.body.name }).then(kelas => {
+        if (kelas) {
+            return res.status(400).json({ name: "Class name already exists" });
+=======
     Class.findOne({ name: req.body.name}).then(kelas => {
         if (kelas) {
             return res.status(400).json({ name: "Class name already exists"});
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
 
         }
         else {
@@ -52,7 +58,11 @@ router.get("/view/:id", (req, res) => {
 
 
 router.get("/viewall", (req, res) => {
+<<<<<<< HEAD
+    Class.find({}).then((classes, err) => {
+=======
     Class.find({ }).then((classes, err) => {
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
         if (!classes)
             res.status(400).json(err);
         else
@@ -72,7 +82,7 @@ router.delete("/delete/:id", (req, res) => {
                 return res.json("Successfully deleted the class")
             }
         })
-        // .catch(res.json("Error happened"))
+    // .catch(res.json("Error happened"))
 })
 
 router.get("/setCurrentClass/:id", (req, res) => {
@@ -86,16 +96,23 @@ router.get("/setCurrentClass/:id", (req, res) => {
     });
 })
 
-router.get("/viewSelectedClasses/", (req,res) => {
-    const {classes_ids} = req.query;
+router.get("/viewSelectedClasses/", (req, res) => {
+    const { classes_ids } = req.query;
     // console.log(classes_ids)
     let ids_to_find
 
     if (classes_ids !== undefined) {
+<<<<<<< HEAD
+        ids_to_find = classes_ids.map((id) => new ObjectId(id))
+
+    }
+    Class.find({ _id: { $in: ids_to_find } }, (err, classes) => {
+=======
         ids_to_find =  classes_ids.map((id) => new ObjectId(id))
 
     }
     Class.find({_id : { $in : ids_to_find}}, (err, classes) => {
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
         if (!classes)
             return res.status(400).json("Class to update not found");
 
@@ -103,9 +120,13 @@ router.get("/viewSelectedClasses/", (req,res) => {
 
     })
 })
+<<<<<<< HEAD
+=======
+
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
 
 
-router.post("/update/:id", (req,res) => {
+router.post("/update/:id", (req, res) => {
     let id = req.params.id;
 
     const { errors, isValid } = validateClassInput(req.body);
@@ -131,8 +152,8 @@ router.post("/update/:id", (req,res) => {
 
 
         classData.save()
-                 .then(res.status(200).json("Done with updating class"))
-                .catch(console.log("Error in updating class"))
+            .then(res.status(200).json("Done with updating class"))
+            .catch(console.log("Error in updating class"))
         // Pipeline on how to create a Async functions to be Synchronous function call
         // Step 1: declare promise
         // var myPromise = (id) => {

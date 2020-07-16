@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
@@ -55,11 +56,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+<<<<<<< HEAD
+function SubjectListitem(props){
+=======
 function MaterialListitem(props) {
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
   const classes = useStyles()
 
   return(
-      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+    <Link to={props.work_link}>
+      <ListItem button className={classes.listItem}>
         <ListItemAvatar>
           {props.work_category_avatar}
         </ListItemAvatar>
@@ -72,13 +78,15 @@ function MaterialListitem(props) {
           secondary={!props.work_subject ? " " : props.work_subject}
         />
       </ListItem>
+    </Link>
   )
 }
 
 function AssignmentListItem(props) {
 const classes = useStyles()
   return(
-    <ListItem button component="a" href={props.work_link}>
+    <Link to={props.work_link}>
+    <ListItem button>
       <ListItemAvatar>
         <Avatar>
           {props.work_category_avatar}
@@ -106,6 +114,7 @@ const classes = useStyles()
         }
       />
     </ListItem>
+    </Link>
   )
 }
 
@@ -137,7 +146,11 @@ function ViewSubject(props) {
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++) {
+<<<<<<< HEAD
+        if(class_assigned[i] === user.kelas)
+=======
         if (class_assigned[i]._id === user.kelas)
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
           tasksByClass.push(task)
       }
     })
@@ -219,7 +232,7 @@ function ViewSubject(props) {
             selectedMaterials.map((material, i) => {
               if (material.subject === subject_name) {
 
-                return( <MaterialListitem
+                return( <SubjectListitem
                   work_title={material.name}
                   work_category_avatar={
                   <Avatar className={classes.material}>

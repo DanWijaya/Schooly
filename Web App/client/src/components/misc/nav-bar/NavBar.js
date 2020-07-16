@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
-import { AppBar, Button, Grid, IconButton, Link, Toolbar, useMediaQuery } from "@material-ui/core";
+import { AppBar, Button, Grid, IconButton, Toolbar, useMediaQuery } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -87,7 +88,7 @@ function NavBar(props) {
       </div>
     )
     middleNavBarContents = (
-      <Link href="/beranda">
+      <Link to="/beranda">
         <img
           alt="SchoolyLogoNavBar"
           src={schoolyLogo}
@@ -103,34 +104,36 @@ function NavBar(props) {
   else {
     leftNavBarContents = (
       <Grid className={classes.navbarContainedLeftItems}>
-        <a href="/">
+        <Link to="/">
           <img
             alt="SchoolyLogoNavBar"
             src={schoolyLogo}
             className={classes.schoolyLogo}
           />
-        </a>
+        </Link>
       </Grid>
     )
     middleNavBarContents = null
     rightNavBarContents = (
       <div>
-        <Button
-          variant="contained"
-          size="small"
-          href="/daftar"
-          className={classes.signupButton}
-        >
-          Daftar
-        </Button>
-        <Button
-          variant="contained"
-          size="small"
-          href="/masuk"
-          className={classes.loginButton}
-        >
-          Masuk
-        </Button>
+        <Link to="/daftar">
+          <Button
+            variant="contained"
+            size="small"
+            className={classes.signupButton}
+          >
+            Daftar
+          </Button>
+        </Link>
+        <Link to="/masuk">
+          <Button
+            variant="contained"
+            size="small"
+            className={classes.loginButton}
+          >
+            Masuk
+          </Button>
+        </Link>
       </div>
     )
   }

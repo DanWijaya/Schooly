@@ -218,9 +218,11 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
         .then()
         .catch(err => console.log(err))
     }
+
+    return res.json(true)
   })
 
-  res.json("Upload file completed")
+  
 })
 
 router.get("/tugas/:id", (req,res) => {

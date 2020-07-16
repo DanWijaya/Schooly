@@ -56,7 +56,7 @@ class CreateClass extends Component {
       name: this.state.name,
       nihil: this.state.nihil,
       walikelas: this.state.walikelas,
-      ukuran: this.state.ukuran,
+      ukuran: Number(this.state.ukuran),
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,

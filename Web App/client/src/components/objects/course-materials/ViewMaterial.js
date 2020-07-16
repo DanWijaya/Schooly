@@ -362,9 +362,17 @@ function ViewMaterial(props) {
               <Typography>
                 {!selectedMaterials.class_assigned || !selectedClasses.size? null :
                 selectedMaterials.class_assigned.map((kelas, i) => {
+<<<<<<< HEAD
+                  if(selectedClasses.get(kelas)){
+                    if(i === selectedMaterials.class_assigned.length - 1)
+                      return `${selectedClasses.get(kelas).name}`
+                    return (`${selectedClasses.get(kelas).name}, `)
+                  }
+=======
                   if (i === selectedMaterials.class_assigned.length - 1)
                     return `${selectedClasses.get(kelas).name}`
                   return (`${selectedClasses.get(kelas).name}, `)
+>>>>>>> d740e5777e42963044129ecc447aaa02f9eb7016
                 })}
               </Typography>
             </Grid>

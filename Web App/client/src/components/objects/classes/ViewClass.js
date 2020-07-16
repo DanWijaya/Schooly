@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/id";
@@ -104,63 +105,67 @@ function AssignmentListItem(props) {
   return(
     <div>
       <Hidden smUp implementation="css">
-        <Paper variant="outlined" className={classes.listItemPaper}>
-          <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-            <Grid container alignItems="center">
-              <Grid item xs={7}>
-                <ListItemText
-                  primary={
-                    <Typography variant="h6">
-                      {props.work_title}
-                    </Typography>
-                  }
-                  secondary={props.work_subject}
-                />
+        <Link to={props.work_link}>
+          <Paper variant="outlined" className={classes.listItemPaper}>
+            <ListItem button className={classes.listItem}>
+              <Grid container alignItems="center">
+                <Grid item xs={7}>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h6">
+                        {props.work_title}
+                      </Typography>
+                    }
+                    secondary={props.work_subject}
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <ListItemText
+                    align="right"
+                    primary={
+                      <Typography variant="body2" className={classes.warningText}>
+                        Batas Waktu: <br /> {props.work_deadline}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="caption">
+                        {props.work_status}
+                      </Typography>
+                    }
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={5}>
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Typography variant="body2" className={classes.warningText}>
-                      Batas Waktu: <br /> {props.work_deadline}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="caption">
-                      {props.work_status}
-                    </Typography>
-                  }
-                />
-              </Grid>
-            </Grid>
-          </ListItem>
-        </Paper>
+            </ListItem>
+          </Paper>
+        </Link>
       </Hidden>
       <Hidden xsDown implementation="css">
-        <Paper variant="outlined" className={classes.listItemPaper}>
-          <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-            <ListItemAvatar>
-              {props.work_category_avatar}
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Typography variant="h6">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Batas Waktu: {props.work_deadline}
-                </Typography>
-              }
-              secondary={props.work_status}
-            />
-          </ListItem>
-        </Paper>
+        <Link to={props.work_link}>
+          <Paper variant="outlined" className={classes.listItemPaper}>
+            <ListItem button className={classes.listItem}>
+              <ListItemAvatar>
+                {props.work_category_avatar}
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Typography variant="h6">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" className={classes.warningText}>
+                    Batas Waktu: {props.work_deadline}
+                  </Typography>
+                }
+                secondary={props.work_status}
+              />
+            </ListItem>
+          </Paper>
+        </Link>
       </Hidden>
     </div>
   )
@@ -172,8 +177,9 @@ function MaterialListitem(props) {
   return(
     <div>
     <Hidden smUp implementation="css">
+    <Link to={props.work_link}>
       <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
-        <ListItem button component="a" href={props.work_link} className={classes.listItem}>
+        <ListItem button className={classes.listItem}>
           <ListItemText
             primary={
               <Typography variant="h6">
@@ -184,23 +190,26 @@ function MaterialListitem(props) {
           />
         </ListItem>
       </Paper>
+      </Link>
     </Hidden>
     <Hidden xsDown implementation="css">
+    <Link to={props.work_link}>
       <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
-        <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-          <ListItemAvatar>
-            {props.work_category_avatar}
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="h6">
-                {props.work_title}
-              </Typography>
-            }
-            secondary={!props.work_subject ? " " : props.work_subject}
-          />
-        </ListItem>
-      </Paper>
+          <ListItem button className={classes.listItem}>
+            <ListItemAvatar>
+              {props.work_category_avatar}
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography variant="h6">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={!props.work_subject ? " " : props.work_subject}
+            />
+          </ListItem>
+        </Paper>
+      </Link>
     </Hidden>
     </div>
   )
@@ -266,6 +275,7 @@ function ViewClass(props) {
   const classId = props.match.params.id;
 
   const [teachers_map, setTeachersMap] = React.useState(new Map());
+  let class_id = props.match.params.id;
 
   let tasksByClass = []
   console.log(props.classesCollection)
@@ -273,21 +283,21 @@ function ViewClass(props) {
   if (Boolean(tasksCollection.length)) {
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
-      for (var i = 0; i < class_assigned.length; i++) {
-        if (class_assigned[i]._id === classId)
+      for (var i = 0; i < class_assigned.length; i++){
+        if(class_assigned[i] === classId)
           tasksByClass.push(task)
       }
     })
   }
 
   React.useEffect(() => {
-    if (Object.keys(kelas).length === 0) {
+    if(kelas._id !== classId){
       setCurrentClass(classId) // get the kelas object
     }
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
+      viewTask() // get the tasksCollection
     }
-    viewTask() // get the tasksCollection
     getAllSubjects() // get the all_subjects
     getStudentsByClass(props.match.params.id) // get the students_by_class
     getTeachers() // get the all_teachers
@@ -297,7 +307,7 @@ function ViewClass(props) {
       setTeachersMap(temp)
     }
     getAllTaskFilesByUser(user.id) // get the all_user_files
-  }, [all_teachers.length ])
+  }, [all_teachers.length, class_id ])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -307,6 +317,7 @@ function ViewClass(props) {
   console.log(selectedMaterials)
   document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
 
+  console.log(kelas, teachers_map, kelas.walikelas)  
   return(
     <div className={classes.root}>
       {user.role === "Admin" ?
@@ -322,12 +333,14 @@ function ViewClass(props) {
           </Typography>
           <Divider className={classes.personListDivider} />
           <List className={classes.listContainer}>
+            {teachers_map.get(kelas.walikelas) ? 
             <PersonListItem
-              person_avatar={teachers_map.get(kelas.walikelas) ?
-                `/api/uploads/image/${teachers_map.get(kelas.walikelas).avatar}` : null}
-              person_name={teachers_map.get(kelas.walikelas)? teachers_map.get(kelas.walikelas).name : null}
-              person_role={teachers_map.get(kelas.walikelas) ? teachers_map.get(kelas.walikelas).subject_teached : null}
-            />
+            person_avatar={
+              `/api/uploads/image/${teachers_map.get(kelas.walikelas).avatar}`}
+            person_name={teachers_map.get(kelas.walikelas).name }
+            person_role={teachers_map.get(kelas.walikelas).subject_teached}/> : null
+            }
+
           </List>
         </Paper>
         <Paper style={{padding: "20px"}}>
@@ -462,14 +475,14 @@ function ViewClass(props) {
                         {subject.name}
                       </Typography>
                       <LightTooltip title="Lihat Lebih Lanjut" placement="right">
-                        <IconButton
-                          size="small"
-                          className={classes.viewSubjectButton}
-                          href={`/mata-pelajaran/${subject.name}`}
-                          onClick={(event) => event.stopPropagation()}
-                        >
+                          <Link to={`/mata-pelajaran/${subject.name}`}>
+                            <IconButton
+                              size="small"
+                              className={classes.viewSubjectButton}
+                            >
                           <PageviewIcon fontSize="small" />
                         </IconButton>
+                        </Link>
                       </LightTooltip>
                     </Grid>
                   </ExpansionPanelSummary>
