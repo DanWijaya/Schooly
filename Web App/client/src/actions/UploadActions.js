@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {
     console.log(ontime)
-  if(userData.role === "Student") {
+  if (userData.role === "Student") {
     axios
         .post(`/api/uploads/uploadtugas/${userData.id}/${taskId}/${ontime}`, tugas)
         .then(res => {
@@ -28,7 +28,7 @@ export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {
 export const deleteTugas = (tugas_id, userData) => dispatch => {
     console.log("Delete tugas is runned")
 
-    if(userData.role === "Student") {
+    if (userData.role === "Student") {
         axios
             .delete(`/api/uploads/tugas/${userData.id}/${tugas_id}/`)
             .then(res => {

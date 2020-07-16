@@ -9,13 +9,10 @@ import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
-   Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+   Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import DescriptionIcon from "@material-ui/icons/Description";
 import DeleteIcon from "@material-ui/icons/Delete";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import ErrorIcon from "@material-ui/icons/Error";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
@@ -200,14 +197,14 @@ class EditAnnouncement extends Component {
   lampiranUploader = React.createRef(null)
   uploadedLampiran = React.createRef(null)
 
-  componentDidMount(){
+  componentDidMount() {
     const { user } = this.props.auth;
     const { setCurrentClass, getOneAnnouncement, viewClass, clearErrors } = this.props;
 
     clearErrors()
     getOneAnnouncement(this.props.match.params.id)
     viewClass()
-    if(user.role ==="Student")
+    if (user.role ==="Student")
       setCurrentClass(user.kelas)
 
   }
@@ -217,10 +214,10 @@ class EditAnnouncement extends Component {
     const { name } = this.state;
     const { selectedAnnouncements } = nextProps.announcements;
     // console.log(nextProps.tasksCollection.deadline);
-    if(!nextProps.errors){
+    if (!nextProps.errors) {
       this.handleOpenUploadDialog()
     }
-    if(Boolean(nextProps.errors)){ // if edited, nextProps.errors is false, supaya ndak run ini..
+    if (Boolean(nextProps.errors)) { // if edited, nextProps.errors is false, supaya ndak run ini..
         this.setState({
             title: selectedAnnouncements.title,
             description: selectedAnnouncements.description,
@@ -238,11 +235,11 @@ class EditAnnouncement extends Component {
     let temp;
     let tempToAdd;
 
-    if(this.state.fileLampiran.length === 0)
+    if (this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
-    else{
+    else {
       console.log(files)
-      if(files.length !== 0) {
+      if (files.length !== 0) {
         temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
         tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
@@ -258,7 +255,7 @@ class EditAnnouncement extends Component {
     let tempToAdd = this.state.fileLampiranToAdd;
     //Kalau yang udah keupload, ada field filename (yang belum adanya name)
     //Untuk yang udah di DB.
-    if(this.state.fileLampiran[i].filename !== undefined) {
+    if (this.state.fileLampiran[i].filename !== undefined) {
       //Remove the file in fileLampiranToDelete
       tempToDelete.push(temp[i])
     }
@@ -266,21 +263,21 @@ class EditAnnouncement extends Component {
       //Remove the file in fileLampiranToAdd
       for(var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
-        if(tempToAdd[j].name === temp[i].name){
+        if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)
         }
       }
     }
     temp.splice(i, 1);
     console.log(tempToDelete)
-    if(temp.length === 0)
+    if (temp.length === 0)
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
       fileLampiranToDelete: tempToDelete})
   }
 
   handleClickMenu = (event) => {
-    if(!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
+    if (!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
       this.setState({ anchorEl: event.currentTarget})
   }
 
@@ -293,9 +290,10 @@ class EditAnnouncement extends Component {
   };
 
   onChange = (e, otherfield) => {
-    if(otherfield === "description") {
+    if (otherfield === "description") {
       this.setState({ description : e.target.value})
-    } else if(otherfield === "kelas") {
+    }
+    else if (otherfield === "kelas") {
       this.setState({ class_assigned: e.target.value})
     }
     else
@@ -408,7 +406,7 @@ class EditAnnouncement extends Component {
 
     const listFileChosen = () => {
       let temp = []
-      if(fileLampiran.length > 0) {
+      if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
           temp.push(
             <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
@@ -417,7 +415,7 @@ class EditAnnouncement extends Component {
                 fileLampiran[i].name :
                 fileLampiran[i].filename
               }
-              filetype={!fileLampiran[i].filename  ? 
+              filetype={!fileLampiran[i].filename  ?
                 fileType(fileLampiran[i].name) :
                 fileType(fileLampiran[i].filename)
               }
@@ -430,7 +428,7 @@ class EditAnnouncement extends Component {
       return temp;
     }
 
-    if(user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id){
+    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id) {
       console.log(kelas.ketua_kelas, user.id)
       return(
         <Redirect to="/tidak-ditemukan"/>
@@ -514,11 +512,11 @@ class EditAnnouncement extends Component {
                               <div className={classes.chips}>
                                 {selected.map((id) => {
                                   let name
-                                  if(all_classes.length === 0)
+                                  if (all_classes.length === 0)
                                     return null;
                                   else {
-                                    for (var i in all_classes){
-                                      if(all_classes[i]._id === id){
+                                    for (var i in all_classes) {
+                                      if (all_classes[i]._id === id) {
                                         name = all_classes[i].name
                                         break;
                                       }

@@ -8,7 +8,7 @@ import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
-   Grid, IconButton, ListItem, ListItemAvatar, ListItemIcon, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+   Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -193,9 +193,9 @@ class CreateAnnouncement extends Component {
   lampiranUploader = React.createRef(null)
   uploadedLampiran = React.createRef(null)
 
-  UNSAFE_componentWillReceiveProps(nextProps){
+  UNSAFE_componentWillReceiveProps(nextProps) {
     console.log(nextProps.errors)
-    if(!nextProps.errors){ // kalau success bakal return false nextProps.errorsnya.
+    if (!nextProps.errors) { // kalau success bakal return false nextProps.errorsnya.
       this.handleOpenUploadDialog()
     }
   }
@@ -206,13 +206,13 @@ class CreateAnnouncement extends Component {
 
     clearErrors()
     viewClass()
-    if(user.role === "Student")
+    if (user.role === "Student")
       setCurrentClass(user.kelas)
   }
 
   handleClickMenu = (event) => {
     // Needed so it will not be run when filetugas = null or filetugas array is empty
-    if(this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
+    if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
       this.setState({ anchorEl: event.currentTarget})
   }
 
@@ -230,12 +230,14 @@ class CreateAnnouncement extends Component {
 
 
   onChange = (e, otherfield) => {
-    if(otherfield === "deadline"){
+    if (otherfield === "deadline") {
       this.setState({ description: e.target.value })
-    } else if(otherfield === "kelas") {
+    }
+    else if (otherfield === "kelas") {
       console.log(e.target.value)
       this.setState({ class_assigned: e.target.value})
-    } else {
+    }
+    else {
       this.setState({ [e.target.id] : e.target.value })
     }
     console.log(this.props.errors)
@@ -243,10 +245,10 @@ class CreateAnnouncement extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    if(this.state.fileLampiran.length === 0)
+    if (this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files})
     else {
-      if(files.length != 0) {
+      if (files.length !== 0) {
         let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
         this.setState({ fileLampiran: temp})
       }
@@ -258,7 +260,7 @@ class CreateAnnouncement extends Component {
     console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     temp.splice(i,1);
-    if(temp.length === 0) //If it is empty.
+    if (temp.length === 0) //If it is empty.
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp})
   }
@@ -277,7 +279,7 @@ class CreateAnnouncement extends Component {
       errors: {}
     };
 
-    if(this.state.fileLampiran)
+    if (this.state.fileLampiran)
       for(var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
         formData.append("lampiran_announcement", this.state.fileLampiran[i])
@@ -364,8 +366,8 @@ class CreateAnnouncement extends Component {
 
     const listFileChosen = () => {
       let temp = []
-      if(fileLampiran.length > 0) {
-        for (var i = 0; i < fileLampiran.length; i++){
+      if (fileLampiran.length > 0) {
+        for (var i = 0; i < fileLampiran.length; i++) {
           console.log(i)
           temp.push(
             <LampiranFile
@@ -383,7 +385,7 @@ class CreateAnnouncement extends Component {
 
     console.log(Object.keys(errors).length)
     // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja.
-    if(user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id){
+    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id) {
       console.log(kelas.ketua_kelas, user.id)
       return(<Redirect to="/tidak-ditemukan"/>)
     }

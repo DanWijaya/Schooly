@@ -4,7 +4,7 @@ import PolicyContent from "./PolicyContent";
 function Policy(props) {
   const [isFirsttimeRendered, setFirstTime] = React.useState(false)
   const { handleMarginTopValue } = props;
-  if(!isFirsttimeRendered) {
+  if (!isFirsttimeRendered) {
     handleMarginTopValue(0);
     setFirstTime(true);
   }

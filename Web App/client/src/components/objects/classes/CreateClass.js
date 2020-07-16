@@ -7,7 +7,6 @@ import { createClass } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import { Button, Divider, FormControl, FormHelperText, Grid, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
   root: {
@@ -44,9 +43,9 @@ class CreateClass extends Component {
   }
 
   onChange = (e, otherfield) => {
-    if(otherfield === "walikelas")
+    if (otherfield === "walikelas")
       this.setState({ walikelas: e.target.value});
-    else{
+    else {
       this.setState({ [e.target.id]: e.target.value});
     }
   }
@@ -67,7 +66,7 @@ class CreateClass extends Component {
   }
 
   onSelect = (selectedList, selectedItem) => {
-    if(selectedList.length > 1)
+    if (selectedList.length > 1)
       selectedList.shift()
       this.setState({ walikelas: selectedList[0]})
   }
@@ -83,7 +82,7 @@ class CreateClass extends Component {
   //  using this.setState() in this method.
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if(nextProps.errors) {
+    if (nextProps.errors) {
       this.setState({
         errors: nextProps.errors
       });
@@ -105,7 +104,7 @@ class CreateClass extends Component {
 
     document.title = "Schooly | Buat Kelas";
 
-    if(user.role === "Teacher" || user.role === "Admin") {
+    if (user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
           <Paper>

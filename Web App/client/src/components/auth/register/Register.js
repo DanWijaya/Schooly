@@ -8,7 +8,6 @@ import lokal from "date-fns/locale/id";
 import { registerUser } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
-import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
 import RegisterStepIcon from "./RegisterStepIcon";
@@ -118,7 +117,7 @@ class Register extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if(Object.keys(nextProps.errors).length > 0) {
+    if (Object.keys(nextProps.errors).length > 0) {
       console.log(this.state.snackbarOpen)
       this.setState({
         errors: nextProps.errors,
@@ -132,13 +131,13 @@ class Register extends Component {
   }
 
   onChange = (e, otherfield) => {
-    if(otherfield === "kelas"){
+    if (otherfield === "kelas") {
       console.log(e.target.value)
       this.setState({ kelas: e.target.value});
     }
-    else if(otherfield === "role")
+    else if (otherfield === "role")
       this.setState({ role: e.target.value})
-    else if(otherfield === "subject")
+    else if (otherfield === "subject")
       this.setState({ subject_teached: e.target.value})
     else
       this.setState({ [e.target.id]: e.target.value });
@@ -160,18 +159,18 @@ class Register extends Component {
 
     const role = this.state.role;
 
-    if(role === "Student") {
+    if (role === "Student") {
       newUser.kelas = this.state.kelas;
     }
     else if (role === "Teacher") {
       newUser.subject_teached = this.state.subject_teached;
     }
 
-    if(this.state.activeStep === 2)
+    if (this.state.activeStep === 2)
       this.setState({submitButtonClicked: true})
 
     console.log(newUser)
-    if(this.state.submitButtonClicked)
+    if (this.state.submitButtonClicked)
       this.props.registerUser(newUser, this.props.history);
   };
 
@@ -431,7 +430,7 @@ class Register extends Component {
     const steps = getSteps();
 
     const handleNext = () => {
-      if(this.state.activeStep !== 2 || this.state.errors === null)
+      if (this.state.activeStep !== 2 || this.state.errors === null)
         this.setState(prevState => ({
           activeStep: prevState.activeStep + 1,
           submitButtonClicked: false

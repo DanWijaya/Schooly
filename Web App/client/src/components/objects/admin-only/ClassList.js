@@ -282,7 +282,7 @@ function ClassList(props) {
   React.useEffect(() => {
     viewClass()
     getTeachers()
-    if(Boolean(all_teachers.length)){
+    if (Boolean(all_teachers.length)) {
       let temp = new Map()
       all_teachers.map((teacher) => temp.set(teacher._id, teacher))
       setTeachersMap(temp);
@@ -291,7 +291,7 @@ function ClassList(props) {
 
   console.log(all_teachers)
   const retrieveClasses = () => {
-    if(classesCollection.all_classes.length > 0) {
+    if (classesCollection.all_classes.length > 0) {
       rows = []
       classesCollection.all_classes.map((data,i) => {
         classItem(data,i)
@@ -357,7 +357,7 @@ function ClassList(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -414,7 +414,7 @@ function ClassList(props) {
     )
   }
 
-  if(user.role === "Student") {
+  if (user.role === "Student") {
     return(
       <div className={classes.root}>
         <Typography variant="h5" align="center" className={classes.title}>

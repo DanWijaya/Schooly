@@ -71,7 +71,7 @@ const StyledListItem = withStyles((theme) => ({
 }))(ListItem);
 
 const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=false) => {
-  if(!isDisabled && linkto) {
+  if (!isDisabled && linkto) {
     return(
         <Link to={linkto}>
           <StyledListItem button disabled={isDisabled}>
@@ -107,15 +107,15 @@ function DrawerContent(props) {
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
-  if(user !== undefined) {
-    if(user.role === "Student")
+  if (user !== undefined) {
+    if (user.role === "Student")
       directedTo = `/kelas/${user.kelas}`
     else
       directedTo = "/daftar-kelas"
   }
 
   let ListItemContents ;
-  if(user.role === "Admin")
+  if (user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
       ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemReactIconsFa}/>, "Pengguna Aktif", null, false],
@@ -134,7 +134,7 @@ function DrawerContent(props) {
       [null, <GrDocumentPerformance className={classes.drawerListItemReactIconsFa} />, "Ujian", "Coming Soon", true],
     ]
 
-    if(user.role === "Teacher") {
+    if (user.role === "Teacher") {
       /*To remove viewclass for teachers*/
       ListItemContents.splice(1,1)
     }
@@ -164,7 +164,7 @@ function SideDrawer(props) {
   const { desktopOpen, mobileOpen, handleDrawerMobile } = props
   const { user } = props.auth;
 
-  if(user.name !== undefined) {
+  if (user.name !== undefined) {
     return(
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">

@@ -44,13 +44,13 @@ import ViewAnnouncement from "./components/objects/announcement/ViewAnnouncement
 import AnnouncementList from "./components/objects/announcement/AnnouncementList";
 //Task
 import CreateTask from "./components/objects/tasks/CreateTask";
-import CreateTaskV2 from "./components/objects/tasks/CreateTask";
 import EditTask from "./components/objects/tasks/EditTask";
-import EditTaskV2 from "./components/objects/tasks/EditTask";
 import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
 import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
+//Assessment
+import CreateAssessment from "./components/objects/assessment/CreateAssessment";
 //Admin Only
 import ClassList from "./components/objects/admin-only/ClassList";
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
@@ -180,6 +180,8 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
                     <PrivateRoute exact path="/daftar-tugas" component={TaskList} />
+                    {/* Route Assessment - Prototype  */}
+                    <PrivateRoute exact access={["Teacher"]} path="/kuis" component={CreateAssessment} />
                     {/* Route Admin-Only  */}
                     <PrivateRoute exact access={["Admin"]} path="/daftar-kelas" component={ClassList} />
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
@@ -187,21 +189,14 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/daftar-mata-pelajaran" component={SubjectList} />
                     {/* Not Found  */}
                     <Route
-                    exact path="/tidak-ditemukan"
+                      exact path="/tidak-ditemukan"
                       render={(props) => (
                         <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
                       )}
                     />
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
-                  <div
-                    style={{
-                      width: "100%",
-                      marginTop: "150px",
-                    }}
-                  >
-                    <Footer/>
-                  </div>
+                  <Footer/>
                 </div>
               </div>
             </Router>

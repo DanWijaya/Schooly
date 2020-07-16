@@ -66,7 +66,7 @@ function MaterialListToolbar(props) {
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Kelas yang diberikan" },
   ];
 
-  if(role === "Student") {
+  if (role === "Student") {
     headCells.pop()
   }
 
@@ -307,13 +307,13 @@ function MaterialList(props) {
   React.useEffect(() => {
     let materialsRetrieved = []
 
-    if(user.role === "Admin"){
+    if (user.role === "Admin") {
       materialsRetrieved = all_materials
       getAllMaterials()
     }
     else {
       materialsRetrieved = selectedMaterials;
-      if(user.role === "Teacher"){
+      if (user.role === "Teacher") {
         getMaterial(user.id, "by_author")
       }
       else { // for student
@@ -340,11 +340,11 @@ function MaterialList(props) {
     console.log(retrieved_users)
     // If all_materials is not undefined or an empty array
     rows = []
-    if(user.role === "Admin") {
+    if (user.role === "Admin") {
       all_materials.map((data) => { materialRowItem(data)})
     }
     else {
-      if(selectedMaterials.length) {
+      if (selectedMaterials.length) {
         selectedMaterials.map((data) => materialRowItem(data))
       }
     }
@@ -377,7 +377,7 @@ function MaterialList(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -530,8 +530,8 @@ function MaterialList(props) {
                           <Typography variant="body1" gutterBottom>
                             <b>Kelas yang Diberikan:</b> {!selectedClasses.size ? null :
                               row.class_assigned.map((kelas,i) => {
-                                if(Boolean(selectedClasses.get(kelas))){
-                                  if(i === row.class_assigned.length - 1)
+                                if (Boolean(selectedClasses.get(kelas))) {
+                                  if (i === row.class_assigned.length - 1)
                                     return (`${selectedClasses.get(kelas).name}`)
                                   return (`${selectedClasses.get(kelas).name}, `)}
                                 })

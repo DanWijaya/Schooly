@@ -13,8 +13,8 @@ module.exports = function validateTaskInput(data) {
 
     console.log(data.description, "Description")
     
-    if(!isEmpty(data.grade)){
-        if(data.grade > 100 || data.grade < 0){
+    if (!isEmpty(data.grade)) {
+        if (data.grade > 100 || data.grade < 0) {
             errors = { grade : "Nilai harus diantara 0 dan 100"}
         }
         return {
@@ -26,16 +26,16 @@ module.exports = function validateTaskInput(data) {
         errors.name = "Nama tugas belum diisi"
     }
 
-    if(Validator.isEmpty(data.subject)){
+    if (Validator.isEmpty(data.subject)) {
         errors.subject = "Mata Pelajaran belum diisi"
     }
-    if(Validator.isEmpty(data.description)) {
+    if (Validator.isEmpty(data.description)) {
         errors.description = "Deskripsi belum diisi"
     }
-    if(Validator.isEmpty(data.deadline)){
+    if (Validator.isEmpty(data.deadline)) {
         errors.deadline = "Batas waktu belum diisi"
     }
-    if(!data.class_assigned.length) {
+    if (!data.class_assigned.length) {
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
 

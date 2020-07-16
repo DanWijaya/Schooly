@@ -14,7 +14,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SortIcon from "@material-ui/icons/Sort";
-import { FaChalkboardTeacher, FaUserCheck, FaUserClock  } from "react-icons/fa";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -241,9 +240,10 @@ function ManageUsers(props) {
       data.tanggal_lahir,
       data.address
     )
-    if(data.role === "Student"){
+    if (data.role === "Student") {
       student_rows.push(temp)
-    }else if(data.role === "Teacher"){
+    }
+    else if (data.role === "Teacher") {
       teacher_rows.push(temp)
     }
   }
@@ -262,12 +262,12 @@ function ManageUsers(props) {
   }
 
   const handleRequestSort = (event, property, role) => {
-    if(role === "Student"){
+    if (role === "Student") {
       const isAsc = orderBy_student === property && order_student === "asc";
       setOrderStudent(isAsc ? "desc" : "asc");
       setOrderByStudent(property);
     }
-    else if(role === "Teacher"){
+    else if (role === "Teacher") {
       const isAsc = orderBy_teacher === property && order_teacher === "asc";
       setOrderTeacher(isAsc ? "desc" : "asc");
       setOrderByTeacher(property);
@@ -340,7 +340,7 @@ function ManageUsers(props) {
     setOpenApproveDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -397,7 +397,7 @@ function ManageUsers(props) {
     )
   }
 
-  function ApproveDialog(){
+  function ApproveDialog() {
     return(
       <Dialog
         open={openApproveDialog}

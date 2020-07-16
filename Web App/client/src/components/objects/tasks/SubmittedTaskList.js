@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DescriptionIcon from "@material-ui/icons/Description";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -49,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "white",
       color: "#61BD4F"
     },
-  },
-  otherFileTypeIcon: {
-    backgroundColor: theme.palette.primary.dark
   },
   downloadAllButton: {
     backgroundColor: theme.palette.primary.main,
@@ -252,7 +248,7 @@ function SubmittedTaskList(props) {
     viewOneTask(task_id)
     getStudents()
     viewClass()
-    if(success){
+    if (success) {
       handleOpenAlert()
     }
   }, [tasksCollection._id, success])
@@ -269,11 +265,11 @@ function SubmittedTaskList(props) {
   };
 
   const onDownloadFile = (id, fileCategory = "none") => {
-    if(fileCategory === "lampiran")
+    if (fileCategory === "lampiran")
       downloadTugas(id)
-    else if(fileCategory === "lampiran/bulk"){
+    else if (fileCategory === "lampiran/bulk") {
       console.log(id)
-      for (var i = 0; i < id.length; i++){
+      for (var i = 0; i < id.length; i++) {
         downloadTugas(id[i])
       }
     }
@@ -281,7 +277,7 @@ function SubmittedTaskList(props) {
   }
 
   const onPreviewFile = (id, fileCategory = "none") => {
-    if(fileCategory === "lampiran")
+    if (fileCategory === "lampiran")
       previewTugas(id)
     else
       console.log("File Category is not specified")
@@ -297,7 +293,7 @@ function SubmittedTaskList(props) {
     console.log(taskId, gradingData)
     let gradeStatusMap = gradeStatus
 
-    if(grade.has(studentId)){
+    if (grade.has(studentId)) {
       gradeStatusMap.set(studentId, "Graded")
       setGradeStatus(gradeStatusMap)
       viewOneTask(task_id)
@@ -329,17 +325,18 @@ function SubmittedTaskList(props) {
   }
 
   let temp = new Map()
-  if(all_classes.length){
+  if (all_classes.length) {
     all_classes.map((kelas) => temp.set(kelas._id, kelas))
   }
 
   const listClassTab = () => {
     let class_assigned = []
-    if(!tasksCollection.class_assigned){
+    if (!tasksCollection.class_assigned) {
       return null;
-    }else {
-      if(temp.size){
-        for (var i = 0; i < tasksCollection.class_assigned.length; i++){
+    }
+    else {
+      if (temp.size) {
+        for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
           class_assigned.push(<Tab label={temp.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
         }
         return(
@@ -359,22 +356,23 @@ function SubmittedTaskList(props) {
 
   const listClassTabPanel = () => {
     let TabPanelList = []
-    if( !tasksCollection.class_assigned || !all_students){
+    if (!tasksCollection.class_assigned || !all_students) {
       return null
-    } else{
+    }
+    else {
       let student_task_files_id; // to handle the download all, this is needed.
-      for(var i = 0; i < tasksCollection.class_assigned.length; i++){
+      for(var i = 0; i < tasksCollection.class_assigned.length; i++) {
         let students_in_class = [];
-        for(var j = 0; j < all_students.length; j++){
+        for(var j = 0; j < all_students.length; j++) {
           // check if the id of the class is the same or not (means student is inside)
           student_task_files_id = []
-          if(all_students[j].kelas === tasksCollection.class_assigned[i]){
+          if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
             let student = all_students[j]
             let student_task = all_students[j].tugas
             let task_list_on_panel = []
-            for( var k = 0; k < student_task.length; k++){
+            for( var k = 0; k < student_task.length; k++) {
               let task = student_task[k]
-              if(student_task[k].for_task_object === task_id){
+              if (student_task[k].for_task_object === task_id) {
                 student_task_files_id.push(task.id)
                 task_list_on_panel.push(
                 <WorkFile

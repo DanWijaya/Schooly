@@ -13,7 +13,7 @@ export const createTask = (formData, taskData, history) => dispatch => {
             type: GET_ERRORS,
             payload: false
         })
-        if(formData.has('lampiran_tugas'))
+        if (formData.has('lampiran_tugas'))
             return axios.post(`/api/uploads/upload_lampiran/${res.data._id}`, formData);
         else // Must return something, if false it won't continue to the next "then"
             return "Successfully created task with no lampiran"
@@ -84,7 +84,7 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
             type: GET_ERRORS,
             payload: false
         })
-        if(lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
+        if (lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
             return axios.delete(`/api/uploads/lampiran/${taskId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         else
             return "No lampiran file is going to be deleted"
@@ -93,7 +93,7 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
     .then(res => {
         console.log("Update the lampiran files, upload some new lampiran files")
         console.log(formData.has("lampiran_tugas"), formData.getAll("lampiran_tugas"))
-        if(formData.has('lampiran_tugas'))
+        if (formData.has('lampiran_tugas'))
             return axios.post(`/api/uploads/upload_lampiran/${taskId}`, formData);
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"

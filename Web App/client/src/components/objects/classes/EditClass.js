@@ -7,7 +7,6 @@ import { clearErrors } from "../../../actions/ErrorActions"
 import { setCurrentClass, updateClass } from "../../../actions/ClassActions";
 import { Button, Divider, FormControl, FormHelperText, MenuItem, Grid, Select, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import ErrorIcon from "@material-ui/icons/Error";
 
 const styles = (theme) => ({
   root: {
@@ -23,28 +22,6 @@ const styles = (theme) => ({
       width: "100%",
       height: "1px",
     },
-  },
-  mainGrid: {
-    width: "450px",
-    padding: "30px",
-  },
-  gridItem: {
-    width: "350px",
-  },
-  formTitle: {
-    textAlign: "center",
-    marginBottom: "30px",
-  },
-  inputField: {
-    width: "400px",
-  },
-  inputLabel: {
-    color: theme.palette.primary.main,
-    fontSize: "15px",
-  },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px"
   },
   editClassButton: {
     width: "100%",
@@ -81,7 +58,7 @@ class EditClass extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.walikelas)
-    switch(otherfield){
+    switch(otherfield) {
       case "bendahara":
         this.setState({ bendahara: e.target.value})
         break;
@@ -109,19 +86,19 @@ class EditClass extends Component {
 
     const {kelas} = nextProps.classesCollection
     //classesCollection.kelas = individual class, .all_classes = all classes
-    // if(kelas.ketua_kelas)
+    // if (kelas.ketua_kelas)
     //   next_ketua_kelas = kelas.ketua_kelas
 
-    // if(kelas.sekretaris)
+    // if (kelas.sekretaris)
     //   next_sekretaris = kelas.sekretaris
 
-    // if(kelas.bendahara)
+    // if (kelas.bendahara)
     //   next_bendahara = kelas.bendahara
 
-    // if(kelas.walikelas)
+    // if (kelas.walikelas)
     //   next_walikelas = kelas.walikelas
 
-    if(Boolean(kelas)){
+    if (Boolean(kelas)) {
       this.setState({
         name: kelas.name,
         nihil: kelas.nihil,
@@ -169,9 +146,9 @@ class EditClass extends Component {
     var student_options = students_by_class
 
     const returnId = (user, arr) => {
-      if(arr === "student") {
+      if (arr === "student") {
         for (var i = 0; i < student_options.length; i++) {
-          if(student_options[i]._id === user._id){
+          if (student_options[i]._id === user._id) {
             return user._id
           }
         }
@@ -179,7 +156,7 @@ class EditClass extends Component {
       else {
         for (var i = 0; i < teacher_options.length; i++) {
           // console.log(student_options[i]._id)
-          if(teacher_options[i]._id === user._id){
+          if (teacher_options[i]._id === user._id) {
             return user._id
           }
         }
@@ -204,7 +181,7 @@ class EditClass extends Component {
 
     document.title = "Schooly | Sunting Kelas";
     console.log(this.state.walikelas)
-    if(user.role === "Teacher" || user.role === "Admin") {
+    if (user.role === "Teacher" || user.role === "Admin") {
       return(
         <div className={classes.root}>
           <Paper>

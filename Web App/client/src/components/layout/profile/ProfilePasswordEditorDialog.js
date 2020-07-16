@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Dialog, Grid, IconButton, List, ListItem, Typography } from "@material-ui/core";
+import { Button, Dialog, Grid, IconButton, List, ListItem, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import LockIcon from "@material-ui/icons/Lock";
@@ -13,6 +12,9 @@ import { clearErrors} from "../../../actions/ErrorActions"
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "15px",
+  },
+  content: {
+    padding: "0px 10px 0px 10px",
   },
   changePasswordCaution: {
     color: "#A9A9A9",
@@ -27,10 +29,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px"
-  },
 }));
 
 function EditPasswordField(props) {
@@ -38,25 +36,21 @@ function EditPasswordField(props) {
   const classes = useStyles();
 
   return(
-    <ListItem>
-        <Grid container alignItems="center">
-          <Grid item xs={6}>
-            <Typography variant="subtitle2">
-              {props.edit_password_requirement}
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <OutlinedTextField
-            on_change={on_change}
-            id={id}
-            value={value}
-            span_classname={classes.errorInfo}
-            html_for="password_lama"
-            error1 = {errors}
-            type="password"/>
-          </Grid>
-        </Grid>
-    </ListItem>
+    <Grid item>
+      <Typography component="label" for={id} variant="caption" color="primary">
+        {props.edit_password_requirement}
+      </Typography>
+      <TextField
+        fullWidth
+        variant="outlined"
+        id={id}
+        onChange={on_change}
+        value={value}
+        error={Boolean(errors)}
+        type="password"
+        helperText={errors}
+      />
+    </Grid>
   )
 }
 
@@ -71,7 +65,7 @@ function ProfilePasswordEditorDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    if(success){
+    if (success) {
       handleOpenAlert()
     }
   }, [success])
@@ -98,7 +92,7 @@ function ProfilePasswordEditorDialog(props) {
   }
 
   const onChange = e => {
-    if(Object.keys(errors).length)
+    if (Object.keys(errors).length)
       clearErrors()
 
     switch(e.target.id) {
@@ -142,7 +136,7 @@ function ProfilePasswordEditorDialog(props) {
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item style={{marginBottom: "10px"}}>
+          <Grid item className={classes.content} style={{marginBottom: "15px"}}>
             <Typography variant="h6" align="center" gutterBottom>
               <b>Ganti Kata Sandi</b>
             </Typography>
@@ -150,8 +144,8 @@ function ProfilePasswordEditorDialog(props) {
                Kata sandi adalah informasi pribadi yang tidak boleh diketahui oleh orang lain.
             </Typography>
           </Grid>
-          <form onSubmit={onSubmit} style={{width: "100%"}}>
-            <List>
+          <form onSubmit={onSubmit} className={classes.content}>
+            <Grid container direction="column" spacing={2}>
               <EditPasswordField
                 id="old_password"
                 errors={errors.old_password}
@@ -173,7 +167,7 @@ function ProfilePasswordEditorDialog(props) {
                 errors={errors.new_password}
                 edit_password_requirement="Konfirmasi kata sandi baru"
               />
-            </List>
+            </Grid>
             <Grid container justify="center" style={{marginTop: "15px"}}>
               <Button
                 type="submit"

@@ -11,7 +11,7 @@ router.post("/create", (req,res) => {
 
     const { errors, isValid} = validateMaterialInput(req.body);
     console.log(errors)
-    if(!isValid) {
+    if (!isValid) {
         console.log(errors)
         return res.status(400).json(errors);
     }
@@ -20,7 +20,7 @@ router.post("/create", (req,res) => {
     let class_assigned = req.body.class_assigned;
     let class_assigned_ids = []
 
-    if(class_assigned.length > 0){
+    if (class_assigned.length > 0) {
         class_assigned.map((kelas) =>
          class_assigned_ids.push(kelas._id))
     }
@@ -45,10 +45,10 @@ router.post("/create", (req,res) => {
 })
 
 router.post("/update/:id", (req,res) => {
-    
+
     const { errors, isValid } = validateMaterialInput(req.body);
 
-    if(!isValid){
+    if (!isValid) {
         console.log("Not valid lahhh");
         return res.status(400).json(errors);
     }
@@ -58,9 +58,9 @@ router.post("/update/:id", (req,res) => {
 
     console.log(req.body);
     Material.findById(id, (err, materialData) => {
-        if(!materialData)
+        if (!materialData)
             return res.status(404).send("material data is not found");
-        else{
+        else {
             materialData.name = req.body.name;
             materialData.subject = req.body.subject;
             materialData.description = req.body.description;
@@ -79,7 +79,7 @@ router.get("/viewOne/:id", (req,res) => {
     console.log("view one is runned")
     let id = req.params.id;
     Material.findById(id, (err, materialData) => {
-        if(!materialData)
+        if (!materialData)
             return res.status(404).send("material data is not found");
         else {
             console.log("materialnya yang ini: ", materialData)
@@ -91,9 +91,9 @@ router.get("/viewOne/:id", (req,res) => {
 //Define View classes route
 router.get("/viewall", (req, res) => {
     Material.find({}).then((materials, err) => {
-        if(!materials)
+        if (!materials)
             return res.status(400).json("materials are not found");
-        else 
+        else
             return res.json(materials);
     })
 })
@@ -104,7 +104,7 @@ router.get("/viewByClass/:id", (req,res) => {
     console.log("View Material by class is runned")
     // if want to get the MongoDB object that has id element in the array.
     Material.find({ class_assigned: id }, (err, materials) => {
-        if(!materials){
+        if (!materials) {
             console.log("Not found")
             return res.status(400).json("material with that class is not found");
         }
@@ -118,7 +118,7 @@ router.get("/viewByAuthor/:id", (req,res) => {
     console.log("View material by author is runned")
 
     Material.find({ author_id: id}, (err, materials) => {
-        if(!materials){
+        if (!materials) {
             console.log("Not found")
             return res.status(400).json("Material with that author_id is not found in DB");
         }
@@ -131,9 +131,10 @@ router.get("/viewByAuthor/:id", (req,res) => {
 router.delete("/delete/:id", (req, res) => {
     Material.findByIdAndRemove(req.params.id)
         .then((materials, err) => {
-            if(!materials) {
+            if (!materials) {
                 res.status(400).json(err);
-            } else {
+            }
+            else {
                 res.json(materials);
             }
         })

@@ -180,7 +180,7 @@ class Dashboard extends Component {
     const { user} = this.props.auth;
 
     viewTask()
-    if(user.role === "Student")
+    if (user.role === "Student")
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
     this.intervalID = setInterval(
       () => this.tick(),
@@ -215,16 +215,17 @@ class Dashboard extends Component {
     const { selectedClasses } = this.props.classesCollection
 
     let tasksByClass = []
-    if(Boolean(tasksCollection.length)) {
-      if(user.role === "Student"){
+    if (Boolean(tasksCollection.length)) {
+      if (user.role === "Student") {
         tasksCollection.map((task) => {
           let class_assigned = task.class_assigned
-          for (var i = 0; i < class_assigned.length; i++){
-            if(class_assigned[i]._id === user.kelas)
+          for (var i = 0; i < class_assigned.length; i++) {
+            if (class_assigned[i]._id === user.kelas)
               tasksByClass.push(task)
           }
         })
-      } else if(user.role === "Teacher"){
+      }
+      else if (user.role === "Teacher") {
         // For Teacher
         console.log("Ini untuk guru")
       }
@@ -347,7 +348,7 @@ class Dashboard extends Component {
                 {tasksByClass.map((task) => {
                   let workStatus = "Belum Dikumpulkan"
                   for(var i = 0; i < all_user_files.length; i++) {
-                    if(all_user_files[i].for_task_object === task._id){
+                    if (all_user_files[i].for_task_object === task._id) {
                       workStatus = "Telah Dikumpulkan"
                       return null;
                     }

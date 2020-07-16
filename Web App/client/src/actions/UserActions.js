@@ -57,7 +57,7 @@ export const updateUserData = (userData, userId, history) => dispatch => {
 }
 
 export const updateAvatar = (userData, userId, formData) => dispatch => {
-  if(Boolean(userData.avatar)) {
+  if (Boolean(userData.avatar)) {
     axios.delete(`/api/uploads/image/${userData.avatar}`)
       .then(res => {
         return axios
@@ -126,7 +126,7 @@ export const loginUser = (userData) => dispatch => {
       // Decode token to get user data
       const decoded = jwt_decode(token);
       // Set current user
-      // if(decoded.role === "Student"){
+      // if (decoded.role === "Student") {
       //   console.log("HEHE")
       //   dispatch(setCurrentClass(decoded.kelas))
       // }
@@ -151,7 +151,7 @@ export const logoutUser = () => dispatch => {
   console.log("test")
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
-  // if(history !== undefined)
+  // if (history !== undefined)
   //   history.push("/masuk")
   window.location.href ="./masuk"
 };

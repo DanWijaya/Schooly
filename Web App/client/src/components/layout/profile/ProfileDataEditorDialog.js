@@ -6,7 +6,6 @@ import "date-fns";
 import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../actions/UserActions";
 import { clearErrors} from "../../../actions/ErrorActions";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
 import { Avatar, Button, Box, Dialog, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
@@ -55,10 +54,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-  },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px",
   },
 }));
 
@@ -144,7 +139,7 @@ function ProfileDataEditorDialog(props) {
   };
   const handleClose = (simpan) => {
     console.log(simpan)
-    if(simpan !== "simpan")
+    if (simpan !== "simpan")
       setDataProfil(defaultUserData)
     clearErrors()
     setOpen(false);
@@ -204,7 +199,7 @@ function ProfileDataEditorDialog(props) {
     //   uni_impian: dataProfil.uni_impian
     // }
 
-    if(!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
+    if (!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
       props.handleOpenAlert()
 
     updateUserData(dataProfil, userId, props.history)

@@ -8,7 +8,7 @@ import { viewTask, deleteTask } from "../../../actions/TaskActions";
 import { viewClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, ListItem, ListItemText, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
+   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -65,7 +65,7 @@ function TaskListToolbar(props) {
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
-  if(role === "Student") {
+  if (role === "Student") {
     // Don't include the class_assigned basically.
     headCells.pop()
   }
@@ -308,7 +308,7 @@ function TaskList(props) {
   React.useEffect(() => {
     viewTask()
     viewClass()
-    if(all_classes.length){
+    if (all_classes.length) {
       let temp = new Map()
       all_classes.map((kelas) => temp.set(kelas._id, kelas))
       setClassesMap(temp);
@@ -318,19 +318,19 @@ function TaskList(props) {
 
   const retrieveTasks = () => {
     // If tasksCollection is not undefined or an empty array
-    if(tasksCollection.length) {
+    if (tasksCollection.length) {
       rows = []
-      if(user.role === "Teacher") {
+      if (user.role === "Teacher") {
       tasksCollection.map((data) => {
-        if(data.person_in_charge_id === user.id) {
+        if (data.person_in_charge_id === user.id) {
           taskRowItem(data)
           }
         })
       }
-      else if (user.role === "Student"){
+      else if (user.role === "Student") {
         tasksCollection.map((data) => {
           let class_assigned = data.class_assigned;
-          if(class_assigned.indexOf(user.kelas) !== -1){
+          if (class_assigned.indexOf(user.kelas) !== -1) {
             taskRowItem(data)
           }
         })
@@ -370,7 +370,7 @@ function TaskList(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -533,7 +533,7 @@ function TaskList(props) {
                           <Typography variant="body1" gutterBottom>
                             <b>Kelas yang Ditugaskan:</b> {!classes_map.size ? null :
                              row.class_assigned.map((id,i) => {
-                              if(i === row.class_assigned.length - 1)
+                              if (i === row.class_assigned.length - 1)
                                 return (`${classes_map.get(id).name}`)
                               return (`${classes_map.get(id).name}, `)})
                             }

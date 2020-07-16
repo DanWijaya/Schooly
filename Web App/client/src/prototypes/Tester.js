@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import { AppBar, Button, Divider, FormControl, Grid, IconButton, InputAdornment, Link, MenuItem, Paper, OutlinedInput, Select, TextField, Toolbar, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const styles = (theme) => ({
   root: {
@@ -29,7 +26,6 @@ class Tester extends Component {
 
     return(
       <div style={{display: "flex", margin: "auto", flexDirection: "column"}}>
-        <TextField variant="outlined" /><Select variant="outlined" />
       </div>
     )
   }

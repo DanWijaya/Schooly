@@ -337,7 +337,7 @@ function SubjectList(props) {
   const handleOpenFormDialog = (e, id, name, action="create") => {
     e.stopPropagation();
     setOpenFormDialog(true);
-    if(action === "edit"){
+    if (action === "edit") {
         setSelectedTaskId(id)
         setSelectedSubjectName(name)
     }
@@ -362,7 +362,7 @@ function SubjectList(props) {
     createSubject(subject)
   }
 
-  function FormDialog(){
+  function FormDialog() {
     return(
       <Dialog
         open={openFormDialog}
@@ -420,7 +420,7 @@ function SubjectList(props) {
       </Dialog>)
   }
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}

@@ -384,7 +384,7 @@ function ViewTaskStudent(props) {
         />
       )
     }
-    if(temp.length !== tasksContents.length) {
+    if (temp.length !== tasksContents.length) {
       console.log("tasks added")
       setTaskContents(temp);
     }
@@ -394,7 +394,7 @@ function ViewTaskStudent(props) {
   // For upload, showing file names before submitting
   const listFileChosen = () => {
     let temp = []
-    if(!fileTugas) {
+    if (!fileTugas) {
       temp.push(
         <Typography className={classes.workChosenFile}>
           Kosong
@@ -442,18 +442,18 @@ function ViewTaskStudent(props) {
   }
 
   const onDownloadFile = (id, fileCategory="none") => {
-    if(fileCategory === "tugas")
+    if (fileCategory === "tugas")
       downloadTugas(id)
-    else if(fileCategory === "lampiran")
+    else if (fileCategory === "lampiran")
       downloadLampiran(id)
     else
       console.log("File Category is not specified")
   }
 
   const onPreviewFile = (id, fileCategory="none") => {
-    if(fileCategory === "tugas")
+    if (fileCategory === "tugas")
       previewTugas(id)
-    else if(fileCategory === "lampiran")
+    else if (fileCategory === "lampiran")
       previewLampiran(id)
     else
       console.log("File Category is not specified")
@@ -470,7 +470,7 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -536,7 +536,7 @@ function ViewTaskStudent(props) {
     setOpenUploadDialog(false);
   };
 
-  function UploadDialog(){
+  function UploadDialog() {
     return(
       <Dialog open={openUploadDialog}>
         <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>

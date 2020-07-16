@@ -166,7 +166,7 @@ function AssignmentListItem(props) {
   )
 }
 
-function MaterialListitem(props){
+function MaterialListitem(props) {
   const classes = useStyles()
 
   return(
@@ -270,28 +270,28 @@ function ViewClass(props) {
   let tasksByClass = []
   console.log(props.classesCollection)
   // All actions to retrive datas from Database
-  if(Boolean(tasksCollection.length)){
+  if (Boolean(tasksCollection.length)) {
     tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
-      for (var i = 0; i < class_assigned.length; i++){
-        if(class_assigned[i]._id === classId)
+      for (var i = 0; i < class_assigned.length; i++) {
+        if (class_assigned[i]._id === classId)
           tasksByClass.push(task)
       }
     })
   }
 
   React.useEffect(() => {
-    if(Object.keys(kelas).length === 0){
+    if (Object.keys(kelas).length === 0) {
       setCurrentClass(classId) // get the kelas object
     }
-    if(user.role === "Student"){
+    if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
     }
     viewTask() // get the tasksCollection
     getAllSubjects() // get the all_subjects
     getStudentsByClass(props.match.params.id) // get the students_by_class
     getTeachers() // get the all_teachers
-    if(Boolean(all_teachers.length)){
+    if (Boolean(all_teachers.length)) {
       let temp = new Map()
       all_teachers.map((teacher) => temp.set(teacher._id, teacher))
       setTeachersMap(temp)
@@ -410,7 +410,7 @@ function ViewClass(props) {
                     )
                     let workStatus = "Belum Dikumpulkan"
                     for(var i = 0; i < all_user_files.length; i++) {
-                      if(all_user_files[i].for_task_object === task._id){
+                      if (all_user_files[i].for_task_object === task._id) {
                         workStatus = "Telah Dikumpulkan"
                         workCategoryAvatar = (
                           <Avatar className={classes.assignmentTurnedIn}>
@@ -477,7 +477,7 @@ function ViewClass(props) {
                   <List className={classes.expansionPanelList}>
                   {!selectedMaterials.length ? null :
                     selectedMaterials.map((material) => {
-                      if(material.subject !== subject.name){
+                      if (material.subject !== subject.name) {
                         return null
                       }
                       let workCategoryAvatar = (
@@ -505,7 +505,7 @@ function ViewClass(props) {
                       )
                       let workStatus = "Belum Dikumpulkan"
                       for(var i =0; i < all_user_files.length; i++) {
-                        if(all_user_files[i].for_task_object === task._id){
+                        if (all_user_files[i].for_task_object === task._id) {
                           workStatus = "Telah Dikumpulkan"
                           workCategoryAvatar = (
                             <Avatar className={classes.assignmentTurnedIn}>
@@ -515,7 +515,7 @@ function ViewClass(props) {
                           break;
                         }
                       }
-                      if(task.subject === subject.name){
+                      if (task.subject === subject.name) {
                         isEmpty = false
                         return(
                           <AssignmentListItem

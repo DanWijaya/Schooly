@@ -8,7 +8,7 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Fab, Grid, Hidden, List, ListItem, ListItemText, Paper, Toolbar, Typography } from "@material-ui/core";
+import { Fab, Grid, Hidden, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -92,17 +92,17 @@ function AnnouncementList(props) {
 
   console.log(retrieved_users)
   React.useEffect(() => {
-    if(user.role === "Teacher" && !annIsRetrieved){
+    if (user.role === "Teacher" && !annIsRetrieved) {
       getAnnouncement(user.id, "by_author")
       setAnnIsRetrieved(true)
     }
-    else if(user.role === "Student" && !annIsRetrieved){
+    else if (user.role === "Student" && !annIsRetrieved) {
       getAnnouncement(user.kelas, "by_class")
       setCurrentClass(user.kelas)
       setAnnIsRetrieved(true)
     }
     console.log(selectedAnnouncements.length)
-    if(selectedAnnouncements.length){
+    if (selectedAnnouncements.length) {
       let author_id_set = new Set();
       selectedAnnouncements.map((ann) => {
         author_id_set.add(ann.author_id)
@@ -119,7 +119,7 @@ function AnnouncementList(props) {
   const listAnnouncements = () => {
     let annList = [];
     // let announcements = selectedAnnouncements.reverse()
-    for(var i = selectedAnnouncements.length-1; i >= 0; i--){
+    for(var i = selectedAnnouncements.length-1; i >= 0; i--) {
       console.log()
       annList.push(
         <AnnouncementItemList
@@ -137,7 +137,7 @@ function AnnouncementList(props) {
 
   const canAnnounce = () => {
     console.log(user.role)
-    if(Object.keys(kelas).length > 0){
+    if (Object.keys(kelas).length > 0) {
       return user.id === kelas.ketua_kelas
     }
     return user.role === "Teacher"

@@ -11,16 +11,16 @@ const Class = require("../../models/Class")
 router.post("/create", (req, res) => {
 
     const { errors, isValid } = validateTaskInput(req.body)
-    if(!isValid) { 
+    if (!isValid) {
         console.log("Not Valid");
         return res.status(400).json(errors);
     }
     Task.findOne({ name: req.body.name, subject: req.body.subject})
-        .then(task => { 
-        if(task) {
+        .then(task => {
+        if (task) {
             return res.status(400).json({ name: "tasks with same name and subject already exist"});
         }
-        
+
         else {
             const newTask = new Task({
             name: req.body.name,
@@ -40,11 +40,11 @@ router.post("/create", (req, res) => {
             }
         });
     });
-            
 
-    
+
+
 router.post("/view", (req, res) => {
-    
+
     // const name = req.body.name;
     // const subject = req.body.subject;
     let id = req.params.id;
@@ -54,7 +54,8 @@ router.post("/view", (req, res) => {
         //Check if task exists
         if (!task) {
             return res.status(404).json({ tasknotfound: "Task not found"});
-        } else {
+        }
+        else {
             const payload = {
                 name : req.body.name,
                 deadline : req.body.deadline,
@@ -62,17 +63,17 @@ router.post("/view", (req, res) => {
                 task_assigned : req.body.task_assigned
                 // submitted : req.body.submitted,
                 }
-            res.json(payload);     
-            }  
+            res.json(payload);
+            }
     });
 });
 
 //Define View classes route
 router.get("/viewall", (req, res) => {
     Task.find({}).then((tasks, err) => {
-        if(!tasks)
+        if (!tasks)
             return res.status(400).json("Tasks are not found");
-        else 
+        else
             return res.json(tasks);
     })
 })
@@ -81,9 +82,10 @@ router.get("/viewall", (req, res) => {
 router.delete("/delete/:id", (req, res) => {
     Task.findByIdAndRemove(req.params.id)
         .then((tasks, err) => {
-            if(!tasks) {
+            if (!tasks) {
                 res.status(400).json(err);
-            } else {
+            }
+            else {
                 res.json(tasks);
             }
         })
@@ -103,20 +105,20 @@ router.post("/update/:id", (req, res) => {
 
     const { errors, isValid } = validateTaskInput(req.body)
 
-    if(!isValid) { 
+    if (!isValid) {
         console.log("Not Valid");
         return res.status(400).json(errors);
     }
-    
+
     let id = req.params.id;
-    
+
     console.log(req.body.name);
     Task.findById(id, (err, taskData) => {
-        if(!taskData)
+        if (!taskData)
             return res.status(404).send("Task data is not found");
-        else{
+        else {
             console.log(grade)
-            if(!grade){
+            if (!grade) {
                 // Untuk taskData yang bukan edit atau kasi nilai
                 taskData.name = req.body.name;
                 taskData.deadine = req.body.deadine;
@@ -124,17 +126,19 @@ router.post("/update/:id", (req, res) => {
                 taskData.class_assigned = req.body.class_assigned;
                 taskData.description = req.body.description;
                 taskData.deadline = req.body.deadline;
-            } else{
+            }
+            else {
                 // untuk yang kasi nilai
-                if(!taskData.grades){
+                if (!taskData.grades) {
                     let gradeMap = new Map()
                     gradeMap.set(req.body.studentId, grade)
                     taskData.grades = gradeMap
                     console.log(gradeMap, taskData.grades)
-                }else{
+                }
+                else {
                     taskData.grades.set(req.body.studentId,grade)
                 }
-        
+
             }
 
             taskData

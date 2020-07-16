@@ -62,7 +62,8 @@ router.post('/saveresethash', async(req,res) => {
               if (error || !body) {
                 // pas kaloa da masalah dgn Mailgunnya ndak bisa send email
                 result = res.send(JSON.stringify({ problem: 'Terjadi masalah, silahkan coba lagi' }));
-              } else {
+              }
+              else {
                 result = res.send(JSON.stringify({ success: true }));
               }
             });
@@ -90,21 +91,21 @@ router.post('/savepassword', async (req, res) => {
     // If the user exists save their new password
     console.log(req.body.password, "PAssword")
     console.log(req.body)
-    if(Validator.isEmpty(req.body.password)){
+    if (Validator.isEmpty(req.body.password)) {
 
       result = res.send(JSON.stringify({ password_entry: 'Kata sandi baru belum diisi' }))
     }
-    else if(!Validator.isLength(req.body.password, { min: 8, max: 30 })){
+    else if (!Validator.isLength(req.body.password, { min: 8, max: 30 })) {
       result = res.send(JSON.stringify({ password_entry: 'Kata sandi harus terdiri dari 8 hingga 30 karakter' }))
     }
-    else if(!Validator.equals(req.body.password, req.body.password2)){
+    else if (!Validator.equals(req.body.password, req.body.password2)) {
       result = res.send(JSON.stringify({ password_match: 'Konfirmasi kata sandi harus sama' }))
     }
-    else if(minute_difference > 5){
+    else if (minute_difference > 5) {
       console.log("Link has expired (exceed 5 mins)")
       result = res.send(JSON.stringify({ reset_problem: 'Tautan ini sudah tidak berlaku setelah 5 menit' , expired: "yes"}))
-    } else {
-
+    }
+    else {
       // Hash password before saving in database
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(req.body.password, salt, (err, hash) => {
@@ -132,22 +133,23 @@ router.post("/changepassword", (req,res) => {
   const new_password = req.body.new_password;
   const new_password2 = req.body.new_password2;
   console.log(email)
-  if(Validator.isEmpty(req.body.new_password)){
-    if(Validator.isEmpty(req.body.old_password))
+  if (Validator.isEmpty(req.body.new_password)) {
+    if (Validator.isEmpty(req.body.old_password))
       return res.status(404).json({ new_password: 'Kata sandi baru belum diisi',
        old_password: 'Kata sandi saat ini belum diisi' })
 
     return res.status(404).json({ new_password: 'Kata sandi baru belum diisi'})
   }
-  else if(!Validator.isLength(req.body.new_password, { min: 8, max: 30 })){
+  else if (!Validator.isLength(req.body.new_password, { min: 8, max: 30 })) {
     return res.status(404).json({ new_password: 'Kata sandi harus terdiri dari 8 hingga 30 karakter' })
-  } else if(!Validator.equals(new_password, new_password2)){
+  }
+  else if (!Validator.equals(new_password, new_password2)) {
     return res.status(404).json({ new_password: 'Konfirmasi Kata sandi harus sama'})
   }
 
   User.findOne({ email }).then(user => {
 
-    if(!user) {
+    if (!user) {
       return res.status(404).json({ emailnotfound: "Pengguna dengan email ini tidak ditemukan"});
     }
 

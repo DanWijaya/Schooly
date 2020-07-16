@@ -231,9 +231,10 @@ function ManageUsers(props) {
       data.tanggal_lahir,
       data.address
     )
-    if(data.role === "Student"){
+    if (data.role === "Student") {
       student_rows.push(temp)
-    }else if(data.role === "Teacher"){
+    }
+    else if (data.role === "Teacher") {
       teacher_rows.push(temp)
     }
   }
@@ -250,12 +251,12 @@ function ManageUsers(props) {
   }
 
   const handleRequestSort = (event, property, role) => {
-    if(role === "Student"){
+    if (role === "Student") {
       const isAsc = orderBy_student === property && order_student === "asc";
       setOrderStudent(isAsc ? "desc" : "asc");
       setOrderByStudent(property);
     }
-    else if(role === "Teacher"){
+    else if (role === "Teacher") {
       const isAsc = orderBy_teacher === property && order_teacher === "asc";
       setOrderTeacher(isAsc ? "desc" : "asc");
       setOrderByTeacher(property);
@@ -327,7 +328,7 @@ function ManageUsers(props) {
     setOpenDisableDialog(false);
   };
 
-  function DeleteDialog(){
+  function DeleteDialog() {
     return(
       <Dialog
         open={openDeleteDialog}
@@ -384,7 +385,7 @@ function ManageUsers(props) {
     )
   }
 
-  function DisableDialog(){
+  function DisableDialog() {
     return(
       <Dialog
         open={openDisableDialog}

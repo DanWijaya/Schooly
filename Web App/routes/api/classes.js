@@ -12,16 +12,17 @@ const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
     const { errors, isValid } = validateClassInput(req.body);
-    if(!isValid) {
+    if (!isValid) {
         console.log("Not valid");
         return res.status(400).json(errors);
     }
 
     Class.findOne({ name: req.body.name}).then(kelas => {
-        if(kelas) {
+        if (kelas) {
             return res.status(400).json({ name: "Class name already exists"});
 
-        } else {
+        }
+        else {
             const newKelas = new Class({
                 name: req.body.name,
                 walikelas: req.body.walikelas._id,
@@ -39,9 +40,10 @@ router.post("/create", (req, res) => {
 router.get("/view/:id", (req, res) => {
 
     Class.findById(req.params.id).then(kelas => {
-        if(!kelas){
+        if (!kelas) {
             return res.status(400).json("Class does not exist");
-        } else {
+        }
+        else {
             // console.log(kelas);
             res.json(kelas);
         }
@@ -51,7 +53,7 @@ router.get("/view/:id", (req, res) => {
 
 router.get("/viewall", (req, res) => {
     Class.find({ }).then((classes, err) => {
-        if(!classes)
+        if (!classes)
             res.status(400).json(err);
         else
             res.json(classes);
@@ -62,9 +64,10 @@ router.delete("/delete/:id", (req, res) => {
     console.log(req.params.id, " testing woi")
     Class.findByIdAndRemove(req.params.id)
         .then((classes, err) => {
-            if(!classes) {
+            if (!classes) {
                 return res.status(400).json(err);
-            } else {
+            }
+            else {
                 console.log(classes)
                 return res.json("Successfully deleted the class")
             }
@@ -76,7 +79,7 @@ router.get("/setCurrentClass/:id", (req, res) => {
     let id = req.params.id;
     console.log("set Current class is runned", id);
     Class.findById(id, (err, classData) => {
-        if(!classData)
+        if (!classData)
             return res.status(404).json("Class is not found")
 
         return res.json(classData)
@@ -87,34 +90,34 @@ router.get("/viewSelectedClasses/", (req,res) => {
     const {classes_ids} = req.query;
     // console.log(classes_ids)
     let ids_to_find
-    
-    if(classes_ids !== undefined){
+
+    if (classes_ids !== undefined) {
         ids_to_find =  classes_ids.map((id) => new ObjectId(id))
 
     }
     Class.find({_id : { $in : ids_to_find}}, (err, classes) => {
-        if(!classes)
+        if (!classes)
             return res.status(400).json("Class to update not found");
 
         return res.json(classes)
- 
+
     })
 })
-    
+
 
 router.post("/update/:id", (req,res) => {
     let id = req.params.id;
 
     const { errors, isValid } = validateClassInput(req.body);
     console.log(errors)
-    if(!isValid) {
+    if (!isValid) {
         console.log("Not valid");
         return res.status(400).json(errors);
     }
 
     Class.findById(id, (err, classData) => {
 
-        if(!classData){
+        if (!classData) {
             return res.status(400).json("Class to update not found");
         }
         // Initially there is else block
@@ -135,7 +138,7 @@ router.post("/update/:id", (req,res) => {
         // var myPromise = (id) => {
         //     return new Promise((resolve, reject) => {
         //         User.findById(id, (err, user) => {
-        //             if(!user){
+        //             if (!user) {
         //                 reject(err)
         //             } else {
         //                 resolve(user);

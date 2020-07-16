@@ -4,51 +4,49 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createHash, password } from "../../../actions/AuthActions";
-import schoolyLogo from "../../../images/SchoolyLogo.png";
 import authBackground from "../AuthBackground.png";
-import OutlinedTextField from "../../misc/text-field/OutlinedTextField";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    maxWidth: "1000px",
     margin: "auto",
+    maxWidth: "1000px",
+    minHeight: "500px",
+    padding: "10px",
     backgroundImage: `url(${authBackground})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain",
+    backgroundSize: "cover",
+    [theme.breakpoints.up("sm")]: {
+      backgroundSize: "contain",
+    },
   },
-  loginForgotGrid: {
-    maxWidth: "400px",
+  mainPaper: {
+    margin: "auto",
+    maxWidth: "350px",
     padding: "40px",
   },
-  schoolyLogo: {
-    width: "30%",
-    height: "30%",
-    marginBottom: "30px",
-  },
-  infoTitle: {
-    textAlign: "center",
-  },
-  errorInfo: {
-    color: "red",
-    fontSize: "10px",
-  },
-  containedButton: {
-    width: "100%",
+  changePasswordButton: {
     marginTop: "30px",
+    width: "100%",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-  }
+  },
+  resendEmailButton: {
+    marginTop: "30px",
+    width: "100%",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
+  },
 });
 
 class LoginForgot extends Component {
@@ -82,74 +80,67 @@ class LoginForgot extends Component {
   }
 
   render() {
-    const { classes} = this.props;
+    const { classes } = this.props;
 
     const { errors, email } = this.state;
-    const { isPasswordReset} = this.props.passwordMatters;
+    const { isPasswordReset } = this.props.passwordMatters;
 
     document.title = "Schooly | Lupa Akun";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return(
       <div className={classes.root}>
-        <img src={schoolyLogo} className={classes.schoolyLogo} alt="schooly logo" />
-        <Paper>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="space-between"
-            spacing={3}
-            className={classes.loginForgotGrid}
-          >
+        <Paper className={classes.mainPaper}>
+          <Grid container direction="column" spacing={5}>
             {!isPasswordReset ?
-              <Grid item className={classes.infoTitle}>
-                <Typography variant="h6" gutterBottom>
+              <Grid item>
+                <Typography variant="h6" align="center" gutterBottom>
                   <b>Lupa Kata Sandi?</b>
                 </Typography>
-                <Typography variant="body1">
-                  Masukkan email dan nomor telepon anda untuk melanjutkan.
+                <Typography variant="body1" align="center" color="textSecondary">
+                  Masukkan email anda untuk melanjutkan.
                 </Typography>
               </Grid>
               :
-              <Grid item className={classes.infoTitle}>
-                <Typography variant="h6" gutterBottom>
-                  Sebuah email telah dikirimkan ke alamat email yang anda berikan.
+              <Grid item>
+                <Typography variant="h6" align="center" gutterBottom>
+                  <b>Email telah dikirim</b>
                 </Typography>
-                <Typography variant="body1">
-                  <b>Silahkan klik tautan itu untuk melanjutkan mengganti password</b>
+                <Typography variant="body1" align="center" color="textSecondary">
+                  Silahkan buka email tersebut untuk melanjutkan.
                 </Typography>
               </Grid>
             }
-            <Grid item style={{width:"300px"}} >
+            <Grid item>
               {!isPasswordReset ?
                 <form noValidate onSubmit={this.onSubmit}>
-                  <div style={{marginBottom: "20px"}}>
-                    <OutlinedTextField
-                      on_change={this.onChange}
-                      value={email}
-                      id="email"
-                      type="email"
-                      classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
-                      })}
-                      html_for="email"
-                      labelname="Email"
-                      span_classname={classes.errorInfo}
-                      error1={errors.problem}
-                    />
-                  </div>
+                  <label for="email">Email</label>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="email"
+                    onChange={this.onChange}
+                    value={email}
+                    error={Boolean(errors.problem)}
+                    type="email"
+                    helperText={errors.problem}
+                    className={classnames("", {
+                      invalid: errors.email || errors.emailnotfound
+                    })}
+                  />
                   <Button
+                    variant="contained"
                     type="submit"
-                    className={classes.containedButton}
+                    className={classes.changePasswordButton}
                   >
                     Ubah Kata Sandi
                   </Button>
                 </form>
                 :
                 <Button
+                  variant="contained"
                   onClick={() => window.location.reload()}
-                  className={classes.containedButton}
+                  className={classes.resendEmailButton}
                 >
                   Kirim Ulang Email
                 </Button>

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
 import authBackground from "../AuthBackground.png";
-import { Button, Divider, FormControl, FormHelperText, Grid, IconButton, InputAdornment, Link, OutlinedInput, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, Divider, Grid, IconButton, InputAdornment, Link, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
@@ -28,6 +28,15 @@ const styles = (theme) => ({
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
+  },
+  loginButton: {
+    width: "100%",
+    backgroundColor: "#61BD4F",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#61BD4F",
+      color: "white",
+    },
   },
 });
 
@@ -151,11 +160,7 @@ class Login extends Component {
                     <Button
                       variant="contained"
                       type="submit"
-                      style={{
-                        backgroundColor: "#61BD4F",
-                        color: "white",
-                        width: "100%",
-                      }}
+                      className={classes.loginButton}
                     >
                       Masuk
                     </Button>

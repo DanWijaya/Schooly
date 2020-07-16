@@ -134,7 +134,7 @@ function NavBarLoggedInContents(props) {
     </Grid>
   )
 
-  if(isMobileView){
+  if (isMobileView) {
       return renderMobileMenu
   }
   else {

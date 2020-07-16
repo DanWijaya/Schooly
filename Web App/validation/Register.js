@@ -22,20 +22,21 @@ module.exports = function validateRegisterInput(data) {
   // Email checks
   if (Validator.isEmpty(data.email)) {
     errors.email = "Email belum diisi";
-  } else if (!Validator.isEmail(data.email)) {
+  }
+  else if (!Validator.isEmail(data.email)) {
     errors.email = "Email tidak benar";
   }
 
   //Role checks
-  if(Validator.isEmpty(data.role)) {
+  if (Validator.isEmpty(data.role)) {
     errors.role = "Peran belum diisi";
   }
 
   // Check for student class field
-  if(data.role === "Student" && Validator.isEmpty(data.kelas)) {
+  if (data.role === "Student" && Validator.isEmpty(data.kelas)) {
     errors.kelas = "Kelas belum dipilih";
   }
-  if(data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
+  if (data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
     errors.subject_teached = "Mata pelajaran belum dipilih"
   }
 
