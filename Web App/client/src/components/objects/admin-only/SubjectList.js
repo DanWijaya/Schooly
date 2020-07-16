@@ -4,11 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import "moment/locale/id";
-import { createSubject, getAllSubjects, getSubject, deleteSubject } from "../../../actions/SubjectActions";
-import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
+import { createSubject, getAllSubjects, getSubject, editSubject, deleteSubject } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { viewSelectedClasses } from "../../../actions/ClassActions";
-import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, TextField, Typography } from "@material-ui/core/";
@@ -83,16 +80,16 @@ function SubjectListToolbar(props) {
       <div style={{display: "flex"}}>
         <Hidden smUp implementation="css">
             <LightTooltip title="Buat Mata Pelajaran">
-                <Fab size="small" className={classes.newMaterialButton} onClick={handleOpenFormDialog}>
+                <Fab size="small" className={classes.newMaterialButton} onClick={(handleOpenFormDialog)}>
                     <MenuBookIcon className={classes.newMaterialIconMobile} />
                 </Fab>
             </LightTooltip>
         </Hidden>
         <Hidden xsDown implementation="css">
-            <Fab size="medium" variant="extended" className={classes.newMaterialButton} onClick={handleOpenFormDialog}>
-            <LibraryBooksIcon className={classes.newMaterialIconDesktop} />
-            Buat Mata Pelajaran
-            </Fab>
+          <Fab size="medium" variant="extended" className={classes.newMaterialButton} onClick={handleOpenFormDialog}>
+          <LibraryBooksIcon className={classes.newMaterialIconDesktop} />
+          Buat Mata Pelajaran
+          </Fab> 
         </Hidden>
         <LightTooltip title="Urutkan Materi">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
@@ -241,12 +238,30 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  dialogEditButton: {
+    width: "150px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
   dialogCancelButton: {
     width: "150px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
+  dialogCancelEdit: {
+    width: "150px",
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.warning.main,
       color: "white",
     },
   },
@@ -275,11 +290,11 @@ function SubjectList(props) {
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openFormDialog, setOpenFormDialog] = React.useState(null);
-  const [selectedTaskId, setSelectedTaskId] = React.useState(null)
+  const [selectedSubjectId, setSelectedSubjectId] = React.useState(null)
   const [selectedSubjectName, setSelectedSubjectName] = React.useState(null);
-
+  const [action, setAction] = React.useState("");
   const [subject, setSubject ] = React.useState({});
-  const { subjectsCollection, getAllSubjects, clearErrors, createSubject, getSubject, deleteSubject, errors } = props;
+  const { subjectsCollection, getAllSubjects, editSubject, clearErrors, createSubject, deleteSubject, errors } = props;
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
 
@@ -312,7 +327,7 @@ function SubjectList(props) {
     setOrderBy(property);
   };
 
-  // Call the function to view the tasks on tablerows.
+  // Call the function to view the subjects on tablerows.
   // This function is defined above.
   retrieveSubjects()
 
@@ -325,7 +340,7 @@ function SubjectList(props) {
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedTaskId(id)
+    setSelectedSubjectId(id)
     setSelectedSubjectName(name)
   };
 
@@ -334,22 +349,37 @@ function SubjectList(props) {
   };
 
   // Delete Dialog
-  const handleOpenFormDialog = (e, id, name, action="create") => {
+  const handleOpenFormDialog = (e, id, name, isEdit=false) => {
     e.stopPropagation();
+<<<<<<< HEAD
     setOpenFormDialog(true);
     if (action === "edit") {
         setSelectedTaskId(id)
         setSelectedSubjectName(name)
+=======
+    if(isEdit){
+      setSubject((prev) => ({
+        ...prev,
+        name: name,
+        id: id
+      }))
+      setAction("Edit")
+    }else{
+      setAction("Create")
+>>>>>>> e5105955a3afec2574ac70d26eb075910eb9d7e6
     }
+    setOpenFormDialog(true);
   };
 
   const handleCloseFormDialog = () => {
     setOpenFormDialog(false);
+    setSubject({})
     clearErrors()
   };
 
   const onChange = (e) => {
     const { id, value} = e.target;
+    console.log(value)
     setSubject((prev) => ({
         ...prev,
         [id] : value
@@ -358,8 +388,10 @@ function SubjectList(props) {
 
   const onSubmit = (e) => {
     e.preventDefault()
-
-    createSubject(subject)
+    if(action === "Edit")
+      editSubject(subject)
+    else
+      createSubject(subject)
   }
 
   function FormDialog() {
@@ -378,9 +410,15 @@ function SubjectList(props) {
           </Grid>
           <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
           <Grid item container justify="center" spacing={2}>
-            <Typography variant="h6" gutterBottom>
+            {action === "Edit" ? 
+              <Typography variant="h6" gutterBottom>
+                <b>Sunting Mata Pelajaran</b>
+              </Typography> : 
+            action === "Create" ? 
+              <Typography variant="h6" gutterBottom>
               <b>Isi Nama Mata Pelajaran</b>
-            </Typography>
+              </Typography> : 
+              null}
             <TextField
             style={{margin: "20px 10px"}}
             fullWidth
@@ -396,20 +434,29 @@ function SubjectList(props) {
             })}
             />
             <Grid item>
+              {action === "Edit" ? 
               <Button
                 type="submit"
                 startIcon={<LibraryBooksIcon />}
-                className={classes.dialogCreateButton}
+                className={classes.dialogEditButton}
               >
-                Buat
-              </Button>
+                Sunting
+              </Button> : 
+              <Button
+              type="submit"
+              startIcon={<LibraryBooksIcon />}
+              className={classes.dialogCreateButton}
+            >
+              Buat
+            </Button>
+            }
             </Grid>
             <Grid item>
               <Button
                 
                 onClick={handleCloseFormDialog}
                 startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
+                className={action === "Edit" ? classes.dialogCancelEdit : classes.dialogCancelButton}
               >
                 Batal
               </Button>
@@ -455,7 +502,7 @@ function SubjectList(props) {
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteSubject(selectedTaskId) }}
+                onClick={() => { onDeleteSubject(selectedSubjectId) }}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -508,7 +555,7 @@ function SubjectList(props) {
                     </Grid>
                     <Grid item xs container spacing={1} justify="flex-end">
                       <Grid item>
-                        <IconButton size="small" className={classes.editSubjectButton} onClick={(e)=> e.stopPropagation()}>
+                        <IconButton size="small" className={classes.editSubjectButton} onClick={(e)=> handleOpenFormDialog(e,row._id, row.name, true)}>
                             <EditIcon fontSize="small" />
                         </IconButton>
                       </Grid>
@@ -533,9 +580,7 @@ SubjectList.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   createSubject: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  getUsers: PropTypes.func.isRequired,
-  viewSelectedClasses: PropTypes.func.isRequired,
-  classesCollection: PropTypes.object.isRequired,
+  editSubject: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
@@ -549,5 +594,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { deleteSubject, getAllSubjects, getSubject, createSubject, getUsers, viewSelectedClasses, clearErrors }
+  { deleteSubject, getAllSubjects, editSubject, getSubject, createSubject, clearErrors }
 )(SubjectList);

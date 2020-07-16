@@ -18,8 +18,8 @@ router.post("/create", (req, res) => {
     }
 
     Subject.findOne({ name: req.body.name}).then(subject => {
-        if (subject) {
-            return res.status(404).json({ name : "The subject with this name already in Database"})
+        if(subject){
+            return res.status(404).json({ name : "Nama mata pelajaran sudah dipakai"})
 
         }
         else {
@@ -35,6 +35,33 @@ router.post("/create", (req, res) => {
     })
 })
 
+router.post("/edit/:id", (req,res) => {
+    let id = req.params.id;
+
+    const {errors, isValid} = validateSubjectInput(req.body)
+    if(!isValid){
+        return res.status(404).json(errors)
+    }
+
+    Subject.findOne({ name : req.body.name}, (err, subject) => {
+        if(subject){
+            return res.status(404).json({ name : "Nama mata pelajaran sudah dipakai"})
+        } else {
+            Subject.findById(id, (err, subject) => {
+                if(!subject){
+                    return res.status(404).json({ name: "Mata pelajaran tidak ditemukan"})
+                }else{
+                    subject.name = req.body.name;
+
+                    subject
+                        .save()
+                        .then(res.status(200).json("Done with updating subject"))
+                        .catch(console.log("Erorr in updating the subject"))
+                }
+            })
+        }
+    })
+})
 router.get("/view/:id", (req, res) => {
     Subject.findById(req.params.id).then(subject => {
         if (!subject) {
@@ -64,7 +91,7 @@ router.delete("/delete/:id", (req,res) => {
             return res.status(400).json(err);
         else{
             console.log(subject)
-            return res.json(subject);
+            return res.json();
         }
     })
 })
