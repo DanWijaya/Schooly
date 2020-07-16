@@ -347,7 +347,7 @@ function ClassList(props) {
 
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
-    e.stopPropagation();
+    e.preventDefault()
     setOpenDeleteDialog(true);
     setSelectedClassId(id)
     setSelectedClassName(name)
@@ -446,8 +446,8 @@ function ClassList(props) {
               <Grid item xs={12} sm={6} md={4}
                 aria-checked={isItemSelected}
                 selected={isItemSelected}
-                onClick={() => window.location.href = viewpage}
               >
+                <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
                 <Paper button square
                   variant="outlined"
                   className={classes.classPaper}
@@ -494,7 +494,7 @@ function ClassList(props) {
                               horizontal: "left",
                             }}
                           >
-                            <IconButton size="small">
+                            <IconButton size="small" disabled>
                               <SupervisorAccountIcon className={classes.classPersonIcon} />
                             </IconButton>
                           </Badge>
@@ -502,11 +502,10 @@ function ClassList(props) {
                       </Grid>
                       <Grid item>
                         <LightTooltip title="Sunting">
-                          <Link to={`/sunting-kelas/${row._id}`}>
+                          <Link to={`/sunting-kelas/${row._id}`} onClick={(e) => e.stopPropagation()}>
                             <IconButton
                               size="small"
                               className={classes.editClassButton}
-                              onClick={(e) =>  e.stopPropagation()}
                             >
                               <EditIcon fontSize="small" />
                             </IconButton>
@@ -515,19 +514,20 @@ function ClassList(props) {
                       </Grid>
                       <Grid item>
                         <LightTooltip title="Hapus">
+                              
                           <IconButton
                             size="small"
                             className={classes.deleteClassButton}
-                            onClick={(e) =>{ handleOpenDeleteDialog(e, row._id, row.classroom) }}
-                          >
-                            <DeleteIcon fontSize="small" />
+                            onClick={(e) => handleOpenDeleteDialog(e, row._id, row.classroom)}>
+                              <DeleteIcon fontSize="small"/>
                           </IconButton>
                         </LightTooltip>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Paper>
-              </Grid>
+              </Link>
+            </Grid>
             );
           })}
       </Grid>

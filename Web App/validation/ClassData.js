@@ -19,13 +19,16 @@ module.exports = function validateClassInput(data) {
     if(Object.keys(data.walikelas).length == 0){
         errors.walikelas = "Wali kelas belum diisi" 
     }
-    if(data.ukuran <= 0) {
-        errors.ukuran = "Jumlah murid harus bernilai positif"
-    }
-    
+
     if(!Number.isInteger(data.ukuran)){
-        errors.ukuran = "Jumlah murid harus berupa bilangan bulat"
+        if(data.ukuran <= 0) {
+          errors.ukuran = "Jumlah murid harus bernilai positif"
+      } else {
+          errors.ukuran = "Jumlah murid harus berupa bilangan bulat"
+      }
     }
+
+    
     
     return {
         errors, 

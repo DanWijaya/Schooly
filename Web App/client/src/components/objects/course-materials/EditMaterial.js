@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
+import {Link } from "react-router-dom"
 import classnames from "classnames";
 import { viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -408,13 +409,14 @@ class EditMaterial extends Component {
                   <b>Mohon tetap tunggu di halaman ini.</b>
                 </Typography>
               :
+              <Link to={`/materi/${this.props.match.params.id}`}>
                 <Button
                   variant="contained"
-                  href={`/materi/${this.props.match.params.id}`}
                   className={classes.uploadFinishButton}
                 >
                   Selesai
                 </Button>
+                </Link>
               }
             </Grid>
           </Grid>

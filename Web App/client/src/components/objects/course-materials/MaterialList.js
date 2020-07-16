@@ -453,7 +453,7 @@ function MaterialList(props) {
           .map((row, index) => {
             const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = user.role === "Student" ? `/materi/${row._id}` : `/materi/${row._id}`
+            let viewpage = `/materi/${row._id}`
             return(
               <Grid item>
                 {user.role === "Teacher" ?
@@ -486,14 +486,14 @@ function MaterialList(props) {
                         <Grid item xs container spacing={1} justify="flex-end">
                           <Grid item>
                             <LightTooltip title="Lihat Lebih Lanjut">
-                              <IconButton
-                                size="small"
-                                href={viewpage}
-                                className={classes.viewMaterialButton}
-                                onClick={(event) => event.stopPropagation()}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
+                              <Link to={viewpage}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewMaterialButton}
+                                  >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
                             </LightTooltip>
                           </Grid>
                           <Grid item>
@@ -502,7 +502,6 @@ function MaterialList(props) {
                                 <IconButton
                                   size="small"
                                   className={classes.editMaterialButton}
-                                  onClick={(e)=> e.stopPropagation()}
                                 >
                                   <EditIcon fontSize="small" />
                                 </IconButton>
@@ -547,9 +546,9 @@ function MaterialList(props) {
                     </ExpansionPanelDetails>
                   </ExpansionPanel>
                 :
+                <Link to={viewpage}>
                   <Paper
                     button component="a"
-                    href={viewpage}
                     variant="outlined"
                     className={classes.materialPaper}
                   >
@@ -577,6 +576,7 @@ function MaterialList(props) {
                       </Hidden>
                     </div>
                   </Paper>
+                  </Link>
                 }
               </Grid>
             );

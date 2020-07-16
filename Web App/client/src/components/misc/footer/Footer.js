@@ -1,6 +1,7 @@
 import React from "react";
 import schoolySymbolLogo from "../../../images/SchoolySymbolLogo.png";
-import { Divider, Grid, Hidden, Link, Typography } from "@material-ui/core";
+import { Divider, Grid, Hidden, Typography } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,17 +48,17 @@ function Footer() {
           </Grid>
           <Grid item>
             <div className={classes.footerMobileContainer}>
-              <Link href="/bantuan">
+              <Link to="/bantuan">
                 <Typography variant="caption">
                   Bantuan
                 </Typography>
               </Link>
-              <Link href="/tentang-schooly">
+              <Link to="/tentang-schooly">
                 <Typography variant="caption">
                   Tentang Schooly
                 </Typography>
               </Link>
-              <Link href="/kebijakan-penggunaan">
+              <Link to="/kebijakan-penggunaan">
                 <Typography variant="caption">
                   Kebijakan Pengunaan
                 </Typography>
@@ -66,12 +67,12 @@ function Footer() {
           </Grid>
           <Grid item>
             <div className={classes.footerMobileContainer}>
-              <Link href="mailto:schoolysystem@gmail.com">
+              <Link to="mailto:schoolysystem@gmail.com">
                 <Typography variant="caption">
                   Hubungi Kami
                 </Typography>
               </Link>
-              <Link href="http://www.instagram.com">
+              <Link to="http://www.instagram.com">
                 <Typography variant="caption">
                   Instagram
                 </Typography>
@@ -88,12 +89,12 @@ function Footer() {
               Schooly System
             </Grid>
             <Grid item>
-              <Link href="/bantuan">
+              <Link to="/bantuan">
                 Bantuan
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/kebijakan-penggunaan">
+              <Link to="/kebijakan-penggunaan">
                 Kebijakan Pengunaan
               </Link>
             </Grid>
@@ -101,19 +102,19 @@ function Footer() {
           <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolDesktop} />
           <Grid container spacing={2} justify="flex-end" className={classes.content}>
             <Grid item>
-              <Link href="/tentang-schooly">
+              <Link to="/tentang-schooly">
                 Tentang Schooly
               </Link>
             </Grid>
             <Grid item>
-              <Link href="mailto:schoolysystem@gmail.com">
+              <a href="mailto:schoolysystem@gmail.com">
                 Hubungi Kami
-              </Link>
+              </a>
             </Grid>
             <Grid item>
-              <Link href="http://www.instagram.com" target="_blank">
+              <a href="http://www.instagram.com">
                 Instagram
-              </Link>
+              </a>
             </Grid>
           </Grid>
         </div>

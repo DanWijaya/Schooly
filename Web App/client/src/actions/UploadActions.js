@@ -10,7 +10,7 @@ export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {
             console.log(res.data)
             dispatch({
                 type: GET_SUCCESS_RESPONSE,
-                payload: true
+                payload: res.data
             })
             console.log("Run woi")
             // window.location.reload()

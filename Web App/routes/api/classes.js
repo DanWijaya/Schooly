@@ -12,14 +12,14 @@ const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
     const { errors, isValid } = validateClassInput(req.body);
-    if(!isValid) {
+    if (!isValid) {
         console.log("Not valid");
         return res.status(400).json(errors);
     }
 
-    Class.findOne({ name: req.body.name}).then(kelas => {
-        if(kelas) {
-            return res.status(400).json({ name: "Class name already exists"});
+    Class.findOne({ name: req.body.name }).then(kelas => {
+        if (kelas) {
+            return res.status(400).json({ name: "Class name already exists" });
 
         } else {
             const newKelas = new Class({
@@ -39,7 +39,7 @@ router.post("/create", (req, res) => {
 router.get("/view/:id", (req, res) => {
 
     Class.findById(req.params.id).then(kelas => {
-        if(!kelas){
+        if (!kelas) {
             return res.status(400).json("Class does not exist");
         } else {
             // console.log(kelas);
@@ -50,8 +50,8 @@ router.get("/view/:id", (req, res) => {
 
 
 router.get("/viewall", (req, res) => {
-    Class.find({ }).then((classes, err) => {
-        if(!classes)
+    Class.find({}).then((classes, err) => {
+        if (!classes)
             res.status(400).json(err);
         else
             res.json(classes);
@@ -62,59 +62,59 @@ router.delete("/delete/:id", (req, res) => {
     console.log(req.params.id, " testing woi")
     Class.findByIdAndRemove(req.params.id)
         .then((classes, err) => {
-            if(!classes) {
+            if (!classes) {
                 return res.status(400).json(err);
             } else {
                 console.log(classes)
                 return res.json("Successfully deleted the class")
             }
         })
-        // .catch(res.json("Error happened"))
+    // .catch(res.json("Error happened"))
 })
 
 router.get("/setCurrentClass/:id", (req, res) => {
     let id = req.params.id;
     console.log("set Current class is runned", id);
     Class.findById(id, (err, classData) => {
-        if(!classData)
+        if (!classData)
             return res.status(404).json("Class is not found")
 
         return res.json(classData)
     });
 })
 
-router.get("/viewSelectedClasses/", (req,res) => {
-    const {classes_ids} = req.query;
+router.get("/viewSelectedClasses/", (req, res) => {
+    const { classes_ids } = req.query;
     // console.log(classes_ids)
     let ids_to_find
-    
-    if(classes_ids !== undefined){
-        ids_to_find =  classes_ids.map((id) => new ObjectId(id))
+
+    if (classes_ids !== undefined) {
+        ids_to_find = classes_ids.map((id) => new ObjectId(id))
 
     }
-    Class.find({_id : { $in : ids_to_find}}, (err, classes) => {
-        if(!classes)
+    Class.find({ _id: { $in: ids_to_find } }, (err, classes) => {
+        if (!classes)
             return res.status(400).json("Class to update not found");
 
         return res.json(classes)
- 
+
     })
 })
-    
 
-router.post("/update/:id", (req,res) => {
+
+router.post("/update/:id", (req, res) => {
     let id = req.params.id;
 
     const { errors, isValid } = validateClassInput(req.body);
     console.log(errors)
-    if(!isValid) {
+    if (!isValid) {
         console.log("Not valid");
         return res.status(400).json(errors);
     }
 
     Class.findById(id, (err, classData) => {
 
-        if(!classData){
+        if (!classData) {
             return res.status(400).json("Class to update not found");
         }
         // Initially there is else block
@@ -128,8 +128,8 @@ router.post("/update/:id", (req,res) => {
 
 
         classData.save()
-                 .then(res.status(200).json("Done with updating class"))
-                .catch(console.log("Error in updating class"))
+            .then(res.status(200).json("Done with updating class"))
+            .catch(console.log("Error in updating class"))
         // Pipeline on how to create a Async functions to be Synchronous function call
         // Step 1: declare promise
         // var myPromise = (id) => {

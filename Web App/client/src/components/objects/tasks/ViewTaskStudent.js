@@ -2,8 +2,10 @@ import React from "react";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { viewOneTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
@@ -323,7 +325,7 @@ function ViewTaskStudent(props) {
 
   const { user, selectedUser } = props.auth;
   const { uploadTugas, deleteTugas, success, getTaskFilesByUser, tasksCollection,
-    filesCollection, downloadTugas, previewTugas,
+    filesCollection, downloadTugas, previewTugas, clearSuccess,
     viewOneTask, getOneUser, downloadLampiran, previewLampiran } = props;
 
   const tugasUploader = React.useRef(null);
@@ -344,7 +346,8 @@ function ViewTaskStudent(props) {
     viewOneTask(tugasId)
     // Will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
-  }, [tasksCollection.person_in_charge_id])
+    
+  }, [tasksCollection.person_in_charge_id, success])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -534,33 +537,36 @@ function ViewTaskStudent(props) {
   };
   const handleCloseUploadDialog = () => {
     setOpenUploadDialog(false);
+    clearSuccess()
   };
 
   function UploadDialog(){
+
     return(
       <Dialog open={openUploadDialog}>
         <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
           <Grid item justify="center">
             <Typography variant="h6" align="center" gutterBottom>
-              {!success ? "Tugas sedang dikumpul" : "Tugas berhasil dikumpul"}
+              {!success ? "Tugas sedang dikumpul" : "Tugas sedang dikumpul"}
             </Typography>
           </Grid>
           <Grid item>
-            {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
+            {!success ?  <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
           </Grid>
           <Grid item>
-            {!success ?
-              <Typography variant="body1" align="center" gutterBottom>
-                <b>Mohon tetap tunggu di halaman ini.</b>
-              </Typography>
-            :
+            {!success ? 
+            <Typography variant="body1" align="center" gutterBottom>
+              <b>Mohon tetap tunggu di halaman ini.</b>
+            </Typography> : 
+            <Link to={`/tugas-murid/${tugasId}`}>
               <Button
                 variant="contained"
-                onClick={() => window.location.reload()}
                 className={classes.uploadFinishButton}
+                onClick={handleCloseUploadDialog}
               >
                 Selesai
               </Button>
+              </Link>
             }
           </Grid>
         </Grid>
@@ -570,6 +576,7 @@ function ViewTaskStudent(props) {
 
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
   console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
+  console.log(success, filesCollection.files)
   return(
     <div className={classes.root}>
       {DeleteDialog()}
@@ -724,6 +731,7 @@ ViewTaskStudent.propTypes = {
   success: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
+
   uploadTugas: PropTypes.func.isRequired,
   deleteTugas: PropTypes.func.isRequired,
   downloadTugas: PropTypes.func.isRequired,
@@ -734,6 +742,7 @@ ViewTaskStudent.propTypes = {
   getOneUser: PropTypes.func.isRequired, // For the person in charge task
   previewLampiran: PropTypes.func.isRequired,
   downloadLampiran: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -744,7 +753,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-   mapStateToProps, { uploadTugas, deleteTugas, downloadTugas,
+   mapStateToProps, { uploadTugas, clearSuccess, deleteTugas, downloadTugas,
      previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
      previewLampiran, viewOneTask }
  ) (ViewTaskStudent);

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
@@ -408,13 +409,14 @@ class EditTask extends Component {
                   <b>Mohon tetap tunggu di halaman ini.</b>
                 </Typography>
               :
+              <Link to={`/tugas-guru/${task_id}`}>
                 <Button
                   variant="contained"
-                  href={`/tugas-guru/${task_id}`}
                   className={classes.uploadFinishButton}
                 >
                   Selesai
                 </Button>
+                </Link>
               }
             </Grid>
           </Grid>

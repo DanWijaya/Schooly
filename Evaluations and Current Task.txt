@@ -27,6 +27,7 @@ Daniel:
 8. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya.
 9. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 10. Select untuk yang edit class masih bermasalah...
+11. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga... 
 
 Penting untuk diimplemen:
 Will implement these features next time:

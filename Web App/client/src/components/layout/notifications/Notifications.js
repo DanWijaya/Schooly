@@ -32,7 +32,8 @@ function NotificationItemList(props) {
 
   return(
     <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button component="a" href={props.notification_link} className={classes.listItem}>
+      <Link to={props.notification_link}>
+      <ListItem button component="a" className={classes.listItem}>
         <IconButton>
           <StarIcon />
         </IconButton>
@@ -58,6 +59,7 @@ function NotificationItemList(props) {
           }
         />
       </ListItem>
+      </Link>
     </Paper>
   )
 }

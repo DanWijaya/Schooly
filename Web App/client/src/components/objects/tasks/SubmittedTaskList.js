@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import { viewOneTask, gradeTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
@@ -252,11 +253,14 @@ function SubmittedTaskList(props) {
     viewOneTask(task_id)
     getStudents()
     viewClass()
-    if(success){
-      handleOpenAlert()
+    // ini successnya bakal return 3 barang di list.
+    if(success instanceof Array){
+      if(success.length === 3)
+        handleOpenAlert()
     }
   }, [tasksCollection._id, success])
 
+  console.log(success)
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);

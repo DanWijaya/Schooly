@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
@@ -375,13 +376,14 @@ class CreateMaterial extends Component {
                   <b>Mohon tetap tunggu di halaman ini.</b>
                 </Typography>
               :
+              <Link to="/daftar-materi">
                 <Button
                   variant="contained"
-                  href="/daftar-materi"
                   className={classes.uploadFinishButton}
                 >
                   Selesai
               </Button>
+              </Link>
               }
             </Grid>
           </Grid>

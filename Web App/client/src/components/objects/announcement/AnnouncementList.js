@@ -90,7 +90,7 @@ function AnnouncementList(props) {
   const { user, retrieved_users } = props.auth;
   const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false)
 
-  console.log(retrieved_users)
+  // retrieved users ini bulk request, dapat data user"nya satu"
   React.useEffect(() => {
     if(user.role === "Teacher" && !annIsRetrieved){
       getAnnouncement(user.id, "by_author")
@@ -107,10 +107,9 @@ function AnnouncementList(props) {
       selectedAnnouncements.map((ann) => {
         author_id_set.add(ann.author_id)
       })
-      console.log("get users is runned")
       getUsers(Array.from(author_id_set))
     }
-  }, [selectedAnnouncements.length])
+  }, [selectedAnnouncements.length, retrieved_users.size])
 
   // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
 
@@ -118,20 +117,25 @@ function AnnouncementList(props) {
 
   const listAnnouncements = () => {
     let annList = [];
-    // let announcements = selectedAnnouncements.reverse()
-    for(var i = selectedAnnouncements.length-1; i >= 0; i--){
-      console.log()
-      annList.push(
-        <AnnouncementItemList
-          sender_icon={<AccountCircleIcon />}
-          author_name={retrieved_users.size ? retrieved_users.get(selectedAnnouncements[i].author_id).name : null}
-          notification_title={selectedAnnouncements[i].title}
-          notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
-          date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}
-          time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
-        />
-      )
+    console.log(selectedAnnouncements, retrieved_users)
+    if(selectedAnnouncements.length && retrieved_users.size){
+      
+      for(var i = selectedAnnouncements.length-1; i >= 0; i--){
+        // retrieved users ini bulk request, dapat data user"nya satu"
+        if(retrieved_users.get(selectedAnnouncements[i].author_id)){
+          annList.push(
+            <AnnouncementItemList
+              sender_icon={<AccountCircleIcon />}
+              author_name={retrieved_users.get(selectedAnnouncements[i].author_id).name}
+              notification_title={selectedAnnouncements[i].title}
+              notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
+              date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}
+              time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
+            />
+          )
+        }
     }
+  }
     return annList;
   }
 
