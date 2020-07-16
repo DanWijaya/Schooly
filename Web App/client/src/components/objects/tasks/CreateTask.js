@@ -282,7 +282,7 @@ class CreateTask extends Component {
     const UploadDialog = () => {
       return(
         <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-betweeen" alignItems="center" className={classes.uploadDialogGrid}>
+          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
             <Grid item justify="center">
               <Typography variant="h6" align="center" gutterBottom>
                 {!success ? "Tugas sedang dibuat" : "Tugas berhasil dibuat"}

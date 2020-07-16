@@ -27,7 +27,6 @@ import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WcIcon from "@material-ui/icons/Wc";
 import WorkIcon from "@material-ui/icons/Work";
-import ErrorIcon from "@material-ui/icons/Error";
 
 const Validator = require("validator");
 const isEmpty = require("is-empty");
@@ -120,14 +119,7 @@ function ProfileDataItemEdit(props) {
                 onChange={props.on_change}
                 value={props.value}
                 error={!errors ? null : errors.email}
-                helperText={
-                  <div style={{display: "flex", alignItems: "center"}}>
-                    {!errors ? null : <ErrorIcon style={{ height: "5%", width:"5%"}} />}
-                    <Typography style={{marginLeft: "4px"}}>
-                      {!errors ? null : errors.email}
-                    </Typography>
-                  </div>
-                }
+                helperText={!errors ? null : errors.email}
               />
             </div>
           :
