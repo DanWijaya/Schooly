@@ -268,7 +268,7 @@ function ViewClass(props) {
   const { setCurrentClass, getStudentsByClass, getAllSubjects,
      tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, viewTask } = props;
   const { all_user_files } = props.filesCollection;
-  const { all_subjects } = props.subjectsCollection;
+  const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
   const { selectedClasses, kelas } = props.classesCollection
   const { students_by_class, all_teachers, user } = props.auth;
@@ -291,16 +291,17 @@ function ViewClass(props) {
   }
 
   React.useEffect(() => {
-    if(kelas._id !== classId){
-      setCurrentClass(classId) // get the kelas object
-    }
+    setCurrentClass(classId)
+
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
       viewTask() // get the tasksCollection
     }
+    getAllSubjects("map") // get the all_subjects_map in map
     getAllSubjects() // get the all_subjects
     getStudentsByClass(props.match.params.id) // get the students_by_class
     getTeachers() // get the all_teachers
+
     if (Boolean(all_teachers.length)) {
       let temp = new Map()
       all_teachers.map((teacher) => temp.set(teacher._id, teacher))
@@ -405,13 +406,136 @@ function ViewClass(props) {
                 </List>
               </ExpansionPanel>
               <ExpansionPanel defaultExpanded>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                      Tugas
-                    </Typography>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">
+                    Materi
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+                <List className={classes.expansionPanelList}>
+              {!selectedMaterials.length ? null :
+              selectedMaterials.map((material) => {
+                let workCategoryAvatar = (
+                  <Avatar className={classes.material}>
+                    <MenuBookIcon/>
+                  </Avatar>
+                )
+                let workStatus = "Belum Dikumpulkan"
+                return(
+                  <MaterialListitem
+                    work_title={material.name}
+                    work_category_avatar={workCategoryAvatar}
+                    work_subject={all_subjects_map.get(material.subject)}
+                    work_status={workStatus}
+                    work_link={`/materi/${material._id}`}
+                  />
+                )
+              })}
+              </List>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">
+                    Tugas
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+                <List className={classes.expansionPanelList}>
+                  {tasksByClass.map((task) => {
+                    let workCategoryAvatar = (
+                      <Avatar className={classes.assignmentLate}>
+                        <AssignmentLateIcon/>
+                      </Avatar>
+                    )
+                    let workStatus = "Belum Dikumpulkan"
+                    for(var i = 0; i < all_user_files.length; i++) {
+                      if (all_user_files[i].for_task_object === task._id) {
+                        workStatus = "Telah Dikumpulkan"
+                        workCategoryAvatar = (
+                          <Avatar className={classes.assignmentTurnedIn}>
+                            <AssignmentTurnedInIcon/>
+                          </Avatar>
+                        )
+                        break;
+                      }
+                    }
+                    return(
+                      <AssignmentListItem
+                        work_title={task.name}
+                        work_category_avatar={workCategoryAvatar}
+                        work_subject={all_subjects_map.get(task.subject)}
+                        work_status={workStatus}
+                        work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+                        work_link={`/tugas-murid/${task._id}`}
+                      />
+                    )
+                  })}
+              </List>
+            </ExpansionPanel>
+            <ExpansionPanel disabled>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">
+                    Kuis (Coming Soon)
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+            </ExpansionPanel>
+            <ExpansionPanel disabled>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">
+                    Ujian (Coming Soon)
+                  </Typography>
+                </ExpansionPanelSummary>
+            </ExpansionPanel>
+            </Grid>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          {all_subjects.length === 0 ? null :
+            all_subjects.map((subject) => {
+              let isEmpty = true
+              return(
+                <ExpansionPanel>
+                  <ExpansionPanelSummary>
+                    <Grid container justify="space-between" alignItems="center">
+                      <Typography variant="h5">
+                        {subject.name}
+                      </Typography>
+                      <LightTooltip title="Lihat Lebih Lanjut" placement="right">
+                          <Link to={`/mata-pelajaran/${subject.name}`}>
+                            <IconButton
+                              size="small"
+                              className={classes.viewSubjectButton}
+                            >
+                          <PageviewIcon fontSize="small" />
+                        </IconButton>
+                        </Link>
+                      </LightTooltip>
+                    </Grid>
                   </ExpansionPanelSummary>
                   <Divider />
                   <List className={classes.expansionPanelList}>
+                  {!selectedMaterials.length ? null :
+                    selectedMaterials.map((material) => {
+                      if (material.subject !== subject._id) {
+                        return null
+                      }
+                      let workCategoryAvatar = (
+                        <Avatar className={classes.material}>
+                          <MenuBookIcon/>
+                        </Avatar>
+                      )
+                      let workStatus = "Belum Dikumpulkan"
+                      isEmpty = false
+                      return(
+                        <MaterialListitem
+                          work_title={material.name}
+                          work_category_avatar={workCategoryAvatar}
+                          work_status={workStatus}
+                          work_link={`/materi/${material._id}`}
+                        />
+                      )
+                    })
+                    }
                     {tasksByClass.map((task) => {
                       let workCategoryAvatar = (
                         <Avatar className={classes.assignmentLate}>
@@ -430,72 +554,7 @@ function ViewClass(props) {
                           break;
                         }
                       }
-                      return(
-                        <AssignmentListItem
-                          work_title={task.name}
-                          work_category_avatar={workCategoryAvatar}
-                          work_subject={task.subject}
-                          work_status={workStatus}
-                          work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                          work_link={`/tugas-murid/${task._id}`}
-                        />
-                      )
-                    })}
-                </List>
-              </ExpansionPanel>
-              <ExpansionPanel disabled>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                      Kuis (Coming Soon)
-                    </Typography>
-                  </ExpansionPanelSummary>
-                  <Divider />
-              </ExpansionPanel>
-              <ExpansionPanel disabled>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                      Ujian (Coming Soon)
-                    </Typography>
-                  </ExpansionPanelSummary>
-              </ExpansionPanel>
-              </Grid>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            {all_subjects.length === 0 ? null :
-              all_subjects.map((subject) => {
-                let isEmpty = true
-                return(
-                  <ExpansionPanel>
-                    <ExpansionPanelSummary>
-                      <Grid container justify="space-between" alignItems="center">
-                        <Typography variant="h5">
-                          {subject.name}
-                        </Typography>
-                        <LightTooltip title="Lihat Lebih Lanjut" placement="right">
-                            <Link to={`/mata-pelajaran/${subject.name}`}>
-                              <IconButton
-                                size="small"
-                                className={classes.viewSubjectButton}
-                              >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                          </Link>
-                        </LightTooltip>
-                      </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider className={classes.subjectDivider} />
-                    <List className={classes.expansionPanelList}>
-                    {!selectedMaterials.length ? null :
-                      selectedMaterials.map((material) => {
-                        if (material.subject !== subject.name) {
-                          return null
-                        }
-                        let workCategoryAvatar = (
-                          <Avatar className={classes.material}>
-                            <MenuBookIcon/>
-                          </Avatar>
-                        )
-                        let workStatus = "Belum Dikumpulkan"
+                      if (task.subject === subject._id) {
                         isEmpty = false
                         return(
                           <MaterialListitem

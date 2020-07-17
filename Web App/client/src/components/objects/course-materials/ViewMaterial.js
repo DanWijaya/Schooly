@@ -6,6 +6,7 @@ import { downloadLampiranMateri, previewLampiranMateri } from "../../../actions/
 import { viewSelectedClasses } from "../../../actions/ClassActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getOneMaterial, deleteMaterial } from "../../../actions/MaterialActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -210,20 +211,23 @@ function ViewMaterial(props) {
   const classes = useStyles();
 
   const { user, selectedUser} = props.auth;
-  const { deleteMaterial, getOneUser, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewSelectedClasses } = props;
+  const { deleteMaterial, getOneUser, getAllSubjects, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewSelectedClasses } = props;
   const { selectedMaterials } = props.materialsCollection;
   const { selectedClasses } = props.classesCollection;
   const materi_id = props.match.params.id
+  const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
   React.useEffect(() => {
     // viewOneTask(materi_id)
+    getAllSubjects("map")
     getOneMaterial(materi_id)
     if (Boolean(selectedMaterials.class_assigned)) {
       viewSelectedClasses(selectedMaterials.class_assigned)
     }
+
     getOneUser(selectedMaterials.author_id)
-  }, [selectedMaterials._id])
+  }, [selectedMaterials._id, all_subjects_map.length])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -348,7 +352,7 @@ function ViewMaterial(props) {
               {selectedMaterials.name}
             </Typography>
             <Typography variant="caption" color="textSecondary">
-              <h6>Mata Pelajaran: {selectedMaterials.subject}</h6>
+              <h6>Mata Pelajaran: {all_subjects_map.get(selectedMaterials.subject)}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Penanggung Jawab: <b>{selectedUser.name}</b>
@@ -430,21 +434,25 @@ ViewMaterial.propTypes = {
    auth: PropTypes.object.isRequired,
    materialsCollection: PropTypes.object.isRequired,
    classesCollection: PropTypes.object.isRequired,
+   subjectsCollection: PropTypes.object.isRequired,
+
    downloadLampiranMateri: PropTypes.func.isRequired,
    previewLampiranMateri: PropTypes.func.isRequired,
    deleteMaterial: PropTypes.func.isRequired,
    getOneUser: PropTypes.func.isRequired, // For the person in charge task
    getOneMaterial: PropTypes.func.isRequired,
+   getAllSubjects: PropTypes.func.isRequired,
    viewSelectedClasses: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({
    auth: state.auth,
    materialsCollection: state.materialsCollection,
-   classesCollection: state.classesCollection
+   classesCollection: state.classesCollection,
+   subjectsCollection: state.subjectsCollection,
  });
 
 export default connect(
-   mapStateToProps,  {downloadLampiranMateri,
+   mapStateToProps,  {downloadLampiranMateri, getAllSubjects,
     previewLampiranMateri, getOneMaterial, deleteMaterial, getOneUser, viewSelectedClasses }
  ) (ViewMaterial);

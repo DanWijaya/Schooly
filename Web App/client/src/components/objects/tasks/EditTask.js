@@ -558,7 +558,7 @@ class EditTask extends Component {
                             onChange={(event) => {this.onChange(event, "subject")}}
                           >
                             {all_subjects.map((subject) => (
-                              <MenuItem value={subject.name}>{subject.name}</MenuItem>
+                              <MenuItem value={subject._id}>{subject.name}</MenuItem>
                             ))}
                           </Select>
                           <FormHelperText>

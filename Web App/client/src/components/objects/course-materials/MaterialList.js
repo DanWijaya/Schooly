@@ -6,6 +6,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import { viewSelectedClasses } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
@@ -287,10 +288,12 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-  const { getAllMaterials, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
+  const { getAllMaterials, getAllSubjects, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { selectedClasses, all_classes } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
+
+  const { all_subjects_map} = props.subjectsCollection;
 
   const materialRowItem = (data) => {
     rows.push(
@@ -306,19 +309,14 @@ function MaterialList(props) {
 
   React.useEffect(() => {
     let materialsRetrieved = []
+    getAllSubjects("map")
 
-    if (user.role === "Admin") {
-      materialsRetrieved = all_materials
-      getAllMaterials()
+    materialsRetrieved = selectedMaterials;
+    if (user.role === "Teacher") {
+      getMaterial(user.id, "by_author")
     }
-    else {
-      materialsRetrieved = selectedMaterials;
-      if (user.role === "Teacher") {
-        getMaterial(user.id, "by_author")
-      }
-      else { // for student
-        getMaterial(user.kelas, "by_class")
-      }
+    else { // for student
+      getMaterial(user.kelas, "by_class")
     }
 
     let userIds = []
@@ -333,7 +331,7 @@ function MaterialList(props) {
 
     getUsers(userIds) // to get the authors objects.
     viewSelectedClasses(Array.from(classIds)) // to get the classes objects.
-  }, [selectedMaterials.length, all_materials.length])
+  }, [selectedMaterials.length, all_materials.length, all_subjects_map.length])
 
   const retrieveMaterials = () => {
     console.log(selectedMaterials)
@@ -471,7 +469,7 @@ function MaterialList(props) {
                               {row.materialtitle}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
-                              {row.subject}
+                              {all_subjects_map.get(row.subject)}
                             </Typography>
                           </Hidden>
                           <Hidden xsDown implementation="css">
@@ -479,7 +477,7 @@ function MaterialList(props) {
                               {row.materialtitle}
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                              {row.subject}
+                              {all_subjects_map.get(row.subject)}
                             </Typography>
                           </Hidden>
                         </Grid>
@@ -557,7 +555,7 @@ function MaterialList(props) {
                         {row.materialtitle}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {row.subject}
+                        {all_subjects_map.get(row.subject)}
                       </Typography>
                     </div>
                     <div>
@@ -591,9 +589,11 @@ MaterialList.propTypes = {
   getAllMaterials: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
   viewSelectedClasses: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
@@ -603,9 +603,10 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   classesCollection: state.classesCollection,
   materialsCollection: state.materialsCollection,
+  subjectsCollection: state.subjectsCollection,
 })
 
 export default connect(
   mapStateToProps,
-  { deleteMaterial, getAllMaterials, getMaterial, getUsers, viewSelectedClasses }
+  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getUsers, viewSelectedClasses }
 )(MaterialList);
