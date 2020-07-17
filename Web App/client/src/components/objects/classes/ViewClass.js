@@ -535,8 +535,8 @@ function ViewClass(props) {
                         />
                       )
                     })
-                    }
-                    {tasksByClass.map((task) => {
+                  }
+                  {tasksByClass.map((task) => {
                       let workCategoryAvatar = (
                         <Avatar className={classes.assignmentLate}>
                           <AssignmentLateIcon/>
@@ -564,7 +564,7 @@ function ViewClass(props) {
                             work_link={`/materi/${material._id}`}
                           />
                         )
-                      })
+                      }})
                       }
                       {tasksByClass.map((task) => {
                         let workCategoryAvatar = (
