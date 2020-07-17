@@ -85,7 +85,8 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=
           </StyledListItem>
         </Link>
     )
-  } else {
+  }
+  else {
     return(
         <StyledListItem button disabled={isDisabled}>
           <ListItemIcon>
@@ -96,7 +97,7 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=
             secondary={itemText2}
           />
         </StyledListItem>
-      )
+    )
   }
 }
 
@@ -133,17 +134,11 @@ function DrawerContent(props) {
       [null, <GrNotes className={classes.drawerListItemReactIconsFa} />, "Kuis", "Coming Soon", true],
       [null, <GrDocumentPerformance className={classes.drawerListItemReactIconsFa} />, "Ujian", "Coming Soon", true],
     ]
-
-    if (user.role === "Teacher") {
-      /*To remove viewclass for teachers*/
-      ListItemContents.splice(1,1)
-    }
   }
 
   return(
     <div>
       <List>
-
         {ListItemContents.map((item) => (
           generateList(item[0],item[1],item[2],item[3],item[4]))
         )}

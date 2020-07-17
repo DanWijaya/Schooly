@@ -8,7 +8,7 @@ import { getStudents } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
 import StandardTextField from "../../misc/text-field/StandardTextField";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
-   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, Typography } from "@material-ui/core";
+   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -409,11 +409,21 @@ function SubmittedTaskList(props) {
               {student_task_files_id.length > 0 ?
                 <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
                   <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
-                    <StandardTextField
-                    defaultValue={grade.has(student._id) || tasksCollection.grades === null ? grade.get(student._id) : tasksCollection.grades[student._id]}
-                    on_change={(e) => {handleChangeGrade(e, student._id)}}
-                    width="35px" borderBottom="1px solid #CCC"/>
-                    <StandardTextField disabled={true} value="/ 100" width="40px" />
+                    <TextField
+                      defaultValue={grade.has(student._id) || tasksCollection.grades === null ? grade.get(student._id) : tasksCollection.grades[student._id]}
+                      onChange={(e) => {handleChangeGrade(e, student._id)}}
+                      inputProps={{
+                        style: {
+                          borderBottom: "none",
+                          boxShadow: "none",
+                          margin: "0px",
+                          width: "35px"
+                        }
+                      }}
+                      InputProps={{
+                        endAdornment: "/ 100"
+                      }}
+                    />
                   </div>
                   <div>
                     <GradeButton onGradeTugas={onGradeTugas} task_id={task_id} student_id={student._id} student_name ={student.name} grade={grade}/>

@@ -161,29 +161,29 @@ class App extends Component {
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />
-                    <PrivateRoute exact access={["Student", "Admin"]} path="/kelas/:id" component={ViewClass} />
+                    <PrivateRoute exact access={["Student", "Teacher", "Admin"]} path="/kelas/:id" component={ViewClass} />
                     <PrivateRoute exact access={["Student"]} path="/mata-pelajaran/:subject_name" component={ViewSubject} />
+                    <PrivateRoute exact access={["Teacher", "Admin"]} path="/daftar-kelas" component={ClassList} />
                     {/* Route Course Materials */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-materi" component={CreateMaterial} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-materi/:id" component={EditMaterial} />
-                    <PrivateRoute exact access={["Teacher", "Student"]} path="/materi/:id" component={ViewMaterial} />
-                    <PrivateRoute exact access={["Teacher", "Student"]} path="/daftar-materi" component={MaterialList} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/materi/:id" component={ViewMaterial} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-materi" component={MaterialList} />
                     {/* Route Announcement  */}
-                    <PrivateRoute exact access={["Teacher", "Student"]} path="/buat-pengumuman" component={CreateAnnouncement} />
-                    <PrivateRoute exact access={["Teacher", "Student"]} path="/sunting-pengumuman/:id" component={EditAnnouncement} />
-                    <PrivateRoute exact access={["Teacher", "Student"]} path="/pengumuman/:id" component={ViewAnnouncement} />
-                    <PrivateRoute exact access={["Teacher", "Student"]} path="/daftar-pengumuman" component={AnnouncementList} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/buat-pengumuman" component={CreateAnnouncement} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/sunting-pengumuman/:id" component={EditAnnouncement} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/pengumuman/:id" component={ViewAnnouncement} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-pengumuman" component={AnnouncementList} />
                     {/* Route Task  */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-tugas" component={CreateTask} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-tugas/:id" component={EditTask} />
                     <PrivateRoute exact access={["Student"]} path="/tugas-murid/:id" component={ViewTaskStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
-                    <PrivateRoute exact path="/daftar-tugas" component={TaskList} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
                     {/* Route Assessment - Prototype  */}
                     <PrivateRoute exact access={["Teacher"]} path="/kuis" component={CreateAssessment} />
                     {/* Route Admin-Only  */}
-                    <PrivateRoute exact access={["Admin"]} path="/daftar-kelas" component={ClassList} />
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/daftar-mata-pelajaran" component={SubjectList} />
