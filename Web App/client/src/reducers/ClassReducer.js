@@ -1,8 +1,9 @@
-import { GET_CLASSES, GET_ALL_CLASSES, SET_CURRENT_CLASS } from "../actions/Types";
+import { GET_CLASSES, GET_ALL_CLASSES, SET_CURRENT_CLASS, GET_ALL_CLASSES_MAP } from "../actions/Types";
 import isEmpty from "is-empty";
 
 const initialState = {
   all_classes: [],
+  all_classes_map: new Map(),
   selectedClasses: [],
   kelas: {} // for student
 };
@@ -23,6 +24,14 @@ export default function(state = initialState, action) {
       return{
         ...state,
         all_classes: action.payload
+      }
+    }
+    case GET_ALL_CLASSES_MAP: {
+      let temp = new Map();
+      action.payload.map((kelas) => temp.set(kelas._id, kelas))
+      return{
+        ...state,
+        all_classes_map: temp
       }
     }
     case SET_CURRENT_CLASS: 

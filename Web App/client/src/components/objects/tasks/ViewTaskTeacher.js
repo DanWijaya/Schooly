@@ -211,7 +211,7 @@ function ViewTaskTeacher(props) {
 
   const { user } = props.auth;
   const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask, viewClass, getAllSubjects } = props;
-  const { all_classes } = props.classesCollection;
+  const { all_classes, all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
   const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -219,14 +219,9 @@ function ViewTaskTeacher(props) {
 
   React.useEffect(() => {
     viewOneTask(task_id)
-    viewClass()
+    viewClass("map")
     getAllSubjects("map")
-    if (all_classes.length) {
-      let temp = new Map()
-      all_classes.map((kelas) => temp.set(kelas._id, kelas))
-      setClassesMap(temp);
-    }
-  }, [tasksCollection._id, all_classes.length, all_subjects_map.length])
+  }, [tasksCollection._id, all_classes_map.size, all_subjects_map.size])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -251,6 +246,7 @@ function ViewTaskTeacher(props) {
     }
   }
 
+console.log(all_classes_map)
   const onDownloadFile = (id, fileCategory="none") => {
     if (fileCategory === "lampiran")
       downloadLampiran(id)
@@ -377,11 +373,11 @@ function ViewTaskTeacher(props) {
               Kelas yang Diberikan:
             </Typography>
             <Typography>
-              {!tasksCollection.class_assigned || !classes_map.size? null :
+              {!tasksCollection.class_assigned || !all_classes_map.size? null :
               tasksCollection.class_assigned.map((kelas, i) => {
                 if (i === tasksCollection.class_assigned.length - 1)
-                  return `${classes_map.get(kelas).name}`
-                return (`${classes_map.get(kelas).name}, `)
+                  return `${all_classes_map.get(kelas).name}`
+                return (`${all_classes_map.get(kelas).name}, `)
               })}
             </Typography>
           </Grid>

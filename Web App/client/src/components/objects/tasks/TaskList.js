@@ -286,12 +286,11 @@ function TaskList(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
   const [selected, setSelected] = React.useState([]);
-  const [classes_map, setClassesMap] = React.useState(new Map());
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const { tasksCollection, viewTask, deleteTask, viewClass, getAllSubjects } = props;
-  const { all_classes } = props.classesCollection;
+  const { all_classes_map } = props.classesCollection;
   const { all_subjects_map} = props.subjectsCollection;
   const { user } = props.auth;
 
@@ -309,15 +308,10 @@ function TaskList(props) {
 
   React.useEffect(() => {
     viewTask()
-    viewClass()
+    viewClass("map")
     getAllSubjects("map")
-    if (all_classes.length) {
-      let temp = new Map()
-      all_classes.map((kelas) => temp.set(kelas._id, kelas))
-      setClassesMap(temp);
-    }
   },
-  [tasksCollection.length, all_classes.length, all_subjects_map.length])
+  [tasksCollection.length, all_classes_map.size, all_subjects_map.length])
 
   const retrieveTasks = () => {
     // If tasksCollection is not undefined or an empty array
@@ -533,11 +527,11 @@ function TaskList(props) {
                       <Grid conntainer direction="column">
                         <Grid item>
                           <Typography variant="body1" gutterBottom>
-                            <b>Kelas yang Ditugaskan:</b> {!classes_map.size ? null :
+                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size ? null :
                              row.class_assigned.map((id,i) => {
                               if (i === row.class_assigned.length - 1)
-                                return (`${classes_map.get(id).name}`)
-                              return (`${classes_map.get(id).name}, `)})
+                                return (`${all_classes_map.get(id).name}`)
+                              return (`${all_classes_map.get(id).name}, `)})
                             }
                           </Typography>
                         </Grid>

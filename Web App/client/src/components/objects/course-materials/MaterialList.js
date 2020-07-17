@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
-import { viewSelectedClasses } from "../../../actions/ClassActions";
+import { viewSelectedClasses, viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -288,9 +288,9 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-  const { getAllMaterials, getAllSubjects, getMaterial, deleteMaterial, getUsers, viewSelectedClasses } = props;
+  const { getAllMaterials, getAllSubjects, getMaterial, deleteMaterial, getUsers, viewClass } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
-  const { selectedClasses, all_classes } = props.classesCollection;
+  const { selectedClasses, all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
 
   const { all_subjects_map} = props.subjectsCollection;
@@ -312,6 +312,7 @@ function MaterialList(props) {
     getAllSubjects("map")
 
     materialsRetrieved = selectedMaterials;
+    viewClass("map")
     if (user.role === "Teacher") {
       getMaterial(user.id, "by_author")
     }
@@ -320,21 +321,10 @@ function MaterialList(props) {
     }
 
     let userIds = []
-    let classIds = new Set()
-    for(var i = 0; i < materialsRetrieved.length; i++) {
-      let material = materialsRetrieved[i]
-      userIds.push(material.author_id)
-      for(var j = 0; j < material.class_assigned.length; j++) {
-        classIds.add(material.class_assigned[j])
-      }
-    }
-
     getUsers(userIds) // to get the authors objects.
-    viewSelectedClasses(Array.from(classIds)) // to get the classes objects.
-  }, [selectedMaterials.length, all_materials.length, all_subjects_map.length])
+  }, [all_classes_map.length, all_materials.length, all_subjects_map.length])
 
   const retrieveMaterials = () => {
-    console.log(selectedMaterials)
     console.log(retrieved_users)
     // If all_materials is not undefined or an empty array
     rows = []
@@ -433,7 +423,7 @@ function MaterialList(props) {
   }
 
   document.title = "Schooly | Daftar Materi";
-
+  console.log(all_classes_map)
   return(
     <div className={classes.root}>
       {DeleteDialog()}
@@ -525,12 +515,12 @@ function MaterialList(props) {
                       <Grid conntainer direction="column">
                         <Grid item>
                           <Typography variant="body1" gutterBottom>
-                            <b>Kelas yang Diberikan:</b> {!selectedClasses.size ? null :
+                            <b>Kelas yang Diberikan:</b> {!all_classes_map.size ? null :
                               row.class_assigned.map((kelas,i) => {
-                                if (Boolean(selectedClasses.get(kelas))) {
+                                if (Boolean(all_classes_map.get(kelas))) {
                                   if (i === row.class_assigned.length - 1)
-                                    return (`${selectedClasses.get(kelas).name}`)
-                                  return (`${selectedClasses.get(kelas).name}, `)}
+                                    return (`${all_classes_map.get(kelas).name}`)
+                                  return (`${all_classes_map.get(kelas).name}, `)}
                                 })
                               }
                           </Typography>
@@ -591,6 +581,8 @@ MaterialList.propTypes = {
   getUsers: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   viewSelectedClasses: PropTypes.func.isRequired,
+  viewClass: PropTypes.func.isRequired,
+
   classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
@@ -608,5 +600,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getUsers, viewSelectedClasses }
+  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getUsers, viewClass, viewSelectedClasses }
 )(MaterialList);

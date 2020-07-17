@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_CLASSES, GET_CLASSES, SET_CURRENT_CLASS } from "./Types";
+import { GET_ERRORS, GET_ALL_CLASSES, GET_ALL_CLASSES_MAP, GET_CLASSES, SET_CURRENT_CLASS } from "./Types";
 
 // Add Class
 export const createClass = (classData, history) => dispatch => {
@@ -20,11 +20,18 @@ export const createClass = (classData, history) => dispatch => {
 };
 
 // View All Class
-export const viewClass = () => dispatch => {
+export const viewClass = (data="array") => dispatch => {
   axios
     .get("/api/classes/viewall")
     .then(res => {
         console.log("Data should be here")
+
+        if(data === "map"){
+          dispatch({
+            type: GET_ALL_CLASSES_MAP,
+            payload: res.data
+          })
+        }
         dispatch({
             type: GET_ALL_CLASSES,
             payload: res.data

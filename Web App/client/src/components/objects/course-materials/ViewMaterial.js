@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { downloadLampiranMateri, previewLampiranMateri } from "../../../actions/UploadActions";
-import { viewSelectedClasses } from "../../../actions/ClassActions";
+import { viewSelectedClasses, viewClass } from "../../../actions/ClassActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getOneMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -211,21 +211,17 @@ function ViewMaterial(props) {
   const classes = useStyles();
 
   const { user, selectedUser} = props.auth;
-  const { deleteMaterial, getOneUser, getAllSubjects, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewSelectedClasses } = props;
+  const { deleteMaterial, getOneUser, getAllSubjects, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewClass, viewSelectedClasses } = props;
   const { selectedMaterials } = props.materialsCollection;
-  const { selectedClasses } = props.classesCollection;
+  const { all_classes_map } = props.classesCollection;
   const materi_id = props.match.params.id
   const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
   React.useEffect(() => {
-    // viewOneTask(materi_id)
     getAllSubjects("map")
     getOneMaterial(materi_id)
-    if (Boolean(selectedMaterials.class_assigned)) {
-      viewSelectedClasses(selectedMaterials.class_assigned)
-    }
-
+    viewClass("map")
     getOneUser(selectedMaterials.author_id)
   }, [selectedMaterials._id, all_subjects_map.length])
 
@@ -364,12 +360,12 @@ function ViewMaterial(props) {
                 Kelas yang Diberikan:
               </Typography>
               <Typography>
-                {!selectedMaterials.class_assigned || !selectedClasses.size? null :
+                {!selectedMaterials.class_assigned || !all_classes_map.size? null :
                 selectedMaterials.class_assigned.map((kelas, i) => {
-                  if(selectedClasses.get(kelas)){
+                  if(all_classes_map.get(kelas)){
                     if(i === selectedMaterials.class_assigned.length - 1)
-                      return `${selectedClasses.get(kelas).name}`
-                    return (`${selectedClasses.get(kelas).name}, `)
+                      return `${all_classes_map.get(kelas).name}`
+                    return (`${all_classes_map.get(kelas).name}, `)
                   }
                 })}
               </Typography>
@@ -443,6 +439,7 @@ ViewMaterial.propTypes = {
    getOneMaterial: PropTypes.func.isRequired,
    getAllSubjects: PropTypes.func.isRequired,
    viewSelectedClasses: PropTypes.func.isRequired,
+   viewClass: PropTypes.func.isRequired
  }
 
 const mapStateToProps = (state) => ({
@@ -454,5 +451,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(
    mapStateToProps,  {downloadLampiranMateri, getAllSubjects,
-    previewLampiranMateri, getOneMaterial, deleteMaterial, getOneUser, viewSelectedClasses }
+    previewLampiranMateri, getOneMaterial, deleteMaterial, 
+    getOneUser, viewClass, viewSelectedClasses }
  ) (ViewMaterial);

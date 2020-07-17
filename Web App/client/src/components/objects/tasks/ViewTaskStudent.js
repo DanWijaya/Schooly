@@ -335,7 +335,6 @@ function ViewTaskStudent(props) {
   const [fileTugas, setFileTugas] = React.useState(null);
   const [tasksContents, setTaskContents] = React.useState([]);
 
-  const [isEmptyFileTugas, setIsEmpty] = React.useState(true);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
