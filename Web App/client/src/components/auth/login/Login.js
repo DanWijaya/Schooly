@@ -152,7 +152,7 @@ class Login extends Component {
                             >
                               {icon ? <VisibilityIcon /> : <VisibilityOffIcon />}
                             </IconButton>
-                          </InputAdornment>,
+                          </InputAdornment>
                       }}
                     />
                   </Grid>

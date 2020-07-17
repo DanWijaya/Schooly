@@ -483,7 +483,49 @@ function ClassList(props) {
                         {row.absent}
                       </Typography>
                     </Grid>
-                    <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
+                    {user.role === "Admin" ?
+                      <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
+                        <Grid item>
+                          <LightTooltip title="Jumlah Peserta">
+                            <Badge
+                              badgeContent={row.size}
+                              color="secondary"
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <IconButton size="small" disabled>
+                                <SupervisorAccountIcon className={classes.classPersonIcon} />
+                              </IconButton>
+                            </Badge>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Sunting">
+                            <Link to={`/sunting-kelas/${row._id}`} onClick={(e) => e.stopPropagation()}>
+                              <IconButton
+                                size="small"
+                                className={classes.editClassButton}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.deleteClassButton}
+                              onClick={(e) => handleOpenDeleteDialog(e, row._id, row.classroom)}
+                            >
+                              <DeleteIcon fontSize="small"/>
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
+                    :
                       <Grid item>
                         <LightTooltip title="Jumlah Peserta">
                           <Badge
@@ -500,30 +542,7 @@ function ClassList(props) {
                           </Badge>
                         </LightTooltip>
                       </Grid>
-                      <Grid item>
-                        <LightTooltip title="Sunting">
-                          <Link to={`/sunting-kelas/${row._id}`} onClick={(e) => e.stopPropagation()}>
-                            <IconButton
-                              size="small"
-                              className={classes.editClassButton}
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Hapus">
-                              
-                          <IconButton
-                            size="small"
-                            className={classes.deleteClassButton}
-                            onClick={(e) => handleOpenDeleteDialog(e, row._id, row.classroom)}>
-                              <DeleteIcon fontSize="small"/>
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
+                    }
                   </Grid>
                 </Paper>
               </Link>
