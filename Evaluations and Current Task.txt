@@ -8,15 +8,6 @@ Botak:
 7. Download as csv, txt
 8. Search
 
-IMPORTANT:
-1. Jumlah murid dan absen di kelas
-2. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
-3. View task student badge? (View task student file telat?)
-4. Delete handle menu di createtaskv2
-5. Cek formcontrol, dan penempatan mui style
-6. Nihil dan Jumlah murid
-7. Pertama kali login habis register ada error
-
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
 2. (On going) Need to change the Object to Object relationship solution. Taruh IDnya saja jgn taruh objectnya.
@@ -32,17 +23,17 @@ Daniel:
 9. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 10. Select untuk yang edit class masih bermasalah...
 11. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga...
-12. Window location reload href (delete) mau diganti
 
-Penting untuk diimplemen:
-Will implement these features next time:
-- Quiz (Optional Important) (Approx 5) (https://github.com/bonham000/react-quiz-app)
-- Mungkin buat page utk si Admin utk bisa manage users
-2. Cari tau gimana remind student tugas kalo deadline sudah dekat.
-3. Kalau baru selesai kumpul, notify ke student lewat email kalo submissionnya sukses.
-4. Notifications page dan listnya (previewnya muncul di Dashboard)
-5. Notification page buat Guru broadcast ke student. Utk admin juga mungkin.
-20. Have to handle if the user not uploading an image, it gives error message.
+IMPORTANT:
+1. Jumlah murid dan absen di kelas
+2. Register hilangkan admin (Kita yang bikin akun admin buat sekolah itu)
+3. View task student badge? (View task student file telat?)
+4. Delete handle menu di createtaskv2
+5. Cek formcontrol, dan penempatan mui style
+6. Nihil dan Jumlah murid
+7. Pertama kali login habis register ada error
+8. Ganti kelas buat murid
+9. Window location reload href (delete) mau diganti
 
 Error and To be Fixed:
 - Ganti copylink di landing dan link insta di about
@@ -54,7 +45,7 @@ Error and To be Fixed:
 - Masukin kata "kosong" buat list dkk yang masih kosong dan "tidak diketahui" untuk guru yang di delete
 
 Yang belum ada di Schooly:
-1. Ujian/Quiz dengan auto checker juga
+1. Ujian/Quiz dengan auto checker juga (https://github.com/bonham000/react-quiz-app)
 2. Platform untuk cari universitas gitu
 3. Notifikasi
   - Push notification (real time): https://www.youtube.com/watch?v=HlYFW2zaYQM
