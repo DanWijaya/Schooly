@@ -341,7 +341,7 @@ function SubmittedTaskList(props) {
     else {
       if (temp.size) {
         for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
-          class_assigned.push(<Tab label={temp.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
+          class_assigned.push(<Tab label={!temp.get(tasksCollection.class_assigned[i]) ? null : temp.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
         }
         return(
           <Tabs

@@ -396,6 +396,7 @@ function ViewClass(props) {
                   </Avatar>
                 )
                 let workStatus = "Belum Dikumpulkan"
+
                 return(
                   <MaterialListitem
                     work_title={material.name}
