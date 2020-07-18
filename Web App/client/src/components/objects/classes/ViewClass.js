@@ -321,7 +321,7 @@ function ViewClass(props) {
   console.log(kelas, teachers_map, kelas.walikelas)
   return(
     <div className={classes.root}>
-      {user.role === "Admin" || "Teacher" ?
+      {user.role === "Admin" || user.role === "Teacher" ?
       <div>
         <Paper square>
           <Typography variant="h3" align="center" style={{padding: "10px"}} gutterBottom>
