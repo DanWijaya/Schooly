@@ -118,10 +118,11 @@ function ViewSubject(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { subject_name } = props.match.params
-  const{ setCurrentClass, viewTask, tasksCollection, getAllTaskFilesByUser, getMaterial} = props;
+  const id = props.match.params.id;
+  const{ setCurrentClass, viewTask, getAllSubjects, tasksCollection, getAllTaskFilesByUser, getMaterial} = props;
   const { selectedClasses, kelas } = props.classesCollection
-  const {all_user_files} = props.filesCollection
+  const {all_user_files} = props.filesCollection;
+  const { all_subjects_map} = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection
 
   console.log(props.classesCollection)
@@ -132,14 +133,16 @@ function ViewSubject(props) {
     setCurrentClass(user.kelas)
     viewTask()
     getAllTaskFilesByUser(user.id)
+    getAllSubjects("map");
   }, [all_user_files.length])
 
+  console.log(all_subjects_map)
   let tasksByClass = [] // Tasks on specific class.
 
   console.log(selectedMaterials)
   // All actions to retrive datas from Database...
   if (tasksCollection.length !== undefined) {
-    tasksCollection.map((task) => {
+    tasksCollection.map((task, i) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++) {
         if(class_assigned[i] === user.kelas)
@@ -170,12 +173,12 @@ function ViewSubject(props) {
         }
       }
 
-      if (task.subject === subject_name) {
+      if (task.subject === id) {
       tasksBySubjectClass.push(
         <AssignmentListItem
           work_title={task.name}
           work_category_avatar={workCategoryAvatar}
-          work_sender={`Mata Pelajaran: ${task.subject}`}
+          work_sender={`Mata Pelajaran: ${all_subjects_map.get(task.subject)}`}
           work_status={workStatus}
           work_deadline={moment(task.deadline).format("DD-MM-YYYY")}
           work_link={`/tugas-murid/${task._id}`}
@@ -197,13 +200,13 @@ function ViewSubject(props) {
   }
 
   generateTaskBySubject()
-  document.title = `Schooly | ${subject_name}`
+  document.title = `Schooly | ${id}`
 
   return(
     <div className={classes.root}>
       <Paper className={classes.subjectCardPaper}>
         <Typography variant="subtitle1" color="primary">
-          <h3><b>{subject_name}</b></h3>
+          <h3><b>{all_subjects_map.get(id)}</b></h3>
         </Typography>
         <Typography variant="body2">
           <h5>Kelas: {kelas.name}</h5>
@@ -222,7 +225,7 @@ function ViewSubject(props) {
 
             {!selectedMaterials.length ? null :
             selectedMaterials.map((material, i) => {
-              if (material.subject === subject_name) {
+              if (material.subject === id) {
 
                 return( <SubjectListitem
                   work_title={material.name}
@@ -230,7 +233,7 @@ function ViewSubject(props) {
                   <Avatar className={classes.material}>
                     <MenuBookIcon/>
                   </Avatar>}
-                  work_sender={material.subject}
+                  work_sender={all_subjects_map.get(material.subject)}
                   work_link={`/materi/${material._id}`}
                 />)
               }
