@@ -15,6 +15,7 @@ IMPORTANT:
 4. Delete handle menu di createtaskv2
 5. Cek formcontrol, dan penempatan mui style
 6. Nihil dan Jumlah murid
+7. Pertama kali login habis register ada error
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -49,6 +50,8 @@ Error and To be Fixed:
 - Nama sekolah (retrieve cluster name)? register choose cluster?
 - Kalau usernya edit profilenya di browser lain/device lain. session yang sebelumnya masih dilogged in itu masih ndak bakal update data usernya
 - Kalau page yang mau dikunjungi ada error, lalu tekan back di browserm biasanya pagenya bakal putih semua (Ganti semua ke link to dari href)
+- Fitur disable belum ready (kalau disable teacher yang ada pegang kelas, bisa error)
+- Masukin kata "kosong" buat list dkk yang masih kosong dan "tidak diketahui" untuk guru yang di delete
 
 Yang belum ada di Schooly:
 1. Ujian/Quiz dengan auto checker juga

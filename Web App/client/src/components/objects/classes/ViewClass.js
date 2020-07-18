@@ -291,7 +291,7 @@ function ViewClass(props) {
   }
 
   React.useEffect(() => {
-    setCurrentClass(classId) 
+    setCurrentClass(classId)
 
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
@@ -318,7 +318,7 @@ function ViewClass(props) {
   console.log(selectedMaterials)
   document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
 
-  console.log(kelas, teachers_map, kelas.walikelas)  
+  console.log(kelas, teachers_map, kelas.walikelas)
   return(
     <div className={classes.root}>
       {user.role === "Admin" || "Teacher" ?
@@ -334,7 +334,7 @@ function ViewClass(props) {
           </Typography>
           <Divider className={classes.personListDivider} />
           <List className={classes.listContainer}>
-            {teachers_map.get(kelas.walikelas) ? 
+            {teachers_map.get(kelas.walikelas) ?
             <PersonListItem
             person_avatar={
               `/api/uploads/image/${teachers_map.get(kelas.walikelas).avatar}`}
@@ -540,10 +540,6 @@ function ViewClass(props) {
                             work_link={`/tugas-murid/${task._id}`}
                           />
                         )
-<<<<<<< HEAD
-=======
-                      }})
->>>>>>> e2f1996757c8841eceb11e8487dba5e54dbf4710
                       }
                     })}
                     {isEmpty ?

@@ -199,6 +199,14 @@ function Help(props) {
                         untuk mengganti kata sandi anda.
                       </Typography>
                     </Grid>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa yang perlu dilakukan jika saya akun saya belum aktif?</b>
+                      </Typography>
+                      <Typography>
+                        Hubungi pengelola sekolah anda untuk mengaktifkan akun anda.
+                      </Typography>
+                    </Grid>
                     { user.role === "Admin" ?
                         <Grid item>
                           <Typography variant="h6" gutterBottom>
