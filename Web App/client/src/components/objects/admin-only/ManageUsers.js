@@ -161,6 +161,15 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
   dialogCancelButton: {
     width: "150px",
     backgroundColor: theme.palette.primary.main,
@@ -510,6 +519,7 @@ function ManageUsers(props) {
                           <LightTooltip title="Nonaktifkan">
                             <IconButton
                               size="small"
+                              style={{display: "none"}}
                               className={classes.profileDisableButton}
                               onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
                             >
@@ -619,6 +629,7 @@ function ManageUsers(props) {
                         <Grid item>
                           <LightTooltip title="Nonaktifkan">
                             <IconButton
+                              style={{display: "none"}}
                               size="small"
                               className={classes.profileDisableButton}
                               onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}

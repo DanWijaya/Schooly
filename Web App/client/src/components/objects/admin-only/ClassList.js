@@ -17,8 +17,8 @@ import SortIcon from "@material-ui/icons/Sort";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
 
-function createData(_id, classroom, homeroomTeacher, size, absent) {
-  return { _id, classroom, homeroomTeacher, size, absent };
+function createData(_id, name, homeroomTeacher, size, absent) {
+  return { _id, name, homeroomTeacher, size, absent };
 }
 
 var rows=[];
@@ -56,7 +56,7 @@ function ClassListToolbar(props) {
   };
 
   const headCells = [
-    { id: "classroom", numeric: false, disablePadding: true, label: "Kelas" },
+    { id: "name", numeric: false, disablePadding: true, label: "Kelas" },
     { id: "homeroomTeacher", numeric: false, disablePadding: false, label: "Wali Kelas" },
     { id: "size", numeric: true, disablePadding: false, label: "Jumlah Murid" },
     { id: "absent", numeric: false, disablePadding: false, label: "Absen" },
@@ -262,6 +262,8 @@ function ClassList(props) {
   const [teachers_map, setTeachersMap] = React.useState(new Map());
 
   const { viewClass, deleteClass, classesCollection, getTeachers } = props;
+  const { all_classes} = props.classesCollection;
+
   const { user, all_teachers } = props.auth;
 
   const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
@@ -273,7 +275,7 @@ function ClassList(props) {
       createData(
         data._id,
         data.name,
-        !teachers_map.size ? null : teachers_map.get(data.walikelas).name,
+        !teachers_map.size || !teachers_map.get(data.walikelas) ? null : teachers_map.get(data.walikelas).name,
         data.ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
       )
@@ -287,7 +289,7 @@ function ClassList(props) {
       all_teachers.map((teacher) => temp.set(teacher._id, teacher))
       setTeachersMap(temp);
     }
-  },[classesCollection.length, all_teachers.length])
+  },[all_classes.length, all_teachers.length])
 
   console.log(all_teachers)
   const retrieveClasses = () => {
@@ -470,7 +472,7 @@ function ClassList(props) {
                   <Divider />
                   <div style={{padding: "10px 20px 20px 10px"}}>
                     <Typography id={labelId} variant="h5" align="center">
-                      {row.classroom}
+                      {row.name}
                     </Typography>
                     <Typography variant="body1" color="textSecondary" align="center">
                       Wali Kelas: <b>{row.homeroomTeacher}</b>
@@ -518,7 +520,7 @@ function ClassList(props) {
                             <IconButton
                               size="small"
                               className={classes.deleteClassButton}
-                              onClick={(e) => handleOpenDeleteDialog(e, row._id, row.classroom)}
+                              onClick={(e) => handleOpenDeleteDialog(e, row._id, row.name)}
                             >
                               <DeleteIcon fontSize="small"/>
                             </IconButton>

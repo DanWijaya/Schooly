@@ -396,6 +396,7 @@ function ViewClass(props) {
                   </Avatar>
                 )
                 let workStatus = "Belum Dikumpulkan"
+
                 return(
                   <MaterialListitem
                     work_title={material.name}
@@ -540,10 +541,6 @@ function ViewClass(props) {
                             work_link={`/tugas-murid/${task._id}`}
                           />
                         )
-<<<<<<< HEAD
-=======
-                      }})
->>>>>>> e2f1996757c8841eceb11e8487dba5e54dbf4710
                       }
                     })}
                     {isEmpty ?

@@ -301,7 +301,7 @@ function MaterialList(props) {
         data._id,
         data.name,
         data.subject,
-        !(retrieved_users).size ? {}: retrieved_users.get(data.author_id),
+        !(retrieved_users).size || !retrieved_users.get(data.author_id) ? {}: retrieved_users.get(data.author_id),
         data.class_assigned,
       )
     )
@@ -517,10 +517,12 @@ function MaterialList(props) {
                           <Typography variant="body1" gutterBottom>
                             <b>Kelas yang Diberikan:</b> {!all_classes_map.size ? null :
                               row.class_assigned.map((kelas,i) => {
-                                if (Boolean(all_classes_map.get(kelas))) {
+                                if (all_classes_map.get(kelas)) {
                                   if (i === row.class_assigned.length - 1)
                                     return (`${all_classes_map.get(kelas).name}`)
-                                  return (`${all_classes_map.get(kelas).name}, `)}
+                                  return (`${all_classes_map.get(kelas).name}, `)
+                                  }
+                                  return null
                                 })
                               }
                           </Typography>

@@ -357,7 +357,7 @@ function ViewMaterial(props) {
           {user.role === "Teacher" ?
             <Grid item xs={12} style={{marginBottom: "30px"}}>
               <Typography color="primary" gutterBottom>
-                Kelas yang Diberikan:
+                Kelas yang Diberikan: 
               </Typography>
               <Typography>
                 {!selectedMaterials.class_assigned || !all_classes_map.size? null :
@@ -367,6 +367,7 @@ function ViewMaterial(props) {
                       return `${all_classes_map.get(kelas).name}`
                     return (`${all_classes_map.get(kelas).name}, `)
                   }
+                  return null
                 })}
               </Typography>
             </Grid>

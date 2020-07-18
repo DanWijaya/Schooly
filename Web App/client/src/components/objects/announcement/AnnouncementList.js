@@ -126,7 +126,7 @@ function AnnouncementList(props) {
           annList.push(
             <AnnouncementItemList
               sender_icon={<AccountCircleIcon />}
-              author_name={retrieved_users.get(selectedAnnouncements[i].author_id).name}
+              author_name={!retrieved_users.get(selectedAnnouncements[i].author_id) ? null: retrieved_users.get(selectedAnnouncements[i].author_id).name}
               notification_title={selectedAnnouncements[i].title}
               notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
               date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}

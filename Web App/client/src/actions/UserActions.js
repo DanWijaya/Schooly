@@ -121,15 +121,14 @@ export const loginUser = (userData) => dispatch => {
       // Set token to localStorage
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
+      
       // Set token to Auth header
       setAuthToken(token);
+
       // Decode token to get user data
       const decoded = jwt_decode(token);
+
       // Set current user
-      // if (decoded.role === "Student") {
-      //   console.log("HEHE")
-      //   dispatch(setCurrentClass(decoded.kelas))
-      // }
       dispatch(setCurrentUser(decoded));
 
     })

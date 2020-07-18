@@ -18,6 +18,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 
 const useStyles = makeStyles((theme) => ({
   listItemPaper: {
@@ -37,37 +38,39 @@ function WorkListItem(props) {
   const classes = useStyles()
 
   return(
-    <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button component="a" href={props.work_link} className={classes.listItem}>
-        <Grid container alignItems="center">
-          <Grid item xs={8}>
-            <ListItemText
-              primary={
-                <Typography variant="h6">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_sender}
-            />
+    <Link to={props.work_link}>
+      <Paper variant="outlined" className={classes.listItemPaper}>
+        <ListItem button className={classes.listItem}>
+          <Grid container alignItems="center">
+            <Grid item xs={8}>
+              <ListItemText
+                primary={
+                  <Typography variant="h6">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_sender}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" className={classes.warningText}>
+                    Batas Waktu:
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" className={classes.warningText}>
+                    {props.work_deadline}
+                  </Typography>
+                }
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Batas Waktu:
-                </Typography>
-              }
-              secondary={
-                <Typography variant="body2" className={classes.warningText}>
-                  {props.work_deadline}
-                </Typography>
-              }
-            />
-          </Grid>
-        </Grid>
-      </ListItem>
-    </Paper>
+        </ListItem>
+      </Paper>
+    </Link>
   )
 }
 
@@ -176,10 +179,11 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const {viewTask, getAllTaskFilesByUser} = this.props;
+    const {viewTask, getAllTaskFilesByUser, getAllSubjects} = this.props;
     const { user} = this.props.auth;
 
     viewTask()
+    getAllSubjects("map")
     if (user.role === "Student")
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
     this.intervalID = setInterval(
@@ -207,11 +211,11 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { classes, tasksCollection, classesCollection, viewTask, getAllTaskFilesByUser,  } = this.props;
+    const { classes, tasksCollection, classesCollection, viewTask, getAllTaskFilesByUser, getAllSubjects } = this.props;
 
     const { user } = this.props.auth;
     const { all_user_files } = this.props.filesCollection
-    const { all_subjects } = this.props.subjectsCollection
+    const { all_subjects_map } = this.props.subjectsCollection
     const { selectedClasses } = this.props.classesCollection
 
     let tasksByClass = []
@@ -220,7 +224,7 @@ class Dashboard extends Component {
         tasksCollection.map((task) => {
           let class_assigned = task.class_assigned
           for (var i = 0; i < class_assigned.length; i++) {
-            if (class_assigned[i]._id === user.kelas)
+            if (class_assigned[i] === user.kelas)
               tasksByClass.push(task)
           }
         })
@@ -353,10 +357,13 @@ class Dashboard extends Component {
                       return null;
                     }
                   }
+                  if(!all_subjects_map.get(task.subject)){
+                    return null;
+                  }
                   return(
                     <WorkListItem
                       work_title={task.name}
-                      work_sender={`Mata Pelajaran: ${task.subject}`}
+                      work_sender={`Mata Pelajaran: ${all_subjects_map.get(task.subject)}`}
                       work_deadline={moment(task.deadline).locale("id").format("DD/MM/YYYY - HH:mm ")}
                       work_link={`/tugas-murid/${task._id}`}
                     />
@@ -391,6 +398,7 @@ Dashboard.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -402,6 +410,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, {viewTask, getAllTaskFilesByUser})
+  connect(mapStateToProps, {viewTask, getAllTaskFilesByUser, getAllSubjects})
   (withStyles(styles)(Dashboard))
 )
