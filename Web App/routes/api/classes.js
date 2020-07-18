@@ -8,6 +8,8 @@ const validateClassInput = require("../../validation/ClassData");
 
 // Load the required Model
 const Class = require("../../models/Class");
+const Student = require("../../models/user_model/Student");
+
 const { ObjectId } = require("mongodb");
 
 router.post("/create", (req, res) => {
@@ -61,8 +63,16 @@ router.get("/viewall", (req, res) => {
 });
 
 router.delete("/delete/:id", (req, res) => {
-    console.log(req.params.id, " testing woi")
-    Class.findByIdAndRemove(req.params.id)
+  let id = req.params.id;
+    
+    Student.find({ kelas: id}, (err, students) => {
+      console.log("Students di kelas: ", students)
+
+      if(students.length){
+        return res.status(400).json({has_student: "Kelas masih terdapat murid"})
+      }
+      else{
+        Class.findByIdAndRemove(req.params.id)
         .then((classes, err) => {
             if (!classes) {
                 return res.status(400).json(err);
@@ -72,6 +82,11 @@ router.delete("/delete/:id", (req, res) => {
                 return res.json("Successfully deleted the class")
             }
         })
+
+      }
+    })
+
+    
     // .catch(res.json("Error happened"))
 })
 

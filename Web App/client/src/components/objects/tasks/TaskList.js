@@ -527,11 +527,14 @@ function TaskList(props) {
                       <Grid conntainer direction="column">
                         <Grid item>
                           <Typography variant="body1" gutterBottom>
-                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size ? null :
+                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
                              row.class_assigned.map((id,i) => {
-                              if (i === row.class_assigned.length - 1)
-                                return (`${all_classes_map.get(id).name}`)
-                              return (`${all_classes_map.get(id).name}, `)})
+
+                              if(all_classes_map.get(id)){
+                                if (i === row.class_assigned.length - 1)
+                                  return (`${all_classes_map.get(id).name}`)
+                                return (`${all_classes_map.get(id).name}, `)}
+                             })
                             }
                           </Typography>
                         </Grid>

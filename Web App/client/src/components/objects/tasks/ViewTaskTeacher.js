@@ -375,10 +375,13 @@ console.log(all_classes_map)
             <Typography>
               {!tasksCollection.class_assigned || !all_classes_map.size? null :
               tasksCollection.class_assigned.map((kelas, i) => {
-                if (i === tasksCollection.class_assigned.length - 1)
-                  return `${all_classes_map.get(kelas).name}`
-                return (`${all_classes_map.get(kelas).name}, `)
-              })}
+                if(all_classes_map.get(kelas)){
+                  if (i === tasksCollection.class_assigned.length - 1)
+                    return `${all_classes_map.get(kelas).name}`
+                  return (`${all_classes_map.get(kelas).name}, `)
+                }
+              })
+            })
             </Typography>
           </Grid>
 

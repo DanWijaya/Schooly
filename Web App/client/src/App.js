@@ -162,7 +162,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />
                     <PrivateRoute exact access={["Student", "Teacher", "Admin"]} path="/kelas/:id" component={ViewClass} />
-                    <PrivateRoute exact access={["Student"]} path="/mata-pelajaran/:subject_name" component={ViewSubject} />
+                    <PrivateRoute exact access={["Student"]} path="/mata-pelajaran/:id" component={ViewSubject} />
                     <PrivateRoute exact access={["Teacher", "Admin"]} path="/daftar-kelas" component={ClassList} />
                     {/* Route Course Materials */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-materi" component={CreateMaterial} />

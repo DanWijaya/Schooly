@@ -6,7 +6,7 @@ import { getTeachers } from "../../../actions/UserActions";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper,
-   TableSortLabel, Typography } from "@material-ui/core/";
+   TableSortLabel, Typography, FormHelperText } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -16,6 +16,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/Sort";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { clearErrors } from "../../../actions/ErrorActions";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
@@ -261,7 +262,7 @@ function ClassList(props) {
 
   const [teachers_map, setTeachersMap] = React.useState(new Map());
 
-  const { viewClass, deleteClass, classesCollection, getTeachers } = props;
+  const { viewClass, deleteClass, classesCollection, getTeachers, errors, clearErrors } = props;
   const { all_classes} = props.classesCollection;
 
   const { user, all_teachers } = props.auth;
@@ -284,6 +285,7 @@ function ClassList(props) {
   React.useEffect(() => {
     viewClass()
     getTeachers()
+    clearErrors()
     if (Boolean(all_teachers.length)) {
       let temp = new Map()
       all_teachers.map((teacher) => temp.set(teacher._id, teacher))
@@ -357,6 +359,7 @@ function ClassList(props) {
 
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
+    clearErrors()
   };
 
   function DeleteDialog() {
@@ -376,12 +379,17 @@ function ClassList(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              Hapus Kelas berikut?
+              "Hapus Kelas berikut" 
+            </Typography>
+          </Grid>
+          <Grid item container justify="center">
+            <Typography variant="h6" align="center" gutterBottom>
+              <b>{selectedClassName}</b>
             </Typography>
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedClassName}</b>
+            <Typography variant="caption" align="center" color="error">
+              {errors.has_student}
             </Typography>
           </Grid>
           <Grid
@@ -559,6 +567,7 @@ function ClassList(props) {
 ClassList.propTypes = {
   viewClass: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   deleteClass: PropTypes.func.isRequired,
@@ -572,5 +581,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { viewClass, deleteClass, getTeachers }
+  mapStateToProps, { viewClass, deleteClass, getTeachers, clearErrors }
 ) (ClassList);

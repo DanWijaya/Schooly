@@ -278,16 +278,43 @@ function ViewClass(props) {
   let class_id = props.match.params.id;
 
   let tasksByClass = []
+  let materialsByClass = []
+
   console.log(props.classesCollection)
   // All actions to retrive datas from Database
   if (Boolean(tasksCollection.length)) {
-    tasksCollection.map((task) => {
+    for(var i = 0; i < tasksCollection.length; i++){
+      let task = tasksCollection[i];
       let class_assigned = task.class_assigned
-      for (var i = 0; i < class_assigned.length; i++){
-        if(class_assigned[i] === classId)
-          tasksByClass.push(task)
+      if(class_assigned.indexOf(classId) !== -1){
+        tasksByClass.push(task)
       }
-    })
+      if(i === 4){ // item terakhir harus pas index ke 4.
+        break;
+      }
+    }
+  }
+
+  if(Boolean(selectedMaterials.length)) {
+    let workCategoryAvatar = (
+      <Avatar className={classes.material}>
+        <MenuBookIcon/>
+      </Avatar>
+    )
+    for(var i = 0; i < selectedMaterials.length; i++){
+      let material = selectedMaterials[i]
+      materialsByClass.push(
+        <MaterialListitem
+          work_title={material.name}
+          work_category_avatar={workCategoryAvatar}
+          work_subject={all_subjects_map.get(material.subject)}
+          work_link={`/materi/${material._id}`}
+        />
+      )
+      if(i === 4){ // item terakhir harus pas index ke 4.
+        break;
+      }
+    }
   }
 
   React.useEffect(() => {
@@ -317,6 +344,8 @@ function ViewClass(props) {
 
   console.log(selectedMaterials)
   document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
+
+      
 
   console.log(kelas, teachers_map, kelas.walikelas)
   return(
@@ -388,25 +417,7 @@ function ViewClass(props) {
                 </ExpansionPanelSummary>
                 <Divider />
                 <List className={classes.expansionPanelList}>
-              {!selectedMaterials.length ? null :
-              selectedMaterials.map((material) => {
-                let workCategoryAvatar = (
-                  <Avatar className={classes.material}>
-                    <MenuBookIcon/>
-                  </Avatar>
-                )
-                let workStatus = "Belum Dikumpulkan"
-
-                return(
-                  <MaterialListitem
-                    work_title={material.name}
-                    work_category_avatar={workCategoryAvatar}
-                    work_subject={all_subjects_map.get(material.subject)}
-                    work_status={workStatus}
-                    work_link={`/materi/${material._id}`}
-                  />
-                )
-              })}
+              {materialsByClass}
               </List>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -477,7 +488,7 @@ function ViewClass(props) {
                         {subject.name}
                       </Typography>
                       <LightTooltip title="Lihat Lebih Lanjut" placement="right">
-                          <Link to={`/mata-pelajaran/${subject.name}`}>
+                          <Link to={`/mata-pelajaran/${subject._id}`}>
                             <IconButton
                               size="small"
                               className={classes.viewSubjectButton}

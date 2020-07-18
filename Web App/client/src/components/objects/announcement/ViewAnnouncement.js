@@ -342,7 +342,7 @@ function ViewAnnouncement(props) {
                 }
                 secondary={
                   <Typography variant="h6" color="textSecondary">
-                    {!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id) ?  null : retrieved_users.get(selectedAnnouncements.author_id).name }
+                    {!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id) ?  "" : retrieved_users.get(selectedAnnouncements.author_id).name }
                   </Typography>
                 }
               />

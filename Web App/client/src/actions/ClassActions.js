@@ -93,7 +93,7 @@ export const deleteClass = (classId) => dispatch => {
         window.location.reload()
     })
     .catch(err => {
-        console.log(err);
+        console.log(err.response.data);
         dispatch({
             type: GET_ERRORS,
             payload: err.response.data
