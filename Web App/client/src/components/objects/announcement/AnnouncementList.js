@@ -122,7 +122,6 @@ function AnnouncementList(props) {
       
       for(var i = selectedAnnouncements.length-1; i >= 0; i--){
         // retrieved users ini bulk request, dapat data user"nya satu"
-        if(retrieved_users.get(selectedAnnouncements[i].author_id)){
           annList.push(
             <AnnouncementItemList
               sender_icon={<AccountCircleIcon />}
@@ -133,7 +132,6 @@ function AnnouncementList(props) {
               time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
             />
           )
-        }
     }
   }
     return annList;
