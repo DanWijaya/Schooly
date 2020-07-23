@@ -7,6 +7,10 @@ Botak:
 6. cek title daftar pengumuman dkk udah di vertical alignnya center atau belum
 7. Download as csv, txt
 8. Search
+9. Cek file dan error
+10. QUIZ dan UJIAN memang penting dengan rquest bu yanti yang banyak.
+11. Snackbar change profile pas mau klik keluar
+12. Maxwidth buat semua dialog
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -43,6 +47,7 @@ Error and To be Fixed:
 - Kalau page yang mau dikunjungi ada error, lalu tekan back di browserm biasanya pagenya bakal putih semua (Ganti semua ke link to dari href)
 - Fitur disable belum ready (kalau disable teacher yang ada pegang kelas, bisa error)
 - Masukin kata "kosong" buat list dkk yang masih kosong dan "tidak diketahui" untuk guru yang di delete
+- Rapikan code, pecahkan jadi beberapa file lagi
 
 Yang belum ada di Schooly:
 1. Ujian/Quiz dengan auto checker juga (https://github.com/bonham000/react-quiz-app)

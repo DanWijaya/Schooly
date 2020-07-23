@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   dialogBox: {
-    width: "350px",
+    maxWidth: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {
@@ -357,7 +357,7 @@ function ViewMaterial(props) {
           {user.role === "Teacher" ?
             <Grid item xs={12} style={{marginBottom: "30px"}}>
               <Typography color="primary" gutterBottom>
-                Kelas yang Diberikan: 
+                Kelas yang Diberikan:
               </Typography>
               <Typography>
                 {!selectedMaterials.class_assigned || !all_classes_map.size? null :
@@ -452,6 +452,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(
    mapStateToProps,  {downloadLampiranMateri, getAllSubjects,
-    previewLampiranMateri, getOneMaterial, deleteMaterial, 
+    previewLampiranMateri, getOneMaterial, deleteMaterial,
     getOneUser, viewClass, viewSelectedClasses }
  ) (ViewMaterial);

@@ -9,30 +9,19 @@ import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: "10px",
-  },
   avatar: {
     width: theme.spacing(25),
     height: theme.spacing(25),
-    margin: "auto",
   },
   avatarImg1: { // If width is smaller than height
     width: theme.spacing(25),
-    margin: "auto",
   },
   avatarImg2: { //If height is smaller than width
     height: theme.spacing(25),
-    margin: "auto",
   },
-  dialogRoot: {
-    width: "350px",
+  profilePictureGrid: {
+    maxWidth: "350px",
     padding: "10px",
-  },
-  uploadCaution: {
-    color: "#A9A9A9",
-    display: "flex",
-    textAlign: "center",
   },
   addPhotoIconButton: {
     color: theme.palette.primary.main,
@@ -177,7 +166,7 @@ function ProfilePictureEditorDialog(props) {
   }
 
   return(
-    <div className={classes.root}>
+    <div>
       <LightTooltip title="Ganti Foto Profil">
         <IconButton
           disableRipple
@@ -192,33 +181,20 @@ function ProfilePictureEditorDialog(props) {
           />
         </IconButton>
       </LightTooltip>
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        className={classes.root}
-      >
-        <Grid container justify="center" className={classes.dialogRoot}>
-          <Grid item
-            container
-            justify="flex-end"
-            alignItems="flex-start"
-            style={{marginBottom: "10px"}}
-          >
-            <IconButton
-              size="small"
-              disableRipple
-              onClick={handleCloseDialog}
-            >
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <Grid container direction="column" alignItems="center" className={classes.profilePictureGrid}>
+          <Grid item container justify="flex-end" alignItems="flex-start" style={{marginBottom: "10px"}}>
+            <IconButton size="small" onClick={handleCloseDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
+          <Grid item style={{marginBottom: "20px"}}>
+            <Typography variant="h5" align="center">
               <b>Perbarui Foto Profil</b>
             </Typography>
           </Grid>
           <Grid item style={{marginBottom: "40px"}}>
-            <form onSubmit={onSubmitForm} style={{width: "100%"}}>
+            <form onSubmit={onSubmitForm}>
               <input
                 accept="image/*"
                 type="file"
@@ -229,15 +205,9 @@ function ProfilePictureEditorDialog(props) {
                   display: "none"
                 }}
               />
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="center"
-                spacing={2}
-              >
+              <Grid container direction="column" spacing={2} alignItems="center">
                 <Grid item style={{marginBottom: "20px"}}>
-                {imageUploadPreview()}
+                  {imageUploadPreview()}
                 </Grid>
                 <Grid item>
                   <Button
@@ -263,9 +233,11 @@ function ProfilePictureEditorDialog(props) {
               </Grid>
             </form>
           </Grid>
-          <Typography variant="subtitle2" className={classes.uploadCaution}>
+          <Grid item>
+          <Typography variant="subtitle2" align="center" color="textSecondary">
             Foto profil Anda dapat dilihat oleh semua orang yang menggunakan layanan Schooly.
           </Typography>
+          </Grid>
         </Grid>
       </Dialog>
     </div>

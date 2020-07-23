@@ -224,7 +224,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogBox: {
-    width: "350px",
+    maxWidth: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {
@@ -379,7 +379,7 @@ function ClassList(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              "Hapus Kelas berikut" 
+              "Hapus Kelas berikut"
             </Typography>
           </Grid>
           <Grid item container justify="center">

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -17,7 +18,14 @@ const styles = (theme) => ({
   errorInfo: {
     color: "red",
     fontSize: "10px",
-  }
+  },
+  label: {
+    border: "1px solid #ccc",
+    display: "inline-block",
+    width: "100px",
+    padding: "6px 12px",
+    cursor: "pointer",
+  },
 });
 
 class Tester extends Component {
@@ -26,6 +34,10 @@ class Tester extends Component {
 
     return(
       <div style={{display: "flex", margin: "auto", flexDirection: "column"}}>
+        <label className={classes.label}>
+          <input type="file" style={{display: "none"}}/>
+          Custom Upload
+        </label>
       </div>
     )
   }

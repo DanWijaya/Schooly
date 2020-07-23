@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   dialogBox: {
-    width: "350px",
+    maxWidth: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {
@@ -132,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
   uploadDialogGrid: {
-    width: "300px",
+    maxWidth: "300px",
     minHeight: "200px",
     padding: "15px",
   },
@@ -338,7 +338,7 @@ function ViewTaskStudent(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
-  
+
 
   let tugasId = props.match.params.id;
 
@@ -557,10 +557,10 @@ function ViewTaskStudent(props) {
             {!success ?  <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
           </Grid>
           <Grid item>
-            {!success ? 
+            {!success ?
             <Typography variant="body1" align="center" gutterBottom>
               <b>Mohon tetap tunggu di halaman ini.</b>
-            </Typography> : 
+            </Typography> :
             <Link to={`/tugas-murid/${tugasId}`}>
               <Button
                 variant="contained"

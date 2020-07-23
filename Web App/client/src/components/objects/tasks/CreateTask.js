@@ -92,7 +92,7 @@ const styles = (theme) => ({
     },
   },
   uploadDialogGrid: {
-    width: "300px",
+    maxWidth: "300px",
     minHeight: "200px",
     padding: "15px",
   },

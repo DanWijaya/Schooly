@@ -69,7 +69,7 @@ const styles = (theme) => ({
     backgroundColor: "#974994",
   },
   pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",  
+    backgroundColor: "#E43B37",
   },
   textFileTypeIcon: {
     backgroundColor: "#F7BC24",
@@ -91,7 +91,7 @@ const styles = (theme) => ({
     },
   },
   uploadDialogGrid: {
-    width: "300px",
+    maxWidth: "300px",
     minHeight: "200px",
     padding: "15px",
   },

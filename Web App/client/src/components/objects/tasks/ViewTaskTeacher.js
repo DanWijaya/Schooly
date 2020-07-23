@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   dialogBox: {
-    width: "350px",
+    maxWidth: "350px",
     padding: "15px",
   },
   dialogDeleteButton: {
