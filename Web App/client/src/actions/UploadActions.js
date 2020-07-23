@@ -5,7 +5,7 @@ export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {
     console.log(ontime)
   if (userData.role === "Student") {
     axios
-        .post(`/api/uploads/uploadtugas/${userData.id}/${taskId}/${ontime}`, tugas)
+        .post(`/api/upload/file_tugas/uploadtugas/${userData.id}/${taskId}/${ontime}`, tugas)
         .then(res => {
             console.log(res.data)
             dispatch({
@@ -30,7 +30,7 @@ export const deleteTugas = (tugas_id, userData) => dispatch => {
 
     if (userData.role === "Student") {
         axios
-            .delete(`/api/uploads/tugas/${userData.id}/${tugas_id}/`)
+            .delete(`/api/upload/file_tugas/tugas/${userData.id}/${tugas_id}/`)
             .then(res => {
                 console.log("Tugas berhasil dibuang")
                 window.location.reload()
@@ -83,57 +83,21 @@ export const getAllTaskFilesByUser = (userId) => dispatch => {
         })
 }
 
-export const downloadTugas = (tugas_id, userData) => dispatch =>{
+export const downloadTugas = (tugas_id, userData) => dispatch => {
     console.log("Downloading Tugas")
-    window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}` , "_blank")
-    // Arsip dulu ini.. ternyata ndak perlu pakai axios karena getnya cuma muncul di reducer (kita kan gak perlu di reducer, cuma not really sure yet)
-    // axios
-    //     .get(`/api/uploads/tugas/${tugas_id}`)
-    //     .then(res => {
-    //         console.log("Tugas berhasil diunduh")
-    //         // window.open(`http://localhost:5000/api/uploads/tugas/${tugas_id}` , "_blank")
-    //         dispatch({
-    //             type: GET_TUGAS,
-    //             payload: res.data
-    //         })
-    //     })
-    //     .catch(err => {
-    //         console.log("Error in downloading")
-    //         dispatch({
-    //             type: GET_ERRORS,
-    //             payload: err.response.data
-    //         })
-    //     })
+    window.open(`http://localhost:5000/api/upload/file_tugas/tugas/${tugas_id}` , "_blank")
 }
 
 export const previewTugas = (tugas_id) => dispatch => {
     console.log("Previewing Tugas")
-    window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
-    // Arsip dulu ini.. ternyata ndak perlu pakai axios karena getnya cuma muncul di reducer (kita kan gak perlu di reducer, cuma not really sure yet)
-    // axios
-    //     .get(`/api/uploads/previewtugas/${tugas_id}`)
-    //     .then(res => {
-    //         console.log("Tugas berhasil di preview")
-    //         window.open(`http://localhost:5000/api/uploads/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
-    //         dispatch({
-    //             type: GET_TUGAS,
-    //             payload: res.data
-    //         })
-    //     })
-    //     .catch(err => {
-    //         console.log("Error in downloading")
-    //         dispatch({
-    //             type: GET_ERRORS,
-    //             payload: err.response.data
-    //         })
-    //     })
+    window.open(`http://localhost:5000/api/upload/file_tugas/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
 }
 
 // Upload lampiran is handled together with createTask.
 export const getAllLampiranByTask = (lampiran) => dispatch => {
     console.log("Get lampiran by task is runned")
 
-    axios.get(`/api/uploads/all_lampiran_by_task/`, lampiran)
+    axios.get(`/api/upload/file_tugas/all_lampiran_by_task/`, lampiran)
         .then(res =>{
             console.log(res.data);
             dispatch({
@@ -152,18 +116,18 @@ export const getAllLampiranByTask = (lampiran) => dispatch => {
 
 export const downloadLampiran = (lampiran_id) => dispatch => {
     console.log("Downloading lampiran")
-    window.open(`http://localhost:5000/api/uploads/lampiran/${lampiran_id}` , "_blank")
+    window.open(`http://localhost:5000/api/upload/att_task/lampiran/${lampiran_id}` , "_blank")
 }
 
 export const previewLampiran = (lampiran_id) => dispatch => {
     console.log("Previewing lampiran")
-    window.open(`http://localhost:5000/api/uploads/previewlampiran/${lampiran_id}`, "_blank")
+    window.open(`http://localhost:5000/api/upload/att_task/preview/${lampiran_id}`, "_blank")
 }
 
 export const deleteLampiran = (lampiran_to_delete, task_id)  => {
     console.log("Delete lampiran is runned")
     axios
-        .delete(`/api/uploads/lampiran/${task_id}`, lampiran_to_delete)
+        .delete(`/api/upload/att_task/lampiran/${task_id}`, lampiran_to_delete)
         .then(res => console.log(res.data))
         .catch(err => {
             console.log("error in deleting lampiran file")
@@ -174,18 +138,18 @@ export const deleteLampiran = (lampiran_to_delete, task_id)  => {
 // Deal with the lampiran on Announcements
 export const downloadLampiranAnnouncement = (lampiran_id) => dispatch => {
     console.log("Downloading lampiran")
-    window.open(`http://localhost:5000/api/uploads/lampiran_announcement/${lampiran_id}` , "_blank")
+    window.open(`http://localhost:5000/api/upload/att_announcement/lampiran/${lampiran_id}` , "_blank")
 }
 
 export const previewLampiranAnnouncement = (lampiran_id) => dispatch => {
     console.log("Previewing lampiran")
-    window.open(`http://localhost:5000/api/uploads/previewlampiran_announcement/${lampiran_id}`, "_blank") // previously has "_blank"
+    window.open(`http://localhost:5000/api/upload/att_announcement/preview/${lampiran_id}`, "_blank") // previously has "_blank"
 }
 
 export const deleteLampiranAnnouncement = (lampiran_to_delete, task_id)  => {
     console.log("Delete lampiran is runned")
     axios
-        .delete(`/api/uploads/lampiran/${task_id}`, lampiran_to_delete)
+        .delete(`/api/upload/att_announcement/lampiran/${task_id}`, lampiran_to_delete)
         .then(res => console.log(res.data))
         .catch(err => {
             console.log("error in deleting lampiran file")
@@ -197,22 +161,11 @@ export const deleteLampiranAnnouncement = (lampiran_to_delete, task_id)  => {
 export const downloadLampiranMateri = (materi_id) => dispatch => {
     console.log("Downloading lampiran", materi_id)
     console.log(materi_id)
-    window.open(`http://localhost:5000/api/uploads/lampiran_materi/${materi_id}` , "_blank")
+    window.open(`http://localhost:5000/api/upload/att_material/lampiran_materi/${materi_id}` , "_blank")
 }
 
 export const previewLampiranMateri = (materi_id) => dispatch => {
     console.log("Previewing lampiran")
     console.log(materi_id)
-    window.open(`http://localhost:5000/api/uploads/previewlampiran_materi/${materi_id}` , "_blank")
+    window.open(`http://localhost:5000/api/upload/att_material/previewlampiran_materi/${materi_id}` , "_blank")
 }
-
-// export const deleteLampiranAnn = (lampiran_to_delete, task_id)  => {
-//     console.log("Delete lampiran is runned")
-//     axios
-//         .delete(`/api/uploads/lampiran/${task_id}`, lampiran_to_delete)
-//         .then(res => console.log(res.data))
-//         .catch(err => {
-//             console.log("error in deleting lampiran file")
-//             console.log(err)
-//         })
-// }

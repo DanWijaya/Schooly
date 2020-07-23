@@ -68,7 +68,7 @@ function NavBarLoggedInContents(props) {
     <Grid container className={classes.navbarContents}>
       <LightTooltip title={user.name}>
         <IconButton onClick={handleProfileMenu}>
-            <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+            <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
         </IconButton>
       </LightTooltip>
       <Menu
@@ -89,7 +89,7 @@ function NavBarLoggedInContents(props) {
           <Link to="/profil">
             <MenuItem className={classes.menuItem}>
               <ListItemIcon>
-                <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+                <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
               </ListItemIcon>
               <ListItemText primary="Profil Saya" />
             </MenuItem>
@@ -125,7 +125,7 @@ function NavBarLoggedInContents(props) {
         <Link to="/profil">
           <MenuItem className={classes.menuItem}>
             <ListItemIcon>
-              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+              <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
             </ListItemIcon>
             <ListItemText primary="Profil Saya" />
           </MenuItem>

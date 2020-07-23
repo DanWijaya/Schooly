@@ -1,4 +1,4 @@
-const avatar = require("./uploads");
+const avatar = require("./upload/uploads");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");

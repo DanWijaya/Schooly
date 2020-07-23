@@ -16,7 +16,7 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
           })
           if (formData.has('lampiran_materi')) {
               console.log("Post lampiran material is running")
-              return axios.post(`/api/uploads/upload_lampiran_materi/${res.data._id}`, formData);
+              return axios.post(`/api/upload/att_material/lampiran/${res.data._id}`, formData);
           }
           else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created material with no lampiran"
@@ -122,7 +122,7 @@ export const deleteMaterial = (materialId, history) => dispatch => {
         .then((res) => {
             console.log("Deleted: ", res.data)
             let lampiran_to_delete = Array.from(res.data.lampiran)
-            return axios.delete(`/api/uploads/lampiran_materi/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
+            return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
         })
         .then((res) => {
             console.log(res)
@@ -150,7 +150,7 @@ console.log("Update material is runned")
             payload: false
         })
         if (lampiran_to_delete.length > 0) {// axios.delete put the data is quite different..
-            return axios.delete(`/api/uploads/lampiran_materi/${materialId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
+            return axios.delete(`/api/upload/att_material/lampiran/${materialId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
         else
             return "No lampiran file is going to be deleted"
@@ -161,7 +161,7 @@ console.log("Update material is runned")
         console.log(formData.has("lampiran_materi"), formData.getAll("lampiran_materi"))
         if (formData.has('lampiran_materi')) {
             console.log("Lampiran material going to be uploaded")
-            return axios.post(`/api/uploads/upload_lampiran_materi/${materialId}`, formData);
+            return axios.post(`/api/upload/att_material/lampiran/${materialId}`, formData);
         }
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"

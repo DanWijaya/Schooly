@@ -394,7 +394,7 @@ function SubmittedTaskList(props) {
               <ListItem className={classes.personListContainer}>
                 <ListItemAvatar>
                   {!student.avatar ? <Avatar style={{marginRight: "10px"}}/> :
-                  <Avatar src={`/api/uploads/image/${student.avatar}`} style={{marginRight: "10px"}}/>}
+                  <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{marginRight: "10px"}}/>}
                 </ListItemAvatar>
                 <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
                 //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>

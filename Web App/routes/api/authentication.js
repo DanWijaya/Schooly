@@ -1,7 +1,6 @@
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 
-const avatar = require("./uploads");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");

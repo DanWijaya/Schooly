@@ -145,8 +145,8 @@ function Profile(props) {
   const handleCloseAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
-    }
-    setOpenAlert(false);
+    } 
+    setOpenAlert(false); 
   }
   console.log(user.avatar)
 
@@ -233,7 +233,7 @@ function Profile(props) {
               }
             >
               <Avatar
-                src={`/api/uploads/image/${user.avatar}`}
+                src={`/api/upload/avatar/${user.avatar}`}
                 className={classes.avatar}
               />
             </StyledBadge>

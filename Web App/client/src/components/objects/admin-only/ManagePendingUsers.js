@@ -493,7 +493,7 @@ function ManageUsers(props) {
                           </ListItemAvatar>
                         :
                           <ListItemAvatar>
-                            <Avatar src={`/api/uploads/image/${row.avatar}`}/>
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
                           </ListItemAvatar>
                         }
                       </Grid>
@@ -603,7 +603,7 @@ function ManageUsers(props) {
                           </ListItemAvatar>
                         :
                           <ListItemAvatar>
-                            <Avatar src={`/api/uploads/image/${row.avatar}`}/>
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
                           </ListItemAvatar>
                         }
                       </Grid>

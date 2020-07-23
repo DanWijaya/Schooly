@@ -57,10 +57,9 @@ export const updateUserData = (userData, userId, history) => dispatch => {
 
 export const updateAvatar = (userData, userId, formData) => dispatch => {
   if (Boolean(userData.avatar)) {
-    axios.delete(`/api/uploads/image/${userData.avatar}`)
+    axios.delete(`/api/upload/avatar/${userData.avatar}`)
       .then(res => {
-        return axios
-        .post("/api/users/update/avatar/" + userId, formData)
+        return axios.post("/api/users/update/avatar/" + userId, formData)
       })
       .then(res => {
         console.log("Old Profile picture is removed")

@@ -141,7 +141,7 @@ function ProfilePictureEditorDialog(props) {
             <img
               alt="profile"
               onLoad={onImgLoad}
-              src={`/api/uploads/image/${user.avatar}`}
+              src={`/api/upload/avatar/${user.avatar}`}
               ref={uploadedImage}
               className={avatarImgClass}
             />

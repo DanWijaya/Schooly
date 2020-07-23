@@ -16,7 +16,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
           })
           if (formData.has('lampiran_announcement')) {
               console.log("Post lampiran announcement is running")
-              return axios.post(`/api/uploads/upload_lampiran_announcement/${res.data._id}`, formData);
+              return axios.post(`/api/upload/att_announcement/lampiran/${res.data._id}`, formData);
           }
           else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created announcement with no lampiran"
@@ -110,7 +110,7 @@ export const deleteAnnouncement = (announcementId, history) => dispatch => {
             console.log("Deleted: ", res.data)
             let lampiran_to_delete = Array.from(res.data.lampiran)
             if (lampiran_to_delete.length > 0)
-                return axios.delete(`/api/uploads/lampiran_announcement/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
+              return axios.delete(`/api/upload/att_announcement/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
             return "Announcement deleted has no lampiran"
         })
         .then((res) => {
@@ -139,7 +139,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
         })
         console.log("From actions: ", lampiran_to_delete)
         if (lampiran_to_delete.length > 0) {// axios.delete put the data is quite different..
-            return axios.delete(`/api/uploads/lampiran_announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
+            return axios.delete(`/api/upload/att_announcement/lampiran/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
         else
             return "No lampiran file is going to be deleted"
@@ -150,7 +150,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
         console.log(formData.has("lampiran_announcement"), formData.getAll("lampiran_announcement"))
         if (formData.has('lampiran_announcement')) {
             console.log("Lampiran announcement going to be uploaded")
-            return axios.post(`/api/uploads/upload_lampiran_announcement/${annId}`, formData);
+            return axios.post(`/api/upload/att_announcement/lampiran/${annId}`, formData);
         }
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"

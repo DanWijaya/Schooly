@@ -435,7 +435,7 @@ function ViewClass(props) {
             {teachers_map.get(kelas.walikelas) ?
             <PersonListItem
             person_avatar={
-              `/api/uploads/image/${teachers_map.get(kelas.walikelas).avatar}`}
+              `/api/upload/avatar/${teachers_map.get(kelas.walikelas).avatar}`}
             person_name={teachers_map.get(kelas.walikelas).name }
             person_role={teachers_map.get(kelas.walikelas).subject_teached}/> : null
             }
@@ -450,7 +450,7 @@ function ViewClass(props) {
           <List className={classes.listContainer}>
             {students_by_class.map((student) => (
               <PersonListItem
-                person_avatar={`/api/uploads/image/${student.avatar}`}
+                person_avatar={`/api/upload/avatar/${student.avatar}`}
                 person_name={student.name}
                 person_id={student._id}
                 person_role={student_role(student._id)}
@@ -612,7 +612,7 @@ function ViewClass(props) {
             <List className={classes.listContainer}>
               <PersonListItem
                 person_avatar={teachers_map.get(kelas.walikelas) ?
-                  `/api/uploads/image/${teachers_map.get(kelas.walikelas).avatar}` : null}
+                  `/api/upload/avatar/${teachers_map.get(kelas.walikelas).avatar}` : null}
                 person_name={teachers_map.get(kelas.walikelas)? teachers_map.get(kelas.walikelas).name : null}
                 person_role={teachers_map.get(kelas.walikelas) ? teachers_map.get(kelas.walikelas).subject_teached : null}
               />
@@ -626,7 +626,7 @@ function ViewClass(props) {
             <List className={classes.listContainer}>
               {students_by_class.map((student) => (
                 <PersonListItem
-                  person_avatar={`/api/uploads/image/${student.avatar}`}
+                  person_avatar={`/api/upload/avatar/${student.avatar}`}
                   person_name={student.name}
                   person_role={student.role}
                 />
