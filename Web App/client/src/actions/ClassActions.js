@@ -8,7 +8,7 @@ export const createClass = (classData, history) => dispatch => {
     .post("/api/classes/create", classData)
     .then(res => {
         console.log(res.data)
-        alert("Class is created")
+        alert("Kelas telah dibuat")
         history.push("/daftar-kelas")
     })
     .catch(err =>
@@ -75,7 +75,7 @@ export const updateClass = (classData, classId, history) => dispatch => {
     .post("/api/classes/update/" + classId, classData)
     .then(res => {
         console.log("Class updated to be : ", res.data);
-        alert("Class is updated successfully")
+        alert("Kelas telah berhasil disunting")
         history.push("/daftar-kelas")
     })
     .catch(err => {

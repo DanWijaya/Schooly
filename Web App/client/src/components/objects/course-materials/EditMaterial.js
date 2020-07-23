@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
-import lokal from "date-fns/locale/id";
 import {Link } from "react-router-dom"
 import classnames from "classnames";
 import { viewClass } from "../../../actions/ClassActions";
@@ -71,7 +69,7 @@ const styles = (theme) => ({
     backgroundColor: "#974994",
   },
   pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
+    backgroundColor: "#E43B37",  
   },
   textFileTypeIcon: {
     backgroundColor: "#F7BC24",

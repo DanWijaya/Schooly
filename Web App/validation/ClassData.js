@@ -8,7 +8,7 @@ module.exports = function validateClassInput(data) {
     // Convert empty fields to an empty strings so validator functions can be used
     data.name = isEmpty(data.name) ? "" : data.name;
     data.walikelas = isEmpty(data.walikelas) ? "" : data.walikelas;
-    data.ukuran = isEmpty(data.ukuran) ? 0 : data.ukuran;
+    data.ukuran = isEmpty(data.ukuran) ? 0 : Number(data.ukuran);
 
     // Name checks
     if (Validator.isEmpty(data.name)) {
@@ -20,13 +20,16 @@ module.exports = function validateClassInput(data) {
         errors.walikelas = "Wali kelas belum diisi" 
     }
 
-    if(!Number.isInteger(data.ukuran)){
+  
+    if(Number.isInteger(data.ukuran)){
         if(data.ukuran <= 0) {
           errors.ukuran = "Jumlah murid harus bernilai positif"
-      } else {
-          errors.ukuran = "Jumlah murid harus berupa bilangan bulat"
-      }
+        }
+    }else{
+      errors.ukuran = "Jumlah murid harus berupa bilangan bulat"
     }
+
+    
 
     
     

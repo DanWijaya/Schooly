@@ -336,7 +336,7 @@ class Dashboard extends Component {
             <Paper className={classes.workPaper}>
               <div className={classes.paperTitle}>
                 <Typography variant="h5" color="primary">
-                  Pekerjaan Anda
+                  To Do List
                 </Typography>
                 <div style={{display: "flex", justifyContent: "flex-end"}}>
                   <Link to="/daftar-tugas">

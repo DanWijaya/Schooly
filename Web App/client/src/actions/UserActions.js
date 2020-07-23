@@ -1,19 +1,18 @@
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
-import { Redirect } from "react-router";
 
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
    GET_USERS, GET_ALL_STUDENTS, GET_ALL_TEACHERS, 
-   GET_ONE_USER, GET_STUDENTS_BY_CLASS, GET_SUCCESS_RESPONSE,
-    GET_PENDING_STUDENTS, GET_PENDING_TEACHERS} from "./Types";
+   GET_ONE_USER, GET_STUDENTS_BY_CLASS,
+   GET_PENDING_STUDENTS, GET_PENDING_TEACHERS} from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
   axios
     .post("/api/users/register", userData)
     .then(res => {
-      alert("New User is registered successfully")
+      alert("Akun baru telah terdaftar")
       history.push("/masuk")
     })
     .catch(err => {

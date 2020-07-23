@@ -49,35 +49,35 @@ function Footer() {
           </Grid>
           <Grid item>
             <div className={classes.footerMobileContainer}>
-              <Link to="/bantuan">
-                <Typography variant="caption">
+              <Typography variant="caption">
+                <Link to="/bantuan">
                   Bantuan
-                </Typography>
-              </Link>
-              <Link to="/tentang-schooly">
-                <Typography variant="caption">
+                </Link>
+              </Typography>
+              <Typography variant="caption">
+                <Link to="/tentang-schooly">
                   Tentang Schooly
-                </Typography>
-              </Link>
-              <Link to="/kebijakan-penggunaan">
-                <Typography variant="caption">
-                  Kebijakan Pengunaan
-                </Typography>
-              </Link>
+                </Link>
+              </Typography>
+              <Typography variant="caption">
+                <Link to="/kebijakan-penggunaan">
+                Kebijakan Pengunaan
+                </Link>
+              </Typography>
             </div>
           </Grid>
           <Grid item>
             <div className={classes.footerMobileContainer}>
-              <Link to="mailto:schoolysystem@gmail.com">
-                <Typography variant="caption">
+              <Typography variant="caption">
+                <Link to="mailto:schoolysystem@gmail.com">
                   Hubungi Kami
-                </Typography>
-              </Link>
-              <Link to="http://www.instagram.com">
-                <Typography variant="caption">
+                </Link>
+              </Typography>
+              <Typography variant="caption">
+                <Link to="http://www.instagram.com">
                   Instagram
-                </Typography>
-              </Link>
+                </Link>
+              </Typography>
             </div>
           </Grid>
         </Grid>

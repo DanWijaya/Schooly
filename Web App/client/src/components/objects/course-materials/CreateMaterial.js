@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { createTask } from "../../../actions/TaskActions"
 import { viewClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -196,7 +195,7 @@ class CreateMaterial extends Component {
   }
 
   lampiranUploader = React.createRef(null)
-  uploadedLampiran = React.createRef(null)
+  // uploadedLampiran = React.createRef(null)
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
@@ -311,7 +310,6 @@ class CreateMaterial extends Component {
 
     console.log(class_assigned)
     console.log(errors)
-
     const fileType = (filename) => {
       let ext_file = path.extname(filename)
       switch(ext_file) {
@@ -523,14 +521,14 @@ class CreateMaterial extends Component {
                         accept="file/*"
                         style={{display: "none"}}
                       />
-                      <input
+                      {/* <input
                         type="file"
                         multiple={true}
                         name="file"
                         id="file"
                         ref={this.uploadedLampiran}
                         style={{display: "none"}}
-                      />
+                      /> */}
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}

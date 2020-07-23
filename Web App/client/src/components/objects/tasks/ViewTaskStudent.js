@@ -350,7 +350,7 @@ function ViewTaskStudent(props) {
     // Will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
 
-  }, [tasksCollection.person_in_charge_id, success, all_subjects_map.length])
+  }, [tasksCollection._id, success, all_subjects_map.length])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -601,7 +601,7 @@ function ViewTaskStudent(props) {
                   <h6>Mata Pelajaran: {all_subjects_map.get(tasksCollection.subject)}</h6>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Penanggung Jawab: <b>{selectedUser.name}</b>
+                  Penanggung Jawab: <b>{selectedUser._id !== tasksCollection.person_in_charge_id ? null : selectedUser.name}</b>
                 </Typography>
               </Grid>
               <Grid item xs={12} md={5}>

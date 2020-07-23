@@ -136,7 +136,7 @@ function Profile(props) {
 
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection } = props;
-
+  // const { kelas } = props.classesCollection;
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
@@ -266,8 +266,8 @@ function Profile(props) {
             } SMA
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            Class {!classesCollection.kelas.name ?
-             null : classesCollection.kelas.name}
+            {!classesCollection.kelas.name ? 
+            null : `Kelas ${classesCollection.kelas.name}`}
           </Typography>
           <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
           <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>

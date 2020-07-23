@@ -516,11 +516,11 @@ class Register extends Component {
             </Grid>
             <Divider />
             <Grid item>
+              <Typography align="center">
               <Link to="/masuk" style={{marginTop: "20px"}}>
-                <Typography align="center">
-                  Sudah ada Akun?
-                </Typography>
-              </Link>
+                Sudah ada Akun?
+                </Link>
+              </Typography>
             </Grid>
           </Grid>
         </Paper>

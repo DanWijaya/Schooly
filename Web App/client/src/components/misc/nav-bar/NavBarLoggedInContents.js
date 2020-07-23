@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
 import LightTooltip from "../light-tooltip/LightTooltip";
@@ -11,6 +11,9 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme) => ({
   menuItem: {
+    "& .MuiListItemText-primary": {
+      color: "black",
+    },
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
@@ -34,7 +37,6 @@ function NavBarLoggedInContents(props) {
 
   const { isMobileView, logoutUser } = props;
   const { user } = props.auth;
-  const history = useHistory()
 
   // Menu items in Mobile
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
@@ -84,19 +86,21 @@ function NavBarLoggedInContents(props) {
             horizontal: "center",
         }}
       >
-        <MenuItem button component="a" href="/profil" className={classes.menuItem}>
-          <ListItemIcon>
-            <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
-          </ListItemIcon>
-          <ListItemText primary="Profil Saya" />
-        </MenuItem>
-        <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
-          <ListItemIcon>
-            <ExitToAppIcon fontSize="medium" />
-          </ListItemIcon>
-          <ListItemText primary="Keluar" />
-        </MenuItem>
-      </Menu>
+          <Link to="/profil">
+            <MenuItem className={classes.menuItem}>
+              <ListItemIcon>
+                <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+              </ListItemIcon>
+              <ListItemText primary="Profil Saya" />
+            </MenuItem>
+          </Link>
+          <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
+            <ListItemIcon>
+              <ExitToAppIcon fontSize="medium" />
+            </ListItemIcon>
+            <ListItemText primary="Keluar" />
+          </MenuItem>
+        </Menu>
     </Grid>
   )
 
@@ -118,12 +122,14 @@ function NavBarLoggedInContents(props) {
         anchorOrigin={{vertical: "top", horizontal: "right"}}
         transformOrigin={{vertical: "top", horizontal: "right"}}
       >
-        <MenuItem button component="a" href="/profil" className={classes.menuItem}>
-          <ListItemIcon>
-            <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
-          </ListItemIcon>
-          <ListItemText primary="Profil Saya" />
-        </MenuItem>
+        <Link to="/profil">
+          <MenuItem className={classes.menuItem}>
+            <ListItemIcon>
+              <Avatar src={`/api/uploads/image/${user.avatar}`} className={classes.navbarProfilePicture} />
+            </ListItemIcon>
+            <ListItemText primary="Profil Saya" />
+          </MenuItem>
+        </Link>
         <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
           <ListItemIcon>
             <ExitToAppIcon fontSize="medium" />

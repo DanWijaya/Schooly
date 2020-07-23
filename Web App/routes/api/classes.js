@@ -22,8 +22,8 @@ router.post("/create", (req, res) => {
     Class.findOne({ name: req.body.name }).then(kelas => {
         if (kelas) {
             return res.status(400).json({ name: "Class name already exists" });
-
         }
+         
         else {
             const newKelas = new Class({
                 name: req.body.name,

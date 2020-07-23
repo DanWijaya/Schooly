@@ -19,10 +19,6 @@ const passport = require("passport");
 // Load User model
 
 const User= require("../../models/user_model/User");
-const Student = require("../../models/user_model/Student");
-const Teacher = require("../../models/user_model/Teacher");
-const Class = require("../../models/Class");
-const { isMaster } = require("cluster");
 
 // POST to saveresethash
 router.post('/saveresethash', async(req,res) => {
@@ -54,7 +50,6 @@ router.post('/saveresethash', async(req,res) => {
               to: foundUser.email,
               subject: `Permohonan Mengubah Kata Sandi di saat ${time_in_string}`,
               html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. <b>Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali.</b> <br/><br/> <a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`,
-              // html: `<a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`
             };
 
             // Send it
@@ -140,6 +135,7 @@ router.post("/changepassword", (req,res) => {
 
     return res.status(404).json({ new_password: 'Kata sandi baru belum diisi'})
   }
+
   else if (!Validator.isLength(req.body.new_password, { min: 8, max: 30 })) {
     return res.status(404).json({ new_password: 'Kata sandi harus terdiri dari 8 hingga 30 karakter' })
   }
@@ -156,17 +152,22 @@ router.post("/changepassword", (req,res) => {
     // Check password
     bcrypt.compare(old_password, user.password).then(isMatch => {
       if (isMatch) {
-        // User matched, then hash the new password before saving to Database.
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(new_password, salt, (err, hash) => {
-            if (err) throw err;
-            user.password = hash;
-            user
-              .save()
-              .then(user => res.json(user))
-              .catch(err => console.log(err));
+        bcrypt.compare(new_password, user.password).then(isMatch => {
+          if(isMatch)
+            return res.status(404).json({ new_password: 'Kata sandi baru dan lama tidak boleh sama'})
+        
+          // User matched, then hash the new password before saving to Database.
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(new_password, salt, (err, hash) => {
+              if (err) throw err;
+              user.password = hash;
+              user
+                .save()
+                .then(user => res.json(user))
+                .catch(err => console.log(err));
+            });
           });
-        });
+        })
       }
       else {
         return res.status(404).json({ old_password: "Tidak sama dengan kata sandi sekarang"})

@@ -14,7 +14,7 @@ const styles = (theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
-  content: {
+  content: {  
     padding: "20px",
   },
   divider: {
@@ -79,24 +79,7 @@ class EditClass extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Class props is received")
     const { name } = this.state;
-    // var next_ketua_kelas = {}
-    // var next_bendahara = {}
-    // var next_sekretaris = {}
-    // var next_walikelas = {}
-
     const {kelas} = nextProps.classesCollection
-    //classesCollection.kelas = individual class, .all_classes = all classes
-    // if (kelas.ketua_kelas)
-    //   next_ketua_kelas = kelas.ketua_kelas
-
-    // if (kelas.sekretaris)
-    //   next_sekretaris = kelas.sekretaris
-
-    // if (kelas.bendahara)
-    //   next_bendahara = kelas.bendahara
-
-    // if (kelas.walikelas)
-    //   next_walikelas = kelas.walikelas
 
     if (Boolean(kelas)) {
       this.setState({
