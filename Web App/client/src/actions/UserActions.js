@@ -56,13 +56,9 @@ export const updateUserData = (userData, userId, history) => dispatch => {
 }
 
 export const updateAvatar = (userData, userId, formData) => dispatch => {
-  if (Boolean(userData.avatar)) {
-    axios.delete(`/api/upload/avatar/${userData.avatar}`)
+  axios.post("/api/users/update/avatar/" + userId, formData)
+    
       .then(res => {
-        return axios.post("/api/users/update/avatar/" + userId, formData)
-      })
-      .then(res => {
-        console.log("Old Profile picture is removed")
         // Set token to localStorage
         const { token } = res.data;
         localStorage.setItem("jwtToken", token);
@@ -73,7 +69,10 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
         const decoded = jwt_decode(token);
         // Set current user
         dispatch(setCurrentUser(decoded));
-
+        if(Boolean(userData.avatar))
+          return axios.delete(`/api/upload/avatar/${userData.avatar}`)
+        else
+          return "Old avatar does not exist"
       })
       .catch(err => {
         dispatch({
@@ -81,30 +80,6 @@ export const updateAvatar = (userData, userId, formData) => dispatch => {
           payload: err.response.data
         })
       })
-  }
-  else {
-      axios
-        .post("/api/users/update/avatar/" + userId, formData, userData)
-        .then(res => {
-          // Set token to localStorage
-          const { token } = res.data;
-          localStorage.setItem("jwtToken", token);
-          console.log("Foto udah diganti")
-          // Set token to Auth header
-          setAuthToken(token);
-          // Decode token to get user data
-          const decoded = jwt_decode(token);
-          // Set current user
-          dispatch(setCurrentUser(decoded));
-
-        })
-        .catch(err => {
-          dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-          })
-        })
-    }
   }
 
 // to initiate a dispatch, pass the result to the dispatch() function.

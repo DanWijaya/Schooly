@@ -138,6 +138,7 @@ function Profile(props) {
   const { updateAvatar, setCurrentClass, classesCollection } = props;
   // const { kelas } = props.classesCollection;
   // Alert control for ProfilePictureEditorDialog
+
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
