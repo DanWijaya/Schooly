@@ -379,7 +379,7 @@ function ClassList(props) {
           </Grid>
           <Grid item container justify="center" style={{marginBottom: "20px"}}>
             <Typography variant="h5" gutterBottom>
-              "Hapus Kelas berikut"
+              Hapus Kelas berikut
             </Typography>
           </Grid>
           <Grid item container justify="center">
@@ -516,8 +516,7 @@ function ClassList(props) {
                             <Link to={`/sunting-kelas/${row._id}`} onClick={(e) => e.stopPropagation()}>
                               <IconButton
                                 size="small"
-                                className={classes.editClassButton}
-                              >
+                                className={classes.editClassButton}>
                                 <EditIcon fontSize="small" />
                               </IconButton>
                             </Link>

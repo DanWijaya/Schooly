@@ -27,6 +27,7 @@ Daniel:
 9. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 10. Select untuk yang edit class masih bermasalah...
 11. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga...
+12. Untuk safari, masih ada masalah di upload fotonya klo lebih dari satu kali. 
 
 IMPORTANT:
 1. Jumlah murid dan absen di kelas

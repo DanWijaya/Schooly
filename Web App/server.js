@@ -3,18 +3,19 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 
+//untuk users punya
 const users = require("./routes/api/Users");
-const tasks = require("./routes/api/Tasks");
-const classes = require("./routes/api/Classes");
-const uploads = require("./routes/api/upload/uploads");
 
+// untuk uploads punya
 const att_announcement = require("./routes/api/upload/att_announcement");
 const att_material = require("./routes/api/upload/att_material");
 const att_task = require("./routes/api/upload/att_task");
 const file_tugas = require("./routes/api/upload/file_tugas");
 const avatar = require("./routes/api/upload/avatar");
 
-const otps = require("./routes/api/otps");
+// untuk objects punya
+const tasks = require("./routes/api/Tasks");
+const classes = require("./routes/api/Classes");
 const subjects = require("./routes/api/subjects");
 const authentication = require('./routes/api/authentication');
 const announcements = require("./routes/api/announcements");
@@ -73,7 +74,6 @@ app.use("/api/upload/att_task", att_task);
 app.use("/api/upload/file_tugas", file_tugas);
 app.use("/api/upload/avatar", avatar.router)
 
-app.use("/api/otps", otps)
 app.use("/api/subjects", subjects);
 app.use("/api/authentication", authentication)
 app.use("/api/announcements", announcements)

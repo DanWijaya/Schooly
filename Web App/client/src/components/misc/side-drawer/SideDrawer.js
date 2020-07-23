@@ -70,10 +70,29 @@ const StyledListItem = withStyles((theme) => ({
   },
 }))(ListItem);
 
-const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=false) => {
-  if (!isDisabled && linkto) {
-    return(
-        <Link to={linkto}>
+function DrawerContent(props) {
+  const classes = useStyles();
+
+  const { user, handleDrawerMobile } = props;
+
+  const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=false) => {
+    if (!isDisabled && linkto) {
+      return(
+          <Link to={linkto} onClick={handleDrawerMobile}>
+            <StyledListItem button disabled={isDisabled}>
+              <ListItemIcon>
+                {icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={<Typography color="textPrimary">{itemText1}</Typography>}
+                secondary={itemText2}
+              />
+            </StyledListItem>
+          </Link>
+      )
+    }
+    else {
+      return(
           <StyledListItem button disabled={isDisabled}>
             <ListItemIcon>
               {icon}
@@ -83,28 +102,9 @@ const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=
               secondary={itemText2}
             />
           </StyledListItem>
-        </Link>
-    )
+      )
+    }
   }
-  else {
-    return(
-        <StyledListItem button disabled={isDisabled}>
-          <ListItemIcon>
-            {icon}
-          </ListItemIcon>
-          <ListItemText
-            primary={<Typography color="textPrimary">{itemText1}</Typography>}
-            secondary={itemText2}
-          />
-        </StyledListItem>
-    )
-  }
-}
-
-function DrawerContent(props) {
-  const classes = useStyles();
-
-  const { user } = props;
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
@@ -176,7 +176,7 @@ function SideDrawer(props) {
               keepMounted: true,
             }}
           >
-            <DrawerContent user={user} />
+            <DrawerContent user={user} handleDrawerMobile={handleDrawerMobile}/>
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">

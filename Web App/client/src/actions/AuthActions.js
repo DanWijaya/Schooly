@@ -114,8 +114,6 @@ export const changePassword = (passwordData, history) => dispatch => {
           type: GET_SUCCESS_RESPONSE,
           payload: true
         })
-        // alert("Kata sandi telah berhasil diganti, silahkan diingat kata sandi baru anda.")
-        // window.location.reload()
       })
       .catch(err => {
         console.log(err);

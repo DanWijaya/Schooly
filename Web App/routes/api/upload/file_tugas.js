@@ -3,8 +3,6 @@ const router = express.Router();
 const keys = require("../../../config/keys")
 const mongoose = require("mongoose");
 const User= require("../../../models/user_model/User");
-const Task = require("../../../models/Task");
-const { GridFSBucket } = require("mongodb");
 const GridFsStream = require("gridfs-stream");
 const uploads = require("./uploads");
 

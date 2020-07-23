@@ -15,15 +15,6 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true)
 const conn = mongoose.createConnection(keys.mongoURI)
 
-// Initialize gfs
-let gfsAvatar;
-
-conn.once("open", () => {
-  // Initialize Stream
-  gfsAvatar = GridFsStream(conn.db, mongoose.mongo);
-  gfsAvatar.collection("avatar")
-})
-
 // Storage Engine initialization function
 function storageEngine(bucketName, random=false) {
   return new GridFsStorage({
