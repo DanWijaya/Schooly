@@ -9,7 +9,6 @@ const OutlinedTextField = (props) => {
     setBorderStyle("1px solid #CCC")
   }
   const onFocus = (e) => {
-    // console.log(e.target.id, props.error)
     setBorderStyle("2px solid #2196F3")
   }
 

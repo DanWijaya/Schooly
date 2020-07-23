@@ -86,7 +86,7 @@ function NavBarLoggedInContents(props) {
             horizontal: "center",
         }}
       >
-          <Link to="/profil">
+          <Link to="/profil" onClick={handleProfileMenuClose}>
             <MenuItem className={classes.menuItem}>
               <ListItemIcon>
                 <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
@@ -122,7 +122,7 @@ function NavBarLoggedInContents(props) {
         anchorOrigin={{vertical: "top", horizontal: "right"}}
         transformOrigin={{vertical: "top", horizontal: "right"}}
       >
-        <Link to="/profil">
+        <Link to="/profil" onClick={handleMobileMenuClose}>
           <MenuItem className={classes.menuItem}>
             <ListItemIcon>
               <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />

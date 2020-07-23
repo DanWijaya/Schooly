@@ -27,7 +27,6 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
               type: GET_SUCCESS_RESPONSE,
               payload: true
             })
-            //   alert("Announcement is created")
             //   history.push("/daftar-pengumuman")
           })
       .catch(err =>{

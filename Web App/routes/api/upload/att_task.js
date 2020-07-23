@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const keys = require("../../../config/keys")
 const mongoose = require("mongoose");
-const User= require("../../../models/user_model/User");
 const GridFsStream = require("gridfs-stream");
 const uploads = require("./uploads");
 const Task = require("../../../models/Task");
