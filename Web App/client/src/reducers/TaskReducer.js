@@ -1,4 +1,4 @@
-import { GET_TASKS, GET_FILE_BY_USER } from "../actions/Types";
+import { GET_TASKS } from "../actions/Types";
 
 const initialState = {};
 

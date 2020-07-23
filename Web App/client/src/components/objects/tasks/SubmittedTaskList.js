@@ -1,12 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { clearSuccess } from "../../../actions/SuccessActions";
 import { viewOneTask, gradeTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
-import StandardTextField from "../../misc/text-field/StandardTextField";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
    List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -127,7 +125,7 @@ function TabIndex(index) {
 function WorkFile(props) {
   const classes = useStyles();
 
-  const {file_type_icon, file_id, file_name, file_type, onDownloadFile, onPreviewFile} = props;
+  const { file_id, file_name, file_type, onDownloadFile, onPreviewFile} = props;
 
   return(
     <Paper variant="outlined" className={classes.listItemPaper}>

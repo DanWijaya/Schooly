@@ -211,7 +211,7 @@ function ViewMaterial(props) {
   const classes = useStyles();
 
   const { user, selectedUser} = props.auth;
-  const { deleteMaterial, getOneUser, getAllSubjects, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewClass, viewSelectedClasses } = props;
+  const { deleteMaterial, getOneUser, getAllSubjects, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewClass } = props;
   const { selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const materi_id = props.match.params.id

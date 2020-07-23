@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -7,7 +6,7 @@ import "moment/locale/id";
 import { createSubject, getAllSubjects, getSubject, editSubject, deleteSubject } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+import { Button, IconButton, Dialog,
    Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, TextField, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -52,7 +51,7 @@ function stableSort(array, comparator) {
 }
 
 function SubjectListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role, handleOpenFormDialog } = props;
+  const { classes, order, orderBy, onRequestSort, handleOpenFormDialog } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -60,7 +59,6 @@ function SubjectListToolbar(props) {
 
   const headCells = [
     { id: "name", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    // { id: "all_class", numeric: false, disablePadding: false, label: "Semua Kelas" },
   ];
 
   // Sort Menu
@@ -286,7 +284,6 @@ function SubjectList(props) {
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
-  const [selected, setSelected] = React.useState([]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openFormDialog, setOpenFormDialog] = React.useState(null);
@@ -318,7 +315,7 @@ function SubjectList(props) {
     console.log(retrieved_users)
     // If all_subjects is not undefined or an empty array
     rows = []
-    all_subjects.map((data) => { subjectRowItem(data)})
+    all_subjects.map((data) =>  subjectRowItem(data))
   }
 
   const handleRequestSort = (event, property) => {
@@ -331,7 +328,6 @@ function SubjectList(props) {
   // This function is defined above.
   retrieveSubjects()
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
   const onDeleteSubject = (id) => {
     deleteSubject(id)
   }
@@ -536,7 +532,6 @@ function SubjectList(props) {
       <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             return(
                 <Grid item>

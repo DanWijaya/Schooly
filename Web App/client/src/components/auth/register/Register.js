@@ -175,7 +175,7 @@ class Register extends Component {
   };
 
   render() {
-    const { classes, classesCollection, subjectsCollection } = this.props;
+    const { classes } = this.props;
     const { all_classes} = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { errors } = this.state;

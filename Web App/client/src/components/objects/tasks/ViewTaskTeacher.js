@@ -6,7 +6,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { uploadTugas, deleteTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
+import { uploadTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { viewClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -211,17 +211,17 @@ function ViewTaskTeacher(props) {
 
   const { user } = props.auth;
   const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask, viewClass, getAllSubjects } = props;
-  const { all_classes, all_classes_map } = props.classesCollection;
+  const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
   const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [classes_map, setClassesMap] = React.useState(new Map());
 
   React.useEffect(() => {
     viewOneTask(task_id)
     viewClass("map")
     getAllSubjects("map")
-  }, [tasksCollection._id, all_classes_map.size, all_subjects_map.size])
+  }, [viewOneTask, viewClass, getAllSubjects])
+  // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -380,6 +380,7 @@ console.log(all_classes_map)
                     return `${all_classes_map.get(kelas).name}`
                   return (`${all_classes_map.get(kelas).name}, `)
                 }
+                return null;
               })
             })
             </Typography>

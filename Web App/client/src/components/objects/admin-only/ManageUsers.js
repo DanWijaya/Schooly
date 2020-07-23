@@ -217,14 +217,13 @@ function ManageUsers(props) {
   const [orderBy_student, setOrderByStudent] = React.useState("name");
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
 
-  const [selected, setSelected] = React.useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openDisableDialog, setOpenDisableDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null)
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
   const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
-  const { user, all_students, all_teachers, pending_users } = props.auth;
+  const { all_students, all_teachers, pending_users } = props.auth;
 
   let student_rows = []
   let teacher_rows = []
@@ -271,43 +270,11 @@ function ManageUsers(props) {
       setOrderByTeacher(property);
     }
   };
-  // Belum dipakai sih.
-/*
-  const handleSelectAllClick = (event, checked) => {
-    if (checked) {
-      const newSelected = student_rows.map((n) => n._id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, item) => { // get the id by item._id
-    const selectedIndex = selected.indexOf(item._id);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, item._id);
-    }
-    else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    }
-    else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    }
-    else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-  };*/
 
   // Call the function to get the classes from DB
   // this function is defined above
   retrieveUsers()
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
   const onDeleteUser = (id) => {
     deleteUser(id)
   }
@@ -473,15 +440,12 @@ function ManageUsers(props) {
       <Grid container direction="column" spacing={2} style={{marginBottom: "50px"}}>
         {stableSort(student_rows, getComparator(order_student, orderBy_student))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             return(
               <Grid item>
                 <ExpansionPanel
                   button
                   variant="outlined"
-                  aria-checked={isItemSelected}
-                  selected={isItemSelected}
                 >
                   <ExpansionPanelSummary className={classes.profilePanelSummary}>
                     <Grid container spacing={1} justify="space-between" alignItems="center">
@@ -584,15 +548,12 @@ function ManageUsers(props) {
       <Grid container direction="column" spacing={2}>
         {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             return(
               <Grid item>
                 <ExpansionPanel
                   button
                   variant="outlined"
-                  aria-checked={isItemSelected}
-                  selected={isItemSelected}
                 >
                   <ExpansionPanelSummary className={classes.profilePanelSummary}>
                     <Grid container spacing={1} justify="space-between" alignItems="center">

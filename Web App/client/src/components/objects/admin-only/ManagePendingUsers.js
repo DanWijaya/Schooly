@@ -217,14 +217,13 @@ function ManageUsers(props) {
   const [orderBy_student, setOrderByStudent] = React.useState("name");
   const [orderBy_teacher, setOrderByTeacher] = React.useState("name");
 
-  const [selected, setSelected] = React.useState([]);
   const [openApproveDialog, setOpenApproveDialog] = React.useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null)
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
-  const { deleteUser, setUserActive, getPendingTeachers, getPendingStudents, getPendingUsers } = props;
-  const { user, pending_students, pending_teachers, pending_users } = props.auth;
+  const { deleteUser, setUserActive, getPendingTeachers, getPendingStudents } = props;
+  const { pending_students, pending_teachers, pending_users } = props.auth;
 
   let student_rows = []
   let teacher_rows = []
@@ -309,7 +308,6 @@ function ManageUsers(props) {
   // this function is defined above
   retrieveUsers()
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
   const onDeleteUser = (id) => {
     deleteUser(id)
   }
@@ -474,15 +472,12 @@ function ManageUsers(props) {
       <Grid container direction="column" spacing={2} style={{marginBottom: "50px"}}>
         {stableSort(student_rows, getComparator(order_student, orderBy_student))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             return(
               <Grid item>
                 <ExpansionPanel
                   button
                   variant="outlined"
-                  aria-checked={isItemSelected}
-                  selected={isItemSelected}
                 >
                   <ExpansionPanelSummary className={classes.profilePanelSummary}>
                     <Grid container spacing={1} justify="space-between" alignItems="center">
@@ -584,15 +579,12 @@ function ManageUsers(props) {
       <Grid container direction="column" spacing={2}>
         {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             return(
               <Grid item>
                 <ExpansionPanel
                   button
                   variant="outlined"
-                  aria-checked={isItemSelected}
-                  selected={isItemSelected}
                 >
                   <ExpansionPanelSummary className={classes.profilePanelSummary}>
                     <Grid container spacing={1} justify="space-between" alignItems="center">

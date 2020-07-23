@@ -202,7 +202,6 @@ class EditMaterial extends Component {
   uploadedLampiran = React.createRef(null)
 
   componentDidMount() {
-    const { user} = this.props.auth;
     const { viewClass, getAllSubjects, clearErrors, getOneMaterial } = this.props;
 
     viewClass()
@@ -214,8 +213,6 @@ class EditMaterial extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
-    const { name } = this.state;
-
     const { selectedMaterials } = nextProps.materialsCollection;
 
     // console.log(selectedMaterials.deadline);
@@ -240,7 +237,7 @@ class EditMaterial extends Component {
     e.preventDefault();
 
     const { id } = this.props.match.params;
-    const { class_assigned, classChanged, fileLampiranToAdd, fileLampiranToDelete } = this.state;
+    const { class_assigned, fileLampiranToAdd, fileLampiranToDelete } = this.state;
 
     console.log(class_assigned)
     console.log(Array.from(this.state.fileLampiran))
@@ -356,8 +353,8 @@ class EditMaterial extends Component {
   }
 
   render() {
-    const { classesCollection, classes, errors, success, subjectsCollection, updateMaterial}  = this.props;
-    const { all_classes, selectedClasses } = this.props.classesCollection;
+    const { classes, errors, success}  = this.props;
+    const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedMaterials} = this.props.materialsCollection;
     const { class_assigned, fileLampiran}  = this.state;
@@ -459,9 +456,9 @@ class EditMaterial extends Component {
     if (this.state.class_assigned !== null) //When firstly received.
       this.state.class_assigned.map((kelas) => {
         if (kelas._id !== undefined)
-          classIds.push(kelas._id)
+          return classIds.push(kelas._id)
         else
-          classIds.push(kelas)
+          return classIds.push(kelas)
       }
     )
 

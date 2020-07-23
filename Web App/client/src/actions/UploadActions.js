@@ -1,4 +1,4 @@
-import { UPLOAD_TUGAS, GET_TUGAS, GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK, GET_SUCCESS_RESPONSE } from "./Types";
+import { GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK, GET_SUCCESS_RESPONSE } from "./Types";
 import axios from "axios";
 
 export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {

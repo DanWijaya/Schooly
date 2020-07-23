@@ -1,4 +1,4 @@
-import { GET_ERRORS, UPDATE_ERRORS } from "./Types"
+import { GET_ERRORS } from "./Types"
 
 export const clearErrors = (field=null) => dispatch => {
     dispatch({

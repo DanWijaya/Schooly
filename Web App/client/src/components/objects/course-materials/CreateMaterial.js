@@ -301,7 +301,7 @@ class CreateMaterial extends Component {
   }
 
   render() {
-    const { classesCollection, classes, subjectsCollection, success}  = this.props;
+    const { classes, success}  = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran}  = this.state;

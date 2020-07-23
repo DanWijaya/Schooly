@@ -272,14 +272,12 @@ function ViewClass(props) {
   const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
-  const { selectedClasses, kelas } = props.classesCollection
+  const { kelas } = props.classesCollection
   const { students_by_class, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
 
   const [teachers_map, setTeachersMap] = React.useState(new Map());
   let class_id = props.match.params.id;
-
-  let tasksByClass = []
 
   console.log(props.classesCollection)
   // All actions to retrive datas from Database
@@ -287,7 +285,8 @@ function ViewClass(props) {
   function listTasks(category=null, subject={}){
     let tasksList = []
     if (Boolean(tasksCollection.length)) {
-      for(var i = tasksCollection.length-1; i >= 0; i--){
+      var i;
+      for(i = tasksCollection.length-1; i >= 0; i--){
         let task = tasksCollection[i];
         let class_assigned = task.class_assigned
         if(class_assigned.indexOf(classId) !== -1){
@@ -299,7 +298,7 @@ function ViewClass(props) {
       }
 
       let result = [];
-      for(var i =0; i < tasksList.length; i++){
+      for(i =0; i < tasksList.length; i++){
       let task = tasksList[i]
       let workCategoryAvatar = (
         <Avatar className={classes.assignmentLate}>
@@ -413,6 +412,9 @@ function ViewClass(props) {
 
       case kelas.sekretaris:
         return "Sekretaris"
+      
+      default:
+        return null
     }
   }
 
@@ -574,7 +576,7 @@ function ViewClass(props) {
         <TabPanel value={value} index={1}>
           {all_subjects.length === 0 ? null :
             all_subjects.map((subject) => {
-              let isEmpty = true
+              // let isEmpty = true
               return(
                 <ExpansionPanel>
                   <ExpansionPanelSummary>

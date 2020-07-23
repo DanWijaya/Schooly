@@ -307,9 +307,9 @@ class CreateTask extends Component {
   }
 
   render() {
-    const { classesCollection, classes, errors, success, viewClass, subjectsCollection}  = this.props;
+    const { classes, errors, success}  = this.props;
     const { class_assigned, fileLampiran}  = this.state;
-    const { all_classes } = this.props.classesCollection
+    const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth
     console.log(errors)

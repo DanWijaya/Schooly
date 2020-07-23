@@ -211,12 +211,11 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { classes, tasksCollection, classesCollection, viewTask, getAllTaskFilesByUser, getAllSubjects } = this.props;
+    const { classes, tasksCollection } = this.props;
 
     const { user } = this.props.auth;
     const { all_user_files } = this.props.filesCollection
     const { all_subjects_map } = this.props.subjectsCollection
-    const { selectedClasses } = this.props.classesCollection
 
     let tasksByClass = []
     if (Boolean(tasksCollection.length)) {
@@ -227,6 +226,7 @@ class Dashboard extends Component {
             if (class_assigned[i] === user.kelas)
               tasksByClass.push(task)
           }
+          return tasksByClass;
         })
       }
       else if (user.role === "Teacher") {
@@ -398,7 +398,6 @@ Dashboard.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   viewTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

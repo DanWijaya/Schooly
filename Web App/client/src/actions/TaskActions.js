@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_TASKS, GET_ERRORS, ADD_TASKS, GET_FILE_BY_USER, GRADE_TASKS, GET_SUCCESS_RESPONSE} from "./Types";
+import { GET_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE} from "./Types";
 
 // Add Task
 export const createTask = (formData, taskData, history) => dispatch => {

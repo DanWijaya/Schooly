@@ -134,7 +134,6 @@ function TaskListToolbar(props) {
             <MenuItem
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
-              onClick={props.handleClosePanel}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
@@ -285,7 +284,6 @@ function TaskList(props) {
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
-  const [selected, setSelected] = React.useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
@@ -320,22 +318,22 @@ function TaskList(props) {
       if (user.role === "Teacher") {
       tasksCollection.map((data) => {
         if (data.person_in_charge_id === user.id) {
-          taskRowItem(data)
+          return taskRowItem(data)
           }
+        return null;
         })
       }
       else if (user.role === "Student") {
         tasksCollection.map((data) => {
           let class_assigned = data.class_assigned;
           if (class_assigned.indexOf(user.kelas) !== -1) {
-            taskRowItem(data)
+            return taskRowItem(data)
           }
+          return null
         })
       }
       else { //Admin
-        tasksCollection.map((data) => {
-          taskRowItem(data)
-        })
+        tasksCollection.map(data =>  taskRowItem(data))
       }
     }
   }
@@ -350,7 +348,6 @@ function TaskList(props) {
   // This function is defined above.
   retrieveTasks()
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
   const onDeleteTask = (id) => {
     deleteTask(id)
   }
@@ -424,15 +421,6 @@ function TaskList(props) {
     )
   }
 
-  // Task Expansion Panel
-  const [expanded, setExpanded] = React.useState(false);
-  const handleTogglePanel = () => {
-    setExpanded();
-  };
-  const handleClosePanel = () => {
-    setExpanded(false);
-  };
-
   document.title = "Schooly | Daftar Tugas";
 
   return(
@@ -446,12 +434,10 @@ function TaskList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-        handleClosePanel={handleClosePanel}
       />
         <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
             return(
@@ -460,8 +446,6 @@ function TaskList(props) {
                   <ExpansionPanel
                     button
                     variant="outlined"
-                    aria-checked={isItemSelected}
-                    selected={isItemSelected}
                   >
                     <ExpansionPanelSummary className={classes.taskPanelSummary}>
                       <Grid container spacing={1} justify="space-between" alignItems="center">
@@ -533,7 +517,9 @@ function TaskList(props) {
                               if(all_classes_map.get(id)){
                                 if (i === row.class_assigned.length - 1)
                                   return (`${all_classes_map.get(id).name}`)
-                                return (`${all_classes_map.get(id).name}, `)}
+                                return (`${all_classes_map.get(id).name}, `)
+                              }
+                              return null
                              })
                             }
                           </Typography>

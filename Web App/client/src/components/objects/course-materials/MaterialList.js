@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import moment from "moment";
-import "moment/locale/id";
 import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import { viewSelectedClasses, viewClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -282,15 +280,14 @@ function MaterialList(props) {
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
-  const [selected, setSelected] = React.useState([]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-  const { getAllMaterials, getAllSubjects, getMaterial, deleteMaterial, getUsers, viewClass } = props;
+  const { getAllSubjects, getMaterial, deleteMaterial, getUsers, viewClass } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
-  const { selectedClasses, all_classes_map } = props.classesCollection;
+  const { all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
 
   const { all_subjects_map} = props.subjectsCollection;
@@ -308,10 +305,7 @@ function MaterialList(props) {
   }
 
   React.useEffect(() => {
-    let materialsRetrieved = []
     getAllSubjects("map")
-
-    materialsRetrieved = selectedMaterials;
     viewClass("map")
     if (user.role === "Teacher") {
       getMaterial(user.id, "by_author")
@@ -329,11 +323,11 @@ function MaterialList(props) {
     // If all_materials is not undefined or an empty array
     rows = []
     if (user.role === "Admin") {
-      all_materials.map((data) => { materialRowItem(data)})
+      all_materials.map(data =>  materialRowItem(data))
     }
     else {
       if (selectedMaterials.length) {
-        selectedMaterials.map((data) => materialRowItem(data))
+        selectedMaterials.map(data => materialRowItem(data))
       }
     }
   }
@@ -348,7 +342,6 @@ function MaterialList(props) {
   // This function is defined above.
   retrieveMaterials()
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
   const onDeleteMaterial = (id) => {
     deleteMaterial(id)
   }
@@ -439,7 +432,6 @@ function MaterialList(props) {
       <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = `/materi/${row._id}`
             return(
@@ -448,8 +440,6 @@ function MaterialList(props) {
                   <ExpansionPanel
                     button
                     variant="outlined"
-                    aria-checked={isItemSelected}
-                    selected={isItemSelected}
                   >
                     <ExpansionPanelSummary className={classes.materialPanelSummary}>
                       <Grid container spacing={1} justify="space-between" alignItems="center">

@@ -303,7 +303,7 @@ class CreateAnnouncement extends Component {
       },
     };
 
-    const {classesCollection,  classes, setCurrentClass, viewClass, subjectsCollection, success} = this.props;
+    const { classes, success} = this.props;
     const { all_classes, kelas } = this.props.classesCollection
     const{ class_assigned, fileLampiran} = this.state;
     const { errors } = this.props;

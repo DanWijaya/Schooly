@@ -6,7 +6,7 @@ import { getTeachers } from "../../../actions/UserActions";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper,
-   TableSortLabel, Typography, FormHelperText } from "@material-ui/core/";
+   TableSortLabel, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -51,7 +51,7 @@ function stableSort(array, comparator) {
 }
 
 function ClassListToolbar(props) {
-  const { classes, item, deleteClass, onSelectAllClick, order, orderBy, rowCount, onRequestSort } = props;
+  const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -254,8 +254,6 @@ function ClassList(props) {
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("homeroomTeacher");
-  const [selected, setSelected] = React.useState([]);
-
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
@@ -297,9 +295,7 @@ function ClassList(props) {
   const retrieveClasses = () => {
     if (classesCollection.all_classes.length > 0) {
       rows = []
-      classesCollection.all_classes.map((data,i) => {
-        classItem(data,i)
-      })
+      classesCollection.all_classes.map((data,i) => classItem(data,i))
     }
   }
 
@@ -308,38 +304,6 @@ function ClassList(props) {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
-  const handleSelectAllClick = (event, checked) => {
-    if (checked) {
-      const newSelected = rows.map((n) => n._id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, item) => { // get the id by item._id
-    const selectedIndex = selected.indexOf(item._id);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, item._id);
-    }
-    else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    }
-    else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    }
-    else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-  };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Call the function to get the classes from DB
   // this function is defined above
@@ -442,26 +406,21 @@ function ClassList(props) {
         deleteClass={deleteClass}
         order={order}
         orderBy={orderBy}
-        onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
+        // onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
       />
       <Grid container spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
-            const isItemSelected = isSelected(row._id);
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = `/kelas/${row._id}`;
             return(
-              <Grid item xs={12} sm={6} md={4}
-                aria-checked={isItemSelected}
-                selected={isItemSelected}
-              >
+              <Grid item xs={12} sm={6} md={4}>
                 <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
                 <Paper button square
                   variant="outlined"
-                  className={classes.classPaper}
-                >
+                  className={classes.classPaper}>
                   <Avatar
                     variant="square"
                     style={{

@@ -208,13 +208,12 @@ function ViewAnnouncement(props) {
   React.useEffect(() => {
     getOneAnnouncement(announcement_id)
     viewSelectedClasses(selectedAnnouncements.class_assigned)
-    console.log(selectedAnnouncements)
     if (selectedAnnouncements._id) {
       console.log("getusers is runned")
       getUsers([selectedAnnouncements.author_id])
     }
 
-  }, [selectedAnnouncements._id]) // beacause only receive one announcement.
+  }, []) // beacause only receive one announcement.
 
   console.log(new Date(), classesCollection)
   console.log("selected announcement: ", selectedAnnouncements)

@@ -1,9 +1,5 @@
 import axios from "axios";
-import setAuthToken from "../utils/setAuthToken";
-import jwt_decode from "jwt-decode";
-import { Redirect } from "react-router";
-import { logoutUser } from "./UserActions"
-import {PWD_RESET_HASH_CREATED, GET_ERRORS, PWD_SAVE_SUCCESS, GET_SUCCESS_RESPONSE } from "./Types"
+import {PWD_RESET_HASH_CREATED, GET_ERRORS, GET_SUCCESS_RESPONSE } from "./Types"
 
 // SEND EMAIL TO API FOR HASHING
 export const createHash = (email) => {

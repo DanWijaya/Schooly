@@ -224,8 +224,6 @@ class EditTask extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
-    const { name } = this.state;
-
     const { tasksCollection, errors } = nextProps;
 
     // pass errorsnya false makanya berhasil
@@ -259,11 +257,12 @@ class EditTask extends Component {
 
     class_assigned.map((id) => {
       for( var i = 0; i < classesOptions.length; i++) {
-      if (classesOptions[i]._id === id) {
-        classesSelected.push(classesOptions[i])
-        break;
+        if (classesOptions[i]._id === id) {
+          classesSelected.push(classesOptions[i])
+          break;
+        }
       }
-    }
+    return classesSelected
   })
 
   const taskObject = {
@@ -381,7 +380,7 @@ class EditTask extends Component {
   render() {
     const { fileLampiran, class_assigned } = this.state;
     const { classes, errors, success } = this.props;
-    const { all_classes, selectedClasses } = this.props.classesCollection;
+    const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection
     const { user } = this.props.auth;
 
@@ -480,9 +479,9 @@ class EditTask extends Component {
     if (class_assigned !== null) //When firstly received.
       class_assigned.map((kelas) => {
         if (kelas._id !== undefined)
-          classIds.push(kelas._id)
+          return classIds.push(kelas._id)
         else
-          classIds.push(kelas)
+          return classIds.push(kelas)
       }
     )
 

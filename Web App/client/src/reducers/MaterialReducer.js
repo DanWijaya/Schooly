@@ -1,5 +1,4 @@
-import {GET_ALL_MATERIALS, GET_MATERIAL, SUCCESS_MATERIAL } from "../actions/Types";
-import { FaCloudShowersHeavy } from "react-icons/fa";
+import {GET_ALL_MATERIALS, GET_MATERIAL } from "../actions/Types";
 
 const initialState = {
     selectedMaterials: [],

@@ -78,7 +78,6 @@ class EditClass extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Class props is received")
-    const { name } = this.state;
     const {kelas} = nextProps.classesCollection
 
     if (Boolean(kelas)) {
@@ -119,7 +118,7 @@ class EditClass extends Component {
   }
 
   render() {
-    const { classes, classesCollection } = this.props;
+    const { classes } = this.props;
     const { errors } = this.props;
     const { user } = this.props.auth;
     const { all_teachers} = this.props.auth;
@@ -129,16 +128,16 @@ class EditClass extends Component {
     var student_options = students_by_class
 
     const returnId = (user, arr) => {
+      var i;
       if (arr === "student") {
-        for (var i = 0; i < student_options.length; i++) {
+        for (i = 0; i < student_options.length; i++) {
           if (student_options[i]._id === user._id) {
             return user._id
           }
         }
       }
       else {
-        for (var i = 0; i < teacher_options.length; i++) {
-          // console.log(student_options[i]._id)
+        for (i = 0; i < teacher_options.length; i++) {
           if (teacher_options[i]._id === user._id) {
             return user._id
           }
@@ -149,16 +148,14 @@ class EditClass extends Component {
 
     const showValue = (options, arr) => {
       let items = []
-      options.map((user) => {
-        console.log(user, this.state.sekretaris)
+      options.map(user => 
         items.push(
           <MenuItem
-            value={returnId(user, arr)}
-          >
+            value={returnId(user, arr)}>
             {user.name}
           </MenuItem>
         )
-      })
+      )
       return items;
     }
 

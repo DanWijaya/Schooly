@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import { Button, Dialog, Grid, IconButton, List, ListItem, TextField, Typography } from "@material-ui/core";
+import { Button, Dialog, Grid, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import LockIcon from "@material-ui/icons/Lock";
@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
 
 function EditPasswordField(props) {
   const {on_change, value, errors, id} = props;
-  const classes = useStyles();
 
   return(
     <Grid item>
@@ -58,7 +57,7 @@ function ProfilePasswordEditorDialog(props) {
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
   const [new_password2, setNewPassword2] = React.useState("");
-  const {changePassword, logoutUser, success, errors, handleOpenAlert, clearErrors} = props;
+  const {changePassword, success, errors, handleOpenAlert, clearErrors} = props;
   // const [errorMessage, setErrorMessage] = React.useState({})
   const {user} = props.auth;
 
@@ -106,6 +105,9 @@ function ProfilePasswordEditorDialog(props) {
 
       case "new_password2":
         setNewPassword2(e.target.value)
+        break;
+
+      default:
         break;
     }
   }

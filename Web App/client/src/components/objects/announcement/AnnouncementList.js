@@ -84,9 +84,9 @@ function AnnouncementList(props) {
   document.title = "Schooly | Daftar Pengumuman"
 
   const classes = useStyles();
-  const { selectedAnnouncements, all_announcements } = props.announcements;
-  const { getAnnouncement, getAllAnnouncement, getUsers, setCurrentClass } = props;
-  const { kelas, selectedClass } = props.classesCollection
+  const { selectedAnnouncements } = props.announcements;
+  const { getAnnouncement, getUsers, setCurrentClass } = props;
+  const { kelas } = props.classesCollection
   const { user, retrieved_users } = props.auth;
   const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false)
 
@@ -104,9 +104,7 @@ function AnnouncementList(props) {
     console.log(selectedAnnouncements.length)
     if (selectedAnnouncements.length) {
       let author_id_set = new Set();
-      selectedAnnouncements.map((ann) => {
-        author_id_set.add(ann.author_id)
-      })
+      selectedAnnouncements.map(ann => author_id_set.add(ann.author_id))
       getUsers(Array.from(author_id_set))
     }
   }, [selectedAnnouncements.length, retrieved_users.size])

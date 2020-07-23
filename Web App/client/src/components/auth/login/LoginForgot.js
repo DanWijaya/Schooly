@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { createHash, password } from "../../../actions/AuthActions";
+import { createHash } from "../../../actions/AuthActions";
 import authBackground from "../AuthBackground.png";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";

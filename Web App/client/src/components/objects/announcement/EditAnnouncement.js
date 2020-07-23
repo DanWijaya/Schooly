@@ -3,8 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { GET_ERRORS } from "../../../actions/Types";
-import { getAllAnnouncements, getAnnouncement, getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
+import { getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
 import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -211,7 +210,6 @@ class EditAnnouncement extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
-    const { name } = this.state;
     const { selectedAnnouncements } = nextProps.announcements;
     // console.log(nextProps.tasksCollection.deadline);
     if (!nextProps.errors) {
@@ -342,8 +340,7 @@ class EditAnnouncement extends Component {
       },
     };
 
-    const { classes, updateAnnouncement, getOneAnnouncement } = this.props;
-    const { selectedAnnouncements} = this.props.announcements;
+    const { classes } = this.props;
     const{ fileLampiran, class_assigned} = this.state
     const { errors, success } = this.props;
     const { user } = this.props.auth;

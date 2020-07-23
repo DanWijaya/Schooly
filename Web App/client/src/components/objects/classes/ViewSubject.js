@@ -120,7 +120,7 @@ function ViewSubject(props) {
   const { user } = props.auth;
   const id = props.match.params.id;
   const{ setCurrentClass, viewTask, getAllSubjects, tasksCollection, getAllTaskFilesByUser, getMaterial} = props;
-  const { selectedClasses, kelas } = props.classesCollection
+  const { kelas } = props.classesCollection
   const {all_user_files} = props.filesCollection;
   const { all_subjects_map} = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection
@@ -142,12 +142,13 @@ function ViewSubject(props) {
   console.log(selectedMaterials)
   // All actions to retrive datas from Database...
   if (tasksCollection.length !== undefined) {
-    tasksCollection.map((task, i) => {
+    tasksCollection.map((task) => {
       let class_assigned = task.class_assigned
       for (var i = 0; i < class_assigned.length; i++) {
         if(class_assigned[i] === user.kelas)
           tasksByClass.push(task)
       }
+      return tasksByClass;
     })
   }
 
@@ -185,18 +186,18 @@ function ViewSubject(props) {
         />
       )
     }
-
+    return tasksBySubjectClass
   })
+
   if (target === "length")
     return tasksBySubjectClass.length;
 
-  else {
-      return tasksBySubjectClass.length === 0 ?
-      (<Typography variant="h5" align="center" gutterBottom>
-        Kosong
-      </Typography>)
-      : tasksBySubjectClass
-    }
+  return tasksBySubjectClass.length === 0 ?
+  (<Typography variant="h5" align="center" gutterBottom>
+    Kosong
+  </Typography>)
+  : tasksBySubjectClass
+
   }
 
   generateTaskBySubject()
@@ -224,7 +225,7 @@ function ViewSubject(props) {
             <List className={classes.expansionPanelList}>
 
             {!selectedMaterials.length ? null :
-            selectedMaterials.map((material, i) => {
+            selectedMaterials.map((material) => {
               if (material.subject === id) {
 
                 return( <SubjectListitem
@@ -237,6 +238,7 @@ function ViewSubject(props) {
                   work_link={`/materi/${material._id}`}
                 />)
               }
+              return null
             })}
             </List>
           </ExpansionPanel>
