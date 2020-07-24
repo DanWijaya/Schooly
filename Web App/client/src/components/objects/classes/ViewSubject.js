@@ -134,7 +134,8 @@ function ViewSubject(props) {
     viewTask()
     getAllTaskFilesByUser(user.id)
     getAllSubjects("map");
-  }, [all_user_files.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   console.log(all_subjects_map)
   let tasksByClass = [] // Tasks on specific class.

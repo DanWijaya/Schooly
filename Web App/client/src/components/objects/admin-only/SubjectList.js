@@ -307,9 +307,9 @@ function SubjectList(props) {
   }
 
   React.useEffect(() => {
-
     getAllSubjects()
-  }, [ all_subjects.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const retrieveSubjects = () => {
     console.log(retrieved_users)

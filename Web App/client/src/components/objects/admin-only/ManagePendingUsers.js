@@ -249,9 +249,8 @@ function ManageUsers(props) {
   React.useEffect(() => {
     getPendingStudents()
     getPendingTeachers()
-    // getPendingStudents()
-    // getPendingTeachers()
-  }, [pending_students.length, pending_teachers.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const retrieveUsers = () => {
     student_rows = []

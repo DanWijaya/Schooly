@@ -212,8 +212,8 @@ function ViewAnnouncement(props) {
       console.log("getusers is runned")
       getUsers([selectedAnnouncements.author_id])
     }
-
-  }, []) // beacause only receive one announcement.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAnnouncements._id]) // beacause only receive one announcement.
 
   console.log(new Date(), classesCollection)
   console.log("selected announcement: ", selectedAnnouncements)

@@ -220,7 +220,8 @@ function ViewTaskTeacher(props) {
     viewOneTask(task_id)
     viewClass("map")
     getAllSubjects("map")
-  }, [viewOneTask, viewClass, getAllSubjects])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
 
   const fileType = (filename) => {

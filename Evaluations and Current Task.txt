@@ -61,7 +61,7 @@ Yang belum ada di Schooly:
 5. Sync Across Devices
   - https://medium.com/@firasd/interface-from-data-using-react-to-sync-updates-and-offline-activity-across-devices-f672b213701c (Mayhe using WebSockets?) Berhubungan ke bawah
   - https://github.com/firasd/react-sync-demo
-6  Absensi generate CSVs dan Generate laporan penilaian dalam CSVs
+6  Absensi generate CSVs dan Generate laporan penilaian dalam CSVs. Seperti yang ada di Schoology https://support.schoology.com/hc/en-us/articles/205427527-System-Administrators-Getting-Started-on-Schoology
 7. Chat system: Socket.io?, Node.js, and React.js (https://www.youtube.com/watch?v=ZwFA3YMfkoc)
 CATATAN: (Notif, Chat, Syncing berhubungan)
 

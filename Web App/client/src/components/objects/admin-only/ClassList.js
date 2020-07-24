@@ -258,10 +258,7 @@ function ClassList(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  const [teachers_map, setTeachersMap] = React.useState(new Map());
-
   const { viewClass, deleteClass, classesCollection, getTeachers, errors, clearErrors } = props;
-  const { all_classes} = props.classesCollection;
 
   const { user, all_teachers } = props.auth;
 
@@ -274,7 +271,7 @@ function ClassList(props) {
       createData(
         data._id,
         data.name,
-        !teachers_map.size || !teachers_map.get(data.walikelas) ? null : teachers_map.get(data.walikelas).name,
+        !all_teachers.size || !all_teachers.get(data.walikelas) ? null : all_teachers.get(data.walikelas).name,
         data.ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
       )
@@ -282,14 +279,10 @@ function ClassList(props) {
   }
   React.useEffect(() => {
     viewClass()
-    getTeachers()
+    getTeachers("map")
     clearErrors()
-    if (Boolean(all_teachers.length)) {
-      let temp = new Map()
-      all_teachers.map((teacher) => temp.set(teacher._id, teacher))
-      setTeachersMap(temp);
-    }
-  },[all_classes.length, all_teachers.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   console.log(all_teachers)
   const retrieveClasses = () => {

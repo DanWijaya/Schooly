@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 
 //untuk users punya
-const users = require("./routes/api/Users");
+const users = require("./routes/api/users");
 
 // untuk uploads punya
 const att_announcement = require("./routes/api/upload/att_announcement");
@@ -14,8 +14,8 @@ const file_tugas = require("./routes/api/upload/file_tugas");
 const avatar = require("./routes/api/upload/avatar");
 
 // untuk objects punya
-const tasks = require("./routes/api/Tasks");
-const classes = require("./routes/api/Classes");
+const tasks = require("./routes/api/tasks");
+const classes = require("./routes/api/classes");
 const subjects = require("./routes/api/subjects");
 const authentication = require('./routes/api/authentication');
 const announcements = require("./routes/api/announcements");
