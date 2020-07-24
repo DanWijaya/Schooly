@@ -11,6 +11,7 @@ Botak:
 10. QUIZ dan UJIAN memang penting dengan rquest bu yanti yang banyak.
 11. Snackbar change profile pas mau klik keluar
 12. Maxwidth buat semua dialog
+13. Murid kumpul tugas masih merah
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -27,7 +28,7 @@ Daniel:
 9. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 10. Select untuk yang edit class masih bermasalah...
 11. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga...
-12. Untuk safari, masih ada masalah di upload fotonya klo lebih dari satu kali. 
+12. Untuk safari, masih ada masalah di upload fotonya klo lebih dari satu kali.
 
 IMPORTANT:
 1. Jumlah murid dan absen di kelas
@@ -63,6 +64,10 @@ Yang belum ada di Schooly:
 6  Absensi generate CSVs dan Generate laporan penilaian dalam CSVs
 7. Chat system: Socket.io?, Node.js, and React.js (https://www.youtube.com/watch?v=ZwFA3YMfkoc)
 CATATAN: (Notif, Chat, Syncing berhubungan)
+
+INFO ABOUT DEPLOY:
+- Belum tau cara restrict range Ip address
+- AWS Amplify (Mungkin cari tau lagi ke depannya)
 
 Selling point :
 1. Ujian/Quiz
