@@ -309,7 +309,8 @@ function TaskList(props) {
     viewClass("map")
     getAllSubjects("map")
   },
-  [tasksCollection.length, all_classes_map.size, all_subjects_map.length])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [])
 
   const retrieveTasks = () => {
     // If tasksCollection is not undefined or an empty array

@@ -67,6 +67,7 @@ function ProfilePasswordEditorDialog(props) {
     if (success) {
       handleOpenAlert()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success])
 
   const [open, setOpen] = React.useState(false);

@@ -252,6 +252,7 @@ function SubmittedTaskList(props) {
       if(success.length === 3)
         handleOpenAlert()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasksCollection._id, success])
 
   console.log(success)

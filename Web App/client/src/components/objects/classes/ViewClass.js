@@ -276,9 +276,6 @@ function ViewClass(props) {
   const { students_by_class, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
 
-  const [teachers_map, setTeachersMap] = React.useState(new Map());
-  let class_id = props.match.params.id;
-
   console.log(props.classesCollection)
   // All actions to retrive datas from Database
   
@@ -306,14 +303,17 @@ function ViewClass(props) {
         </Avatar>
       )
       let workStatus = "Belum Dikumpulkan"
-
-      if(all_user_files.indexOf(task._id) !== -1){
-        workStatus = "Telah Dikumpulkan"
-        workCategoryAvatar = (
-          <Avatar className={classes.assignmentTurnedIn}>
-            <AssignmentTurnedInIcon/>
-          </Avatar>
-        )
+      console.log(all_user_files)
+      for(var j = 0; j < all_user_files.length; j++){
+          if(all_user_files[j].for_task_object === task._id){
+          workStatus = "Telah Dikumpulkan"
+          workCategoryAvatar = (
+            <Avatar className={classes.assignmentTurnedIn}>
+              <AssignmentTurnedInIcon/>
+            </Avatar>
+          )
+          break;
+        }
       }
 
       if(!category || (category === "subject" && task.subject === subject._id))
@@ -384,15 +384,11 @@ function ViewClass(props) {
     getAllSubjects("map") // get the all_subjects_map in map
     getAllSubjects() // get the all_subjects
     getStudentsByClass(props.match.params.id) // get the students_by_class
-    getTeachers() // get the all_teachers
+    getTeachers("map") // get the all_teachers
 
-    if (Boolean(all_teachers.length)) {
-      let temp = new Map()
-      all_teachers.map((teacher) => temp.set(teacher._id, teacher))
-      setTeachersMap(temp)
-    }
     getAllTaskFilesByUser(user.id) // get the all_user_files
-  }, [all_teachers.length, class_id ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -418,7 +414,7 @@ function ViewClass(props) {
     }
   }
 
-  console.log(kelas, teachers_map, kelas.walikelas)
+  console.log(kelas, all_teachers, kelas.walikelas)
   return(
     <div className={classes.root}>
       {user.role === "Admin" || user.role === "Teacher" ?
@@ -434,12 +430,12 @@ function ViewClass(props) {
           </Typography>
           <Divider className={classes.personListDivider} />
           <List className={classes.listContainer}>
-            {teachers_map.get(kelas.walikelas) ?
+            {all_teachers.get(kelas.walikelas) ?
             <PersonListItem
             person_avatar={
-              `/api/upload/avatar/${teachers_map.get(kelas.walikelas).avatar}`}
-            person_name={teachers_map.get(kelas.walikelas).name }
-            person_role={teachers_map.get(kelas.walikelas).subject_teached}/> : null
+              `/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
+            person_name={all_teachers.get(kelas.walikelas).name }
+            person_role={all_teachers.get(kelas.walikelas).subject_teached}/> : null
             }
 
           </List>
@@ -612,12 +608,12 @@ function ViewClass(props) {
             </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
+              {!all_teachers.size || !all_teachers.get(kelas.walikelas) ? null :
               <PersonListItem
-                person_avatar={teachers_map.get(kelas.walikelas) ?
-                  `/api/upload/avatar/${teachers_map.get(kelas.walikelas).avatar}` : null}
-                person_name={teachers_map.get(kelas.walikelas)? teachers_map.get(kelas.walikelas).name : null}
-                person_role={teachers_map.get(kelas.walikelas) ? teachers_map.get(kelas.walikelas).subject_teached : null}
-              />
+                person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
+                person_name={all_teachers.get(kelas.walikelas).name}
+                person_role={all_teachers.get(kelas.walikelas).subject_teached}/>
+              }
             </List>
           </Paper>
           <Paper style={{padding: "20px"}}>

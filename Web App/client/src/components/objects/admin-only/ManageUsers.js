@@ -249,7 +249,8 @@ function ManageUsers(props) {
   React.useEffect(() => {
     getStudents()
     getTeachers()
-  }, [all_students.length, all_teachers.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const retrieveUsers = () => {
     student_rows = []

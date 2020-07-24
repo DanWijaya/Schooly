@@ -223,7 +223,8 @@ function ViewMaterial(props) {
     getOneMaterial(materi_id)
     viewClass("map")
     getOneUser(selectedMaterials.author_id)
-  }, [selectedMaterials._id, all_subjects_map.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMaterials])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)

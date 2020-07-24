@@ -285,7 +285,7 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-  const { getAllSubjects, getMaterial, deleteMaterial, getUsers, viewClass } = props;
+  const { getAllSubjects, getMaterial, deleteMaterial, viewClass } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
@@ -313,10 +313,8 @@ function MaterialList(props) {
     else { // for student
       getMaterial(user.kelas, "by_class")
     }
-
-    let userIds = []
-    getUsers(userIds) // to get the authors objects.
-  }, [all_classes_map.length, all_materials.length, all_subjects_map.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const retrieveMaterials = () => {
     console.log(retrieved_users)

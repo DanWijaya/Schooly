@@ -160,15 +160,24 @@ export const getStudents = () => dispatch => {
     })
 }
 
-export const getTeachers = () => dispatch => {
+export const getTeachers = (data="array") => dispatch => {
   axios
     .get("/api/users/getteachers")
     .then(res => {
       console.log(res.data)
-      dispatch({
-        type: GET_ALL_TEACHERS,
-        payload: res.data
-      })
+      if(data === "map"){
+        let temp = new Map()
+        res.data.map((teacher) => temp.set(teacher._id, teacher))
+        dispatch({
+          type: GET_ALL_TEACHERS,
+          payload: temp
+        })
+      } else {
+        dispatch({
+          type: GET_ALL_TEACHERS,
+          payload: res.data
+        })
+      }
     })
     .catch(err => {
       console.log("Error in getting all Teachers");

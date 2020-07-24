@@ -349,8 +349,8 @@ function ViewTaskStudent(props) {
     getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
     getOneUser(tasksCollection.person_in_charge_id)
-
-  }, [tasksCollection._id, success, all_subjects_map.length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)

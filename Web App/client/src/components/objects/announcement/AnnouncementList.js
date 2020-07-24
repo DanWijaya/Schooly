@@ -107,7 +107,8 @@ function AnnouncementList(props) {
       selectedAnnouncements.map(ann => author_id_set.add(ann.author_id))
       getUsers(Array.from(author_id_set))
     }
-  }, [selectedAnnouncements.length, retrieved_users.size])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAnnouncements.length])
 
   // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
 
