@@ -291,7 +291,7 @@ function MaterialList(props) {
   const { user, retrieved_users } = props.auth;
 
   const { all_subjects_map} = props.subjectsCollection;
-
+  
   const materialRowItem = (data) => {
     rows.push(
       createData(
