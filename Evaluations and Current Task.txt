@@ -68,6 +68,7 @@ CATATAN: (Notif, Chat, Syncing berhubungan)
 INFO ABOUT DEPLOY:
 - Belum tau cara restrict range Ip address
 - AWS Amplify (Mungkin cari tau lagi ke depannya)
+- Ingat region deploynya (Singapore) ????
 
 Selling point :
 1. Ujian/Quiz
