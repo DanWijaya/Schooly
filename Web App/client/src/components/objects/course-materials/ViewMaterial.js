@@ -218,13 +218,14 @@ function ViewMaterial(props) {
   const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
+  console.log(selectedMaterials)
   React.useEffect(() => {
-    getAllSubjects("map")
+    getAllSubjects("map") // this will get the selectedMaterials.
     getOneMaterial(materi_id)
     viewClass("map")
     getOneUser(selectedMaterials.author_id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMaterials])
+  }, [selectedMaterials.author_id])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)

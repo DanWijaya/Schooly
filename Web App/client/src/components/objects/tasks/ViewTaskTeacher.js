@@ -382,8 +382,7 @@ console.log(all_classes_map)
                   return (`${all_classes_map.get(kelas).name}, `)
                 }
                 return null;
-              })
-            })
+              })}
             </Typography>
           </Grid>
 

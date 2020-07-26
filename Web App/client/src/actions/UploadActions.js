@@ -85,12 +85,12 @@ export const getAllTaskFilesByUser = (userId) => dispatch => {
 
 export const downloadTugas = (tugas_id, userData) => dispatch => {
     console.log("Downloading Tugas")
-    window.open(`http://localhost:5000/api/upload/file_tugas/tugas/${tugas_id}` , "_blank")
+    window.open(`http://${window.location.hostname}:5000/api/upload/file_tugas/tugas/${tugas_id}` , "_blank")
 }
 
 export const previewTugas = (tugas_id) => dispatch => {
     console.log("Previewing Tugas")
-    window.open(`http://localhost:5000/api/upload/file_tugas/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
+    window.open(`http://${window.location.hostname}:5000/api/upload/file_tugas/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
 }
 
 // Upload lampiran is handled together with createTask.
@@ -116,12 +116,12 @@ export const getAllLampiranByTask = (lampiran) => dispatch => {
 
 export const downloadLampiran = (lampiran_id) => dispatch => {
     console.log("Downloading lampiran")
-    window.open(`http://localhost:5000/api/upload/att_task/lampiran/${lampiran_id}` , "_blank")
+    window.open(`http://${window.location.hostname}:5000/api/upload/att_task/lampiran/${lampiran_id}` , "_blank")
 }
 
 export const previewLampiran = (lampiran_id) => dispatch => {
     console.log("Previewing lampiran")
-    window.open(`http://localhost:5000/api/upload/att_task/preview/${lampiran_id}`, "_blank")
+    window.open(`http://${window.location.hostname}:5000/api/upload/att_task/preview/${lampiran_id}`, "_blank")
 }
 
 export const deleteLampiran = (lampiran_to_delete, task_id)  => {
@@ -138,12 +138,12 @@ export const deleteLampiran = (lampiran_to_delete, task_id)  => {
 // Deal with the lampiran on Announcements
 export const downloadLampiranAnnouncement = (lampiran_id) => dispatch => {
     console.log("Downloading lampiran")
-    window.open(`http://localhost:5000/api/upload/att_announcement/lampiran/${lampiran_id}` , "_blank")
+    window.open(`http://${window.location.hostname}:5000/api/upload/att_announcement/lampiran/${lampiran_id}` , "_blank")
 }
 
 export const previewLampiranAnnouncement = (lampiran_id) => dispatch => {
     console.log("Previewing lampiran")
-    window.open(`http://localhost:5000/api/upload/att_announcement/preview/${lampiran_id}`, "_blank") // previously has "_blank"
+    window.open(`http://${window.location.hostname}:5000/api/upload/att_announcement/preview/${lampiran_id}`, "_blank") // previously has "_blank"
 }
 
 export const deleteLampiranAnnouncement = (lampiran_to_delete, task_id)  => {
@@ -161,11 +161,11 @@ export const deleteLampiranAnnouncement = (lampiran_to_delete, task_id)  => {
 export const downloadLampiranMateri = (materi_id) => dispatch => {
     console.log("Downloading lampiran", materi_id)
     console.log(materi_id)
-    window.open(`http://localhost:5000/api/upload/att_material/lampiran_materi/${materi_id}` , "_blank")
+    window.open(`http://${window.location.hostname}:5000/api/upload/att_material/lampiran_materi/${materi_id}` , "_blank")
 }
 
 export const previewLampiranMateri = (materi_id) => dispatch => {
     console.log("Previewing lampiran")
     console.log(materi_id)
-    window.open(`http://localhost:5000/api/upload/att_material/previewlampiran_materi/${materi_id}` , "_blank")
+    window.open(`http://${window.location.hostname}:5000/api/upload/att_material/previewlampiran_materi/${materi_id}` , "_blank")
 }
