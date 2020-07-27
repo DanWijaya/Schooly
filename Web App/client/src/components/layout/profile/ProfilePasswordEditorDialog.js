@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 function EditPasswordField(props) {
   const {on_change, value, errors, id} = props;
 
-  return(
+  return (
     <Grid item>
       <Typography component="label" for={id} variant="caption" color="primary">
         {props.edit_password_requirement}
@@ -115,7 +115,7 @@ function ProfilePasswordEditorDialog(props) {
   console.log(success)
 
 
-  return(
+  return (
     <div>
       <Button
         variant="contained"

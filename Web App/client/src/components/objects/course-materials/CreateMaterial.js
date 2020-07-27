@@ -113,7 +113,7 @@ const styles = (theme) => ({
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
 
-  return(
+  return (
     <Grid item xs={12}>
       <Paper variant="outlined">
         <ListItem disableRipple>
@@ -353,7 +353,7 @@ class CreateMaterial extends Component {
     }
 
     const UploadDialog = () => {
-      return(
+      return (
         <Dialog open={this.state.openUploadDialog}>
           <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
             <Grid item>
@@ -399,7 +399,7 @@ class CreateMaterial extends Component {
     document.title = "Schooly | Buat Materi";
 
     if (user.role === "Teacher") {
-      return(
+      return (
         <div className={classes.root}>
           {UploadDialog()}
           <Paper>
@@ -494,7 +494,7 @@ class CreateMaterial extends Component {
                               {selected.map((kelas) => {
                                 console.log(selected)
                                 console.log(kelas, class_assigned)
-                                return(
+                                return (
                                   <Chip key={kelas} label={kelas.name} className={classes.chip} />
                                 )
                               })}
@@ -502,7 +502,7 @@ class CreateMaterial extends Component {
                           )}
                         >
                           {all_classes.map((kelas) => {
-                            return(
+                            return (
                               <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                           )})}
                         </Select>
@@ -565,7 +565,7 @@ class CreateMaterial extends Component {
       );
     }
     else {
-      return(
+      return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>

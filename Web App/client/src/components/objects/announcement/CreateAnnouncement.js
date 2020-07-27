@@ -112,7 +112,7 @@ const styles = (theme) => ({
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
 
-  return(
+  return (
     <Grid item xs={12}>
       <Paper variant="outlined">
         <ListItem disableRipple>
@@ -310,7 +310,7 @@ class CreateAnnouncement extends Component {
     const { user } = this.props.auth
 
     const UploadDialog = () => {
-        return(
+        return (
           <Dialog open={this.state.openUploadDialog}>
             <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
               <Grid item>
@@ -388,10 +388,10 @@ class CreateAnnouncement extends Component {
     // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja.
     if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id) {
       console.log(kelas.ketua_kelas, user.id)
-      return(<Redirect to="/tidak-ditemukan"/>)
+      return (<Redirect to="/tidak-ditemukan"/>)
     }
 
-    return(
+    return (
       <div className={classes.root}>
         {UploadDialog()}
         <Paper>
@@ -471,7 +471,7 @@ class CreateAnnouncement extends Component {
                               {selected.map((kelas) => {
                                 console.log(selected)
                                 console.log(kelas, class_assigned)
-                                return(
+                                return (
                                   <Chip key={kelas} label={kelas.name} className={classes.chip} />
                                 )
                               })}
@@ -479,7 +479,7 @@ class CreateAnnouncement extends Component {
                           )}
                         >
                           {all_classes.map((kelas) => { console.log(kelas, class_assigned)
-                            return(
+                            return (
                               <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                           )})}
                         </Select>

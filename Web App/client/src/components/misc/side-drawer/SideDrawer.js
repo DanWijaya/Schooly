@@ -77,22 +77,8 @@ function DrawerContent(props) {
 
   const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=false) => {
     if (!isDisabled && linkto) {
-      return(
-          <Link to={linkto} onClick={handleDrawerMobile}>
-            <StyledListItem button disabled={isDisabled}>
-              <ListItemIcon>
-                {icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={<Typography color="textPrimary">{itemText1}</Typography>}
-                secondary={itemText2}
-              />
-            </StyledListItem>
-          </Link>
-      )
-    }
-    else {
-      return(
+      return (
+        <Link to={linkto} onClick={handleDrawerMobile}>
           <StyledListItem button disabled={isDisabled}>
             <ListItemIcon>
               {icon}
@@ -102,6 +88,20 @@ function DrawerContent(props) {
               secondary={itemText2}
             />
           </StyledListItem>
+        </Link>
+      )
+    }
+    else {
+      return (
+        <StyledListItem button disabled={isDisabled}>
+          <ListItemIcon>
+            {icon}
+          </ListItemIcon>
+          <ListItemText
+            primary={<Typography color="textPrimary">{itemText1}</Typography>}
+            secondary={itemText2}
+          />
+        </StyledListItem>
       )
     }
   }
@@ -115,7 +115,7 @@ function DrawerContent(props) {
       directedTo = "/daftar-kelas"
   }
 
-  let ListItemContents ;
+  let ListItemContents;
   if (user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
@@ -136,7 +136,7 @@ function DrawerContent(props) {
     ]
   }
 
-  return(
+  return (
     <div>
       <List>
         {ListItemContents.map((item) => (
@@ -160,7 +160,7 @@ function SideDrawer(props) {
   const { user } = props.auth;
 
   if (user.name !== undefined) {
-    return(
+    return (
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">
           {/* Mobile = Backdrop Drawer */}
@@ -202,7 +202,7 @@ function SideDrawer(props) {
     )
   }
   else {
-    return(
+    return (
       <div style={{display: "none"}} />
     )
   }

@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return(
+  return (
     <div
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -102,7 +102,7 @@ function TabIndex(index) {
 function AssignmentListItem(props) {
   const classes = useStyles()
 
-  return(
+  return (
     <div>
       <Hidden smUp implementation="css">
         <Link to={props.work_link}>
@@ -174,7 +174,7 @@ function AssignmentListItem(props) {
 function MaterialListitem(props) {
   const classes = useStyles()
 
-  return(
+  return (
     <div>
     <Hidden smUp implementation="css">
     <Link to={props.work_link}>
@@ -216,7 +216,7 @@ function MaterialListitem(props) {
 }
 
 function PersonListItem(props) {
-  return(
+  return (
     <div>
       <Hidden smUp implementation="css">
         <ListItem>
@@ -415,7 +415,7 @@ function ViewClass(props) {
   }
 
   console.log(kelas, all_teachers, kelas.walikelas)
-  return(
+  return (
     <div className={classes.root}>
       {user.role === "Admin" || user.role === "Teacher" ?
       <div>
@@ -539,7 +539,7 @@ function ViewClass(props) {
                       break;
                     }
                   }
-                  return(
+                  return (
                     <AssignmentListItem
                       work_title={task.name}
                       work_category_avatar={workCategoryAvatar}
@@ -573,7 +573,7 @@ function ViewClass(props) {
           {all_subjects.length === 0 ? null :
             all_subjects.map((subject) => {
               // let isEmpty = true
-              return(
+              return (
                 <ExpansionPanel>
                   <ExpansionPanelSummary>
                     <Grid container justify="space-between" alignItems="center">

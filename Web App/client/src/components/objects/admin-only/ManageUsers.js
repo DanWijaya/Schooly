@@ -71,7 +71,7 @@ function ManageUsersToolbar(props) {
     setAnchorEl(null);
   };
 
-  return(
+  return (
     <Toolbar className={classes.toolbar}>
       <Typography variant="h5" color="primary">
         <b>{heading}</b>
@@ -306,7 +306,7 @@ function ManageUsers(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -363,7 +363,7 @@ function ManageUsers(props) {
   }
 
   function DisableDialog() {
-    return(
+    return (
       <Dialog
         open={openDisableDialog}
         onClose={handleCloseDisableDialog}
@@ -420,7 +420,7 @@ function ManageUsers(props) {
   }
 
   console.log(pending_users)
-  return(
+  return (
     <div className={classes.root}>
       {DisableDialog()}
       {DeleteDialog()}
@@ -442,7 +442,7 @@ function ManageUsers(props) {
         {stableSort(student_rows, getComparator(order_student, orderBy_student))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            return(
+            return (
               <Grid item>
                 <ExpansionPanel
                   button
@@ -550,7 +550,7 @@ function ManageUsers(props) {
         {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            return(
+            return (
               <Grid item>
                 <ExpansionPanel
                   button

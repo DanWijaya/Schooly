@@ -20,13 +20,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-end",
-    textAlign: "center",
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
-  },
-  whatIsSchoolyTitle: {
-    fontFamily: "Cambria",
   },
   schoolyFeatures: {
     margin: "auto",
@@ -43,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-end",
-    textAlign: "center",
     margin: "auto",
     marginTop: "30px",
     marginBottom: "30px",
@@ -71,7 +66,7 @@ function About(props) {
 
   document.title = "Schooly | Tentang Schooly";
 
-  return(
+  return (
     <div className={classes.root}>
       <div className={classes.whatIsSchoolyBackground}>
         <div className={classes.whatIsSchooly}>
@@ -80,13 +75,13 @@ function About(props) {
             src={whatIsSchooly}
             style={{maxWidth: "100%", maxHeight: "100%", marginBottom: "20px"}}
           />
-          <Typography variant="h2" gutterBottom className={classes.whatIsSchoolyTitle}>
+          <Typography variant="h3" align="center" gutterBottom className={classes.whatIsSchoolyTitle}>
             Apa itu Schooly?
           </Typography>
-          <Typography variant="h6" paragraph>
+          <Typography variant="h6" align="center" paragraph>
             Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
           </Typography>
-          <Typography style={{paddingBottom: "40px"}}>
+          <Typography align="center" style={{marginBottom: "40px"}}>
             "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien."
           </Typography>
         </div>

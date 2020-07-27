@@ -69,19 +69,11 @@ function NavBar(props) {
     leftNavBarContents = (
       <div className={classes.navbarContainedLeftItems}>
         {isMobileView ?
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={handleDrawerMobile}
-          >
+          <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
             <MenuIcon />
           </IconButton>
           :
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={handleDrawerDesktop}
-          >
+          <IconButton edge="start" color="inherit" onClick={handleDrawerDesktop}>
             <MenuIcon />
           </IconButton>
         }
@@ -126,11 +118,7 @@ function NavBar(props) {
           </Button>
         </Link>
         <Link to="/masuk">
-          <Button
-            variant="contained"
-            size="small"
-            className={classes.loginButton}
-          >
+          <Button variant="contained" size="small" className={classes.loginButton}>
             Masuk
           </Button>
         </Link>
@@ -138,11 +126,8 @@ function NavBar(props) {
     )
   }
 
-  return(
-    <AppBar
-      position="fixed"
-      className={classes.appBar}
-    >
+  return (
+    <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
         {leftNavBarContents}
         {middleNavBarContents}

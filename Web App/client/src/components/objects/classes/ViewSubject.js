@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 function SubjectListitem(props){
   const classes = useStyles()
 
-  return(
+  return (
     <Link to={props.work_link}>
       <ListItem button className={classes.listItem}>
         <ListItemAvatar>
@@ -80,7 +80,7 @@ function SubjectListitem(props){
 
 function AssignmentListItem(props) {
 const classes = useStyles()
-  return(
+  return (
     <Link to={props.work_link}>
     <ListItem button>
       <ListItemAvatar>
@@ -204,7 +204,7 @@ function ViewSubject(props) {
   generateTaskBySubject()
   document.title = `Schooly | ${id}`
 
-  return(
+  return (
     <div className={classes.root}>
       <Paper className={classes.subjectCardPaper}>
         <Typography variant="subtitle1" color="primary">
@@ -229,7 +229,7 @@ function ViewSubject(props) {
             selectedMaterials.map((material) => {
               if (material.subject === id) {
 
-                return( <SubjectListitem
+                return ( <SubjectListitem
                   work_title={material.name}
                   work_category_avatar={
                   <Avatar className={classes.material}>

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 function Footer() {
   const classes = useStyles();
 
-  return(
+  return (
     <div className={classes.root}>
       <Divider style={{marginBottom: "10px"}} />
       <Hidden mdUp implementation="css">
@@ -61,7 +61,7 @@ function Footer() {
               </Typography>
               <Typography variant="caption">
                 <Link to="/kebijakan-penggunaan">
-                Kebijakan Pengunaan
+                  Kebijakan Pengunaan
                 </Link>
               </Typography>
             </div>

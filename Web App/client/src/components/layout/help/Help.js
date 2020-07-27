@@ -110,7 +110,7 @@ function Help(props) {
 
   document.title = "Schooly | Bantuan";
 
-  return(
+  return (
     <div className={classes.root}>
       <div className={classes.helpTopicsBackground}>
         <div className={classes.helpTopics}>

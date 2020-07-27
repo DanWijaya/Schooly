@@ -112,7 +112,7 @@ const styles = (theme) => ({
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
 
-  return(
+  return (
     <Grid item xs={12}>
       <Paper variant="outlined">
         <ListItem disableRipple>
@@ -347,7 +347,7 @@ class EditAnnouncement extends Component {
     const { all_classes, kelas } = this.props.classesCollection;
 
     const UploadDialog = () => {
-      return(
+      return (
         <Dialog open={this.state.openUploadDialog}>
           <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
             <Grid item>
@@ -428,12 +428,12 @@ class EditAnnouncement extends Component {
 
     if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id) {
       console.log(kelas.ketua_kelas, user.id)
-      return(
+      return (
         <Redirect to="/tidak-ditemukan"/>
       )
     }
 
-    return(
+    return (
       <div className={classes.root}>
         {UploadDialog()}
         <Paper>
@@ -506,7 +506,7 @@ class EditAnnouncement extends Component {
                           value={class_assigned}
                           onChange={(event) => {this.onChange(event, "kelas")}}
                           renderValue={(selected) => {
-                            return(
+                            return (
                               <div className={classes.chips}>
                                 {selected.map((id) => {
                                   let name
@@ -519,7 +519,7 @@ class EditAnnouncement extends Component {
                                         break;
                                       }
                                     }
-                                    return(
+                                    return (
                                       <Chip key={id} label={name} className={classes.chip} />
                                     )
                                   }
@@ -528,7 +528,7 @@ class EditAnnouncement extends Component {
                           )}}
                         >
                           {all_classes.map((kelas) => { console.log(kelas, class_assigned)
-                            return(
+                            return (
                               <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                           )})}
                         </Select>

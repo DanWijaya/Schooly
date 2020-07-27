@@ -1,17 +1,14 @@
 Botak:
-1. Delete tester di akhir
 2. nama sekolah di profil
-3. Notification
 4. Sort mapping dkk
 5. Rename not graded jadi indo
-6. cek title daftar pengumuman dkk udah di vertical alignnya center atau belum
 7. Download as csv, txt
 8. Search
 9. Cek file dan error
-10. QUIZ dan UJIAN memang penting dengan rquest bu yanti yang banyak.
 11. Snackbar change profile pas mau klik keluar
 12. Maxwidth buat semua dialog
 13. Murid kumpul tugas masih merah
+14. Sticky footer
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

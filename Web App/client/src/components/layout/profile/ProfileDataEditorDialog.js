@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return(
+  return (
     <div
       hidden={value !== index}
       id={`tabpanel-${index}`}
@@ -91,7 +91,7 @@ function ProfileDataItemEdit(props) {
   const classes = useStyles();
   const { errors } = props;
   console.log(errors)
-  return(
+  return (
     <ListItem>
       <Grid container alignItems="center">
         <Grid item sm={2}>
@@ -227,7 +227,7 @@ function ProfileDataEditorDialog(props) {
     }))
   }
 
-  return(
+  return (
     <div>
       <Button
         variant="contained"

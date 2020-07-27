@@ -162,7 +162,7 @@ class EditClass extends Component {
     document.title = "Schooly | Sunting Kelas";
     console.log(this.state.walikelas)
     if (user.role === "Teacher" || user.role === "Admin") {
-      return(
+      return (
         <div className={classes.root}>
           <Paper>
             <div className={classes.content}>
@@ -296,7 +296,7 @@ class EditClass extends Component {
       )
     }
     else {
-      return(
+      return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>

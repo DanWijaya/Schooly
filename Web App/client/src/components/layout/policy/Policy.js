@@ -11,7 +11,7 @@ function Policy(props) {
 
   document.title = "Schooly | Kebijakan Penggunaan";
 
-  return(
+  return (
     <PolicyContent />
   )
 };

@@ -125,7 +125,7 @@ function ProfilePictureEditorDialog(props) {
 
     if (!profileImg) {
       if (user.avatar) {
-        return(
+        return (
           <Avatar className={classes.avatar}>
             <img
               alt="profile"
@@ -138,7 +138,7 @@ function ProfilePictureEditorDialog(props) {
         )
       }
       else {
-        return(
+        return (
           <Avatar className={classes.avatar}>
             <img
               alt="profile"
@@ -152,7 +152,7 @@ function ProfilePictureEditorDialog(props) {
       }
     }
     else {
-      return(
+      return (
         <Avatar className={classes.avatar}>
           <img
             alt="current profile"
@@ -165,7 +165,7 @@ function ProfilePictureEditorDialog(props) {
     }
   }
 
-  return(
+  return (
     <div>
       <LightTooltip title="Ganti Foto Profil">
         <IconButton

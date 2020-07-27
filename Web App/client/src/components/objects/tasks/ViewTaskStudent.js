@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
   },
   workChosenFile: {
     width: "200px",
-    textAlign: "center",
     color: theme.palette.primary.main,
   },
   selectFileButton: {
@@ -164,7 +163,7 @@ function LampiranFile(props) {
   :
     displayedName = filename
 
-  return(
+  return (
     <Grid item xs={12} md={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem
@@ -245,7 +244,7 @@ function WorkFile(props) {
   :
     displayedName = file_name
 
-  return(
+  return (
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem
         button
@@ -402,7 +401,7 @@ function ViewTaskStudent(props) {
     let temp = []
     if (!fileTugas) {
       temp.push(
-        <Typography className={classes.workChosenFile}>
+        <Typography align="center" className={classes.workChosenFile}>
           Kosong
         </Typography>
       )
@@ -477,7 +476,7 @@ function ViewTaskStudent(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -545,7 +544,7 @@ function ViewTaskStudent(props) {
 
   function UploadDialog(){
 
-    return(
+    return (
       <Dialog open={openUploadDialog}>
         <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
           <Grid item justify="center">
@@ -580,7 +579,7 @@ function ViewTaskStudent(props) {
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
   console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
   console.log(success, filesCollection.files)
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       {UploadDialog()}

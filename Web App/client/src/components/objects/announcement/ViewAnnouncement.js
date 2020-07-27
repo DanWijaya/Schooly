@@ -128,7 +128,7 @@ function LampiranFile(props) {
   :
     displayedName = filename
 
-  return(
+  return (
     <Grid item xs={12} sm={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem button disableRipple className={classes.listItem}
@@ -255,7 +255,7 @@ function ViewAnnouncement(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -326,7 +326,7 @@ function ViewAnnouncement(props) {
   }
 
   console.log(retrieved_users)
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paper}>

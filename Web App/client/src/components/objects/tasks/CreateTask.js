@@ -116,7 +116,7 @@ const styles = (theme) => ({
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
 
-  return(
+  return (
     <Grid item xs={12}>
       <Paper variant="outlined">
         <ListItem disableRipple>
@@ -315,7 +315,7 @@ class CreateTask extends Component {
     console.log(errors)
 
     const UploadDialog = () => {
-      return(
+      return (
         <Dialog open={this.state.openUploadDialog}>
           <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
             <Grid item justify="center">
@@ -403,7 +403,7 @@ class CreateTask extends Component {
     document.title = "Schooly | Buat Tugas";
 
     if (user.role === "Teacher") {
-      return(
+      return (
         <div className={classes.root}>
           {UploadDialog()}
           <Paper>
@@ -526,7 +526,7 @@ class CreateTask extends Component {
                                     break;
                                   }
                                 }
-                                return(
+                                return (
                                   <Chip key={id} label={name} className={classes.chip} />
                                 )
                               })}
@@ -534,7 +534,7 @@ class CreateTask extends Component {
                           )}
                         >
                           {all_classes.map((kelas) => { console.log(kelas, class_assigned)
-                            return(
+                            return (
                               <MenuItem value={kelas._id} key={kelas._id} selected>{kelas.name}</MenuItem>
                           )})}
                         </Select>
@@ -592,7 +592,7 @@ class CreateTask extends Component {
       );
     }
     else {
-      return(
+      return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>

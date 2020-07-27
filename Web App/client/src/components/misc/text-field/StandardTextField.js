@@ -10,7 +10,7 @@ const StandardTextField = (props) => {
     setBorderStyle("2px solid #2196F3")
   }
 
-  return(
+  return (
     <div>
       <input
         onFocus={onFocus}

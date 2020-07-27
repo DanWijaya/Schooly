@@ -72,7 +72,7 @@ function ClassListToolbar(props) {
     setAnchorEl(null);
   };
 
-  return(
+  return (
     <div className={classes.toolbar}>
       <Typography variant="h4" color="primary">
         <b>Daftar Kelas</b>
@@ -320,7 +320,7 @@ function ClassList(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -382,7 +382,7 @@ function ClassList(props) {
   }
 
   if (user.role === "Student") {
-    return(
+    return (
       <div className={classes.root}>
         <Typography variant="h5" align="center" className={classes.title}>
           <b>Anda tidak mempunyai izin akses halaman ini.</b>
@@ -391,7 +391,7 @@ function ClassList(props) {
     )
   }
 
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       <ClassListToolbar
@@ -408,7 +408,7 @@ function ClassList(props) {
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = `/kelas/${row._id}`;
-            return(
+            return (
               <Grid item xs={12} sm={6} md={4}>
                 <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
                 <Paper button square

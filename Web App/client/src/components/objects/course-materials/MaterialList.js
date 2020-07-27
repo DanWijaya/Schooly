@@ -78,7 +78,7 @@ function MaterialListToolbar(props) {
     setAnchorEl(null);
   };
 
-  return(
+  return (
     <div className={classes.toolbar}>
       <Typography variant="h4" color="primary">
         <b>Daftar Materi</b>
@@ -357,7 +357,7 @@ function MaterialList(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -415,7 +415,7 @@ function MaterialList(props) {
 
   document.title = "Schooly | Daftar Materi";
   console.log(all_classes_map)
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       <MaterialListToolbar
@@ -432,7 +432,7 @@ function MaterialList(props) {
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = `/materi/${row._id}`
-            return(
+            return (
               <Grid item>
                 {user.role === "Teacher" ?
                   <ExpansionPanel

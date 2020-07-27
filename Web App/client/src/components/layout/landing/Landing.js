@@ -31,9 +31,6 @@ const styles = (theme) => ({
     padding: "20px",
     color: "white",
   },
-  schoolyIntroductionTitle: {
-    color: "white",
-  },
   schoolyAccessBackground: {
     backgroundColor: "#F5F5F5",
   },
@@ -54,7 +51,7 @@ const styles = (theme) => ({
     maxWidth: "1000px",
     marginTop: "75px",
     marginBottom: "75px",
-    padding: "10px",
+    padding: "20px",
   },
   schoolyFeaturesTitle: {
     color: "grey",
@@ -69,7 +66,7 @@ const styles = (theme) => ({
   featuresAvatar: {
     width: theme.spacing(15),
     height: theme.spacing(15),
-    marginBottom: "30px",
+    marginBottom: "10px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
   },
@@ -77,6 +74,12 @@ const styles = (theme) => ({
     width: theme.spacing(10),
     height: theme.spacing(10),
     color: theme.palette.primary.main,
+  },
+  featuresText: {
+    fontSize: "14px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "12.5px",
+    },
   },
   useSchooly: {
     display: "flex",
@@ -88,12 +91,8 @@ const styles = (theme) => ({
     padding: "10px",
     maxWidth: "1000px",
   },
-  useSchoolyButtonContainer: {
-    display: "flex",
-    justifyContent: "space-between"
-  },
   sendMessageButton: {
-    width: "150px",
+    width: "160px",
     marginRight: "30px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -103,7 +102,7 @@ const styles = (theme) => ({
     },
   },
   copyLinkButton: {
-    width: "150px",
+    width: "160px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
     "&:focus, &:hover": {
@@ -141,24 +140,19 @@ class Landing extends Component {
 
     document.title = "Schooly | Sistem Persekolahan Terbaik di Indonesia";
 
-    return(
+    return (
     <div className={classes.root}>
       <div className={classes.schoolyIntroductionBackground}>
         <div className={classes.schoolyIntroduction}>
           <Grid container justify="center" alignItems="center">
             <Grid item xs={12} sm={6}>
-              <Typography
-                className={classes.schoolyIntroductionTitle}
-                variant="h4"
-                color="primary"
-                gutterBottom
-              >
-               Schooly membuat pekerjaan sekolahmu lebih mudah.
+              <Typography variant="h4" gutterBottom>
+                Schooly membuat pekerjaan sekolahmu lebih mudah.
               </Typography>
               <Typography variant="h6">
-               Berikan pekerjaan sekolah dengan mudah. <br />
-               Rangkum hasil pengecekkan dengan mudah. <br />
-               Tidak pernah lupa dengan tugas sekolahmu.
+                Berikan pekerjaan sekolah dengan mudah. <br />
+                Rangkum hasil pengecekkan dengan mudah. <br />
+                Tidak pernah lupa dengan tugas sekolahmu.
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -183,11 +177,11 @@ class Landing extends Component {
             </Grid>
             <Grid item>
               <Typography variant="h4" color="primary" gutterBottom>
-               Akses dengan mudah di mana saja.
+                Akses dengan mudah di mana saja.
               </Typography>
-              <Typography variant="h6">
-               Buka dan gunakan Schooly dengan mudah pada browser anda di perangkat apa saja,
-               dimana saja, dan kapan saja.
+              <Typography>
+                Buka dan gunakan Schooly dengan mudah pada browser anda di perangkat apa saja,
+                dimana saja, dan kapan saja.
               </Typography>
             </Grid>
           </Grid>
@@ -198,7 +192,7 @@ class Landing extends Component {
           <Grid container spacing={3} justify="center" alignItems="stretch">
             <Grid item xs={12}>
               <Typography variant="h4" gutterBottom className={classes.schoolyFeaturesTitle}>
-               Fitur-Fitur Schooly
+                Fitur-Fitur Schooly
               </Typography>
             </Grid>
             <Grid item xs={6} sm={3}>
@@ -206,7 +200,7 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <AssignmentIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography variant="subtitle1">
+                <Typography className={classes.featuresText}>
                   Publikasi pekerjaan sekolah dengan mudah dan tidak pernah takut kehilangan data.
                 </Typography>
               </Paper>
@@ -216,7 +210,7 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <PeopleIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography variant="subtitle1">
+                <Typography className={classes.featuresText}>
                   Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari murid, guru, hingga pengelola.
                 </Typography>
               </Paper>
@@ -226,7 +220,7 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <WatchLaterIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography variant="subtitle1">
+                <Typography className={classes.featuresText}>
                   Tidak pernah lupa untuk mengumpulkan atau memeriksa pekerjaan sekolah lagi dengan pengingat dari Schooly.
                 </Typography>
               </Paper>
@@ -236,7 +230,7 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <ContactlessIcon className={classes.featuresIcon} />
                 </Avatar>
-                <Typography variant="subtitle1">
+                <Typography className={classes.featuresText}>
                   Temukan kontak orang-orang sepersekolahanmu dengan mudah.
                 </Typography>
               </Paper>
@@ -251,7 +245,7 @@ class Landing extends Component {
         <Typography paragraph>
           Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin Tautan" untuk mengirim tautan ini ke sekolah anda.
         </Typography>
-        <div className={classes.useSchoolyButtonContainer}>
+        <div style={{display: "flex", justifyContent: "space-between"}}>
           <Button
             variant="contained"
             href="mailto:schoolysystem@gmail.com"

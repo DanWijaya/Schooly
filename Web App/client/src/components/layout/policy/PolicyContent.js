@@ -15,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    textAlign: "center",
     color: "white",
     margin: "auto",
     maxWidth: "1000px",
     height: "100px",
+    padding: "10px",
   },
   content: {
     margin: "auto",
@@ -39,11 +39,11 @@ const useStyles = makeStyles((theme) => ({
 function PolicyContent() {
   const classes = useStyles();
 
-  return(
+  return (
     <div className={classes.root}>
       <div className={classes.policyBackground}>
         <div className={classes.policy}>
-          <Typography variant="h3">
+          <Typography variant="h3" align="center">
             Kebijakan Penggunaan Schooly
           </Typography>
         </div>

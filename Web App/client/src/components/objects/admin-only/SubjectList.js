@@ -70,7 +70,7 @@ function SubjectListToolbar(props) {
     setAnchorEl(null);
   };
 
-  return(
+  return (
     <div className={classes.toolbar}>
       <Typography variant="h4" color="primary">
         <b>Daftar Mata Pelajaran</b>
@@ -384,7 +384,7 @@ function SubjectList(props) {
   }
 
   function FormDialog() {
-    return(
+    return (
       <Dialog
         open={openFormDialog}
         onClose={handleCloseFormDialog}>
@@ -457,7 +457,7 @@ function SubjectList(props) {
   }
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -515,7 +515,7 @@ function SubjectList(props) {
 
   document.title = "Schooly | Daftar Mata Pelajaran";
   console.log(errors)
-  return(
+  return (
     <div className={classes.root}>
       {FormDialog()}
       {DeleteDialog()}
@@ -533,7 +533,7 @@ function SubjectList(props) {
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            return(
+            return (
                 <Grid item>
                 <Paper variant="outlined" className={classes.subjectPaper}>
                     <Grid item>

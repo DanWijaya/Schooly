@@ -109,7 +109,7 @@ class App extends Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
@@ -169,21 +169,21 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-materi/:id" component={EditMaterial} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/materi/:id" component={ViewMaterial} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-materi" component={MaterialList} />
-                    {/* Route Announcement  */}
+                    {/* Route Announcement */}
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/buat-pengumuman" component={CreateAnnouncement} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/sunting-pengumuman/:id" component={EditAnnouncement} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/pengumuman/:id" component={ViewAnnouncement} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-pengumuman" component={AnnouncementList} />
-                    {/* Route Task  */}
+                    {/* Route Task */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-tugas" component={CreateTask} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-tugas/:id" component={EditTask} />
                     <PrivateRoute exact access={["Student"]} path="/tugas-murid/:id" component={ViewTaskStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
-                    {/* Route Assessment - Prototype  */}
+                    {/* Route Assessment - Prototype */}
                     <PrivateRoute exact access={["Teacher"]} path="/kuis" component={CreateAssessment} />
-                    {/* Route Admin-Only  */}
+                    {/* Route Admin-Only */}
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/daftar-mata-pelajaran" component={SubjectList} />

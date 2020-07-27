@@ -83,7 +83,7 @@ class ResetPassword extends Component {
       savePassword(passwordReset)
     }
 
-    return(
+    return (
       <div className={classes.root}>
         <Paper className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
