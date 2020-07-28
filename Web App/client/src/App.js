@@ -58,7 +58,7 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
-import DropboxTester from "./components/auth/dropbox/DropboxTester";
+import DropboxConnect from "./components/auth/dropbox/DropboxConnect";
 import DropboxAuth from "./components/auth/dropbox/DropboxAuth";
 
 // Check for token to keep user logged in
@@ -156,7 +156,7 @@ class App extends Component {
                       )}
                     />
                     <Route exact path="/dropbox-auth" component={DropboxAuth}/>
-                    <Route exact path="/dropbox-connect" component={DropboxTester}/>
+                    <Route exact path="/dropbox-connect" component={DropboxConnect}/>
                     <Route exact path="/daftar" component={Register} />
                     <Route exact path="/masuk" component={Login} />
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />

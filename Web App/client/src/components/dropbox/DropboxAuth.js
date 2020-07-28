@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as queryString from "query-string";
 import { Redirect } from "react-router-dom";
-import { setDropboxToken } from "../../../actions/UserActions";
+import { setDropboxToken } from "../../actions/UserActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -16,12 +16,8 @@ function DropboxAuth(props) {
     updateTokenSaved(true)
   }, [])
 
-  return(
-    <div>
-      {tokenSaved}
-      {queryString.parse(window.location.hash).access_token}
-    </div>
-  );
+  return tokenSaved ? <Redirect to="/dropbox-connect"/> : null;
+  
 }
 
 DropboxAuth.propTypes = {
@@ -30,7 +26,6 @@ DropboxAuth.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  errors: state.errors,
   auth: state.auth,
 })
 
