@@ -11,6 +11,7 @@ Botak:
 16. Dashboard admin dan guru
 17. Tidak nihil dan jumlah murid
 18. Disable overflow hidden when opening menu
+19. Fix profile page lagi
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24

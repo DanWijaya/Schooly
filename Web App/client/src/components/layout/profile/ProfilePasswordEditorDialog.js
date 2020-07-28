@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip"
 import { Button, Dialog, Grid, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
@@ -12,6 +13,14 @@ import { clearErrors} from "../../../actions/ErrorActions"
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "15px",
+  },
+  editPasswordButton: {
+    backgroundColor: "#DCDCDC",
+    color: "black",
+    "&:focus, &:hover": {
+      backgroundColor: "#DCDCDC",
+      color: "black",
+    },
   },
   content: {
     padding: "0px 10px 0px 10px",
@@ -117,18 +126,15 @@ function ProfilePasswordEditorDialog(props) {
 
   return (
     <div>
-      <Button
-        variant="contained"
-        onClick={handleClickOpen}
-        startIcon={<LockIcon />}
-        style={{
-          backgroundColor: "#DCDCDC",
-          color: "black",
-          width: "200px",
-        }}
-      >
-        Ganti Kata Sandi
-      </Button>
+      <LightTooltip title="Ganti Kata Sandi">
+        <IconButton
+          size="medium"
+          onClick={handleClickOpen}
+          className={classes.editPasswordButton}
+        >
+          <LockIcon />
+        </IconButton>
+      </LightTooltip>
       <Dialog open={open} onClose={handleClose}>
         <Grid container direction="column" alignItems="center" className={classes.root}>
           <Grid item container justify="flex-end" alignItems="flex-start">

@@ -3,12 +3,15 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { updateAvatar } from "../../../actions/UserActions"
-import { setCurrentClass} from "../../../actions/ClassActions"
+import { updateAvatar } from "../../../actions/UserActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
+import informationContacts from "./InformationContacts.png";
+import informationJob from "./InformationJob.png";
+import informationPrivate from "./InformationPrivate.png";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
-import { Avatar, Badge, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Typography } from "@material-ui/core";
+import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
@@ -35,9 +38,21 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(20),
     height: theme.spacing(20),
   },
-  paperBox: {
-    padding: "15px",
-    paddingTop: "20px",
+  informationPaper: {
+    padding: "22.5px 25px 22.5px 25px",
+  },
+  informationPictureContainer: {
+    display: "flex",
+    justifyContent: "center",
+    [theme.breakpoints.up("sm")]: {
+      justifyContent: "flex-end",
+    },
+  },
+  informationPicture: {
+    height: "100px",
+    [theme.breakpoints.up("sm")]: {
+      height: "150px",
+    },
   },
   profileDataItemAvatar: {
     backgroundColor: theme.palette.primary.main,
@@ -79,8 +94,8 @@ function ProfileDataItem(props) {
           </ListItemAvatar>
           <ListItemText
             primary={
-              <Typography variant="overline">
-                {props.profile_data_category}
+              <Typography variant="overline" color="textSecondary">
+                <b>{props.profile_data_category}</b>
               </Typography>
             }
             secondary={
@@ -91,7 +106,7 @@ function ProfileDataItem(props) {
                   </Typography>
                 </Paper>
               :
-                <Typography>
+                <Typography variant="body1">
                   {props.profile_data_info}
                 </Typography>
             }
@@ -106,12 +121,12 @@ function ProfileDataItem(props) {
             </Avatar>
           </ListItemAvatar>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography variant="overline">
-                {props.profile_data_category}
+            <Grid item xs={5}>
+              <Typography variant="overline" color="textSecondary">
+                <b>{props.profile_data_category}</b>
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={7}>
               {!props.profile_data_info ?
                 <Paper className={classes.emptyProfileData}>
                   <Typography variant="button">
@@ -146,8 +161,8 @@ function Profile(props) {
   const handleCloseAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
-    } 
-    setOpenAlert(false); 
+    }
+    setOpenAlert(false);
   }
   console.log(user.avatar)
 
@@ -167,7 +182,7 @@ function Profile(props) {
   const [openPasswordEditorAlert, setOpenPasswordEditorAlert] = React.useState(false);
   const handleOpenPasswordEditorAlert = () => {
     setOpenPasswordEditorAlert(true);
-    
+
   }
   const handleClosePasswordEditorAlert = (e, reason) => {
     if (reason === "clickaway") {
@@ -255,119 +270,162 @@ function Profile(props) {
             {user.name}
           </Typography>
           <Typography variant="h6" align="center">
-            {user.sekolah}
-          </Typography>
-          <Typography variant="h6" align="center" gutterBottom>
             {user.role === "Student" ?
               "Murid"
             : user.role === "Teacher" ?
               "Guru"
             :
               "Pengelola"
-            } SMA
+            }
           </Typography>
           <Typography style={{marginBottom:"25px"}}>
-            {!classesCollection.kelas.name ? 
-            null : `Kelas ${classesCollection.kelas.name}`}
+            {!classesCollection.kelas.name ? null : `Kelas ${classesCollection.kelas.name}`}
           </Typography>
-          <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
-          <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
+          <Grid container spacing={3} justify="flex-end" alignItems="center">
+            <Grid item>
+              <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
+            </Grid>
+            <Grid item>
+              <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item container direction="column" spacing={4}>
           <Grid item>
-            <Paper>
-              <div className={classes.paperBox}>
-                <Typography variant="h4" gutterBottom>
-                  Informasi Pribadi
-                </Typography>
-                <Typography variant="subtitle1">
-                  Beberapa informasi profil dapat dilihat oleh pengelola sekolah anda.
-                </Typography>
-                <List>
-                  <ProfileDataItem
-                    profile_data_icon={<PersonIcon />}
-                    profile_data_category="Nama"
-                    profile_data_info={user.name}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<CakeIcon />}
-                    profile_data_category="Tanggal Lahir"
-                    profile_data_info={moment(user.tanggal_lahir).locale("id").format("DD-MM-YYYY")}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<WcIcon />}
-                    profile_data_category="Jenis Kelamin"
-                    profile_data_info={user.jenis_kelamin}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<SchoolIcon />}
-                    profile_data_category="Sekolah"
-                    profile_data_info={user.sekolah}
-                  />
-                </List>
-              </div>
+            <Paper className={classes.informationPaper}>
+              <Grid container justify="space-between">
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h4" gutterBottom>
+                    Informasi Pribadi
+                  </Typography>
+                  <Typography variant="body1" color="primary">
+                    Beberapa informasi profil dapat dilihat oleh pengelola sekolah anda.
+                  </Typography>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    Pastikan Anda mengisi semua inforamasi profil Anda untuk melengkapi
+                    database sekolah Anda.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <div className={classes.informationPictureContainer}>
+                    <img src={informationPrivate} className={classes.informationPicture} />
+                  </div>
+                </Grid>
+              </Grid>
+              <List>
+                <ProfileDataItem
+                  profile_data_icon={<PersonIcon />}
+                  profile_data_category="Nama"
+                  profile_data_info={user.name}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<CakeIcon />}
+                  profile_data_category="Tanggal Lahir"
+                  profile_data_info={moment(user.tanggal_lahir).locale("id").format("DD-MM-YYYY")}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<WcIcon />}
+                  profile_data_category="Jenis Kelamin"
+                  profile_data_info={user.jenis_kelamin}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<SchoolIcon />}
+                  profile_data_category="Sekolah"
+                  profile_data_info={user.sekolah}
+                />
+              </List>
             </Paper>
           </Grid>
           <Grid item>
-            <Paper>
-              <div className={classes.paperBox}>
-                <Typography variant="h4">
-                  Kontak
-                </Typography>
-                <List>
-                  <ProfileDataItem
-                    profile_data_icon={<EmailIcon />}
-                    profile_data_category="Email"
-                    profile_data_info={user.email}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<PhoneIcon />}
-                    profile_data_category="Nomor Telepon"
-                    profile_data_info={user.phone}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<ContactPhoneIcon />}
-                    profile_data_category="Nomor Telepon Darurat"
-                    profile_data_info={user.emergency_phone}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<HomeIcon />}
-                    profile_data_category="Alamat"
-                    profile_data_info={user.address}
-                  />
-                </List>
-              </div>
+            <Paper className={classes.informationPaper}>
+              <Grid container justify="space-between">
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h4" gutterBottom>
+                    Kontak
+                  </Typography>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    Jangan lupa untuk mengecek kembali kontak-kontak yang Anda masukkan.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <div className={classes.informationPictureContainer}>
+                    <img src={informationContacts} className={classes.informationPicture} />
+                  </div>
+                </Grid>
+              </Grid>
+              <List>
+                <ProfileDataItem
+                  profile_data_icon={<EmailIcon />}
+                  profile_data_category="Email"
+                  profile_data_info={user.email}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<PhoneIcon />}
+                  profile_data_category="Nomor Telepon"
+                  profile_data_info={user.phone}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<ContactPhoneIcon />}
+                  profile_data_category="Nomor Telepon Darurat"
+                  profile_data_info={user.emergency_phone}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<HomeIcon />}
+                  profile_data_category="Alamat"
+                  profile_data_info={user.address}
+                />
+              </List>
             </Paper>
           </Grid>
           <Grid item>
-            <Paper>
-              <div className={classes.paperBox}>
-                <Typography variant="h4">
-                  Karir
-                </Typography>
-                <List>
-                  <ProfileDataItem
-                    profile_data_icon={<SportsEsportsIcon />}
-                    profile_data_category="Hobi dan Minat"
-                    profile_data_info={user.hobi_minat}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<ColorLensIcon />}
-                    profile_data_category="Keterampilan Non-Akademik"
-                    profile_data_info={user.ket_non_teknis}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<WorkIcon />}
-                    profile_data_category="Cita-Cita"
-                    profile_data_info={user.cita_cita}
-                  />
-                  <ProfileDataItem
-                    profile_data_icon={<AccountBalanceIcon />}
-                    profile_data_category="Perguruan Tinggi Impian"
-                    profile_data_info={user.uni_impian}
-                  />
-                </List>
-              </div>
+            <Paper className={classes.informationPaper}>
+              <Grid container justify="space-between">
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h4" gutterBottom>
+                    Karir
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Kami ke depannya juga berencana untuk membantu Anda menemukan
+                    jalur karir terbaik untuk Anda.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <div className={classes.informationPictureContainer}>
+                    <img src={informationJob} className={classes.informationPicture} />
+                  </div>
+                </Grid>
+              </Grid>
+              <List>
+                <ProfileDataItem
+                  profile_data_icon={<SportsEsportsIcon />}
+                  profile_data_category="Hobi dan Minat"
+                  profile_data_info={user.hobi_minat}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<ColorLensIcon />}
+                  profile_data_category="Keterampilan Non-Akademik"
+                  profile_data_info={user.ket_non_teknis}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<WorkIcon />}
+                  profile_data_category="Cita-Cita"
+                  profile_data_info={user.cita_cita}
+                />
+                <Divider variant="inset" />
+                <ProfileDataItem
+                  profile_data_icon={<AccountBalanceIcon />}
+                  profile_data_category="Perguruan Tinggi Impian"
+                  profile_data_info={user.uni_impian}
+                />
+              </List>
             </Paper>
           </Grid>
         </Grid>
