@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import { Drawer, Divider, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -97,7 +97,6 @@ function DrawerContent(props) {
       ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Pending"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
-      ["/dropbox-connect", <FaDropbox className={classes.drawerListItemIcon}/>, "Dropbox Anda"]
     ]
   else {
     ListItemContents = [
@@ -108,16 +107,21 @@ function DrawerContent(props) {
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       ["/kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
       ["/kuis", <FaFileSignature className={classes.drawerListItemIcon} />, "Ujian"],
-      ["/dropbox-connect", <FaDropbox className={classes.drawerListItemIcon}/>, "Dropbox Anda"]
     ]
   }
 
   return (
-    <List>
-      {ListItemContents.map((item) => (
-        generateList(item[0],item[1],item[2],item[3]))
-      )}
-    </List>
+    <div>
+      <List>
+        {ListItemContents.map((item) => (
+          generateList(item[0],item[1],item[2],item[3]))
+        )}
+      </List>
+      <Divider />
+      <List>
+        {generateList("/dropbox-connect", <FaDropbox className={classes.drawerListItemIcon}/>, "Dropbox")}
+      </List>
+    </div>
   )
 };
 

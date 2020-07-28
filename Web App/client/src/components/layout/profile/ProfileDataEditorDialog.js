@@ -32,7 +32,6 @@ const isEmpty = require("is-empty");
 
 const useStyles = makeStyles((theme) => ({
   editProfileButton: {
-    width: "200px",
     marginBottom: "10px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
@@ -179,26 +178,6 @@ function ProfileDataEditorDialog(props) {
   const onSubmit = (e) => {
     e.preventDefault()
     let userId = user.id;
-
-    // let userData = {
-    //   nama: dataProfil.nama,
-    //   tanggal_lahir: dataProfil.tanggal_lahir,
-    //   jenis_kelamin: dataProfil.jenis_kelamin,
-    //   sekolah: dataProfil.sekolah,
-
-    //   //Kontak
-    //   email: dataProfil.email,
-    //   no_telp: dataProfil.no_telp,
-    //   no_telp_darurat: dataProfil.no_telp_darurat,
-    //   alamat: dataProfil.alamat,
-
-    //   //Karir
-    //   hobi_minat: dataProfil.hobi_minat,
-    //   ket_non_teknis: dataProfil.ket_non_teknis,
-    //   cita_cita: dataProfil.cita_cita,
-    //   uni_impian: dataProfil.uni_impian
-    // }
-
     if (!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
       props.handleOpenAlert()
 
@@ -230,7 +209,6 @@ function ProfileDataEditorDialog(props) {
   return (
     <div>
       <Button
-        variant="contained"
         onClick={handleClickOpen}
         startIcon={<EditIcon />}
         className={classes.editProfileButton}
