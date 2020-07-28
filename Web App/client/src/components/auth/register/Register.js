@@ -188,7 +188,7 @@ class Register extends Component {
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
         case 0:
-          return(
+          return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
                 <label for="email">Email</label>
@@ -241,7 +241,7 @@ class Register extends Component {
             </Grid>
           );
         case 1:
-          return(
+          return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
                 <label id="role">Daftar Sebagai</label>
@@ -381,7 +381,7 @@ class Register extends Component {
             </Grid>
           );
         case 2:
-          return(
+          return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
                 <Typography align="center">
@@ -418,7 +418,7 @@ class Register extends Component {
                   menekan foto profil pada bagian kanan atas aplikasi.
                 </Typography>
                 <Typography variant="body2" align="center" style={{marginTop: "20px"}}>
-                  Silahkan hubungi pengelola sekolah anda untuk mengaktifkan akun anda, setalah registrasi selesai.
+                  Silahkan hubungi pengelola sekolah anda untuk mengaktifkan akun anda, setelah registrasi selesai.
                 </Typography>
               </Grid>
             </Grid>
@@ -462,7 +462,7 @@ class Register extends Component {
     document.title = "Daftar ke Schooly";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
-    return(
+    return (
       <div className={classes.root}>
         <Paper className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>

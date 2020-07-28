@@ -88,7 +88,7 @@ class LoginForgot extends Component {
     document.title = "Schooly | Lupa Akun";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
-    return(
+    return (
       <div className={classes.root}>
         <Paper className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
@@ -129,7 +129,6 @@ class LoginForgot extends Component {
                     })}
                   />
                   <Button
-                    variant="contained"
                     type="submit"
                     className={classes.changePasswordButton}
                   >
@@ -138,7 +137,6 @@ class LoginForgot extends Component {
                 </form>
                 :
                 <Button
-                  variant="contained"
                   onClick={() => window.location.reload()}
                   className={classes.resendEmailButton}
                 >

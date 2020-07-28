@@ -82,7 +82,7 @@ function TaskListToolbar(props) {
     setAnchorEl(null);
   };
 
-  return(
+  return (
     <div className={classes.toolbar}>
       <Typography variant="h4" color="primary">
         <b>Daftar Tugas</b>
@@ -368,7 +368,7 @@ function TaskList(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -426,7 +426,7 @@ function TaskList(props) {
 
   document.title = "Schooly | Daftar Tugas";
 
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       <TaskListToolbar
@@ -443,7 +443,7 @@ function TaskList(props) {
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
-            return(
+            return (
               <Grid item>
                 {user.role === "Teacher" ?
                   <ExpansionPanel

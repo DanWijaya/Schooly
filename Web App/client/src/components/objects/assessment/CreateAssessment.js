@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class CreateAssessment extends Component {
   render() {
-    return(
+    return (
       <div>
         
       </div>

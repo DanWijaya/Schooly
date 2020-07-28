@@ -57,7 +57,7 @@ function NotFound(props) {
 
   document.title="Schooly | Error 404";
 
-  return(
+  return (
     <div className={classes.root}>
       <div className={classes.notFoundBackground}>
         <div className={classes.notFoundContainer}>

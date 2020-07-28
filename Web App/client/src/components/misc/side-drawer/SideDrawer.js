@@ -3,13 +3,11 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import { Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
-import HelpIcon from "@material-ui/icons/Help";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { FaChalkboardTeacher, FaUserCheck, FaUserClock, FaDropbox  } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
@@ -77,22 +75,8 @@ function DrawerContent(props) {
 
   const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=false) => {
     if (!isDisabled && linkto) {
-      return(
-          <Link to={linkto} onClick={handleDrawerMobile}>
-            <StyledListItem button disabled={isDisabled}>
-              <ListItemIcon>
-                {icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={<Typography color="textPrimary">{itemText1}</Typography>}
-                secondary={itemText2}
-              />
-            </StyledListItem>
-          </Link>
-      )
-    }
-    else {
-      return(
+      return (
+        <Link to={linkto} onClick={handleDrawerMobile}>
           <StyledListItem button disabled={isDisabled}>
             <ListItemIcon>
               {icon}
@@ -102,6 +86,20 @@ function DrawerContent(props) {
               secondary={itemText2}
             />
           </StyledListItem>
+        </Link>
+      )
+    }
+    else {
+      return (
+        <StyledListItem button disabled={isDisabled}>
+          <ListItemIcon>
+            {icon}
+          </ListItemIcon>
+          <ListItemText
+            primary={<Typography color="textPrimary">{itemText1}</Typography>}
+            secondary={itemText2}
+          />
+        </StyledListItem>
       )
     }
   }
@@ -115,7 +113,7 @@ function DrawerContent(props) {
       directedTo = "/daftar-kelas"
   }
 
-  let ListItemContents ;
+  let ListItemContents;
   if (user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
@@ -138,19 +136,12 @@ function DrawerContent(props) {
     ]
   }
 
-  return(
-    <div>
-      <List>
-        {ListItemContents.map((item) => (
-          generateList(item[0],item[1],item[2],item[3],item[4]))
-        )}
-      </List>
-      <Divider />
-      <List>
-        {generateList("/bantuan", <HelpIcon className={classes.drawerListItemMuiIcons} />,  "Bantuan", null, false)}
-        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemMuiIcons} />,  "Tentang Schooly", null, false)}
-      </List>
-    </div>
+  return (
+    <List>
+      {ListItemContents.map((item) => (
+        generateList(item[0],item[1],item[2],item[3],item[4]))
+      )}
+    </List>
   )
 };
 
@@ -162,7 +153,7 @@ function SideDrawer(props) {
   const { user } = props.auth;
 
   if (user.name !== undefined) {
-    return(
+    return (
       <div className={classes.drawerMobile}>
         <Hidden smUp implementation="css">
           {/* Mobile = Backdrop Drawer */}
@@ -204,7 +195,7 @@ function SideDrawer(props) {
     )
   }
   else {
-    return(
+    return (
       <div style={{display: "none"}} />
     )
   }

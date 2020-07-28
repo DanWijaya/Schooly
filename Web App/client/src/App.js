@@ -32,6 +32,7 @@ import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
 import ViewClass from "./components/objects/classes/ViewClass";
 import ViewSubject from "./components/objects/classes/ViewSubject";
+import ClassList from "./components/objects/classes/ClassList";
 //Material
 import CreateMaterial from "./components/objects/course-materials/CreateMaterial";
 import EditMaterial from "./components/objects/course-materials/EditMaterial";
@@ -52,7 +53,6 @@ import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
 //Admin Only
-import ClassList from "./components/objects/admin-only/ClassList";
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import SubjectList from "./components/objects/admin-only/SubjectList";
@@ -117,7 +117,7 @@ class App extends Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
@@ -132,11 +132,7 @@ class App extends Component {
                   desktopOpen={this.state.desktopOpen}
                   handleDrawerMobile={this.handleDrawerMobile}
                 />
-                <div
-                  style={{
-                    flexGrow: "1",
-                    overflowX: "hidden",
-                    marginTop: `${this.state.marginTopValue}px`}}>
+                <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
                   <Switch>
                     <Route exact path="/"
@@ -179,21 +175,21 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-materi/:id" component={EditMaterial} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/materi/:id" component={ViewMaterial} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-materi" component={MaterialList} />
-                    {/* Route Announcement  */}
+                    {/* Route Announcement */}
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/buat-pengumuman" component={CreateAnnouncement} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/sunting-pengumuman/:id" component={EditAnnouncement} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/pengumuman/:id" component={ViewAnnouncement} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-pengumuman" component={AnnouncementList} />
-                    {/* Route Task  */}
+                    {/* Route Task */}
                     <PrivateRoute exact access={["Teacher"]} path="/buat-tugas" component={CreateTask} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-tugas/:id" component={EditTask} />
                     <PrivateRoute exact access={["Student"]} path="/tugas-murid/:id" component={ViewTaskStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
-                    {/* Route Assessment - Prototype  */}
+                    {/* Route Assessment - Prototype */}
                     <PrivateRoute exact access={["Teacher"]} path="/kuis" component={CreateAssessment} />
-                    {/* Route Admin-Only  */}
+                    {/* Route Admin-Only */}
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/daftar-mata-pelajaran" component={SubjectList} />
@@ -206,7 +202,7 @@ class App extends Component {
                     />
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
-                  <Footer/>
+                  <Footer />
                 </div>
               </div>
             </Router>

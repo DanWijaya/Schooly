@@ -138,7 +138,7 @@ function LampiranFile(props) {
   :
     displayedName = filename
 
-  return(
+  return (
     <Grid item xs={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem
@@ -279,7 +279,7 @@ function ViewMaterial(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -337,7 +337,7 @@ function ViewMaterial(props) {
 
   document.title = !selectedMaterials.name ? "Schooly | Lihat Materi" : `Schooly | ${selectedMaterials.name}`
 
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       <Paper className={classes.paperBox}>

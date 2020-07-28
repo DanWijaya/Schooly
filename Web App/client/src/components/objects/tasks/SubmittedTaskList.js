@@ -95,7 +95,7 @@ function Alert(props) {
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return(
+  return (
     <div
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -127,7 +127,7 @@ function WorkFile(props) {
 
   const { file_id, file_name, file_type, onDownloadFile, onPreviewFile} = props;
 
-  return(
+  return (
     <Paper variant="outlined" className={classes.listItemPaper}>
       <ListItem button disableRipple className={classes.listItem}
       onClick={() => {onPreviewFile(file_id, "lampiran")}}>
@@ -191,7 +191,7 @@ function GradeButton(props) {
   const classes = useStyles()
   const {onGradeTugas, task_id, student_id, grade, student_name} = props
 
-  return(
+  return (
     <Button
       variant="contained"
       startIcon={<CheckCircleIcon/>}
@@ -206,7 +206,7 @@ function GradeButton(props) {
 function UnduhSemuaButton(props) {
   const classes = useStyles()
   const { onDownloadFile, student_task_files_id } = props;
-    return(
+    return (
       <Button
         variant="contained"
         startIcon={<GetAppIcon />}
@@ -342,7 +342,7 @@ function SubmittedTaskList(props) {
         for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
           class_assigned.push(<Tab label={!temp.get(tasksCollection.class_assigned[i]) ? null : temp.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
         }
-        return(
+        return (
           <Tabs
             value={value}
             variant="scrollable"
@@ -453,7 +453,7 @@ function SubmittedTaskList(props) {
   document.title = "Schooly | Daftar Tugas Terkumpul"
   console.log(success)
   // Before that, run this :
-  return(
+  return (
     <div className={classes.root}>
       <Snackbar
         open={openAlert}
@@ -467,7 +467,7 @@ function SubmittedTaskList(props) {
       </Snackbar>
       <Paper>
         <Typography variant="h4" style={{textAlign: "center"}} gutterBottom>
-        <b>{tasksCollection.name}</b>
+          <b>{tasksCollection.name}</b>
         </Typography>
           {listClassTab()}
       </Paper>

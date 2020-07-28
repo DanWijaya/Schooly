@@ -115,7 +115,7 @@ const styles = (theme) => ({
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
 
-  return(
+  return (
     <Grid item xs={12}>
       <Paper variant="outlined">
         <ListItem disableRipple>
@@ -380,7 +380,7 @@ class EditMaterial extends Component {
     };
 
     const UploadDialog = () => {
-      return(
+      return (
         <Dialog open={this.state.openUploadDialog}>
           <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
             <Grid item>
@@ -465,7 +465,7 @@ class EditMaterial extends Component {
     document.title = "Schooly | Sunting Materi";
 
     if (user.role === "Teacher" || user.role === "Admin") {
-      return(
+      return (
         <div className={classes.root}>
           {UploadDialog()}
           <Paper>
@@ -553,7 +553,7 @@ class EditMaterial extends Component {
                           value={class_assigned}
                           onChange={(event) => {this.onChange(event, "kelas")}}
                           renderValue={(selected) => {
-                            return(
+                            return (
                               <div className={classes.chips}>
                                 {selected.map((id) => {
                                   let name
@@ -566,7 +566,7 @@ class EditMaterial extends Component {
                                         break;
                                       }
                                     }
-                                  return(
+                                  return (
                                     <Chip key={id} label={name} className={classes.chip} />
                                   )
                                 }
@@ -576,7 +576,7 @@ class EditMaterial extends Component {
                           }}
                         >
                           {all_classes.map((kelas) => {
-                            return(
+                            return (
                               <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                           )})}
                         </Select>
@@ -639,7 +639,7 @@ class EditMaterial extends Component {
       );
     }
     else {
-      return(
+      return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>

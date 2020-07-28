@@ -68,7 +68,7 @@ function Alert(props) {
 function ProfileDataItem(props) {
   const classes = useStyles();
 
-  return(
+  return (
     <div>
       <Hidden smUp implementation="css">
         <ListItem>
@@ -185,7 +185,7 @@ function Profile(props) {
 
   document.title = "Schooly | Profil"
 
-  return(
+  return (
     <div className={classes.root}>
       {/* ProfilePictureEditorDialog Snackbar */}
       <Snackbar

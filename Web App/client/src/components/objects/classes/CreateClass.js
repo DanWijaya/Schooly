@@ -105,7 +105,7 @@ class CreateClass extends Component {
     document.title = "Schooly | Buat Kelas";
 
     if (user.role === "Teacher" || user.role === "Admin") {
-      return(
+      return (
         <div className={classes.root}>
           <Paper>
             <div className={classes.content}>
@@ -192,7 +192,7 @@ class CreateClass extends Component {
       )
     }
     else {
-      return(
+      return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>

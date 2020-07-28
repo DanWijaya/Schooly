@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return(
+  return (
     <div
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -102,7 +102,7 @@ function TabIndex(index) {
 function AssignmentListItem(props) {
   const classes = useStyles()
 
-  return(
+  return (
     <div>
       <Hidden smUp implementation="css">
         <Link to={props.work_link}>
@@ -174,7 +174,7 @@ function AssignmentListItem(props) {
 function MaterialListitem(props) {
   const classes = useStyles()
 
-  return(
+  return (
     <div>
     <Hidden smUp implementation="css">
     <Link to={props.work_link}>
@@ -216,7 +216,7 @@ function MaterialListitem(props) {
 }
 
 function PersonListItem(props) {
-  return(
+  return (
     <div>
       <Hidden smUp implementation="css">
         <ListItem>
@@ -229,9 +229,9 @@ function PersonListItem(props) {
                 {props.person_name}
               </Typography>
             }
-            
+
             secondary={
-              !props.person_role ? null : 
+              !props.person_role ? null :
               <Typography variant="caption">
                 {props.person_role}
               </Typography>
@@ -278,7 +278,7 @@ function ViewClass(props) {
 
   console.log(props.classesCollection)
   // All actions to retrive datas from Database
-  
+
   function listTasks(category=null, subject={}){
     let tasksList = []
     if (Boolean(tasksCollection.length)) {
@@ -330,7 +330,7 @@ function ViewClass(props) {
 
       if(!category && result.length === 5)
         break;
-      
+
       if(category==="subject" && result.length === 3)
         break;
     }
@@ -363,7 +363,7 @@ function ViewClass(props) {
 
         if(!category && materialList.length ===  5) // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
           break;
-        
+
         if(category==="subject" && materialList.length ===  3)// item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
           break;
 
@@ -372,7 +372,7 @@ function ViewClass(props) {
     }
   }
 
-  
+
 
   React.useEffect(() => {
     setCurrentClass(classId)
@@ -408,23 +408,21 @@ function ViewClass(props) {
 
       case kelas.sekretaris:
         return "Sekretaris"
-      
+
       default:
         return null
     }
   }
 
   console.log(kelas, all_teachers, kelas.walikelas)
-  return(
+  return (
     <div className={classes.root}>
       {user.role === "Admin" || user.role === "Teacher" ?
       <div>
-        <Paper square>
-          <Typography variant="h3" align="center" style={{padding: "10px"}} gutterBottom>
-            {kelas.name}
-          </Typography>
-        </Paper>
-        <Paper style={{padding: "20px", marginBottom: "40px"}}>
+        <Typography variant="h3" align="center" style={{padding: "10px"}} gutterBottom>
+          {kelas.name}
+        </Typography>
+        <div style={{padding: "20px", marginBottom: "40px"}}>
           <Typography variant="h4" gutterBottom>
             Wali Kelas
           </Typography>
@@ -439,8 +437,8 @@ function ViewClass(props) {
             }
 
           </List>
-        </Paper>
-        <Paper style={{padding: "20px"}}>
+        </div>
+        <div style={{padding: "20px"}}>
           <Typography variant="h4" gutterBottom>
             Murid
           </Typography>
@@ -455,7 +453,7 @@ function ViewClass(props) {
               />
             ))}
           </List>
-        </Paper>
+        </div>
       </div>
       :
       <div>
@@ -539,7 +537,7 @@ function ViewClass(props) {
                       break;
                     }
                   }
-                  return(
+                  return (
                     <AssignmentListItem
                       work_title={task.name}
                       work_category_avatar={workCategoryAvatar}
@@ -573,7 +571,7 @@ function ViewClass(props) {
           {all_subjects.length === 0 ? null :
             all_subjects.map((subject) => {
               // let isEmpty = true
-              return(
+              return (
                 <ExpansionPanel>
                   <ExpansionPanelSummary>
                     <Grid container justify="space-between" alignItems="center">
@@ -602,7 +600,7 @@ function ViewClass(props) {
             })}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Paper style={{padding: "20px", marginBottom: "40px"}}>
+          <div style={{padding: "20px", marginBottom: "40px"}}>
             <Typography variant="h4" gutterBottom>
               Wali Kelas
             </Typography>
@@ -615,8 +613,8 @@ function ViewClass(props) {
                 person_role={all_teachers.get(kelas.walikelas).subject_teached}/>
               }
             </List>
-          </Paper>
-          <Paper style={{padding: "20px"}}>
+          </div>
+          <div style={{padding: "20px"}}>
             <Typography variant="h4" gutterBottom>
               Murid
             </Typography>
@@ -630,7 +628,7 @@ function ViewClass(props) {
                 />
               ))}
             </List>
-          </Paper>
+          </div>
         </TabPanel>
       </div>
       }

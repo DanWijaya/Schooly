@@ -51,7 +51,7 @@ function stableSort(array, comparator) {
 }
 
 function ClassListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort } = props;
+  const { classes, user, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -72,29 +72,35 @@ function ClassListToolbar(props) {
     setAnchorEl(null);
   };
 
-  return(
+  return (
     <div className={classes.toolbar}>
-      <Typography variant="h4" color="primary">
+      <Typography variant="h4">
         <b>Daftar Kelas</b>
       </Typography>
       <div style={{display: "flex"}}>
-        <Hidden smUp implementation="css">
-          <LightTooltip title="Buat Kelas">
-            <Link to="/buat-kelas">
-              <Fab size="small" className={classes.newClassButton}>
-                <FaChalkboardTeacher className={classes.newClassIconMobile} />
-              </Fab>
-            </Link>
-          </LightTooltip>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Link to="/buat-kelas">
-            <Fab size="medium" variant="extended" className={classes.newClassButton}>
-              <FaChalkboardTeacher className={classes.newClassIconDesktop} />
-              Buat Kelas
-            </Fab>
-          </Link>
-        </Hidden>
+        {user.role === "Admin" ?
+          <div>
+            <Hidden smUp implementation="css">
+              <LightTooltip title="Buat Kelas">
+                <Link to="/buat-kelas">
+                  <Fab size="small" className={classes.newClassButton}>
+                    <FaChalkboardTeacher className={classes.newClassIconMobile} />
+                  </Fab>
+                </Link>
+              </LightTooltip>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+              <Link to="/buat-kelas">
+                <Fab size="medium" variant="extended" className={classes.newClassButton}>
+                  <FaChalkboardTeacher className={classes.newClassIconDesktop} />
+                  Buat Kelas
+                </Fab>
+              </Link>
+            </Hidden>
+          </div>
+        :
+          null
+        }
         <LightTooltip title="Urutkan Kelas">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
@@ -158,7 +164,8 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px",
+    alignItems: "center",
+    marginBottom: "20px",
   },
   newClassButton: {
     marginRight: "10px",
@@ -320,7 +327,7 @@ function ClassList(props) {
   };
 
   function DeleteDialog() {
-    return(
+    return (
       <Dialog
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
@@ -382,7 +389,7 @@ function ClassList(props) {
   }
 
   if (user.role === "Student") {
-    return(
+    return (
       <div className={classes.root}>
         <Typography variant="h5" align="center" className={classes.title}>
           <b>Anda tidak mempunyai izin akses halaman ini.</b>
@@ -391,7 +398,7 @@ function ClassList(props) {
     )
   }
 
-  return(
+  return (
     <div className={classes.root}>
       {DeleteDialog()}
       <ClassListToolbar
@@ -399,7 +406,7 @@ function ClassList(props) {
         deleteClass={deleteClass}
         order={order}
         orderBy={orderBy}
-        // onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
+        user={user}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
       />
@@ -408,7 +415,7 @@ function ClassList(props) {
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             let viewpage = `/kelas/${row._id}`;
-            return(
+            return (
               <Grid item xs={12} sm={6} md={4}>
                 <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
                 <Paper button square

@@ -7,6 +7,7 @@ import LightTooltip from "../light-tooltip/LightTooltip";
 import { Avatar, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import HelpIcon from "@material-ui/icons/Help";
 import MoreIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +69,7 @@ function NavBarLoggedInContents(props) {
     <Grid container className={classes.navbarContents}>
       <LightTooltip title={user.name}>
         <IconButton onClick={handleProfileMenu}>
-            <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
+          <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
         </IconButton>
       </LightTooltip>
       <Menu
@@ -86,21 +87,28 @@ function NavBarLoggedInContents(props) {
             horizontal: "center",
         }}
       >
-          <Link to="/profil" onClick={handleProfileMenuClose}>
-            <MenuItem className={classes.menuItem}>
-              <ListItemIcon>
-                <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
-              </ListItemIcon>
-              <ListItemText primary="Profil Saya" />
-            </MenuItem>
-          </Link>
-          <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
+        <Link to="/profil" onClick={handleProfileMenuClose}>
+          <MenuItem className={classes.menuItem}>
             <ListItemIcon>
-              <ExitToAppIcon fontSize="medium" />
+              <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
             </ListItemIcon>
-            <ListItemText primary="Keluar" />
+            <ListItemText primary="Profil Saya" />
           </MenuItem>
-        </Menu>
+        </Link>
+        <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
+          <ListItemIcon>
+            <ExitToAppIcon fontSize="medium" />
+          </ListItemIcon>
+          <ListItemText primary="Keluar" />
+        </MenuItem>
+      </Menu>
+      <LightTooltip title="Bantuan">
+        <Link to="/bantuan">
+          <IconButton color="white" style={{color: "white"}}>
+            <HelpIcon />
+          </IconButton>
+        </Link>
+      </LightTooltip>
     </Grid>
   )
 
@@ -128,6 +136,14 @@ function NavBarLoggedInContents(props) {
               <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
             </ListItemIcon>
             <ListItemText primary="Profil Saya" />
+          </MenuItem>
+        </Link>
+        <Link to="/bantuan">
+          <MenuItem className={classes.menuItem}>
+            <ListItemIcon>
+              <HelpIcon fontSize="medium" />
+            </ListItemIcon>
+            <ListItemText primary="Bantuan" />
           </MenuItem>
         </Link>
         <MenuItem onClick={onLogoutClick} className={classes.menuItem}>

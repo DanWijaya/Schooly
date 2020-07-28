@@ -30,7 +30,7 @@ function NotificationItemList(props) {
 
   document.title="Schooly | Notifikasi";
 
-  return(
+  return (
     <Paper variant="outlined" className={classes.listItemPaper}>
       <Link to={props.notification_link}>
       <ListItem button component="a" className={classes.listItem}>
@@ -67,7 +67,7 @@ function NotificationItemList(props) {
 function Notifications(props) {
   const classes = useStyles();
 
-  return(
+  return (
     <div className={classes.root}>
       <Paper className={classes.paperBox}>
         <Grid container justify="space-between">

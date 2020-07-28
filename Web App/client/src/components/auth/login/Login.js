@@ -96,12 +96,12 @@ class Login extends Component {
 
   render() {
     const { classes } = this.props;
-
     const { passwordIsMasked, icon , errors} = this.state;
+
     document.title = "Masuk ke Schooly";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
-    console.log(Boolean(errors.password || errors.passwordincorrect))
-    return(
+
+    return (
       <div className={classes.root}>
         <Paper className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
@@ -158,7 +158,6 @@ class Login extends Component {
                   </Grid>
                   <Grid item>
                     <Button
-                      variant="contained"
                       type="submit"
                       className={classes.loginButton}
                     >

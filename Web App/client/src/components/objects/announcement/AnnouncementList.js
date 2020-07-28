@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 function AnnouncementItemList(props) {
   const classes = useStyles();
 
-  return(
+  return (
     <Grid item>
       <Paper variant="outlined">
         <Link to={props.notification_link}>
@@ -144,7 +144,7 @@ function AnnouncementList(props) {
     return user.role === "Teacher"
   }
 
-  return(
+  return (
     <div className={classes.root}>
       <div className={classes.toolbar}>
         <Typography variant="h4" color="primary">
