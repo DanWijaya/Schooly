@@ -3,15 +3,13 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import { Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import AboutIcon from "@material-ui/icons/Info";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
-import HelpIcon from "@material-ui/icons/Help";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { FaChalkboardTeacher, FaUserCheck, FaUserClock  } from "react-icons/fa";
+import { FaChalkboardTeacher, FaUserCheck, FaUserClock } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
@@ -137,18 +135,11 @@ function DrawerContent(props) {
   }
 
   return (
-    <div>
-      <List>
-        {ListItemContents.map((item) => (
-          generateList(item[0],item[1],item[2],item[3],item[4]))
-        )}
-      </List>
-      <Divider />
-      <List>
-        {generateList("/bantuan", <HelpIcon className={classes.drawerListItemMuiIcons} />,  "Bantuan", null, false)}
-        {generateList("/tentang-schooly", <AboutIcon className={classes.drawerListItemMuiIcons} />,  "Tentang Schooly", null, false)}
-      </List>
-    </div>
+    <List>
+      {ListItemContents.map((item) => (
+        generateList(item[0],item[1],item[2],item[3],item[4]))
+      )}
+    </List>
   )
 };
 

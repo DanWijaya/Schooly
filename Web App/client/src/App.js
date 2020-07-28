@@ -32,6 +32,7 @@ import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
 import ViewClass from "./components/objects/classes/ViewClass";
 import ViewSubject from "./components/objects/classes/ViewSubject";
+import ClassList from "./components/objects/classes/ClassList";
 //Material
 import CreateMaterial from "./components/objects/course-materials/CreateMaterial";
 import EditMaterial from "./components/objects/course-materials/EditMaterial";
@@ -52,7 +53,6 @@ import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
 //Admin Only
-import ClassList from "./components/objects/admin-only/ClassList";
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import SubjectList from "./components/objects/admin-only/SubjectList";
@@ -124,11 +124,7 @@ class App extends Component {
                   desktopOpen={this.state.desktopOpen}
                   handleDrawerMobile={this.handleDrawerMobile}
                 />
-                <div
-                  style={{
-                    flexGrow: "1",
-                    overflowX: "hidden",
-                    marginTop: `${this.state.marginTopValue}px`}}>
+                <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
                   <Switch>
                     <Route exact path="/"
@@ -196,7 +192,7 @@ class App extends Component {
                     />
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
-                  <Footer/>
+                  <Footer />
                 </div>
               </div>
             </Router>

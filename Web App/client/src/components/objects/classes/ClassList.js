@@ -51,7 +51,7 @@ function stableSort(array, comparator) {
 }
 
 function ClassListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort } = props;
+  const { classes, user, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -74,27 +74,33 @@ function ClassListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4" color="primary">
+      <Typography variant="h4">
         <b>Daftar Kelas</b>
       </Typography>
       <div style={{display: "flex"}}>
-        <Hidden smUp implementation="css">
-          <LightTooltip title="Buat Kelas">
-            <Link to="/buat-kelas">
-              <Fab size="small" className={classes.newClassButton}>
-                <FaChalkboardTeacher className={classes.newClassIconMobile} />
-              </Fab>
-            </Link>
-          </LightTooltip>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Link to="/buat-kelas">
-            <Fab size="medium" variant="extended" className={classes.newClassButton}>
-              <FaChalkboardTeacher className={classes.newClassIconDesktop} />
-              Buat Kelas
-            </Fab>
-          </Link>
-        </Hidden>
+        {user.role === "Admin" ?
+          <div>
+            <Hidden smUp implementation="css">
+              <LightTooltip title="Buat Kelas">
+                <Link to="/buat-kelas">
+                  <Fab size="small" className={classes.newClassButton}>
+                    <FaChalkboardTeacher className={classes.newClassIconMobile} />
+                  </Fab>
+                </Link>
+              </LightTooltip>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+              <Link to="/buat-kelas">
+                <Fab size="medium" variant="extended" className={classes.newClassButton}>
+                  <FaChalkboardTeacher className={classes.newClassIconDesktop} />
+                  Buat Kelas
+                </Fab>
+              </Link>
+            </Hidden>
+          </div>
+        :
+          null
+        }
         <LightTooltip title="Urutkan Kelas">
           <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
@@ -158,7 +164,8 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px",
+    alignItems: "center",
+    marginBottom: "20px",
   },
   newClassButton: {
     marginRight: "10px",
@@ -399,7 +406,7 @@ function ClassList(props) {
         deleteClass={deleteClass}
         order={order}
         orderBy={orderBy}
-        // onSelectAllClick={(event, target) => {handleSelectAllClick(event,target)}}
+        user={user}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
       />

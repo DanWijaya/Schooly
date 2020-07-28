@@ -25,7 +25,7 @@ const styles = (theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
-    padding: "10px"
+    padding: "10px",
   },
   timePaperStudent: {
     height: "250px",
