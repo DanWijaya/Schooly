@@ -304,17 +304,17 @@ function ViewClass(props) {
       )
       let workStatus = "Belum Dikumpulkan"
       console.log(all_user_files)
-      for(var j = 0; j < all_user_files.length; j++){
-          if(all_user_files[j].for_task_object === task._id){
-          workStatus = "Telah Dikumpulkan"
-          workCategoryAvatar = (
-            <Avatar className={classes.assignmentTurnedIn}>
-              <AssignmentTurnedInIcon/>
-            </Avatar>
-          )
-          break;
-        }
-      }
+      // for(var j = 0; j < all_user_files.length; j++){
+      //     if(all_user_files[j].for_task_object === task._id){
+      //     workStatus = "Telah Dikumpulkan"
+      //     workCategoryAvatar = (
+      //       <Avatar className={classes.assignmentTurnedIn}>
+      //         <AssignmentTurnedInIcon/>
+      //       </Avatar>
+      //     )
+      //     break;
+      //   }
+      // }
 
       if(!category || (category === "subject" && task.subject === subject._id))
         result.push(

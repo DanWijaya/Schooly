@@ -26,6 +26,7 @@ import PublishIcon from "@material-ui/icons/Publish";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
+const fetch = require('isomorphic-fetch');
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -347,9 +348,11 @@ function ViewTaskStudent(props) {
     viewOneTask(tugasId)
     getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
-    getOneUser(tasksCollection.person_in_charge_id)
+    if(tasksCollection.person_in_charge_id){
+      getOneUser(tasksCollection.person_in_charge_id)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success])
+  }, [success, tasksCollection.person_in_charge_id])
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)

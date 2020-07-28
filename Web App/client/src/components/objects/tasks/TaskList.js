@@ -19,6 +19,8 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+// import { Dropbox } from 'dropbox';
+  // Parses the url and gets the access token if it is in the urls hash
 
 function createData(_id, tasktitle, subject, deadline, class_assigned) {
   return { _id, tasktitle, subject, deadline, class_assigned };

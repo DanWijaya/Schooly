@@ -10,7 +10,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { FaChalkboardTeacher, FaClipboardList, FaFileSignature, FaUserCheck, FaUserClock } from "react-icons/fa";
+import { FaChalkboardTeacher, FaClipboardList, FaDropbox, FaFileSignature, FaUserCheck, FaUserClock } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -97,6 +97,7 @@ function DrawerContent(props) {
       ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Pending"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
+      ["/dropbox-connect", <FaDropbox className={classes.drawerListItemIcon}/>, "Dropbox Anda"]
     ]
   else {
     ListItemContents = [
@@ -107,6 +108,7 @@ function DrawerContent(props) {
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       ["/kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
       ["/kuis", <FaFileSignature className={classes.drawerListItemIcon} />, "Ujian"],
+      ["/dropbox-connect", <FaDropbox className={classes.drawerListItemIcon}/>, "Dropbox Anda"]
     ]
   }
 

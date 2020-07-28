@@ -7,7 +7,7 @@ import store from "./Store";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 //Routing and Actions
-import { setCurrentUser, logoutUser } from "./actions/UserActions";
+import { setCurrentUser, logoutUser, setDropboxToken } from "./actions/UserActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 //Auth
 import Register from "./components/auth/register/Register";
@@ -58,6 +58,8 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
+import DropboxTester from "./components/auth/dropbox/DropboxTester";
+import DropboxAuth from "./components/auth/dropbox/DropboxAuth";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -77,6 +79,12 @@ if (localStorage.jwtToken) {
     // Redirect to login
     window.location.href = "./masuk";
   }
+}
+
+if (localStorage.dropbox_token) {
+  const dropbox_token = localStorage.dropbox_token;
+  console.log(dropbox_token)
+  store.dispatch(setDropboxToken(dropbox_token));
 }
 
 class App extends Component {
@@ -147,6 +155,8 @@ class App extends Component {
                         <Policy {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
                       )}
                     />
+                    <Route exact path="/dropbox-auth" component={DropboxAuth}/>
+                    <Route exact path="/dropbox-connect" component={DropboxTester}/>
                     <Route exact path="/daftar" component={Register} />
                     <Route exact path="/masuk" component={Login} />
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />

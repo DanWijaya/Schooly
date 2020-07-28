@@ -5,7 +5,7 @@ import jwt_decode from "jwt-decode";
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
    GET_USERS, GET_ALL_STUDENTS, GET_ALL_TEACHERS, 
    GET_ONE_USER, GET_STUDENTS_BY_CLASS,
-   GET_PENDING_STUDENTS, GET_PENDING_TEACHERS} from "./Types";
+   GET_PENDING_STUDENTS, GET_PENDING_TEACHERS,SET_DROPBOX_TOKEN} from "./Types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -118,6 +118,7 @@ export const loginUser = (userData) => dispatch => {
 export const logoutUser = () => dispatch => {
   // Remove token from local storage
   localStorage.removeItem("jwtToken");
+  localStorage.removeItem("dropbox_token")
   // Remove auth header for future requests
   setAuthToken(false);
   console.log("test")
@@ -292,4 +293,22 @@ export const deleteUser = (userId) => dispatch => {
       .catch(err => {
         console.log("Error in deleting students")
       })
+}
+
+export const setDropboxToken = (token) => dispatch => {
+  console.log("SET Drop box lah")
+  if(token) {
+    localStorage.setItem('dropbox_token', token);
+    dispatch({
+      type: SET_DROPBOX_TOKEN,
+      payload: token,
+    });
+  } else {
+    localStorage.removeItem('dropbox_token')
+    dispatch({
+      type: SET_DROPBOX_TOKEN,
+      payload: null,
+    });
+  }
+  
 }
