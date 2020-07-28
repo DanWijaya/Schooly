@@ -34,38 +34,38 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
   console.log("Uploading the task file")
 
   User.findById(id, (err, user) => {
-    if (!user) {
-      console.log("User not found")
-      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
-    }
+    // if (!user) {
+    //   console.log("User not found")
+    //   return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
+    // }
 
-    else{
-      if (!user.tugas) {
-        let tugas_user = []
-        for(var i = 0; i < req.files.length; i++) {
-          tugas_user.push({
-            id: req.files[i].id,
-            filename: req.files[i].filename,
-            for_task_object: task_id,
-            ontime: ontime
-          })
-        }
-        user.tugas = tugas_user
-      }
-      else {
-        for(var i = 0; i < req.files.length; i++) {
-          user.tugas.push({id: req.files[i].id,
-              filename: req.files[i].filename,
-              for_task_object: task_id,
-              ontime: ontime})
-        }
-      }
-      console.log(user.tugas)
-      user
-        .save()
-        .then()
-        .catch(err => console.log(err))
-    }
+    // else{
+    //   if (!user.tugas) {
+    //     let tugas_user = []
+    //     for(var i = 0; i < req.files.length; i++) {
+    //       tugas_user.push({
+    //         id: req.files[i].id,
+    //         filename: req.files[i].filename,
+    //         for_task_object: task_id,
+    //         ontime: ontime
+    //       })
+    //     }
+    //     user.tugas = tugas_user
+    //   }
+    //   else {
+    //     for(var i = 0; i < req.files.length; i++) {
+    //       user.tugas.push({id: req.files[i].id,
+    //           filename: req.files[i].filename,
+    //           for_task_object: task_id,
+    //           ontime: ontime})
+    //     }
+    //   }
+    //   console.log(user.tugas)
+    //   user
+    //     .save()
+    //     .then()
+    //     .catch(err => console.log(err))
+    // }
 
     return res.json(true)
   })

@@ -254,19 +254,20 @@ router.get("/gettask/:id/:task_id", (req, res) => {
   let tugasId = req.params.task_id;
 
   User.findById(id, (err, user) => {
-    if (!user || !user.active)
-      res.status(404).send("User data is not found");
-    else {
-      let tugasList = []
-      if (user.role === "Student") { //Student are the ones has tugas field...
-      user.tugas.map((item) => {
-      if (item.for_task_object === tugasId)
-        tugasList.push(item)
-        }
-      )}
-      res.json(tugasList)
-    }
-  } )
+    res.send([])
+    // if (!user || !user.active)
+    //   res.status(404).send("User data is not found");
+    // else {
+    //   let tugasList = []
+    //   if (user.role === "Student") { //Student are the ones has tugas field...
+    //     user.tugas.map((item) => {
+    //     if (item.for_task_object === tugasId)
+    //       tugasList.push(item)
+    //       }
+    //     )}
+    //   res.json(tugasList)
+    // }
+  })
 })
 
 router.get("/getalltask/:user_id", (req,res) => {

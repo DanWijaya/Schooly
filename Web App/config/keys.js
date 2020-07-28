@@ -10,4 +10,5 @@ module.exports = {
   expressSession : {
     "secret": "bmoe5r8hb98fhsbso93ikdfgbs0u"
   },
+  dropboxKey: "r9btl0edvqqjqo3"
 };

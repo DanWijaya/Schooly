@@ -349,7 +349,7 @@ class Dashboard extends Component {
                 </div>
               </div>
               <List>
-                {tasksByClass.map((task) => {
+                {/* {tasksByClass.map((task) => {
                   for(var i = 0; i < all_user_files.length; i++) {
                     if (all_user_files[i].for_task_object === task._id) {
                       return null;
@@ -366,7 +366,7 @@ class Dashboard extends Component {
                       work_link={`/tugas-murid/${task._id}`}
                     />
                   )
-                })}
+                })} */}
               </List>
             </Paper>
           :

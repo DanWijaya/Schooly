@@ -25,10 +25,9 @@ Daniel:
 6. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
 7. Select untuk yang edit class masih bermasalah...
 8. Ada error pas munculin error messagenya di edit task field karena refer class_assignednya bkn ids.. masih obejctnya.
-9. Renaming a MOngoDB Database (https://studio3t.com/knowledge-base/articles/rename-mongodb-database/)
-10. Select untuk yang edit class masih bermasalah...
-11. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga...
-12. (HERAN) Untuk safari, masih ada masalah di upload fotonya klo lebih dari satu kali.
+9. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga...
+10. (HERAN) Untuk safari, masih ada masalah di upload fotonya klo lebih dari satu kali.
+11. Mungkin masukkin warning kalo file size kebesaran (cthnya ndak boleh exceed 512mb)
 
 IMPORTANT:
 1. Jumlah murid dan absen di kelas

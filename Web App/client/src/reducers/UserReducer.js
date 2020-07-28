@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_ALL_TEACHERS, GET_ALL_STUDENTS, GET_ONE_USER, GET_STUDENTS_BY_CLASS, GET_PENDING_STUDENTS, GET_PENDING_TEACHERS } from "../actions/Types";
+import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_ALL_TEACHERS, GET_ALL_STUDENTS, GET_ONE_USER, GET_STUDENTS_BY_CLASS, GET_PENDING_STUDENTS, GET_PENDING_TEACHERS, SET_DROPBOX_TOKEN } from "../actions/Types";
 
 const isEmpty = require("is-empty");
 
@@ -12,7 +12,8 @@ const initialState = {
   pending_students: [],
   pending_teachers: [],
   selectedUser: {},
-  retrieved_users: new Map()
+  retrieved_users: new Map(),
+  dropbox_token: null
 };
 
 export default function(state = initialState, action) {
@@ -22,6 +23,11 @@ export default function(state = initialState, action) {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload
+      };
+    case SET_DROPBOX_TOKEN:
+      return {
+        ...state,
+        dropbox_token: action.payload
       };
     case USER_LOADING:
       return {

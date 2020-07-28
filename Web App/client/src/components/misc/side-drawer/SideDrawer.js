@@ -11,7 +11,7 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import HelpIcon from "@material-ui/icons/Help";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { FaChalkboardTeacher, FaUserCheck, FaUserClock  } from "react-icons/fa";
+import { FaChalkboardTeacher, FaUserCheck, FaUserClock, FaDropbox  } from "react-icons/fa";
 import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
@@ -122,7 +122,8 @@ function DrawerContent(props) {
       ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemReactIconsFa}/>, "Pengguna Aktif", null, false],
       ["/pending-users", <FaUserClock className={classes.drawerListItemReactIconsFa}/>, "Pengguna Pending", null, false],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIconsFa} />, "Kelas", null, false],
-      ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemMuiIcons}/>, "Mata Pelajaran", null, false]
+      ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemMuiIcons}/>, "Mata Pelajaran", null, false],
+      ["/dropbox-connect", <FaDropbox className={classes.drawerListItemReactIconsFa}/>, "Dropbox Anda", null, false]
     ]
   else {
     ListItemContents = [
@@ -131,6 +132,7 @@ function DrawerContent(props) {
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemMuiIcons}/>, "Materi", null, false],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
+      ["/dropbox-connect", <FaDropbox className={classes.drawerListItemReactIconsFa}/>, "Dropbox Anda", null, false],
       [null, <GrNotes className={classes.drawerListItemReactIconsFa} />, "Kuis", "Coming Soon", true],
       [null, <GrDocumentPerformance className={classes.drawerListItemReactIconsFa} />, "Ujian", "Coming Soon", true],
     ]
