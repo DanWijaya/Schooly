@@ -8,10 +8,9 @@ import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { FaChalkboardTeacher, FaUserCheck, FaUserClock } from "react-icons/fa";
-import { GrNotes, GrDocumentPerformance } from "react-icons/gr";
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import { FaChalkboardTeacher, FaClipboardList, FaFileSignature, FaUserCheck, FaUserClock } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -47,16 +46,9 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
-  drawerListItemMuiIcons: {
-    width: theme.spacing(2.70),
-    height: theme.spacing(2.70),
-  },
-  drawerListItemReactIconsFa: {
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
+  drawerListItemIcon: {
+    width: theme.spacing(2.7),
+    height: theme.spacing(2.7),
   },
 }));
 
@@ -73,35 +65,19 @@ function DrawerContent(props) {
 
   const { user, handleDrawerMobile } = props;
 
-  const generateList = (linkto, icon, itemText1, itemText2, isDisabled, subheader=false) => {
-    if (!isDisabled && linkto) {
-      return (
-        <Link to={linkto} onClick={handleDrawerMobile}>
-          <StyledListItem button disabled={isDisabled}>
-            <ListItemIcon>
-              {icon}
-            </ListItemIcon>
-            <ListItemText
-              primary={<Typography color="textPrimary">{itemText1}</Typography>}
-              secondary={itemText2}
-            />
-          </StyledListItem>
-        </Link>
-      )
-    }
-    else {
-      return (
-        <StyledListItem button disabled={isDisabled}>
+  const generateList = (linkto, icon, itemText, subheader=false) => {
+    return (
+      <Link to={linkto} onClick={handleDrawerMobile}>
+        <StyledListItem button>
           <ListItemIcon>
             {icon}
           </ListItemIcon>
           <ListItemText
-            primary={<Typography color="textPrimary">{itemText1}</Typography>}
-            secondary={itemText2}
+            primary={<Typography color="textPrimary">{itemText}</Typography>}
           />
         </StyledListItem>
-      )
-    }
+      </Link>
+    )
   }
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
@@ -116,28 +92,28 @@ function DrawerContent(props) {
   let ListItemContents;
   if (user.role === "Admin")
     ListItemContents = [
-      ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
-      ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemReactIconsFa}/>, "Pengguna Aktif", null, false],
-      ["/pending-users", <FaUserClock className={classes.drawerListItemReactIconsFa}/>, "Pengguna Pending", null, false],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIconsFa} />, "Kelas", null, false],
-      ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemMuiIcons}/>, "Mata Pelajaran", null, false]
+      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemIcon}/>, "Pengguna Aktif"],
+      ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Pending"],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
+      ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
     ]
   else {
     ListItemContents = [
-      ["/beranda", <DashboardIcon className={classes.drawerListItemMuiIcons} />, "Beranda", null, false],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemReactIconsFa} />, "Kelas", null, false],
-      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemMuiIcons} />,"Pengumuman", null, false],
-      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemMuiIcons}/>, "Materi", null, false],
-      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemMuiIcons} />, "Tugas", null, false],
-      [null, <GrNotes className={classes.drawerListItemReactIconsFa} />, "Kuis", "Coming Soon", true],
-      [null, <GrDocumentPerformance className={classes.drawerListItemReactIconsFa} />, "Ujian", "Coming Soon", true],
+      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
+      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
+      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
+      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
+      ["/kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
+      ["/kuis", <FaFileSignature className={classes.drawerListItemIcon} />, "Ujian"],
     ]
   }
 
   return (
     <List>
       {ListItemContents.map((item) => (
-        generateList(item[0],item[1],item[2],item[3],item[4]))
+        generateList(item[0],item[1],item[2],item[3]))
       )}
     </List>
   )
