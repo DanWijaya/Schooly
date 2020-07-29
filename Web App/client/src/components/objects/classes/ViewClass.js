@@ -10,6 +10,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { viewTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
+import viewClassPicture from "./ViewClassPicture.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
    List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
@@ -28,6 +29,16 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
+  },
+  classPaper: {
+    height: "250px",
+    padding: "30px",
+    color: "white",
+    backgroundColor: theme.palette.primary.light,
+    backgroundImage: `url(${viewClassPicture})`,
+    backgroundPosition: "bottom",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
   },
   subjectDivider: {
     backgroundColor: theme.palette.primary.main,
@@ -112,7 +123,7 @@ function AssignmentListItem(props) {
                 <Grid item xs={7}>
                   <ListItemText
                     primary={
-                      <Typography variant="h6">
+                      <Typography variant="body1">
                         {props.work_title}
                       </Typography>
                     }
@@ -148,7 +159,7 @@ function AssignmentListItem(props) {
               </ListItemAvatar>
               <ListItemText
                 primary={
-                  <Typography variant="h6">
+                  <Typography variant="body1">
                     {props.work_title}
                   </Typography>
                 }
@@ -177,31 +188,12 @@ function MaterialListitem(props) {
   return (
     <div>
     <Hidden smUp implementation="css">
-    <Link to={props.work_link}>
-      <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
-        <ListItem button className={classes.listItem}>
-          <ListItemText
-            primary={
-              <Typography variant="h6">
-                {props.work_title}
-              </Typography>
-            }
-            secondary={!props.work_subject ? " " : props.work_subject}
-          />
-        </ListItem>
-      </Paper>
-      </Link>
-    </Hidden>
-    <Hidden xsDown implementation="css">
-    <Link to={props.work_link}>
-      <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+      <Link to={props.work_link}>
+        <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
           <ListItem button className={classes.listItem}>
-            <ListItemAvatar>
-              {props.work_category_avatar}
-            </ListItemAvatar>
             <ListItemText
               primary={
-                <Typography variant="h6">
+                <Typography variant="body1">
                   {props.work_title}
                 </Typography>
               }
@@ -209,6 +201,25 @@ function MaterialListitem(props) {
             />
           </ListItem>
         </Paper>
+      </Link>
+    </Hidden>
+    <Hidden xsDown implementation="css">
+      <Link to={props.work_link}>
+        <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+            <ListItem button className={classes.listItem}>
+              <ListItemAvatar>
+                {props.work_category_avatar}
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={!props.work_subject ? " " : props.work_subject}
+              />
+            </ListItem>
+          </Paper>
       </Link>
     </Hidden>
     </div>
@@ -229,7 +240,6 @@ function PersonListItem(props) {
                 {props.person_name}
               </Typography>
             }
-
             secondary={
               !props.person_role ? null :
               <Typography variant="caption">
@@ -372,8 +382,6 @@ function ViewClass(props) {
     }
   }
 
-
-
   React.useEffect(() => {
     setCurrentClass(classId)
 
@@ -398,8 +406,8 @@ function ViewClass(props) {
   console.log(selectedMaterials)
   document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
 
-  function student_role(id){
-    switch(id){
+  function student_role(id) {
+    switch(id) {
       case kelas.ketua_kelas:
         return "Ketua Kelas"
 
@@ -418,69 +426,90 @@ function ViewClass(props) {
   return (
     <div className={classes.root}>
       {user.role === "Admin" || user.role === "Teacher" ?
-      <div>
-        <Typography variant="h3" align="center" style={{padding: "10px"}} gutterBottom>
-          {kelas.name}
-        </Typography>
-        <div style={{padding: "20px", marginBottom: "40px"}}>
-          <Typography variant="h4" gutterBottom>
-            Wali Kelas
-          </Typography>
-          <Divider className={classes.personListDivider} />
-          <List className={classes.listContainer}>
-            {all_teachers.get(kelas.walikelas) ?
-            <PersonListItem
-            person_avatar={
-              `/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
-            person_name={all_teachers.get(kelas.walikelas).name }
-            person_role={all_teachers.get(kelas.walikelas).subject_teached}/> : null
-            }
-
-          </List>
+        <div>
+          <Paper className={classes.classPaper}>
+            <Typography variant="h3">
+              {kelas.name}
+            </Typography>
+            <Typography variant="h6">
+              {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+                null
+              :
+                all_teachers.get(kelas.walikelas).name
+              }
+            </Typography>
+          </Paper>
+          <div style={{padding: "20px", marginBottom: "40px"}}>
+            <Typography variant="h4" gutterBottom>
+              Wali Kelas
+            </Typography>
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
+              {all_teachers.get(kelas.walikelas) ?
+                <PersonListItem
+                  person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
+                  person_name={all_teachers.get(kelas.walikelas).name }
+                  person_role={all_teachers.get(kelas.walikelas).subject_teached}
+                />
+              :
+                null
+              }
+            </List>
+          </div>
+          <div style={{padding: "20px"}}>
+            <Typography variant="h4" gutterBottom>
+              Murid
+            </Typography>
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
+              {students_by_class.map((student) => (
+                <PersonListItem
+                  person_avatar={`/api/upload/avatar/${student.avatar}`}
+                  person_name={student.name}
+                  person_id={student._id}
+                  person_role={student_role(student._id)}
+                />
+              ))}
+            </List>
+          </div>
         </div>
-        <div style={{padding: "20px"}}>
-          <Typography variant="h4" gutterBottom>
-            Murid
-          </Typography>
-          <Divider className={classes.personListDivider} />
-          <List className={classes.listContainer}>
-            {students_by_class.map((student) => (
-              <PersonListItem
-                person_avatar={`/api/upload/avatar/${student.avatar}`}
-                person_name={student.name}
-                person_id={student._id}
-                person_role={student_role(student._id)}
-              />
-            ))}
-          </List>
-        </div>
-      </div>
       :
-      <div>
-        <Paper square>
-          <Typography variant="h3" align="center" style={{paddingTop: "10px"}} gutterBottom>
-            {kelas.name}
-          </Typography>
-          <Tabs
-            variant="fullWidth"
-            indicatorColor="primary"
-            textColor="primary"
-            value={value}
-            onChange={handleChange}
-          >
-            <Tab icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" {...TabIndex(0)} />
-            <Tab icon={<BallotIcon />} label="Mata Pelajaran" {...TabIndex(1)} />
-            <Tab icon={<SupervisorAccountIcon />} label="Peserta" {...TabIndex(2)} />
-          </Tabs>
-        </Paper>
-        <TabPanel value={value} index={0} >
-            <Grid item>
-              <ExpansionPanel defaultExpanded>
-                <ExpansionPanelSummary>
-                  <Grid container justify="space-between" alignItems="center">
-                    <Typography variant="h5">
+        <div>
+          <Paper square>
+            <div className={classes.classPaper}>
+              <Typography variant="h3">
+                {kelas.name}
+              </Typography>
+              <Typography variant="h6">
+                {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+                  null
+                :
+                  all_teachers.get(kelas.walikelas).name
+                }
+              </Typography>
+            </div>
+            <Tabs
+              variant="fullWidth"
+              indicatorColor="primary"
+              textColor="primary"
+              value={value}
+              onChange={handleChange}
+            >
+              <Tab icon={<DesktopWindowsIcon />} label="Pekerjaan Kelas" {...TabIndex(0)} />
+              <Tab icon={<BallotIcon />} label="Mata Pelajaran" {...TabIndex(1)} />
+              <Tab icon={<SupervisorAccountIcon />} label="Peserta" {...TabIndex(2)} />
+            </Tabs>
+          </Paper>
+          <TabPanel value={value} index={0} >
+            <ExpansionPanel defaultExpanded>
+              <ExpansionPanelSummary>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid item>
+                    <Typography variant="h6">
                       Materi
                     </Typography>
+                  </Grid>
+                  <Grid item>
                     <LightTooltip title="Lihat Semua" placement="right">
                       <Link to="/daftar-materi">
                         <IconButton
@@ -492,28 +521,33 @@ function ViewClass(props) {
                       </Link>
                     </LightTooltip>
                   </Grid>
-                </ExpansionPanelSummary>
-                <Divider />
-                <List className={classes.expansionPanelList}>
-                  {listMaterials()}
-                </List>
-              </ExpansionPanel>
-              <ExpansionPanel defaultExpanded>
+                </Grid>
+              </ExpansionPanelSummary>
+              <Divider />
+              <List className={classes.expansionPanelList}>
+                {listMaterials()}
+              </List>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded>
               <ExpansionPanelSummary>
                 <Grid container justify="space-between" alignItems="center">
-                  <Typography variant="h5">
-                    Tugas
-                  </Typography>
-                  <LightTooltip title="Lihat Semua" placement="right">
-                    <Link to="/daftar-tugas">
-                      <IconButton
-                        size="small"
-                        className={classes.viewSubjectButton}
-                      >
-                      <PageviewIcon fontSize="small" />
-                    </IconButton>
-                    </Link>
-                  </LightTooltip>
+                  <Grid item>
+                    <Typography variant="h6">
+                      Tugas
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <LightTooltip title="Lihat Semua" placement="right">
+                      <Link to="/daftar-tugas">
+                        <IconButton
+                          size="small"
+                          className={classes.viewSubjectButton}
+                        >
+                          <PageviewIcon fontSize="small" />
+                        </IconButton>
+                      </Link>
+                    </LightTooltip>
+                  </Grid>
                 </Grid>
               </ExpansionPanelSummary>
               <Divider />
@@ -548,89 +582,90 @@ function ViewClass(props) {
                     />
                   )
                 })} */}
-            </List>
-        </ExpansionPanel>
-        <ExpansionPanel disabled>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Kuis (Coming Soon)
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-        </ExpansionPanel>
-        <ExpansionPanel disabled>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Ujian (Coming Soon)
-              </Typography>
-            </ExpansionPanelSummary>
-        </ExpansionPanel>
-            </Grid>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          {all_subjects.length === 0 ? null :
-            all_subjects.map((subject) => {
-              // let isEmpty = true
-              return (
-                <ExpansionPanel>
-                  <ExpansionPanelSummary>
-                    <Grid container justify="space-between" alignItems="center">
-                      <Typography variant="h5">
-                        {subject.name}
-                      </Typography>
-                      <LightTooltip title="Lihat Lebih Lanjut" placement="right">
+              </List>
+            </ExpansionPanel>
+            <ExpansionPanel disabled>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  Kuis (Coming Soon)
+                </Typography>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>
+            <ExpansionPanel disabled>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">
+                  Ujian (Coming Soon)
+                </Typography>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            {all_subjects.length === 0 ? null :
+              all_subjects.map((subject) => {
+                // let isEmpty = true
+                return (
+                  <ExpansionPanel>
+                    <ExpansionPanelSummary>
+                      <Grid container justify="space-between" alignItems="center">
+                        <Typography variant="h6">
+                          {subject.name}
+                        </Typography>
+                        <LightTooltip title="Lihat Lebih Lanjut" placement="right">
                           <Link to={`/mata-pelajaran/${subject._id}`}>
                             <IconButton
                               size="small"
                               className={classes.viewSubjectButton}
                             >
-                          <PageviewIcon fontSize="small" />
-                        </IconButton>
-                        </Link>
-                      </LightTooltip>
-                    </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.subjectDivider} />
-                  <List className={classes.expansionPanelList}>
-                  {listMaterials("subject", subject)}
-                  {listTasks("subject", subject)}
-                  </List>
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
+                        </LightTooltip>
+                      </Grid>
+                    </ExpansionPanelSummary>
+                    <Divider className={classes.subjectDivider} />
+                    <List className={classes.expansionPanelList}>
+                      {listMaterials("subject", subject)}
+                      {listTasks("subject", subject)}
+                    </List>
                   </ExpansionPanel>
-                  )
+                )
             })}
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <div style={{padding: "20px", marginBottom: "40px"}}>
-            <Typography variant="h4" gutterBottom>
-              Wali Kelas
-            </Typography>
-            <Divider className={classes.personListDivider} />
-            <List className={classes.listContainer}>
-              {!all_teachers.size || !all_teachers.get(kelas.walikelas) ? null :
-              <PersonListItem
-                person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
-                person_name={all_teachers.get(kelas.walikelas).name}
-                person_role={all_teachers.get(kelas.walikelas).subject_teached}/>
-              }
-            </List>
-          </div>
-          <div style={{padding: "20px"}}>
-            <Typography variant="h4" gutterBottom>
-              Murid
-            </Typography>
-            <Divider className={classes.personListDivider} />
-            <List className={classes.listContainer}>
-              {students_by_class.map((student) => (
-                <PersonListItem
-                  person_avatar={`/api/upload/avatar/${student.avatar}`}
-                  person_name={student.name}
-                  person_role={student.role}
-                />
-              ))}
-            </List>
-          </div>
-        </TabPanel>
-      </div>
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <div style={{padding: "20px", marginBottom: "40px"}}>
+              <Typography variant="h4" gutterBottom>
+                Wali Kelas
+              </Typography>
+              <Divider className={classes.personListDivider} />
+              <List className={classes.listContainer}>
+                {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+                  null
+                :
+                  <PersonListItem
+                    person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
+                    person_name={all_teachers.get(kelas.walikelas).name}
+                    person_role={all_teachers.get(kelas.walikelas).subject_teached}
+                  />
+                }
+              </List>
+            </div>
+            <div style={{padding: "20px"}}>
+              <Typography variant="h4" gutterBottom>
+                Murid
+              </Typography>
+              <Divider className={classes.personListDivider} />
+              <List className={classes.listContainer}>
+                {students_by_class.map((student) => (
+                  <PersonListItem
+                    person_avatar={`/api/upload/avatar/${student.avatar}`}
+                    person_name={student.name}
+                    person_role={student.role === "Student" ? "Murid" : null}
+                  />
+                ))}
+              </List>
+            </div>
+          </TabPanel>
+        </div>
       }
     </div>
   )

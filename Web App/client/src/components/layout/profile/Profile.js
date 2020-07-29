@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profileDivider: {
     backgroundColor: theme.palette.primary.main,
-    margin: "10px 0px 10px 0px",
+    margin: "15px 0px 15px 0px",
   },
   informationPaper: {
     padding: "22.5px 25px 22.5px 25px",
