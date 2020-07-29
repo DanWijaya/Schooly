@@ -148,4 +148,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { logoutUser }
- ) (NavBar);
+ ) (React.memo(NavBar));

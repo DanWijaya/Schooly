@@ -124,6 +124,7 @@ export const logoutUser = () => dispatch => {
   console.log("test")
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
+  setDropboxToken(false)
   // if (history !== undefined)
   //   history.push("/masuk")
   window.location.href ="./masuk"

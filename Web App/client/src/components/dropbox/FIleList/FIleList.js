@@ -1,34 +1,83 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from 'react-router-dom';
+import { makeStyles } from "@material-ui/core/styles";
 import { FaFolder, FaStar, FaRegStar, FaFile, FaFilePdf, FaBars } from 'react-icons/fa';
 import { convertDate } from './convertDate.js';
 import { convertBytes } from './convertBytes.js';
-import { Dropbox } from "dropbox"
+import { Dropbox } from "dropbox";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from "@material-ui/core";
+
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
 const path = require("path");
 
-const FileList = ({
-	doc,
-	location,
-	getLinkToFile,
-	// favorites,
-	localToken,
-	updateDocs,
-	documents,
-}) => {
-	const [dropDown, updateDropDown] = useState(false);
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
+  },
+  container: {
+    maxHeight: 440
+  },
+}));
+
+const columns = [
+  { id: 'name', label: 'Name'},
+  { id: 'size', label: 'Ukuran File'},
+  {
+    id: 'modified',
+    label: 'Terakhir diubah',
+    format: (value) => value.toLocaleString('en-US'),
+  },
+  {
+    id: 'type',
+    label: 'Tipe File',
+    format: (value) => value.toLocaleString('en-US'),
+  },
+];
+
+function createData(name, size, modified, type, path_display) {
+  return { name, size, modified, type, path_display };
+}
+
+function FileList(props) {
+
+  const [dropDown, updateDropDown] = useState(false);
 	const [showRemoveModal, updateRemoveModal] = useState(false);
 	const [showRenameModal, updateRenameModal] = useState(false);
 	const [showCopyModal, updateCopyModal] = useState(false);
 	const [showMoveModal, updateMoveModal] = useState(false);
-	const [thumbnailUrl, updateThumbnailUrl] = useState(null);
+  const [thumbnailUrl, updateThumbnailUrl] = useState(null);
+  
+  const classes = useStyles();
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const {allDocs, updatePath, getLinkToFile } = props;
 
-	
-	const nodeDropdown = useRef();
+  const rows = allDocs.map((doc) => createData(doc.name, 
+    doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--", 
+    convertDate(doc.client_modified),  doc['.tag'] !== "folder" ? path.extname(doc.name): "Folder", doc.path_display ))
 
-	const showDropDown = useCallback(() => {
+  const handleClickItem = (event, file_tag, file_path) => {
+    if(file_tag === "Folder"){
+      updatePath(file_path)
+    } else {
+      getLinkToFile(file_path)
+    }
+  }
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const showDropDown = useCallback(() => {
 		updateDropDown(dropDown ? false : true);
 	}, [dropDown]);
 
@@ -40,7 +89,6 @@ const FileList = ({
 		updateRenameModal(true);
 	}
 
-
 	const handleCopyModal = () => {
 		updateCopyModal(true);
 	}
@@ -49,138 +97,106 @@ const FileList = ({
 		updateMoveModal(true);
 	}
 
-	const handleClickOutside = useCallback((e) => {
-		if (nodeDropdown.current.contains(e.target)) {
-			// inside click
-			return;
-		}
-		// outside click 
-		showDropDown(dropDown);
-	}, [showDropDown, dropDown]);
+	// const handleClickOutside = useCallback((e) => {
+	// 	if (nodeDropdown.current.contains(e.target)) {
+	// 		// inside click
+	// 		return;
+	// 	}
+	// 	// outside click 
+	// 	showDropDown(dropDown);
+  // }, [showDropDown, dropDown]);
+  
+  console.log(rows)
+  return (
+    <Paper className={classes.root}>
+      <TableContainer className={classes.container}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => {
+                let width;
+                switch(column.id){
+                  case "name":
+                    width= "50%"
+                    break
 
-	useEffect(() => {
-		//this document.addEventListerner can only be used inside a useEffect
-		if (dropDown) {
-			document.addEventListener("mousedown", handleClickOutside);
-		} else {
-			document.removeEventListener("mousedown", handleClickOutside);
-		}
+                  case "size":
+                    width = "20%"
+                    break
 
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [dropDown, handleClickOutside]);
+                  case "modified":
+                    width = "20%"
+                    break
 
+                  case "type":
+                    width = "10%"
+                    break
 
-	useEffect(() => {
-		let dropbox = new Dropbox({ fetch: fetch, accessToken: localToken })
-    console.log("TRY TO FETCH THUMBNAIL")
-    let ext_file = path.extname(doc.name)
-		if ( ext_file=== 'jpg' || ext_file === 'jpeg' || ext_file === 'png') {
-			dropbox
-				.filesGetThumbnail({
-					path: doc.path_lower,
-					size: 'w32h32'
-				})
-				.then(response => {
-					if (response.fileBlob) {
-						const url = URL.createObjectURL(response.fileBlob);
-						updateThumbnailUrl(url);
-					}
-					console.log("RENDER from THUMBNAIL")
-				})
-				.catch(function (error) {
-					console.log(error, 'Error by creating thumbnail');
-				});
-		}
-	}, [doc.name, updateThumbnailUrl, doc.path_lower, localToken]);
+                  default:
+                    break
+                }
 
+                return (
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ width: width }}
+                >
+                  {column.label}
+                </TableCell>
+              )})}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+              return (
+                <TableRow hover style={{cursor: "pointer"}} role="checkbox" tabIndex={-1} key={row.code} onClick={(event) => handleClickItem(event, row.type, row.path_display)}>
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    let width;
+                    switch(column.id){
+                      case "name":
+                        width= "50%"
+                        break
+                      
+                      case "size":
+                        width = "20%"
+                        break
+                      
+                      case "modified":
+                        width = "20%"
+                        break
+                      
+                      case "type":
+                        width = "10%"
+                        break
+                      
+                      default:
+                        break
+                    }
+                    return (
+                      <TableCell key={column.id} align={column.align} style={{width: width}}>
+                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 20]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </Paper>
+  );
+}
 
-	let dropdownClass;
-	if (dropDown) {
-		dropdownClass = 'dropDown active';
-	} else {
-		dropdownClass = 'dropDown';
-	}
-
-	// const handleFav = (doc) => {
-	// 	toggleFavorite(doc);
-	// };
-
-	if (doc) {
-
-		return (
-			<li className="item">
-				<div className="itemSmlCtn">
-					{/* <span className="starIcon" onClick={() => handleFav(doc)}>
-						{favorites.find(x => x.id === doc.id)
-							? <span><FaStar size="20px" style={{ color: "rgb(250, 142, 0)", position: "relative", top: "3px" }} /></span>
-							: <span><FaRegStar size="20px" style={{ position: "relative", top: "3px" }} /></span>}
-					</span> */}
-					{doc['.tag'] === 'file' ? (
-						<>
-							{
-								doc.name.slice(doc.name.length - 3) === "pdf"
-									? <FaFilePdf size="2rem" style={{color: "rgb(34, 130, 208)", marginRight:"10px"}}/>
-									: thumbnailUrl
-										? <img src={thumbnailUrl} alt='' style={{ marginRight: '10px' }} />
-										: <FaFile size="2rem" className="folderIcon" />
-							}
-							<a
-								className="documentLink"
-								onClick={() => getLinkToFile(doc.path_lower)}
-							>
-								{doc.name}
-							</a>
-						</>
-					) : (
-							<>
-								<FaFolder size="2rem" className="folderIcon" />
-								<Link to={"/home" + doc.path_lower} className="documentLink">{doc.name}</Link>
-							</>
-						)}
-				</div>
-				<p className="metaData">{doc['.tag'] === 'file' ? convertBytes(doc.size) : '--'}</p>
-				<p className="modified">{convertDate(doc.client_modified)}</p>
-				<div className="dropDownCtn" ref={nodeDropdown}>
-					<button onClick={showDropDown} id={doc.id} >
-						<FaBars size="14px" style={{ position: "relative", top: "3px", color: "#737373" }} />
-					</button>
-					{/* <div className={dropdownClass}>
-						<button
-							className="deleteBtn"
-							onClick={handleRemoveModal}
-						>
-							Delete
-							</button>
-						{showRemoveModal && <Remove updateRemoveModal={updateRemoveModal} location={location} doc={doc} updateDocs={updateDocs} documents={documents} />}
-
-						<button
-							className="renameBtn"
-							onClick={handleRenameModal}
-						>
-							Rename
-						</button>
-						{showRenameModal && <Rename doc={doc} updateRenameModal={updateRenameModal} documents={documents} updateDocs={updateDocs} location={location} />}
-						<button
-							className="copyBtn"
-							onClick={handleCopyModal}
-						>
-							Copy
-						</button>
-						{showCopyModal && <CopyMove method="filesCopyV2" option="Copy" doc={doc} onClose={(e) => updateCopyModal(false)}  getLinkToFile={getLinkToFile} location={location} />}
-						<button
-							className="moveBtn"
-							onClick={handleMoveModal}
-						>
-							Move
-						</button>
-						{showMoveModal && <CopyMove method="filesMoveV2" option="Move" doc={doc} onClose={(e) => updateMoveModal()} getLinkToFile={getLinkToFile} location={location} />}
-					</div> */}
-				</div>
-			</li>
-		);
-	}
-};
-
-export default FileList;
+export default React.memo(FileList);

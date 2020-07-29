@@ -191,4 +191,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps
-) (SideDrawer);
+) (React.memo(SideDrawer));
