@@ -58,8 +58,8 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
-import DropboxConnect from "./components/auth/dropbox/DropboxConnect";
-import DropboxAuth from "./components/auth/dropbox/DropboxAuth";
+import DropboxConnect from "./components/dropbox/DropboxConnect";
+import DropboxAuth from "./components/dropbox/DropboxAuth";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {

@@ -11,6 +11,7 @@ import { GoSearch } from 'react-icons/go';
 import { FaAngleRight, FaHome } from "react-icons/fa";
 import { Grid, InputAdornment, IconButton, TextField, Typography, Button } from "@material-ui/core";
 import { setDropboxToken } from "../../actions/UserActions"
+import FileList from "./FileList/FileList"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -123,16 +124,18 @@ const handleCloseDropbox = () => {
     console.log(allDocs)
 
     const showFiles = () => {
-      allDocs.map((doc) => {
+      allDocs.map(doc => 
         <FileList
         key={doc.id}
         doc={doc}
-        getLinkToFile={getLinkToFile}
-        favorites={favorites}
-        location={location}
+        // getLinkToFile={getLinkToFile}
+        // favorites={favorites}
+        // location={location}
         documents={allDocs}
-        localToken={localToken}/>
-      })
+        // localToken={localToken}
+        />
+      )
+      return allDocs
     }
 
     return(

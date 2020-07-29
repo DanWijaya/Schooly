@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from 'react-router-dom';
 import { FaFolder, FaStar, FaRegStar, FaFile, FaFilePdf, FaBars } from 'react-icons/fa';
 import { convertDate } from './convertDate.js';
 import { convertBytes } from './convertBytes.js';
-import { Dropbox } from 'dropbox';
+import { Dropbox } from "dropbox"
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
 const path = require("path");
