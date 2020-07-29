@@ -6,17 +6,16 @@ import "moment/locale/id";
 import { createSubject, getAllSubjects, getSubject, editSubject, deleteSubject } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog,
-   Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, TextField, Typography } from "@material-ui/core/";
+import { Button, IconButton, Dialog, Divider, Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, TextField, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import SortIcon from "@material-ui/icons/Sort";
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
@@ -72,27 +71,27 @@ function SubjectListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4" color="primary">
-        <b>Daftar Mata Pelajaran</b>
+      <Typography variant="h4">
+        Daftar Mata Pelajaran
       </Typography>
-      <div style={{display: "flex"}}>
+      <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
-            <LightTooltip title="Buat Mata Pelajaran">
-                <Fab size="small" className={classes.newMaterialButton} onClick={(handleOpenFormDialog)}>
-                    <MenuBookIcon className={classes.newMaterialIconMobile} />
-                </Fab>
-            </LightTooltip>
+          <LightTooltip title="Buat Mata Pelajaran">
+            <Fab size="small" className={classes.newMaterialButton} onClick={(handleOpenFormDialog)}>
+              <MenuBookIcon className={classes.newMaterialIconMobile} />
+            </Fab>
+          </LightTooltip>
         </Hidden>
         <Hidden xsDown implementation="css">
           <Fab size="medium" variant="extended" className={classes.newMaterialButton} onClick={handleOpenFormDialog}>
-          <LibraryBooksIcon className={classes.newMaterialIconDesktop} />
-          Buat Mata Pelajaran
+            <LibraryBooksIcon className={classes.newMaterialIconDesktop} />
+            Buat Mata Pelajaran
           </Fab>
         </Hidden>
         <LightTooltip title="Urutkan Materi">
-          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
-          </Fab>
+          </IconButton>
         </LightTooltip>
         <Menu
           keepMounted
@@ -153,7 +152,12 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px",
+    alignItems: "center",
+  },
+  titleDivider: {
+    backgroundColor: theme.palette.primary.main,
+    marginTop: "15px",
+    marginBottom: "15px",
   },
   newMaterialButton: {
     marginRight: "10px",
@@ -174,9 +178,11 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
   },
   sortButton: {
-    backgroundColor: "white",
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
     "&:focus, &:hover": {
-      backgroundColor: "white",
+      backgroundColor: theme.palette.divider,
+      color: "black",
     },
   },
   visuallyHidden: {
@@ -402,47 +408,49 @@ function SubjectList(props) {
             {action === "Edit" ?
               <Typography variant="h6" gutterBottom>
                 <b>Sunting Mata Pelajaran</b>
-              </Typography> :
-            action === "Create" ?
+              </Typography>
+            : action === "Create" ?
               <Typography variant="h6" gutterBottom>
-              <b>Isi Nama Mata Pelajaran</b>
-              </Typography> :
-              null}
+                <b>Isi Nama Mata Pelajaran</b>
+              </Typography>
+            :
+              null
+            }
             <TextField
-            style={{margin: "20px 10px"}}
-            fullWidth
-            variant="outlined"
-            id="name"
-            onChange={onChange}
-            value={subject.name}
-            error={errors.name}
-            type="text"
-            helperText={errors.name}
-            className={classnames("", {
-                invalid: errors.name
-            })}
+              style={{margin: "20px 10px"}}
+              fullWidth
+              variant="outlined"
+              id="name"
+              onChange={onChange}
+              value={subject.name}
+              error={errors.name}
+              type="text"
+              helperText={errors.name}
+              className={classnames("", {
+                  invalid: errors.name
+              })}
             />
             <Grid item>
               {action === "Edit" ?
-              <Button
-                type="submit"
-                startIcon={<LibraryBooksIcon />}
-                className={classes.dialogEditButton}
-              >
-                Sunting
-              </Button> :
-              <Button
-              type="submit"
-              startIcon={<LibraryBooksIcon />}
-              className={classes.dialogCreateButton}
-            >
-              Buat
-            </Button>
-            }
+                <Button
+                  type="submit"
+                  startIcon={<LibraryBooksIcon />}
+                  className={classes.dialogEditButton}
+                >
+                  Sunting
+                </Button>
+              :
+                <Button
+                  type="submit"
+                  startIcon={<LibraryBooksIcon />}
+                  className={classes.dialogCreateButton}
+                >
+                  Buat
+                </Button>
+              }
             </Grid>
             <Grid item>
               <Button
-
                 onClick={handleCloseFormDialog}
                 startIcon={< CancelIcon/>}
                 className={action === "Edit" ? classes.dialogCancelEdit : classes.dialogCancelButton}
@@ -529,6 +537,7 @@ function SubjectList(props) {
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
       />
+      <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {

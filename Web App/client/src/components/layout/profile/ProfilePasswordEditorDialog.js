@@ -11,16 +11,16 @@ import { logoutUser } from "../../../actions/UserActions"
 import { clearErrors} from "../../../actions/ErrorActions"
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: "15px",
-  },
   editPasswordButton: {
-    backgroundColor: "#DCDCDC",
+    backgroundColor: theme.palette.action.selected,
     color: "black",
     "&:focus, &:hover": {
-      backgroundColor: "#DCDCDC",
+      backgroundColor: theme.palette.divider,
       color: "black",
     },
+  },
+  root: {
+    padding: "15px",
   },
   content: {
     padding: "0px 10px 0px 10px",
@@ -127,13 +127,12 @@ function ProfilePasswordEditorDialog(props) {
   return (
     <div>
       <LightTooltip title="Ganti Kata Sandi">
-        <IconButton
-          size="medium"
+        <Button
           onClick={handleClickOpen}
           className={classes.editPasswordButton}
         >
           <LockIcon />
-        </IconButton>
+        </Button>
       </LightTooltip>
       <Dialog open={open} onClose={handleClose}>
         <Grid container direction="column" alignItems="center" className={classes.root}>

@@ -32,16 +32,23 @@ const isEmpty = require("is-empty");
 
 const useStyles = makeStyles((theme) => ({
   editProfileButton: {
-    marginBottom: "10px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.dark,
       color: "white",
     },
   },
   root: {
     padding: "15px",
+  },
+  tabTitle: {
+    fontSize: "10px",
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "12px",
+    },
   },
   profileDataItemAvatar: {
     backgroundColor: theme.palette.primary.main,
@@ -238,9 +245,33 @@ function ProfileDataEditorDialog(props) {
               value={value}
               onChange={handleChange}
             >
-              <Tab icon={<ContactsIcon />} label="Info Saya" {...TabIndex(0)} />
-              <Tab icon={<ContactMailIcon />} label="Kontak" {...TabIndex(1)} />
-              <Tab icon={<EmojiPeopleIcon />} label="Karir" {...TabIndex(2)} />
+              <Tab
+                icon={<ContactsIcon />}
+                label={
+                  <Typography className={classes.tabTitle}>
+                    Informasi Pribadi
+                  </Typography>
+                }
+                {...TabIndex(0)}
+              />
+              <Tab
+                icon={<ContactMailIcon />}
+                label={
+                  <Typography className={classes.tabTitle}>
+                    Kontak
+                  </Typography>
+                }
+                {...TabIndex(1)}
+              />
+              <Tab
+                icon={<EmojiPeopleIcon />}
+                label={
+                  <Typography className={classes.tabTitle}>
+                    Karir
+                  </Typography>
+                }
+                {...TabIndex(2)}
+              />
             </Tabs>
             <TabPanel value={value} index={0}>
               <List>

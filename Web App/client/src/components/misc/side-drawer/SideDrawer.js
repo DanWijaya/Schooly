@@ -94,7 +94,7 @@ function DrawerContent(props) {
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
       ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemIcon}/>, "Pengguna Aktif"],
-      ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Pending"],
+      ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Tertunda"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
     ]
@@ -119,7 +119,7 @@ function DrawerContent(props) {
       </List>
       <Divider />
       <List>
-        {generateList("/dropbox-connect", <FaDropbox className={classes.drawerListItemIcon}/>, "Dropbox")}
+        {generateList("/dropbox-connect", <FaDropbox style={{color: "#0d2481"}} className={classes.drawerListItemIcon}/>, "Dropbox")}
       </List>
     </div>
   )

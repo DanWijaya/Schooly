@@ -12,6 +12,7 @@ Botak:
 17. Tidak nihil dan jumlah murid
 18. Disable overflow hidden when opening menu
 19. Fix profile page lagi
+20. Cek
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -28,6 +29,7 @@ Daniel:
 9. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga...
 10. (HERAN) Untuk safari, masih ada masalah di upload fotonya klo lebih dari satu kali.
 11. Mungkin masukkin warning kalo file size kebesaran (cthnya ndak boleh exceed 512mb)
+20. Ganti hardcode link di app sama dropbox
 
 IMPORTANT:
 1. Jumlah murid dan absen di kelas

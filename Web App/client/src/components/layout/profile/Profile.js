@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(20),
     height: theme.spacing(20),
   },
+  profileDivider: {
+    backgroundColor: theme.palette.primary.main,
+    margin: "15px 0px 15px 0px",
+  },
   informationPaper: {
     padding: "22.5px 25px 22.5px 25px",
   },
@@ -51,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   informationPicture: {
     height: "100px",
     [theme.breakpoints.up("sm")]: {
-      height: "150px",
+      height: "125px",
     },
   },
   profileDataItemAvatar: {
@@ -235,38 +239,39 @@ function Profile(props) {
           Kata sandi berhasil diganti!
         </Alert>
       </Snackbar>
-      <Grid container direction="column" alignItems="center" spacing={5}>
-        <Grid item container direction="column" alignItems="center">
-          {user.avatar
-          ?
-            <StyledBadge
-              badgeContent={
-                <ProfilePictureEditorDialog
-                  user={user}
-                  updateAvatar={updateAvatar}
-                  handleOpenAlert={handleOpenAlert}
-                />
-              }
-            >
-              <Avatar
-                src={`/api/upload/avatar/${user.avatar}`}
-                className={classes.avatar}
+      <Grid container direction="column" spacing={1} alignItems="center">
+        <Grid item>
+          {user.avatar ?
+          <StyledBadge
+            badgeContent={
+              <ProfilePictureEditorDialog
+                user={user}
+                updateAvatar={updateAvatar}
+                handleOpenAlert={handleOpenAlert}
               />
-            </StyledBadge>
-            :
-            <StyledBadge
-              badgeContent={
-                <ProfilePictureEditorDialog
-                  user={user}
-                  updateAvatar={updateAvatar}
-                  handleOpenAlert={handleOpenAlert}
-                />
-              }
-            >
-              <Avatar className={classes.avatar} />
-            </StyledBadge>
-          }
-          <Typography variant="h3" align="center" style={{padding: "10px"}}>
+            }
+          >
+            <Avatar
+              src={`/api/upload/avatar/${user.avatar}`}
+              className={classes.avatar}
+            />
+          </StyledBadge>
+        :
+          <StyledBadge
+            badgeContent={
+              <ProfilePictureEditorDialog
+                user={user}
+                updateAvatar={updateAvatar}
+                handleOpenAlert={handleOpenAlert}
+              />
+            }
+          >
+            <Avatar className={classes.avatar} />
+          </StyledBadge>
+        }
+        </Grid>
+        <Grid item>
+          <Typography variant="h4" align="center">
             {user.name}
           </Typography>
           <Typography variant="h6" align="center">
@@ -278,16 +283,19 @@ function Profile(props) {
               "Pengelola"
             }
           </Typography>
-          <Typography style={{marginBottom:"25px"}}>
+          <Typography variant="body1" align="center" color="textSecondary">
             {!classesCollection.kelas.name ? null : `Kelas ${classesCollection.kelas.name}`}
           </Typography>
-          <Grid container spacing={3} justify="flex-end" alignItems="center">
-            <Grid item>
-              <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
-            </Grid>
-            <Grid item>
-              <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
-            </Grid>
+        </Grid>
+      </Grid>
+      <Divider className={classes.profileDivider} />
+      <Grid container direction="column" alignItems="center" spacing={5}>
+        <Grid item container spacing={1} justify="flex-end" alignItems="center">
+          <Grid item>
+            <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
+          </Grid>
+          <Grid item>
+            <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
           </Grid>
         </Grid>
         <Grid item container direction="column" spacing={4}>
@@ -298,11 +306,8 @@ function Profile(props) {
                   <Typography variant="h4" gutterBottom>
                     Informasi Pribadi
                   </Typography>
-                  <Typography variant="body1" color="primary">
-                    Beberapa informasi profil dapat dilihat oleh pengelola sekolah anda.
-                  </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
-                    Pastikan Anda mengisi semua inforamasi profil Anda untuk melengkapi
+                    Jangan lupa untuk mengisi semua informasi profil Anda untuk melengkapi
                     database sekolah Anda.
                   </Typography>
                 </Grid>
@@ -347,7 +352,7 @@ function Profile(props) {
                     Kontak
                   </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
-                    Jangan lupa untuk mengecek kembali kontak-kontak yang Anda masukkan.
+                    Pastikan Anda mengecek kembali kontak-kontak yang Anda masukkan.
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -390,7 +395,7 @@ function Profile(props) {
                   <Typography variant="h4" gutterBottom>
                     Karir
                   </Typography>
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle1" color="textSecondary">
                     Kami ke depannya juga berencana untuk membantu Anda menemukan
                     jalur karir terbaik untuk Anda.
                   </Typography>

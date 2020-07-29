@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect, useCallback  } from "react";
+import React, { useState, useEffect, useCallback  } from "react";
 // import { tokenUrl } from "../getToken";
 import { tokenUrl } from "../../utils/getDropboxToken"
 import { makeStyles } from "@material-ui/core/styles";
 import { Dropbox } from "dropbox";
 import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 import { GoSearch } from 'react-icons/go';
 import { FaDropbox } from "react-icons/fa";
@@ -84,10 +83,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleClick(event) {
-  event.preventDefault();
-  console.info('You clicked a breadcrumb.');
-}
 
 function DropboxConnect(props) {
   const classes = useStyles();
@@ -102,7 +97,6 @@ function DropboxConnect(props) {
   // const nodeDropdown = useRef();
   const { setDropboxToken } = props;
   const { dropbox_token } = props.auth;
-
 
   useEffect(() => {
     if(dropbox_token){
@@ -205,7 +199,6 @@ const handleCloseDropbox = () => {
 }
 
   if(dropbox_token){
-    // let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
     console.log(searchFilter)
     console.log(allDocs)
 
@@ -222,7 +215,7 @@ const handleCloseDropbox = () => {
                   endAdornment:
                     <InputAdornment position="start">
                       <IconButton size="small">
-                        <GoSearch style={{color:"#2196f3"}}/> 
+                        <GoSearch style={{color:"#2196f3"}}/>
                       </IconButton>
                     </InputAdornment>
                 }}
@@ -276,4 +269,3 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps, { setDropboxToken }
 )(DropboxConnect);
-

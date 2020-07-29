@@ -73,50 +73,50 @@ function ManageUsersToolbar(props) {
 
   return (
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h5" color="primary">
-        <b>{heading}</b>
+      <Typography variant="h5">
+        {heading}
       </Typography>
-        <LightTooltip title="Urutkan Akun">
-          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
-            <SortIcon />
-          </Fab>
-        </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
-              onClick={props.handleClosePanel}
+      <LightTooltip title="Urutkan Akun">
+        <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <SortIcon />
+        </IconButton>
+      </LightTooltip>
+      <Menu
+        keepMounted
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseSortMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        {headCells.map((headCell, i) => (
+          <MenuItem
+            key={headCell.id}
+            sortDirection={orderBy === headCell.id ? order : false}
+            onClick={props.handleClosePanel}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
             >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ?
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
-                  </span>
-                  : null
-                }
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu>
+              {headCell.label}
+              {orderBy === headCell.id ?
+                <span className={classes.visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </span>
+                : null
+              }
+            </TableSortLabel>
+          </MenuItem>
+        ))}
+      </Menu>
     </Toolbar>
   );
 };
@@ -127,10 +127,15 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
+  titleDivider: {
+    backgroundColor: theme.palette.primary.main,
+    marginBottom: "20px",
+  },
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px",
+    alignItems: "center",
+    padding: "0px",
   },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
@@ -180,9 +185,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sortButton: {
-    backgroundColor: "white",
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
     "&:focus, &:hover": {
-      backgroundColor: "white",
+      backgroundColor: theme.palette.divider,
+      color: "black",
     },
   },
   visuallyHidden: {
@@ -427,7 +434,7 @@ function ManageUsers(props) {
       <Typography variant="h4" align="center" gutterBottom>
         Daftar Pengguna Aktif
       </Typography>
-      <Divider style={{marginBottom: "20px", backgroundColor: "#2196f3"}}/>
+      <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
         role="Student"
@@ -438,7 +445,8 @@ function ManageUsers(props) {
         onRequestSort={handleRequestSort}
         rowCount={student_rows ? student_rows.length : 0}
       />
-      <Grid container direction="column" spacing={2} style={{marginBottom: "50px"}}>
+      <Divider variant="inset" />
+      <Grid container direction="column" spacing={2} style={{marginTop: "10px", marginBottom: "75px"}}>
         {stableSort(student_rows, getComparator(order_student, orderBy_student))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
@@ -546,7 +554,8 @@ function ManageUsers(props) {
         onRequestSort={handleRequestSort}
         rowCount={student_rows ? student_rows.length : 0}
       />
-      <Grid container direction="column" spacing={2}>
+      <Divider variant="inset" />
+      <Grid container direction="column" spacing={2} style={{marginTop: "10px"}}>
         {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
