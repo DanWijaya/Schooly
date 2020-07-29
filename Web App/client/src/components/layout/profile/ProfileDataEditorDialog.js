@@ -32,11 +32,12 @@ const isEmpty = require("is-empty");
 
 const useStyles = makeStyles((theme) => ({
   editProfileButton: {
-    marginBottom: "10px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.dark,
       color: "white",
     },
   },

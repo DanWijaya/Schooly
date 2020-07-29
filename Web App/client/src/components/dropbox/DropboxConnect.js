@@ -11,7 +11,7 @@ import { GoSearch } from 'react-icons/go';
 import { FaAngleRight, FaHome } from "react-icons/fa";
 import { Grid, InputAdornment, IconButton, TextField, Typography, Button } from "@material-ui/core";
 import { setDropboxToken } from "../../actions/UserActions"
-import FileList from "./FileList/FileList"
+import FileList from "./filelist/FileList"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,7 +74,7 @@ function DropboxConnect(props) {
 
   const { setDropboxToken } = props;
   const { dropbox_token } = props.auth;
-  
+
 // this is for getting the users.
 // this is for getting the files.
   useEffect(() => {
@@ -88,7 +88,7 @@ function DropboxConnect(props) {
         .catch(function (error) {
             console.error(error);
         });
-      
+
       dropbox
         .filesListFolder({ path: '' }).then((response) => {
           console.log('resonse.entries', response.entries);
@@ -116,7 +116,7 @@ const handleCloseDropbox = () => {
   console.log(localStorage.dropbox_token)
   setDropboxToken(null)
 }
-  
+
 
   if(dropbox_token){
     // let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
@@ -124,7 +124,7 @@ const handleCloseDropbox = () => {
     console.log(allDocs)
 
     const showFiles = () => {
-      allDocs.map(doc => 
+      allDocs.map(doc =>
         <FileList
         key={doc.id}
         doc={doc}
@@ -151,7 +151,7 @@ const handleCloseDropbox = () => {
                   endAdornment:
                     <InputAdornment position="start">
                       <IconButton size="small">
-                        <GoSearch style={{color:"#2196f3"}}/> 
+                        <GoSearch style={{color:"#2196f3"}}/>
                       </IconButton>
                     </InputAdornment>
                 }}
@@ -168,7 +168,7 @@ const handleCloseDropbox = () => {
 
 
       </div>
-    ) 
+    )
 
 
 
@@ -187,7 +187,7 @@ const handleCloseDropbox = () => {
           Dropbox Anda
         </Typography>
         <p> Dropbox anda belum terhubung ke sistem Schooly</p>
-         <a href={tokenUrl}>Hubungkan ke Dropbox</a> 
+         <a href={tokenUrl}>Hubungkan ke Dropbox</a>
       </div>
     )
   }
@@ -207,4 +207,3 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps, { setDropboxToken }
 )(DropboxConnect);
-
