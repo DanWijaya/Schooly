@@ -119,7 +119,7 @@ function DrawerContent(props) {
       </List>
       <Divider />
       <List>
-        {generateList("/dropbox-connect", <FaDropbox className={classes.drawerListItemIcon}/>, "Dropbox")}
+        {generateList("/dropbox-connect", <FaDropbox style={{color: "#0d2481"}} className={classes.drawerListItemIcon}/>, "Dropbox")}
       </List>
     </div>
   )
