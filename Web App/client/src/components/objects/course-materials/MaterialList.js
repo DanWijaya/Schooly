@@ -80,10 +80,10 @@ function MaterialListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4" color="primary">
-        <b>Daftar Materi</b>
+      <Typography variant="h4">
+        Daftar Materi
       </Typography>
-      <div style={{display: "flex"}}>
+      <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {role === "Student" ?
             null
@@ -110,9 +110,9 @@ function MaterialListToolbar(props) {
           }
         </Hidden>
         <LightTooltip title="Urutkan Materi">
-          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
-          </Fab>
+          </IconButton>
         </LightTooltip>
         <Menu
           keepMounted
@@ -173,7 +173,12 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px",
+    alignItems: "center",
+  },
+  titleDivider: {
+    backgroundColor: theme.palette.primary.main,
+    marginTop: "15px",
+    marginBottom: "15px",
   },
   newMaterialButton: {
     marginRight: "10px",
@@ -194,9 +199,11 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
   },
   sortButton: {
-    backgroundColor: "white",
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
     "&:focus, &:hover": {
-      backgroundColor: "white",
+      backgroundColor: theme.palette.divider,
+      color: "black",
     },
   },
   visuallyHidden: {
@@ -291,7 +298,7 @@ function MaterialList(props) {
   const { user, retrieved_users } = props.auth;
 
   const { all_subjects_map} = props.subjectsCollection;
-  
+
   const materialRowItem = (data) => {
     rows.push(
       createData(
@@ -427,6 +434,7 @@ function MaterialList(props) {
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
       />
+      <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {

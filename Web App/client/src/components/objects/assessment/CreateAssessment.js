@@ -4,7 +4,7 @@ class CreateAssessment extends Component {
   render() {
     return (
       <div>
-        
+        Test
       </div>
     )
   }

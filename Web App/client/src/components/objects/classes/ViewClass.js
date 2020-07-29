@@ -242,7 +242,7 @@ function PersonListItem(props) {
             }
             secondary={
               !props.person_role ? null :
-              <Typography variant="caption">
+              <Typography variant="caption" color="textSecondary">
                 {props.person_role}
               </Typography>
             }
@@ -263,7 +263,7 @@ function PersonListItem(props) {
           />
           <ListItemText
             primary={
-              <Typography align="right">
+              <Typography align="right" color="textSecondary">
                 {props.person_role}
               </Typography>
             }
@@ -305,7 +305,7 @@ function ViewClass(props) {
       }
 
       let result = [];
-      for(i =0; i < tasksList.length; i++){
+      for(i = 0; i < tasksList.length; i++){
       let task = tasksList[i]
       let workCategoryAvatar = (
         <Avatar className={classes.assignmentLate}>
@@ -553,35 +553,6 @@ function ViewClass(props) {
               <Divider />
               <List className={classes.expansionPanelList}>
                 {listTasks()}
-                {/* {tasksByClass.map((task) => {
-                  let workCategoryAvatar = (
-                    <Avatar className={classes.assignmentLate}>
-                      <AssignmentLateIcon/>
-                    </Avatar>
-                  )
-                  let workStatus = "Belum Dikumpulkan"
-                  for(var i = 0; i < all_user_files.length; i++) {
-                    if (all_user_files[i].for_task_object === task._id) {
-                      workStatus = "Telah Dikumpulkan"
-                      workCategoryAvatar = (
-                        <Avatar className={classes.assignmentTurnedIn}>
-                          <AssignmentTurnedInIcon/>
-                        </Avatar>
-                      )
-                      break;
-                    }
-                  }
-                  return (
-                    <AssignmentListItem
-                      work_title={task.name}
-                      work_category_avatar={workCategoryAvatar}
-                      work_subject={all_subjects_map.get(task.subject)}
-                      work_status={workStatus}
-                      work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
-                      work_link={`/tugas-murid/${task._id}`}
-                    />
-                  )
-                })} */}
               </List>
             </ExpansionPanel>
             <ExpansionPanel disabled>
@@ -632,38 +603,40 @@ function ViewClass(props) {
             })}
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <div style={{padding: "20px", marginBottom: "40px"}}>
-              <Typography variant="h4" gutterBottom>
-                Wali Kelas
-              </Typography>
-              <Divider className={classes.personListDivider} />
-              <List className={classes.listContainer}>
-                {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
-                  null
-                :
-                  <PersonListItem
-                    person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
-                    person_name={all_teachers.get(kelas.walikelas).name}
-                    person_role={all_teachers.get(kelas.walikelas).subject_teached}
-                  />
-                }
-              </List>
-            </div>
-            <div style={{padding: "20px"}}>
-              <Typography variant="h4" gutterBottom>
-                Murid
-              </Typography>
-              <Divider className={classes.personListDivider} />
-              <List className={classes.listContainer}>
-                {students_by_class.map((student) => (
-                  <PersonListItem
-                    person_avatar={`/api/upload/avatar/${student.avatar}`}
-                    person_name={student.name}
-                    person_role={student.role === "Student" ? "Murid" : null}
-                  />
-                ))}
-              </List>
-            </div>
+            <Paper>
+              <div style={{padding: "20px", marginBottom: "40px"}}>
+                <Typography variant="h4" gutterBottom>
+                  Wali Kelas
+                </Typography>
+                <Divider className={classes.personListDivider} />
+                <List className={classes.listContainer}>
+                  {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+                    null
+                  :
+                    <PersonListItem
+                      person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
+                      person_name={all_teachers.get(kelas.walikelas).name}
+                      person_role={all_teachers.get(kelas.walikelas).subject_teached}
+                    />
+                  }
+                </List>
+              </div>
+              <div style={{padding: "20px"}}>
+                <Typography variant="h4" gutterBottom>
+                  Murid
+                </Typography>
+                <Divider className={classes.personListDivider} />
+                <List className={classes.listContainer}>
+                  {students_by_class.map((student) => (
+                    <PersonListItem
+                      person_avatar={`/api/upload/avatar/${student.avatar}`}
+                      person_name={student.name}
+                      person_role={student.role === "Student" ? "Murid" : null}
+                    />
+                  ))}
+                </List>
+              </div>
+            </Paper>
           </TabPanel>
         </div>
       }

@@ -84,10 +84,10 @@ function TaskListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4" color="primary">
-        <b>Daftar Tugas</b>
+      <Typography variant="h4">
+        Daftar Tugas
       </Typography>
-      <div style={{display: "flex"}}>
+      <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {role === "Student" ?
             null
@@ -114,9 +114,9 @@ function TaskListToolbar(props) {
           }
         </Hidden>
         <LightTooltip title="Urutkan Tugas">
-          <Fab size="small" onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
-          </Fab>
+          </IconButton>
         </LightTooltip>
         <Menu
           keepMounted
@@ -176,7 +176,12 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px",
+    alignItems: "center",
+  },
+  titleDivider: {
+    backgroundColor: theme.palette.primary.main,
+    marginTop: "15px",
+    marginBottom: "15px",
   },
   newTaskButton: {
     marginRight: "10px",
@@ -197,9 +202,11 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
   },
   sortButton: {
-    backgroundColor: "white",
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
     "&:focus, &:hover": {
-      backgroundColor: "white",
+      backgroundColor: theme.palette.divider,
+      color: "black",
     },
   },
   visuallyHidden: {
@@ -438,140 +445,141 @@ function TaskList(props) {
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
       />
-        <Grid container direction="column" spacing={2}>
-        {stableSort(rows, getComparator(order, orderBy))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
-            return (
-              <Grid item>
-                {user.role === "Teacher" ?
-                  <ExpansionPanel
-                    button
-                    variant="outlined"
-                  >
-                    <ExpansionPanelSummary className={classes.taskPanelSummary}>
-                      <Grid container spacing={1} justify="space-between" alignItems="center">
+      <Divider variant="inset" className={classes.titleDivider} />
+      <Grid container direction="column" spacing={2}>
+      {stableSort(rows, getComparator(order, orderBy))
+        .map((row, index) => {
+          const labelId = `enhanced-table-checkbox-${index}`;
+          let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
+          return (
+            <Grid item>
+              {user.role === "Teacher" ?
+                <ExpansionPanel
+                  button
+                  variant="outlined"
+                >
+                  <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                    <Grid container spacing={1} justify="space-between" alignItems="center">
+                      <Grid item>
+                        <Hidden smUp implementation="css">
+                          <Typography variant="subtitle1" id={labelId}>
+                            {row.tasktitle}
+                          </Typography>
+                          <Typography variant="caption" color="textSecondary">
+                            {all_subjects_map.get(row.subject)}
+                          </Typography>
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <Typography variant="h6" id={labelId}>
+                            {row.tasktitle}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            {all_subjects_map.get(row.subject)}
+                          </Typography>
+                        </Hidden>
+                      </Grid>
+                      <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
-                              {row.tasktitle}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.tasktitle}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          </Hidden>
-                        </Grid>
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Lebih Lanjut">
-                              <Link to={viewpage}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewTaskButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <Link to={`/sunting-tugas/${row._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.editTaskButton}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Hapus">
+                          <LightTooltip title="Lihat Lebih Lanjut">
+                            <Link to={viewpage}>
                               <IconButton
                                 size="small"
-                                className={classes.deleteTaskButton}
-                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.tasktitle)}}
+                                className={classes.viewTaskButton}
                               >
-                                <DeleteIcon fontSize="small" />
+                                <PageviewIcon fontSize="small" />
                               </IconButton>
-                            </LightTooltip>
-                          </Grid>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Sunting">
+                            <Link to={`/sunting-tugas/${row._id}`}>
+                              <IconButton
+                                size="small"
+                                className={classes.editTaskButton}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Hapus">
+                            <IconButton
+                              size="small"
+                              className={classes.deleteTaskButton}
+                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.tasktitle)}}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
                         </Grid>
                       </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider className={classes.taskPanelDivider} />
-                    <ExpansionPanelDetails>
-                      <Grid conntainer direction="column">
-                        <Grid item>
-                          <Typography variant="body1" gutterBottom>
-                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
-                             row.class_assigned.map((id,i) => {
+                    </Grid>
+                  </ExpansionPanelSummary>
+                  <Divider className={classes.taskPanelDivider} />
+                  <ExpansionPanelDetails>
+                    <Grid conntainer direction="column">
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
+                           row.class_assigned.map((id,i) => {
 
-                              if(all_classes_map.get(id)){
-                                if (i === row.class_assigned.length - 1)
-                                  return (`${all_classes_map.get(id).name}`)
-                                return (`${all_classes_map.get(id).name}, `)
-                              }
-                              return null
-                             })
+                            if(all_classes_map.get(id)){
+                              if (i === row.class_assigned.length - 1)
+                                return (`${all_classes_map.get(id).name}`)
+                              return (`${all_classes_map.get(id).name}, `)
                             }
-                          </Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography variant="body2" className={classes.deadlineWarningText}>
-                             Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
-                          </Typography>
-                        </Grid>
+                            return null
+                           })
+                          }
+                        </Typography>
                       </Grid>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                :
-                <Link to={viewpage}>
-                  <Paper
-                    button component="a"
-                    variant="outlined"
-                    className={classes.taskPaper}
-                  >
-                    <div>
-                      <Typography variant="h6" id={labelId}>
-                        {row.tasktitle}
+                      <Grid item>
+                        <Typography variant="body2" className={classes.deadlineWarningText}>
+                           Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              :
+              <Link to={viewpage}>
+                <Paper
+                  button component="a"
+                  variant="outlined"
+                  className={classes.taskPaper}
+                >
+                  <div>
+                    <Typography variant="h6" id={labelId}>
+                      {row.tasktitle}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {all_subjects_map.get(row.subject)}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Hidden smUp implementation="css">
+                      <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
+                        Batas Waktu:
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {all_subjects_map.get(row.subject)}
+                      <Typography variant="caption" align="right" className={classes.deadlineWarningText}>
+                        {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
                       </Typography>
-                    </div>
-                    <div>
-                      <Hidden smUp implementation="css">
-                        <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
-                          Batas Waktu:
-                        </Typography>
-                        <Typography variant="caption" align="right" className={classes.deadlineWarningText}>
-                          {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
-                        </Typography>
-                      </Hidden>
-                      <Hidden xsDown implementation="css">
-                        <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
-                          Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
-                        </Typography>
-                      </Hidden>
-                    </div>
-                  </Paper>
-                  </Link>
-                }
-              </Grid>
-            );
-          })}
-        </Grid>
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                      <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
+                        Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                      </Typography>
+                    </Hidden>
+                  </div>
+                </Paper>
+                </Link>
+              }
+            </Grid>
+          );
+        })}
+      </Grid>
     </div>
   );
 }

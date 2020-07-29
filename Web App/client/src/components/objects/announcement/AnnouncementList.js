@@ -8,7 +8,7 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Fab, Grid, Hidden, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Divider, Fab, Grid, Hidden, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -22,7 +22,12 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "15px",
+    alignItems: "center",
+  },
+  titleDivider: {
+    backgroundColor: theme.palette.primary.main,
+    marginTop: "15px",
+    marginBottom: "15px",
   },
   newAnnouncementButton: {
     backgroundColor: "#61BD4F",
@@ -117,22 +122,21 @@ function AnnouncementList(props) {
   const listAnnouncements = () => {
     let annList = [];
     console.log(selectedAnnouncements, retrieved_users)
-    if(selectedAnnouncements.length && retrieved_users.size){
-      
-      for(var i = selectedAnnouncements.length-1; i >= 0; i--){
+    if(selectedAnnouncements.length && retrieved_users.size) {
+      for(var i = selectedAnnouncements.length-1; i >= 0; i--) {
         // retrieved users ini bulk request, dapat data user"nya satu"
-          annList.push(
-            <AnnouncementItemList
-              sender_icon={<AccountCircleIcon />}
-              author_name={!retrieved_users.get(selectedAnnouncements[i].author_id) ? null: retrieved_users.get(selectedAnnouncements[i].author_id).name}
-              notification_title={selectedAnnouncements[i].title}
-              notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
-              date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}
-              time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
-            />
-          )
+        annList.push(
+          <AnnouncementItemList
+            sender_icon={<AccountCircleIcon />}
+            author_name={!retrieved_users.get(selectedAnnouncements[i].author_id) ? null: retrieved_users.get(selectedAnnouncements[i].author_id).name}
+            notification_title={selectedAnnouncements[i].title}
+            notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
+            date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}
+            time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
+          />
+        )
+      }
     }
-  }
     return annList;
   }
 
@@ -147,8 +151,8 @@ function AnnouncementList(props) {
   return (
     <div className={classes.root}>
       <div className={classes.toolbar}>
-        <Typography variant="h4" color="primary">
-          <b>Daftar Pengumuman</b>
+        <Typography variant="h4">
+          Daftar Pengumuman
         </Typography>
         {canAnnounce() ?
             <div>
@@ -174,6 +178,7 @@ function AnnouncementList(props) {
             null
           }
       </div>
+      <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
         {listAnnouncements()}
       </Grid>
