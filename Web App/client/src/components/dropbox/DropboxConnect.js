@@ -8,6 +8,7 @@ import FileList from "./FileList/FIleList.js";
 import "./DropboxConnect.css";
 import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { FaDropbox } from "react-icons/fa";
@@ -28,46 +29,6 @@ const useStyles = makeStyles((theme) => ({
       height: "75px",
     },
   },
-  listItem: {
-    padding: "10px 20px 10px 20px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
-    },
-  },
-  createButton: {
-    backgroundColor: "#61BD4F",
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: "#61BD4F",
-    },
-  },
-  menuItem: {
-    "&:hover": {
-      backgroundColor: "#61BD4F",
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-      },
-    },
-  },
-  containerLogin: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexFlow: "column wrap",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    position: "relative",
-  },
-  closeButton: {
-    width: "100%",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
   connectButton: {
     width: "100%",
     maxWidth: "300px",
@@ -78,11 +39,30 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  closeButton: {
+    color: theme.palette.error.main,
+    "&:focus, &:hover": {
+      color: theme.palette.error.dark,
+    },
+  },
+  searchButton: {
+    color: theme.palette.primary.main,
+    "&:focus, &:hover": {
+      color: theme.palette.primary.dark,
+    },
+  },
   viewDirectory: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    fontFamily: "Franklin Gothic",
+    marginTop: "10px",
+    marginBottom: "5px",
   },
-  iconDirectory: {
+  viewDirectoryPath: {
+    fontFamily: "Franklin Gothic",
+    cursor: "pointer",
+  },
+  homeDirectoryIcon: {
     marginRight: theme.spacing(0.5),
     width: 20,
     height: 20,
@@ -117,97 +97,99 @@ function DropboxConnect(props) {
         });
     }
     // eslint-disable-next-line
-}, [dropbox_token]);
+  }, [dropbox_token]);
 
-useEffect(() => {
-  let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
-  dropbox
-    .filesListFolder({ path: path })
-    .then((response) => {
-      console.log("resonse.entries", response.entries);
-      updateAllDocs(response.entries);
-    })
-    .catch((response) => {
-      console.log(response.error.error_summary);
-    });
-}, [path])
+  useEffect(() => {
+    let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+    dropbox
+      .filesListFolder({ path: path })
+      .then((response) => {
+        console.log("resonse.entries", response.entries);
+        updateAllDocs(response.entries);
+      })
+      .catch((response) => {
+        console.log(response.error.error_summary);
+      });
+  }, [path])
 
 
-const handleUpdatePath = useCallback((path) => {
-  updatePath(path)
-},[])
+  const handleUpdatePath = useCallback((path) => {
+    updatePath(path)
+  },[])
 
-const getLinkToFile = useCallback((path) => {
-  // console.log(path);
-  let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+  const getLinkToFile = useCallback((path) => {
+    // console.log(path);
+    let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
 
-  dropbox
-    .filesGetTemporaryLink({ path: path})
-    .then((response) => {
-      window.location.href = response.link
-    })
-    .catch((error) => {
-      console.error(error, 'Error by downloading file');
-    })
-},[dropbox_token]);
+    dropbox
+      .filesGetTemporaryLink({ path: path})
+      .then((response) => {
+        window.location.href = response.link
+      })
+      .catch((error) => {
+        console.error(error, "Error by downloading file");
+      })
+  },[dropbox_token]);
 
-const ViewDirectory = (folders) => {
-  const classes = useStyles();
+  const ViewDirectory = (folders) => {
+    const classes = useStyles();
 
-  let folders_name = folders.split("/")
-  let traverse_dir = "";
-  let dir_list = [];
+    let folders_name = folders.split("/")
+    let traverse_dir = "";
+    let dir_list = [];
 
-  for ( var i = 1; i < folders_name.length; i++){
-    traverse_dir += `/${folders_name[i]}`
-    dir_list.push(traverse_dir)
-  }
+    for (var i = 1; i < folders_name.length; i++) {
+      traverse_dir += `/${folders_name[i]}`
+      dir_list.push(traverse_dir)
+    }
 
-  return (
-    <div className={classes.root}>
-      <Breadcrumbs component="div" className={classes.viewDirectory} separator={<NavigateNextIcon fontSize="small" />}>
-        <Grid container onClick={() => handleUpdatePath("")}>
-          <HomeIcon color={path ? "textSecondary" : "primary"} className={classes.iconDirectory}/>
-          <Typography color={path ? "textSecondary" : "primary"} style={{ cursor: "pointer"}}>
+    return (
+      <Breadcrumbs
+        component="div"
+        separator={<NavigateNextIcon fontSize="small" />}
+        className={classes.viewDirectory}
+      >
+        <div onClick={() => handleUpdatePath("")} style={{display: "flex"}}>
+          <HomeIcon color={path ? "textPrimary" : "primary"} className={classes.homeDirectoryIcon}/>
+          <Typography color={path ? "textPrimary" : "primary"} className={classes.viewDirectoryPath}>
             Dropbox
           </Typography>
-        </Grid>
+        </div>
         {folders_name.map((name,i) => {
-          if(i !== 0){
+          if (i !== 0) {
             return(
-          <Grid item onClick={() => handleUpdatePath(dir_list[i-1])}>
-            <Typography color={ i === folders_name.length - 1 ? "primary" : "textSecondary"} style={{ cursor: "pointer"}}>
-              {name}
-            </Typography>
-          </Grid>
-          )}})
+              <Grid item onClick={() => handleUpdatePath(dir_list[i-1])}>
+                <Typography color={ i === folders_name.length - 1 ? "primary" : "textPrimary"} className={classes.viewDirectoryPath}>
+                  {name}
+                </Typography>
+              </Grid>
+            )
+          }})
         }
       </Breadcrumbs>
-    </div>
-  );
-}
-
-const onChange = (e) => {
-  switch(e.target.id){
-    case "searchFilter":
-      setSearchFilter(e.target.value)
-      break;
-
-    default:
-      break;
+    );
   }
-}
 
-const handleCloseDropbox = () => {
-  console.log("AA")
-  console.log(localStorage.dropbox_token)
-  setDropboxToken(null)
-}
+  const onChange = (e) => {
+    switch(e.target.id){
+      case "searchFilter":
+        setSearchFilter(e.target.value)
+        break;
 
-  if(dropbox_token){
+      default:
+        break;
+    }
+  }
+
+  const handleCloseDropbox = () => {
+    console.log("AA")
+    console.log(localStorage.dropbox_token)
+    setDropboxToken(null)
+  }
+
+  if (dropbox_token) {
     console.log(searchFilter)
     console.log(allDocs)
-
     return(
       <div className={classes.root}>
         <Grid container spacing={3} alignItems="center">
@@ -223,8 +205,11 @@ const handleCloseDropbox = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid container spacing={5} alignItems="center" style={{paddingTop: "20px"}}>
-          <Grid item xs={9}>
+        <Grid container alignItems="space-between" style={{marginTop: "20px", marginBottom: "7.5px"}}>
+          <Grid item xs={6}>
+            {ViewDirectory(path)}
+          </Grid>
+          <Grid item xs={5}>
             <TextField
               fullWidth
               variant="outlined"
@@ -232,8 +217,8 @@ const handleCloseDropbox = () => {
               InputProps={{
                 endAdornment:
                   <InputAdornment position="start">
-                    <IconButton size="small">
-                      <GoSearch style={{color:"#2196f3"}}/>
+                    <IconButton size="small" className={classes.searchButton}>
+                      <GoSearch />
                     </IconButton>
                   </InputAdornment>
               }}
@@ -241,13 +226,12 @@ const handleCloseDropbox = () => {
               onChange={onChange}
             />
           </Grid>
-          <Grid item xs={3}>
-            <Button startIcon onClick={handleCloseDropbox} className={classes.closeButton}>
-              <b>Tutup Dropbox</b>
-            </Button>
+          <Grid item xs={1}>
+            <IconButton onClick={handleCloseDropbox} className={classes.closeButton}>
+              <ExitToAppIcon />
+            </IconButton>
           </Grid>
         </Grid>
-        {ViewDirectory(path)}
         <FileList allDocs={allDocs} updatePath={handleUpdatePath} getLinkToFile={getLinkToFile}/>
       </div>
     )
