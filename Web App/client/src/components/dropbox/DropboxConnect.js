@@ -149,7 +149,7 @@ function DropboxConnect(props) {
       .catch((response) => {
         console.log(response.error.error_summary);
       });
-    
+
   }, [path, dropbox_token])
 
   const handleUpdatePath = useCallback((path) => {
@@ -227,14 +227,16 @@ function DropboxConnect(props) {
               }}
             />
           </Grid>
+          <LightTooltip title="Matikan Dropbox">
             <IconButton onClick={handleCloseDropbox} className={classes.closeButton}>
               <ExitToAppIcon />
             </IconButton>
+          </LightTooltip>
         </Grid>
         <FileList
           searchFilter={searchFilter}
           allDocs={allDocs}
-          updatePath={handleUpdatePath} 
+          updatePath={handleUpdatePath}
           getLinkToFile={getLinkToFile}/>
       </div>
     )

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   container: {
-    maxHeight: 440
+    maxHeight: "440px",
   },
   wordFileTypeIcon: {
     marginRight: "10px",
