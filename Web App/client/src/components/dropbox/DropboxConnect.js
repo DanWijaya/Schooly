@@ -4,7 +4,7 @@ import { Dropbox } from "dropbox";
 import { tokenUrl } from "../../utils/getDropboxToken";
 import PropTypes from "prop-types";
 import { setDropboxToken } from "../../actions/UserActions";
-import FileList from "./FileList/FileList.js";
+import FileList from "./filelist/FileList.js";
 import "./DropboxConnect.css";
 import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
