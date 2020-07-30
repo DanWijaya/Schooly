@@ -161,10 +161,10 @@ const useStyles = makeStyles((theme) => ({
   },
   newMaterialButton: {
     marginRight: "10px",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },

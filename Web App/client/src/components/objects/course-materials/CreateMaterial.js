@@ -81,10 +81,10 @@ const styles = (theme) => ({
   createMaterialButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },
@@ -101,10 +101,10 @@ const styles = (theme) => ({
   uploadFinishButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },
@@ -301,10 +301,10 @@ class CreateMaterial extends Component {
   }
 
   render() {
-    const { classes, success}  = this.props;
+    const { classes, success }  = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran}  = this.state;
+    const { class_assigned, fileLampiran }  = this.state;
     const { errors } = this.props;
     const { user } = this.props.auth
 

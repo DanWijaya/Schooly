@@ -80,10 +80,10 @@ const styles = (theme) => ({
   createAnnouncementButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },
@@ -100,10 +100,10 @@ const styles = (theme) => ({
   uploadFinishButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },
