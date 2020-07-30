@@ -2,11 +2,11 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
-import { FaFolder, FaStar, FaRegStar, FaFile, FaFilePdf, FaBars } from 'react-icons/fa';
+import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint } from 'react-icons/fa';
 import { convertDate } from './convertDate.js';
 import { convertBytes } from './convertBytes.js';
 import { Dropbox } from "dropbox";
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from "@material-ui/core";
+import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography} from "@material-ui/core";
 
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
@@ -20,6 +20,55 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     maxHeight: 440
+  },
+  wordFileTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "#16B0DD",
+  },
+  excelFileTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "#68C74F",
+  },
+  imageFileTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "#974994",
+  },
+  pdfFileTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "#E43B37",
+  },
+  textFileTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "#F7BC24",
+  },
+  presentationFileTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "#FD931D",
+  },
+  folderTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "transparent",
+    color: theme.palette.primary.main
+  },
+  otherFileTypeIcon: {
+    marginRight: "10px",
+    width: theme.spacing(2.25),
+    height: theme.spacing(2.5),
+    backgroundColor: "#808080",
   },
 }));
 
@@ -58,7 +107,7 @@ function FileList(props) {
 
   const rows = allDocs.map((doc) => createData(doc.name, 
     doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--", 
-    convertDate(doc.client_modified),  doc['.tag'] !== "folder" ? path.extname(doc.name): "Folder", doc.path_display ))
+    convertDate(doc.client_modified),  doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display ))
 
   const handleClickItem = (event, file_tag, file_path) => {
     if(file_tag === "Folder"){
@@ -97,15 +146,90 @@ function FileList(props) {
 		updateMoveModal(true);
 	}
 
-	// const handleClickOutside = useCallback((e) => {
-	// 	if (nodeDropdown.current.contains(e.target)) {
-	// 		// inside click
-	// 		return;
-	// 	}
-	// 	// outside click 
-	// 	showDropDown(dropDown);
-  // }, [showDropDown, dropDown]);
+  function fileType(filename) {
+    let ext_file = path.extname(filename)
+    switch(ext_file) {
+      case ".docx" : return "Word"
+      case ".xlsx" :
+      case ".csv"  : return "Excel"
   
+      case ".png" :
+      case ".jpg" :
+      case ".jpeg" : return "Gambar"
+  
+      case ".pdf" : return "PDF"
+  
+      case ".txt" :
+      case ".rtf" : return "Teks"
+  
+      case ".ppt" :
+      case ".pptx" : return "Presentasi"
+  
+      default: return "File Lainnya"
+    }
+  }
+  
+  function fileIcon(filename, type) {
+    let ext_file = path.extname(filename)
+    if(type === "Folder")
+      return( 
+      <Avatar variant="rounded" className={classes.folderTypeIcon}>
+        <FaFolder />
+      </Avatar>)
+    else{
+    switch(ext_file) {
+      case ".docx" : 
+        return( 
+        <Avatar variant="rounded" className={classes.wordFileTypeIcon}>
+          <FaFileWord />
+        </Avatar>)
+  
+      case ".xlsx" :
+      case ".csv"  : 
+        return( 
+        <Avatar variant="rounded" className={classes.excelFileTypeIcon}>
+         <FaFileExcel />
+        </Avatar>)
+  
+      case ".png" :
+      case ".jpg" :
+      case ".jpeg" : 
+        return (
+          <Avatar variant="rounded" className={classes.imageFileTypeIcon}>
+            <FaFileImage />
+          </Avatar>
+          )
+  
+      case ".pdf" : 
+        return(
+          <Avatar variant="rounded" className={classes.pdfFileTypeIcon}>
+            <FaFilePdf/>
+          </Avatar>
+          )
+  
+      case ".txt" :
+      case ".rtf" : 
+        return (
+          <Avatar variant="rounded" className={classes.textFileTypeIcon}>
+            <FaFileAlt />
+          </Avatar>
+        )
+  
+      case ".ppt" :
+      case ".pptx" : 
+        return (
+          <Avatar variant="rounded" className={classes.presentationFileTypeIcon}>
+            <FaFilePowerpoint />
+          </Avatar>
+          )
+  
+      default: return null
+    }
+  }
+  
+    
+  }
+
   console.log(rows)
   return (
     <Paper className={classes.root}>
@@ -148,15 +272,23 @@ function FileList(props) {
             </TableRow>
           </TableHead>
           <TableBody>
+
+          <ListItemAvatar>
+          
+        </ListItemAvatar>
+
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover style={{cursor: "pointer"}} role="checkbox" tabIndex={-1} key={row.code} onClick={(event) => handleClickItem(event, row.type, row.path_display)}>
                   {columns.map((column) => {
                     const value = row[column.id];
                     let width;
+                    let icon=null;
+          
                     switch(column.id){
                       case "name":
                         width= "50%"
+                        icon=fileIcon(row.name, row.type)
                         break
                       
                       case "size":
@@ -176,7 +308,11 @@ function FileList(props) {
                     }
                     return (
                       <TableCell key={column.id} align={column.align} style={{width: width}}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                        <Typography style={{display: "flex", flexDirection:"row", alignItems:"center"}}>
+                          {icon}
+                          {value}
+                        </Typography>
+                        {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
                       </TableCell>
                     );
                   })}

@@ -29,6 +29,7 @@ Daniel:
 9. Perbaiki Subject object di task untuk  refer ke ID, karena subject nya udah editable juga...
 10. (HERAN) Untuk safari, masih ada masalah di upload fotonya klo lebih dari satu kali.
 11. Mungkin masukkin warning kalo file size kebesaran (cthnya ndak boleh exceed 512mb)
+12. Dropbox preview file: https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/get-preview-returning-unsupported-extension-for-pdf-jpeg/td-p/372374
 20. Ganti hardcode link di app sama dropbox
 
 IMPORTANT:
