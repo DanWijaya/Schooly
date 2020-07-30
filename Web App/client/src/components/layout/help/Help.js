@@ -175,8 +175,8 @@ function Help(props) {
                         <b>Bagaimana cara saya untuk meregistrasi akun Schooly saya?</b>
                       </Typography>
                       <Typography>
-                        Silahkan hubungi pengelola Schooly pada sekolah anda untuk memberikan tautan untuk registrasi akun
-                        anda sesuai dengan kebutuhan anda (Guru atau Murid).
+                        Silahkan hubungi pengelola Schooly pada sekolah Anda untuk memberikan tautan untuk registrasi akun
+                        Anda sesuai dengan kebutuhan Anda (Guru atau Murid).
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -184,7 +184,7 @@ function Help(props) {
                         <b>Apa yang perlu dilakukan jika saya lupa email saya?</b>
                       </Typography>
                       <Typography>
-                        Silahkan hubungi pengelola Schooly pada sekolah anda untuk mendapatkan email akun anda.
+                        Silahkan hubungi pengelola Schooly pada sekolah Anda untuk mendapatkan email akun Anda.
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -194,9 +194,9 @@ function Help(props) {
                       <Typography>
                         Masuk ke halaman masuk schooly. Pada bagian bawah formulir masuk,
                         tekan tautan "Lupa Kata Sandi" yang akan mengarah kepada halaman untuk mengganti kata sandi.
-                        Pada halaman tersebut, masukkan alamat email akun anda, kemudian sistem akan mengirimkan
+                        Pada halaman tersebut, masukkan alamat email akun Anda, kemudian sistem akan mengirimkan
                         pesan yang hanya berlaku selama 5 menit jika tidak diklik kepada alamat email yang bersangkutan
-                        untuk mengganti kata sandi anda.
+                        untuk mengganti kata sandi Anda.
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -204,7 +204,7 @@ function Help(props) {
                         <b>Apa yang perlu dilakukan jika saya akun saya belum aktif?</b>
                       </Typography>
                       <Typography>
-                        Hubungi pengelola sekolah anda untuk mengaktifkan akun anda.
+                        Hubungi pengelola sekolah Anda untuk mengaktifkan akun Anda.
                       </Typography>
                     </Grid>
                     { user.role === "Admin" ?
@@ -215,17 +215,17 @@ function Help(props) {
                           <Typography paragraph>
                             <ol>
                               <li>
-                                Masuk dengan akun pengelola sekolah anda.
+                                Masuk dengan akun pengelola sekolah Anda.
                               </li>
                               <li>
-                                Undang guru-guru dan murid-murid di sekolah anda dengan mengirim tautan untuk registrasi
+                                Undang guru-guru dan murid-murid di sekolah Anda dengan mengirim tautan untuk registrasi
                                 yang dapat diakses pada halaman "Beranda" yang dapat ditemukan pada bagian kiri aplikasi
                                 (tautan tersebut hanya berlaku pada waktu yang terbatas).
                               </li>
                               <li>
-                                Buat kelas-kelas yang anda butuhkan yang dapat diakses dengan pada halaman "Kelas"
+                                Buat kelas-kelas yang Anda butuhkan yang dapat diakses dengan pada halaman "Kelas"
                                 yang dapat ditemukan pada bagian kiri aplikasi (Anda akan diarahkan ke suatu halaman yang berisi
-                                daftar kelas anda), kemudian klik tombol "Buat Kelas".
+                                daftar kelas Anda), kemudian klik tombol "Buat Kelas".
                               </li>
                               <li>
                                 Lakukan penyuntingan kelas untuk memberikan peran murid seperti Ketua Kelas, Sekretaris, dan Bendahara.
@@ -239,7 +239,7 @@ function Help(props) {
                       :
                         <Grid item>
                           <Typography align="center" color="primary">
-                            <b>Silahkan masuk ke akun Schooly anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
+                            <b>Silahkan masuk ke akun Schooly Anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
                           </Typography>
                         </Grid>
                     }
@@ -326,7 +326,7 @@ function Help(props) {
                       :
                       <Grid item>
                         <Typography align="center" color="primary">
-                          <b>Silahkan masuk ke akun Schooly anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
+                          <b>Silahkan masuk ke akun Schooly Anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
                         </Typography>
                       </Grid>
                     }
@@ -374,14 +374,14 @@ function Help(props) {
                                   Tekan tombol "Pilih File" pada halaman tugas yang bersangkutan.
                                 </li>
                                 <li>
-                                  Pilih file-file yang ingin anda kumpulkan. <br />
+                                  Pilih file-file yang ingin Anda kumpulkan. <br />
                                   Tips: Tahan tombol "CTRL" dan menekan klik kiri pada mouse untuk memilih file dalam jumlah banyak.
                                 </li>
                                 <li>
-                                  File yang anda pilih akan muncul pada daftar "File Terpilih".
+                                  File yang Anda pilih akan muncul pada daftar "File Terpilih".
                                 </li>
                                 <li>
-                                  Tekan tombol kumpul tugas untuk mengunggah file anda. File anda yang terkumpul akan muncul pada daftar di bagian
+                                  Tekan tombol kumpul tugas untuk mengunggah file Anda. File Anda yang terkumpul akan muncul pada daftar di bagian
                                   hasil pekeraan.
                                 </li>
                               </ol>
@@ -457,7 +457,7 @@ function Help(props) {
                       :
                       <Grid item>
                         <Typography align="center" color="primary">
-                          <b>Silahkan masuk ke akun Schooly anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
+                          <b>Silahkan masuk ke akun Schooly Anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
                         </Typography>
                       </Grid>
                     }
@@ -472,7 +472,7 @@ function Help(props) {
             Ada yang bisa kami bantu?
           </Typography>
           <Typography variant="h6" className={classes.moreHelpText}>
-            Masih belum menemukan solusi dari permasalahan anda? Silahkan hubungi kami.
+            Masih belum menemukan solusi dari permasalahan Anda? Silahkan hubungi kami.
           </Typography>
         </div>
         <Grid container spacing={2} justify="center" alignItems="center">

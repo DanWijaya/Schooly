@@ -92,7 +92,7 @@ class ResetPassword extends Component {
                 <b>Ubah Kata Sandi</b>
               </Typography>
               <Typography variant="body1" align="center" color="textSecondary">
-                Masukkan Kata Sandi baru anda
+                Masukkan Kata Sandi baru Anda
               </Typography>
             </Grid>
             <Grid item>

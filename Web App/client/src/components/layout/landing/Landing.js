@@ -180,7 +180,7 @@ class Landing extends Component {
                 Akses dengan mudah di mana saja.
               </Typography>
               <Typography>
-                Buka dan gunakan Schooly dengan mudah pada browser anda di perangkat apa saja,
+                Buka dan gunakan Schooly dengan mudah pada browser Anda di perangkat apa saja,
                 dimana saja, dan kapan saja.
               </Typography>
             </Grid>
@@ -243,7 +243,7 @@ class Landing extends Component {
           Siap untuk Schooly?
         </Typography>
         <Typography paragraph>
-          Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin Tautan" untuk mengirim tautan ini ke sekolah anda.
+          Klik tombol "Kirim Pesan" untuk menghubungi kami atau tombol "Salin Tautan" untuk mengirim tautan ini ke sekolah Anda.
         </Typography>
         <div style={{display: "flex", justifyContent: "space-between"}}>
           <Button
