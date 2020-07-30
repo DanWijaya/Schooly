@@ -14,7 +14,7 @@ function DropboxAuth(props) {
     const accessToken = queryString.parse(window.location.hash).access_token;
     setDropboxToken(accessToken)
     updateTokenSaved(true)
-  }, [])
+  }, [setDropboxToken])
 
   return tokenSaved ? <Redirect to="/dropbox-connect"/> : null;
   

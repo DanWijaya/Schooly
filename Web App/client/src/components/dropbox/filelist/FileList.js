@@ -7,10 +7,11 @@ import { convertDate } from './convertDate.js';
 import { convertBytes } from './convertBytes.js';
 import { Dropbox } from "dropbox";
 import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography} from "@material-ui/core";
-
+import moment from "moment";
+import "moment/locale/id";
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
-const path = require("path");
+import path from "path";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -107,7 +108,7 @@ function FileList(props) {
 
   const rows = allDocs.map((doc) => createData(doc.name,
     doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",
-    convertDate(doc.client_modified),  doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display ))
+    "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),  doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display ))
 
   const handleClickItem = (event, file_tag, file_path) => {
     if(file_tag === "Folder"){
@@ -245,15 +246,15 @@ function FileList(props) {
                     break
 
                   case "size":
-                    width = "20%"
+                    width = "5%"
                     break
 
                   case "modified":
-                    width = "20%"
+                    width = "25%"
                     break
 
                   case "type":
-                    width = "10%"
+                    width = "20%"
                     break
 
                   default:
