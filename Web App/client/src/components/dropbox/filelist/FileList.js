@@ -104,7 +104,8 @@ function FileList(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const {allDocs, updatePath, getLinkToFile } = props;
+  
+  const {allDocs, updatePath, getLinkToFile, searchFilter } = props;
 
   const rows = allDocs.map((doc) => createData(doc.name,
     doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",
@@ -275,7 +276,9 @@ function FileList(props) {
           <TableBody>
           <ListItemAvatar>
         </ListItemAvatar>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {rows.filter(row => row.name.toLowerCase().includes(searchFilter.toLowerCase()))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => {
               return (
                 <TableRow hover style={{cursor: "pointer"}} role="checkbox" tabIndex={-1} key={row.code} onClick={(event) => handleClickItem(event, row.type, row.path_display)}>
                   {columns.map((column) => {
@@ -315,8 +318,8 @@ function FileList(props) {
                     );
                   })}
                 </TableRow>
-              );
-            })}
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>

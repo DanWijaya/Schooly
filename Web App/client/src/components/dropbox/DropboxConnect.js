@@ -113,12 +113,11 @@ function DropboxConnect(props) {
   const classes = useStyles();
   // const [documents, updateDocs] = useState([]);
   // const [choosenFiles, updateChoosenFiles] = useState([]);
-  // const [search, updateSearch] = useState("");
-  const [userName, updateUserName] = useState("");
   // const [dropDown, updateDropDown] = useState(false);
-  const [searchFilter, setSearchFilter ] = useState("");
+  const [searchFilter, updateSearchFilter ] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
   const [path, updatePath] = useState("");
+  const [userName, updateUserName] = useState("");
   // const nodeDropdown = useRef();
   const { setDropboxToken } = props;
   const { dropbox_token } = props.auth;
@@ -145,12 +144,13 @@ function DropboxConnect(props) {
       .then((response) => {
         console.log("resonse.entries", response.entries);
         updateAllDocs(response.entries);
+        updateSearchFilter("") // ini untuk clear search filter tiap kali ganti directory
       })
       .catch((response) => {
         console.log(response.error.error_summary);
       });
+    
   }, [path, dropbox_token])
-
 
   const handleUpdatePath = useCallback((path) => {
     updatePath(path)
@@ -170,11 +170,11 @@ function DropboxConnect(props) {
       })
   },[dropbox_token]);
 
-
   const onChange = (e) => {
     switch(e.target.id){
       case "searchFilter":
-        setSearchFilter(e.target.value)
+        console.log(e.target.value)
+        updateSearchFilter(e.target.value)
         break;
 
       default:
@@ -231,7 +231,11 @@ function DropboxConnect(props) {
               <ExitToAppIcon />
             </IconButton>
         </Grid>
-        <FileList allDocs={allDocs} updatePath={handleUpdatePath} getLinkToFile={getLinkToFile}/>
+        <FileList
+          searchFilter={searchFilter}
+          allDocs={allDocs}
+          updatePath={handleUpdatePath} 
+          getLinkToFile={getLinkToFile}/>
       </div>
     )
   }
