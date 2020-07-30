@@ -40,10 +40,10 @@ const styles = (theme) => ({
   resendEmailButton: {
     marginTop: "30px",
     width: "100%",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },

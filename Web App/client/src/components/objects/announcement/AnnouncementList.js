@@ -30,10 +30,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   newAnnouncementButton: {
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },

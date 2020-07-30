@@ -6,6 +6,7 @@ import { tokenUrl } from "../../utils/getDropboxToken";
 import PropTypes from "prop-types";
 import { setDropboxToken } from "../../actions/UserActions";
 import FileList from "./filelist/FileList.js"
+import LightTooltip from "../misc/light-tooltip/LightTooltip";
 import "./DropboxConnect.css";
 import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -232,6 +233,7 @@ function DropboxConnect(props) {
     }
   ]
 
+  document.title = "Schooly | Hubungkan ke Dropbox";
   if (dropbox_token) {
     console.log(searchFilter)
     console.log(allDocs)

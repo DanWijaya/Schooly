@@ -13,6 +13,9 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
       light: "#4791DB",
       dark: "#115293",
     },
+    create: {
+      main: "#61BD4F",
+    },
     button: {
       main: fade("#2196F3", 0.15),
     },
@@ -73,7 +76,26 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         },
       },
     },
-    MuiTextField: {
+    MuiInput: {
+      inputProps: {
+        style: {
+          borderBottom: "none",
+          boxShadow: "none",
+          margin: "0px",
+          WebkitBoxShadow: "0 0 0 1000px white inset",
+        },
+      },
+    },
+    MuiFilledInput: {
+      inputProps: {
+        style: {
+          borderBottom: "none",
+          boxShadow: "none",
+          margin: "0px 15px 0px 15px",
+        },
+      },
+    },
+    MuiOutlinedInput: {
       inputProps: {
         style: {
           borderBottom: "none",

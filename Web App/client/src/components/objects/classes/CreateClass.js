@@ -20,10 +20,10 @@ const styles = (theme) => ({
   createClassButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },

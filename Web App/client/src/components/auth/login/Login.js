@@ -31,10 +31,10 @@ const styles = (theme) => ({
   },
   loginButton: {
     width: "100%",
-    backgroundColor: "#61BD4F",
+    backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#61BD4F",
+      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },
