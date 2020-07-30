@@ -47,7 +47,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
     },
     MuiIconButton: {
       root: {
-        "&:focus": {
+        "&:focus, &:hover": {
           backgroundColor: "transparent",
         },
       },
