@@ -137,7 +137,7 @@ function About(props) {
               </Typography>
               <Typography variant="h6">
                Temukan kontak orang-orang sepersekolahan dengan mudah di Schooly.
-               Anda juga tidak akan pernah lupa lagi akan tugas sekolah anda dengan fitur pengingat baik untuk guru dan murid.
+               Anda juga tidak akan pernah lupa lagi akan tugas sekolah Anda dengan fitur pengingat baik untuk guru dan murid.
               </Typography>
             </Grid>
           </Grid>
@@ -149,7 +149,7 @@ function About(props) {
             Sudah menggunakan Schooly tetapi masih belum puas?
           </Typography>
           <Typography paragraph>
-            Bantu Schooly berkembang dengan pendapat anda. Saran maupun kritik anda sangat berarti bagi kami.
+            Bantu Schooly berkembang dengan pendapat Anda. Saran maupun kritik Anda sangat berarti bagi kami.
           </Typography>
           <Button
             variant="contained"

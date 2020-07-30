@@ -98,7 +98,7 @@ class LoginForgot extends Component {
                   <b>Lupa Kata Sandi?</b>
                 </Typography>
                 <Typography variant="body1" align="center" color="textSecondary">
-                  Masukkan email anda untuk melanjutkan.
+                  Masukkan email Anda untuk melanjutkan.
                 </Typography>
               </Grid>
               :

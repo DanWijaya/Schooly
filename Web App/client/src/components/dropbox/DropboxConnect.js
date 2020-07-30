@@ -224,11 +224,9 @@ function DropboxConnect(props) {
               }}
             />
           </Grid>
-          <Grid item xs={1}>
             <IconButton onClick={handleCloseDropbox} className={classes.closeButton}>
               <ExitToAppIcon />
             </IconButton>
-          </Grid>
         </Grid>
         <FileList allDocs={allDocs} updatePath={handleUpdatePath} getLinkToFile={getLinkToFile}/>
       </div>
@@ -237,18 +235,38 @@ function DropboxConnect(props) {
   else {
     return (
       <div className={classes.root}>
-        <Grid container direction="column" alignItems="center">
-          <Typography variant="h5" align="center">
-            Dropbox anda belum terhubung ke sistem Schooly
-          </Typography>
-          <Grid item style={{paddingTop: "20px"}}>
-            <Button
-              href={tokenUrl}
-              startIcon={<FaDropbox />}
-              className={classes.connectButton}
-            >
-              Hubungkan ke Dropbox
-            </Button>
+        <Grid container direction="column" spacing={5} alignItems="center">
+          <Grid item container spacing={3} alignItems="center">
+            <Grid item>
+              <FaDropbox className={classes.dropboxLogo} />
+            </Grid>
+            <Grid item>
+              <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
+                Dropbox
+              </Typography>
+              <Typography color="error">
+                Belum Terhubung
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item container direction="column" spacing={2} alignItems="center">
+            <Grid item>
+              <Typography align="center" gutterBottom>
+                Hubungkan ke akun Dropbox Anda ke Schooly untuk mengakses, menggunggah dan mengunduh berkas yang ada di Schooly.
+              </Typography>
+              <Typography variant="body2" align="center" color="textSecondary">
+                Dengan menghubungkan akun Dropbox Anda ke Schooly, Anda telah menyetujui <a href="https://www.dropbox.com/terms">Kebijakan Penggunan Dropbox</a>.
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                href={tokenUrl}
+                startIcon={<FaDropbox />}
+                className={classes.connectButton}
+              >
+                Hubungkan Dropbox
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </div>
