@@ -4,7 +4,7 @@ import { Dropbox } from "dropbox";
 import { tokenUrl } from "../../utils/getDropboxToken";
 import PropTypes from "prop-types";
 import { setDropboxToken } from "../../actions/UserActions";
-import FileList from "./FileList/FIleList.js";
+import FileList from "./FileList/FileList.js";
 import "./DropboxConnect.css";
 import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -67,6 +67,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function ViewDirectory (props) {
+  // Hooks only allowed to be used inside a component.
+  const classes = useStyles();
+  const {handleUpdatePath, path} = props;
+  let folders_name = path.split("/")
+  let traverse_dir = "";
+  let dir_list = [];
+
+  for (var i = 1; i < folders_name.length; i++) {
+    traverse_dir += `/${folders_name[i]}`
+    dir_list.push(traverse_dir)
+  }
+
+  return (
+    <Breadcrumbs
+      component="div"
+      separator={<NavigateNextIcon fontSize="small" />}
+      className={classes.viewDirectory}
+    >
+      <div onClick={() => handleUpdatePath("")} style={{display: "flex"}}>
+        <HomeIcon color={path ? "textPrimary" : "primary"} className={classes.homeDirectoryIcon}/>
+        <Typography color={path ? "textPrimary" : "primary"} className={classes.viewDirectoryPath}>
+          Dropbox
+        </Typography>
+      </div>
+      {folders_name.map((name,i) => {
+        if (i !== 0) {
+          return(
+            <Grid item onClick={() => handleUpdatePath(dir_list[i-1])}>
+              <Typography color={ i === folders_name.length - 1 ? "primary" : "textPrimary"} className={classes.viewDirectoryPath}>
+                {name}
+              </Typography>
+            </Grid>
+          )
+        }
+      return null
+      })
+      }
+    </Breadcrumbs>
+  );
+}
 
 function DropboxConnect(props) {
   const classes = useStyles();
@@ -108,7 +149,7 @@ function DropboxConnect(props) {
       .catch((response) => {
         console.log(response.error.error_summary);
       });
-  }, [path])
+  }, [path, dropbox_token])
 
 
   const handleUpdatePath = useCallback((path) => {
@@ -129,44 +170,6 @@ function DropboxConnect(props) {
       })
   },[dropbox_token]);
 
-  const ViewDirectory = (folders) => {
-    const classes = useStyles();
-
-    let folders_name = folders.split("/")
-    let traverse_dir = "";
-    let dir_list = [];
-
-    for (var i = 1; i < folders_name.length; i++) {
-      traverse_dir += `/${folders_name[i]}`
-      dir_list.push(traverse_dir)
-    }
-
-    return (
-      <Breadcrumbs
-        component="div"
-        separator={<NavigateNextIcon fontSize="small" />}
-        className={classes.viewDirectory}
-      >
-        <div onClick={() => handleUpdatePath("")} style={{display: "flex"}}>
-          <HomeIcon color={path ? "textPrimary" : "primary"} className={classes.homeDirectoryIcon}/>
-          <Typography color={path ? "textPrimary" : "primary"} className={classes.viewDirectoryPath}>
-            Dropbox
-          </Typography>
-        </div>
-        {folders_name.map((name,i) => {
-          if (i !== 0) {
-            return(
-              <Grid item onClick={() => handleUpdatePath(dir_list[i-1])}>
-                <Typography color={ i === folders_name.length - 1 ? "primary" : "textPrimary"} className={classes.viewDirectoryPath}>
-                  {name}
-                </Typography>
-              </Grid>
-            )
-          }})
-        }
-      </Breadcrumbs>
-    );
-  }
 
   const onChange = (e) => {
     switch(e.target.id){
@@ -205,7 +208,7 @@ function DropboxConnect(props) {
         </Grid>
         <Grid container justify="space-between" alignItems="center" style={{marginTop: "20px", marginBottom: "7.5px"}}>
           <Grid item xs={7}>
-            {ViewDirectory(path)}
+            <ViewDirectory path={path} handleUpdatePath={handleUpdatePath}/> 
           </Grid>
           <Grid item xs={4}>
             <TextField
@@ -255,7 +258,7 @@ function DropboxConnect(props) {
                 Hubungkan ke akun Dropbox Anda ke Schooly untuk mengakses, menggunggah dan mengunduh berkas yang ada di Schooly.
               </Typography>
               <Typography variant="body2" align="center" color="textSecondary">
-                Dengan menghubungkan akun Dropbox Anda ke Schooly, Anda telah menyetujui <a href="https://www.dropbox.com/terms">Kebijakan Penggunan Dropbox</a>.
+                Dengan menghubungkan akun Dropbox Anda ke Schooly, Anda telah menyetujui <a href="https://www.dropbox.com/terms" target="_blank" rel="noopener noreferrer">Kebijakan Penggunan Dropbox</a>.
               </Typography>
             </Grid>
             <Grid item>
