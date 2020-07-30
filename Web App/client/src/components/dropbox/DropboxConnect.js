@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback  } from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Dropbox } from "dropbox";
 import { tokenUrl } from "../../utils/getDropboxToken";
@@ -30,12 +31,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   connectButton: {
-    width: "100%",
     maxWidth: "300px",
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.dropbox.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.dropbox.main,
       color: "white",
     },
   },
@@ -255,13 +255,14 @@ function DropboxConnect(props) {
                 Hubungkan ke akun Dropbox Anda ke Schooly untuk mengakses, menggunggah dan mengunduh berkas yang ada di Schooly.
               </Typography>
               <Typography variant="body2" align="center" color="textSecondary">
-                Dengan menghubungkan akun Dropbox Anda ke Schooly, Anda telah menyetujui <a href="https://www.dropbox.com/terms">Kebijakan Penggunan Dropbox</a>.
+                Dengan menghubungkan akun Dropbox Anda ke Schooly, Anda telah menyetujui <a href="https://www.dropbox.com/terms">
+                Kebijakan Penggunan Dropbox</a> dan <Link to="/kebijakan-penggunaan">Kebijakan Penggunaan Schooly</Link> untuk penggunaan aplikasi pihak ketiga di Schooly.
               </Typography>
             </Grid>
             <Grid item>
               <Button
+                variant="contained"
                 href={tokenUrl}
-                startIcon={<FaDropbox />}
                 className={classes.connectButton}
               >
                 Hubungkan Dropbox
