@@ -55,8 +55,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     fontFamily: "Franklin Gothic",
-    marginTop: "10px",
-    marginBottom: "5px",
   },
   viewDirectoryPath: {
     fontFamily: "Franklin Gothic",
@@ -205,15 +203,17 @@ function DropboxConnect(props) {
             </Typography>
           </Grid>
         </Grid>
-        <Grid container alignItems="space-between" style={{marginTop: "20px", marginBottom: "7.5px"}}>
-          <Grid item xs={6}>
+        <Grid container justify="space-between" alignItems="center" style={{marginTop: "20px", marginBottom: "7.5px"}}>
+          <Grid item xs={7}>
             {ViewDirectory(path)}
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={4}>
             <TextField
               fullWidth
               variant="outlined"
               id="searchFilter"
+              value={searchFilter}
+              onChange={onChange}
               InputProps={{
                 endAdornment:
                   <InputAdornment position="start">
@@ -222,8 +222,6 @@ function DropboxConnect(props) {
                     </IconButton>
                   </InputAdornment>
               }}
-              value={searchFilter}
-              onChange={onChange}
             />
           </Grid>
           <Grid item xs={1}>
