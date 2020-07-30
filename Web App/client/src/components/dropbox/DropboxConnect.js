@@ -5,7 +5,8 @@ import { Dropbox } from "dropbox";
 import { tokenUrl } from "../../utils/getDropboxToken";
 import PropTypes from "prop-types";
 import { setDropboxToken } from "../../actions/UserActions";
-import FileList from "./FileList/FileList.js";
+import FileList from "./filelist/FileList.js";
+import LightTooltip from "../misc/light-tooltip/LightTooltip";
 import "./DropboxConnect.css";
 import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -227,9 +228,11 @@ function DropboxConnect(props) {
               }}
             />
           </Grid>
+          <LightTooltip title="Matikan Dropbox">
             <IconButton onClick={handleCloseDropbox} className={classes.closeButton}>
               <ExitToAppIcon />
             </IconButton>
+          </LightTooltip>
         </Grid>
         <FileList allDocs={allDocs} updatePath={handleUpdatePath} getLinkToFile={getLinkToFile}/>
       </div>

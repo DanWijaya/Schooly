@@ -10,7 +10,8 @@ import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { FaChalkboardTeacher, FaClipboardList, FaDropbox, FaFileSignature, FaUserCheck, FaUserClock } from "react-icons/fa";
+import { BsClipboardData } from "react-icons/bs";
+import { FaChalkboardTeacher, FaClipboardList, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -111,7 +112,7 @@ function DrawerContent(props) {
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       ["/kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
-      ["/kuis", <FaFileSignature className={classes.drawerListItemIcon} />, "Ujian"],
+      ["/kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
     ]
   }
 
