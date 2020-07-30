@@ -133,15 +133,17 @@ const handleUpdatePath = useCallback((path) => {
 
 const getLinkToFile = useCallback((path) => {
   // console.log(path);
-  let dropbox = new Dropbox({ accessToken: dropbox_token });
+  let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+  
   dropbox
-    .filesGetTemporaryLink({ path: path })
+    .filesGetTemporaryLink({ path: path})
     .then((response) => {
-      window.location.href = response.link;
+      window.location.href = response.link
     })
     .catch((error) => {
       console.error(error, 'Error by downloading file');
-    });
+    })
+
 },[dropbox_token]);
 
 const ViewDirectory = (folders) => {
