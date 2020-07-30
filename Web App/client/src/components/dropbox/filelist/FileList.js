@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useRef, useEffect, useCallback } from "./node_modules/react";
-import { Link } from './node_modules/react-router-dom';
-import { makeStyles } from "./node_modules/@material-ui/core/styles";
-import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint } from './node_modules/react-icons/fa';
-import { convertDate } from './convertDate.js';
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { Link } from 'react-router-dom';
+import { makeStyles } from "@material-ui/core/styles";
+import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint } from 'react-icons/fa';
 import { convertBytes } from './convertBytes.js';
-import { Dropbox } from "./node_modules/dropbox";
-import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography} from "./node_modules/@material-ui/core";
-import moment from "./node_modules/moment";
-import "./node_modules/moment/locale/id";
+import { Dropbox } from "dropbox";
+import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography} from "@material-ui/core";
+import moment from "moment";
+import "moment/locale/id";
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
 import path from "path";
@@ -75,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   { id: 'name', label: 'Name'},
-  { id: 'size', label: 'Ukuran File'},
+  { id: 'size', label: 'Ukuran'},
   {
     id: 'modified',
     label: 'Terakhir diubah',
@@ -83,7 +82,7 @@ const columns = [
   },
   {
     id: 'type',
-    label: 'Tipe File',
+    label: 'Tipe',
     format: (value) => value.toLocaleString('en-US'),
   },
 ];
