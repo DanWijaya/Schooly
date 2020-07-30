@@ -16,6 +16,9 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
     button: {
       main: fade("#2196F3", 0.15),
     },
+    dropbox: {
+      main: "#0D2481",
+    },
   },
   overrides: {
     MuiButton: {

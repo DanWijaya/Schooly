@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(2.7),
     height: theme.spacing(2.7),
   },
+  dropboxIcon: {
+    width: theme.spacing(2.7),
+    height: theme.spacing(2.7),
+    color: theme.palette.dropbox.main,
+  },
 }));
 
 const StyledListItem = withStyles((theme) => ({
@@ -119,7 +124,7 @@ function DrawerContent(props) {
       </List>
       <Divider />
       <List>
-        {generateList("/dropbox-connect", <FaDropbox style={{color: "#0d2481"}} className={classes.drawerListItemIcon}/>, "Dropbox")}
+        {generateList("/dropbox-connect", <FaDropbox className={classes.dropboxIcon}/>, "Dropbox")}
       </List>
     </div>
   )

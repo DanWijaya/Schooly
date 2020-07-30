@@ -1,26 +1,32 @@
 import React, { useState, useEffect, useCallback  } from "react";
-// import { tokenUrl } from "../getToken";
-import { tokenUrl } from "../../utils/getDropboxToken"
-import { makeStyles } from "@material-ui/core/styles";
-import { Dropbox } from "dropbox";
 import { connect } from "react-redux";
+import { Dropbox } from "dropbox";
+import { tokenUrl } from "../../utils/getDropboxToken";
 import PropTypes from "prop-types";
-import { GoSearch } from 'react-icons/go';
+import { setDropboxToken } from "../../actions/UserActions";
+import FileList from "./filelist/FileList";
+import "./DropboxConnect.css";
+import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import HomeIcon from "@material-ui/icons/Home";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { FaDropbox } from "react-icons/fa";
-import {Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
-import { setDropboxToken } from "../../actions/UserActions"
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import FileList from "./FileList/FileList"
-import "./DropboxConnect.css"
-import HomeIcon from '@material-ui/icons/Home';
+import { GoSearch } from "react-icons/go";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
   },
-  container: {
-    maxHeight: 440
+  dropboxLogo: {
+    color: theme.palette.dropbox.main,
+    width: "50px",
+    height: "50px",
+    [theme.breakpoints.up("sm")]: {
+      width: "75px",
+      height: "75px",
+    },
   },
   listItem: {
     padding: "10px 20px 10px 20px",
@@ -88,12 +94,12 @@ function DropboxConnect(props) {
   const classes = useStyles();
   // const [documents, updateDocs] = useState([]);
   // const [choosenFiles, updateChoosenFiles] = useState([]);
-  // const [search, updateSearch] = useState('');
+  // const [search, updateSearch] = useState("");
   const [userName, updateUserName] = useState("");
   // const [dropDown, updateDropDown] = useState(false);
   const [searchFilter, setSearchFilter ] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
-  const [path, updatePath] = useState('');
+  const [path, updatePath] = useState("");
   // const nodeDropdown = useRef();
   const { setDropboxToken } = props;
   const { dropbox_token } = props.auth;
@@ -118,7 +124,7 @@ useEffect(() => {
   dropbox
     .filesListFolder({ path: path })
     .then((response) => {
-      console.log('resonse.entries', response.entries);
+      console.log("resonse.entries", response.entries);
       updateAllDocs(response.entries);
     })
     .catch((response) => {
@@ -140,7 +146,7 @@ const getLinkToFile = useCallback((path) => {
       window.location.href = response.link;
     })
     .catch((error) => {
-      console.error(error, 'Error by downloading file');
+      console.error(error, "Error by downloading file");
     });
 },[dropbox_token]);
 
@@ -158,7 +164,6 @@ const ViewDirectory = (folders) => {
 
   return (
     <div className={classes.root}>
-      
       <Breadcrumbs component="div" className={classes.viewDirectory} separator={<NavigateNextIcon fontSize="small" />}>
         <Grid container onClick={() => handleUpdatePath("")}>
           <HomeIcon color={path ? "textSecondary" : "primary"} className={classes.iconDirectory}/>
@@ -204,48 +209,51 @@ const handleCloseDropbox = () => {
 
     return(
       <div className={classes.root}>
-        <Typography variant="h5" align="center">Akun Dropbox {userName}</Typography>
-          <Grid container spacing={5} alignItems="center" style={{paddingTop: "20px"}}>
-            <Grid item xs={9}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="searchFilter"
-                InputProps={{
-                  endAdornment:
-                    <InputAdornment position="start">
-                      <IconButton size="small">
-                        <GoSearch style={{color:"#2196f3"}}/>
-                      </IconButton>
-                    </InputAdornment>
-                }}
-                value={searchFilter}
-                onChange={onChange}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <Button startIcon onClick={handleCloseDropbox} className={classes.closeButton}>
-                <b>Tutup Dropbox</b>
-              </Button>
-            </Grid>
+        <Typography variant="h5" align="center">
+          <FaDropbox className={classes.dropboxLogo} /> Akun Dropbox {userName}
+        </Typography>
+        <Grid container spacing={5} alignItems="center" style={{paddingTop: "20px"}}>
+          <Grid item xs={9}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              id="searchFilter"
+              InputProps={{
+                endAdornment:
+                  <InputAdornment position="start">
+                    <IconButton size="small">
+                      <GoSearch style={{color:"#2196f3"}}/>
+                    </IconButton>
+                  </InputAdornment>
+              }}
+              value={searchFilter}
+              onChange={onChange}
+            />
           </Grid>
-          {ViewDirectory(path)}
-          <FileList allDocs={allDocs} updatePath={handleUpdatePath} getLinkToFile={getLinkToFile}/>
+          <Grid item xs={3}>
+            <Button startIcon onClick={handleCloseDropbox} className={classes.closeButton}>
+              <b>Tutup Dropbox</b>
+            </Button>
+          </Grid>
+        </Grid>
+        {ViewDirectory(path)}
+        <FileList allDocs={allDocs} updatePath={handleUpdatePath} getLinkToFile={getLinkToFile}/>
       </div>
-    ) 
+    )
   }
   else {
     return (
       <div className={classes.root}>
         <Grid container direction="column" alignItems="center">
           <Typography variant="h5" align="center">
-          Dropbox anda belum terhubung ke sistem Schooly
+            Dropbox anda belum terhubung ke sistem Schooly
           </Typography>
           <Grid item style={{paddingTop: "20px"}}>
             <Button
               href={tokenUrl}
               startIcon={<FaDropbox />}
-              className={classes.connectButton}>
+              className={classes.connectButton}
+            >
               Hubungkan ke Dropbox
             </Button>
           </Grid>
