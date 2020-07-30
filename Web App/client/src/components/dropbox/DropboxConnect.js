@@ -12,8 +12,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import { FaDropbox } from "react-icons/fa";
+import { FaDropbox, FaFolderPlus, FaFileUpload } from "react-icons/fa";
 import { GoSearch } from "react-icons/go";
+import LightTooltip from "../misc/light-tooltip/LightTooltip";
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
+import { RiFolderUploadLine } from "react-icons/ri";
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import CustomizedMenu from "./CustomizedMenu.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +50,13 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  moreIcon: {
+    opacity: "50%",
+    "&:focus, &:hover": {
+      opacity: "100%",
+      color: theme.palette.primary.main,
+    },
+  },
   searchButton: {
     color: theme.palette.primary.main,
     "&:focus, &:hover": {
@@ -65,7 +77,14 @@ const useStyles = makeStyles((theme) => ({
     width: 20,
     height: 20,
   },
+  actionIcon: {
+    color: theme.palette.dropbox.main,
+    display: "flex",
+    alignItems:"center", 
+    color:"#2196f3"
+  }
 }));
+
 
 function ViewDirectory (props) {
   // Hooks only allowed to be used inside a component.
@@ -121,6 +140,15 @@ function DropboxConnect(props) {
   // const nodeDropdown = useRef();
   const { setDropboxToken } = props;
   const { dropbox_token } = props.auth;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClickAction = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseAction = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if(dropbox_token){
@@ -182,35 +210,79 @@ function DropboxConnect(props) {
     }
   }
 
+
   const handleCloseDropbox = () => {
     console.log("AA")
     console.log(localStorage.dropbox_token)
     setDropboxToken(null)
   }
 
+  const menuItemList = [
+    {
+      icon: <FaFileUpload style={{marginRight: "10px"}}/>,
+      text: "Unggah File"
+    },
+    {
+      icon: <FaFolderPlus style={{marginRight: "10px"}}/> ,
+      text: "Buat Folder"
+    },
+    {
+      icon: <RiFolderUploadLine style={{marginRight: "10px"}}/>,
+      text: "Unggah Folder"
+    }
+  ]
+
   if (dropbox_token) {
     console.log(searchFilter)
     console.log(allDocs)
     return(
       <div className={classes.root}>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item>
-            <FaDropbox className={classes.dropboxLogo} />
+          <Grid container>
+            <Grid container spacing={3} alignItems="center">
+              <Grid item>
+                <FaDropbox className={classes.dropboxLogo} />
+              </Grid>
+              <Grid item>
+                <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
+                  Dropbox
+                </Typography>
+                <Typography color="textSecondary">
+                  {userName}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            {/* <Grid container direction="column" alignItems="flex-end">
+              <Grid item >
+                <Typography className={classes.actionIcon}>
+                  <RiFolderUploadLine style={{marginRight: "10px"}}/>
+                  Unggah Folder
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography className={classes.actionIcon}>
+                  <FaFolderPlus style={{marginRight: "10px"}}/> 
+                  Tambah Folder
+                </Typography> 
+              </Grid>
+
+              <Grid item>
+                <Typography className={classes.actionIcon}>
+                  <FaFileUpload style={{marginRight: "10px"}}/> 
+                  Unggah File
+                </Typography> 
+              </Grid>
+
+            </Grid> */}
           </Grid>
-          <Grid item>
-            <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
-              Dropbox
-            </Typography>
-            <Typography color="textSecondary">
-              {userName}
-            </Typography>
-          </Grid>
-        </Grid>
+            
+
         <Grid container justify="space-between" alignItems="center" style={{marginTop: "20px", marginBottom: "7.5px"}}>
           <Grid item xs={7}>
             <ViewDirectory path={path} handleUpdatePath={handleUpdatePath}/>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3.5}>
             <TextField
               fullWidth
               variant="outlined"
@@ -227,11 +299,21 @@ function DropboxConnect(props) {
               }}
             />
           </Grid>
-          <LightTooltip title="Matikan Dropbox">
-            <IconButton onClick={handleCloseDropbox} className={classes.closeButton}>
-              <ExitToAppIcon />
+          <Grid item xs={1.5}>
+            <IconButton  onClick={handleClickAction} className={classes.moreIcon}>
+              <MoreHorizIcon />
             </IconButton>
-          </LightTooltip>
+            <CustomizedMenu
+              menuItemList={menuItemList}
+              handleClose={handleCloseAction}
+              anchorEl={anchorEl}
+              setAnchorEl={setAnchorEl}/>
+            <LightTooltip title="Matikan Dropbox">
+              <IconButton onClick={handleCloseDropbox} className={classes.closeButton}>
+                <ExitToAppIcon />
+              </IconButton>
+            </LightTooltip>
+          </Grid>
         </Grid>
         <FileList
           searchFilter={searchFilter}

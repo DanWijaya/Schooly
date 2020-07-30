@@ -2,15 +2,17 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
-import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint } from 'react-icons/fa';
+import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint, FaFileUpload } from 'react-icons/fa';
 import { convertBytes } from './convertBytes.js';
 import { Dropbox } from "dropbox";
-import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography} from "@material-ui/core";
+import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Menu, MenuItem} from "@material-ui/core";
 import moment from "moment";
 import "moment/locale/id";
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
 import path from "path";
+import MenuIcon from '@material-ui/icons/Menu';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +22,13 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     maxHeight: "440px",
+  },
+  moreIcon: {
+    opacity: "50%",
+    "&:focus, &:hover": {
+      opacity: "100%",
+      color: theme.palette.primary.main,
+    },
   },
   wordFileTypeIcon: {
     marginRight: "10px",
@@ -85,10 +94,14 @@ const columns = [
     label: 'Tipe',
     format: (value) => value.toLocaleString('en-US'),
   },
+  {
+    id: "action",
+    label: ""
+  }
 ];
 
-function createData(name, size, modified, type, path_display) {
-  return { name, size, modified, type, path_display };
+function createData(name, size, modified, type, path_display, action) {
+  return { name, size, modified, type, path_display, action};
 }
 
 function FileList(props) {
@@ -108,7 +121,7 @@ function FileList(props) {
 
   const rows = allDocs.map((doc) => createData(doc.name,
     doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",
-    "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),  doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display ))
+    "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),  doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display, <MoreHorizIcon className={classes.moreIcon}/> ))
 
   const handleClickItem = (event, file_tag, file_path) => {
     if(file_tag === "Folder"){
@@ -147,6 +160,7 @@ function FileList(props) {
 		updateMoveModal(true);
 	}
 
+  
   function fileType(filename) {
     let ext_file = path.extname(filename)
     switch(ext_file) {

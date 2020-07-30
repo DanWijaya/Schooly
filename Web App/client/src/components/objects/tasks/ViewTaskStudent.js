@@ -26,7 +26,6 @@ import PublishIcon from "@material-ui/icons/Publish";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
-const fetch = require('isomorphic-fetch');
 
 const useStyles = makeStyles((theme) => ({
   root: {
