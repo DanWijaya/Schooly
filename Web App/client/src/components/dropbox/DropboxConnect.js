@@ -210,9 +210,19 @@ const handleCloseDropbox = () => {
 
     return(
       <div className={classes.root}>
-        <Typography variant="h5" align="center">
-          <FaDropbox className={classes.dropboxLogo} /> Akun Dropbox {userName}
-        </Typography>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item>
+            <FaDropbox className={classes.dropboxLogo} />
+          </Grid>
+          <Grid item>
+            <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
+              Dropbox
+            </Typography>
+            <Typography color="textSecondary">
+              {userName}
+            </Typography>
+          </Grid>
+        </Grid>
         <Grid container spacing={5} alignItems="center" style={{paddingTop: "20px"}}>
           <Grid item xs={9}>
             <TextField

@@ -99,14 +99,14 @@ function FileList(props) {
 	const [showCopyModal, updateCopyModal] = useState(false);
 	const [showMoveModal, updateMoveModal] = useState(false);
   const [thumbnailUrl, updateThumbnailUrl] = useState(null);
-  
+
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const {allDocs, updatePath, getLinkToFile } = props;
 
-  const rows = allDocs.map((doc) => createData(doc.name, 
-    doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--", 
+  const rows = allDocs.map((doc) => createData(doc.name,
+    doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",
     convertDate(doc.client_modified),  doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display ))
 
   const handleClickItem = (event, file_tag, file_path) => {
@@ -152,82 +152,82 @@ function FileList(props) {
       case ".docx" : return "Word"
       case ".xlsx" :
       case ".csv"  : return "Excel"
-  
+
       case ".png" :
       case ".jpg" :
       case ".jpeg" : return "Gambar"
-  
+
       case ".pdf" : return "PDF"
-  
+
       case ".txt" :
       case ".rtf" : return "Teks"
-  
+
       case ".ppt" :
       case ".pptx" : return "Presentasi"
-  
+
       default: return "File Lainnya"
     }
   }
-  
+
   function fileIcon(filename, type) {
     let ext_file = path.extname(filename)
     if(type === "Folder")
-      return( 
+      return(
       <Avatar variant="rounded" className={classes.folderTypeIcon}>
         <FaFolder />
       </Avatar>)
     else{
     switch(ext_file) {
-      case ".docx" : 
-        return( 
+      case ".docx" :
+        return(
         <Avatar variant="rounded" className={classes.wordFileTypeIcon}>
           <FaFileWord />
         </Avatar>)
-  
+
       case ".xlsx" :
-      case ".csv"  : 
-        return( 
+      case ".csv"  :
+        return(
         <Avatar variant="rounded" className={classes.excelFileTypeIcon}>
          <FaFileExcel />
         </Avatar>)
-  
+
       case ".png" :
       case ".jpg" :
-      case ".jpeg" : 
+      case ".jpeg" :
         return (
           <Avatar variant="rounded" className={classes.imageFileTypeIcon}>
             <FaFileImage />
           </Avatar>
           )
-  
-      case ".pdf" : 
+
+      case ".pdf" :
         return(
           <Avatar variant="rounded" className={classes.pdfFileTypeIcon}>
             <FaFilePdf/>
           </Avatar>
           )
-  
+
       case ".txt" :
-      case ".rtf" : 
+      case ".rtf" :
         return (
           <Avatar variant="rounded" className={classes.textFileTypeIcon}>
             <FaFileAlt />
           </Avatar>
         )
-  
+
       case ".ppt" :
-      case ".pptx" : 
+      case ".pptx" :
         return (
           <Avatar variant="rounded" className={classes.presentationFileTypeIcon}>
             <FaFilePowerpoint />
           </Avatar>
           )
-  
+
       default: return null
     }
   }
-  
-    
+
+
   }
 
   console.log(rows)
@@ -272,11 +272,8 @@ function FileList(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-
           <ListItemAvatar>
-          
         </ListItemAvatar>
-
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover style={{cursor: "pointer"}} role="checkbox" tabIndex={-1} key={row.code} onClick={(event) => handleClickItem(event, row.type, row.path_display)}>
@@ -284,25 +281,25 @@ function FileList(props) {
                     const value = row[column.id];
                     let width;
                     let icon=null;
-          
+
                     switch(column.id){
                       case "name":
                         width= "50%"
                         icon=fileIcon(row.name, row.type)
                         break
-                      
+
                       case "size":
                         width = "20%"
                         break
-                      
+
                       case "modified":
                         width = "20%"
                         break
-                      
+
                       case "type":
                         width = "10%"
                         break
-                      
+
                       default:
                         break
                     }
