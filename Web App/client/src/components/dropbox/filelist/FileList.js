@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Link } from 'react-router-dom';
-import { makeStyles } from "@material-ui/core/styles";
-import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint } from 'react-icons/fa';
+import React, { useState, useRef, useEffect, useCallback } from "./node_modules/react";
+import { Link } from './node_modules/react-router-dom';
+import { makeStyles } from "./node_modules/@material-ui/core/styles";
+import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint } from './node_modules/react-icons/fa';
 import { convertDate } from './convertDate.js';
 import { convertBytes } from './convertBytes.js';
-import { Dropbox } from "dropbox";
-import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography} from "@material-ui/core";
-import moment from "moment";
-import "moment/locale/id";
+import { Dropbox } from "./node_modules/dropbox";
+import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography} from "./node_modules/@material-ui/core";
+import moment from "./node_modules/moment";
+import "./node_modules/moment/locale/id";
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
 import path from "path";
@@ -104,7 +104,8 @@ function FileList(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const {allDocs, updatePath, getLinkToFile } = props;
+  
+  const {allDocs, updatePath, getLinkToFile, searchFilter } = props;
 
   const rows = allDocs.map((doc) => createData(doc.name,
     doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",
@@ -275,7 +276,9 @@ function FileList(props) {
           <TableBody>
           <ListItemAvatar>
         </ListItemAvatar>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {rows.filter(row => row.name.toLowerCase().includes(searchFilter.toLowerCase()))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => {
               return (
                 <TableRow hover style={{cursor: "pointer"}} role="checkbox" tabIndex={-1} key={row.code} onClick={(event) => handleClickItem(event, row.type, row.path_display)}>
                   {columns.map((column) => {
@@ -315,8 +318,8 @@ function FileList(props) {
                     );
                   })}
                 </TableRow>
-              );
-            })}
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
