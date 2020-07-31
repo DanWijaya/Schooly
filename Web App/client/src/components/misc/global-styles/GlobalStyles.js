@@ -77,6 +77,11 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
       },
     },
     MuiInput: {
+      InputProps: {
+        style: {
+          padding: "0px",
+        },
+      },
       inputProps: {
         style: {
           borderBottom: "none",

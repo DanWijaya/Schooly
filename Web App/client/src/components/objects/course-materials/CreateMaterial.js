@@ -79,8 +79,6 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   createMaterialButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
@@ -549,15 +547,13 @@ class CreateMaterial extends Component {
               </Grid>
               <Divider />
               <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
-                <div>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    className={classes.createMaterialButton}
-                  >
-                    Buat Materi
-                  </Button>
-                </div>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  className={classes.createMaterialButton}
+                >
+                  Buat Materi
+                </Button>
               </div>
             </form>
           </Paper>
