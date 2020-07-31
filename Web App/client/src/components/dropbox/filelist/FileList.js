@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from 'react-router-dom';
 import { makeStyles } from "@material-ui/core/styles";
-import { FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint, FaFileUpload } from 'react-icons/fa';
+import { FaFile, FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint, FaFileUpload } from 'react-icons/fa';
 import { convertBytes } from './convertBytes.js';
 import { Dropbox } from "dropbox";
 import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Menu, MenuItem} from "@material-ui/core";
@@ -13,6 +13,8 @@ import "moment/locale/id";
 import path from "path";
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import CustomizedMenu from "../CustomizedMenu";
+import Delete from "../dialog/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
     width: theme.spacing(2.25),
     height: theme.spacing(2.5),
-    backgroundColor: "#808080",
+    backgroundColor: "#654321",
   },
 }));
 
@@ -107,21 +109,70 @@ function createData(name, size, modified, type, path_display, action) {
 function FileList(props) {
 
   const [dropDown, updateDropDown] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 	const [showRemoveModal, updateRemoveModal] = useState(false);
 	const [showRenameModal, updateRenameModal] = useState(false);
 	const [showCopyModal, updateCopyModal] = useState(false);
 	const [showMoveModal, updateMoveModal] = useState(false);
-  const [thumbnailUrl, updateThumbnailUrl] = useState(null);
-
-  const classes = useStyles();
-  const [page, setPage] = React.useState(0);
+  // const [thumbnailUrl, updateThumbnailUrl] = useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-  const {allDocs, updatePath, getLinkToFile, searchFilter } = props;
+  // const [page, setPage] = React.useState(0);
+  // this selectedDoc used to keep the document selected for further action.
+  const [selectedDoc, setSelectedDoc] = useState(null);
+  const classes = useStyles();
+  const {page, setPage, allDocs, updatePath, getLinkToFile, searchFilter, renderToUpdate } = props;
 
-  const rows = allDocs.map((doc) => createData(doc.name,
-    doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",
-    "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),  doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display, <MoreHorizIcon className={classes.moreIcon}/> ))
+  const handleClickAction = (event,doc) => {
+    event.stopPropagation()
+    setSelectedDoc(doc)
+    console.log(doc)
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseAction = (event) => {
+    event.stopPropagation()
+    setAnchorEl(null);
+    setSelectedDoc(null)
+  };
+
+
+  const menuItemList = [
+    {
+      text: "Hapus",
+      handleClick: function(){
+        setDeleteDialog(true)
+        setAnchorEl(null)
+      }
+    },
+    {
+      text: "Pindah",
+      handleClick: function(){
+        setAnchorEl(null)
+      }
+    },
+    {
+      text: "Ubah nama",
+      handleClick: function(){
+        setAnchorEl(null)
+      }
+    }
+  ]
+
+  const rows = allDocs.map((doc) => createData(
+    doc.name, doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",!doc.client_modified ? "--" : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"), 
+    doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display,
+     <div>
+      <MoreHorizIcon onClick={(e) => handleClickAction(e,doc)} className={classes.moreIcon}/>
+      <CustomizedMenu
+      menuItemList={menuItemList}
+      handleClose={handleCloseAction}
+      anchorEl={anchorEl}
+      setAnchorEl={setAnchorEl}/>
+    </div> )
+    )
+  
+  
 
   const handleClickItem = (event, file_tag, file_path) => {
     if(file_tag === "Folder"){
@@ -144,7 +195,7 @@ function FileList(props) {
 		updateDropDown(dropDown ? false : true);
 	}, [dropDown]);
 
-	const handleRemoveModal = () => {
+	const handleDeleteModal = () => {
 		updateRemoveModal(true);
 	}
 
@@ -238,7 +289,10 @@ function FileList(props) {
           </Avatar>
           )
 
-      default: return null
+      default: return (
+      <Avatar variant="rounded" className={classes.otherFileTypeIcon}>
+        <FaFile />
+      </Avatar>)
     }
   }
 
@@ -248,6 +302,7 @@ function FileList(props) {
   console.log(rows)
   return (
     <Paper className={classes.root}>
+      <Delete doc={selectedDoc} open={deleteDialog} handleOpen={setDeleteDialog} renderToUpdate={renderToUpdate}/>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

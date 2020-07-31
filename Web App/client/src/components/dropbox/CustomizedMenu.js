@@ -32,7 +32,7 @@ const StyledMenu = withStyles({
 const StyledMenuItem = withStyles((theme) => ({
   root: {
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: theme.palette.primary.main,
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
         color: theme.palette.common.white,
       },
@@ -47,15 +47,21 @@ function CustomizedMenus(props) {
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
-        keepMounted
+        // keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
         {menuItemList.map((item) => 
-        <StyledMenuItem>
+        <StyledMenuItem 
+        onClick={(e) => { 
+          e.stopPropagation()
+          item.handleClick()
+          }}>
+          {!item.icon ? null : 
           <ListItemIcon>
             {item.icon}
           </ListItemIcon>
+          }
           <ListItemText primary={item.text} />
         </StyledMenuItem>)
         }

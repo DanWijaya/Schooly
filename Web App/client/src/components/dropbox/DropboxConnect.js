@@ -15,11 +15,11 @@ import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { FaDropbox, FaFolderPlus, FaFileUpload } from "react-icons/fa";
 import { GoSearch } from "react-icons/go";
-import LightTooltip from "../misc/light-tooltip/LightTooltip";
 import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import { RiFolderUploadLine } from "react-icons/ri";
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CustomizedMenu from "./CustomizedMenu.js";
+import CreateFolder from "./dialog/CreateFolder";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -134,14 +134,21 @@ function DropboxConnect(props) {
   // const [documents, updateDocs] = useState([]);
   // const [choosenFiles, updateChoosenFiles] = useState([]);
   // const [dropDown, updateDropDown] = useState(false);
+  const [createFolderDialog, setCreateFolderDialog] = useState(false);
+  const [uploadFileDialog, setUploadFileDialog] = useState(false);
+  const [uploadFolderDialog, setUploadFolderDialog] = useState(false);
+  const [choosedFile, setChoosedFile] = useState(null);
   const [searchFilter, updateSearchFilter ] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
+  
+  const [newFileToRender, setNewFileToRender] = useState("first");
   const [path, updatePath] = useState("");
   const [userName, updateUserName] = useState("");
-  // const nodeDropdown = useRef();
+  const fileUploader = React.useRef(null);
+
   const { setDropboxToken } = props;
   const { dropbox_token } = props.auth;
-
+  const [page, setPage] = React.useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClickAction = (event) => {
     setAnchorEl(event.currentTarget);
@@ -167,22 +174,28 @@ function DropboxConnect(props) {
   }, [dropbox_token]);
 
   useEffect(() => {
-    let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
-    dropbox
-      .filesListFolder({ path: path })
-      .then((response) => {
-        console.log("resonse.entries", response.entries);
-        updateAllDocs(response.entries);
-        updateSearchFilter("") // ini untuk clear search filter tiap kali ganti directory
-      })
-      .catch((response) => {
-        console.log(response.error.error_summary);
-      });
+    
+      let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+      dropbox
+        .filesListFolder({ path: path })
+        .then((response) => {
+          console.log("resonse.entries", response.entries);
+          updateAllDocs(response.entries);
+          if(newFileToRender){
+            setNewFileToRender(false)
+          }
+          setPage(0)
+          updateSearchFilter("") // ini untuk clear search filter tiap kali ganti directory
+        })
+        .catch((response) => {
+          console.log(response.error.error_summary);
+        });
 
-  }, [path, dropbox_token])
+  }, [path, dropbox_token, newFileToRender])
 
   const handleUpdatePath = useCallback((path) => {
     updatePath(path)
+
   },[])
 
   const getLinkToFile = useCallback((path) => {
@@ -221,24 +234,66 @@ function DropboxConnect(props) {
   const menuItemList = [
     {
       icon: <FaFileUpload style={{marginRight: "10px"}}/>,
-      text: "Unggah File"
+      text: "Unggah File",
+      handleClick: function(){
+        fileUploader.current.click()
+        handleCloseAction()
+      }
     },
     {
       icon: <FaFolderPlus style={{marginRight: "10px"}}/> ,
-      text: "Buat Folder"
+      text: "Buat Folder",
+      handleClick: function(){
+        setCreateFolderDialog(true)
+        handleCloseAction()
+      }
     },
-    {
-      icon: <RiFolderUploadLine style={{marginRight: "10px"}}/>,
-      text: "Unggah Folder"
-    }
   ]
+
+  const uploadFiles = e => {
+    const UPLOAD_FILE_SIZE_LIMIT = 100 * 1024 * 1024;
+    let dropBox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+    let files = Array.from(e.target.files);
+    console.log(files)
+    if (files.length === 0) {
+      return;
+    }
+    // this.props.updateChoosenFiles({ files });
+
+    if (files.some(file => file.size > UPLOAD_FILE_SIZE_LIMIT)) {
+      alert("One of the files is too big!");
+    } else {
+      const promises = files.map(file =>
+        dropBox.filesUpload({
+          path: path + "/" + file.name,
+          contents: file,
+        })
+      );
+
+      Promise.all(promises)
+        .then(responses => {
+          console.log("promiseAll response", responses);
+          setNewFileToRender(true)
+          const files = responses.map(response => ({
+            ...response,
+            ".tag": "file"
+          }));
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  };
 
   document.title = "Schooly | Hubungkan ke Dropbox";
   if (dropbox_token) {
-    console.log(searchFilter)
-    console.log(allDocs)
     return(
       <div className={classes.root}>
+        <CreateFolder path={path} 
+          newFolder = {newFileToRender}
+          open={createFolderDialog} 
+          renderToUpdate={setNewFileToRender}
+          handleOpen={setCreateFolderDialog}/>
           <Grid container>
             <Grid container spacing={3} alignItems="center">
               <Grid item>
@@ -253,30 +308,6 @@ function DropboxConnect(props) {
                 </Typography>
               </Grid>
             </Grid>
-
-            {/* <Grid container direction="column" alignItems="flex-end">
-              <Grid item >
-                <Typography className={classes.actionIcon}>
-                  <RiFolderUploadLine style={{marginRight: "10px"}}/>
-                  Unggah Folder
-                </Typography>
-              </Grid>
-
-              <Grid item>
-                <Typography className={classes.actionIcon}>
-                  <FaFolderPlus style={{marginRight: "10px"}}/> 
-                  Tambah Folder
-                </Typography> 
-              </Grid>
-
-              <Grid item>
-                <Typography className={classes.actionIcon}>
-                  <FaFileUpload style={{marginRight: "10px"}}/> 
-                  Unggah File
-                </Typography> 
-              </Grid>
-
-            </Grid> */}
           </Grid>
             
 
@@ -303,13 +334,21 @@ function DropboxConnect(props) {
           </Grid>
           <Grid item xs={1.5}>
             <IconButton  onClick={handleClickAction} className={classes.moreIcon}>
-              <MoreHorizIcon />
+              <MoreHorizIcon/>
             </IconButton>
             <CustomizedMenu
               menuItemList={menuItemList}
               handleClose={handleCloseAction}
               anchorEl={anchorEl}
               setAnchorEl={setAnchorEl}/>
+              <input
+                style={{ display: "none" }}
+                multiple
+                ref={fileUploader}
+                onChange={uploadFiles}
+                value={choosedFile}
+                type="file"
+              />
             <LightTooltip title="Matikan Dropbox">
               <IconButton onClick={handleCloseDropbox} className={classes.closeButton}>
                 <ExitToAppIcon />
@@ -318,6 +357,9 @@ function DropboxConnect(props) {
           </Grid>
         </Grid>
         <FileList
+          page={page}
+          setPage={setPage}
+          renderToUpdate={setNewFileToRender}
           searchFilter={searchFilter}
           allDocs={allDocs}
           updatePath={handleUpdatePath}
