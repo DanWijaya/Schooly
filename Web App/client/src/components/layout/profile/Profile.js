@@ -313,7 +313,7 @@ function Profile(props) {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <div className={classes.informationPictureContainer}>
-                    <img src={informationPrivate} className={classes.informationPicture} />
+                    <img alt="Private Information" src={informationPrivate} className={classes.informationPicture} />
                   </div>
                 </Grid>
               </Grid>
@@ -357,7 +357,7 @@ function Profile(props) {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <div className={classes.informationPictureContainer}>
-                    <img src={informationContacts} className={classes.informationPicture} />
+                    <img alt="Contacts" src={informationContacts} className={classes.informationPicture} />
                   </div>
                 </Grid>
               </Grid>
@@ -402,7 +402,7 @@ function Profile(props) {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <div className={classes.informationPictureContainer}>
-                    <img src={informationJob} className={classes.informationPicture} />
+                    <img alt="Career" src={informationJob} className={classes.informationPicture} />
                   </div>
                 </Grid>
               </Grid>

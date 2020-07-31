@@ -5,20 +5,19 @@ import { Dropbox } from "dropbox";
 import { tokenUrl } from "../../utils/getDropboxToken";
 import PropTypes from "prop-types";
 import { setDropboxToken } from "../../actions/UserActions";
-import FileList from "./filelist/FileList.js"
+import FileList from "./filelist/FileList.js";
+import CustomizedMenu from "./CustomizedMenu.js";
 import LightTooltip from "../misc/light-tooltip/LightTooltip";
 import "./DropboxConnect.css";
 import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { FaDropbox, FaFolderPlus, FaFileUpload } from "react-icons/fa";
 import { GoSearch } from "react-icons/go";
-import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
-import { RiFolderUploadLine } from "react-icons/ri";
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import CustomizedMenu from "./CustomizedMenu.js";
 import CreateFolder from "./dialog/CreateFolder";
 
 const useStyles = makeStyles((theme) => ({
@@ -81,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   actionIcon: {
     color: theme.palette.dropbox.main,
     display: "flex",
-    alignItems:"center", 
+    alignItems:"center",
     color:"#2196f3"
   }
 }));
@@ -309,7 +308,7 @@ function DropboxConnect(props) {
               </Grid>
             </Grid>
           </Grid>
-            
+
 
         <Grid container justify="space-between" alignItems="center" style={{marginTop: "20px", marginBottom: "7.5px"}}>
           <Grid item xs={7}>

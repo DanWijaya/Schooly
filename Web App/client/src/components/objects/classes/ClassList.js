@@ -6,7 +6,7 @@ import { getTeachers } from "../../../actions/UserActions";
 import { viewClass, deleteClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core/";
+import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
