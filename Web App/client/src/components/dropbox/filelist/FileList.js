@@ -5,6 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FaFile, FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint, FaFileUpload } from 'react-icons/fa';
 import { convertBytes } from './convertBytes.js';
 import { Dropbox } from "dropbox";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Menu, MenuItem} from "@material-ui/core";
 import moment from "moment";
 import "moment/locale/id";
@@ -106,6 +108,7 @@ function createData(name, size, modified, type, path_display, action) {
   return { name, size, modified, type, path_display, action};
 }
 
+
 function FileList(props) {
 
   const [dropDown, updateDropDown] = useState(false);
@@ -121,8 +124,10 @@ function FileList(props) {
   // this selectedDoc used to keep the document selected for further action.
   const [selectedDoc, setSelectedDoc] = useState(null);
   const classes = useStyles();
-  const {page, setPage, allDocs, updatePath, getLinkToFile, searchFilter, renderToUpdate } = props;
-
+  const {page, setPage, allDocs, updatePath, getLinkToFile, searchFilter, 
+    renderToUpdate, handleOpenLoadingAlert, handleOpenSuccessAlert, setSuccessMessage, setLoadingMessage } = props;
+  const { dropbox_token } = props.auth;
+  
   const handleClickAction = (event,doc) => {
     event.stopPropagation()
     setSelectedDoc(doc)
@@ -136,41 +141,84 @@ function FileList(props) {
     setSelectedDoc(null)
   };
 
+  const handleDownloadFolder = () => {
+    let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+    dropbox
+      .filesDownloadZip({ path: selectedDoc.path_display})
+      .then((res) => {
+        let name = res.metadata.name;
+        let blobUrl = window.URL.createObjectURL(res.fileBlob);
+        const link = document.createElement("a");
+        // Set link's href to point to the Blob URL
+        link.href = blobUrl;
+        link.download = name;
+        link.click()
+        window.URL.revokeObjectURL(blobUrl);
+        })
+      .catch((err) => console.log(err))
+  }
 
-  const menuItemList = [
-    {
-      text: "Hapus",
-      handleClick: function(){
-        setDeleteDialog(true)
-        setAnchorEl(null)
+  let menuItemList = 
+    [
+      {
+        text: "Bagikan",
+        handleClick: function(){
+          setAnchorEl(null)
+        }
+      },
+      {
+        text: "Hapus",
+        handleClick: function(){
+          setDeleteDialog(true)
+          setAnchorEl(null)
+        }
+      },
+      {
+        text: "Unduh Folder",
+        handleClick: function(){
+          setAnchorEl(null)
+          handleDownloadFolder()
+
+        }
       }
-    },
-    {
-      text: "Pindah",
-      handleClick: function(){
-        setAnchorEl(null)
-      }
-    },
-    {
-      text: "Ubah nama",
-      handleClick: function(){
-        setAnchorEl(null)
-      }
-    }
   ]
 
-  const rows = allDocs.map((doc) => createData(
+
+  const rows = allDocs.map((doc) => {
+    
+    if(doc['.tag'] !== "folder"){
+      menuItemList = [
+        {
+          text: "Bagikan",
+          handleClick: function(){
+            setAnchorEl(null)
+          }
+        },
+        {
+          text: "Hapus",
+          handleClick: function(){
+            setDeleteDialog(true)
+            setAnchorEl(null)
+          }
+        },
+      ]
+    }
+    return(
+    createData(
     doc.name, doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",!doc.client_modified ? "--" : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"), 
     doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display,
      <div>
       <MoreHorizIcon onClick={(e) => handleClickAction(e,doc)} className={classes.moreIcon}/>
+      {selectedDoc ? doc.path_display === selectedDoc.path_display ? 
       <CustomizedMenu
       menuItemList={menuItemList}
       handleClose={handleCloseAction}
       anchorEl={anchorEl}
-      setAnchorEl={setAnchorEl}/>
-    </div> )
+      setAnchorEl={setAnchorEl}/> : null : null}
+    </div> ))
+  }
     )
+  
   
   
 
@@ -302,7 +350,15 @@ function FileList(props) {
   console.log(rows)
   return (
     <Paper className={classes.root}>
-      <Delete doc={selectedDoc} open={deleteDialog} handleOpen={setDeleteDialog} renderToUpdate={renderToUpdate}/>
+      <Delete 
+      handleOpenSuccessAlert={handleOpenSuccessAlert} 
+      handleOpenLoadingAlert={handleOpenLoadingAlert} 
+      doc={selectedDoc} 
+      open={deleteDialog} 
+      handleOpen={setDeleteDialog} 
+      renderToUpdate={renderToUpdate}
+      setLoadingMessage={setLoadingMessage}
+      setSuccessMessage={setSuccessMessage}/>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -404,4 +460,18 @@ function FileList(props) {
   );
 }
 
-export default React.memo(FileList);
+FileList.propTypes = {
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  errors: state.errors,
+  auth: state.auth,
+})
+
+export default connect(
+  mapStateToProps
+)(FileList);
+
+// export default React.memo(FileList);

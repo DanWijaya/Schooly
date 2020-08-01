@@ -64,7 +64,7 @@ function CreateFolder(props){
   const classes = useStyles();
   const [folderName, updateFolderName] = useState('');
   // const [open, setOpen] = React.useState(null);
-  const { errors, open, handleOpen, path, renderToUpdate } = props;
+  const { errors, open, handleOpen, path, renderToUpdate, handleOpenLoadingAlert, setLoadingMessage, setSuccessMessage } = props;
   const { dropbox_token } = props.auth;
 
   const onChange = (e) => {
@@ -78,6 +78,8 @@ function CreateFolder(props){
 
   const onSubmit = (e) => {
     e.preventDefault();
+    setLoadingMessage("Folder baru sedang dibuat")
+    handleOpenLoadingAlert()
 		//console.log(pathName);
 
 		let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
@@ -86,7 +88,8 @@ function CreateFolder(props){
 			.then(function (response) {
         console.log(response.metadata)
         // renderToUpdate(response.metadata.path_display)
-        renderToUpdate(true)
+        setSuccessMessage("Folder baru berhasil dibuat")
+        renderToUpdate("Folder Created")
 			})
 			.catch(function (error) {
 				console.error(error);

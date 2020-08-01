@@ -9,7 +9,8 @@ import FileList from "./filelist/FileList.js";
 import CustomizedMenu from "./CustomizedMenu.js";
 import LightTooltip from "../misc/light-tooltip/LightTooltip";
 import "./DropboxConnect.css";
-import { Breadcrumbs, Button, Grid, InputAdornment, IconButton, TextField, Typography } from "@material-ui/core";
+import { Breadcrumbs, Button, CircularProgress, Grid, InputAdornment, IconButton, LinearProgress, Icon, Snackbar, TextField, Typography } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from "@material-ui/core/styles";
 import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -82,9 +83,15 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems:"center",
     color:"#2196f3"
-  }
+  },
+  loadingAlert: {
+    backgroundColor: theme.palette.primary.main
+  },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function ViewDirectory (props) {
   // Hooks only allowed to be used inside a component.
@@ -134,16 +141,18 @@ function DropboxConnect(props) {
   // const [choosenFiles, updateChoosenFiles] = useState([]);
   // const [dropDown, updateDropDown] = useState(false);
   const [createFolderDialog, setCreateFolderDialog] = useState(false);
-  const [uploadFileDialog, setUploadFileDialog] = useState(false);
-  const [uploadFolderDialog, setUploadFolderDialog] = useState(false);
   const [choosedFile, setChoosedFile] = useState(null);
   const [searchFilter, updateSearchFilter ] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
   
-  const [newFileToRender, setNewFileToRender] = useState("first");
+  const [newFileToRender, setNewFileToRender] = useState(false);
   const [path, updatePath] = useState("");
   const [userName, updateUserName] = useState("");
   const fileUploader = React.useRef(null);
+  const [openLoadingAlert, setOpenLoadingAlert] = React.useState(false);
+  const [loadingMessage, setLoadingMessage] = React.useState("");
+  const [openSuccessAlert, setOpenSuccessAlert] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState("")
 
   const { setDropboxToken } = props;
   const { dropbox_token } = props.auth;
@@ -156,6 +165,33 @@ function DropboxConnect(props) {
   const handleCloseAction = () => {
     setAnchorEl(null);
   };
+
+
+  const handleOpenLoadingAlert = useCallback(() => {
+    setOpenLoadingAlert(true)
+    setOpenSuccessAlert(false)
+  },[])
+
+  const handleCloseLoadingAlert = useCallback((event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenLoadingAlert(false);
+  },[]);
+
+  const handleOpenSuccessAlert = useCallback(() => {
+    handleCloseLoadingAlert()
+    setOpenSuccessAlert(true);
+    setNewFileToRender(false)
+  },[])
+
+  const handleCloseSuccessAlert = useCallback((event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSuccessAlert(false);
+  },[])
 
   useEffect(() => {
     if(dropbox_token){
@@ -182,19 +218,34 @@ function DropboxConnect(props) {
           updateAllDocs(response.entries);
           if(newFileToRender){
             setNewFileToRender(false)
+            handleOpenSuccessAlert()
           }
-          setPage(0)
-          updateSearchFilter("") // ini untuk clear search filter tiap kali ganti directory
         })
         .catch((response) => {
           console.log(response.error.error_summary);
         });
 
-  }, [path, dropbox_token, newFileToRender])
+  }, [dropbox_token, newFileToRender])
+
+  useEffect(() => {
+
+    let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+    dropbox
+      .filesListFolder({ path: path })
+      .then((response) => {
+        console.log("resonse.entries", response.entries);
+        updateAllDocs(response.entries);
+        updateSearchFilter("") // ini untuk clear search filter tiap kali ganti directory
+        setPage(0)
+      })
+      .catch((response) => {
+        console.log(response.error.error_summary);
+      });
+
+  }, [path, searchFilter])
 
   const handleUpdatePath = useCallback((path) => {
     updatePath(path)
-
   },[])
 
   const getLinkToFile = useCallback((path) => {
@@ -262,6 +313,8 @@ function DropboxConnect(props) {
     if (files.some(file => file.size > UPLOAD_FILE_SIZE_LIMIT)) {
       alert("One of the files is too big!");
     } else {
+      setLoadingMessage("File sedang diunggah")
+      handleOpenLoadingAlert()
       const promises = files.map(file =>
         dropBox.filesUpload({
           path: path + "/" + file.name,
@@ -273,6 +326,8 @@ function DropboxConnect(props) {
         .then(responses => {
           console.log("promiseAll response", responses);
           setNewFileToRender(true)
+          setSuccessMessage("File berhasil diunggah")
+          // handle success alertnya di useEffect render files.
           const files = responses.map(response => ({
             ...response,
             ".tag": "file"
@@ -288,7 +343,21 @@ function DropboxConnect(props) {
   if (dropbox_token) {
     return(
       <div className={classes.root}>
-        <CreateFolder path={path} 
+      <Snackbar open={openLoadingAlert} anchorOrigin={{vertical: 'top', horizontal: 'top' }} autoHideDuration={null} onClose={handleCloseLoadingAlert}>
+        <Alert className={classes.loadingAlert} icon={<CircularProgress disableShrink size={22} color="inherit" />} >
+          {loadingMessage}
+        </Alert> 
+      </Snackbar>
+      <Snackbar open={openSuccessAlert} anchorOrigin={{vertical: 'top', horizontal: 'top' }} autoHideDuration={3000} onClose={handleCloseSuccessAlert}>
+        <Alert onClose={handleCloseSuccessAlert} severity="success">
+          {successMessage}
+        </Alert> 
+      </Snackbar>
+        <CreateFolder
+          setLoadingMessage={setLoadingMessage}
+          setSuccessMessage={setSuccessMessage} 
+          handleOpenLoadingAlert={handleOpenLoadingAlert}
+          path={path} 
           newFolder = {newFileToRender}
           open={createFolderDialog} 
           renderToUpdate={setNewFileToRender}
@@ -311,10 +380,10 @@ function DropboxConnect(props) {
 
 
         <Grid container justify="space-between" alignItems="center" style={{marginTop: "20px", marginBottom: "7.5px"}}>
-          <Grid item xs={7}>
+          <Grid item xs={12} md={6}>
             <ViewDirectory path={path} handleUpdatePath={handleUpdatePath}/>
           </Grid>
-          <Grid item xs={3.5}>
+          <Grid item xs={10} md={4}>
             <TextField
               fullWidth
               variant="outlined"
@@ -331,7 +400,7 @@ function DropboxConnect(props) {
               }}
             />
           </Grid>
-          <Grid item xs={1.5}>
+          <Grid item>
             <IconButton  onClick={handleClickAction} className={classes.moreIcon}>
               <MoreHorizIcon/>
             </IconButton>
@@ -361,8 +430,13 @@ function DropboxConnect(props) {
           renderToUpdate={setNewFileToRender}
           searchFilter={searchFilter}
           allDocs={allDocs}
+          path={path}
           updatePath={handleUpdatePath}
-          getLinkToFile={getLinkToFile}/>
+          getLinkToFile={getLinkToFile}
+          handleOpenLoadingAlert={handleOpenLoadingAlert}
+          handleOpenSuccessAlert={handleOpenSuccessAlert}
+          setSuccessMessage={setSuccessMessage}
+          setLoadingMessage={setLoadingMessage}/>
       </div>
     )
   }
