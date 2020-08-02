@@ -139,7 +139,7 @@ function DropboxConnect(props) {
   const [choosedFile, setChoosedFile] = useState(null);
   const [searchFilter, updateSearchFilter ] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
-  
+
   const [newFileToRender, setNewFileToRender] = useState("first");
   const [path, updatePath] = useState("");
   const [userName, updateUserName] = useState("");
@@ -173,7 +173,7 @@ function DropboxConnect(props) {
   }, [dropbox_token]);
 
   useEffect(() => {
-    
+
       let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
       dropbox
         .filesListFolder({ path: path })
@@ -288,33 +288,33 @@ function DropboxConnect(props) {
   if (dropbox_token) {
     return(
       <div className={classes.root}>
-        <CreateFolder path={path} 
+        <CreateFolder
+          path={path}
           newFolder = {newFileToRender}
-          open={createFolderDialog} 
+          open={createFolderDialog}
           renderToUpdate={setNewFileToRender}
-          handleOpen={setCreateFolderDialog}/>
-          <Grid container>
-            <Grid container spacing={3} alignItems="center">
-              <Grid item>
-                <FaDropbox className={classes.dropboxLogo} />
-              </Grid>
-              <Grid item>
-                <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
-                  Dropbox
-                </Typography>
-                <Typography color="textSecondary">
-                  {userName}
-                </Typography>
-              </Grid>
+          handleOpen={setCreateFolderDialog}
+        />
+        <Grid container>
+          <Grid container spacing={3} alignItems="center">
+            <Grid item>
+              <FaDropbox className={classes.dropboxLogo} />
+            </Grid>
+            <Grid item>
+              <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
+                Dropbox
+              </Typography>
+              <Typography color="textSecondary">
+                {userName}
+              </Typography>
             </Grid>
           </Grid>
-
-
+        </Grid>
         <Grid container justify="space-between" alignItems="center" style={{marginTop: "20px", marginBottom: "7.5px"}}>
-          <Grid item xs={7}>
+          <Grid item xs={12} md={7}>
             <ViewDirectory path={path} handleUpdatePath={handleUpdatePath}/>
           </Grid>
-          <Grid item xs={3.5}>
+          <Grid item>
             <TextField
               fullWidth
               variant="outlined"
@@ -331,8 +331,8 @@ function DropboxConnect(props) {
               }}
             />
           </Grid>
-          <Grid item xs={1.5}>
-            <IconButton  onClick={handleClickAction} className={classes.moreIcon}>
+          <Grid item>
+            <IconButton onClick={handleClickAction} className={classes.moreIcon}>
               <MoreHorizIcon/>
             </IconButton>
             <CustomizedMenu
@@ -362,7 +362,8 @@ function DropboxConnect(props) {
           searchFilter={searchFilter}
           allDocs={allDocs}
           updatePath={handleUpdatePath}
-          getLinkToFile={getLinkToFile}/>
+          getLinkToFile={getLinkToFile}
+        />
       </div>
     )
   }

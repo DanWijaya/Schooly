@@ -736,8 +736,6 @@ ViewTaskStudent.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-
-
   uploadTugas: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   deleteTugas: PropTypes.func.isRequired,

@@ -1,12 +1,17 @@
 import React, { Component } from "react";
+import DateFnsUtils from "@date-io/date-fns";
+import "date-fns";
+import lokal from "date-fns/locale/id";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Divider, FormControl, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup, TablePagination, TextField, Typography } from "@material-ui/core";
+import { Avatar, Badge, Button, CircularProgress, Divider, FormControl, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup, TablePagination, TextField, Typography } from "@material-ui/core";
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
+import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
 
@@ -16,19 +21,8 @@ const styles = (theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
-  paperContent: {
+  content: {
     padding: "20px",
-  },
-  pageButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
-    backgroundColor: theme.palette.action.selected,
-    color: "grey",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.divider,
-      color: "grey",
-    },
   },
   addQuestionButton: {
     width: "35px",
@@ -85,7 +79,7 @@ class CreateAssessment extends Component {
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Paper>
-                <div className={classes.paperContent}>
+                <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
                     <b>Buat Kuis</b>
                   </Typography>
@@ -94,7 +88,7 @@ class CreateAssessment extends Component {
                   </Typography>
                 </div>
                 <Divider />
-                <Grid container direction="column" spacing={3} justify="center" className={classes.paperContent}>
+                <Grid container direction="column" spacing={3} justify="center" className={classes.content}>
                   <Grid item>
                     <Typography component="label" for="name" color="primary">
                       Judul
@@ -116,58 +110,26 @@ class CreateAssessment extends Component {
                       id="description"
                     />
                   </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper>
-                <Grid container>
-                  <Grid item xs sm className={classes.paperContent}>
-                    <Grid container direction="column" spacing={2}>
-                      <Grid item>
-                        <Typography variant="h6" gutterBottom>
-                          Soal 1
-                        </Typography>
-                        <TextField multiline fullWidth variant="filled" />
-                      </Grid>
-                      <Grid item>
-                        <FormControl component="fieldset">
-                          <RadioGroup value={this.state.radioValue} onChange={this.handleRadioValue}>
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
-                            <FormControlLabel disabled control={<Radio />} label={<TextField />} />
-                          </RadioGroup>
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Divider flexItem orientation="vertical" />
-                  <Grid item xs={3} sm={1} className={classes.paperContent}>
-                    <Grid container direction="column" alignItems="center">
-                      <Grid item>
-                        <LightTooltip title="Tambahkan Berkas" placement="right">
-                          <IconButton>
-                            <AttachFileIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Duplikat Soal" placement="right">
-                          <IconButton>
-                            <FilterNoneIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Hapus Soal" placement="right">
-                          <IconButton>
-                            <DeleteIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                    </Grid>
+                  <Grid item>
+                    <Typography component="label" for="workTime" color="primary">
+                      Jadwal Pengerjaan
+                    </Typography>
+                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                      <KeyboardDateTimePicker
+                        fullWidth
+                        disablePast
+                        inputVariant="outlined"
+                        format="dd/MM/yyyy - HH:mm"
+                        ampm={false}
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        minDateMessage="Batas waktu harus waktu yang akan datang"
+                        invalidDateMessage="Format tanggal tidak benar"
+                        id="workTime"
+                        value=""
+                        onChange=""
+                      />
+                    </MuiPickersUtilsProvider>
                   </Grid>
                 </Grid>
               </Paper>
@@ -175,51 +137,47 @@ class CreateAssessment extends Component {
             <Grid item>
               <Paper>
                 <Grid container>
-                  <Grid item xs sm className={classes.paperContent}>
-                    <Grid container direction="column" spacing={2}>
-                      <Grid item>
-                        <Typography variant="h6" gutterBottom>
-                          Soal 1
-                        </Typography>
-                        <TextField multiline fullWidth variant="filled" />
-                      </Grid>
-                      <Grid item>
-                        <FormControl component="fieldset">
-                          <RadioGroup value={this.state.radioValue} onChange={this.handleRadioValue}>
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
-                            <FormControlLabel disabled control={<Radio />} label={<TextField />} />
-                          </RadioGroup>
-                        </FormControl>
-                      </Grid>
+                  <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        Soal 1
+                      </Typography>
+                      <TextField multiline fullWidth variant="filled" />
+                    </Grid>
+                    <Grid item>
+                      <FormControl component="fieldset">
+                        <RadioGroup value={this.state.radioValue} onChange={this.handleRadioValue}>
+                          <FormControlLabel value="female" control={<Radio />} label="Female" />
+                          <FormControlLabel value="male" control={<Radio />} label="Male" />
+                          <FormControlLabel value="other" control={<Radio />} label="Other" />
+                          <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
+                          <FormControlLabel disabled control={<Radio />} label={<TextField />} />
+                        </RadioGroup>
+                      </FormControl>
                     </Grid>
                   </Grid>
                   <Divider flexItem orientation="vertical" />
-                  <Grid item xs={3} sm={1} className={classes.paperContent}>
-                    <Grid container direction="column" alignItems="center">
-                      <Grid item>
-                        <LightTooltip title="Tambahkan Berkas" placement="right">
-                          <IconButton>
-                            <AttachFileIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Duplikat Soal" placement="right">
-                          <IconButton>
-                            <FilterNoneIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title="Hapus Soal" placement="right">
-                          <IconButton>
-                            <DeleteIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
+                  <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
+                    <Grid item>
+                      <LightTooltip title="Tambahkan Berkas" placement="right">
+                        <IconButton>
+                          <AttachFileIcon />
+                        </IconButton>
+                      </LightTooltip>
+                    </Grid>
+                    <Grid item>
+                      <LightTooltip title="Duplikat Soal" placement="right">
+                        <IconButton>
+                          <FilterNoneIcon />
+                        </IconButton>
+                      </LightTooltip>
+                    </Grid>
+                    <Grid item>
+                      <LightTooltip title="Hapus Soal" placement="right">
+                        <IconButton>
+                          <DeleteIcon />
+                        </IconButton>
+                      </LightTooltip>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -227,93 +185,37 @@ class CreateAssessment extends Component {
             </Grid>
             <Grid item>
               <Paper>
-                <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.paperContent}>
-                  <div style={{marginRight: "20px"}}>
+                <Grid container justify="flex-end" spacing={2} className={classes.content}>
+                  <Grid item>
                     <LightTooltip title="Tambah Soal">
                       <IconButton className={classes.addQuestionButton}>
                         <AddIcon />
                       </IconButton>
                     </LightTooltip>
-                  </div>
-                  <div style={{marginRight: "20px"}}>
+                  </Grid>
+                  <Grid item>
                     <LightTooltip title="Simpan Kuis">
-                      <IconButton className={classes.draftAssessmentButton}>
-                        <SaveIcon />
-                      </IconButton>
+                      <Badge
+                        badgeContent={
+                          <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
+                            <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
+                          </Avatar>
+                        }
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                      >
+                        <IconButton className={classes.draftAssessmentButton}>
+                          <SaveIcon />
+                        </IconButton>
+                      </Badge>
                     </LightTooltip>
-                  </div>
-                  <div>
+                  </Grid>
+                  <Grid item>
                     <Button variant="contained" className={classes.createAssessmentButton}>
                       Buat Kuis
                     </Button>
-                  </div>
-                </div>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper>
-                <Grid container>
-                  <Grid item xs className={classes.paperContent}>
-                    <Grid container justify="space-between">
-                      <Grid item>
-                        <Grid item container spacing={3} alignItems="center">
-                          <Grid item>
-                            1
-                          </Grid>
-                          <Grid item>
-                            2
-                          </Grid>
-                          <Grid item>
-                            3
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Tambah Soal">
-                              <IconButton className={classes.addQuestionButton}>
-                                <AddIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <Grid item container spacing={2}>
-                          <Grid item>
-                            <LightTooltip title="Sebelumnya">
-                              <IconButton className={classes.pageButton}>
-                                <ChevronLeftIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Selanjutnya">
-                              <IconButton className={classes.pageButton}>
-                                <ChevronRightIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Divider flexItem orientation="vertical" />
-                  <Grid item className={classes.paperContent}>
-                    <Grid container spacing={2}>
-                      <Grid item>
-                        <LightTooltip title="Simpan Kuis">
-                          <IconButton className={classes.draftAssessmentButton}>
-                            <SaveIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          className={classes.createAssessmentButton}
-                        >
-                          Buat Kuis
-                        </Button>
-                      </Grid>
-                    </Grid>
                   </Grid>
                 </Grid>
               </Paper>
