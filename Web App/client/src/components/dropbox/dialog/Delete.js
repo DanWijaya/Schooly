@@ -73,29 +73,33 @@ const useStyles = makeStyles((theme) => ({
 
 function Delete(props){
 
-  const { doc, errors, open, handleOpen, renderToUpdate } = props;
+  const { doc, errors, open, handleOpen, renderToUpdate, handleOpenLoadingAlert, setLoadingMessage, setSuccessMessage } = props;
   const {dropbox_token} = props.auth;
   const classes = useStyles()
-  const [docName, updateDocName] = useState('');
 
   const handleCloseDialog = () => {
     handleOpen(false)
-    updateDocName("")
-  }
-
-  const onChange = (e) => {
-    updateDocName(e.target.value)
   }
 
   const onSubmit = (e) => {
     e.preventDefault();
+      if(doc[".tag"] === "folder"){
+        setLoadingMessage("Folder sedang dihapus")
+      } else {
+        setLoadingMessage("File sedang dihapus")
+      }
 
+      handleOpenLoadingAlert()
 			let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
       dropbox
         .filesDeleteV2({ path: doc.path_lower })
         .then(function (response) {
-          console.log('deleteResponse', response);
-          renderToUpdate(true)
+          if(response.metadata[".tag"] === "folder"){
+            setSuccessMessage("Folder berhasil dihapus")
+          } else {
+            setSuccessMessage("File berhasil dihapus")
+          }
+          renderToUpdate("Deleted")
         })
         .catch(function(err) {
           console.log(err);

@@ -42,6 +42,7 @@ IMPORTANT:
 7. Pertama kali login habis register ada error
 8. Ganti kelas buat murid
 9. Window location reload href (delete) mau diganti
+21. Untuk share dengan member lain: https://dropbox.github.io/dropbox-sdk-js/Dropbox.html#sharingAddFileMember
 
 Error and To be Fixed:
 - Ganti copylink di landing dan link insta di about
