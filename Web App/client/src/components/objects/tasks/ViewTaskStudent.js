@@ -338,9 +338,8 @@ function ViewTaskStudent(props) {
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
-
   let tugasId = props.match.params.id;
-
+  console.log(filesCollection)
   // This page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
@@ -395,6 +394,7 @@ function ViewTaskStudent(props) {
       console.log("tasks added")
       setTaskContents(temp);
     }
+    console.log(tasksContents)
     return tasksContents
   }
 

@@ -142,6 +142,8 @@ function FileList(props) {
   };
 
   const handleDownloadFolder = () => {
+    setLoadingMessage("Folder sedang diunduh, mohon tetap menunggu")
+    handleOpenLoadingAlert()
     let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
     dropbox
       .filesDownloadZip({ path: selectedDoc.path_display})
@@ -154,6 +156,8 @@ function FileList(props) {
         link.download = name;
         link.click()
         window.URL.revokeObjectURL(blobUrl);
+        renderToUpdate(true)
+        setSuccessMessage("Folder berhasil diunduh")
         })
       .catch((err) => console.log(err))
   }

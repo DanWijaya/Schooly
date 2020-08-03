@@ -357,98 +357,98 @@ function SubmittedTaskList(props) {
     }
   }
 
-  const listClassTabPanel = () => {
-    return null;
-  }
-  
   // const listClassTabPanel = () => {
-  //   let TabPanelList = []
-  //   if (!tasksCollection.class_assigned || !all_students) {
-  //     return null
-  //   }
-  //   else {
-  //     let student_task_files_id; // to handle the download all, this is needed.
-  //     for(var i = 0; i < tasksCollection.class_assigned.length; i++) {
-  //       let students_in_class = [];
-  //       for(var j = 0; j < all_students.length; j++) {
-  //         // check if the id of the class is the same or not (means student is inside)
-  //         student_task_files_id = []
-  //         if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
-  //           let student = all_students[j]
-  //           let student_task = all_students[j].tugas
-  //           let task_list_on_panel = []
-  //           for( var k = 0; k < student_task.length; k++) {
-  //             let task = student_task[k]
-  //             if (student_task[k].for_task_object === task_id) {
-  //               student_task_files_id.push(task.id)
-  //               task_list_on_panel.push(
-  //               <WorkFile
-  //                 file_id={task.id}
-  //                 file_name={!task.ontime ? <div> {task.filename}  <Typography display="inline" color="error">(TELAT)</Typography></div> : task.filename}
-  //                 on_time = {task.ontime}
-  //                 file_type={fileType(task.filename)}
-  //                 onPreviewFile={onPreviewFile}
-  //                 onDownloadFile={onDownloadFile}/>)
-  //             }
-  //           }
-  //           students_in_class.push(
-  //             <ExpansionPanel>
-  //             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-  //             <ListItem className={classes.personListContainer}>
-  //               <ListItemAvatar>
-  //                 {!student.avatar ? <Avatar style={{marginRight: "10px"}}/> :
-  //                 <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{marginRight: "10px"}}/>}
-  //               </ListItemAvatar>
-  //               <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
-  //               //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
-  //                secondary={!tasksCollection.grades ? "Not graded" : !gradeStatus.has(student._id) && !tasksCollection.grades[student._id] ? "Not Graded" : "Graded"}/>
-  //           </ListItem>
-  //           </ExpansionPanelSummary>
-  //            <Divider />
-  //            <div className={classes.studentFileListContainer}>
-  //             <List>
-  //               {task_list_on_panel}
-  //             </List>
-  //             {student_task_files_id.length > 0 ?
-  //               <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
-  //                 <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
-  //                   <TextField
-  //                     defaultValue={grade.has(student._id) || tasksCollection.grades === null ? grade.get(student._id) : tasksCollection.grades[student._id]}
-  //                     onChange={(e) => {handleChangeGrade(e, student._id)}}
-  //                     inputProps={{
-  //                       style: {
-  //                         borderBottom: "none",
-  //                         boxShadow: "none",
-  //                         margin: "0px",
-  //                         width: "35px"
-  //                       }
-  //                     }}
-  //                     InputProps={{
-  //                       endAdornment: "/ 100"
-  //                     }}
-  //                   />
-  //                 </div>
-  //                 <div>
-  //                   <GradeButton onGradeTugas={onGradeTugas} task_id={task_id} student_id={student._id} student_name ={student.name} grade={grade}/>
-  //                   <UnduhSemuaButton onDownloadFile={onDownloadFile} student_task_files_id={student_task_files_id}/>
-  //                 </div>
-  //               </div>
-  //               : null
-  //             }
-  //           </div>
-  //            </ExpansionPanel>
-  //           )
-  //         }
-  //       }
-  //       TabPanelList.push(
-  //       <TabPanel value={value} index={i}>
-  //         {students_in_class}
-  //       </TabPanel>
-  //     )
-  //   }
+  //   return null;
   // }
-  //   return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
-  // }
+  
+  const listClassTabPanel = () => {
+    let TabPanelList = []
+    if (!tasksCollection.class_assigned || !all_students) {
+      return null
+    }
+    else {
+      let student_task_files_id; // to handle the download all, this is needed.
+      for(var i = 0; i < tasksCollection.class_assigned.length; i++) {
+        let students_in_class = [];
+        for(var j = 0; j < all_students.length; j++) {
+          // check if the id of the class is the same or not (means student is inside)
+          student_task_files_id = []
+          if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
+            let student = all_students[j]
+            let student_task = all_students[j].tugas
+            let task_list_on_panel = []
+            for( var k = 0; k < student_task.length; k++) {
+              let task = student_task[k]
+              if (student_task[k].for_task_object === task_id) {
+                student_task_files_id.push(task.id)
+                task_list_on_panel.push(
+                <WorkFile
+                  file_id={task.id}
+                  file_name={!task.ontime ? <div> {task.filename}  <Typography display="inline" color="error">(TELAT)</Typography></div> : task.filename}
+                  on_time = {task.ontime}
+                  file_type={fileType(task.filename)}
+                  onPreviewFile={onPreviewFile}
+                  onDownloadFile={onDownloadFile}/>)
+              }
+            }
+            students_in_class.push(
+              <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <ListItem className={classes.personListContainer}>
+                <ListItemAvatar>
+                  {!student.avatar ? <Avatar style={{marginRight: "10px"}}/> :
+                  <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{marginRight: "10px"}}/>}
+                </ListItemAvatar>
+                <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
+                //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
+                 secondary={!tasksCollection.grades ? "Not graded" : !gradeStatus.has(student._id) && !tasksCollection.grades[student._id] ? "Not Graded" : "Graded"}/>
+            </ListItem>
+            </ExpansionPanelSummary>
+             <Divider />
+             <div className={classes.studentFileListContainer}>
+              <List>
+                {task_list_on_panel}
+              </List>
+              {student_task_files_id.length > 0 ?
+                <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
+                  <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
+                    <TextField
+                      defaultValue={grade.has(student._id) || tasksCollection.grades === null ? grade.get(student._id) : tasksCollection.grades[student._id]}
+                      onChange={(e) => {handleChangeGrade(e, student._id)}}
+                      inputProps={{
+                        style: {
+                          borderBottom: "none",
+                          boxShadow: "none",
+                          margin: "0px",
+                          width: "35px"
+                        }
+                      }}
+                      InputProps={{
+                        endAdornment: "/ 100"
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <GradeButton onGradeTugas={onGradeTugas} task_id={task_id} student_id={student._id} student_name ={student.name} grade={grade}/>
+                    <UnduhSemuaButton onDownloadFile={onDownloadFile} student_task_files_id={student_task_files_id}/>
+                  </div>
+                </div>
+                : null
+              }
+            </div>
+             </ExpansionPanel>
+            )
+          }
+        }
+        TabPanelList.push(
+        <TabPanel value={value} index={i}>
+          {students_in_class}
+        </TabPanel>
+      )
+    }
+  }
+    return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
+  }
 
   document.title = "Schooly | Daftar Tugas Terkumpul"
   console.log(success)

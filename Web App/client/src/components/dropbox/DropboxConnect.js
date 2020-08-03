@@ -208,8 +208,8 @@ function DropboxConnect(props) {
     // eslint-disable-next-line
   }, [dropbox_token]);
 
+  // Ini untuk handle pas awal" connect ke Dropbox.
   useEffect(() => {
-
       let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
       dropbox
         .filesListFolder({ path: path })
@@ -227,8 +227,8 @@ function DropboxConnect(props) {
 
   }, [dropbox_token, newFileToRender])
 
+// Ini untuk handle kalo pathnya berubah berubah
   useEffect(() => {
-
     let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
     dropbox
       .filesListFolder({ path: path })
@@ -242,7 +242,23 @@ function DropboxConnect(props) {
         console.log(response.error.error_summary);
       });
 
-  }, [path, searchFilter])
+  }, [path])
+
+  // Ini untuk hand;e Search filter
+  useEffect(() => {
+    let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+    dropbox
+      .filesListFolder({ path: path })
+      .then((response) => {
+        console.log("resonse.entries", response.entries);
+        updateAllDocs(response.entries); // ini untuk clear search filter tiap kali ganti directory
+        setPage(0)
+      })
+      .catch((response) => {
+        console.log(response.error.error_summary);
+      });
+
+  }, [searchFilter])
 
   const handleUpdatePath = useCallback((path) => {
     updatePath(path)
@@ -301,19 +317,19 @@ function DropboxConnect(props) {
   ]
 
   const uploadFiles = e => {
-    const UPLOAD_FILE_SIZE_LIMIT = 100 * 1024 * 1024;
+    // const UPLOAD_FILE_SIZE_LIMIT = 100 * 1024 * 1024;
     let dropBox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
     let files = Array.from(e.target.files);
     console.log(files)
     if (files.length === 0) {
       return;
     }
-    // this.props.updateChoosenFiles({ files });
 
-    if (files.some(file => file.size > UPLOAD_FILE_SIZE_LIMIT)) {
-      alert("One of the files is too big!");
-    } else {
-      setLoadingMessage("File sedang diunggah")
+    // if (files.some(file => file.size > UPLOAD_FILE_SIZE_LIMIT)) {
+    //   alert("Salah satu file memiliki ukuran melebihi batas (100MB)!");
+    // }
+
+      setLoadingMessage("File sedang diunggah, mohon tetap menunggu")
       handleOpenLoadingAlert()
       const promises = files.map(file =>
         dropBox.filesUpload({
@@ -336,7 +352,6 @@ function DropboxConnect(props) {
         .catch(err => {
           console.error(err);
         });
-    }
   };
 
   document.title = "Schooly | Hubungkan ke Dropbox";

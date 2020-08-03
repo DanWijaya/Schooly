@@ -1,5 +1,6 @@
 import { GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK, GET_SUCCESS_RESPONSE } from "./Types";
 import axios from "axios";
+import { Dropbox } from "dropbox"
 
 export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {
     console.log(ontime)
@@ -91,6 +92,18 @@ export const downloadTugas = (tugas_id, userData) => dispatch => {
 export const previewTugas = (tugas_id) => dispatch => {
     console.log("Previewing Tugas")
     window.open(`http://${window.location.hostname}:5000/api/upload/file_tugas/previewtugas/${tugas_id}`, "_blank") // previously has "_blank"
+}
+
+export const moveToDropbox = (dropbox_token, tugas_ids) => dispatch => { 
+
+  axios
+    .get('/api/upload/tugas', { params: { tugas_ids : tugas_ids}})
+    .then(res => {
+      console.log(res.data)
+    })
+  let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+  // let fileList = Array.from(files);
+
 }
 
 // Upload lampiran is handled together with createTask.
