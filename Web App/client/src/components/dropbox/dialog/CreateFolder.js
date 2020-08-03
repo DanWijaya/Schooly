@@ -78,7 +78,7 @@ function CreateFolder(props){
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setLoadingMessage("Folder baru sedang dibuat")
+    setLoadingMessage("Folder baru sedang dibuat, mohon tetap menunggu")
     handleOpenLoadingAlert()
 		//console.log(pathName);
 

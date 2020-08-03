@@ -84,9 +84,9 @@ function Delete(props){
   const onSubmit = (e) => {
     e.preventDefault();
       if(doc[".tag"] === "folder"){
-        setLoadingMessage("Folder sedang dihapus")
+        setLoadingMessage("Folder sedang dihapus, mohon tetap menunggu")
       } else {
-        setLoadingMessage("File sedang dihapus")
+        setLoadingMessage("File sedang dihapus, mohon tetap menunggu")
       }
 
       handleOpenLoadingAlert()

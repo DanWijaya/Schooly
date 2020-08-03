@@ -34,38 +34,38 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
   console.log("Uploading the task file")
 
   User.findById(id, (err, user) => {
-    // if (!user) {
-    //   console.log("User not found")
-    //   return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
-    // }
+    if (!user) {
+      console.log("User not found")
+      return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
+    }
 
-    // else{
-    //   if (!user.tugas) {
-    //     let tugas_user = []
-    //     for(var i = 0; i < req.files.length; i++) {
-    //       tugas_user.push({
-    //         id: req.files[i].id,
-    //         filename: req.files[i].filename,
-    //         for_task_object: task_id,
-    //         ontime: ontime
-    //       })
-    //     }
-    //     user.tugas = tugas_user
-    //   }
-    //   else {
-    //     for(var i = 0; i < req.files.length; i++) {
-    //       user.tugas.push({id: req.files[i].id,
-    //           filename: req.files[i].filename,
-    //           for_task_object: task_id,
-    //           ontime: ontime})
-    //     }
-    //   }
-    //   console.log(user.tugas)
-    //   user
-    //     .save()
-    //     .then()
-    //     .catch(err => console.log(err))
-    // }
+    else {
+      if (!user.tugas) {
+        let tugas_user = []
+        for(var i = 0; i < req.files.length; i++) {
+          tugas_user.push({
+            id: req.files[i].id,
+            filename: req.files[i].filename,
+            for_task_object: task_id,
+            ontime: ontime
+          })
+        }
+        user.tugas = tugas_user
+      }
+      else {
+        for(var i = 0; i < req.files.length; i++) {
+          user.tugas.push({id: req.files[i].id,
+              filename: req.files[i].filename,
+              for_task_object: task_id,
+              ontime: ontime})
+        }
+      }
+      console.log(user.tugas)
+      user
+        .save()
+        .then()
+        .catch(err => console.log(err))
+    }
 
     return res.json(true)
   })
@@ -74,27 +74,31 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
 })
 
 router.get("/tugas/:id", (req,res) => {
-  let id = new mongoose.mongo.ObjectId(req.params.id)
+  let { tugas_ids } = req.query;
+  let id = tugas_ids.map((tugas_id) => new mongoose.mongo.ObjectId(tugas_id))
+
   if (Boolean(gfsTugas)) {
-    gfsTugas.files.findOne({_id: id}, (err, file) => {
+    gfsTugas.files.find({_id:{$in:id}}).toArray((err, files) => {
       // Check if files
-      if (!file || file.length === 0) {
+      if (!files || files.length === 0) {
         return res.status(404).json({
           err: "Tugas tidak ada"
         });
-      }
-      var type = file.contentType;
-      var filename = file.filename;
-      res.set("Content-Type", type);
-      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
+      } 
+      res.json(files)
 
-      // Files exist
-      const readStream = gfsTugas.createReadStream(filename);
-      readStream.pipe(res)
+      // var type = file.contentType;
+      // var filename = file.filename;
+      // res.set("Content-Type", type);
+      // res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
+
+      // // Files exist
+      // const readStream = gfsTugas.createReadStream(filename);
+      // readStream.pipe(res)
 
     });
   }
-});
+})
 
 router.get("/previewtugas/:id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.id)
