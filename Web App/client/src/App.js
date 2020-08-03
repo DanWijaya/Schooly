@@ -52,6 +52,9 @@ import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
+import AssessmentList from "./components/objects/assessment/AssessmentList";
+import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";
+import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -190,6 +193,9 @@ class App extends Component {
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
                     {/* Route Assessment - Prototype */}
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" component={CreateAssessment} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
+                    <PrivateRoute exact access={["Student"]} path="/kuis-murid" component={ViewAssessmentStudent} />
+                    <PrivateRoute exact access={["Teacher"]} path="/kuis-guru" component={ViewAssessmentTeacher} />
                     {/* Route Admin-Only */}
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />

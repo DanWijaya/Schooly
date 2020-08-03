@@ -144,7 +144,7 @@ function DropboxConnect(props) {
   const [choosedFile, setChoosedFile] = useState(null);
   const [searchFilter, updateSearchFilter ] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
-  
+
   const [newFileToRender, setNewFileToRender] = useState(false);
   const [path, updatePath] = useState("");
   const [userName, updateUserName] = useState("");
@@ -361,39 +361,38 @@ function DropboxConnect(props) {
       <Snackbar open={openLoadingAlert} anchorOrigin={{vertical: 'top', horizontal: 'top' }} autoHideDuration={null} onClose={handleCloseLoadingAlert}>
         <Alert className={classes.loadingAlert} icon={<CircularProgress disableShrink size={22} color="inherit" />} >
           {loadingMessage}
-        </Alert> 
+        </Alert>
       </Snackbar>
       <Snackbar open={openSuccessAlert} anchorOrigin={{vertical: 'top', horizontal: 'top' }} autoHideDuration={3000} onClose={handleCloseSuccessAlert}>
         <Alert onClose={handleCloseSuccessAlert} severity="success">
           {successMessage}
-        </Alert> 
+        </Alert>
       </Snackbar>
         <CreateFolder
           setLoadingMessage={setLoadingMessage}
-          setSuccessMessage={setSuccessMessage} 
+          setSuccessMessage={setSuccessMessage}
           handleOpenLoadingAlert={handleOpenLoadingAlert}
-          path={path} 
+          path={path}
           newFolder = {newFileToRender}
-          open={createFolderDialog} 
+          open={createFolderDialog}
           renderToUpdate={setNewFileToRender}
-          handleOpen={setCreateFolderDialog}/>
-          <Grid container>
-            <Grid container spacing={3} alignItems="center">
-              <Grid item>
-                <FaDropbox className={classes.dropboxLogo} />
-              </Grid>
-              <Grid item>
-                <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
-                  Dropbox
-                </Typography>
-                <Typography color="textSecondary">
-                  {userName}
-                </Typography>
-              </Grid>
+          handleOpen={setCreateFolderDialog}
+        />
+        <Grid container>
+          <Grid container spacing={3} alignItems="center">
+            <Grid item>
+              <FaDropbox className={classes.dropboxLogo} />
+            </Grid>
+            <Grid item>
+              <Typography variant="h3" style={{fontFamily: "Franklin Gothic"}}>
+                Dropbox
+              </Typography>
+              <Typography color="textSecondary">
+                {userName}
+              </Typography>
             </Grid>
           </Grid>
-
-
+        </Grid>
         <Grid container justify="space-between" alignItems="center" style={{marginTop: "20px", marginBottom: "7.5px"}}>
           <Grid item xs={12} md={6}>
             <ViewDirectory path={path} handleUpdatePath={handleUpdatePath}/>
