@@ -40,6 +40,7 @@
     "passport-jwt": "^4.0.0",
     "query-string": "^6.13.1",
     "react-avatar-edit": "^0.8.3",
+    "react-countdown-circle-timer": "^2.3.7",
     "react-icons": "^3.9.0",
     "react-sidebar": "^3.0.2",
     "react-swipeable-views": "^0.13.9",
