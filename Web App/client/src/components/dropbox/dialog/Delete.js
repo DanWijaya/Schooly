@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { Dropbox } from 'dropbox';
-import { FaFolder } from 'react-icons/fa';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Alert, Button, Dialog, Grid, Hidden, IconButton, TextField, Typography, CircularProgress } from "@material-ui/core";
+import { Button, Dialog, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import CloseIcon from "@material-ui/icons/Close";
 import CancelIcon from "@material-ui/icons/Cancel";
-import classnames from "classnames";
 import path from "path";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
@@ -25,10 +22,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   actionIcon: {
-    color: theme.palette.dropbox.main,
     display: "flex",
-    alignItems:"center", 
-    color:"#2196f3"
+    alignItems: "center",
+    color: theme.palette.dropbox.main,
   },
   dialogBox: {
     maxWidth: "350px",
@@ -66,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center"
   },
   folderIcon: {
-    marginRight: "10px", 
+    marginRight: "10px",
     color: "#2196f3"
   }
 }));
@@ -116,10 +112,10 @@ function Delete(props){
           <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
           <Grid item container justify="center" spacing={2}>
             <Grid item container justify="center">
-            {!doc? null : doc[".tag"] === "folder" ? 
+            {!doc? null : doc[".tag"] === "folder" ?
             <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
               Hapus Folder Berikut?
-            </Typography> : 
+            </Typography> :
             <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
               Hapus File Berikut?
             </Typography>
@@ -168,4 +164,3 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps
 )(Delete);
-

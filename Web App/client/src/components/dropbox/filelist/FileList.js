@@ -1,19 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Link } from 'react-router-dom';
+import React, { useState, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FaFile, FaFolder, FaFileExcel, FaFileAlt,FaFileImage, FaFileWord, FaFilePdf,FaFilePowerpoint, FaFileUpload } from 'react-icons/fa';
+import { FaFile, FaFolder, FaFileExcel, FaFileAlt, FaFileImage, FaFileWord, FaFilePdf, FaFilePowerpoint } from 'react-icons/fa';
 import { convertBytes } from './convertBytes.js';
 import { Dropbox } from "dropbox";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, Menu, MenuItem} from "@material-ui/core";
+import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@material-ui/core";
 import moment from "moment";
 import "moment/locale/id";
 // import Remove from "../Modals/Remove";
 // import CopyMove from "../Modals/CopyMove";
 import path from "path";
-import MenuIcon from '@material-ui/icons/Menu';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CustomizedMenu from "../CustomizedMenu";
 import Delete from "../dialog/Delete";
@@ -124,10 +122,10 @@ function FileList(props) {
   // this selectedDoc used to keep the document selected for further action.
   const [selectedDoc, setSelectedDoc] = useState(null);
   const classes = useStyles();
-  const {page, setPage, allDocs, updatePath, getLinkToFile, searchFilter, 
+  const {page, setPage, allDocs, updatePath, getLinkToFile, searchFilter,
     renderToUpdate, handleOpenLoadingAlert, handleOpenSuccessAlert, setSuccessMessage, setLoadingMessage } = props;
   const { dropbox_token } = props.auth;
-  
+
   const handleClickAction = (event,doc) => {
     event.stopPropagation()
     setSelectedDoc(doc)
@@ -162,7 +160,7 @@ function FileList(props) {
       .catch((err) => console.log(err))
   }
 
-  let menuItemList = 
+  let menuItemList =
     [
       {
         text: "Bagikan",
@@ -189,7 +187,7 @@ function FileList(props) {
 
 
   const rows = allDocs.map((doc) => {
-    
+
     if(doc['.tag'] !== "folder"){
       menuItemList = [
         {
@@ -209,11 +207,11 @@ function FileList(props) {
     }
     return(
     createData(
-    doc.name, doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",!doc.client_modified ? "--" : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"), 
+    doc.name, doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",!doc.client_modified ? "--" : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),
     doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display,
      <div>
       <MoreHorizIcon onClick={(e) => handleClickAction(e,doc)} className={classes.moreIcon}/>
-      {selectedDoc ? doc.path_display === selectedDoc.path_display ? 
+      {selectedDoc ? doc.path_display === selectedDoc.path_display ?
       <CustomizedMenu
       menuItemList={menuItemList}
       handleClose={handleCloseAction}
@@ -222,9 +220,9 @@ function FileList(props) {
     </div> ))
   }
     )
-  
-  
-  
+
+
+
 
   const handleClickItem = (event, file_tag, file_path) => {
     if(file_tag === "Folder"){
@@ -263,7 +261,7 @@ function FileList(props) {
 		updateMoveModal(true);
 	}
 
-  
+
   function fileType(filename) {
     let ext_file = path.extname(filename)
     switch(ext_file) {
@@ -354,12 +352,12 @@ function FileList(props) {
   console.log(rows)
   return (
     <Paper className={classes.root}>
-      <Delete 
-      handleOpenSuccessAlert={handleOpenSuccessAlert} 
-      handleOpenLoadingAlert={handleOpenLoadingAlert} 
-      doc={selectedDoc} 
-      open={deleteDialog} 
-      handleOpen={setDeleteDialog} 
+      <Delete
+      handleOpenSuccessAlert={handleOpenSuccessAlert}
+      handleOpenLoadingAlert={handleOpenLoadingAlert}
+      doc={selectedDoc}
+      open={deleteDialog}
+      handleOpen={setDeleteDialog}
       renderToUpdate={renderToUpdate}
       setLoadingMessage={setLoadingMessage}
       setSuccessMessage={setSuccessMessage}/>

@@ -8,18 +8,17 @@ import { setDropboxToken } from "../../actions/UserActions";
 import FileList from "./filelist/FileList.js";
 import CustomizedMenu from "./CustomizedMenu.js";
 import LightTooltip from "../misc/light-tooltip/LightTooltip";
+import CreateFolder from "./dialog/CreateFolder";
 import "./DropboxConnect.css";
-import { Breadcrumbs, Button, CircularProgress, Grid, InputAdornment, IconButton, LinearProgress, Icon, Snackbar, TextField, Typography } from "@material-ui/core";
+import { Breadcrumbs, Button, CircularProgress, Grid, InputAdornment, IconButton, Snackbar, TextField, Typography } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from "@material-ui/core/styles";
-import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HomeIcon from "@material-ui/icons/Home";
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { FaDropbox, FaFolderPlus, FaFileUpload } from "react-icons/fa";
 import { GoSearch } from "react-icons/go";
-import CreateFolder from "./dialog/CreateFolder";
 
 const useStyles = makeStyles((theme) => ({
   root: {
