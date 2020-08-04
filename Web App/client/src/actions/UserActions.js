@@ -22,8 +22,7 @@ export const registerUser = (userData, history) => dispatch => {
         payload: err.response.data
       })
     }
-    );
-
+  );
 };
 
 export const updateUserData = (userData, userId, history) => dispatch => {
@@ -181,9 +180,7 @@ export const getTeachers = (data="array") => dispatch => {
         })
       }
     })
-    .catch(err => {
-      console.log("Error in getting all Teachers");
-    })
+    .catch(err => { console.log("Error in getting all Teachers");})
 }
 
 export const getOneUser = (userId) => dispatch => {

@@ -1,6 +1,5 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Button, Divider, FormControl, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup, TablePagination, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -24,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 
 function ViewAssessmentStudent() {
   const classes = useStyles();
-  
+
+
   return (
     <div className={classes.root}>
       <form>
@@ -45,14 +45,6 @@ function ViewAssessmentStudent() {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  {/*<CountdownCircleTimer
-                    isPlaying
-                    duration={10}
-                    colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
-                    onComplete={() => [true, 1000]}
-                  >
-                    {renderTime}
-                  </CountdownCircleTimer> */}
                 </Grid>
               </Grid>
             </Paper>
