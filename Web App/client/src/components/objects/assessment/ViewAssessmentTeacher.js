@@ -1,17 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Divider, Fab, FormControl, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup, TablePagination, TextField, Typography } from "@material-ui/core";
+import { Fab, FormControl, FormControlLabel, Grid, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import SaveIcon from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
   root: {

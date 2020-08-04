@@ -12,7 +12,6 @@ import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { Avatar, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 
