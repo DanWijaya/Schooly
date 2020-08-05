@@ -6,8 +6,8 @@ import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
 import classnames from "classnames";
-import { viewClass } from "../../../actions/ClassActions";
-import { viewOneTask, updateTask } from "../../../actions/TaskActions";
+import { getAllClass } from "../../../actions/ClassActions";
+import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -217,8 +217,8 @@ class EditTask extends Component {
 
   componentDidMount() {
     this.props.clearErrors()
-    this.props.viewOneTask(this.props.match.params.id)
-    this.props.viewClass()
+    this.props.getOneTask(this.props.match.params.id)
+    this.props.getAllClass()
     this.props.getAllSubjects()
   }
 
@@ -693,11 +693,11 @@ EditTask.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  viewOneTask : PropTypes.func.isRequired,
+  getOneTask : PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -710,5 +710,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-    mapStateToProps, { viewOneTask, updateTask, viewClass, getAllSubjects, clearErrors }
+    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors }
 ) (withStyles(styles)(EditTask))

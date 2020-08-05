@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { viewTask, deleteTask } from "../../../actions/TaskActions";
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllTask, deleteTask } from "../../../actions/TaskActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
@@ -296,7 +296,7 @@ function TaskList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
-  const { tasksCollection, viewTask, deleteTask, viewClass, getAllSubjects } = props;
+  const { tasksCollection, getAllTask, deleteTask, getAllClass, getAllSubjects } = props;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map} = props.subjectsCollection;
   const { user } = props.auth;
@@ -314,8 +314,8 @@ function TaskList(props) {
   }
 
   React.useEffect(() => {
-    viewTask()
-    viewClass("map")
+    getAllTask()
+    getAllClass("map")
     getAllSubjects("map")
   },
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -585,8 +585,8 @@ function TaskList(props) {
 }
 
 TaskList.propTypes = {
-  viewTask: PropTypes.func.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getAllTask: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   deleteTask: PropTypes.func.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
@@ -604,5 +604,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { viewTask, deleteTask, viewClass, getAllSubjects}
+  mapStateToProps, { getAllTask, deleteTask, getAllClass, getAllSubjects}
 )(TaskList);

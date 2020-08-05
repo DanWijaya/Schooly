@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { downloadLampiranMateri, previewLampiranMateri } from "../../../actions/UploadActions";
-import { viewSelectedClasses, viewClass } from "../../../actions/ClassActions";
+import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getOneMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -211,7 +211,7 @@ function ViewMaterial(props) {
   const classes = useStyles();
 
   const { user, selectedUser} = props.auth;
-  const { deleteMaterial, getOneUser, getAllSubjects, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, viewClass } = props;
+  const { deleteMaterial, getOneUser, getAllSubjects, downloadLampiranMateri, previewLampiranMateri, getOneMaterial, getAllClass } = props;
   const { selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const materi_id = props.match.params.id
@@ -222,7 +222,7 @@ function ViewMaterial(props) {
   React.useEffect(() => {
     getAllSubjects("map") // this will get the selectedMaterials.
     getOneMaterial(materi_id)
-    viewClass("map")
+    getAllClass("map")
     getOneUser(selectedMaterials.author_id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMaterials.author_id])
@@ -441,8 +441,8 @@ ViewMaterial.propTypes = {
    getOneUser: PropTypes.func.isRequired, // For the person in charge task
    getOneMaterial: PropTypes.func.isRequired,
    getAllSubjects: PropTypes.func.isRequired,
-   viewSelectedClasses: PropTypes.func.isRequired,
-   viewClass: PropTypes.func.isRequired
+   getSelectedClasses: PropTypes.func.isRequired,
+   getAllClass: PropTypes.func.isRequired
  }
 
 const mapStateToProps = (state) => ({
@@ -455,5 +455,5 @@ const mapStateToProps = (state) => ({
 export default connect(
    mapStateToProps,  {downloadLampiranMateri, getAllSubjects,
     previewLampiranMateri, getOneMaterial, deleteMaterial,
-    getOneUser, viewClass, viewSelectedClasses }
+    getOneUser, getAllClass, getSelectedClasses }
  ) (ViewMaterial);

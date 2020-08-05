@@ -182,7 +182,7 @@ function DropboxConnect(props) {
     handleCloseLoadingAlert()
     setOpenSuccessAlert(true);
     setNewFileToRender(false)
-  },[])
+  },[handleCloseLoadingAlert])
 
   const handleCloseSuccessAlert = useCallback((event, reason) => {
     if (reason === 'clickaway') {
@@ -241,7 +241,7 @@ function DropboxConnect(props) {
         console.log(response.error.error_summary);
       });
 
-  }, [path])
+  }, [path, dropbox_token])
 
   // Ini untuk hand;e Search filter
   useEffect(() => {
@@ -257,7 +257,7 @@ function DropboxConnect(props) {
         console.log(response.error.error_summary);
       });
 
-  }, [searchFilter])
+  }, [searchFilter, dropbox_token, path])
 
   const handleUpdatePath = useCallback((path) => {
     updatePath(path)
@@ -315,7 +315,7 @@ function DropboxConnect(props) {
     },
   ]
 
-  const uploadFiles = e => {
+  const uploadFiles = (e) => {
     // const UPLOAD_FILE_SIZE_LIMIT = 100 * 1024 * 1024;
     let dropBox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
     let files = Array.from(e.target.files);
@@ -328,29 +328,29 @@ function DropboxConnect(props) {
     //   alert("Salah satu file memiliki ukuran melebihi batas (100MB)!");
     // }
 
-      setLoadingMessage("File sedang diunggah, mohon tetap menunggu")
-      handleOpenLoadingAlert()
-      const promises = files.map(file =>
-        dropBox.filesUpload({
-          path: path + "/" + file.name,
-          contents: file,
-        })
-      );
+    setLoadingMessage("File sedang diunggah, mohon tetap menunggu")
+    handleOpenLoadingAlert()
+    const promises = files.map(file =>
+      dropBox.filesUpload({
+        path: path + "/" + file.name,
+        contents: file,
+      })
+    );
 
-      Promise.all(promises)
-        .then(responses => {
-          console.log("promiseAll response", responses);
-          setNewFileToRender(true)
-          setSuccessMessage("File berhasil diunggah")
-          // handle success alertnya di useEffect render files.
-          const files = responses.map(response => ({
-            ...response,
-            ".tag": "file"
-          }));
-        })
-        .catch(err => {
-          console.error(err);
-        });
+    Promise.all(promises)
+      .then(responses => {
+        console.log("promiseAll response", responses);
+        setNewFileToRender(true)
+        setSuccessMessage("File berhasil diunggah")
+        // handle success alertnya di useEffect render files.
+        const files = responses.map(response => ({
+          ...response,
+          ".tag": "file"
+        }));
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   document.title = "Schooly | Hubungkan ke Dropbox";

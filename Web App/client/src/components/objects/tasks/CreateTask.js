@@ -7,7 +7,7 @@ import "date-fns";
 import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { createTask } from "../../../actions/TaskActions"
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
@@ -231,9 +231,10 @@ class CreateTask extends Component {
     else if (otherfield === "subject") {
       this.setState({ subject: e.target.value})
     }
-    else
+    else{
       this.setState({ [e.target.id]: e.target.value});
       console.log(this.state.fileLampiran)
+    }
   }
 
   onDateChange = (date) => {
@@ -278,9 +279,9 @@ class CreateTask extends Component {
   }
 
   componentDidMount() {
-    const { clearErrors, viewClass, getAllSubjects} = this.props;
+    const { clearErrors, getAllClass, getAllSubjects} = this.props;
     clearErrors()
-    viewClass()
+    getAllClass()
     getAllSubjects()
   }
 
@@ -607,7 +608,7 @@ CreateTask.propTypes = {
   createTask: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getOneUser: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -623,5 +624,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createTask, viewClass, getAllSubjects, getOneUser, clearErrors }
+  mapStateToProps, { createTask, getAllClass, getAllSubjects, getOneUser, clearErrors }
 ) (withStyles(styles)(CreateTask))

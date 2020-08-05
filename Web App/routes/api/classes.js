@@ -108,7 +108,6 @@ router.get("/viewSelectedClasses/", (req, res) => {
 
     if (classes_ids !== undefined) {
         ids_to_find = classes_ids.map((id) => new ObjectId(id))
-
     }
     Class.find({ _id: { $in: ids_to_find } }, (err, classes) => {
         if (!classes)

@@ -7,7 +7,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
-import { viewOneTask } from "../../../actions/TaskActions";
+import { getOneTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
@@ -326,7 +326,7 @@ function ViewTaskStudent(props) {
   const { user, selectedUser } = props.auth;
   const { uploadTugas, deleteTugas, success, getTaskFilesByUser, tasksCollection,
     filesCollection, downloadTugas, previewTugas, clearSuccess,
-    viewOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
+    getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
   const { all_subjects_map} = props.subjectsCollection;
 
   const tugasUploader = React.useRef(null);
@@ -343,7 +343,7 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
-    viewOneTask(tugasId)
+    getOneTask(tugasId)
     getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
     if(tasksCollection.person_in_charge_id){
@@ -742,7 +742,7 @@ ViewTaskStudent.propTypes = {
   downloadTugas: PropTypes.func.isRequired,
   previewTugas: PropTypes.func.isRequired,
   updateUserData: PropTypes.func.isRequired, // When you upload files, then update the user data.
-  viewOneTask: PropTypes.func.isRequired,
+  getOneTask: PropTypes.func.isRequired,
   getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
   getOneUser: PropTypes.func.isRequired, // For the person in charge task
   previewLampiran: PropTypes.func.isRequired,
@@ -761,5 +761,5 @@ const mapStateToProps = (state) => ({
 export default connect(
    mapStateToProps, { uploadTugas, clearSuccess, deleteTugas, downloadTugas,
      previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
-     previewLampiran, viewOneTask, getAllSubjects }
+     previewLampiran, getOneTask, getAllSubjects }
  ) (ViewTaskStudent);

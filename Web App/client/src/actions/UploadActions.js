@@ -101,7 +101,9 @@ export const moveToDropbox = (dropbox_token, tugas_ids) => dispatch => {
     .then(res => {
       console.log(res.data)
       let files = res.data
-      console.log(files)
+      // for (var i = 0; i < files.length; i++){
+      // window.open(`http://${window.location.hostname}:5000/api/upload/file_tugas/download/${files[0]._id}`)
+      // }
 
       let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
 

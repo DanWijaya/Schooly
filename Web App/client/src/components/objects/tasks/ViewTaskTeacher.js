@@ -4,11 +4,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { viewOneTask, deleteTask } from "../../../actions/TaskActions";
+import { getOneTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { uploadTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -210,15 +210,15 @@ function ViewTaskTeacher(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, viewOneTask, viewClass, getAllSubjects } = props;
+  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, getOneTask, getAllClass, getAllSubjects } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
   const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
   React.useEffect(() => {
-    viewOneTask(task_id)
-    viewClass("map")
+    getOneTask(task_id)
+    getAllClass("map")
     getAllSubjects("map")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -456,7 +456,7 @@ ViewTaskTeacher.propTypes = {
    updateUserData: PropTypes.func.isRequired,
    getOneUser: PropTypes.func.isRequired, // For the person in charge task
    getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
-   viewOneTask: PropTypes.func.isRequired,
+   getOneTask: PropTypes.func.isRequired,
  }
 
 const mapStateToProps = (state) => ({
@@ -468,5 +468,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
    mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, viewOneTask, getOneUser, viewClass, getAllSubjects }
+    previewLampiran, getOneTask, getOneUser, getAllClass, getAllSubjects }
  ) (ViewTaskTeacher);

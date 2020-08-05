@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { viewOneTask, gradeTask } from "../../../actions/TaskActions";
+import { getOneTask, gradeTask } from "../../../actions/TaskActions";
 import { getTaskFilesByUser, moveToDropbox ,downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
    List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -221,7 +221,7 @@ function UnduhSemuaButton(props) {
 function SubmittedTaskList(props) {
   const classes = useStyles();
 
-  const { viewOneTask, viewClass, tasksCollection, getStudents, downloadTugas, previewTugas, moveToDropbox, gradeTask, success } = props;
+  const { getOneTask, getAllClass, tasksCollection, getStudents, downloadTugas, previewTugas, moveToDropbox, gradeTask, success } = props;
   const { all_classes } = props.classesCollection;
   const { all_students, dropbox_token } = props.auth;
   const task_id = props.match.params.id;
@@ -244,9 +244,9 @@ function SubmittedTaskList(props) {
   }
 
   React.useEffect(() => {
-    viewOneTask(task_id)
+    getOneTask(task_id)
     getStudents()
-    viewClass()
+    getAllClass()
     // ini successnya bakal return 3 barang di list.
     if(success instanceof Array){
       if(success.length === 3)
@@ -299,7 +299,7 @@ function SubmittedTaskList(props) {
     if (grade.has(studentId)) {
       gradeStatusMap.set(studentId, "Graded")
       setGradeStatus(gradeStatusMap)
-      viewOneTask(task_id)
+      getOneTask(task_id)
       gradeTask(taskId, gradingData, student_name)
       moveToDropbox(dropbox_token, student_task_files_id)
     }
@@ -484,12 +484,12 @@ SubmittedTaskList.propTypes = {
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   getTaskFilesByUser:PropTypes.func.isRequired,
-  viewOneTask: PropTypes.func.isRequired,
+  getOneTask: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
   downloadTugas: PropTypes.func.isRequired,
   previewTugas: PropTypes.func.isRequired,
   gradeTask: PropTypes.func.isRequired,
-  viewClass: PropTypes.func.isRequired
+  getAllClass: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -501,6 +501,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { getStudents,
-    getTaskFilesByUser, viewOneTask, downloadTugas,
-    previewTugas, gradeTask, viewClass, moveToDropbox }
+    getTaskFilesByUser, getOneTask, downloadTugas,
+    previewTugas, gradeTask, getAllClass, moveToDropbox }
 ) (SubmittedTaskList);

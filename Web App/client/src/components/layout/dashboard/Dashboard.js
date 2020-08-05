@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import { viewTask } from "../../../actions/TaskActions";
+import { getAllTask } from "../../../actions/TaskActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
@@ -151,10 +151,10 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const {viewTask, getAllTaskFilesByUser, getAllSubjects} = this.props;
+    const {getAllTask, getAllTaskFilesByUser, getAllSubjects} = this.props;
     const { user} = this.props.auth;
 
-    viewTask()
+    getAllTask()
     getAllSubjects("map")
     if (user.role === "Student")
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
@@ -376,7 +376,7 @@ Dashboard.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  viewTask: PropTypes.func.isRequired,
+  getAllTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
 };
 
@@ -389,6 +389,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, {viewTask, getAllTaskFilesByUser, getAllSubjects})
+  connect(mapStateToProps, {getAllTask, getAllTaskFilesByUser, getAllSubjects})
   (withStyles(styles)(Dashboard))
 )

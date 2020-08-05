@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createAnnouncement } from "../../../actions/AnnouncementActions"
-import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
+import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
@@ -202,10 +202,10 @@ class CreateAnnouncement extends Component {
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { viewClass, setCurrentClass, clearErrors} = this.props;
+    const { getAllClass, setCurrentClass, clearErrors} = this.props;
 
     clearErrors()
-    viewClass()
+    getAllClass()
     if (user.role === "Student")
       setCurrentClass(user.kelas)
   }
@@ -559,5 +559,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createAnnouncement, viewClass , setCurrentClass, clearErrors }
+  mapStateToProps, { createAnnouncement, getAllClass , setCurrentClass, clearErrors }
  ) (withStyles(styles)(CreateAnnouncement))

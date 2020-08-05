@@ -9,7 +9,7 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
-import { viewSelectedClasses } from "../../../actions/ClassActions"
+import { getSelectedClasses } from "../../../actions/ClassActions"
 import { getUsers } from "../../../actions/UserActions";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditIcon from "@material-ui/icons/Edit";
@@ -200,14 +200,14 @@ function ViewAnnouncement(props) {
 
   const classes = useStyles();
   const { selectedAnnouncements } = props.announcements;
-  const { getUsers, classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, viewSelectedClasses } = props;
+  const { getUsers, classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, getSelectedClasses } = props;
   const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
     getOneAnnouncement(announcement_id)
-    viewSelectedClasses(selectedAnnouncements.class_assigned)
+    getSelectedClasses(selectedAnnouncements.class_assigned)
     if (selectedAnnouncements._id) {
       console.log("getusers is runned")
       getUsers([selectedAnnouncements.author_id])
@@ -419,7 +419,7 @@ ViewAnnouncement.propTypes = {
   deleteAnnouncement: PropTypes.func.isRequired,
   downloadLampiranAnnouncement: PropTypes.func.isRequired,
   previewLampiranAnnouncement: PropTypes.func.isRequired,
-  viewSelectedClasses: PropTypes.func.isRequired,
+  getSelectedClasses: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
 }
 
@@ -431,5 +431,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { getOneAnnouncement, getUsers, deleteAnnouncement,
-    previewLampiranAnnouncement, downloadLampiranAnnouncement, viewSelectedClasses}
+    previewLampiranAnnouncement, downloadLampiranAnnouncement, getSelectedClasses}
 ) (ViewAnnouncement);

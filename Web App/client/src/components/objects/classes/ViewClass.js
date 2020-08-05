@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { viewTask } from "../../../actions/TaskActions";
+import { getAllTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import viewClassPicture from "./ViewClassPicture.png";
@@ -278,7 +278,7 @@ function ViewClass(props) {
   const classes = useStyles();
 
   const { setCurrentClass, getStudentsByClass, getAllSubjects,
-     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, viewTask } = props;
+     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, getAllTask } = props;
   const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
@@ -387,7 +387,7 @@ function ViewClass(props) {
 
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
-      viewTask() // get the tasksCollection
+      getAllTask() // get the tasksCollection
     }
     getAllSubjects("map") // get the all_subjects_map in map
     getAllSubjects() // get the all_subjects
@@ -653,7 +653,7 @@ ViewClass.propTypes = {
   filesCollection: PropTypes.object.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  viewTask: PropTypes.func.isRequired,
+  getAllTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
@@ -670,5 +670,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { setCurrentClass, getStudentsByClass,
-    getAllSubjects, viewTask, getTeachers, getMaterial, getAllTaskFilesByUser }
+    getAllSubjects, getAllTask, getTeachers, getMaterial, getAllTaskFilesByUser }
 ) (ViewClass);
