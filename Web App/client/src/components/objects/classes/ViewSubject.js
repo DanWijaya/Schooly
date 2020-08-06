@@ -120,7 +120,7 @@ function ViewSubject(props) {
   const id = props.match.params.id;
   const{ setCurrentClass, getAllTask, getAllSubjects, tasksCollection, getAllTaskFilesByUser, getMaterial} = props;
   const { kelas } = props.classesCollection
-  const {all_user_files} = props.filesCollection;
+  // const {all_user_files} = props.filesCollection;
   const { all_subjects_map} = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection
 

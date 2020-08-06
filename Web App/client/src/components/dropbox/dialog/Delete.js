@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dropbox } from 'dropbox';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Delete(props){
 
-  const { doc, errors, open, handleOpen, renderToUpdate, handleOpenLoadingAlert, setLoadingMessage, setSuccessMessage } = props;
+  const { doc, open, handleOpen, renderToUpdate, handleOpenLoadingAlert, setLoadingMessage, setSuccessMessage } = props;
   const {dropbox_token} = props.auth;
   const classes = useStyles()
 

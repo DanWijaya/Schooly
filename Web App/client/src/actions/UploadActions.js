@@ -117,15 +117,11 @@ export const moveToDropbox = (dropbox_token, tugas_ids) => dispatch => {
       Promise
         .all(promises)
         .then(responses => {
-          const files = responses.map(response => ({
-            ...response,
-            ".tag": "file"
-          }));
+          console.log(responses)
         })
         .catch(err => {
           console.log(err)
         });
-    let fileList = Array.from(files);
     })
   
 

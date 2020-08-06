@@ -81,7 +81,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.dropbox.main,
     display: "flex",
     alignItems:"center",
-    color:"#2196f3"
   },
   loadingAlert: {
     backgroundColor: theme.palette.primary.main
@@ -140,7 +139,6 @@ function DropboxConnect(props) {
   // const [choosenFiles, updateChoosenFiles] = useState([]);
   // const [dropDown, updateDropDown] = useState(false);
   const [createFolderDialog, setCreateFolderDialog] = useState(false);
-  const [choosedFile, setChoosedFile] = useState(null);
   const [searchFilter, updateSearchFilter ] = useState("");
   const [allDocs, updateAllDocs] = useState([]);
 
@@ -223,7 +221,7 @@ function DropboxConnect(props) {
         .catch((response) => {
           console.log(response.error.error_summary);
         });
-
+        // eslint-disable-next-line
   }, [dropbox_token, newFileToRender])
 
 // Ini untuk handle kalo pathnya berubah berubah
@@ -241,7 +239,7 @@ function DropboxConnect(props) {
         console.log(response.error.error_summary);
       });
 
-  }, [path, dropbox_token])
+  }, [dropbox_token, path])
 
   // Ini untuk hand;e Search filter
   useEffect(() => {
@@ -343,10 +341,6 @@ function DropboxConnect(props) {
         setNewFileToRender(true)
         setSuccessMessage("File berhasil diunggah")
         // handle success alertnya di useEffect render files.
-        const files = responses.map(response => ({
-          ...response,
-          ".tag": "file"
-        }));
       })
       .catch(err => {
         console.error(err);
@@ -427,7 +421,6 @@ function DropboxConnect(props) {
                 multiple
                 ref={fileUploader}
                 onChange={uploadFiles}
-                value={choosedFile}
                 type="file"
               />
             <LightTooltip title="Matikan Dropbox">

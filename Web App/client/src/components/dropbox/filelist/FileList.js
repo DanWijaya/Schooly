@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { FaFile, FaFolder, FaFileExcel, FaFileAlt, FaFileImage, FaFileWord, FaFilePdf, FaFilePowerpoint } from 'react-icons/fa';
 import { convertBytes } from './convertBytes.js';
@@ -109,16 +109,9 @@ function createData(name, size, modified, type, path_display, action) {
 
 function FileList(props) {
 
-  const [dropDown, updateDropDown] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
-	const [showRemoveModal, updateRemoveModal] = useState(false);
-	const [showRenameModal, updateRenameModal] = useState(false);
-	const [showCopyModal, updateCopyModal] = useState(false);
-	const [showMoveModal, updateMoveModal] = useState(false);
-  // const [thumbnailUrl, updateThumbnailUrl] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  // const [page, setPage] = React.useState(0);
   // this selectedDoc used to keep the document selected for further action.
   const [selectedDoc, setSelectedDoc] = useState(null);
   const classes = useStyles();
@@ -240,26 +233,6 @@ function FileList(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  const showDropDown = useCallback(() => {
-		updateDropDown(dropDown ? false : true);
-	}, [dropDown]);
-
-	const handleDeleteModal = () => {
-		updateRemoveModal(true);
-	}
-
-	const handleRenameModal = () => {
-		updateRenameModal(true);
-	}
-
-	const handleCopyModal = () => {
-		updateCopyModal(true);
-	}
-
-	const handleMoveModal = () => {
-		updateMoveModal(true);
-	}
 
 
   function fileType(filename) {

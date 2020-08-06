@@ -5,17 +5,20 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import lokal from "date-fns/locale/id";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, Grid, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { createQuiz } from "../../../actions/QuizActions";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ClearIcon from '@material-ui/icons/Clear';
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
 import { getAllClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 
 const styles = (theme) => ({
   root: {
@@ -32,6 +35,15 @@ const styles = (theme) => ({
     padding: "0px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    },
+  },
+  addOptionButton: {
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    marginTop: "20px",
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.primary.main,
@@ -72,45 +84,100 @@ class CreateAssessment extends Component {
       num_qns: 1,
       questions: [{
         name: "",
-        options: new Map(),
+        options: ["Opsi 1"],
         answerIndex: "A",
       }],
       name: "",
       description: "",
       subject: "",
       class_assigned: [],
+      deadline: new Date()
     }
   }
 
-  handleRadioValue = (e) => {
-    this.setState(e.target.value);
-  };
-
+  onSubmit = (e, id) => {
+    e.preventDefault()
+    const quizData = {
+      name: this.state.name,
+      deadline: this.state.deadline,
+      subject: this.state.subject,
+      class_assigned: this.state.class_assigned,
+      description: this.state.description,
+      questions: this.state.questions,
+      author_id: id,
+    }
+    console.log(quizData)
+  }
 
   onChange = (e, otherfield=null) => {
     if(otherfield === "kelas"){
       this.setState({ class_assigned: e.target.value})
     } else if(otherfield === "subject"){
       this.setState({ subject: e.target.value})
-    } else{
+    }
+    else{
       this.setState({ [e.target.id]: e.target.value})
     }
   }
 
-  addQuestion = () => {
+  onDateChange = (date) => {
+    this.setState({ deadline: date })
+  }
+
+  handleAddQuestion = () => {
     let questions = this.state.questions
-    questions.push({name: "", options: new Map(),answerIndex: "B"})
+    questions.push({name: "", options: ["Opsi 1"], answerIndex: "B"})
     this.setState({questions: questions})
   }
 
+ 
   handleChangeQuestion = (e, i, otherfield=null) => {
     console.log(i)
     console.log(e.target.id)
-    let questions = this.state.questions
-    questions[i][e.target.id] = e.target.value
+    console.log(e.target.value)
+
+    var questions = this.state.questions
+
     if(otherfield === "answerIndex"){
       questions[i]["answerIndex"] = e.target.value
+      console.log(e.target.value)
+    }else {
+      questions[i][e.target.id] = e.target.value
     }
+
+    this.setState({ questions: questions})
+  }
+
+  handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
+    let questions = this.state.questions
+    let question = questions[qnsIndex]
+
+    if(action === "Delete"){
+      questions[qnsIndex].options.splice(optionIndex, 1)
+    }else if(action === "Add"){
+      questions[qnsIndex].options.push("")
+    }else if(action === "Edit"){
+      questions[qnsIndex].options[optionIndex] = e.target.value
+    }else{
+      console.log("No action is specified")
+    }
+    this.setState({ questions: questions})
+  }
+
+  handleDuplicateQueston = (i, question) => {
+    console.log(i)
+    let questions = this.state.questions
+    
+    questions.splice(i+1, 0, 
+    {
+      name: question.name,
+      options: [...question.options],
+      answerIndex: question.answerIndex,
+    })
+    // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
+    // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda? 
+    // questions.splice(i+1, 0, question)
+
     this.setState({ questions: questions})
   }
 
@@ -128,6 +195,7 @@ class CreateAssessment extends Component {
 
     for( let i = 0; i < length; i++){
       let question = questions[i]
+      let options = question.options;
 
       questionList.push(
         <Grid item>
@@ -138,16 +206,30 @@ class CreateAssessment extends Component {
                   <Typography variant="h6" gutterBottom>
                     Soal {i+1}
                   </Typography>
-                  <TextField multiline id="name" fullWidth variant="filled" value={question.name} onChange={(e) => this.handleChangeQuestion(e, i)}/>
+                  <TextField multiline rowsMax={10} id="name" fullWidth variant="filled" value={question.name} onChange={(e) => this.handleChangeQuestion(e, i)}/>
                 </Grid>
                 <Grid item>
-                  <FormControl component="fieldset" id="answerIndex">
-                    <RadioGroup value={question.answerIndex} id="answerIndex" onChange={(e) => this.handleChangeQuestion(e,i, "answerIndex")}>
-                      <FormControlLabel value="A" control={<Radio />} label="Female" />
-                      <FormControlLabel value="B" control={<Radio />} label="Male" />
-                      <FormControlLabel value="C" control={<Radio />} label="Other" />
-                      <FormControlLabel value="D" disabled control={<Radio />} label="(Disabled option)" />
-                      <FormControlLabel disabled control={<Radio />} label={<TextField />} />
+                  <FormControl component="fieldset" id="answerIndex" fullWidth>
+                    <RadioGroup value={question.answerIndex.toUpperCase()} id="answerIndex" onChange={(e) => this.handleChangeQuestion(e, i, "answerIndex")}>
+                      {options.map((option, index) => 
+                      <Grid>
+                        <FormControlLabel
+                        component="div" 
+                        style={{flexGrow: 1 }}
+                        value={String.fromCharCode(97 + index).toUpperCase()}
+                        control={<Radio />} 
+                        label={<TextField value={option} fullWidth onChange={(e) => this.handleQuestionOptions(e, index, i, "Edit" )} placeholder="Isi Pilihan"/>} />
+                        <IconButton onClick={(e) => this.handleQuestionOptions(e, index, i, "Delete" )}>
+                          <ClearIcon/>
+                        </IconButton>
+                        
+                      </Grid>
+                      )}
+                      <Grid>
+                        <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => this.handleQuestionOptions(e, null, i, "Add")}>
+                          Tambah  pilihan
+                        </Button>
+                      </Grid>
                     </RadioGroup>
                   </FormControl>
                 </Grid>
@@ -163,16 +245,16 @@ class CreateAssessment extends Component {
                 </Grid>
                 <Grid item>
                   <LightTooltip title="Duplikat Soal" placement="right">
-                    <IconButton>
+                    <IconButton onClick={() => this.handleDuplicateQueston(i, question)}>
                       <FilterNoneIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
                 <Grid item>
                   <LightTooltip title="Hapus Soal" placement="right">
-                    <IconButton onClick={(index=i)=> { console.log(index) 
-                      this.deleteQuestion(index)}}>
-                      <DeleteIcon />
+                    <IconButton onClick={() => { console.log(i) 
+                      this.deleteQuestion(i)}}>
+                      <ClearIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
@@ -186,23 +268,28 @@ class CreateAssessment extends Component {
   }
 
   componentDidMount(){
-    const { createQuiz, getAllClass } = this.props
+    const { createQuiz, getAllClass, getAllSubjects } = this.props
     getAllClass()
+    getAllSubjects()
   }
 
   render() {
     const { name, description, subject, class_assigned} = this.state;
     const { num_qns, radioValue } = this.state;
-    const { classes, getAllClass } = this.props;
+    const { classes, getAllClass, errors } = this.props;
     const { all_classes } = this.props.classesCollection;
+    const { all_subjects } = this.props.subjectsCollection;
 
+    const { user } = this.props.auth;
+
+    console.log(this.state.questions)
     console.log(this.state.description)
     console.log(all_classes)
     document.title = "Schooly | Buat Kuis";
     console.log(this.state.questions)
     return (
       <div className={classes.root}>
-        <form>
+        <form onSubmit={(e) => this.onSubmit(e, user.id)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Paper>
@@ -224,9 +311,27 @@ class CreateAssessment extends Component {
                       fullWidth
                       variant="outlined"
                       id="name"
+                      onChange={this.onChange}
                     />
                   </Grid>
-                  
+                  <Grid item>
+                    <Typography component="label" for="subject" color="primary">
+                      Mata Pelajaran
+                    </Typography>
+                    <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                      <Select
+                        value={this.state.subject}
+                        onChange={(event) => {this.onChange(event, "subject")}}
+                      >
+                        {all_subjects.map((subject) => (
+                          <MenuItem value={subject._id}>{subject.name}</MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>
+                        {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
                   <Grid item>
                     <Typography component="label" for="class_assigned" color="primary">
                       Kelas yang Ditugaskan
@@ -243,7 +348,7 @@ class CreateAssessment extends Component {
                         <div className={classes.chips}>
                           {selected.map((id) => {
                             let name
-                            for (var i in all_classes) {
+                            for (let i in all_classes) {
                               if(all_classes[i]._id === id) {
                                 name = all_classes[i].name
                                 break;
@@ -288,8 +393,8 @@ class CreateAssessment extends Component {
                         minDateMessage="Batas waktu harus waktu yang akan datang"
                         invalidDateMessage="Format tanggal tidak benar"
                         id="workTime"
-                        value={new Date()}
-                        onChange=""
+                        value={this.state.deadline}
+                        onChange={(date) => this.onDateChange(date)}
                       />
                     </MuiPickersUtilsProvider>
                   </Grid>
@@ -302,7 +407,7 @@ class CreateAssessment extends Component {
                 <Grid container justify="flex-end" spacing={2} className={classes.content}>
                   <Grid item>
                     <LightTooltip title="Tambah Soal">
-                      <IconButton onClick={this.addQuestion} className={classes.addQuestionButton}>
+                      <IconButton onClick={this.handleAddQuestion} className={classes.addQuestionButton}>
                         <AddIcon/>
                       </IconButton>
                     </LightTooltip>
@@ -327,7 +432,7 @@ class CreateAssessment extends Component {
                     </LightTooltip>
                   </Grid>
                   <Grid item>
-                    <Button variant="contained" className={classes.createAssessmentButton}>
+                    <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
                       Buat Kuis
                     </Button>
                   </Grid>
@@ -344,13 +449,19 @@ class CreateAssessment extends Component {
 CreateAssessment.propTypes = {
   createQuiz: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
-  classesCollection: PropTypes.object.isRequired
+  getAllSubjects: PropTypes.func.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-  classesCollection: state.classesCollection
+  errors:state.errors,
+  auth: state.auth,
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
 })
 
 export default connect(
-  mapStateToProps, { createQuiz, getAllClass }
+  mapStateToProps, { createQuiz, getAllClass, getAllSubjects }
 )(withStyles(styles)(CreateAssessment));

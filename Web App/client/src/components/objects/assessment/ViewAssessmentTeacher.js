@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Fab, FormControl, FormControlLabel, Grid, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_CLASSES, GET_ALL_CLASSES_MAP, GET_CLASSES, SET_CURRENT_CLASS } from "./Types";
+import { GET_ERRORS } from "./Types";
 
 // Add Quiz
 export const createQuiz = (quiz, history) => dispatch => {

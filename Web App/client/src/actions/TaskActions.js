@@ -1,6 +1,5 @@
 import axios from "axios";
 import { GET_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE} from "./Types";
-import { moveToDropbox } from "./UploadActions";
 
 // Add Task
 export const createTask = (formData, taskData, history) => dispatch => {
