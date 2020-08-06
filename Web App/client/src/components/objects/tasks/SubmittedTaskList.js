@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { viewOneTask, gradeTask } from "../../../actions/TaskActions";
-import { getTaskFilesByUser, downloadTugas, previewTugas } from "../../../actions/UploadActions";
+import { getOneTask, gradeTask } from "../../../actions/TaskActions";
+import { getTaskFilesByUser, moveToDropbox ,downloadTugas, previewTugas } from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
    List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -189,14 +189,14 @@ function WorkFile(props) {
 }
 function GradeButton(props) {
   const classes = useStyles()
-  const {onGradeTugas, task_id, student_id, grade, student_name} = props
+  const {onGradeTugas, task_id, student_id, grade, student_name, student_task_files_id} = props
 
   return (
     <Button
       variant="contained"
       startIcon={<CheckCircleIcon/>}
       className={classes.checkCircleIcon}
-      onClick={() => onGradeTugas(task_id, student_id, student_name, grade)}
+      onClick={() => onGradeTugas(task_id, student_task_files_id, student_id, student_name, grade)}
     >
       Simpan
     </Button>
@@ -221,9 +221,9 @@ function UnduhSemuaButton(props) {
 function SubmittedTaskList(props) {
   const classes = useStyles();
 
-  const { viewOneTask, viewClass, tasksCollection, getStudents, downloadTugas, previewTugas, gradeTask, success } = props;
+  const { getOneTask, getAllClass, tasksCollection, getStudents, downloadTugas, previewTugas, moveToDropbox, gradeTask, success } = props;
   const { all_classes } = props.classesCollection;
-  const { all_students } = props.auth;
+  const { all_students, dropbox_token } = props.auth;
   const task_id = props.match.params.id;
 
   const [grade, setGrade] = React.useState(new Map());
@@ -244,9 +244,9 @@ function SubmittedTaskList(props) {
   }
 
   React.useEffect(() => {
-    viewOneTask(task_id)
+    getOneTask(task_id)
     getStudents()
-    viewClass()
+    getAllClass()
     // ini successnya bakal return 3 barang di list.
     if(success instanceof Array){
       if(success.length === 3)
@@ -286,7 +286,7 @@ function SubmittedTaskList(props) {
       console.log("File Category is not specified")
   }
 
-  const onGradeTugas = (taskId, studentId, student_name, grade) => {
+  const onGradeTugas = (taskId, student_task_files_id, studentId, student_name, grade) => {
     console.log(studentId, grade)
     console.log(grade.get(studentId))
     let gradingData = {
@@ -299,8 +299,9 @@ function SubmittedTaskList(props) {
     if (grade.has(studentId)) {
       gradeStatusMap.set(studentId, "Graded")
       setGradeStatus(gradeStatusMap)
-      viewOneTask(task_id)
+      getOneTask(task_id)
       gradeTask(taskId, gradingData, student_name)
+      moveToDropbox(dropbox_token, student_task_files_id)
     }
   }
 
@@ -376,6 +377,7 @@ function SubmittedTaskList(props) {
           if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
             let student = all_students[j]
             let student_task = all_students[j].tugas
+            console.log(student_task)
             let task_list_on_panel = []
             for ( var k = 0; k < student_task.length; k++) {
               let task = student_task[k]
@@ -429,7 +431,7 @@ function SubmittedTaskList(props) {
                     />
                   </div>
                   <div>
-                    <GradeButton onGradeTugas={onGradeTugas} task_id={task_id} student_id={student._id} student_name ={student.name} grade={grade}/>
+                    <GradeButton onGradeTugas={onGradeTugas} student_task_files_id={student_task_files_id} task_id={task_id} student_id={student._id} student_name ={student.name} grade={grade}/>
                     <UnduhSemuaButton onDownloadFile={onDownloadFile} student_task_files_id={student_task_files_id}/>
                   </div>
                 </div>
@@ -482,12 +484,12 @@ SubmittedTaskList.propTypes = {
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   getTaskFilesByUser:PropTypes.func.isRequired,
-  viewOneTask: PropTypes.func.isRequired,
+  getOneTask: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
   downloadTugas: PropTypes.func.isRequired,
   previewTugas: PropTypes.func.isRequired,
   gradeTask: PropTypes.func.isRequired,
-  viewClass: PropTypes.func.isRequired
+  getAllClass: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -499,6 +501,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { getStudents,
-    getTaskFilesByUser, viewOneTask, downloadTugas,
-    previewTugas, gradeTask, viewClass }
+    getTaskFilesByUser, getOneTask, downloadTugas,
+    previewTugas, gradeTask, getAllClass, moveToDropbox }
 ) (SubmittedTaskList);

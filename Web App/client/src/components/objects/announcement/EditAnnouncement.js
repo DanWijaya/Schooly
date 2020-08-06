@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
-import { viewClass, setCurrentClass } from "../../../actions/ClassActions";
+import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
@@ -198,11 +198,11 @@ class EditAnnouncement extends Component {
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { setCurrentClass, getOneAnnouncement, viewClass, clearErrors } = this.props;
+    const { setCurrentClass, getOneAnnouncement, getAllClass, clearErrors } = this.props;
 
     clearErrors()
     getOneAnnouncement(this.props.match.params.id)
-    viewClass()
+    getAllClass()
     if (user.role ==="Student")
       setCurrentClass(user.kelas)
 
@@ -601,7 +601,7 @@ EditAnnouncement.propTypes = {
   updateAnnouncement: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -613,5 +613,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, viewClass, clearErrors }
+  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors }
   )(withStyles(styles)(EditAnnouncement))

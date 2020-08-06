@@ -22,51 +22,27 @@ router.post("/create", (req, res) => {
         }
 
         else {
-            const newTask = new Task({
-            name: req.body.name,
-            deadline: req.body.deadline,
-            subject: req.body.subject,
-            class_assigned: req.body.class_assigned,
-            description: req.body.description,
-            person_in_charge_id: req.body.person_in_charge_id
-            // submitted: req.body.submitted
-        });
-        newTask
-            .save()
-            .then(task => {
-                res.json(task)
-                console.log("Task is created")})
-            .catch(err => console.log(err));
+          const newTask = new Task(req.body)
+            // const newTask = new Task({
+            // name: req.body.name,
+            // deadline: req.body.deadline,
+            // subject: req.body.subject,
+            // class_assigned: req.body.class_assigned,
+            // description: req.body.description,
+            // person_in_charge_id: req.body.person_in_charge_id
+            // })
+        
+          newTask
+              .save()
+              .then(task => {
+                  res.json(task)
+                  console.log("Task is created")})
+              .catch(err => console.log(err));
             }
         });
     });
 
 
-
-router.post("/view", (req, res) => {
-
-    // const name = req.body.name;
-    // const subject = req.body.subject;
-    let id = req.params.id;
-    console.log("req");
-    Task.findById(id)
-        .then(task => {
-        //Check if task exists
-        if (!task) {
-            return res.status(404).json({ tasknotfound: "Task not found"});
-        }
-        else {
-            const payload = {
-                name : req.body.name,
-                deadline : req.body.deadline,
-                subject : req.body.subject,
-                task_assigned : req.body.task_assigned
-                // submitted : req.body.submitted,
-                }
-            res.json(payload);
-            }
-    });
-});
 
 //Define View classes route
 router.get("/viewall", (req, res) => {
@@ -92,10 +68,13 @@ router.delete("/delete/:id", (req, res) => {
 })
 
 //Define Edit routes
-router.get("/viewOneTask/:id", (req, res) => {
+router.get("/view/:id", (req, res) => {
     let id = req.params.id;
     Task.findById(id, (err, taskData) => {
-        res.json(taskData);
+      if(!taskData)
+        return res.status(404).json("Task is not found")
+
+      return res.json(taskData);
     })
 })
 

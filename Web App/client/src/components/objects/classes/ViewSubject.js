@@ -6,7 +6,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { viewTask } from "../../../actions/TaskActions";
+import { getAllTask } from "../../../actions/TaskActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { Avatar, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
@@ -118,7 +118,7 @@ function ViewSubject(props) {
 
   const { user } = props.auth;
   const id = props.match.params.id;
-  const{ setCurrentClass, viewTask, getAllSubjects, tasksCollection, getAllTaskFilesByUser, getMaterial} = props;
+  const{ setCurrentClass, getAllTask, getAllSubjects, tasksCollection, getAllTaskFilesByUser, getMaterial} = props;
   const { kelas } = props.classesCollection
   const {all_user_files} = props.filesCollection;
   const { all_subjects_map} = props.subjectsCollection;
@@ -130,7 +130,7 @@ function ViewSubject(props) {
       getMaterial(user.kelas, "by_class")
     }
     setCurrentClass(user.kelas)
-    viewTask()
+    getAllTask()
     getAllTaskFilesByUser(user.id)
     getAllSubjects("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -322,7 +322,7 @@ ViewSubject.propTypes = {
   filesCollection: PropTypes.object.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  viewTask: PropTypes.func.isRequired,
+  getAllTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired
 }
@@ -338,5 +338,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, {setCurrentClass,
-    getAllSubjects, viewTask, getAllTaskFilesByUser, getMaterial}
+    getAllSubjects, getAllTask, getAllTaskFilesByUser, getMaterial}
 ) (ViewSubject)

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "date-fns";
 import {Link } from "react-router-dom"
 import classnames from "classnames";
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneMaterial } from "../../../actions/MaterialActions";
 import { updateMaterial} from "../../../actions/MaterialActions"
@@ -202,9 +202,9 @@ class EditMaterial extends Component {
   uploadedLampiran = React.createRef(null)
 
   componentDidMount() {
-    const { viewClass, getAllSubjects, clearErrors, getOneMaterial } = this.props;
+    const { getAllClass, getAllSubjects, clearErrors, getOneMaterial } = this.props;
 
-    viewClass()
+    getAllClass()
     clearErrors()
     getOneMaterial(this.props.match.params.id)
     getAllSubjects()
@@ -660,7 +660,7 @@ EditMaterial.propTypes = {
   clearErrors: PropTypes.func.isRequired,
   updateMaterial: PropTypes.func.isRequired,
   getOneMaterial: PropTypes.func.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
 
@@ -674,5 +674,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-    mapStateToProps, { viewClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial }
+    mapStateToProps, { getAllClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial }
 ) (withStyles(styles)(EditMaterial))

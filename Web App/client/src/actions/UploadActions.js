@@ -95,14 +95,39 @@ export const previewTugas = (tugas_id) => dispatch => {
 }
 
 export const moveToDropbox = (dropbox_token, tugas_ids) => dispatch => { 
-
+  console.log(dropbox_token, tugas_ids)
   axios
-    .get('/api/upload/tugas', { params: { tugas_ids : tugas_ids}})
+    .get('/api/upload/file_tugas/', { params: { tugas_ids : tugas_ids}})
     .then(res => {
       console.log(res.data)
+      let files = res.data
+      // for (var i = 0; i < files.length; i++){
+      // window.open(`http://${window.location.hostname}:5000/api/upload/file_tugas/download/${files[0]._id}`)
+      // }
+
+      let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+
+      const promises = files.map(file => 
+        dropbox.filesUpload({
+          path: "/TUGAS/" + file.filename,
+          contents: file
+        })
+      );
+
+      Promise
+        .all(promises)
+        .then(responses => {
+          const files = responses.map(response => ({
+            ...response,
+            ".tag": "file"
+          }));
+        })
+        .catch(err => {
+          console.log(err)
+        });
+    let fileList = Array.from(files);
     })
-  let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
-  // let fileList = Array.from(files);
+  
 
 }
 

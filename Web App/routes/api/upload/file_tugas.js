@@ -73,29 +73,39 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
   
 })
 
-router.get("/tugas/:id", (req,res) => {
-  let { tugas_ids } = req.query;
-  let id = tugas_ids.map((tugas_id) => new mongoose.mongo.ObjectId(tugas_id))
+router.get("/tugas/:tugas_id", (req,res) => {
+  let { tugas_id } = req.params;
+  let {tugas_ids} = req.query;
+
+  console.log("TUGAS ID : ", tugas_id)
+  let id
+  if(tugas_ids) {
+    id = tugas_ids.map((tugas_id) => new mongoose.mongo.ObjectId(tugas_id))
+  } else {
+    id = new mongoose.mongo.ObjectId(tugas_id)
+  }
+  
 
   if (Boolean(gfsTugas)) {
-    gfsTugas.files.find({_id:{$in:id}}).toArray((err, files) => {
+    gfsTugas.files.find({_id:id}).toArray((err, files) => {
       // Check if files
       if (!files || files.length === 0) {
         return res.status(404).json({
           err: "Tugas tidak ada"
         });
       } 
-      res.json(files)
 
-      // var type = file.contentType;
-      // var filename = file.filename;
-      // res.set("Content-Type", type);
-      // res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
+      var type = files[0].contentType;
+      var filename = files[0].filename;
+      res.set("Content-Type", type);
+      res.set("Content-Disposition", "attachment;filename=" + filename) // harus pakai attachment.
 
-      // // Files exist
-      // const readStream = gfsTugas.createReadStream(filename);
-      // readStream.pipe(res)
-
+      // Files exist
+      const readStream = gfsTugas.createReadStream(filename);
+      readStream.on('data', function(chunk) {
+        console.log(chunk.toString())
+      })
+      // res.json(files)
     });
   }
 })
@@ -110,15 +120,16 @@ router.get("/previewtugas/:id", (req,res) => {
           err: "Tugas tidak ada"
         });
       }
+      console.log(file)
       var type = file.contentType;
       var filename = file.filename;
       res.set("Content-Type", type);
       res.set("Content-Disposition", "inline;filename=" + filename)
 
-      // Files exist
+      // // Files exist
       const readStream = gfsTugas.createReadStream(filename);
+      console.log("PREVIEW TUGASSS")
       readStream.pipe(res)
-
     });
   }
 })

@@ -20,7 +20,7 @@ export const createClass = (classData, history) => dispatch => {
 };
 
 // View All Class
-export const viewClass = (data="array") => dispatch => {
+export const getAllClass = (data="array") => dispatch => {
   axios
     .get("/api/classes/viewall")
     .then(res => {
@@ -47,7 +47,7 @@ export const viewClass = (data="array") => dispatch => {
     })
 }
 
-export const viewSelectedClasses = (classes_ids) => dispatch => {
+export const getSelectedClasses = (classes_ids) => dispatch => {
   axios
     .get("/api/classes/viewSelectedClasses/", { params: { classes_ids : classes_ids}})
     .then(res => {

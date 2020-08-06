@@ -1,5 +1,6 @@
 import axios from "axios";
 import { GET_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE} from "./Types";
+import { moveToDropbox } from "./UploadActions";
 
 // Add Task
 export const createTask = (formData, taskData, history) => dispatch => {
@@ -34,7 +35,7 @@ export const createTask = (formData, taskData, history) => dispatch => {
 }
 
 // View Task
-export const viewTask = () => dispatch => {
+export const getAllTask = () => dispatch => {
   axios
     .get("/api/tasks/viewall")
     .then(res => {
@@ -54,9 +55,9 @@ export const viewTask = () => dispatch => {
 }
 
 // View All Tasks
-export const viewOneTask = (taskId) => dispatch => {
+export const getOneTask = (taskId) => dispatch => {
   axios
-    .get("/api/tasks/viewOneTask/" + taskId)
+    .get("/api/tasks/view/" + taskId)
     .then(res => {
         console.log("Task to be edited: ", res.data);
         dispatch({
@@ -126,6 +127,7 @@ export const gradeTask = (taskId, gradingData, student_name) => dispatch => {
                 type: GET_SUCCESS_RESPONSE,
                 payload: [true, gradingData.grade, student_name ]
             })
+
         })
         .catch(err => {
             console.log(err);

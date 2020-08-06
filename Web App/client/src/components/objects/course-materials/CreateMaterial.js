@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
@@ -271,7 +271,7 @@ class CreateMaterial extends Component {
 
   componentDidMount() {
     this.props.clearErrors()
-    this.props.viewClass()
+    this.props.getAllClass()
     this.props.getAllSubjects()
 
   }
@@ -576,7 +576,7 @@ CreateMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   createMaterial: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -591,5 +591,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { viewClass, getAllSubjects, createMaterial, clearErrors }
+  mapStateToProps, { getAllClass, getAllSubjects, createMaterial, clearErrors }
 ) (withStyles(styles)(CreateMaterial))

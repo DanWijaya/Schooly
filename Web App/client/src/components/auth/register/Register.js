@@ -6,7 +6,7 @@ import classnames from "classnames";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
 import { registerUser } from "../../../actions/UserActions";
-import { viewClass } from "../../../actions/ClassActions";
+import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import authBackground from "../AuthBackground.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
@@ -109,7 +109,7 @@ class Register extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
-    this.props.viewClass()
+    this.props.getAllClass()
     this.props.getAllSubjects()
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
@@ -544,7 +544,7 @@ Register.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
 };
 
@@ -556,6 +556,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { registerUser, viewClass , getAllSubjects})
+  connect(mapStateToProps, { registerUser, getAllClass , getAllSubjects})
   (withStyles(styles)(Register))
 )

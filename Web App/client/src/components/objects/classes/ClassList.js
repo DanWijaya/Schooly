@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getTeachers } from "../../../actions/UserActions";
-import { viewClass, deleteClass } from "../../../actions/ClassActions";
+import { getAllClass, deleteClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core";
@@ -270,7 +270,7 @@ function ClassList(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  const { viewClass, deleteClass, classesCollection, getTeachers, errors, clearErrors } = props;
+  const { getAllClass, deleteClass, classesCollection, getTeachers, errors, clearErrors } = props;
 
   const { user, all_teachers } = props.auth;
 
@@ -290,7 +290,7 @@ function ClassList(props) {
     )
   }
   React.useEffect(() => {
-    viewClass()
+    getAllClass()
     getTeachers("map")
     clearErrors()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -530,7 +530,7 @@ function ClassList(props) {
 };
 
 ClassList.propTypes = {
-  viewClass: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
@@ -546,5 +546,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { viewClass, deleteClass, getTeachers, clearErrors }
+  mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors }
 ) (ClassList);

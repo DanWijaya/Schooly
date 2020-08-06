@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
-import { viewSelectedClasses, viewClass } from "../../../actions/ClassActions";
+import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -292,7 +292,7 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-  const { getAllSubjects, getMaterial, deleteMaterial, viewClass } = props;
+  const { getAllSubjects, getMaterial, deleteMaterial, getAllClass } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
@@ -313,7 +313,7 @@ function MaterialList(props) {
 
   React.useEffect(() => {
     getAllSubjects("map")
-    viewClass("map")
+    getAllClass("map")
     if (user.role === "Teacher") {
       getMaterial(user.id, "by_author")
     }
@@ -578,8 +578,8 @@ MaterialList.propTypes = {
   getMaterial: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  viewSelectedClasses: PropTypes.func.isRequired,
-  viewClass: PropTypes.func.isRequired,
+  getSelectedClasses: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
 
   classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
@@ -598,5 +598,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getUsers, viewClass, viewSelectedClasses }
+  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getUsers, getAllClass, getSelectedClasses }
 )(MaterialList);
