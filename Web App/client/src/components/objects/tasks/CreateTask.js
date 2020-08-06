@@ -256,7 +256,7 @@ class CreateTask extends Component {
 
     //Check if there is any lampiran_tugas uploaded or not.
     if (this.state.fileLampiran)
-      for(var i = 0; i < this.state.fileLampiran.length; i++) {
+      for (var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
         formData.append("lampiran_tugas", this.state.fileLampiran[i])
       }

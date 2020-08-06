@@ -123,7 +123,7 @@ function AnnouncementList(props) {
     let annList = [];
     console.log(selectedAnnouncements, retrieved_users)
     if(selectedAnnouncements.length && retrieved_users.size) {
-      for(var i = selectedAnnouncements.length-1; i >= 0; i--) {
+      for (var i = selectedAnnouncements.length-1; i >= 0; i--) {
         // retrieved users ini bulk request, dapat data user"nya satu"
         annList.push(
           <AnnouncementItemList

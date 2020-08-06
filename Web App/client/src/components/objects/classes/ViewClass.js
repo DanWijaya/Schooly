@@ -293,7 +293,7 @@ function ViewClass(props) {
     let tasksList = []
     if (Boolean(tasksCollection.length)) {
       var i;
-      for(i = tasksCollection.length-1; i >= 0; i--){
+      for (i = tasksCollection.length-1; i >= 0; i--){
         let task = tasksCollection[i];
         let class_assigned = task.class_assigned
         if(class_assigned.indexOf(classId) !== -1){
@@ -305,7 +305,7 @@ function ViewClass(props) {
       }
 
       let result = [];
-      for(i = 0; i < tasksList.length; i++){
+      for (i = 0; i < tasksList.length; i++){
       let task = tasksList[i]
       let workCategoryAvatar = (
         <Avatar className={classes.assignmentLate}>
@@ -314,7 +314,7 @@ function ViewClass(props) {
       )
       let workStatus = "Belum Dikumpulkan"
       console.log(all_user_files)
-      // for(var j = 0; j < all_user_files.length; j++){
+      // for (var j = 0; j < all_user_files.length; j++){
       //     if(all_user_files[j].for_task_object === task._id){
       //     workStatus = "Telah Dikumpulkan"
       //     workCategoryAvatar = (
@@ -358,7 +358,7 @@ function ViewClass(props) {
           <MenuBookIcon/>
         </Avatar>
       )
-      for(var i = selectedMaterials.length-1; i >= 0; i--){
+      for (var i = selectedMaterials.length-1; i >= 0; i--){
         let material = selectedMaterials[i]
         if(!category || (category === "subject" && material.subject === subject._id)){
           materialList.push(

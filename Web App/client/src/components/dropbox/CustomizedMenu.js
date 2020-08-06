@@ -48,18 +48,19 @@ function CustomizedMenus(props) {
         onClose={handleClose}
       >
         {menuItemList.map((item) =>
-        <StyledMenuItem
-        onClick={(e) => {
-          e.stopPropagation()
-          item.handleClick()
-          }}>
-          {!item.icon ? null :
-          <ListItemIcon>
-            {item.icon}
-          </ListItemIcon>
-          }
-          <ListItemText primary={item.text} />
-        </StyledMenuItem>)
+          <StyledMenuItem
+            onClick={(e) => {
+              e.stopPropagation()
+              item.handleClick()
+            }}
+          >
+            {!item.icon ? null :
+              <ListItemIcon>
+                {item.icon}
+              </ListItemIcon>
+            }
+            <ListItemText primary={item.text} />
+          </StyledMenuItem>)
         }
       </StyledMenu>
   );

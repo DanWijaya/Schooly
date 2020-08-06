@@ -198,15 +198,15 @@ class CreateMaterial extends Component {
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
     if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
-      this.setState({ anchorEl: event.currentTarget})
+      this.setState({ anchorEl: event.currentTarget })
   }
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null})
+    this.setState({ anchorEl: null })
   }
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true})
+    this.setState({ openUploadDialog: true })
   };
 
   handleCloseUploadDialog = () => {
@@ -214,22 +214,22 @@ class CreateMaterial extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log("On change : ", e.target.value)
+    console.log("On change:", e.target.value)
     console.log(Array.from(this.state.fileLampiran))
     if (otherfield === "kelas") {
-      this.setState({ class_assigned: e.target.value})
+      this.setState({ class_assigned: e.target.value })
     }
     else if (otherfield === "deadline") {
-      this.setState({ deadline: e}) // e is the date value itself.
+      this.setState({ deadline: e }) // e is the date value itself.
     }
     else if (otherfield === "description") {
-      this.setState({ description : e.target.value})
+      this.setState({ description : e.target.value })
     }
     else if (otherfield === "subject") {
-      this.setState({ subject: e.target.value})
+      this.setState({ subject: e.target.value })
     }
     else
-      this.setState({ [e.target.id]: e.target.value});
+      this.setState({ [e.target.id]: e.target.value });
   }
 
   onSubmit = (e, id) => {
@@ -238,7 +238,7 @@ class CreateMaterial extends Component {
 
     //Check if there is any lampiran uploaded or not.
     if (this.state.fileLampiran)
-      for(var i = 0; i < this.state.fileLampiran.length; i++) {
+      for (var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
         formData.append("lampiran_materi", this.state.fileLampiran[i])
       }

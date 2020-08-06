@@ -280,7 +280,7 @@ class CreateAnnouncement extends Component {
     };
 
     if (this.state.fileLampiran)
-      for(var i = 0; i < this.state.fileLampiran.length; i++) {
+      for (var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
         formData.append("lampiran_announcement", this.state.fileLampiran[i])
       }

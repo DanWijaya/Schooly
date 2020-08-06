@@ -279,7 +279,7 @@ class Dashboard extends Component {
                 </Grid>
                 <Grid container direction="column" spacing={1}>
                   {tasksByClass.map((task) => {
-                    for(var i = 0; i < all_user_files.length; i++) {
+                    for (var i = 0; i < all_user_files.length; i++) {
                       if (all_user_files[i].for_task_object === task._id) {
                         return null;
                       }
