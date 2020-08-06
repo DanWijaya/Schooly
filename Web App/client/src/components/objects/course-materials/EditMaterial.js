@@ -257,7 +257,7 @@ class EditMaterial extends Component {
     //   materialObject.class_assigned = class_assigned // When it has no change
 
     let formData = new FormData()
-    for(var i = 0; i< fileLampiranToAdd.length; i++) {
+    for (var i = 0; i< fileLampiranToAdd.length; i++) {
       console.log(this.state.fileLampiran[i])
       formData.append("lampiran_materi", this.state.fileLampiranToAdd[i])
     }
@@ -300,7 +300,7 @@ class EditMaterial extends Component {
     }
     else { // For the one that"s not yet in DB
       // Remove the file in fileLampiranToAdd
-      for(var j = 0; j < tempToAdd.length; j++) {
+      for (var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
         if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)
@@ -560,7 +560,7 @@ class EditMaterial extends Component {
                                   if (all_classes.length === 0)
                                     return null;
                                   else{
-                                    for(var i in all_classes) {
+                                    for (var i in all_classes) {
                                       if (all_classes[i]._id === id) {
                                         name = all_classes[i].name
                                         break;

@@ -259,7 +259,7 @@ class EditAnnouncement extends Component {
     }
     else { //Untuk yang belum di DB
       //Remove the file in fileLampiranToAdd
-      for(var j = 0; j < tempToAdd.length; j++) {
+      for (var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
         if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)
@@ -315,7 +315,7 @@ class EditAnnouncement extends Component {
     }
 
     let formData = new FormData()
-    for(var i = 0; i< fileLampiranToAdd.length; i++) {
+    for (var i = 0; i< fileLampiranToAdd.length; i++) {
       console.log(fileLampiran[i])
       formData.append("lampiran_announcement", fileLampiranToAdd[i])
     }

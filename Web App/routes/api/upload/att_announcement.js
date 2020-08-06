@@ -33,7 +33,7 @@ router.post("/lampiran/:id", uploadLampiranAnnouncement.array("lampiran_announce
       let temp = [];
       console.log("Files are here: ", req.files)
       // console.log("Files are here: ", req.files)
-      for(var i = 0; i< req.files.length; i++) {
+      for (var i = 0; i< req.files.length; i++) {
         console.log(req.files[i])
         temp.push({
           id: req.files[i].id,
@@ -65,7 +65,7 @@ router.delete("/lampiran/:id", (req,res) => {
   const {lampiran_to_delete, current_lampiran} = req.body;
   console.log(lampiran_to_delete)
 
-  for(var i = 0; i < lampiran_to_delete.length; i++) {
+  for (var i = 0; i < lampiran_to_delete.length; i++) {
     let id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // // di rootnya, masukkin collection namenya..
     gfsLampiranAnnouncement.remove({ _id: id, root: "lampiran_announcement"}, (err) => {
@@ -79,7 +79,7 @@ router.delete("/lampiran/:id", (req,res) => {
     })
 
     if (announcement_id !== "deleteall") {
-      for(var j =0; j < current_lampiran.length; j++) {
+      for (var j =0; j < current_lampiran.length; j++) {
         if (current_lampiran[j].filename === lampiran_to_delete[i].filename) {
           current_lampiran.splice(j,1)
           break;

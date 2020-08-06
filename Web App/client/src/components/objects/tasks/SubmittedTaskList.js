@@ -369,9 +369,9 @@ function SubmittedTaskList(props) {
     }
     else {
       let student_task_files_id; // to handle the download all, this is needed.
-      for(var i = 0; i < tasksCollection.class_assigned.length; i++) {
+      for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
         let students_in_class = [];
-        for(var j = 0; j < all_students.length; j++) {
+        for (var j = 0; j < all_students.length; j++) {
           // check if the id of the class is the same or not (means student is inside)
           student_task_files_id = []
           if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
@@ -379,7 +379,7 @@ function SubmittedTaskList(props) {
             let student_task = all_students[j].tugas
             console.log(student_task)
             let task_list_on_panel = []
-            for( var k = 0; k < student_task.length; k++) {
+            for ( var k = 0; k < student_task.length; k++) {
               let task = student_task[k]
               if (student_task[k].for_task_object === task_id) {
                 student_task_files_id.push(task.id)

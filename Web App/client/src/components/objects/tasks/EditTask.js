@@ -256,7 +256,7 @@ class EditTask extends Component {
     console.log(class_assigned)
 
     class_assigned.map((id) => {
-      for( var i = 0; i < classesOptions.length; i++) {
+      for ( var i = 0; i < classesOptions.length; i++) {
         if (classesOptions[i]._id === id) {
           classesSelected.push(classesOptions[i])
           break;
@@ -279,7 +279,7 @@ class EditTask extends Component {
     taskObject.class_assigned = class_assigned // When it has no change
 
   let formData = new FormData()
-  for(var i = 0; i< fileLampiranToAdd.length; i++) {
+  for (var i = 0; i< fileLampiranToAdd.length; i++) {
     console.log(this.state.fileLampiran[i])
     formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i])
   }
@@ -321,7 +321,7 @@ class EditTask extends Component {
     }
     else { // For the one that"s not yet in DB
       // Remove the file in fileLampiranToAdd
-      for(var j = 0; j < tempToAdd.length; j++) {
+      for (var j = 0; j < tempToAdd.length; j++) {
         console.log(temp[i].name, tempToAdd[j].name)
         if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)

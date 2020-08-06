@@ -37,7 +37,7 @@ router.post("/lampiran/:task_id", uploadLampiranTugas.array("lampiran_tugas", 10
     else {
       let temp = []
       console.log("Files are here: ", req.files)
-      for(var i = 0; i< req.files.length; i++) {
+      for (var i = 0; i< req.files.length; i++) {
         console.log(req.files[i])
         temp.push({
           id: req.files[i].id,
@@ -113,7 +113,7 @@ router.get("/preview/:task_id", (req,res) => {
 router.delete("/lampiran/:task_id", (req,res) => {
   let task_id = req.params.task_id;
   const {lampiran_to_delete, current_lampiran} = req.body;
-  for(var i = 0; i < lampiran_to_delete.length; i++) {
+  for (var i = 0; i < lampiran_to_delete.length; i++) {
     lampiran_id = new mongoose.mongo.ObjectId(lampiran_to_delete[i].id)
     // di rootnya, masukkin collection namenya..
     gfsLampiranTugas.remove({ _id: lampiran_id, root: "lampiran_tugas"}, (err) => {
@@ -126,7 +126,7 @@ router.delete("/lampiran/:task_id", (req,res) => {
       }
     })
 
-    for(var j =0; j < current_lampiran.length; j++) {
+    for (var j =0; j < current_lampiran.length; j++) {
       if (current_lampiran[j].filename === lampiran_to_delete[i].filename) {
         current_lampiran.splice(j,1)
         break;

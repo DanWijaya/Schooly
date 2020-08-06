@@ -42,7 +42,7 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
     else {
       if (!user.tugas) {
         let tugas_user = []
-        for(var i = 0; i < req.files.length; i++) {
+        for (var i = 0; i < req.files.length; i++) {
           tugas_user.push({
             id: req.files[i].id,
             filename: req.files[i].filename,
@@ -53,7 +53,7 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
         user.tugas = tugas_user
       }
       else {
-        for(var i = 0; i < req.files.length; i++) {
+        for (var i = 0; i < req.files.length; i++) {
           user.tugas.push({id: req.files[i].id,
               filename: req.files[i].filename,
               for_task_object: task_id,

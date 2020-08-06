@@ -7,7 +7,7 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
     axios
       .post("/api/materials/create", materialData)
       .then(res => {
-          console.log("this is the res" , res.data)
+          console.log("this is the res", res.data)
           console.log("Will run this")
           console.log(formData.getAll('lampiran_materi'))
           dispatch({

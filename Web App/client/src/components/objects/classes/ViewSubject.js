@@ -162,7 +162,7 @@ function ViewSubject(props) {
       )
 
       let workStatus = "Belum Dikumpulkan"
-      // for(var i = 0; i < all_user_files.length; i++) {
+      // for (var i = 0; i < all_user_files.length; i++) {
       //   if (all_user_files[i].for_task_object === task._id) {
       //     workStatus = "Telah Dikumpulkan"
       //     workCategoryAvatar = (
