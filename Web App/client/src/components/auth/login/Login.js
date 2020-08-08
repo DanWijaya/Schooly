@@ -47,6 +47,7 @@ class Login extends Component {
       email: "",
       password: "",
       errors: {},
+      isAuthenticated: false,
       passwordIsMasked: true, // True = masked
       icon: true // True = shown
     };
@@ -59,16 +60,26 @@ class Login extends Component {
     }
   }
 
-  handleChange(event) {}
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      window.location.href = "./beranda"
-    }
+  // UNSAFE_componentWillReceiveProps(nextProps) {
+  //   if (nextProps.auth.isAuthenticated) {
+  //     window.location.href = "./beranda"
+  //   }
 
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      });
+  //   if (nextProps.errors) {
+  //     this.setState({
+  //       errors: nextProps.errors
+  //     });
+  //   }
+  // }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    if(nextProps.auth.isAuthenticated)
+      return { isAuthenticated: nextProps.auth.isAuthenticated }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.isAuthenticated){
+      window.location.href = "./beranda"
     }
   }
 

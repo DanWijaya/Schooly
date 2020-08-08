@@ -109,6 +109,7 @@ class Register extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
+    console.log("Component did mount is runned")
     this.props.getAllClass()
     this.props.getAllSubjects()
     if (this.props.auth.isAuthenticated) {

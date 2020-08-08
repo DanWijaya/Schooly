@@ -62,6 +62,7 @@ router.post("/edit/:id", (req,res) => {
         }
     })
 })
+
 router.get("/view/:id", (req, res) => {
     Subject.findById(req.params.id).then(subject => {
         if (!subject) {
