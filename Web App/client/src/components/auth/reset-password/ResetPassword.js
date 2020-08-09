@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
+import { clearErrors } from "../../../actions/ErrorActions"
 import authBackground from "../AuthBackground.png";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -52,12 +53,14 @@ class ResetPassword extends Component {
     this.setState({ [e.target.id]: e.target.value})
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      });
-    }
+  // UNSAFE_componentWillReceiveProps(nextProps) {
+  //   if (nextProps.errors)
+  //   this.setState({errors: nextProps.errors});
+  // }
+
+  componentDidMount(){
+    const { clearErrors } = this.props
+    clearErrors()
   }
 
 //Dispatch is used as a callback which gets invoked once some async action is complete.
@@ -67,7 +70,8 @@ class ResetPassword extends Component {
     document.title = "Schooly | Lupa Akun"
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
-    const { password, password2, errors } = this.state;
+    const { password, password2 } = this.state;
+    const { errors } = this.props;
     const { classes, savePassword} = this.props;
     const { hash } = this.props.match.params;
 
@@ -163,5 +167,5 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { savePassword })
+  connect(mapStateToProps, { savePassword, clearErrors })
   (withStyles(styles)(ResetPassword)));

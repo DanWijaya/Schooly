@@ -193,9 +193,8 @@ class CreateAnnouncement extends Component {
   lampiranUploader = React.createRef(null)
   uploadedLampiran = React.createRef(null)
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log(nextProps.errors)
-    if (!nextProps.errors) { // kalau success bakal return false nextProps.errorsnya.
+  componentDidUpdate(prevProps, prevState){
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
       this.handleOpenUploadDialog()
     }
   }
@@ -305,7 +304,7 @@ class CreateAnnouncement extends Component {
 
     const { classes, success} = this.props;
     const { all_classes, kelas } = this.props.classesCollection
-    const{ class_assigned, fileLampiran} = this.state;
+    const { class_assigned, fileLampiran} = this.state;
     const { errors } = this.props;
     const { user } = this.props.auth
 

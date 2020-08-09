@@ -38,7 +38,7 @@ class CreateClass extends Component {
       nihil: true,
       walikelas: {},
       ukuran: 0,
-      errors: {},
+      // errors: {},
     };
   }
 
@@ -75,19 +75,9 @@ class CreateClass extends Component {
     this.setState({ class_assigned: selectedList[0]})
   }
 
-  // UNSAFE_componentWillReceiveProps() is invoked before
-  //  a mounted component receives new props. If you need
-  //  update the state in response to prop changes (for example, to reset it),
-  //  you may compare this.props and nextProps and perform state transitions
-  //  using this.setState() in this method.
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      });
-    }
-  }
+  // UNSAFE_componentWillReceiveProps(nextProps) {
+  //   if (nextProps.errors) {this.setState({errors: nextProps.errors});}
+  // }
 
   componentDidMount() {
     this.props.clearErrors()
@@ -98,10 +88,9 @@ class CreateClass extends Component {
     const { classes } = this.props;
 
     const { all_teachers, user } = this.props.auth
-    const { errors } = this.state;
+    const { errors } = this.props;
     console.log(errors)
-    var options = all_teachers;
-
+    console.log(all_teachers)
     document.title = "Schooly | Buat Kelas";
 
     if (user.role === "Teacher" || user.role === "Admin") {
@@ -146,9 +135,9 @@ class CreateClass extends Component {
                       value={this.state.walikelas}
                       onChange={(event) => {this.onChange(event, "walikelas")}}
                     >
-                      {options.map((walikelas) => (
+                      {Array.isArray(all_teachers) ? all_teachers.map((walikelas) => (
                         <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
-                      ))}
+                      )) : null}
                     </Select>
                     <FormHelperText error>
                       {Boolean(errors.walikelas) ? errors.walikelas : null}

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import DateFnsUtils from "@date-io/date-fns";
 import lokal from "date-fns/locale/id";
+import { clearErrors } from "../../../actions/ErrorActions";
 import { registerUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
@@ -109,7 +110,7 @@ class Register extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
-    console.log("Component did mount is runned")
+    this.props.clearErrors()
     this.props.getAllClass()
     this.props.getAllSubjects()
     if (this.props.auth.isAuthenticated) {
@@ -441,6 +442,9 @@ class Register extends Component {
     };
 
     const handleBack = () => {
+      if(this.state.snackbarOpen){
+        this.setState({ snackbarOpen: false})
+      }
       this.setState(prevState => ({
         activeStep: prevState.activeStep - 1,
         })
@@ -557,6 +561,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { registerUser, getAllClass , getAllSubjects})
+  connect(mapStateToProps, { registerUser, getAllClass , getAllSubjects, clearErrors})
   (withStyles(styles)(Register))
 )

@@ -266,15 +266,10 @@ class CreateTask extends Component {
       this.props.createTask(formData, taskData, this.props.history);
   }
 
-  // UNSAFE_componentWillReceiveProps() is invoked before
-  // a mounted component receives new props. If you need
-  // update the state in response to prop changes (for example, to reset it),
-  // you may compare this.props and nextProps and perform state transitions
-  // using this.setState() in this method.
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (!nextProps.errors) {
-        this.handleOpenUploadDialog()
+  componentDidUpdate(prevProps, prevState){
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
+      this.handleOpenUploadDialog()
     }
   }
 

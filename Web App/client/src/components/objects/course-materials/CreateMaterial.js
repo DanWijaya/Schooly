@@ -263,9 +263,15 @@ class CreateMaterial extends Component {
   // you may compare this.props and nextProps and perform state transitions
   // using this.setState() in this method.
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (!nextProps.errors) {
-        this.handleOpenUploadDialog()
+  // UNSAFE_componentWillReceiveProps(nextProps) {
+  //   if (!nextProps.errors) {
+  //       this.handleOpenUploadDialog()
+  //   }
+  // }
+
+  componentDidUpdate(prevProps, prevState){
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
+      this.handleOpenUploadDialog()
     }
   }
 

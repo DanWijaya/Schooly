@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
 import { Button, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -55,26 +56,19 @@ class Login extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Login page, should redirect them to dashboard
+    this.props.clearErrors()
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
   }
 
-  // UNSAFE_componentWillReceiveProps(nextProps) {
-  //   if (nextProps.auth.isAuthenticated) {
-  //     window.location.href = "./beranda"
-  //   }
-
-  //   if (nextProps.errors) {
-  //     this.setState({
-  //       errors: nextProps.errors
-  //     });
-  //   }
-  // }
-
   static getDerivedStateFromProps(nextProps, prevState){
     if(nextProps.auth.isAuthenticated)
       return { isAuthenticated: nextProps.auth.isAuthenticated }
+    else if(nextProps.errors) 
+      return { errors: nextProps.errors }
+    else
+      return null
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -207,6 +201,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { loginUser })
+  connect(mapStateToProps, { loginUser, clearErrors })
   (withStyles(styles)(Login))
 );

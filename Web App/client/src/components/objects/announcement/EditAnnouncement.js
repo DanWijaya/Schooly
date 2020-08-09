@@ -205,27 +205,44 @@ class EditAnnouncement extends Component {
     getAllClass()
     if (user.role ==="Student")
       setCurrentClass(user.kelas)
-
   }
 
+  // kurang tau gimana cara ubah.
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { selectedAnnouncements } = nextProps.announcements;
     // console.log(nextProps.tasksCollection.deadline);
+
     if (!nextProps.errors) {
       this.handleOpenUploadDialog()
     }
-    if (Boolean(nextProps.errors)) { // if edited, nextProps.errors is false, supaya ndak run ini..
-        this.setState({
-            title: selectedAnnouncements.title,
-            description: selectedAnnouncements.description,
-            fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
-            class_assigned: Boolean(selectedAnnouncements.class_assigned) ? selectedAnnouncements.class_assigned : []
-            // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
-            // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
-        })
+
+    if (nextProps.errors) { // if edited, nextProps.errors is false, supaya ndak run ini..
+      this.setState({
+          title: selectedAnnouncements.title,
+          description: selectedAnnouncements.description,
+          fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
+          class_assigned: Boolean(selectedAnnouncements.class_assigned) ? selectedAnnouncements.class_assigned : []
+          // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
+          // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
+      })
     }
-}
+  }
+  
+  // componentDidUpdate(prevProps, prevState){
+  //   const { selectedAnnouncements } = this.props.announcements
+  //   console.log(selectedAnnouncements)
+  //   if(!this.props.errors && !this.state.openUploadDialog){
+  //     this.setState({ openUploadDialog: true })
+  //   } else {
+  //     this.setState({
+  //       title: selectedAnnouncements.title,
+  //       description: selectedAnnouncements.description,
+  //       fileLampiran: selectedAnnouncements.lampiran ? selectedAnnouncements.lampiran : [],
+  //       class_assigned: selectedAnnouncements.class_assigned ? selectedAnnouncements.class_assigned : []
+  //     })
+  //   }
+  // }
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
@@ -527,7 +544,7 @@ class EditAnnouncement extends Component {
                               </div>
                           )}}
                         >
-                          {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                          {all_classes.map((kelas) => {
                             return (
                               <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
                           )})}

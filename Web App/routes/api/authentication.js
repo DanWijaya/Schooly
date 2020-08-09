@@ -48,7 +48,7 @@ router.post('/saveresethash', async(req,res) => {
               from: `Schoolysystem-no-reply <postmaster@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>`,
               to: foundUser.email,
               subject: `Permohonan Mengubah Kata Sandi di saat ${time_in_string}`,
-              html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. <b>Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali.</b> <br/><br/> <a href="http://localhost:3000/akun/ubah-katasandi/${foundUser.passwordReset}">Ubah Kata Sandi</a>`,
+              html: `Permohonan untuk mengubah kata sandi akun Schooly dengan alamat email ${foundUser.email} dilakukan. Silahkan klik tautan dibawah ini. <b>Tautan ini hanya berlaku selama 5 menit dan hanya bisa digunakan untuk mengubah kata sandi satu kali.</b> <br/><br/> <a href=http://localhost:5000/akun/ubah-katasandi/${foundUser.passwordReset}>Ubah Kata Sandi</a>`,
             };
 
             // Send it

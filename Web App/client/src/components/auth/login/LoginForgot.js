@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createHash } from "../../../actions/AuthActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -63,14 +64,6 @@ class LoginForgot extends Component {
     this.setState({ [e.target.id]: e.target.value})
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      });
-    }
-  }
-
 // Dispatch is used as a callback which gets invoked once some async action is complete.
 // In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
   onSubmit = (e) => {
@@ -79,10 +72,14 @@ class LoginForgot extends Component {
     this.props.createHash(this.state.email)
   }
 
-  render() {
-    const { classes } = this.props;
+  componentDidMount(){
+    this.props.clearErrors()
+  }
 
-    const { errors, email } = this.state;
+  render() {
+    const { classes, errors } = this.props;
+
+    const { email } = this.state;
     const { isPasswordReset } = this.props.passwordMatters;
 
     document.title = "Schooly | Lupa Akun";
@@ -165,6 +162,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { createHash })
+  connect(mapStateToProps, { createHash, clearErrors })
   (withStyles(styles)(LoginForgot))
 );
