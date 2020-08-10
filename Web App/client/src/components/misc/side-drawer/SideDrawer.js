@@ -111,7 +111,7 @@ function DrawerContent(props) {
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
+      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
       ["/kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
     ]
   }

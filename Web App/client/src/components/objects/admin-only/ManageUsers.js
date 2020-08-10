@@ -253,6 +253,7 @@ function ManageUsers(props) {
       teacher_rows.push(temp)
     }
   }
+
   React.useEffect(() => {
     getStudents()
     getTeachers()
@@ -262,8 +263,12 @@ function ManageUsers(props) {
   const retrieveUsers = () => {
     student_rows = []
     teacher_rows = []
-    all_students.map((data) => userRowItem(data, "Student"))
-    all_teachers.map((data) => userRowItem(data, "Teacher"))
+    if(Array.isArray(all_students)){
+      all_students.map((data) => userRowItem(data, "Student"))
+    }
+    if(Array.isArray(all_teachers)){
+      all_teachers.map((data) => userRowItem(data, "Teacher"))
+    }
   }
 
   const handleRequestSort = (event, property, role) => {
