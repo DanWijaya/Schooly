@@ -16,7 +16,8 @@ const PrivateRoute = ({ component: Component, auth, access, ...rest }) => {
     : (<Redirect to="/masuk" />)
   }
 />
-);}
+);
+}
 
 PrivateRoute.propTypes = {
   auth: PropTypes.object.isRequired,

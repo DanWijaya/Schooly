@@ -288,13 +288,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 function TaskList(props) {
   const classes = useStyles();
-
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedTaskId, setSelectedTaskId] = React.useState(null)
+  const [selectedTaskId, setSelectedTaskId] = React.useState(null);
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const { tasksCollection, getAllTask, deleteTask, getAllClass, getAllSubjects } = props;
   const { all_classes_map } = props.classesCollection;

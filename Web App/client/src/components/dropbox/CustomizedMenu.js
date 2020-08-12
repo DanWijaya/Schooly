@@ -37,7 +37,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 function CustomizedMenus(props) {
-  const {handleClose, anchorEl, setAnchorEl, menuItemList} = props;
+  const {handleClose, anchorEl, menuItemList} = props;
 
   return (
       <StyledMenu

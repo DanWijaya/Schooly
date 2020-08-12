@@ -8,6 +8,9 @@ const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = keys.secretOrKey;
 
+// Intinya passport-jwt digunakan untuk bisa authenticate menggunakan JSON Web Token gitu. (kasus ini token user yang udah log in)
+// Tidak perlu pedulikan detailnya sih karena most likely udah gak mainin lagi. 
+
 module.exports = passport => {
   passport.use(
     new JwtStrategy(opts, (jwt_payload, done) => {
