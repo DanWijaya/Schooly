@@ -7,14 +7,14 @@ function Policy(props) {
   //kayak componentDidMount()
   useEffect(() => {
     handleMarginTopValue(0);
-  },[])
+  },[handleMarginTopValue])
 
   // kayak componentWillUnMount()
   useEffect(() => {
     return () => {
       handleMarginTopValue(20)
     }
-  }, [])
+  }, [handleMarginTopValue])
 
   document.title = "Schooly | Kebijakan Penggunaan";
 

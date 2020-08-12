@@ -264,10 +264,12 @@ class CreateMaterial extends Component {
   }
 
   componentDidMount() {
-    this.props.clearErrors()
     this.props.getAllClass()
     this.props.getAllSubjects()
+  }
 
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   handleLampiranUpload = (e) => {

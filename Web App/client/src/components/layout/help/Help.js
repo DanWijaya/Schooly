@@ -100,18 +100,17 @@ function Help(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-
   const { handleMarginTopValue } = props;
 
   useEffect(() => {
     handleMarginTopValue(0);
-  },[])
+  },[handleMarginTopValue])
 
   useEffect(() => {
     return () => {
       handleMarginTopValue(20)
     }
-  }, [])
+  }, [handleMarginTopValue])
 
   document.title = "Schooly | Bantuan";
 

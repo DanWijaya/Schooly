@@ -110,11 +110,14 @@ class EditClass extends Component {
   }
 
   componentDidMount() {
-    const { getTeachers, getStudentsByClass, clearErrors} = this.props;
-
-    clearErrors()
+    const { getTeachers, getStudentsByClass} = this.props;
     getTeachers()
     getStudentsByClass(this.props.match.params.id)
+  }
+
+  componentWillUnmount(){
+    const { clearErrors } = this.props
+    clearErrors()
   }
 
   render() {

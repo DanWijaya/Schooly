@@ -216,10 +216,13 @@ class EditTask extends Component {
   uploadedTugas = React.createRef(null)
 
   componentDidMount() {
-    this.props.clearErrors()
     this.props.getOneTask(this.props.match.params.id)
     this.props.getAllClass()
     this.props.getAllSubjects()
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {

@@ -201,12 +201,14 @@ class CreateAnnouncement extends Component {
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { getAllClass, setCurrentClass, clearErrors} = this.props;
-
-    clearErrors()
+    const { getAllClass, setCurrentClass} = this.props;
     getAllClass()
     if (user.role === "Student")
       setCurrentClass(user.kelas)
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   handleClickMenu = (event) => {

@@ -53,9 +53,8 @@ class ResetPassword extends Component {
     this.setState({ [e.target.id]: e.target.value})
   }
 
-  componentDidMount(){
-    const { clearErrors } = this.props
-    clearErrors()
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
 //Dispatch is used as a callback which gets invoked once some async action is complete.

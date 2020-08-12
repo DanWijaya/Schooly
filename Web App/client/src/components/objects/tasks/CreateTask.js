@@ -260,10 +260,13 @@ class CreateTask extends Component {
   }
 
   componentDidMount() {
-    const { clearErrors, getAllClass, getAllSubjects} = this.props;
-    clearErrors() // ini API calls.
+    const { getAllClass, getAllSubjects} = this.props;
     getAllClass()
     getAllSubjects()
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   // akan selalu dirun kalau ada terima state atau props yang berubah. 

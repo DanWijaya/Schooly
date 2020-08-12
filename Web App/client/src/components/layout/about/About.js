@@ -58,15 +58,16 @@ function About(props) {
   const classes = useStyles();
 
   const { handleMarginTopValue } = props;
+  
   useEffect(() => {
     handleMarginTopValue(0);
-  },[])
+  },[handleMarginTopValue])
 
   useEffect(() => {
     return () => {
       handleMarginTopValue(20)
     }
-  }, [])
+  }, [handleMarginTopValue])
   
   document.title = "Schooly | Tentang Schooly";
 

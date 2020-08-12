@@ -57,11 +57,14 @@ class Login extends Component {
   componentDidMount() {
     // untuk handle kalau misalnya usernya udah logged in lalu buka login pagenya. Langusng ke beranda
     // If logged in and user navigates to Login page, should redirect them to dashboard
-    this.props.clearErrors()
     // this.props.auth.isAuthenticated = true, berarti udah logged in dan masuk ke beranda langsung
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
