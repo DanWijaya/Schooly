@@ -4,6 +4,7 @@ import { Provider } from "react-redux"; //provide state from Store to the compon
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./Store";
+
 import { ThemeProvider } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 //Routing and Actions
@@ -160,6 +161,7 @@ class App extends Component {
                       )}
                     />
                     <Route exact path="/dropbox-auth" component={DropboxAuth}/>
+                    
                     <Route exact path="/dropbox-connect" component={DropboxConnect}/>
                     <Route exact path="/daftar" component={Register} />
                     <Route exact path="/masuk" component={Login} />
