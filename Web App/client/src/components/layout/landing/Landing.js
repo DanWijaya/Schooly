@@ -113,6 +113,7 @@ const styles = (theme) => ({
 });
 
 class Landing extends Component {
+
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       this.props.handleMarginTopValue(20)
@@ -122,6 +123,10 @@ class Landing extends Component {
       this.props.handleMarginTopValue(0);
   }
 
+  componentWillUnmount(){
+    this.props.handleMarginTopValue(20);
+  }
+  
   copyToClipboard(text) {
     var dummy = document.createElement("textarea");
     // To avoid breaking orgain page when copying more words

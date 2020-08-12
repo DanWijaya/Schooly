@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import helpTopics from "./HelpTopics.png";
@@ -100,13 +100,17 @@ function Help(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-
-  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
   const { handleMarginTopValue } = props;
-  if (!isFirsttimeRendered) {
+
+  useEffect(() => {
     handleMarginTopValue(0);
-    setFirstTime(true);
-  }
+  },[handleMarginTopValue])
+
+  useEffect(() => {
+    return () => {
+      handleMarginTopValue(20)
+    }
+  }, [handleMarginTopValue])
 
   document.title = "Schooly | Bantuan";
 

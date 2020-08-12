@@ -217,7 +217,7 @@ class App extends Component {
             </Router>
           </ThemeProvider>
         </Provider>
-      </div>
+      </div> 
     );
   }
 }

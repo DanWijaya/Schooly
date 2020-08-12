@@ -292,9 +292,15 @@ function ClassList(props) {
   React.useEffect(() => {
     getAllClass()
     getTeachers("map")
-    clearErrors()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
+
+  React.useEffect(() => {
+    return () => { 
+      clearErrors()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   console.log(all_teachers)
   const retrieveClasses = () => {

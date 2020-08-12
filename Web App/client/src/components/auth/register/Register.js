@@ -110,12 +110,15 @@ class Register extends Component {
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
-    this.props.clearErrors()
     this.props.getAllClass()
     this.props.getAllSubjects()
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {

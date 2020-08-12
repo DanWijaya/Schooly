@@ -113,6 +113,7 @@ const styles = (theme) => ({
   },
 });
 
+// name = fileLampiran[i].name
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
 
@@ -198,7 +199,8 @@ class CreateTask extends Component {
     }
   }
 
-  lampiranUploader = React.createRef(null)
+  // ref itu untuk ngerefer html yang ada di render. 
+  lampiranUploader = React.createRef(null) // untuk ngerefer html object yang lain
   uploadedLampiran = React.createRef(null)
 
   handleClickMenu = (event) => {
@@ -215,25 +217,15 @@ class CreateTask extends Component {
     this.setState({ openUploadDialog: true})
   };
 
-  onChange = (e, otherfield) => {
+  onChange = (e, otherfield=null) => {
     console.log(this.state.class_assigned, e.target.value)
     // if (Object.keys(this.props.errors).length !== 0)
-    //   this.props.clearErrors()
-    if (otherfield === "kelas") {
-      this.setState({ class_assigned: e.target.value})
-    }
-    else if (otherfield === "deadline") {
-      this.setState({ deadline: e}) // e is the date value itself.
-    }
-    else if (otherfield === "description") {
-      this.setState({ description : e.target.value})
-    }
-    else if (otherfield === "subject") {
-      this.setState({ subject: e.target.value})
+    if(otherfield){
+      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
+      this.setState({ [otherfield] : e.target.value})
     }
     else{
       this.setState({ [e.target.id]: e.target.value});
-      console.log(this.state.fileLampiran)
     }
   }
 
@@ -266,18 +258,26 @@ class CreateTask extends Component {
       this.props.createTask(formData, taskData, this.props.history);
   }
 
-
-  componentDidUpdate(prevProps, prevState){
-    if(!this.props.errors && this.props.errors !== prevProps.errors){
-      this.handleOpenUploadDialog()
-    }
-  }
-
   componentDidMount() {
-    const { clearErrors, getAllClass, getAllSubjects} = this.props;
-    clearErrors()
+    const { getAllClass, getAllSubjects} = this.props;
     getAllClass()
     getAllSubjects()
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
+  }
+
+  // akan selalu dirun kalau ada terima state atau props yang berubah. 
+  componentDidUpdate(prevProps, prevState){
+    console.log(this.props.errors)
+    // this.props.errors = false, ini berarti kan !this.props.erros itu true
+
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
+      // pertama kali run yang didalam ini, itu this.props.errors = false dan prevProps.errors = { "description": dedwde}, this.state.dialogopen = false, prevState.dialog = false
+      // setelah ngerun this.handleOpenUploadDialog(), komponennya dirender lagi. Karena itu jd tuh prevProps.errors = false, this.props.errors = false. maka this.props.errors = false dan prevProps.errors = false. this.state.dialog = true, prevState.dialog = false
+      this.handleOpenUploadDialog()
+    }
   }
 
   handleLampiranUpload = (e) => {
@@ -425,6 +425,7 @@ class CreateTask extends Component {
                         variant="outlined"
                         id="name"
                         onChange={this.onChange}
+                        // onChange={(event) => this.onChange(event)}
                         value={this.state.name}
                         error={errors.name}
                         type="text"
@@ -511,7 +512,7 @@ class CreateTask extends Component {
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          onChange={(event) => {this.onChange(event, "class_assigned")}}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
                               {selected.map((id) => {
@@ -600,14 +601,14 @@ class CreateTask extends Component {
 }
 
 CreateTask.propTypes = {
-  createTask: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  createTask: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getOneUser: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -154,8 +154,8 @@ class Dashboard extends Component {
     const {getAllTask, getAllTaskFilesByUser, getAllSubjects} = this.props;
     const { user} = this.props.auth;
 
-    getAllTask()
-    getAllSubjects("map")
+    getAllTask() // actions yang membuat GET request ke Database. 
+    getAllSubjects("map") // untuk dapatin subject"nya gitu
     if (user.role === "Student")
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
     this.intervalID = setInterval(
@@ -183,6 +183,7 @@ class Dashboard extends Component {
   };
 
   render() {
+
     const { classes, tasksCollection } = this.props;
 
     const { user } = this.props.auth;
@@ -209,7 +210,6 @@ class Dashboard extends Component {
 
     document.title = "Schooly | Dashboard";
     document.body.style = "background: #FFFFFF";
-
     return (
       <div className={classes.root}>
         <Grid container direction="column" spacing={3}>

@@ -55,24 +55,33 @@ class Login extends Component {
   }
 
   componentDidMount() {
+    // untuk handle kalau misalnya usernya udah logged in lalu buka login pagenya. Langusng ke beranda
     // If logged in and user navigates to Login page, should redirect them to dashboard
-    this.props.clearErrors()
+    // this.props.auth.isAuthenticated = true, berarti udah logged in dan masuk ke beranda langsung
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
   }
 
+  componentWillUnmount(){
+    this.props.clearErrors()
+  }
+
   static getDerivedStateFromProps(nextProps, prevState){
-    if(nextProps.auth.isAuthenticated)
+    // Function static ini belongs to the class secara keseluruhan, bukan instance of the class.
+    //  Makanya gak ada this keyword.
+    if(nextProps.auth.isAuthenticated) // nextProps.auth.isAuthenticated = kalau true, 
       return { isAuthenticated: nextProps.auth.isAuthenticated }
-    else if(nextProps.errors) 
+      // ini sama dengan this.setState({ isAuthenticated : nextProps.auth.isAuthenticated })
+    else if(nextProps.errors) // kalau errorsnya ngak false. 
       return { errors: nextProps.errors }
     else
-      return null
+      return null // gak ngapa ngapain
   }
 
   componentDidUpdate(prevProps, prevState) {
     if(this.state.isAuthenticated){
+      // untuk redirect ke page lain.
       window.location.href = "./beranda"
     }
   }

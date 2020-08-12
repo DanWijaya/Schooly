@@ -198,13 +198,16 @@ class EditAnnouncement extends Component {
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { setCurrentClass, getOneAnnouncement, getAllClass, clearErrors } = this.props;
+    const { setCurrentClass, getOneAnnouncement, getAllClass } = this.props;
 
-    clearErrors()
     getOneAnnouncement(this.props.match.params.id)
     getAllClass()
     if (user.role ==="Student")
       setCurrentClass(user.kelas)
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   // kurang tau gimana cara ubah.

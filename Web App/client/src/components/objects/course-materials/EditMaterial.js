@@ -202,13 +202,15 @@ class EditMaterial extends Component {
   uploadedLampiran = React.createRef(null)
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects, clearErrors, getOneMaterial } = this.props;
+    const { getAllClass, getAllSubjects, getOneMaterial } = this.props;
 
     getAllClass()
-    clearErrors()
     getOneMaterial(this.props.match.params.id)
     getAllSubjects()
+  }
 
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {

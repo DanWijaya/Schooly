@@ -80,10 +80,13 @@ class CreateClass extends Component {
   // }
 
   componentDidMount() {
-    this.props.clearErrors()
     this.props.getTeachers()
   }
 
+  componentWillUnmount(){
+    this.props.clearErrors()
+  }
+  
   render() {
     const { classes } = this.props;
 

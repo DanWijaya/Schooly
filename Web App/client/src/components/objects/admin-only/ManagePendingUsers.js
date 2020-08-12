@@ -253,18 +253,23 @@ function ManageUsers(props) {
       teacher_rows.push(temp)
     }
   }
+  const retrieveUsers = () => {
+    student_rows = []
+    teacher_rows = []
+    console.log("retrieve users")
+    if(Array.isArray(pending_students)){
+    pending_students.map((data) => userRowItem(data, "Student"))
+    }
+    if(Array.isArray(pending_teachers)){
+    pending_teachers.map((data) => userRowItem(data, "Teacher"))
+    }
+  }
+
   React.useEffect(() => {
     getPendingStudents()
     getPendingTeachers()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const retrieveUsers = () => {
-    student_rows = []
-    teacher_rows = []
-    pending_students.map((data) => userRowItem(data, "Student"))
-    pending_teachers.map((data) => userRowItem(data, "Teacher"))
-  }
 
   const handleRequestSort = (event, property, role) => {
     if (role === "Student") {

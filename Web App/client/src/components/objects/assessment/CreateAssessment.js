@@ -7,12 +7,11 @@ import lokal from "date-fns/locale/id";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
-import { createQuiz } from "../../../actions/QuizActions";
+import { createAssessment } from "../../../actions/AssessmentActions";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import DeleteIcon from "@material-ui/icons/Delete";
 import ClearIcon from '@material-ui/icons/Clear';
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
@@ -84,8 +83,8 @@ class CreateAssessment extends Component {
       num_qns: 1,
       questions: [{
         name: "",
-        options: ["Opsi 1"],
-        answerIndex: "A",
+        options: ["Opsi 1", ""],
+        answer: "A",
       }],
       name: "",
       description: "",
@@ -97,7 +96,8 @@ class CreateAssessment extends Component {
 
   onSubmit = (e, id) => {
     e.preventDefault()
-    const quizData = {
+    const { createAssessment , history} = this.props
+    const assessmentData = {
       name: this.state.name,
       deadline: this.state.deadline,
       subject: this.state.subject,
@@ -106,7 +106,8 @@ class CreateAssessment extends Component {
       questions: this.state.questions,
       author_id: id,
     }
-    console.log(quizData)
+
+    createAssessment(assessmentData, history)
   }
 
   onChange = (e, otherfield=null) => {
@@ -126,10 +127,9 @@ class CreateAssessment extends Component {
 
   handleAddQuestion = () => {
     let questions = this.state.questions
-    questions.push({name: "", options: ["Opsi 1"], answerIndex: "B"})
+    questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
     this.setState({questions: questions})
   }
-
  
   handleChangeQuestion = (e, i, otherfield=null) => {
     console.log(i)
@@ -138,8 +138,8 @@ class CreateAssessment extends Component {
 
     var questions = this.state.questions
 
-    if(otherfield === "answerIndex"){
-      questions[i]["answerIndex"] = e.target.value
+    if(otherfield === "answer"){
+      questions[i]["answer"] = e.target.value
       console.log(e.target.value)
     }else {
       questions[i][e.target.id] = e.target.value
@@ -150,8 +150,6 @@ class CreateAssessment extends Component {
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
     let questions = this.state.questions
-    let question = questions[qnsIndex]
-
     if(action === "Delete"){
       questions[qnsIndex].options.splice(optionIndex, 1)
     }else if(action === "Add"){
@@ -161,23 +159,22 @@ class CreateAssessment extends Component {
     }else{
       console.log("No action is specified")
     }
+    console.log(questions)
     this.setState({ questions: questions})
   }
 
   handleDuplicateQueston = (i, question) => {
     console.log(i)
     let questions = this.state.questions
-    
-    questions.splice(i+1, 0, 
-    {
-      name: question.name,
-      options: [...question.options],
-      answerIndex: question.answerIndex,
-    })
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda? 
     // questions.splice(i+1, 0, question)
 
+    questions.splice(i+1, 0, {
+      name: question.name,
+      options: [...question.options],
+      answer: question.answer,
+    })
     this.setState({ questions: questions})
   }
 
@@ -191,6 +188,7 @@ class CreateAssessment extends Component {
   listQuestion = (classes) => {
     let questionList = []
     let questions = this.state.questions;
+    // const { errors } = this.props
     let length = questions.length
 
     for( let i = 0; i < length; i++){
@@ -206,11 +204,18 @@ class CreateAssessment extends Component {
                   <Typography variant="h6" gutterBottom>
                     Soal {i+1}
                   </Typography>
-                  <TextField multiline rowsMax={10} id="name" fullWidth variant="filled" value={question.name} onChange={(e) => this.handleChangeQuestion(e, i)}/>
+                  <TextField 
+                    multiline 
+                    rowsMax={10} 
+                    id="name" 
+                    fullWidth 
+                    variant="filled" 
+                    value={question.name}
+                    onChange={(e) => this.handleChangeQuestion(e, i)}/>
                 </Grid>
                 <Grid item>
-                  <FormControl component="fieldset" id="answerIndex" fullWidth>
-                    <RadioGroup value={question.answerIndex.toUpperCase()} id="answerIndex" onChange={(e) => this.handleChangeQuestion(e, i, "answerIndex")}>
+                  <FormControl component="fieldset" id="answer" fullWidth>
+                    <RadioGroup value={question.answer.toUpperCase()} id="answer" onChange={(e) => this.handleChangeQuestion(e, i, "answer")}>
                       {options.map((option, index) => 
                       <Grid>
                         <FormControlLabel
@@ -268,23 +273,18 @@ class CreateAssessment extends Component {
   }
 
   componentDidMount(){
-    const { createQuiz, getAllClass, getAllSubjects } = this.props
+    const { getAllClass, getAllSubjects } = this.props
     getAllClass()
     getAllSubjects()
   }
 
   render() {
-    const { name, description, subject, class_assigned} = this.state;
-    const { num_qns, radioValue } = this.state;
-    const { classes, getAllClass, errors } = this.props;
+    const { class_assigned } = this.state;
+    const { classes, errors } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-
     const { user } = this.props.auth;
 
-    console.log(this.state.questions)
-    console.log(this.state.description)
-    console.log(all_classes)
     document.title = "Schooly | Buat Kuis";
     console.log(this.state.questions)
     return (
@@ -311,6 +311,8 @@ class CreateAssessment extends Component {
                       fullWidth
                       variant="outlined"
                       id="name"
+                      error={errors.name}
+                      helperText={errors.name} 
                       onChange={this.onChange}
                     />
                   </Grid>
@@ -336,6 +338,7 @@ class CreateAssessment extends Component {
                     <Typography component="label" for="class_assigned" color="primary">
                       Kelas yang Ditugaskan
                     </Typography>
+                    <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
                     <Select
                       multiple
                       fullWidth
@@ -362,6 +365,10 @@ class CreateAssessment extends Component {
                       )}>
                       {all_classes.map((kelas) => (<MenuItem value={kelas._id}>{kelas.name}</MenuItem>))}
                     </Select>
+                      <FormHelperText>
+                        {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
+                      </FormHelperText>
+                    </FormControl>
                   </Grid> 
 
                   <Grid item>
@@ -372,6 +379,8 @@ class CreateAssessment extends Component {
                       multiline
                       rowsMax={10}
                       fullWidth
+                      error={errors.description}
+                      helperText={errors.description} 
                       onChange={this.onChange}
                       variant="outlined"
                       id="description"
@@ -405,6 +414,11 @@ class CreateAssessment extends Component {
             <Grid item>
               <Paper>
                 <Grid container justify="flex-end" spacing={2} className={classes.content}>
+                  <Grid item>
+                    <FormHelperText error>
+                      {errors.questions}
+                    </FormHelperText>
+                  </Grid>
                   <Grid item>
                     <LightTooltip title="Tambah Soal">
                       <IconButton onClick={this.handleAddQuestion} className={classes.addQuestionButton}>
@@ -447,7 +461,7 @@ class CreateAssessment extends Component {
 };
 
 CreateAssessment.propTypes = {
-  createQuiz: PropTypes.func.isRequired,
+  createAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
@@ -463,5 +477,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createQuiz, getAllClass, getAllSubjects }
+  mapStateToProps, { getAllClass, getAllSubjects, createAssessment }
 )(withStyles(styles)(CreateAssessment));

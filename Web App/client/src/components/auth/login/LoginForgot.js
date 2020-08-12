@@ -72,7 +72,7 @@ class LoginForgot extends Component {
     this.props.createHash(this.state.email)
   }
 
-  componentDidMount(){
+  componentWillUnmount(){
     this.props.clearErrors()
   }
 

@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -329,18 +328,28 @@ function ViewTaskStudent(props) {
     getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
   const { all_subjects_map} = props.subjectsCollection;
 
+  // ref itu untuk ngerefer html yang ada di render. 
+
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
   const [fileTugas, setFileTugas] = React.useState(null);
   const [tasksContents, setTaskContents] = React.useState([]);
 
+  // React HOOKS React.use bla2
+
+  // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedFileName, setSelectedFileName] = React.useState(null);
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
   let tugasId = props.match.params.id;
   console.log(filesCollection)
+  
+  // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
+  // useEffect(() => {getAllSubjects("map")}, [])
+
   // This page is only for student later on, so for now put the user.role logic condition
+  // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
     getTaskFilesByUser(user.id, tugasId)
     getOneTask(tugasId)
@@ -468,7 +477,7 @@ function ViewTaskStudent(props) {
 
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
-    setOpenDeleteDialog(true);
+    setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
     setSelectedFileId(fileid)
     setSelectedFileName(filename)
   };

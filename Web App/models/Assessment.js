@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { ObjectId } = require("mongodb");
 
-// Create MaterialSchema
-const QuizSchema = new Schema({ 
+// Create AssessmentSchema
+const AssessmentSchema = new Schema({ 
     name: {
         type: String, 
         required: true
@@ -20,11 +20,11 @@ const QuizSchema = new Schema({
         type: String,
         required: true
     },
-    problems: [{
-        question: {type: String, required: true},
+    questions: [{
+        name: {type: String, required: true},
         options: [{ type: String, required: true }],
-        answerIndex: {type: Number, required: true}
+        answer: {type: String, required: true}
     }]
 })
 
-module.exports = Quiz = mongoose.model("quizzes", QuizSchema);
+module.exports = Assessment = mongoose.model("quizzes", AssessmentSchema);

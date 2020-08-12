@@ -12,44 +12,42 @@ const mailgun = require("mailgun-js")({
   domain: keys.mailGunService.domain,
 })
 const passport = require("passport");
-
-const Quiz = require("../../models/Quiz")
+const validateAssessmentInput = require("../../validation/AssessmentData");
+const Assessment = require("../../models/Assessment")
 
 router.post('/create', (req,res) => {
 
-  // const {errors, isValid} = validateQuizInput(req.body)
-  // if(!isValid){
-  //   console.log("Data is not valid")
-  //   return res.status(400).json(errors)
-  // }
+  const {errors, isValid} = validateAssessmentInput(req.body)
+  if(!isValid){
+    console.log("Data is not valid")
+    return res.status(400).json(errors)
+  }
 
-  Quiz.findOne({ name: req.body.name, subject: req.body.subject})
-    .then(quiz => {
-      if(quiz){
+  Assessment.findOne({ name: req.body.name, subject: req.body.subject})
+    .then(assessment => {
+      if(assessment){
         return res.status(400).json({ name: "Quizzes with same name and subject already exist"});
       }
 
       else {
-        const newQuiz = new Quiz(req.body);
+        console.log(req.body)
+        const newAssessment = new Assessment(req.body);
 
-        newQuiz
+        newAssessment
             .save()
-            .then(quiz => {
-              res.json(quiz)
-              console.log("Quiz is created")
-            })
-            .catch(err => console.log(err))
+            .then(quiz => res.json(quiz))
+            .catch(err => res.json(err))
       }
     })
 })
 
 router.get("/view/:id", (req,res) => {
   let id = req.params.id
-  Quiz.findById(id, (err, quiz) => {
-    if(!quiz)
+  Assessment.findById(id, (err, assessment) => {
+    if(!assessment)
       return res.status(404).json("Quiz is not found")
-    return res.json(quiz)
+    return res.json(assessment)
   })
 })
 
-
+module.exports = router;

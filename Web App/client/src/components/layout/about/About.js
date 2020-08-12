@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import whatIsSchooly from "./WhatIsSchooly.png";
 import schoolyFeature1 from "./SchoolyFeature1.png";
 import schoolyFeature2 from "./SchoolyFeature2.png";
@@ -57,13 +57,18 @@ const useStyles = makeStyles((theme) => ({
 function About(props) {
   const classes = useStyles();
 
-  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
   const { handleMarginTopValue } = props;
-  if (!isFirsttimeRendered) {
+  
+  useEffect(() => {
     handleMarginTopValue(0);
-    setFirstTime(true);
-  }
+  },[handleMarginTopValue])
 
+  useEffect(() => {
+    return () => {
+      handleMarginTopValue(20)
+    }
+  }, [handleMarginTopValue])
+  
   document.title = "Schooly | Tentang Schooly";
 
   return (
