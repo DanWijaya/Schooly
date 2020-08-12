@@ -296,10 +296,10 @@ function ClassList(props) {
   },[])
 
   React.useEffect(() => {
-    const { clearErrors } = this.props;
     return () => { 
       clearErrors()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   console.log(all_teachers)

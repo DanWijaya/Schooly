@@ -220,7 +220,6 @@ class CreateTask extends Component {
   onChange = (e, otherfield=null) => {
     console.log(this.state.class_assigned, e.target.value)
     // if (Object.keys(this.props.errors).length !== 0)
-    //   this.props.clearErrors()
     if(otherfield){
       // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
       this.setState({ [otherfield] : e.target.value})
