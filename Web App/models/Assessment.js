@@ -20,6 +20,18 @@ const AssessmentSchema = new Schema({
         type: String,
         required: true
     },
+    subject: {
+      type: ObjectId,
+      required: true
+    },
+    start_date: {
+      type: Date,
+      required: true
+    },
+    end_date: {
+      type: Date,
+      required: true
+    },
     questions: [{
         name: {type: String, required: true},
         options: [{ type: String, required: true }],
@@ -27,4 +39,4 @@ const AssessmentSchema = new Schema({
     }]
 })
 
-module.exports = Assessment = mongoose.model("quizzes", AssessmentSchema);
+module.exports = Assessment = mongoose.model("assessments", AssessmentSchema);

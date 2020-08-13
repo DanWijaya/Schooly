@@ -12,7 +12,7 @@ module.exports = function validateClassInput(data) {
 
     // Name checks
     if (Validator.isEmpty(data.name)) {
-        errors.name = "Name kelas belum diisi";
+        errors.name = "Nama kelas belum diisi";
     }
 
 

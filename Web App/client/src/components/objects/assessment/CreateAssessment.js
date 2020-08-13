@@ -11,13 +11,14 @@ import { createAssessment } from "../../../actions/AssessmentActions";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AttachFileIcon from "@material-ui/icons/AttachFile";
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import ClearIcon from '@material-ui/icons/Clear';
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 
 const styles = (theme) => ({
   root: {
@@ -90,8 +91,13 @@ class CreateAssessment extends Component {
       description: "",
       subject: "",
       class_assigned: [],
-      deadline: new Date()
+      start_date: new Date(),
+      end_date: new Date(),
     }
+  }
+
+  componentWillUnmount(){
+    this.props.clearErrors()
   }
 
   onSubmit = (e, id) => {
@@ -99,7 +105,8 @@ class CreateAssessment extends Component {
     const { createAssessment , history} = this.props
     const assessmentData = {
       name: this.state.name,
-      deadline: this.state.deadline,
+      start_date: this.state.start_date,
+      end_date: this.state.end_date,
       subject: this.state.subject,
       class_assigned: this.state.class_assigned,
       description: this.state.description,
@@ -111,18 +118,20 @@ class CreateAssessment extends Component {
   }
 
   onChange = (e, otherfield=null) => {
-    if(otherfield === "kelas"){
-      this.setState({ class_assigned: e.target.value})
-    } else if(otherfield === "subject"){
-      this.setState({ subject: e.target.value})
-    }
+    if(otherfield){
+      if(otherfield === "end_date" || otherfield === "start_date"){
+        this.setState({ [otherfield]: e })
+      }else{
+        this.setState({ [otherfield]: e.target.value})
+      }
+    } 
     else{
       this.setState({ [e.target.id]: e.target.value})
     }
   }
 
   onDateChange = (date) => {
-    this.setState({ deadline: date })
+    this.setState({ end_date: date })
   }
 
   handleAddQuestion = () => {
@@ -132,10 +141,6 @@ class CreateAssessment extends Component {
   }
  
   handleChangeQuestion = (e, i, otherfield=null) => {
-    console.log(i)
-    console.log(e.target.id)
-    console.log(e.target.value)
-
     var questions = this.state.questions
 
     if(otherfield === "answer"){
@@ -242,9 +247,9 @@ class CreateAssessment extends Component {
               <Divider flexItem orientation="vertical" />
               <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
                 <Grid item>
-                  <LightTooltip title="Tambahkan Berkas" placement="right">
+                  <LightTooltip title="Tambahkan " placement="right">
                     <IconButton>
-                      <AttachFileIcon />
+                      <AddPhotoAlternateIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
@@ -346,7 +351,7 @@ class CreateAssessment extends Component {
                       color="primary"
                       id="class_assigned"
                       value={class_assigned}
-                      onChange={(event) => this.onChange(event, "kelas")}
+                      onChange={(event) => this.onChange(event, "class_assigned")}
                       renderValue={(selected) => (
                         <div className={classes.chips}>
                           {selected.map((id) => {
@@ -388,7 +393,7 @@ class CreateAssessment extends Component {
                   </Grid>
                   <Grid item>
                     <Typography component="label" for="workTime" color="primary">
-                      Jadwal Pengerjaan
+                      Mulai Waktu Pengerjaan
                     </Typography>
                     <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                       <KeyboardDateTimePicker
@@ -402,8 +407,30 @@ class CreateAssessment extends Component {
                         minDateMessage="Batas waktu harus waktu yang akan datang"
                         invalidDateMessage="Format tanggal tidak benar"
                         id="workTime"
-                        value={this.state.deadline}
-                        onChange={(date) => this.onDateChange(date)}
+                        value={this.state.start_date}
+                        onChange={(date) => this.onChange(date, "start_date")}
+                      />
+                    </MuiPickersUtilsProvider>
+                  </Grid>
+                  <Grid item>
+                    <Typography component="label" for="workTime" color="primary">
+                      Batas Waktu Pengerjaan
+                    </Typography>
+                    <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                      <KeyboardDateTimePicker
+                        fullWidth
+                        disablePast
+                        inputVariant="outlined"
+                        format="dd/MM/yyyy - HH:mm"
+                        ampm={false}
+                        okLabel="Simpan"
+                        cancelLabel="Batal"
+                        invalidDateMessage="Format tanggal tidak benar"
+                        id="workTime"
+                        value={this.state.end_date}
+                        minDate={this.state.start_date}
+                        minDateMessage="Batas waktu harus setelah Mulai waktu pengerjaan"
+                        onChange={(date) => this.onChange(date, "end_date")}
                       />
                     </MuiPickersUtilsProvider>
                   </Grid>
@@ -464,6 +491,7 @@ CreateAssessment.propTypes = {
   createAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
@@ -477,5 +505,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createAssessment }
+  mapStateToProps, { getAllClass, getAllSubjects, createAssessment, clearErrors }
 )(withStyles(styles)(CreateAssessment));

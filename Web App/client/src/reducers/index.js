@@ -9,16 +9,18 @@ import UserReducer from "./UserReducer";
 import AuthReducer from "./AuthReducer";
 import AnnouncementReducer from "./AnnouncementReducer"
 import SuccessReducer from "./SuccessReducer";
+import AssessmentReducer from "./AssessmentReducer";
 
 export default combineReducers({
   auth: UserReducer,
-  errors: ErrorReducer,
-  classesCollection: ClassReducer,
-  tasksCollection: TasksReducer,
-  materialsCollection: MaterialReducer, 
-  filesCollection: UploadReducer,
-  subjectsCollection: SubjectReducer,
-  passwordMatters: AuthReducer,
   announcementsCollection : AnnouncementReducer,
+  assessmentsCollection: AssessmentReducer,
+  classesCollection: ClassReducer,
+  errors: ErrorReducer,
+  filesCollection: UploadReducer,
+  materialsCollection: MaterialReducer, 
+  passwordMatters: AuthReducer,
+  subjectsCollection: SubjectReducer,
   success: SuccessReducer,
+  tasksCollection: TasksReducer,
 });

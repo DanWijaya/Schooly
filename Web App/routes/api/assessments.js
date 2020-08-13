@@ -30,7 +30,7 @@ router.post('/create', (req,res) => {
       }
 
       else {
-        console.log(req.body)
+        console.log("HDHEWJ FNKERNFKERF ",req.body)
         const newAssessment = new Assessment(req.body);
 
         newAssessment
@@ -41,11 +41,33 @@ router.post('/create', (req,res) => {
     })
 })
 
+router.get("/viewall", (req,res) => {
+  Assessment.find({})
+            .then(assessments => {
+              if(!assessments)
+                res.status(400).json("Assessments are not found")
+              else 
+                res.json(assessments)
+            })
+})
+
 router.get("/view/:id", (req,res) => {
   let id = req.params.id
   Assessment.findById(id, (err, assessment) => {
     if(!assessment)
       return res.status(404).json("Quiz is not found")
+
+    return res.json(assessment)
+  })
+})
+
+router.delete("/delete/:id", (req,res) => {
+  let id = req.params.id
+
+  Assessment.findByIdAndRemove(id, (err, assessment) => {
+    if(!assessment)
+      return res.status(404).json("Quiz to be deleted not found");
+      
     return res.json(assessment)
   })
 })

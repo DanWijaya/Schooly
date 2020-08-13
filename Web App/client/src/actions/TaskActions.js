@@ -34,7 +34,7 @@ export const createTask = (formData, taskData, history) => dispatch => {
     })
 }
 
-// View Task
+// View All Task
 export const getAllTask = () => dispatch => {
   axios
     .get("/api/tasks/viewall")
@@ -54,12 +54,12 @@ export const getAllTask = () => dispatch => {
     })
 }
 
-// View All Tasks
+// View One Task
 export const getOneTask = (taskId) => dispatch => {
   axios
     .get("/api/tasks/view/" + taskId)
     .then(res => {
-        console.log("Task to be edited: ", res.data);
+        console.log("Task to be received: ", res.data);
         dispatch({
             type: GET_TASKS,
             payload: res.data

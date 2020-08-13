@@ -216,18 +216,14 @@ class CreateMaterial extends Component {
   onChange = (e, otherfield) => {
     console.log("On change:", e.target.value)
     console.log(Array.from(this.state.fileLampiran))
-    if (otherfield === "kelas") {
-      this.setState({ class_assigned: e.target.value })
+    if(otherfield){
+      if(otherfield === "deadline")
+        this.setState({ [otherfield] : e}) // e is the date value itself for KeyboardDatePicker
+      
+      else
+        this.setState({ [otherfield] : e.target.value}) 
     }
-    else if (otherfield === "deadline") {
-      this.setState({ deadline: e }) // e is the date value itself.
-    }
-    else if (otherfield === "description") {
-      this.setState({ description : e.target.value })
-    }
-    else if (otherfield === "subject") {
-      this.setState({ subject: e.target.value })
-    }
+    
     else
       this.setState({ [e.target.id]: e.target.value });
   }
@@ -482,7 +478,7 @@ class CreateMaterial extends Component {
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          onChange={(event) => {this.onChange(event, "class_assigned")}}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
                               {selected.map((kelas) => {

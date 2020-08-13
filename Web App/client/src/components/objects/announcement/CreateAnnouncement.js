@@ -230,13 +230,9 @@ class CreateAnnouncement extends Component {
   };
 
 
-  onChange = (e, otherfield) => {
-    if (otherfield === "deadline") {
-      this.setState({ description: e.target.value })
-    }
-    else if (otherfield === "kelas") {
-      console.log(e.target.value)
-      this.setState({ class_assigned: e.target.value})
+  onChange = (e, otherfield=null) => {
+    if (otherfield) {
+      this.setState({ [otherfield]: e.target.value})
     }
     else {
       this.setState({ [e.target.id] : e.target.value })
@@ -466,7 +462,7 @@ class CreateAnnouncement extends Component {
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          onChange={(event) => {this.onChange(event, "class_assigned")}}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
                               {selected.map((kelas) => {

@@ -56,24 +56,14 @@ class EditClass extends Component {
     this.props.setCurrentClass(id);
   }
 
-  onChange = (e, otherfield) => {
+  onChange = (e, otherfield=null) => {
     console.log(this.state.walikelas)
-    switch(otherfield) {
-      case "bendahara":
-        this.setState({ bendahara: e.target.value})
-        break;
-      case "sekretaris":
-        this.setState({ sekretaris: e.target.value})
-        break;
-      case "ketua_kelas":
-        this.setState({ ketua_kelas: e.target.value})
-        break;
-      case "walikelas":
-        this.setState({ walikelas: e.target.value})
-        break;
-      default:
-        this.setState({ [e.target.id]: e.target.value});
+    if(otherfield){
+      this.setState({ [otherfield] : e.target.value})
+    }else {
+      this.setState({ [e.target.id]: e.target.value})
     }
+
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -150,16 +140,16 @@ class EditClass extends Component {
 
 
     const showValue = (options, arr) => {
-      let items = []
-      options.map(user => 
-        items.push(
+      if(!Array.isArray(options))
+        return null;
+
+
+      return options.map(user => 
           <MenuItem
             value={returnId(user, arr)}>
             {user.name}
           </MenuItem>
-        )
       )
-      return items;
     }
 
     document.title = "Schooly | Sunting Kelas";
