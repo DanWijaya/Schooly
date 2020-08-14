@@ -61,6 +61,7 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
+import Elbert from "./protoypes/Elbert";
 //Dropbox
 import DropboxConnect from "./components/dropbox/DropboxConnect";
 import DropboxAuth from "./components/dropbox/DropboxAuth";
@@ -166,6 +167,7 @@ class App extends Component {
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
+                    <Route exact path="/elbert" component={Elbert} />
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     {/* Route Class */}
