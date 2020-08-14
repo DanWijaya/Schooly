@@ -42,9 +42,9 @@ class CreateClass extends Component {
     };
   }
 
-  onChange = (e, otherfield) => {
-    if (otherfield === "walikelas")
-      this.setState({ walikelas: e.target.value});
+  onChange = (e, otherfield=null) => {
+    if (otherfield)
+      this.setState({ [otherfield]: e.target.value});
     else {
       this.setState({ [e.target.id]: e.target.value});
     }

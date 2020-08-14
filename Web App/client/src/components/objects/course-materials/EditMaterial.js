@@ -331,22 +331,16 @@ class EditMaterial extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.fileLampiran)
-    if (otherfield === "kelas") {
-      console.log(this.state.class_assigned, e.target.value)
-      this.setState({ class_assigned: e.target.value})
+    if(otherfield){
+      if(otherfield === "deadline")
+        this.setState({ [otherfield] : e}) // e is the date value itself for KeyboardDatePicker
+      
+      else
+        this.setState({ [otherfield] : e.target.value}) 
     }
-    else if (otherfield === "deadline") {
-      this.setState({ deadline: e}) // e is the date value itself.
-    }
-    else if (otherfield === "description") {
-      this.setState({ description : e.target.value})
-    }
-    else if (otherfield === "subject") {
-      console.log(e.target.value)
-      this.setState({subject: e.target.value })
-    }
+    
     else
-      this.setState({ [e.target.id]: e.target.value});
+      this.setState({ [e.target.id]: e.target.value });
   }
 
   onDateChange = (date) => {
@@ -553,7 +547,7 @@ class EditMaterial extends Component {
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          onChange={(event) => {this.onChange(event, "class_assigned")}}
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>

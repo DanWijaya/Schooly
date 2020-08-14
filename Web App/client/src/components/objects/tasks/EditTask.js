@@ -354,25 +354,13 @@ class EditTask extends Component {
 
   onChange = (e, otherfield) => {
     console.log(this.state.class_assigned)
-    if (Object.keys(this.props.errors).length !== 0) {
-      this.props.clearErrors()
+    if(otherfield){
+      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
+      this.setState({ [otherfield] : e.target.value})
     }
-    if (otherfield === "kelas") {
-      console.log(this.state.class_assigned, e.target.value)
-      this.setState({ class_assigned: e.target.value, classChanged: true})
-    }
-    else if (otherfield === "deadline") {
-      this.setState({ deadline: e}) // e is the date value itself.
-    }
-    else if (otherfield === "description") {
-      this.setState({ description : e.target.value})
-    }
-    else if (otherfield === "subject") {
-      console.log(e.target.value)
-      this.setState({subject: e.target.value })
-    }
-    else
+    else{
       this.setState({ [e.target.id]: e.target.value});
+    }
   }
 
   onDateChange = (date) => {
@@ -600,7 +588,7 @@ class EditTask extends Component {
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          onChange={(event) => {this.onChange(event, "class_assigned")}}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
                               {selected.map((id) => {

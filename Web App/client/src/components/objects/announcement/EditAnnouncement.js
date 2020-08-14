@@ -307,15 +307,13 @@ class EditAnnouncement extends Component {
     this.setState({ openUploadDialog: true})
   };
 
-  onChange = (e, otherfield) => {
-    if (otherfield === "description") {
-      this.setState({ description : e.target.value})
+  onChange = (e, otherfield=null) => {
+    if (otherfield) {
+      this.setState({ [otherfield] : e.target.value})
     }
-    else if (otherfield === "kelas") {
-      this.setState({ class_assigned: e.target.value})
-    }
-    else
+    else{
       this.setState({ [e.target.id]: e.target.value});
+    }
   }
 
   onSubmit = (e) => {
@@ -524,7 +522,7 @@ class EditAnnouncement extends Component {
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "kelas")}}
+                          onChange={(event) => {this.onChange(event, "class_assigned")}}
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>
