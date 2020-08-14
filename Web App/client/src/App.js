@@ -66,6 +66,8 @@ import Tester from "./prototypes/Tester";
 import DropboxConnect from "./components/dropbox/DropboxConnect";
 import DropboxAuth from "./components/dropbox/DropboxAuth";
 
+import Dimas from "./prototypes/Dimas";
+
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -164,6 +166,7 @@ class App extends Component {
                     
                     <Route exact path="/dropbox-connect" component={DropboxConnect}/>
                     <Route exact path="/daftar" component={Register} />
+                    <Route exact path="/Dimas" component={Dimas} />
                     <Route exact path="/masuk" component={Login} />
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
