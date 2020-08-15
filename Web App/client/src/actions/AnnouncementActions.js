@@ -83,23 +83,23 @@ export const getAnnouncement = (Id, category) => dispatch => {
 }
 
 export const getOneAnnouncement = (annId) => dispatch => {
-    console.log("run getOneAnnoucnement")
-    axios
-        .get(`/api/announcements/viewOne/${annId}`)
-        .then((res) => {
-            console.log("Announcement datas are received")
-            dispatch({
-                type: GET_ANNOUNCEMENT,
-                payload: res.data
-            })
+  console.log("run getOneAnnoucnement")
+  axios
+      .get(`/api/announcements/viewOne/${annId}`)
+      .then((res) => {
+        console.log("Announcement datas are received")
+        dispatch({
+            type: GET_ANNOUNCEMENT,
+            payload: res.data
         })
-        .catch(err => {
-            console.log(err);
-            dispatch({
-                type: GET_ERRORS,
-                payload: err
-            })
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+            type: GET_ERRORS,
+            payload: err
         })
+      })
 }
 
 export const deleteAnnouncement = (announcementId, history) => dispatch => {
@@ -138,10 +138,10 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
         })
         console.log("From actions: ", lampiran_to_delete)
         if (lampiran_to_delete.length > 0) {// axios.delete put the data is quite different..
-            return axios.delete(`/api/upload/att_announcement/lampiran/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
+          return axios.delete(`/api/upload/att_announcement/lampiran/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
         else
-            return "No lampiran file is going to be deleted"
+          return "No lampiran file is going to be deleted"
 
     })
     .then(res => {

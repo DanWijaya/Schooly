@@ -64,7 +64,6 @@ router.post("/lampiran/:task_id", uploadLampiranTugas.array("lampiran_tugas", 10
   res.json({success: "Successfully uploaded the lampiran file"})
 })
 
-
 router.get("/lampiran/:task_id", (req,res) => {
   id = new mongoose.mongo.ObjectId(req.params.task_id)
   if (Boolean(gfsLampiranTugas)) {

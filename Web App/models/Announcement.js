@@ -35,3 +35,6 @@ const AnnoucementSchema = new Schema({
 
 const Announcement = mongoose.model("announcements", AnnoucementSchema);
 module.exports = Announcement;
+
+// export 
+// Kalau di Schooly, di luar client folder pakai module.exports. Kalau di dlm client folder pakai export. 

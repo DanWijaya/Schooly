@@ -9,9 +9,7 @@ const validateSubjectInput = require("../../validation/SubjectData")
 const Subject = require("../../models/Subject");
 
 router.post("/create", (req, res) => {
-
     const {errors, isValid} = validateSubjectInput(req.body)
-
     if (!isValid) {
         console.log("not valid data");
         return res.status(404).json(errors)

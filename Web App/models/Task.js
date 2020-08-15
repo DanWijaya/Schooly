@@ -34,7 +34,7 @@ const TaskSchema = new Schema({
     }],
     grades: {
         type: Map,
-        default: null // userId -> the score.
+        default: new Map()  // userId -> the score.
     }
 })
 

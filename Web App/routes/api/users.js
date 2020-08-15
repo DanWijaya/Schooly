@@ -29,12 +29,14 @@ const isEmpty = require("is-empty");
 
 router.post("/register", (req, res) => {
   // Form validation
-
   const { errors, isValid } = validateRegisterInput(req.body);
   // Check validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
+  // res stands for response
+  // req.body.name
+  // req.body.subject_teached
 
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {

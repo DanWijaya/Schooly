@@ -1,5 +1,6 @@
 // Require Mongoose
 const mongoose = require("mongoose");
+// API dari mongoose MongoDb. 
 
 // Define a Schema
 const Schema = mongoose.Schema;
@@ -79,4 +80,5 @@ const UserSchema = new Schema({
 }, options )
 
 const User = mongoose.model("users", UserSchema);
+// mongoose.model(nama_collection , Schema );
 module.exports = User;

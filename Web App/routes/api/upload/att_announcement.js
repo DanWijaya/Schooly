@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const GridFsStream = require("gridfs-stream");
+const GridFsStream = require("gridfs-stream"); // untuk upload atau downlaod file.
 const keys = require("../../../config/keys")
 const mongoose = require("mongoose");
 const Announcement = require("../../../models/Announcement");
@@ -8,7 +8,8 @@ const uploads = require("./uploads");
 
 // Create Mongo Connection
 mongoose.set('useUnifiedTopology', true);
-mongoose.set('useNewUrlParser', true)
+mongoose.set('useNewUrlParser', true);
+
 const conn = mongoose.createConnection(keys.mongoURI)
 
 const uploadLampiranAnnouncement = uploads.uploadLampiranAnnouncement;

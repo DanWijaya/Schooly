@@ -167,20 +167,25 @@ function Abc() {
   const [subject,setSubject] = React.useState(null)
   const stylesheet = useStyles();
 
-  const handleClickOpenFisika = () => {
-    setOpen(true);
-    setSubject('Fisika')
-  };
+  const handleClickOpen = (name) => {
+    setOpen(true)
+    setSubject(name)
+  }
 
-  const handleClickOpenMatematika = () => {
-    setOpen(true);
-    setSubject('Matematika')
-  };
+  // const handleClickOpenFisika = () => {
+  //   setOpen(true);
+  //   setSubject('Fisika')
+  // };
 
-  const handleClickOpenKimia = () => {
-    setOpen(true);
-    setSubject('Kimia')
-  };
+  // const handleClickOpenMatematika = () => {
+  //   setOpen(true);
+  //   setSubject('Matematika')
+  // };
+
+  // const handleClickOpenKimia = () => {
+  //   setOpen(true);
+  //   setSubject('Kimia')
+  // };
 
   const handleClose = (value) => {
     setOpen(false);
@@ -192,21 +197,21 @@ function Abc() {
                 <ThemeProvider theme={theme}>
                   <Typography variant='h3'align="center" className={stylesheet.type}>FISIKA</Typography>
                 </ThemeProvider>
-                <Button style={{backgroundColor: fade('#FFFFFF',0.7),fontSize:12,fontFamily:'Alegreya',marginTop:'20%'}} onClick={handleClickOpenFisika} >Deskripsi Pelajaran</Button>
+                <Button style={{backgroundColor: fade('#FFFFFF',0.7),fontSize:12,fontFamily:'Alegreya',marginTop:'20%'}} onClick={() => handleClickOpen('Fisika')} >Deskripsi Pelajaran</Button>
                 <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} subject={subject}/>
             </Grid>
             <Grid item xs={6} sm={3} align="center" style={{padding: '100px',margin:'15px',borderRadius:35,backgroundImage: `url(${Image2})`}}>
                 <ThemeProvider theme={theme}>
                     <Typography variant='h3' align="center" className={stylesheet.type}>MAT</Typography>
                 </ThemeProvider>
-                <Button style={{backgroundColor: fade('#FFFFFF',0.7),fontSize:12,fontFamily:'Alegreya',marginTop:'20%'}} onClick={handleClickOpenMatematika}>Deskripsi Pelajaran</Button>
+                <Button style={{backgroundColor: fade('#FFFFFF',0.7),fontSize:12,fontFamily:'Alegreya',marginTop:'20%'}} onClick={() => handleClickOpen('Matematika')}>Deskripsi Pelajaran</Button>
                 <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} subject={subject} />
             </Grid>
             <Grid item xs={6} sm={3} align="center" style={{padding: '100px',margin:'20px',borderRadius:35,backgroundImage: `url(${Image3})`}}>
                 <ThemeProvider theme={theme}>
                     <Typography variant='h3' align="center" className={stylesheet.type}>KIMIA</Typography>
                 </ThemeProvider>
-                <Button style={{backgroundColor: fade('#FFFFFF',0.7),fontSize:12,fontFamily:'Alegreya',marginTop:'20%'}} onClick={handleClickOpenKimia}>Deskripsi Pelajaran</Button>
+                <Button style={{backgroundColor: fade('#FFFFFF',0.7),fontSize:12,fontFamily:'Alegreya',marginTop:'20%'}} onClick={() => handleClickOpen('Kimia')}>Deskripsi Pelajaran</Button>
                 <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} subject={subject} />
             </Grid>
 

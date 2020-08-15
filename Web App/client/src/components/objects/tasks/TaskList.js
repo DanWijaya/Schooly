@@ -519,10 +519,11 @@ function TaskList(props) {
                   </ExpansionPanelSummary>
                   <Divider className={classes.taskPanelDivider} />
                   <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
-                      <Grid item>
+                    <Grid container>
+                      <Grid item xs={12}>
                         <Typography variant="body1" gutterBottom>
-                          <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
+                          <b>Kelas yang Ditugaskan: </b> 
+                          {!all_classes_map.size  ? null :
                            row.class_assigned.map((id,i) => {
 
                             if(all_classes_map.get(id)){
@@ -535,8 +536,8 @@ function TaskList(props) {
                           }
                         </Typography>
                       </Grid>
-                      <Grid item>
-                        <Typography variant="body2" className={classes.deadlineWarningText}>
+                      <Grid item xs={12}>
+                        <Typography variant="body1" className={classes.deadlineWarningText}>
                            Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
                         </Typography>
                       </Grid>

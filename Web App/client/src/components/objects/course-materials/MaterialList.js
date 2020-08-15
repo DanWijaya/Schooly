@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getUsers } from "../../../actions/UserActions";
+import { getTeachers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core/";
@@ -292,10 +292,10 @@ function MaterialList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-  const { getAllSubjects, getMaterial, deleteMaterial, getAllClass } = props;
+  const { getAllSubjects, getMaterial, deleteMaterial, getAllClass, getTeachers } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
-  const { user, retrieved_users } = props.auth;
+  const { user, all_teachers } = props.auth;
 
   const { all_subjects_map} = props.subjectsCollection;
 
@@ -305,7 +305,7 @@ function MaterialList(props) {
         data._id,
         data.name,
         data.subject,
-        !(retrieved_users).size || !retrieved_users.get(data.author_id) ? {}: retrieved_users.get(data.author_id),
+        !(all_teachers).size || !all_teachers.get(data.author_id) ? {}: all_teachers.get(data.author_id),
         data.class_assigned,
       )
     )
@@ -314,6 +314,7 @@ function MaterialList(props) {
   React.useEffect(() => {
     getAllSubjects("map")
     getAllClass("map")
+    getTeachers("map")
     if (user.role === "Teacher") {
       getMaterial(user.id, "by_author")
     }
@@ -323,8 +324,8 @@ function MaterialList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  console.log(all_teachers)
   const retrieveMaterials = () => {
-    console.log(retrieved_users)
     // If all_materials is not undefined or an empty array
     rows = []
     if (user.role === "Admin") {
@@ -508,8 +509,8 @@ function MaterialList(props) {
                     </ExpansionPanelSummary>
                     <Divider className={classes.materialPanelDivider} />
                     <ExpansionPanelDetails>
-                      <Grid conntainer direction="column">
-                        <Grid item>
+                      <Grid container>
+                        <Grid item xs={12}>
                           <Typography variant="body1" gutterBottom>
                             <b>Kelas yang Diberikan:</b> {!all_classes_map.size ? null :
                               row.class_assigned.map((kelas,i) => {
@@ -523,7 +524,7 @@ function MaterialList(props) {
                               }
                           </Typography>
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={12}>
                           <Typography variant="body1" color="textSecondary">
                              Pemberi Materi: {!row.author ? null : row.author.name}
                           </Typography>
@@ -576,7 +577,7 @@ MaterialList.propTypes = {
   deleteMaterial: PropTypes.func.isRequired,
   getAllMaterials: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
-  getUsers: PropTypes.func.isRequired,
+  getTeachers: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getSelectedClasses: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
@@ -598,5 +599,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getUsers, getAllClass, getSelectedClasses }
+  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getTeachers, getAllClass, getSelectedClasses }
 )(MaterialList);
