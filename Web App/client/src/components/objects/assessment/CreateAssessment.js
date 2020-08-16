@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import lokal from "date-fns/locale/id";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { createAssessment } from "../../../actions/AssessmentActions";
 import { withStyles } from "@material-ui/core/styles";
@@ -19,6 +19,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
   root: {
@@ -68,12 +69,21 @@ const styles = (theme) => ({
       color: theme.palette.create.main,
     },
   },
+  avatarImg1: { // If width is smaller than height
+    width: theme.spacing(25),
+  },
+  avatarImg2: { //If height is smaller than width
+    height: theme.spacing(25),
+  },
   chips: {
     display: "flex",
     flexWrap: "wrap",
   },
   chip: {
     marginRight: 2,
+  },
+  gridList: {
+    maxHeight: "250px",
   },
 });
 
@@ -86,6 +96,7 @@ class CreateAssessment extends Component {
         name: "",
         options: ["Opsi 1", ""],
         answer: "A",
+        images: []
       }],
       name: "",
       description: "",
@@ -95,6 +106,10 @@ class CreateAssessment extends Component {
       end_date: new Date(),
     }
   }
+
+  // ref itu untuk ngerefer html yang ada di render. 
+  imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
+  uploadedImage = React.createRef(null)
 
   componentWillUnmount(){
     this.props.clearErrors()
@@ -179,6 +194,7 @@ class CreateAssessment extends Component {
       name: question.name,
       options: [...question.options],
       answer: question.answer,
+      images: question.images
     })
     this.setState({ questions: questions})
   }
@@ -190,6 +206,62 @@ class CreateAssessment extends Component {
     this.setState({ questions: questions})
   }
 
+  // readImageURI = (e, qnsIndex) => {
+    
+  // }
+
+  handleQuestionImage = (e, qnsIndex) => {
+    if(e.target.files){
+      const files = Array.from(e.target.files);
+
+      Promise.all(files.map(file => {
+        return (new Promise((resolve, reject) => {
+          let reader = new FileReader();
+          reader.onload = e => {
+            resolve(e.target.result);
+          }
+          reader.addEventListener('error', reject);
+          reader.readAsDataURL(file);
+        }))
+      }))
+      .then(images => {
+        console.log("hdwdwendjw")
+        let questions = this.state.questions
+        let temp = questions[qnsIndex].images.concat(images);
+        questions[qnsIndex].images = temp
+
+        this.setState({ questions: questions})
+      })
+      .catch(err => console.log(err))
+    }
+    // this.readImageURI(e, qnsIndex)
+  }
+
+  buildImgTag = (images) => {
+    if(!images)
+      return null;
+    else {
+      let result = images.map((image, i) => 
+        <GridListTile cellHeight={image.height} key={image} cols={1} >
+          <img alt="current image" src={image}/>
+          <GridListTileBar
+              title={"HAHHA"}
+              titlePosition="top"
+              actionIcon={
+                <IconButton aria-label="WK">
+                  <CloseIcon />
+                </IconButton>
+              }
+              actionPosition="right"
+            />
+        </GridListTile>
+      )
+
+      return result;
+    }
+
+  }
+
   listQuestion = (classes) => {
     let questionList = []
     let questions = this.state.questions;
@@ -198,6 +270,7 @@ class CreateAssessment extends Component {
 
     for( let i = 0; i < length; i++){
       let question = questions[i]
+      let images = question.images;
       let options = question.options;
 
       questionList.push(
@@ -209,6 +282,9 @@ class CreateAssessment extends Component {
                   <Typography variant="h6" gutterBottom>
                     Soal {i+1}
                   </Typography>
+                  <GridList>
+                    {this.buildImgTag(images)}
+                  </GridList>
                   <TextField 
                     multiline 
                     rowsMax={10} 
@@ -247,13 +323,24 @@ class CreateAssessment extends Component {
               <Divider flexItem orientation="vertical" />
               <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
                 <Grid item>
+                <input
+                accept="image/*"
+                multiple
+                type="file"
+                name="avatar"
+                onChange={(e) => this.handleQuestionImage(e, i)}
+                ref={this.imageUploader}
+                style={{
+                  display: "none"
+                }}
+              />
                   <LightTooltip title="Tambahkan " placement="right">
-                    <IconButton>
-                      <AddPhotoAlternateIcon />
+                    <IconButton onClick={() => this.imageUploader.current.click()}>
+                      <AddPhotoAlternateIcon/>
                     </IconButton>
                   </LightTooltip>
                 </Grid>
-                <Grid item>
+                <Grid item> 
                   <LightTooltip title="Duplikat Soal" placement="right">
                     <IconButton onClick={() => this.handleDuplicateQueston(i, question)}>
                       <FilterNoneIcon />
@@ -284,6 +371,7 @@ class CreateAssessment extends Component {
   }
 
   render() {
+    console.log(this.state.questions)
     const { class_assigned } = this.state;
     const { classes, errors } = this.props;
     const { all_classes } = this.props.classesCollection;

@@ -15,8 +15,6 @@ import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types';
 import { List, ListItem } from '@material-ui/core';
 
-export default Abc;
-
 const useStyles = makeStyles((theme) => ({
 root: {
     margin:'5%',
@@ -218,4 +216,6 @@ function Abc() {
         </Grid>
     )
 }
+
+export default Abc;
 
