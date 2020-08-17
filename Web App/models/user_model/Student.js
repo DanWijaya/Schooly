@@ -1,18 +1,20 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const User = require("./User");
+const { ObjectId } = require("mongodb");
 
 const Student = User.discriminator("Student", new mongoose.Schema({
-    kelas: { type: Object, ref: "classes"},
+    kelas: { type: ObjectId, ref: "classes", required: true}, 
+    // mau perbaiki ini.
     tugas: [
         {
           id:
-              { type : String, default: null}
+              { type : ObjectId, default: null}
           ,
           filename:
               {type: String, default: null}
         ,
-          for_task_object: { type: String, default: null}
+          for_task_object: { type: ObjectId, default: null}
         ,
             ontime: { type: Boolean }
         },

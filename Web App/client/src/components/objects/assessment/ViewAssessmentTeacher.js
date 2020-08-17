@@ -228,31 +228,31 @@ function ViewAssessmentTeacher(props) {
               </Grid>
             </Paper>
           </Grid>
-          <Grid item>
           {!Array.isArray(questions) ? null : 
           questions.map((question, i) => (
-            <Paper>
-              <Grid container direction="column" spacing={2} className={classes.content}>
-                <Grid item>
-                  <Typography variant="h6" gutterBottom color="primary">
-                    Soal {i+1}
-                  </Typography>
-                  <Typography>
-                    {question.name}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  {question.options.map((option, i) => 
-                  (
-                    <Typography className={question.answer === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
-                      {option}
+            <Grid item>
+              <Paper>
+                <Grid container direction="column" spacing={2} className={classes.content}>
+                  <Grid item>
+                    <Typography variant="h6" gutterBottom color="primary">
+                      Soal {i+1}
                     </Typography>
-                  ))}
+                    <Typography>
+                      {question.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    {question.options.map((option, i) => 
+                    (
+                      <Typography className={question.answer === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
+                        {option}
+                      </Typography>
+                    ))}
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Paper>
+              </Paper>
+            </Grid>
           ))}
-          </Grid>
           <Grid item container spacing={2} justify="flex-end" alignItems="center">
             <Grid item>
               <Link to="">

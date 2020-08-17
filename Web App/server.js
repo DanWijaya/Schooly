@@ -30,6 +30,7 @@ app.use(
     extended: true
   })
 );
+
 // // for parsing application/json
 // app.use(express.json()); 
 
@@ -64,6 +65,7 @@ require("./config/passport")(passport);
 console.log("Check routes");
 
 // Routes
+
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);

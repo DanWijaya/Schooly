@@ -39,7 +39,7 @@ module.exports = function validateTaskInput(data) {
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
 
-    return{
+    return {
         errors,
         isValid: isEmpty(errors)
     }

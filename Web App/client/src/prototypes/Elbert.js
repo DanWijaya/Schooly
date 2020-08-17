@@ -79,7 +79,6 @@ function Elbert() {
 		</List>
 	);
 
-
 	return (
 		<div className={classes.root}>
 			{/* kumpulan kartu nama */}

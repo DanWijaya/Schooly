@@ -44,6 +44,7 @@ export const getAllSubjects = (data="array") => dispatch => {
 }
 export const createSubject = (subjectData) => dispatch => {
 
+  // router.post()
     axios
         .post("/api/subjects/create", subjectData)
         .then(res => {

@@ -110,7 +110,7 @@ function Help(props) {
     return () => {
       handleMarginTopValue(20)
     }
-  }, [handleMarginTopValue])
+  }, []) // dirun pas komponennya diunmount. 
 
   document.title = "Schooly | Bantuan";
 

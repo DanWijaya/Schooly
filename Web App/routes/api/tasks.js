@@ -6,15 +6,19 @@ const keys = require("../../config/keys");
 const validateTaskInput = require("../../validation/TaskData")
 // Load Task model
 const Task = require("../../models/Task");
-const Class = require("../../models/Class")
-//Define create route
-router.post("/create", (req, res) => {
+const Class = require("../../models/Class");
 
+//Define create route
+
+router.post("/create", (req, res) => {
+  // pakai body parser
+  console.log(req.body)
     const { errors, isValid } = validateTaskInput(req.body)
     if (!isValid) {
         console.log("Not Valid");
-        return res.status(400).json(errors);
+        return res.status(400).json(errors); // errors ini kan juga json
     }
+
     Task.findOne({ name: req.body.name, subject: req.body.subject})
         .then(task => {
         if (task) {
@@ -46,6 +50,7 @@ router.post("/create", (req, res) => {
 
 //Define View classes route
 router.get("/viewall", (req, res) => {
+  // pokoknya kalau ada request, requestnya harus diiringi dengan response. 
     Task.find({}).then((tasks, err) => {
         if (!tasks)
             return res.status(400).json("Tasks are not found");
@@ -53,6 +58,7 @@ router.get("/viewall", (req, res) => {
             return res.json(tasks);
     })
 })
+
 
 //Define delete routes
 router.delete("/delete/:id", (req, res) => {
@@ -67,7 +73,7 @@ router.delete("/delete/:id", (req, res) => {
         })
 })
 
-//Define Edit routes
+//Define Get one task routes
 router.get("/view/:id", (req, res) => {
     let id = req.params.id;
     Task.findById(id, (err, taskData) => {
@@ -81,7 +87,6 @@ router.get("/view/:id", (req, res) => {
 //Define update routes
 router.post("/update/:id", (req, res) => {
     let grade = req.body.grade;
-
     const { errors, isValid } = validateTaskInput(req.body)
 
     if (!isValid) {
@@ -96,6 +101,7 @@ router.post("/update/:id", (req, res) => {
         if (!taskData)
             return res.status(404).send("Task data is not found");
         else {
+          // taskData.grades
             console.log(grade)
             if (!grade) {
                 // Untuk taskData yang bukan edit atau kasi nilai
@@ -107,25 +113,16 @@ router.post("/update/:id", (req, res) => {
                 taskData.deadline = req.body.deadline;
             }
             else {
+              //grade kan dia Map (key, value). grade -> (studentId, nilainya)
                 // untuk yang kasi nilai
-                if (!taskData.grades) {
-                    let gradeMap = new Map()
-                    gradeMap.set(req.body.studentId, grade)
-                    taskData.grades = gradeMap
-                    console.log(gradeMap, taskData.grades)
-                }
-                else {
-                    taskData.grades.set(req.body.studentId,grade)
-                }
-
+                taskData.grades.set(req.body.studentId,grade)
             }
 
             taskData
                 .save()
                 .then(taskData => res.json("Update Task complete"))
                 .catch(err => res.status(400).send("Unable to update task database"));
-
-        }
+          }
         });
     });
 

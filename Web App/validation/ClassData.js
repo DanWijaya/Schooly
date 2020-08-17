@@ -4,6 +4,7 @@ const isEmpty = require("is-empty");
 module.exports = function validateClassInput(data) {
     let errors = {};
 
+    
     // console.log(data.walikelas)
     // Convert empty fields to an empty strings so validator functions can be used
     data.name = isEmpty(data.name) ? "" : data.name;
