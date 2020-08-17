@@ -101,7 +101,7 @@ class CreateAssessment extends Component {
     super();
     this.state = {
       num_qns: 1,
-      questions: [{
+      questions: [{ // mau ganti questions ini dalam Hashmap mungkin.
         name: "",
         options: ["Opsi 1", ""],
         answer: "A",

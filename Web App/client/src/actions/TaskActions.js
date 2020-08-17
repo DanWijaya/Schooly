@@ -10,6 +10,7 @@ export const createTask = (formData, taskData, history) => dispatch => {
         console.log("this is the res" , res.data._id)
         console.log("Will run this")
         console.log(formData.has('lampiran_tugas'))
+        // dispatch action. Ada dua atribut. type dan payload
         dispatch({
             type: GET_ERRORS,
             payload: false

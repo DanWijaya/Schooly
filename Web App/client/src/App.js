@@ -63,12 +63,11 @@ import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
 import Elbert from "./prototypes/Elbert";
+import Dimas from "./prototypes/Dimas";
 import CSV from "./prototypes/CSV";
 //Dropbox
 import DropboxConnect from "./components/dropbox/DropboxConnect";
 import DropboxAuth from "./components/dropbox/DropboxAuth";
-
-import Dimas from "./prototypes/Dimas";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -209,13 +208,13 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/daftar-mata-pelajaran" component={SubjectList} />
-                    {/* Not Found  */}
+                    {/* Not Found */}
                     <Route
                       exact path="/tidak-ditemukan"
                       render={(props) => (
                         <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
                       )}
-                    />
+                    /> 
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
                   <Footer />

@@ -298,6 +298,13 @@ function MaterialList(props) {
   const { user, all_teachers } = props.auth;
 
   const { all_subjects_map} = props.subjectsCollection;
+  // props.subjectsCollection = 
+  //   {
+  //   all_subjects: [],
+  //     selectedSubjects:{},
+  //     all_subjects_map: new Map(),
+  //     subject: {}
+  // }
 
   const materialRowItem = (data) => {
     rows.push(
@@ -311,6 +318,8 @@ function MaterialList(props) {
     )
   }
 
+  // nah jadi itu gak ada componentLifeCycle method spt class.
+  // makanya pakai React.useEffect()
   React.useEffect(() => {
     getAllSubjects("map")
     getAllClass("map")
@@ -574,6 +583,7 @@ function MaterialList(props) {
 }
 
 MaterialList.propTypes = {
+  // ini itu yang ada di folder actions, untuk membuat HTTP Request.
   deleteMaterial: PropTypes.func.isRequired,
   getAllMaterials: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
@@ -582,12 +592,14 @@ MaterialList.propTypes = {
   getSelectedClasses: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
 
+  // ini itu yang ada di index.js dari folder Reducers, untuk mendapatkan state aplikasi.
   classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
+
 
 const mapStateToProps = (state) => ({
   errors: state.errors,

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -157,7 +156,6 @@ function MaterialListToolbar(props) {
 };
 
 MaterialListToolbar.propTypes = {
-  // state -> props
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -285,37 +283,60 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ListTester(props) {
+
   const classes = useStyles();
 
-  const[order,setOrder] = React.useState("asc");
-  const[orderBy,setOrderBy] = React.useState("subject");
-
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("subject");
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-  // dapet dari store (index.js) yang dapet dari reducer
+
+  //props.auth.user 
+  //props.auth.all_teachers
+  const { getAllSubjects, getMaterial, deleteMaterial, getAllClass, getTeachers } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const { user, all_teachers } = props.auth;
-  // sama kayak user = props.auth.user
+  const { all_subjects_map} = props.subjectsCollection;
+  const materialRowItem = (data) => {
+    rows.push(
+      createData(
+        data._id,
+        data.name,
+        data.subject,
+        !(all_teachers).size || !all_teachers.get(data.author_id) ? {}: all_teachers.get(data.author_id),
+        data.class_assigned,
+      )
+    )
+  }
+
+  
+  React.useEffect(() => {
+    getAllSubjects("map") // yang dapetin semua subjects, terimanya dalam Map/Dictionary/HashMap object
+    getAllClass("map")
+    getTeachers("map")
+    if (user.role === "Teacher") {
+      getMaterial(user.id, "by_author")
+    }
+    else { // for student
+      getMaterial(user.kelas, "by_class")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <div>
+      HAHAHHA
+    </div>
+  )
+
 }
 
-React.useEffect(() => {
-  getAllSubjects("map")
-  getAllClass("map")
-  getTeachers("map")
-  if (user.role === "Teacher") {
-    getMaterial(user.id, "by_author")
-  }
-  else { // for student
-    getMaterial(user.kelas, "by_class")
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [])
 
 ListTester.propTypes = {
-  // ada di folder actions
+  
   deleteMaterial: PropTypes.func.isRequired,
   getAllMaterials: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
@@ -324,7 +345,7 @@ ListTester.propTypes = {
   getSelectedClasses: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
 
-  // ada di index.js
+  
   classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
@@ -342,7 +363,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { deleteMaterial,getAllMaterials,getAllSubjects}
-)(ListTester);
-=======
->>>>>>> b9bec6ab44c287cfae00a14561c0d5d57af07a7c
+  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getTeachers, getAllClass, getSelectedClasses }
+  )(ListTester)

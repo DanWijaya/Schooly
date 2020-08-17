@@ -16,7 +16,7 @@ export default combineReducers({
   announcementsCollection : AnnouncementReducer,
   assessmentsCollection: AssessmentReducer,
   classesCollection: ClassReducer,
-  errors: ErrorReducer,
+  errors: ErrorReducer, // dari null jd false
   filesCollection: UploadReducer,
   materialsCollection: MaterialReducer, 
   passwordMatters: AuthReducer,

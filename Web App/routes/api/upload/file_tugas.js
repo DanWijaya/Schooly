@@ -76,6 +76,7 @@ router.get("/", (req,res) => {
     var r = new FileReader();
     r.readAsDataURL(file)
   }
+  
 
   let { tugas_ids } = req.query;
 

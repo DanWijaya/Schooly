@@ -10,10 +10,17 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
           console.log("this is the res", res.data)
           console.log("Will run this")
           console.log(formData.getAll('lampiran_materi'))
+<<<<<<< HEAD
           // memberikan signal ke Store untuk mengubah/menambahkan state
           // secara codenya dilakukan dengan cara dispatch action
           dispatch({
               // ini action berupa JavaScript Object
+=======
+          // memebrikan signal ke Store untuk mengubah/menambahkan state aplikasi
+          // kalau secara codenya, dilakukan dgn cara dispatch action
+          dispatch({
+            // ini action yang berupa JavaScript object
+>>>>>>> b9bec6ab44c287cfae00a14561c0d5d57af07a7c
               type: GET_ERRORS,
               payload: false
           })

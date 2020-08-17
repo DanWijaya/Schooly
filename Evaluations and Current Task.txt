@@ -54,6 +54,10 @@ Error and To be Fixed:
 - Masukin kata "kosong" buat list dkk yang masih kosong dan "tidak diketahui" untuk guru yang di delete
 - Rapikan code, pecahkan jadi beberapa file lagi
 
+To be fixed (Urgent):
+- Di ViewTaskStudent, ndak muncul file yang dikumpul. 
+- Di ViewClass yang si Student, ndak muncul Murid muridnya. 
+
 Yang belum ada di Schooly:
 1. Ujian/Quiz dengan auto checker juga (https://github.com/bonham000/react-quiz-app)
 2. Platform untuk cari universitas gitu
