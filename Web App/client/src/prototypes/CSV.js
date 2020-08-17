@@ -63,6 +63,13 @@ export default function CSV() {
 	};
 	
 	const handleClickSubmit = () => {
+		// if(kontenCSV==""){
+		// 	alert("Harap masukkan file CSV terlebih dahulu")
+		// }
+		// else{
+		// 	submitButton.current.click();
+		// }
+
 		if (fileInput.current.files[0]) {
 			submitButton.current.click();
 			if (openErrorAlert) {
@@ -74,6 +81,23 @@ export default function CSV() {
 		}
 	};
 	
+	const handleClickDownload = (data) => {
+		if(data==""){
+			alert("Belum ada data yang di-submit");
+		}
+		else {
+			const blob = new Blob([data],{ type : 'text/csv'});
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.setAttribute('hidden','')
+			a.setAttribute('href',url)
+			a.setAttribute('download','file.csv')
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}
+	};
+
 	const handleSubmit = (event) => {
 		event.preventDefault(); // agar default action elemen HTML <form> tidak dilakukan(?)
 
@@ -162,6 +186,9 @@ export default function CSV() {
 					</Grid>
 					<Grid item xs={12} className={classes.gridButton}>
 						<Button variant="contained" onClick={() => {handleClickOpenDialog()}} className={classes.button}>Lihat Isi</Button>					
+					</Grid>
+					<Grid item xs={12} style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+						<Button variant="contained" onClick={() => {handleClickDownload(kontenCSV)}}>Download/Export</Button>				
 					</Grid>
 				</Grid>
 			</Grid>
