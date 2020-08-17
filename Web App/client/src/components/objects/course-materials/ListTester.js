@@ -282,30 +282,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MaterialList(props) {
+function ListTester(props) {
+
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
-
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
+
+  //props.auth.user 
+  //props.auth.all_teachers
   const { getAllSubjects, getMaterial, deleteMaterial, getAllClass, getTeachers } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const { user, all_teachers } = props.auth;
-
   const { all_subjects_map} = props.subjectsCollection;
-  // props.subjectsCollection = 
-  //   {
-  //   all_subjects: [],
-  //     selectedSubjects:{},
-  //     all_subjects_map: new Map(),
-  //     subject: {}
-  // }
-
   const materialRowItem = (data) => {
     rows.push(
       createData(
@@ -318,10 +312,9 @@ function MaterialList(props) {
     )
   }
 
-  // nah jadi itu gak ada componentLifeCycle method spt class.
-  // makanya pakai React.useEffect()
+  
   React.useEffect(() => {
-    getAllSubjects("map")
+    getAllSubjects("map") // yang dapetin semua subjects, terimanya dalam Map/Dictionary/HashMap object
     getAllClass("map")
     getTeachers("map")
     if (user.role === "Teacher") {
@@ -333,257 +326,17 @@ function MaterialList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  console.log(all_teachers)
-  const retrieveMaterials = () => {
-    // If all_materials is not undefined or an empty array
-    rows = []
-    if (user.role === "Admin") {
-      all_materials.map(data =>  materialRowItem(data))
-    }
-    else {
-      if (selectedMaterials.length) {
-        selectedMaterials.map(data => materialRowItem(data))
-      }
-    }
-  }
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  // Call the function to view the tasks on tablerows.
-  // This function is defined above.
-  retrieveMaterials()
-
-  const onDeleteMaterial = (id) => {
-    deleteMaterial(id)
-  }
-
-  // Delete Dialog
-  const handleOpenDeleteDialog = (e, id, name) => {
-    e.stopPropagation();
-    setOpenDeleteDialog(true);
-    setSelectedTaskId(id)
-    setSelectedMaterialName(name)
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
-
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Materi berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedMaterialName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteMaterial(selectedTaskId) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
-  document.title = "Schooly | Daftar Materi";
-  console.log(all_classes_map)
   return (
-    <div className={classes.root}>
-      {DeleteDialog()}
-      <MaterialListToolbar
-        role={user.role}
-        deleteMaterial={deleteMaterial}
-        classes={classes}
-        order={order}
-        orderBy={orderBy}
-        onRequestSort={handleRequestSort}
-        rowCount={rows ? rows.length : 0}
-      />
-      <Divider variant="inset" className={classes.titleDivider} />
-      <Grid container direction="column" spacing={2}>
-        {stableSort(rows, getComparator(order, orderBy))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = `/materi/${row._id}`
-            return (
-              <Grid item>
-                {user.role === "Teacher" ?
-                  <ExpansionPanel
-                    button
-                    variant="outlined"
-                  >
-                    <ExpansionPanelSummary className={classes.materialPanelSummary}>
-                      <Grid container spacing={1} justify="space-between" alignItems="center">
-                        <Grid item>
-                          <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
-                              {row.materialtitle}
-                            </Typography>
-                            <Typography variant="caption" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          </Hidden>
-                          <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.materialtitle}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          </Hidden>
-                        </Grid>
-                        <Grid item xs container spacing={1} justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Lebih Lanjut">
-                              <Link to={viewpage}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
-                                  >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <Link to={`/sunting-materi/${row._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.editMaterialButton}
-                                >
-                                  <EditIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Hapus">
-                              <IconButton
-                                size="small"
-                                className={classes.deleteMaterialButton}
-                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.materialtitle)}}
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </ExpansionPanelSummary>
-                    <Divider className={classes.materialPanelDivider} />
-                    <ExpansionPanelDetails>
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" gutterBottom>
-                            <b>Kelas yang Diberikan:</b> {!all_classes_map.size ? null :
-                              row.class_assigned.map((kelas,i) => {
-                                if (all_classes_map.get(kelas)) {
-                                  if (i === row.class_assigned.length - 1)
-                                    return (`${all_classes_map.get(kelas).name}`)
-                                  return (`${all_classes_map.get(kelas).name}, `)
-                                  }
-                                  return null
-                                })
-                              }
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="textSecondary">
-                             Pemberi Materi: {!row.author ? null : row.author.name}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
-                :
-                <Link to={viewpage}>
-                  <Paper
-                    button component="a"
-                    variant="outlined"
-                    className={classes.materialPaper}
-                  >
-                    <div>
-                      <Typography variant="h6" id={labelId}>
-                        {row.materialtitle}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {all_subjects_map.get(row.subject)}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Hidden smUp implementation="css">
-                        <Typography variant="body2" color="textSecondary" align="right">
-                          Pemberi Materi:
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary" align="right">
-                          {!row.author ? null : row.author.name}
-                        </Typography>
-                      </Hidden>
-                      <Hidden xsDown implementation="css">
-                        <Typography variant="overline" color="textSecondary" align="right">
-                          Pemberi Materi: {!row.author ? null : row.author.name}
-                        </Typography>
-                      </Hidden>
-                    </div>
-                  </Paper>
-                  </Link>
-                }
-              </Grid>
-            );
-          })}
-      </Grid>
+    <div>
+      HAHAHHA
     </div>
-  );
+  )
+
 }
 
-MaterialList.propTypes = {
-  // ini itu yang ada di folder actions, untuk membuat HTTP Request.
+
+ListTester.propTypes = {
+  
   deleteMaterial: PropTypes.func.isRequired,
   getAllMaterials: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
@@ -592,14 +345,13 @@ MaterialList.propTypes = {
   getSelectedClasses: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
 
-  // ini itu yang ada di index.js dari folder Reducers, untuk mendapatkan state aplikasi.
+  
   classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
-
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
@@ -612,4 +364,4 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getTeachers, getAllClass, getSelectedClasses }
-)(MaterialList);
+  )(ListTester)
