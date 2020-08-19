@@ -20,15 +20,15 @@ const useStyles = makeStyles((theme) => ({
 
 	},
 	button: {
-		'&:focus': {
-			backgroundColor: '#e0e0e0',
-		}
+		'&:focus, &:hover': {
+			backgroundColor: '#e0e0e0'
+    },
 	}
 }));
 
 export default function CSV() {
 	const classes = useStyles();
-	const theme = useTheme();
+	// const theme = useTheme();
 
 	const [kontenCSV, setKontenCSV] = React.useState(""); // isi file csv disimpan di sini sebagai satu string panjang
 	const [openTabelDialog, setOpenTabelDialog] = React.useState(false); // untuk menampilkan/menutup dialog yang berisi tabel
@@ -53,7 +53,8 @@ export default function CSV() {
 		}
 
 		setOpenSuccessAlert(false);
-	};
+  };
+
 	const handleCloseErrorAlert = (event, reason) => {
 		if (reason === 'clickaway') {
 			return;
@@ -92,9 +93,9 @@ export default function CSV() {
 			a.setAttribute('hidden','')
 			a.setAttribute('href',url)
 			a.setAttribute('download','file.csv')
-			document.body.appendChild(a);
+			// document.body.appendChild(a);
 			a.click();
-			document.body.removeChild(a);
+      // document.body.removeChild(a);
 		}
 	};
 
@@ -172,13 +173,14 @@ export default function CSV() {
 		<div className={classes.root}>
 			<Grid container style={{ margin: 'auto', display: 'flex', justifyContent: 'center'}}>
 				<Grid item xs={12} sm={6} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-						<form onSubmit={(event) => {handleSubmit(event)}} className={classes.form} style={{display: 'flex', justifyContent: 'center'}}>
-							<label style={{color: "black"}}>
-								Pilih file CSV &nbsp;
-								<input type="file" ref={fileInput} accept=".csv"/>
-							</label>
-							<button type="submit" ref={submitButton} style={{display:'none'}}>Submit</button>
-						</form>
+          <form onSubmit={(event) => {handleSubmit(event)}} className={classes.form} style={{display: 'flex', justifyContent: 'center'}}>
+            <label style={{color: "black"}}>
+              Pilih file CSV &nbsp;
+              <input type="file" ref={fileInput} accept=".csv"/>
+              <Button className={classes.button}> <input type="file" ref={fileInput} accept=".csv" style={{display: "none"}}/> </Button>
+            </label>
+            <button type="submit" ref={submitButton} style={{display:'none'}}>Submit</button>
+          </form>
 				</Grid>
 				<Grid container item xs={12} sm={4}>
 					<Grid item xs={12}  className={classes.gridButton}>
@@ -188,7 +190,7 @@ export default function CSV() {
 						<Button variant="contained" onClick={() => {handleClickOpenDialog()}} className={classes.button}>Lihat Isi</Button>					
 					</Grid>
 					<Grid item xs={12} style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
-						<Button variant="contained" onClick={() => {handleClickDownload(kontenCSV)}}>Download/Export</Button>				
+						<Button variant="contained" onClick={() => {handleClickDownload(kontenCSV)}} className={classes.button}>Download/Export</Button>				
 					</Grid>
 				</Grid>
 			</Grid>

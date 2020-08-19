@@ -199,7 +199,6 @@ class EditMaterial extends Component {
   }
 
   lampiranUploader = React.createRef(null)
-  uploadedLampiran = React.createRef(null)
 
   componentDidMount() {
     const { getAllClass, getAllSubjects, getOneMaterial } = this.props;
@@ -286,6 +285,7 @@ class EditMaterial extends Component {
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
       }
     }
+    document.getElementById("file_control").value = null
   }
 
   handleLampiranDelete = (e, i, name) => {
@@ -584,19 +584,12 @@ class EditMaterial extends Component {
                     <Grid item>
                       <input
                         type="file"
+                        id="file_control"
                         multiple={true}
                         name="lampiran"
                         onChange={this.handleLampiranUpload}
                         ref={this.lampiranUploader}
                         accept="file/*"
-                        style={{display: "none"}}
-                      />
-                      <input
-                        type="file"
-                        multiple={true}
-                        name="file"
-                        id="file"
-                        ref={this.uploadedLampiran}
                         style={{display: "none"}}
                       />
                       <Button

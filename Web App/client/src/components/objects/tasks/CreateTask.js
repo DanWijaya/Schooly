@@ -201,7 +201,6 @@ class CreateTask extends Component {
 
   // ref itu untuk ngerefer html yang ada di render. 
   lampiranUploader = React.createRef(null) // untuk ngerefer html object yang lain
-  uploadedLampiran = React.createRef(null)
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
@@ -282,15 +281,11 @@ class CreateTask extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files})
-    else {
-      if (files.length !== 0) {
-        let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
-        this.setState({ fileLampiran: temp})
-      }
-    }
+    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
+    this.setState({ fileLampiran: temp})
+    document.getElementById("file_control").value = null
   }
+
 
   handleLampiranDelete = (e, i) => {
     e.preventDefault()
@@ -542,20 +537,13 @@ class CreateTask extends Component {
                     </Grid>
                     <Grid item>
                       <input
+                        id="file_control"
                         type="file"
                         multiple={true}
                         name="lampiran"
                         onChange={this.handleLampiranUpload}
                         ref={this.lampiranUploader}
                         accept="file/*"
-                        style={{display: "none"}}
-                      />
-                      <input
-                        type="file"
-                        multiple={true}
-                        name="file"
-                        id="file"
-                        ref={this.uploadedLampiran}
                         style={{display: "none"}}
                       />
                       <Button

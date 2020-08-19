@@ -263,6 +263,7 @@ class EditAnnouncement extends Component {
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
       }
     }
+    document.getElementById("file_control").value = null
   }
 
   handleLampiranDelete = (e, i, name) => {
@@ -287,7 +288,6 @@ class EditAnnouncement extends Component {
       }
     }
     temp.splice(i, 1);
-    console.log(tempToDelete)
     if (temp.length === 0)
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
@@ -563,6 +563,7 @@ class EditAnnouncement extends Component {
                       name="lampiran"
                       onChange={this.handleLampiranUpload}
                       ref={this.lampiranUploader}
+                      id="file_control"
                       accept="file/*"
                       style={{display: "none"}}
                     />

@@ -75,8 +75,14 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
-  passwordReset: { type: String, select: false },
-  passwordResetTime: { type: Date, select: true}
+  passwordReset: { 
+    type: String, 
+    select: false 
+  },
+  passwordResetTime: { 
+    type: Date, 
+    select: true
+  }
 }, options )
 
 const User = mongoose.model("users", UserSchema);
