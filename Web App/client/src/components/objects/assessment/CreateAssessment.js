@@ -8,7 +8,6 @@ import { createAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import gambarTest from "./GambarTest.jpg";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
@@ -116,7 +115,7 @@ class CreateAssessment extends Component {
     }
   }
 
-  // ref itu untuk ngerefer html yang ada di render. 
+  // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
   uploadedImage = React.createRef(null)
 
@@ -218,7 +217,7 @@ class CreateAssessment extends Component {
   }
 
   // readImageURI = (e, qnsIndex) => {
-    
+
   // }
 
   handleQuestionImage = (e, qnsIndex) => {
@@ -252,7 +251,7 @@ class CreateAssessment extends Component {
     if(!images)
       return null;
     else {
-      let result = images.map((image, i) => 
+      let result = images.map((image, i) =>
         <GridListTile cellHeight={image.height} key={image} cols={1} >
           <img alt="current image" src={image}/>
           <GridListTileBar
@@ -279,28 +278,6 @@ class CreateAssessment extends Component {
     // const { errors } = this.props
     let length = questions.length
 
-    const tileData = [
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 1,
-         height: "250px",
-       },
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 3,
-       },
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 4,
-       },
-    ];
-
     for( let i = 0; i < length; i++){
       let question = questions[i]
       let images = question.images;
@@ -318,12 +295,12 @@ class CreateAssessment extends Component {
                   <GridList>
                     {this.buildImgTag(images)}
                   </GridList>
-                  <TextField 
-                    multiline 
-                    rowsMax={10} 
-                    id="name" 
-                    fullWidth 
-                    variant="filled" 
+                  <TextField
+                    multiline
+                    rowsMax={10}
+                    id="name"
+                    fullWidth
+                    variant="filled"
                     value={question.name}
                     onChange={(e) => this.handleChangeQuestion(e, i)}
                   />
@@ -392,7 +369,7 @@ class CreateAssessment extends Component {
                     </IconButton>
                   </LightTooltip>
                 </Grid>
-                <Grid item> 
+                <Grid item>
                   <LightTooltip title="Duplikat Soal" placement="right">
                     <IconButton onClick={() => this.handleDuplicateQueston(i, question)}>
                       <FilterNoneIcon />
