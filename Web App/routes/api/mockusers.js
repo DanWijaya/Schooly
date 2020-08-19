@@ -172,7 +172,7 @@ router.post("/update/data/:id", (req,res) => {
   }
 
   let id = req.params.id
-  User.findById(id, (err, user) => {
+  MockUser.findById(id, (err, user) => {
         if (!user) {
           return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
         }
@@ -262,7 +262,7 @@ router.get("/gettask/:id/:task_id", (req, res) => {
   let tugasId = req.params.task_id;
 
   // res.send([])
-  User.findById(id, (err, user) => {
+  MockUser.findById(id, (err, user) => {
     if (!user || !user.active)
       res.status(404).send("User data is not found");
     else {
@@ -282,7 +282,7 @@ router.get("/gettask/:id/:task_id", (req, res) => {
 router.get("/getalltask/:user_id", (req,res) => {
   let id = req.params.user_id;
 
-  User.findById(id, (err, user) => {
+  MockUser.findById(id, (err, user) => {
     if (!user || !user.active)
       res.status(404).send("User data is not found");
     else {
