@@ -191,7 +191,6 @@ class CreateAnnouncement extends Component {
   }
 
   lampiranUploader = React.createRef(null)
-  uploadedLampiran = React.createRef(null)
 
   componentDidUpdate(prevProps, prevState){
     if(!this.props.errors && this.props.errors !== prevProps.errors){
@@ -240,18 +239,6 @@ class CreateAnnouncement extends Component {
     console.log(this.props.errors)
   }
 
-  handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files})
-    else {
-      if (files.length !== 0) {
-        let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
-        this.setState({ fileLampiran: temp})
-      }
-    }
-  }
-
   handleLampiranDelete = (e, i) => {
     e.preventDefault()
     console.log("Index is: ", i)
@@ -260,6 +247,13 @@ class CreateAnnouncement extends Component {
     if (temp.length === 0) //If it is empty.
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp})
+  }
+
+  handleLampiranUpload = (e) => {
+    const files = e.target.files;
+    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
+    this.setState({ fileLampiran: temp})
+    document.getElementById("file_control").value = null
   }
 
   onSubmit = (e, id) => {
@@ -388,6 +382,7 @@ class CreateAnnouncement extends Component {
       return (<Redirect to="/tidak-ditemukan"/>)
     }
 
+
     return (
       <div className={classes.root}>
         {UploadDialog()}
@@ -491,23 +486,16 @@ class CreateAnnouncement extends Component {
                       type="file"
                       multiple={true}
                       name="lampiran"
+                      id="file_control"
                       onChange={this.handleLampiranUpload}
                       ref={this.lampiranUploader}
                       accept="file/*"
                       style={{display: "none"}}
                     />
-                    <input
-                      type="file"
-                      multiple={true}
-                      name="file"
-                      id="file"
-                      ref={this.uploadedLampiran}
-                      style={{display: "none"}}
-                    />
                     <Button
                       variant="contained"
                       startIcon={<AttachFileIcon />}
-                      onClick={() => {this.lampiranUploader.current.click()}}
+                      onClick={() => this.lampiranUploader.current.click()}
                       className={classes.addFileButton}
                     >
                       Tambah Lampiran Berkas

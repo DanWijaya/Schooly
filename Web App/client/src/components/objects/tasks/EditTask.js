@@ -213,7 +213,6 @@ class EditTask extends Component {
   }
 
   tugasUploader = React.createRef(null)
-  uploadedTugas = React.createRef(null)
 
   componentDidMount() {
     this.props.getOneTask(this.props.match.params.id)
@@ -308,6 +307,7 @@ class EditTask extends Component {
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
       }
     }
+    document.getElementById("file_control").value = null
   }
 
   handleLampiranDelete = (e, i, name) => {
@@ -332,7 +332,6 @@ class EditTask extends Component {
       }
     }
     temp.splice(i, 1);
-    console.log(tempToDelete)
     if (temp.length === 0)
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
@@ -619,18 +618,11 @@ class EditTask extends Component {
                       <input
                         type="file"
                         multiple={true}
+                        id="file_control"
                         name="lampiran"
                         onChange={this.handleLampiranUpload}
                         ref={this.tugasUploader}
                         accept="file/*"
-                        style={{display: "none"}}
-                      />
-                      <input
-                        type="file"
-                        multiple={true}
-                        name="file"
-                        id="file"
-                        ref={this.uploadedTugas}
                         style={{display: "none"}}
                       />
                       <Button

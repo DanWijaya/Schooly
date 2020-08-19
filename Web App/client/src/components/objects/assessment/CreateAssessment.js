@@ -8,7 +8,6 @@ import { createAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import gambarTest from "./GambarTest.jpg";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
@@ -32,9 +31,6 @@ const styles = (theme) => ({
   },
   content: {
     padding: "20px 20px 30px 20px",
-  },
-  gridList: {
-    maxHeight: "250px",
   },
   divider: {
     [theme.breakpoints.down("md")]: {
@@ -116,7 +112,7 @@ class CreateAssessment extends Component {
     }
   }
 
-  // ref itu untuk ngerefer html yang ada di render. 
+  // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
   uploadedImage = React.createRef(null)
 
@@ -218,7 +214,7 @@ class CreateAssessment extends Component {
   }
 
   // readImageURI = (e, qnsIndex) => {
-    
+
   // }
 
   handleQuestionImage = (e, qnsIndex) => {
@@ -252,14 +248,14 @@ class CreateAssessment extends Component {
     if(!images)
       return null;
     else {
-      let result = images.map((image, i) => 
-        <GridListTile cellHeight={image.height} key={image} cols={1} >
+      let result = images.map((image, i) =>
+        <GridListTile key={image} cols={1} >
           <img alt="current image" src={image}/>
           <GridListTileBar
               title={"HAHHA"}
               titlePosition="top"
               actionIcon={
-                <IconButton aria-label="WK">
+                <IconButton style={{color: "white"}}>
                   <CloseIcon />
                 </IconButton>
               }
@@ -267,7 +263,6 @@ class CreateAssessment extends Component {
             />
         </GridListTile>
       )
-
       return result;
     }
 
@@ -278,28 +273,6 @@ class CreateAssessment extends Component {
     let questions = this.state.questions;
     // const { errors } = this.props
     let length = questions.length
-
-    const tileData = [
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 1,
-         height: "250px",
-       },
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 3,
-       },
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 4,
-       },
-    ];
 
     for( let i = 0; i < length; i++){
       let question = questions[i]
@@ -315,15 +288,15 @@ class CreateAssessment extends Component {
                   <Typography variant="h6" gutterBottom>
                     Soal {i+1}
                   </Typography>
-                  <GridList>
+                  <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
                     {this.buildImgTag(images)}
                   </GridList>
-                  <TextField 
-                    multiline 
-                    rowsMax={10} 
-                    id="name" 
-                    fullWidth 
-                    variant="filled" 
+                  <TextField
+                    multiline
+                    rowsMax={10}
+                    id="name"
+                    fullWidth
+                    variant="filled"
                     value={question.name}
                     onChange={(e) => this.handleChangeQuestion(e, i)}
                   />
@@ -348,7 +321,7 @@ class CreateAssessment extends Component {
                           <FormControlLabel
                             style={{width: "100%"}}
                             value={String.fromCharCode(97 + index).toUpperCase()}
-                            control={<Radio />}
+                            control={<Radio color="primary" />}
                             label={
                               <TextField
                                 style={{flexGrow: 1}}
@@ -375,24 +348,25 @@ class CreateAssessment extends Component {
               <Divider flexItem orientation="vertical" />
               <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
                 <Grid item>
-                <input
-                accept="image/*"
-                multiple
-                type="file"
-                name="avatar"
-                onChange={(e) => this.handleQuestionImage(e, i)}
-                ref={this.imageUploader}
-                style={{
-                  display: "none"
-                }}
-              />
+                  <input
+                    accept="image/*"
+                    multiple
+                    type="file"
+                    name="avatar"
+                    onChange={(e) => this.handleQuestionImage(e, i)}
+                    ref={this.imageUploader}
+                    style={{
+                      display: "none",
+                      visibility: "hidden",
+                    }}
+                  />
                   <LightTooltip title="Tambahkan " placement="right">
                     <IconButton onClick={() => this.imageUploader.current.click()}>
                       <AddPhotoAlternateIcon/>
                     </IconButton>
                   </LightTooltip>
                 </Grid>
-                <Grid item> 
+                <Grid item>
                   <LightTooltip title="Duplikat Soal" placement="right">
                     <IconButton onClick={() => this.handleDuplicateQueston(i, question)}>
                       <FilterNoneIcon />

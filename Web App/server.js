@@ -5,6 +5,7 @@ const passport = require("passport");
 
 //untuk users punya
 const users = require("./routes/api/users");
+const mockusers = require("./routes/api/mockusers"); // ------------------------------ untuk tugas 3
 
 // untuk uploads punya
 const att_announcement = require("./routes/api/upload/att_announcement");
@@ -70,6 +71,10 @@ app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
 
+
+// Prototype route ------------------------------ untuk tugas 3
+app.use("/api/mockusers", mockusers); 
+
 // Handle upload routing..
 app.use("/api/upload/att_announcement", att_announcement)
 app.use("/api/upload/att_material", att_material)
@@ -82,6 +87,8 @@ app.use("/api/authentication", authentication)
 app.use("/api/announcements", announcements)
 app.use("/api/materials", materials)
 app.use("/api/assessments", assessments)
+
+
 // Always put this in the end
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
