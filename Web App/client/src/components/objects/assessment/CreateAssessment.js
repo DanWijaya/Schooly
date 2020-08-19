@@ -278,28 +278,6 @@ class CreateAssessment extends Component {
     // const { errors } = this.props
     let length = questions.length
 
-    const tileData = [
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 1,
-         height: "250px",
-       },
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 3,
-       },
-       {
-         img: gambarTest,
-         title: 'Image',
-         author: 'author',
-         cols: 4,
-       },
-    ];
-
     for( let i = 0; i < length; i++){
       let question = questions[i]
       let images = question.images;
