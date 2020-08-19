@@ -19,10 +19,10 @@ export const registerUser = (userData, history) => dispatch => {
   );
 };
 
-// Lihat Isi Button
+// Action Export/Download Button
 export const exportUser = (userData, history) => dispatch => {
     axios
-      .get("/downloadCurrentUsersCSV", userData)
+      .get("/api/mockusers/importUsers", userData)
       .then(res => {
         history.push("/masuk")
       })
@@ -35,19 +35,4 @@ export const exportUser = (userData, history) => dispatch => {
     );
   };
 
-// Action Export/Download Button
-export const exportUser = (userData, userId, history) => dispatch => {
-  axios
-      .get("/downloadCurrentUsersCSV", userData)
-      .then(res => {
-        history.push("/masuk")
-      })
-      .catch(err => {
-        dispatch({
-          type: "ERROR_EXPORT",
-          payload: err.response.data
-        })
-      }
-    );
-}
 
