@@ -32,9 +32,6 @@ const styles = (theme) => ({
   content: {
     padding: "20px 20px 30px 20px",
   },
-  gridList: {
-    maxHeight: "250px",
-  },
   divider: {
     [theme.breakpoints.down("md")]: {
       width: "100%",
@@ -252,7 +249,7 @@ class CreateAssessment extends Component {
       return null;
     else {
       let result = images.map((image, i) =>
-        <GridListTile cellHeight={image.height} key={image} cols={1} >
+        <GridListTile key={image} cols={1} >
           <img alt="current image" src={image}/>
           <GridListTileBar
               title={"HAHHA"}
@@ -266,7 +263,6 @@ class CreateAssessment extends Component {
             />
         </GridListTile>
       )
-
       return result;
     }
 
@@ -292,7 +288,7 @@ class CreateAssessment extends Component {
                   <Typography variant="h6" gutterBottom>
                     Soal {i+1}
                   </Typography>
-                  <GridList style={{margin: "10px 0px 10px 0px"}}>
+                  <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
                     {this.buildImgTag(images)}
                   </GridList>
                   <TextField
@@ -325,7 +321,7 @@ class CreateAssessment extends Component {
                           <FormControlLabel
                             style={{width: "100%"}}
                             value={String.fromCharCode(97 + index).toUpperCase()}
-                            control={<Radio />}
+                            control={<Radio color="primary" />}
                             label={
                               <TextField
                                 style={{flexGrow: 1}}
