@@ -258,7 +258,7 @@ class CreateAssessment extends Component {
               title={"HAHHA"}
               titlePosition="top"
               actionIcon={
-                <IconButton aria-label="WK">
+                <IconButton style={{color: "white"}}>
                   <CloseIcon />
                 </IconButton>
               }
@@ -292,7 +292,7 @@ class CreateAssessment extends Component {
                   <Typography variant="h6" gutterBottom>
                     Soal {i+1}
                   </Typography>
-                  <GridList>
+                  <GridList style={{margin: "10px 0px 10px 0px"}}>
                     {this.buildImgTag(images)}
                   </GridList>
                   <TextField
@@ -352,17 +352,18 @@ class CreateAssessment extends Component {
               <Divider flexItem orientation="vertical" />
               <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
                 <Grid item>
-                <input
-                accept="image/*"
-                multiple
-                type="file"
-                name="avatar"
-                onChange={(e) => this.handleQuestionImage(e, i)}
-                ref={this.imageUploader}
-                style={{
-                  display: "none"
-                }}
-              />
+                  <input
+                    accept="image/*"
+                    multiple
+                    type="file"
+                    name="avatar"
+                    onChange={(e) => this.handleQuestionImage(e, i)}
+                    ref={this.imageUploader}
+                    style={{
+                      display: "none",
+                      visibility: "hidden",
+                    }}
+                  />
                   <LightTooltip title="Tambahkan " placement="right">
                     <IconButton onClick={() => this.imageUploader.current.click()}>
                       <AddPhotoAlternateIcon/>
