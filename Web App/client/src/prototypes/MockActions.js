@@ -3,12 +3,12 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
 // Submit Button
-export const registerUser = (userData, history) => dispatch => {
+export const importUsers = (userData) => dispatch => {
   axios
     .post("/api/mockusers/importUsers", userData)
     .then(res => {
       alert("Data CSV telah tersimpan")
-      history.push("/masuk")
+      // history.push("/masuk")
     })
     .catch(err => {
       dispatch({
@@ -20,11 +20,11 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 // Action Export/Download Button
-export const exportUser = (userData, history) => dispatch => {
+export const exportUsers = (userData) => dispatch => {
     axios
-      .get("/api/mockusers/importUsers", userData)
+      .get("/api/mockusers/exportUsers", userData)
       .then(res => {
-        history.push("/masuk")
+        // history.push("/masuk")
       })
       .catch(err => {
         dispatch({

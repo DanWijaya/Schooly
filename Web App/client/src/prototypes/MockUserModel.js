@@ -10,6 +10,10 @@ const options = {discriminatorKey: "role"};
 // Create Schema (New way)
 
 const MockUserSchema = new Schema({
+  password: {
+    type: String,
+    required: true
+  },
   avatar: {
     type: String,
     default: ""
@@ -49,6 +53,36 @@ const MockUserSchema = new Schema({
     type: String,
     required: true
   },
+
+  //Karir
+  hobi_minat: {
+    type: String,
+    default: null
+  },
+  ket_non_teknis: {
+    type: String,
+    default: null
+  },
+  cita_cita: {
+    type: String,
+    default: null
+  },
+  uni_impian: {
+    type: String,
+    default: null
+  },
+  active: {
+    type: Boolean,
+    default: false
+  },
+  passwordReset: { 
+    type: String, 
+    select: false 
+  },
+  passwordResetTime: { 
+    type: Date, 
+    select: true
+  }
 }, options )
 
 const MockUser = mongoose.model("mock_users", MockUserSchema);

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const MockUser = require("./MockUserModel");
 const { ObjectId } = require("mongodb");
 
-const MockStudent = MockUser.discriminator("Student", new mongoose.Schema({
+const MockStudent = MockUser.discriminator("MockStudent", new mongoose.Schema({
     kelas: { type: ObjectId, ref: "classes", required: true}, 
     // mau perbaiki ini.
     tugas: [
