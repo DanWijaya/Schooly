@@ -16,6 +16,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
 import { importUsers } from "./MockActions";
+import ImportExportIcon from '@material-ui/icons/ImportExport';
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -75,51 +76,104 @@ function ManageUsersToolbar(props) {
 
   return (
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h5">
-        {heading}
-      </Typography>
-      <LightTooltip title="Urutkan Akun">
-        <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-          <SortIcon />
-        </IconButton>
-      </LightTooltip>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseSortMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        {headCells.map((headCell, i) => (
-          <MenuItem
-            key={headCell.id}
-            sortDirection={orderBy === headCell.id ? order : false}
-            onClick={props.handleClosePanel}
+      <div>
+        <Typography variant="h5">
+          {heading}
+        </Typography>
+      </div>
+      <div style={{display: "flex",
+    justifyContent: "space-between",
+    alignItems: 'center',
+    padding: "10px",flexDirection:'row'}}>
+        <div style={{marginRight:'7px'}}>
+          <LightTooltip title="Urutkan Akun">
+            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+              <SortIcon />
+            </IconButton>
+          </LightTooltip>
+          <Menu
+            keepMounted
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseSortMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ?
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-                : null
-              }
-            </TableSortLabel>
-          </MenuItem>
-        ))}
-      </Menu>
+            {headCells.map((headCell, i) => (
+              <MenuItem
+                key={headCell.id}
+                sortDirection={orderBy === headCell.id ? order : false}
+                onClick={props.handleClosePanel}
+              >
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ?
+                    <span className={classes.visuallyHidden}>
+                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    </span>
+                    : null
+                  }
+                </TableSortLabel>
+              </MenuItem>
+            ))}
+          </Menu>
+        </div>
+        <div>
+          <LightTooltip title="Import CSV">
+            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+              <ImportExportIcon />
+            </IconButton>
+          </LightTooltip>
+          <Menu
+            keepMounted
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseSortMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            {headCells.map((headCell, i) => (
+              <MenuItem
+                key={headCell.id}
+                sortDirection={orderBy === headCell.id ? order : false}
+                onClick={props.handleClosePanel}
+              >
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ?
+                    <span className={classes.visuallyHidden}>
+                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    </span>
+                    : null
+                  }
+                </TableSortLabel>
+              </MenuItem>
+            ))}
+          </Menu>
+          </div>
+        </div>
     </Toolbar>
+    
   );
 };
 
@@ -138,6 +192,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
+    marginLeft:'5%',
   },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
