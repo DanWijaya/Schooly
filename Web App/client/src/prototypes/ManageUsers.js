@@ -6,7 +6,8 @@ import "moment/locale/id";
 import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../actions/UserActions";
 import LightTooltip  from "../components/misc/light-tooltip/LightTooltip";
 import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+   Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography,
+   TableContainer, Table, TableHead , TableBody, TableRow, TableCell } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -14,6 +15,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
+import { importUsers } from "./MockActions";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -288,6 +290,102 @@ function ManageUsers(props) {
   // this function is defined above
   retrieveUsers()
 
+
+  // Tugas 3 ------------------------------------------------------------------------------------------
+  const [kontenCSV, setKontenCSV] = React.useState("");
+  const [openTabelDialog, setOpenTabelDialog] = React.useState(false);
+  const fileInput = React.createRef(null);
+  
+  const onClickImportButton = () => {
+    fileInput.current.click();
+  };
+
+  const onInputChange = (event) => {
+    event.preventDefault();
+
+		fileInput.current.files[0].text().then((fileContent) => {
+     setKontenCSV(fileContent);
+    }).catch((err) => {
+			console.log(err);
+    });
+    setOpenTabelDialog(true);
+  };
+
+  const onClickCancelImport = () => {
+    setOpenTabelDialog(false);
+    fileInput.current.value = ''; //supaya onchange pasti dipanggil
+  };
+
+  const onClickSubmitImport = () => {
+    let strings = kontenCSV.split('\n');
+      
+    let daftarNamaKolom = strings[0].split(",");
+    let dataTabel = []; 
+
+    strings.slice(1).forEach((row) => {
+      let data = row.split(",");
+      let map = new Map();
+
+      for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
+        map.set(daftarNamaKolom[idx], data[idx]);
+      }
+
+      dataTabel.push(map);
+    });
+
+    importUsers(dataTabel);
+
+    setOpenTabelDialog(false);
+    fileInput.current.value = ''; //supaya onchange pasti dipanggil
+  };
+
+  function previewTable() {
+    let element = null;
+		if (kontenCSV) {
+      let strings = kontenCSV.split('\n');
+      
+			let daftarNamaKolom = strings[0].split(",");
+			let dataTabel = []; 
+
+			strings.slice(1).forEach((row) => {
+				let data = row.split(",");
+				let map = new Map();
+
+				for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
+					map.set(daftarNamaKolom[idx], data[idx]);
+				}
+
+				dataTabel.push(map);
+      });
+      
+			element = (
+				<TableContainer>
+					<Table size="small">
+						<TableHead>
+							<TableRow>
+								{daftarNamaKolom.map((namaKolom) => {
+									return (<TableCell>{namaKolom}</TableCell>);									
+								})}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+						{dataTabel.map((baris) => (
+							<TableRow>
+								{daftarNamaKolom.map((namaKolom) => {
+									return (<TableCell>{baris.get(namaKolom)}</TableCell>);
+								})}
+							</TableRow>
+						))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			);
+		}
+
+		return element;
+  };
+  // ------------------------------------------------------------------------------------------
+
   const onDeleteUser = (id) => {
     deleteUser(id)
   }
@@ -439,6 +537,18 @@ function ManageUsers(props) {
       <Typography variant="h4" align="center" gutterBottom>
         Daftar Pengguna Aktif
       </Typography>
+
+      {/* tugas 3 ----------------------------------------------- */}
+      <input type="file" ref={fileInput} accept=".csv" onChange={(event) => {onInputChange(event)}} style={{display:'none'}} />
+      <Button variant="contained" onClick={() => {onClickImportButton()}}>Import</Button>
+
+      <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
+				{previewTable()}
+        <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
+        <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
+			</Dialog>
+      {/* ----------------------------------------------- */}
+
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
