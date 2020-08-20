@@ -17,6 +17,9 @@ import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
 import { importUsers } from "./MockActions"; // tugas 3 -------------------------------------------
 import ImportExportIcon from '@material-ui/icons/ImportExport';
+import Paper from '@material-ui/core/Paper';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { List, ListItem } from '@material-ui/core';
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -48,6 +51,8 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
+
+
 
 function ManageUsersToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role, heading } = props;
@@ -81,10 +86,6 @@ function ManageUsersToolbar(props) {
           {heading}
         </Typography>
       </div>
-      <div style={{display: "flex",
-    justifyContent: "space-between",
-    alignItems: 'center',
-    padding: "10px",flexDirection:'row'}}>
         <div style={{marginRight:'7px'}}>
           <LightTooltip title="Urutkan Akun">
             <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
@@ -127,50 +128,7 @@ function ManageUsersToolbar(props) {
               </MenuItem>
             ))}
           </Menu>
-        </div>
-        <div>
-          <LightTooltip title="Import CSV">
-            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-              <ImportExportIcon />
-            </IconButton>
-          </LightTooltip>
-          <Menu
-            keepMounted
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleCloseSortMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            {headCells.map((headCell, i) => (
-              <MenuItem
-                key={headCell.id}
-                sortDirection={orderBy === headCell.id ? order : false}
-                onClick={props.handleClosePanel}
-              >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {orderBy === headCell.id ?
-                    <span className={classes.visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
-                    </span>
-                    : null
-                  }
-                </TableSortLabel>
-              </MenuItem>
-            ))}
-          </Menu>
-          </div>
+       
         </div>
     </Toolbar>
     
@@ -192,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
-    marginLeft:'5%',
+    
   },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
@@ -249,6 +207,21 @@ const useStyles = makeStyles((theme) => ({
       color: "black",
     },
   },
+  importButton: {
+    backgroundColor: "#50c878",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#A2F7B5",
+      color: "#309B94",
+    },
+    "&:focus":{
+      backgroundColor: "#50c878",
+      color: "white",
+      "&:hover": {
+        backgroundColor: "#A2F7B5",
+        color: "#309B94",
+    } 
+  }},
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -350,11 +323,36 @@ function ManageUsers(props) {
   const [kontenCSV, setKontenCSV] = React.useState("");
   const [openTabelDialog, setOpenTabelDialog] = React.useState(false);
   const fileInput = React.createRef(null);
-  
+ 
+
+  // Dialog Import/Export
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(null);
+  const [subject,setSubject] = React.useState(null)
+  const stylesheet = useStyles();
+
+  const handleClickOpen = (name) => {
+    setOpen(true)
+    setSubject(name)
+  }
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+  //---------------------------------------------
+
   const onClickImportButton = () => {
     fileInput.current.click();
   };
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
   const onInputChange = (event) => {
     event.preventDefault();
 
@@ -393,6 +391,35 @@ function ManageUsers(props) {
     setOpenTabelDialog(false);
     fileInput.current.value = ''; //supaya onchange pasti dipanggil
   };
+
+  // Tugas 3 -------------------------------------------------------------------
+  function SimpleDialog(props) {
+    const { onClose, selectedValue, open, subject } = props;
+    const pass_subject = subject
+    const stylesheet = useStyles();
+
+    const handleClose = () => {
+      onClose(selectedValue);
+    };
+
+    return (
+      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth='xs' fullWidth={true}>
+        <Typography style={{display:'flex', justifyContent:'flex-start', fontSize:20,margin:'17px'}}>Import/Export CSV</Typography>
+        <div style={{display:'flex', justifyContent:'flex-end',marginTop:'20px',margin:'17px'}}>
+            <Button variant="contained" onClick={() => {onClickImportButton()}} style={{backgroundColor:'#4cbb17',marginRight:'5px'}} >Import</Button>
+            <Button variant="contained" style={{backgroundColor:'#d85426'}}>Export</Button>
+        </div>
+      </Dialog>
+    );
+  }
+
+  SimpleDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    selectedValue: PropTypes.string.isRequired,
+  };
+
+  // -----------------------------------------------------------------------------------------
 
   function previewTable() {
     let element = null;
@@ -595,8 +622,20 @@ function ManageUsers(props) {
 
       {/* tugas 3 ----------------------------------------------- */}
       <input type="file" ref={fileInput} accept=".csv" onChange={(event) => {onInputChange(event)}} style={{display:'none'}} />
-      <Button variant="contained" onClick={() => {onClickImportButton()}}>Import</Button>
-
+      
+      {/* <LightTooltip title="Import CSV">
+        <IconButton className={classes.sortButton} variant="contained" onClick={() => {onClickImportButton()}}>
+            <ImportExportIcon variant="contained" ref={fileInput} />
+        </IconButton>
+      </LightTooltip> */}
+      <div style={{display:'flex',justifyContent:'flex-end',marginTop:'6px',marginBottom:'10px'}}>
+        <LightTooltip title="Import CSV">
+          <IconButton className={classes.importButton} onClick={() => handleClickOpen('Fisika')}>
+              <ImportExportIcon />  
+          </IconButton>
+        </LightTooltip>
+        <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} subject={subject}/>
+      </div>
       <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
 				{previewTable()}
         <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
@@ -828,15 +867,6 @@ function ManageUsers(props) {
 }
 
 
-ManageUsers.propTypes = {
-  classesCollection: PropTypes.object.isRequired,
-  getStudents: PropTypes.func.isRequired,
-  getTeachers: PropTypes.func.isRequired,
-  setUserDisabled: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  deleteUser: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-}
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
