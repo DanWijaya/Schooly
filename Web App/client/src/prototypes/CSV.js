@@ -177,7 +177,7 @@ export default function CSV() {
             <label style={{color: "black"}}>
               Pilih file CSV &nbsp;
               <input type="file" ref={fileInput} accept=".csv"/>
-              <Button className={classes.button}> <input type="file" ref={fileInput} accept=".csv" style={{display: "none"}}/> </Button>
+              <Button className={classes.button}> <input type="file" ref={fileInput} accept=".csv" /> </Button>
             </label>
             <button type="submit" ref={submitButton} style={{display:'none'}}>Submit</button>
           </form>
