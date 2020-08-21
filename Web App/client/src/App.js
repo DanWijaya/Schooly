@@ -61,7 +61,7 @@ import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
-import Tester from "./prototypes/Tester";
+// import Tester from "./prototypes/Tester";
 import Elbert from "./prototypes/Elbert";
 import Dimas from "./prototypes/Dimas";
 import CSV from "./prototypes/CSV";
