@@ -364,21 +364,29 @@ function ManageUsers(props) {
     event.preventDefault();
 
 		fileInput.current.files[0].text().then((fileContent) => {
-      csv()
-      .fromString(fileContent)
-      .then((jsonObj) => { 
-        setUserObjects(prevState => {
-          return {...prevState, content: jsonObj};
-      })
-      .on('header',(header)=>{
-        //header=> [header1, header2, header3]
-      })
-      
-      });
-     
+        let newUserObjects = {header: null, content: null};
+        csv()
+        .fromString(fileContent)
+        .then((jsonObj) => {
+          newUserObjects.content = jsonObj;
+          console.log(jsonObj);
+          return newUserObjects;
+        })
+        .then((newUserObjects) => {
+          csv()
+          .fromString(fileContent)
+          .on('header', (header)=>{
+            newUserObjects.header = header;
+            console.log(header);
+          })
+          .on('done', () => {
+            setUserObjects(newUserObjects);
+          })
+        })
     }).catch((err) => {
 			console.log(err);
     });
+
     setOpenTabelDialog(true);
   };
 
@@ -388,29 +396,9 @@ function ManageUsers(props) {
   };
 
   const onClickSubmitImport = () => {
-    // parse pakai library luar
-    
-
-    // parse manual
-    // let strings = kontenCSV.split('\n');
-      
-    // let daftarNamaKolom = strings[0].split(",");
-    // let newUserDocuments = []; 
-
-    // strings.slice(1).forEach((row) => {
-    //   let temp = row.split(",");
-    //   let docs = {};
-    //   for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
-    //     docs[daftarNamaKolom[idx]] = temp[idx];
-    //   }
-
-    //   newUserDocuments.push(docs);
-    // });
-
-    // importUsers(newUserDocuments);
-
+    importUsers(userObjects); 
     setOpenTabelDialog(false);
-    fileInput.current.value = ''; //supaya onchange pasti dipanggil
+    fileInput.current.value = '';
   };
 
   function SimpleDialog(props) {
@@ -446,36 +434,21 @@ function ManageUsers(props) {
   function previewTable() {
     let element = null;
 		if (userObjects) {
-      let strings = kontenCSV.split('\n');
-      
-			let daftarNamaKolom = strings[0].split(",");
-			let dataTabel = []; 
-
-			strings.slice(1).forEach((row) => {
-				let data = row.split(",");
-				let map = new Map();
-
-				for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
-					map.set(daftarNamaKolom[idx], data[idx]);
-				}
-
-				dataTabel.push(map);
-      });
       
 			element = (
 				<TableContainer>
 					<Table size="small">
 						<TableHead>
 							<TableRow>
-								{daftarNamaKolom.map((namaKolom) => {
+								{userObjects.header.map((namaKolom) => {
 									return (<TableCell>{namaKolom}</TableCell>);									
 								})}
 							</TableRow>
 						</TableHead>
 						<TableBody>
-						{dataTabel.map((baris) => (
+						{userObjects.content.map((baris) => (
 							<TableRow>
-								{daftarNamaKolom.map((namaKolom) => {
+								{userObjects.header.map((namaKolom) => {
 									return (<TableCell>{baris[namaKolom]}</TableCell>);
 								})}
 							</TableRow>

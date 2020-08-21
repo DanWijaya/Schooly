@@ -38,12 +38,6 @@ const isEmpty = require("is-empty");
 router.post("/importUsers", (req, res) => {
 	const newUsers = req.body;
 	let currentUsers = [];
-
-	// const { errors, isValid } = validateImportInput(req.body);
-	// Check validation
-	// if (!isValid) {
-	//   return res.status(400).json(errors);
-	// }
   
 	MockUser.find().then((users) => {
 		currentUsers = users;
@@ -84,14 +78,17 @@ router.post("/importUsers", (req, res) => {
 	});
 });
 
+router.get("/getMockUsers", (req, res) => {
+	MockUser.find().then((users, err) => {
+		if (!users) {
+			return res.status(404).json("No students yet in Schooly system");
+		} else {
+			return res.status(200).json(users);
+		}
+	})
+});
 
 router.delete("/deleteAllUsers", (req,res) => {
-	// MockUser.findByIdAndDelete(userId, (err,user) => {
-	// 	if (!user)
-	// 	return res.status(404).json("User to delete is not found")
-	// 	else
-	// 	return res.json(user)
-	// })
 	MockUser.deleteMany().then((result) => {		
 		console.log(`Deleted all mockuser. ${result.deletedCount} documents were deleted`);	
 		return res.status(200);
