@@ -15,22 +15,13 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
-
-// tugas 3 -------------------------------------------
-import { importUsers } from "./MockActions";
-// import csv from 'csv-parser';
-// import { Readable } from "stream";
-import csv from 'csvtojson';
-// -----------------------------------------------------
-
+import { importUsers } from "./MockActions"; // tugas 3 -------------------------------------------
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import PublishIcon from '@material-ui/icons/PublishRounded';
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
 import Paper from '@material-ui/core/Paper';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { List, ListItem } from '@material-ui/core';
-
-// const csv = require("csv-parser")
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -331,51 +322,44 @@ function ManageUsers(props) {
 
 
   // Tugas 3 ------------------------------------------------------------------------------------------
-  const [userObjects, setUserObjects] = React.useState({header: [], content: []});
+  const [kontenCSV, setKontenCSV] = React.useState("");
   const [openTabelDialog, setOpenTabelDialog] = React.useState(false);
   const fileInput = React.createRef(null);
  
 
   // Dialog Import/Export
   const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(null);
+  const [subject,setSubject] = React.useState(null)
+  const stylesheet = useStyles();
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (name) => {
     setOpen(true)
+    setSubject(name)
   }
 
   const handleClose = (value) => {
     setOpen(false);
+    setSelectedValue(value);
   };
+  //---------------------------------------------
 
   const onClickImportButton = () => {
     fileInput.current.click();
-    setOpen(false);
   };
 
-  // const [anchorEl, setAnchorEl] = React.useState(null);
-  // const handleOpenSortMenu = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleCloseSortMenu = () => {
-  //   setAnchorEl(null);
-  // };
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
   const onInputChange = (event) => {
     event.preventDefault();
 
 		fileInput.current.files[0].text().then((fileContent) => {
-      csv()
-      .fromString(fileContent)
-      .then((jsonObj) => { 
-        setUserObjects(prevState => {
-          return {...prevState, content: jsonObj};
-      })
-      .on('header',(header)=>{
-        //header=> [header1, header2, header3]
-      })
-      
-      });
-     
+     setKontenCSV(fileContent);
     }).catch((err) => {
 			console.log(err);
     });
@@ -388,36 +372,46 @@ function ManageUsers(props) {
   };
 
   const onClickSubmitImport = () => {
-    // parse pakai library luar
-    
-
-    // parse manual
-    // let strings = kontenCSV.split('\n');
+    let strings = kontenCSV.split('\n');
       
     // let daftarNamaKolom = strings[0].split(",");
-    // let newUserDocuments = []; 
+    let newUserDocuments = []; 
 
-    // strings.slice(1).forEach((row) => {
-    //   let temp = row.split(",");
-    //   let docs = {};
-    //   for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
-    //     docs[daftarNamaKolom[idx]] = temp[idx];
-    //   }
+    strings.forEach((row) => {
+      let data = row.split(",");
+      let doc = createData(
+        data._id,
+        data.avatar,
+        data.name,
+        data.email,
+        data.phone,
+        data.emergency_phone,
+        data.tanggal_lahir,
+        data.address
+      );
+      // let map = new Map();
 
-    //   newUserDocuments.push(docs);
-    // });
+      // for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
+        // map.set(daftarNamaKolom[idx], data[idx]);
+      // }
 
-    // importUsers(newUserDocuments);
+      newUserDocuments.push(doc);
+    });
+
+    importUsers(newUserDocuments);
 
     setOpenTabelDialog(false);
     fileInput.current.value = ''; //supaya onchange pasti dipanggil
   };
 
+  // Tugas 3 -------------------------------------------------------------------
   function SimpleDialog(props) {
-    const { onClose, open } = props;
+    const { onClose, selectedValue, open, subject } = props;
+    const pass_subject = subject
+    const stylesheet = useStyles();
 
     const handleClose = () => {
-      onClose();
+      onClose(selectedValue);
     };
 
     return (
@@ -440,12 +434,14 @@ function ManageUsers(props) {
   SimpleDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    selectedValue: PropTypes.string.isRequired,
   };
 
+  // -----------------------------------------------------------------------------------------
 
   function previewTable() {
     let element = null;
-		if (userObjects) {
+		if (kontenCSV) {
       let strings = kontenCSV.split('\n');
       
 			let daftarNamaKolom = strings[0].split(",");
@@ -476,7 +472,7 @@ function ManageUsers(props) {
 						{dataTabel.map((baris) => (
 							<TableRow>
 								{daftarNamaKolom.map((namaKolom) => {
-									return (<TableCell>{baris[namaKolom]}</TableCell>);
+									return (<TableCell>{baris.get(namaKolom)}</TableCell>);
 								})}
 							</TableRow>
 						))}
@@ -656,7 +652,7 @@ function ManageUsers(props) {
               <ImportExportIcon />  
           </IconButton>
         </LightTooltip>
-        <SimpleDialog open={open} onClose={handleClose}/>
+        <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} subject={subject}/>
       </div>
       <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
 				{previewTable()}
