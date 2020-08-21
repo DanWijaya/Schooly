@@ -10,10 +10,10 @@ const options = {discriminatorKey: "role"};
 // Create Schema (New way)
 
 const MockUserSchema = new Schema({
-  password: {
-    type: String,
-    required: true
-  },
+  // password: {
+  //   type: String,
+  //   required: true
+  // },
   avatar: {
     type: String,
     default: ""
@@ -27,14 +27,14 @@ const MockUserSchema = new Schema({
     type: Date,
     default: new Date()
   },
-  jenis_kelamin: {
-    type: String,
-    default: null
-  },
-  sekolah: {
-    type: String,
-    default: null
-  },
+  // jenis_kelamin: {
+  //   type: String,
+  //   default: null
+  // },
+  // sekolah: {
+  //   type: String,
+  //   default: null
+  // },
 
   //Kontak
   email: {
@@ -55,34 +55,34 @@ const MockUserSchema = new Schema({
   },
 
   //Karir
-  hobi_minat: {
-    type: String,
-    default: null
-  },
-  ket_non_teknis: {
-    type: String,
-    default: null
-  },
-  cita_cita: {
-    type: String,
-    default: null
-  },
-  uni_impian: {
-    type: String,
-    default: null
-  },
+  // hobi_minat: {
+  //   type: String,
+  //   default: null
+  // },
+  // ket_non_teknis: {
+  //   type: String,
+  //   default: null
+  // },
+  // cita_cita: {
+  //   type: String,
+  //   default: null
+  // },
+  // uni_impian: {
+  //   type: String,
+  //   default: null
+  // },
   active: {
     type: Boolean,
     default: false
   },
-  passwordReset: { 
-    type: String, 
-    select: false 
-  },
-  passwordResetTime: { 
-    type: Date, 
-    select: true
-  }
+  // passwordReset: { 
+  //   type: String, 
+  //   select: false 
+  // },
+  // passwordResetTime: { 
+  //   type: Date, 
+  //   select: true
+  // }
 }, options )
 
 const MockUser = mongoose.model("mock_users", MockUserSchema);

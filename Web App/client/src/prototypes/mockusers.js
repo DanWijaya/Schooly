@@ -16,7 +16,7 @@ const validateLoginInput = require("../../../validation/Login");
 const User= require("../../../models/user_model/User");
 
 // tugas 3 ------------------------------------------------------------------------------------------
-// const validateImportInput = require("./ImportValidator");
+const validateUserImport = require("./ImportValidator");
 
 const MockUser = require("./MockUserModel");
 const MockStudent = require("./MockStudent");
@@ -56,76 +56,96 @@ router.post("/importUsers", (req, res) => {
 	});
 
 	let validUsers = [];
-	let invalidUsers = []; 
+	let invalidUsers = [];
 	newUsers.foreach((user) => {
-		if ( !validImport() || usedEmails.includes(user.email)) { // bikin ulang validation methodnya 
+		if ( !validateUserImport(user).isValid ) { // bikin ulang validation methodnya 
 			invalidUsers.push(user);
 		} else {
-			let newUser;
-			if (user.role === "MockStudent") {
-				newUser = new MockStudent(user);
-			} else if (user.role === "MockTeacher") {
-				newUser = new MockTeacher(user);
+			if (usedEmails.includes(user.email)) {
+				invalidUsers.push(user);
 			} else {
-				newUser = new MockAdmin(user);
+				let newUser;
+				if (user.role === "MockStudent") {
+					newUser = new MockStudent(user);
+				} else if (user.role === "MockTeacher") {
+					newUser = new MockTeacher(user);
+				} else {
+					newUser = new MockAdmin(user);
+				}
+
+				validUsers.push(newUser);
 			}
-
-			validUsers.push(newUser);
 		}
-
-		MockUser.insertMany(validUsers)
-			.then((invalidUsers) => res.json(invalidUsers))
-			.catch(err => console.log(err));
+		
+		MockUser.insertMany(validUsers).then((result) => {
+			console.log(`${result.insertedCount} documents were inserted`);
+			return res.status(200);
+		});
 	});
 });
+
+
+router.delete("/deleteAllUsers", (req,res) => {
+	// MockUser.findByIdAndDelete(userId, (err,user) => {
+	// 	if (!user)
+	// 	return res.status(404).json("User to delete is not found")
+	// 	else
+	// 	return res.json(user)
+	// })
+	MockUser.deleteMany().then((result) => {		
+		console.log(`Deleted all mockuser. ${result.deletedCount} documents were deleted`);	
+		return res.status(200);
+	});
+});
+
 // -------------------------------------------------------------------------------------
 
+{
 // @route POST api/users/register
 // @desc Register user
 // @access Public
 // router.post("/register", (req, res) => {
 //   // Form validation
-router.post("/register", (req, res) => {
-	// Form validation
-	const { errors, isValid } = validateRegisterInput(req.body);
-	// Check validation
-	if (!isValid) {
-	  return res.status(400).json(errors);
-	}
-	// res stands for response
-	// req.body.name
-	// req.body.subject_teached
+// router.post("/register", (req, res) => {
+// 	// Form validation
+// 	const { errors, isValid } = validateRegisterInput(req.body);
+// 	// Check validation
+// 	if (!isValid) {
+// 	  return res.status(400).json(errors);
+// 	}
+// 	// res stands for response
+// 	// req.body.name
+// 	// req.body.subject_teached
   
-	User.findOne({ email: req.body.email }).then(user => {
-	  if (user) {
-		return res.status(400).json({ email: "Email sudah terdaftar" });
-	  }
-	  else {
-		  var newUser
-		  if (req.body.role === "Student")
-			newUser = new Student(req.body)
-		  else if (req.body.role === "Teacher")
-			newUser = new Teacher(req.body)
-		  else {
-			newUser = new Admin(req.body)
-		  }
+// 	User.findOne({ email: req.body.email }).then(user => {
+// 	  if (user) {
+// 		return res.status(400).json({ email: "Email sudah terdaftar" });
+// 	  }
+// 	  else {
+// 		  var newUser
+// 		  if (req.body.role === "Student")
+// 			newUser = new Student(req.body)
+// 		  else if (req.body.role === "Teacher")
+// 			newUser = new Teacher(req.body)
+// 		  else {
+// 			newUser = new Admin(req.body)
+// 		  }
   
-		// Hash password before saving in database
-		bcrypt.genSalt(10, (err, salt) => {
-		  bcrypt.hash(newUser.password, salt, (err, hash) => {
-			if (err) throw err;
-			newUser.password = hash;
-			newUser
-			  .save()
-			  .then(user => res.json(user))
-			  .catch(err => console.log(err));
-		  });
-		});
-	  }
-	});
-  });
+// 		// Hash password before saving in database
+// 		bcrypt.genSalt(10, (err, salt) => {
+// 		  bcrypt.hash(newUser.password, salt, (err, hash) => {
+// 			if (err) throw err;
+// 			newUser.password = hash;
+// 			newUser
+// 			  .save()
+// 			  .then(user => res.json(user))
+// 			  .catch(err => console.log(err));
+// 		  });
+// 		});
+// 	  }
+// 	});
+// });
   
-{
   // @route POST api/users/login
   // @desc Login user and return JWT token
   // @access Public
@@ -416,7 +436,7 @@ router.post("/register", (req, res) => {
 //
 router.get("/getteachers", (req, res) => {
 // console.log("GET teachers runned")
-User.find({ role: "Teacher", active: true }).then((users, err) => {
+MockUser.find({ role: "MockTeacher", active: true }).then((users, err) => {
 	if (!users)
 	console.log("No teachers yet in Schooly System")
 	else
@@ -426,7 +446,7 @@ User.find({ role: "Teacher", active: true }).then((users, err) => {
 
 //
 router.get("/getstudents", (req,res) => {
-User.find({ role: "Student", active: true}).then((users, err) => {
+MockUser.find({ role: "MockStudent", active: true}).then((users, err) => {
 	if (!users)
 	console.log("No students yet in Schooly System")
 
@@ -525,7 +545,7 @@ User.find({ active: true }).then((users, err) => {
 router.post("/setuserdisabled/:id", (req,res) => {
 let id = req.params.id;
 
-User.findById(id, (err, user) => {
+MockUser.findById(id, (err, user) => {
 	if (!user)
 	return res.status(404).json("User to be disabled is not found")
 	
@@ -540,7 +560,7 @@ User.findById(id, (err, user) => {
 // 
 router.delete("/delete/:id", (req,res) => {
 let userId = req.params.id;
-User.findByIdAndDelete(userId, (err,user) => {
+MockUser.findByIdAndDelete(userId, (err,user) => {
 	if (!user)
 	return res.status(404).json("User to delete is not found")
 	else
