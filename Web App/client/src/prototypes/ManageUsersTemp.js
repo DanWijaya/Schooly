@@ -316,11 +316,21 @@ function ManageUsers(props) {
   const retrieveUsers = () => {
     student_rows = []
     teacher_rows = []
+<<<<<<< HEAD:Web App/client/src/prototypes/ManageUsersTemp.js
     if(Array.isArray(all_students)){
       all_students.map((data) => userRowItem(data, "Student"))
     }
     if(Array.isArray(all_teachers)){
       all_teachers.map((data) => userRowItem(data, "Teacher"))
+=======
+    if(Array.isArray(all_students)) {
+      console.log(all_students);
+      all_students.map((data) => userRowItem(data));
+    }
+    if(Array.isArray(all_teachers)) {
+      console.log(all_teachers);
+      all_teachers.map((data) => userRowItem(data));
+>>>>>>> 58361301d10410df1e5a6821eb4bd4902b8a54dc:Web App/client/src/prototypes/ManageUsers.js
     }
   }
 
