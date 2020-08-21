@@ -7,10 +7,12 @@ export const importUsers = (userData) => dispatch => {
   axios
     .post("/api/mockusers/importUsers", userData)
     .then(res => {
-      alert("Data CSV telah tersimpan")
+      // console.log(res.data);
+      console.log("Data CSV telah tersimpan");
       // history.push("/masuk")
     })
     .catch(err => {
+      console.log(err);
       dispatch({
         type: "ERROR_INPUT",
         payload: err.response.data

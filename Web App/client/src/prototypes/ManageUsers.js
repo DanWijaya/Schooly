@@ -286,7 +286,7 @@ function ManageUsers(props) {
   const [selectedUserId, setSelectedUserId] = React.useState(null)
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
-  const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
+  const { importUsers, setUserDisabled, deleteUser, getTeachers, getStudents } = props;
   const { all_students, all_teachers, pending_users } = props.auth;
 
   let student_rows = []
@@ -374,21 +374,31 @@ function ManageUsers(props) {
   const onClickSubmitImport = () => {
     let strings = kontenCSV.split('\n');
       
-    let daftarNamaKolom = strings[0].split(",");
-    let dataTabel = []; 
+    // let daftarNamaKolom = strings[0].split(",");
+    let newUserDocuments = []; 
 
-    strings.slice(1).forEach((row) => {
+    strings.forEach((row) => {
       let data = row.split(",");
-      let map = new Map();
+      let doc = createData(
+        data._id,
+        data.avatar,
+        data.name,
+        data.email,
+        data.phone,
+        data.emergency_phone,
+        data.tanggal_lahir,
+        data.address
+      );
+      // let map = new Map();
 
-      for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
-        map.set(daftarNamaKolom[idx], data[idx]);
-      }
+      // for (let idx = 0; idx < daftarNamaKolom.length; idx++) {
+        // map.set(daftarNamaKolom[idx], data[idx]);
+      // }
 
-      dataTabel.push(map);
+      newUserDocuments.push(doc);
     });
 
-    importUsers(dataTabel);
+    importUsers(newUserDocuments);
 
     setOpenTabelDialog(false);
     fileInput.current.value = ''; //supaya onchange pasti dipanggil
@@ -845,5 +855,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { setUserDisabled, getStudents, getTeachers, deleteUser }
+  mapStateToProps, { importUsers, setUserDisabled, getStudents, getTeachers, deleteUser }
 ) (ManageUsers);

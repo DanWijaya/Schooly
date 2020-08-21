@@ -10,13 +10,14 @@ const keys = require("../../../config/keys");
 // Load input validation
 const validateRegisterInput = require("../../../validation/Register");
 const validateLoginInput = require("../../../validation/Login");
-const validateImportInput = require("./ImportValidator");
 // const validateUserDataInput = require("../../validation/UserData")
 
 // Load User model
 const User= require("../../../models/user_model/User");
 
-// tambahan (untuk tugas 3) ------------------------------------------------------------------------------------------
+// tugas 3 ------------------------------------------------------------------------------------------
+// const validateImportInput = require("./ImportValidator");
+
 const MockUser = require("./MockUserModel");
 const MockStudent = require("./MockStudent");
 const MockTeacher = require("./MockTeacher");
@@ -35,40 +36,46 @@ const isEmpty = require("is-empty");
 
 // tugas 3 -------------------------------------------------------------------------------------
 router.post("/importUsers", (req, res) => {
-	// Form validation
-	const users = req.body;
-	const { errors, isValid } = validateImportInput(req.body);
+	const newUsers = req.body;
+	let currentUsers = [];
+
+	// const { errors, isValid } = validateImportInput(req.body);
 	// Check validation
-	if (!isValid) {
-	  return res.status(400).json(errors);
-	}
+	// if (!isValid) {
+	//   return res.status(400).json(errors);
+	// }
   
-	MockUser.find().then((user) => {
-	  if (user) {
-		return res.status(400).json({ email: "Email sudah terdaftar" });
-	  }
-	  else {
-		  var newUser;
-		  if (req.body.role === "Student")
-			newUser = new Student(req.body)
-		  else if (req.body.role === "Teacher")
-			newUser = new Teacher(req.body)
-		  else {
-			newUser = new Admin(req.body)
-		  }
-  
-		// Hash password before saving in database
-		bcrypt.genSalt(10, (err, salt) => {
-		  bcrypt.hash(newUser.password, salt, (err, hash) => {
-			if (err) throw err;
-			newUser.password = hash;
-			newUser
-			  .save()
-			  .then(user => res.json(user))
-			  .catch(err => console.log(err));
-		  });
-		});
-	  }
+	MockUser.find().then((users) => {
+		currentUsers = users;
+	}).catch((err) => {
+		console.log(err);
+	});
+
+	let usedEmails = currentUsers.map((user) => {
+		return(user.email);
+	});
+
+	let validUsers = [];
+	let invalidUsers = []; 
+	newUsers.foreach((user) => {
+		if ( !validImport() || usedEmails.includes(user.email)) { // bikin ulang validation methodnya 
+			invalidUsers.push(user);
+		} else {
+			let newUser;
+			if (user.role === "MockStudent") {
+				newUser = new MockStudent(user);
+			} else if (user.role === "MockTeacher") {
+				newUser = new MockTeacher(user);
+			} else {
+				newUser = new MockAdmin(user);
+			}
+
+			validUsers.push(newUser);
+		}
+
+		MockUser.insertMany(validUsers)
+			.then((invalidUsers) => res.json(invalidUsers))
+			.catch(err => console.log(err));
 	});
 });
 // -------------------------------------------------------------------------------------

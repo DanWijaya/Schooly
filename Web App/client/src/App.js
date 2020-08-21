@@ -173,7 +173,7 @@ class App extends Component {
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                      {/*prototype*/}
-                    <Route exact path="/tester" component={Tester} />
+                    {/* <Route exact path="/tester" component={Tester} /> */}
                     <Route exact path="/elbert" component={Elbert} />
                     <Route exact path="/csv" component={CSV} />
                     <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} />
