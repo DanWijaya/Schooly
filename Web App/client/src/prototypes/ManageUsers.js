@@ -369,7 +369,6 @@ function ManageUsers(props) {
         .fromString(fileContent)
         .then((jsonObj) => {
           newUserObjects.content = jsonObj;
-          console.log(jsonObj);
           return newUserObjects;
         })
         .then((newUserObjects) => {
@@ -377,7 +376,6 @@ function ManageUsers(props) {
           .fromString(fileContent)
           .on('header', (header)=>{
             newUserObjects.header = header;
-            console.log(header);
           })
           .on('done', () => {
             setUserObjects(newUserObjects);
@@ -396,7 +394,7 @@ function ManageUsers(props) {
   };
 
   const onClickSubmitImport = () => {
-    importUsers(userObjects); 
+    importUsers(userObjects.content); 
     setOpenTabelDialog(false);
     fileInput.current.value = '';
   };

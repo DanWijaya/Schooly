@@ -38,7 +38,10 @@ const isEmpty = require("is-empty");
 router.post("/importUsers", (req, res) => {
 	const newUsers = req.body;
 	let currentUsers = [];
-  
+
+	// console.log("mockusers: ");
+	// console.log(newUsers);
+
 	MockUser.find().then((users) => {
 		currentUsers = users;
 	}).catch((err) => {
@@ -51,7 +54,7 @@ router.post("/importUsers", (req, res) => {
 
 	let validUsers = [];
 	let invalidUsers = [];
-	newUsers.foreach((user) => {
+	newUsers.forEach((user) => {
 		if ( !validateUserImport(user).isValid ) { // bikin ulang validation methodnya 
 			invalidUsers.push(user);
 		} else {
@@ -70,11 +73,11 @@ router.post("/importUsers", (req, res) => {
 				validUsers.push(newUser);
 			}
 		}
-		
-		MockUser.insertMany(validUsers).then((result) => {
-			console.log(`${result.insertedCount} documents were inserted`);
-			return res.status(200);
-		});
+	});
+	MockUser.insertMany(validUsers).then((result) => {
+		return res.status(200).json(`${result.insertedCount} documents were inserted`);
+	}).catch((err) => {
+		return res.status(400).json(err);
 	});
 });
 
@@ -85,13 +88,16 @@ router.get("/getMockUsers", (req, res) => {
 		} else {
 			return res.status(200).json(users);
 		}
-	})
+	}).catch((err) => {
+		return res.status(400).json(err);
+	});
 });
 
 router.delete("/deleteAllUsers", (req,res) => {
 	MockUser.deleteMany().then((result) => {		
-		console.log(`Deleted all mockuser. ${result.deletedCount} documents were deleted`);	
-		return res.status(200);
+		return res.status(200).json(`Deleted all mockuser. ${result.deletedCount} documents were deleted`);
+	}).catch((err) => {
+		return res.status(400).json(err);
 	});
 });
 
