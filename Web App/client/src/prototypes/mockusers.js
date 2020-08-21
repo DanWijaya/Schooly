@@ -21,7 +21,7 @@ const validateUserImport = require("./ImportValidator");
 const MockUser = require("./MockUserModel");
 const MockStudent = require("./MockStudent");
 const MockTeacher = require("./MockTeacher");
-const MockAdmin = require("./MockAdmin");
+// const MockAdmin = require("./MockAdmin");
 // ------------------------------------------------------------------------------------------
 
 const Student = require("../../../models/user_model/Student");
@@ -53,18 +53,19 @@ router.post("/importUsers", (req, res) => {
 						invalidUsers.push(user);
 					} else {
 						let newUser;
-						let userCopy = {...user};
+						// let userCopy = {...user};
 						if (user.role === "MockStudent") {
-							delete userCopy.subject_teached;
-							newUser = new MockStudent(userCopy);
+							// delete userCopy.subject_teached;
+							newUser = new MockStudent(user);
 						} else if (user.role === "MockTeacher") {
-							delete userCopy.kelas;
-							newUser = new MockTeacher(userCopy);
-						} else {
-							delete userCopy.subject_teached;
-							delete userCopy.kelas;
-							newUser = new MockAdmin(userCopy);
-						}
+							// delete userCopy.kelas;
+							newUser = new MockTeacher(user);
+						} 
+						// else {
+						// 	delete userCopy.subject_teached;
+						// 	delete userCopy.kelas;
+						// 	newUser = new MockAdmin(userCopy);
+						// }
 		
 						validUsers.push(newUser);
 					}
@@ -82,6 +83,7 @@ router.post("/importUsers", (req, res) => {
 	});
 });
 
+// untuk keperluan testing, endpoint ini tidak dipakai dalam action apapun 
 router.get("/getMockUsers", (req, res) => {
 	MockUser.find().then((users, err) => {
 		if (!users) {
@@ -94,6 +96,7 @@ router.get("/getMockUsers", (req, res) => {
 	});
 });
 
+// untuk keperluan testing, endpoint ini tidak dipakai dalam action apapun
 router.delete("/deleteAllMockUsers", (req,res) => {
 	MockUser.deleteMany().then((result) => {		
 		return res.status(200).json(`Deleted all mockuser. ${result.deletedCount} documents were deleted`);
@@ -127,7 +130,6 @@ router.get("/getMockStudents", (req,res) => {
 //
 router.post("/setUserDisabled/:id", (req,res) => {
 	let id = req.params.id;
-
 	MockUser.findById(id, (err, user) => {
 		if (!user) {
 			return res.status(404).json("User to be disabled is not found");

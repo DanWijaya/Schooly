@@ -304,10 +304,11 @@ function ManageUsers(props) {
     student_rows = []
     teacher_rows = []
     if(Array.isArray(all_students)) {
+      console.log(all_students);
       all_students.map((data) => userRowItem(data));
     }
     if(Array.isArray(all_teachers)) {
-      // console.log(all_teachers);
+      console.log(all_teachers);
       all_teachers.map((data) => userRowItem(data));
     }
   }

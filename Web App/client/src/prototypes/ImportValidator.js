@@ -10,8 +10,6 @@ module.exports = function validateUserImport(data) {
   data.phone = !isEmpty(data.phone) ? data.phone : "";
   data.emergency_phone = !isEmpty(data.emergency_phone) ? data.emergency_phone : "";
   data.address = !isEmpty(data.address) ? data.address : "";
-  // data.password = !isEmpty(data.password) ? data.password : "";
-  // data.password2 = !isEmpty(data.password2) ? data.password2 : "";
   data.role = !isEmpty(data.role) ? data.role : "";
 
   // Name checks
@@ -54,24 +52,6 @@ module.exports = function validateUserImport(data) {
   if (Validator.isEmpty(data.address)) {
     errors.address = "Alamat belum diisi"
   }
-
-  // // Password checks
-  // if (Validator.isEmpty(data.password)) {
-  //   errors.password = "Kata sandi belum diisi";
-  // }
-
-  // if (Validator.isEmpty(data.password2)) {
-  //   errors.password2 = "Konfirmasi kata sandi belum diisi";
-  // }
-
-  // if (!Validator.isEmpty(data.password) && !Validator.isLength(data.password, { min: 8, max: 30 })) {
-  //     errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
-  // }
-
-  // if (!Validator.equals(data.password, data.password2)) {
-  //   errors.password2 = "Kata sandi harus sama";
-  // }
-
 
   return {
     errors,
