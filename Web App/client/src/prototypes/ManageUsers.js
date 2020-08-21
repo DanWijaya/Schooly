@@ -17,6 +17,8 @@ import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
 import { importUsers } from "./MockActions"; // tugas 3 -------------------------------------------
 import ImportExportIcon from '@material-ui/icons/ImportExport';
+import PublishIcon from '@material-ui/icons/PublishRounded';
+import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
 import Paper from '@material-ui/core/Paper';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { List, ListItem } from '@material-ui/core';
@@ -414,10 +416,16 @@ function ManageUsers(props) {
 
     return (
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth='xs' fullWidth={true}>
-        <Typography style={{display:'flex', justifyContent:'flex-start', fontSize:20,margin:'17px'}}>Import/Export CSV</Typography>
+        <Typography style={{display:'flex', justifyContent:'flex-start', fontSize:20,margin:'17px'}}>Import/Export CSV Data Pengguna</Typography>
         <div style={{display:'flex', justifyContent:'flex-end',marginTop:'20px',margin:'17px'}}>
-            <Button variant="contained" onClick={() => {onClickImportButton()}} style={{backgroundColor:'#4cbb17',marginRight:'5px'}} >Import</Button>
-            <Button variant="contained" style={{backgroundColor:'#d85426'}}>Export</Button>
+            <Button variant="contained" onClick={() => {onClickImportButton()}} style={{backgroundColor:'#2E8B57',marginRight:'5px',color:'white'}} >
+              <PublishIcon/>
+              <Typography style={{marginLeft:'5px'}}>Import</Typography>
+            </Button>
+            <Button variant="contained" style={{backgroundColor:'#c21807',color:'white'}}>
+              <GetAppRoundedIcon/>
+              <Typography style={{marginLeft:'5px'}}>Export</Typography>
+            </Button>
         </div>
       </Dialog>
     );
@@ -639,8 +647,8 @@ function ManageUsers(props) {
         </IconButton>
       </LightTooltip> */}
       <div style={{display:'flex',justifyContent:'flex-end',marginTop:'6px',marginBottom:'10px'}}>
-        <LightTooltip title="Import CSV">
-          <IconButton className={classes.importButton} onClick={() => handleClickOpen('Fisika')}>
+        <LightTooltip title="Import/Export CSV">
+          <IconButton className={classes.importButton} onClick={() => handleClickOpen()}>
               <ImportExportIcon />  
           </IconButton>
         </LightTooltip>
