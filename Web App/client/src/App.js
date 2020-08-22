@@ -103,6 +103,7 @@ class App extends Component {
     loggedIn: false,
     marginTopValue: 20,
     posts: [],
+    sideDrawerExist: true
   };
 
   //Drawer at Mobile View Hooks
@@ -124,6 +125,10 @@ class App extends Component {
     this.setState({ loggedIn : dataFromChild})
   }
 
+  handleSideDrawerExist = (dataFromChild) => {
+    this.setState({ sideDrawerExist: dataFromChild})
+  }
+
   render() {
     return (
       <div>
@@ -134,12 +139,16 @@ class App extends Component {
                 <NavBar
                   handleDrawerDesktop={this.handleDrawerDesktop}
                   handleDrawerMobile={this.handleDrawerMobile}
+                  sideDrawerExist={this.state.sideDrawerExist}
                 />
+                {this.state.sideDrawerExist ? 
                 <SideDrawer
                   mobileOpen={this.state.mobileOpen}
                   desktopOpen={this.state.desktopOpen}
                   handleDrawerMobile={this.handleDrawerMobile}
-                />
+                /> : 
+                null 
+                }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
                   <Switch>
@@ -200,7 +209,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
                     {/* Route Assessment - Prototype */}
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" component={CreateAssessment} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
                     <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />

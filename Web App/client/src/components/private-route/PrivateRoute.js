@@ -3,14 +3,15 @@ import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-const PrivateRoute = ({ component: Component, auth, access, ...rest }) => {
+const PrivateRoute = ({ component: Component, handleSideDrawerExist, auth, access, ...rest }) => {
   return (
 <Route
   {...rest}
   render={props =>
     auth.isAuthenticated === true ?
     !access || access.indexOf(auth.user.role) !== -1 ? (
-      <Component {...props} />
+      <Component {...props} 
+      handleSideDrawerExist={handleSideDrawerExist}/>
     ) 
     : <Redirect to="/tidak-ditemukan"/>
     : (<Redirect to="/masuk" />)
