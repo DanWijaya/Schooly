@@ -66,6 +66,7 @@ import Graph from "./prototypes/Graph";
 import Elbert from "./prototypes/Elbert";
 import Dimas from "./prototypes/Dimas";
 import CSV from "./prototypes/CSV";
+import ManageMockUsers from "./prototypes/ManageUsers";
 //Dropbox
 import DropboxConnect from "./components/dropbox/DropboxConnect";
 import DropboxAuth from "./components/dropbox/DropboxAuth";
@@ -176,6 +177,8 @@ class App extends Component {
                     <Route exact path="/graph" component={Graph} /> {/*prototype*/}
                     <Route exact path="/elbert" component={Elbert} />
                     <Route exact path="/csv" component={CSV} />
+                    <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} />
+
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     {/* Route Class */}
