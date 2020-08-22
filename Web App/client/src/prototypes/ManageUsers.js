@@ -233,6 +233,8 @@ const useStyles = makeStyles((theme) => ({
     } 
   }},
     closeButton: {
+        width:'6px',
+        height:'6px',
         color: "black",
         "&:hover": {
           backgroundColor:'#c21807',
@@ -560,7 +562,7 @@ function ManageUsers(props) {
             <GetAppRoundedIcon style={{backgroundColor:'#c21807',color:'white',borderRadius:100,display:'flex',alignItems:'center',justifyContent:'center'}}/>
             <Typography style={{fontSize:20,marginLeft:'10px'}}>Pilih Jenis User Untuk di-Export</Typography>
           </div>
-          <div style={{margin:'12px'}}>
+          <div style={{marginRight:'12px'}}>
             <IconButton className={classes.closeButton} onClick={onClose}>
               <CloseIcon onClick={onClose} />
             </IconButton>
