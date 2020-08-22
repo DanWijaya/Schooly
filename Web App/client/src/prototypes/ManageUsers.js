@@ -96,52 +96,52 @@ function ManageUsersToolbar(props) {
           {heading}
         </Typography>
       </div>
-        <div style={{marginRight:'7px'}}>
-          <LightTooltip title="Urutkan Akun">
-            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-              <SortIcon />
-            </IconButton>
-          </LightTooltip>
-          <Menu
-            keepMounted
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleCloseSortMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-          >
-            {headCells.map((headCell, i) => (
-              <MenuItem
-                key={headCell.id}
-                sortDirection={orderBy === headCell.id ? order : false}
-                onClick={props.handleClosePanel}
+      <div>
+        <LightTooltip title="Urutkan Akun">
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </IconButton>
+        </LightTooltip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+              onClick={props.handleClosePanel}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
               >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {orderBy === headCell.id ?
-                    <span className={classes.visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
-                    </span>
-                    : null
-                  }
-                </TableSortLabel>
-              </MenuItem>
-            ))}
-          </Menu>
-       
-        </div>
+                {headCell.label}
+                {orderBy === headCell.id ?
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </span>
+                  : null
+                }
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+
+      </div>
     </Toolbar>
-    
+
   );
 };
 
@@ -160,7 +160,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
-    
+
   },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
@@ -176,6 +176,24 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.warning.dark,
+    },
+  },
+  confirmButton: {
+    width: "150px",
+    backgroundColor: theme.palette.create.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.create.main,
+    },
+  },
+  cancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.main,
     },
   },
   dialogBox: {
@@ -230,7 +248,7 @@ const useStyles = makeStyles((theme) => ({
       "&:hover": {
         backgroundColor: "#A2F7B5",
         color: "#309B94",
-    } 
+    }
   }},
     closeButton: {
         width:'6px',
@@ -249,7 +267,7 @@ const useStyles = makeStyles((theme) => ({
       "&:hover": {
         backgroundColor: "#A2F7B5",
         color: "#309B94",
-    } 
+    }
   },
   visuallyHidden: {
     border: 0,
@@ -292,7 +310,7 @@ function ManageUsers(props) {
   const { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } = props; // tugas 3
   // const { all_students, all_teachers, pending_users } = props.auth;
   const { all_students, all_teachers} = props.mockUserCollection; // tugas 3
- 
+
   let student_rows = []
   let teacher_rows = []
 
@@ -356,7 +374,7 @@ function ManageUsers(props) {
   const [userObjects, setUserObjects] = React.useState({header: [], content: []});
   const [openTabelDialog, setOpenTabelDialog] = React.useState(false);
   const fileInput = React.createRef(null);
- 
+
   // Fitur Download/Export==================================
   const prepareDownload = (array_of_users) => {
     if(array_of_users==all_students){
@@ -419,13 +437,13 @@ function ManageUsers(props) {
       // document.body.removeChild(a);
 		}
   };
-  
+
   const downloadcsv = (user) => {
     let chosen_user = prepareDownload(user)
     handleClickDownload(chosen_user,user)
   }
 
-  
+
   // ======================================================
 
 
@@ -510,23 +528,38 @@ function ManageUsers(props) {
     };
 
     return (
-      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth='xs' fullWidth={true}>
-        <div style={{display:"flex",justifyContent:'space-between'}}>
-          <Typography style={{display:'flex', justifyContent:'center', fontSize:20,margin:'17px'}}>Import/Export CSV Data Pengguna</Typography>
-          <IconButton className={classes.closeButton} onClick={onClose} style={{margin:'10px'}}>
-                <CloseIcon onClick={onClose} />
-          </IconButton>
-        </div>
-        <div style={{display:'flex', justifyContent:'flex-end',marginTop:'20px',margin:'17px'}}>
-            <Button variant="contained" onClick={() => {onClickImportButton()}} style={{backgroundColor:'#2E8B57',marginRight:'5px',color:'white'}} >
-              <PublishIcon/>
-              <Typography style={{marginLeft:'5px'}}>Import</Typography>
-            </Button>
-            <Button variant="contained" style={{backgroundColor:'#c21807',color:'white'}} onClick={() => {handleClickOpenUser()}}>
-              <GetAppRoundedIcon/>
-              <Typography style={{marginLeft:'5px'}}>Export</Typography>
-            </Button>
-        </div>
+      <Dialog onClose={handleClose} open={open} maxWidth='xs' fullWidth={true}>
+        <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
+          <Grid item container justify="flex-end" alignItems="flex-start"> {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+            <IconButton className={classes.closeButton} onClick={onClose}>
+              <CloseIcon onClick={onClose} />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6" style={{margin: "10px 0px 20px 0px"}}> {/*Kalo bisa jangan pake fontSize gitu sih pake "variant" props dari material ui biar dia bisa auto resize gitu*/}
+              Import/Export CSV Data Pengguna
+            </Typography>
+          </Grid>
+          <Grid item container justify="center" spacing={2}>
+            <Grid item>
+              {/* Untuk icon di button ada props startIcon coba cek di material ui lagi, coba bandingin sama yang dibawah jadi ga perlu margin left dan typography tag lagi */}
+              <Button
+                variant="contained"
+                onClick={() => {onClickImportButton()}}
+                style={{backgroundColor:'#2E8B57',marginRight:'5px',color:'white'}}
+                startIcon={<PublishIcon/>}
+              >
+                Import
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" style={{backgroundColor:'#c21807',color:'white'}} onClick={() => {handleClickOpenUser()}}>
+                <GetAppRoundedIcon/>
+                <Typography style={{marginLeft:'5px'}}>Export</Typography>
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
       </Dialog>
     );
   }
@@ -556,8 +589,49 @@ function ManageUsers(props) {
 
     return (
       <Dialog onClose={handleCloseUser} aria-labelledby="user-dialog-title" open={openUser} maxWidth='sm' fullWidth={true}>
-        
-        <div style={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
+       {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+       <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
+         <Grid item container justify="flex-end" alignItems="flex-start"> {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+           <IconButton className={classes.closeButton} onClick={onClose}>
+             <CloseIcon onClick={onClose} />
+           </IconButton>
+         </Grid>
+          <Grid item container justify="flex-start" alignItems="center" style={{margin: "10px 0px 20px 0px"}}>
+            <GetAppRoundedIcon
+              style={{
+                backgroundColor: '#c21807',
+                color: 'white',
+                borderRadius: 100,
+                marginRight: "5px",
+              }}
+            />
+            <Typography variant="h6">
+              Pilih Jenis User Untuk di-Export
+            </Typography>
+         </Grid>
+         <Grid item container justify="flex-end" spacing={1}>
+           <Grid item>
+             <Button variant="contained"
+              startIcon={<SchoolRoundedIcon/>}
+              onClick={() => {downloadcsv(all_students)}}
+              style={{backgroundColor:'#621940', marginRight:'5px', color:'white'}}
+            >
+               Siswa
+             </Button>
+           </Grid>
+           <Grid item>
+             <Button
+                variant="contained"
+                startIcon={<LocalLibraryRoundedIcon/>}
+                onClick={() => {downloadcsv(all_teachers)}}
+                style={{backgroundColor:'#0b032d',color:'white'}}
+            >
+               Guru
+             </Button>
+           </Grid>
+         </Grid>
+       </Grid>
+        {/*<div style={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
           <div style={{display:'flex',alignItems:'center',margin:'18px'}}>
             <GetAppRoundedIcon style={{backgroundColor:'#c21807',color:'white',borderRadius:100,display:'flex',alignItems:'center',justifyContent:'center'}}/>
             <Typography style={{fontSize:20,marginLeft:'10px'}}>Pilih Jenis User Untuk di-Export</Typography>
@@ -569,15 +643,15 @@ function ManageUsers(props) {
           </div>
         </div>
         <div style={{display:'flex', justifyContent:'flex-end',marginTop:'20px',margin:'17px'}}>
-            <Button variant="contained" onClick={() => {downloadcsv(all_students)}} style={{backgroundColor:'#621940',marginRight:'5px',color:'white'}} >
-              <SchoolRoundedIcon/>
-              <Typography style={{marginLeft:'5px'}}>Siswa</Typography>
-            </Button>
-            <Button variant="contained" style={{backgroundColor:'#0b032d',color:'white'}} onClick={() => {downloadcsv(all_teachers)}}>
-              <LocalLibraryRoundedIcon/>
-              <Typography style={{marginLeft:'5px'}}>Guru</Typography>
-            </Button>
-        </div>
+          <Button variant="contained" onClick={() => {downloadcsv(all_students)}} style={{backgroundColor:'#621940',marginRight:'5px',color:'white'}} >
+            <SchoolRoundedIcon/>
+            <Typography style={{marginLeft:'5px'}}>Siswa</Typography>
+          </Button>
+          <Button variant="contained" style={{backgroundColor:'#0b032d',color:'white'}} onClick={() => {downloadcsv(all_teachers)}}>
+            <LocalLibraryRoundedIcon/>
+            <Typography style={{marginLeft:'5px'}}>Guru</Typography>
+          </Button>
+        </div>*/}
       </Dialog>
     );
   }
@@ -592,14 +666,14 @@ function ManageUsers(props) {
   function previewTable() {
     let element = null;
 		if (userObjects) {
-      
+
 			element = (
 				<TableContainer>
-					<Table size="small">
+					<Table>
 						<TableHead>
 							<TableRow>
 								{userObjects.header.map((namaKolom) => {
-									return (<TableCell>{namaKolom}</TableCell>);									
+									return (<TableCell><b>{namaKolom}</b></TableCell>);
 								})}
 							</TableRow>
 						</TableHead>
@@ -775,7 +849,7 @@ function ManageUsers(props) {
 
       {/* tugas 3 ----------------------------------------------- */}
       <input type="file" ref={fileInput} accept=".csv" onChange={(event) => {onInputChange(event)}} style={{display:'none'}} />
-      
+
       {/* <LightTooltip title="Import CSV">
         <IconButton className={classes.sortButton} variant="contained" onClick={() => {onClickImportButton()}}>
             <ImportExportIcon variant="contained" ref={fileInput} />
@@ -784,19 +858,32 @@ function ManageUsers(props) {
       <div style={{display:'flex',justifyContent:'flex-end',marginTop:'6px',marginBottom:'10px'}}>
         <LightTooltip title="Import/Export CSV">
           <IconButton className={classes.importButton} onClick={() => handleClickOpen()}>
-              <ImportExportIcon />  
+              <ImportExportIcon />
           </IconButton>
         </LightTooltip>
         <SimpleDialog open={open} onClose={handleClose}/>
         <DialogPilihDownload open={openUser} onClose={handleCloseUser}/>
       </div>
-      <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
-				{previewTable()}
-        <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
-        <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
-	  </Dialog>
-      {/* ----------------------------------------------- */}
-
+      <Dialog fullWidth={true} maxWidth="lg" open={openTabelDialog}>
+        <div style={{padding: "10px"}}>
+  				{previewTable()}
+          <Grid container spacing={2} justify="center" style={{padding: "20px 0px 10px 0px"}}>
+            <Grid item>
+              {/* Kalau propsnya panjang biasakan dibikin turun biar ga susah scroll ke samping */}
+              <Button
+                variant="contained"
+                onClick={() => {onClickSubmitImport()}}
+                className={classes.confirmButton}
+              >
+                Konfirmasi
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={()=> {onClickCancelImport()}} className={classes.cancelButton}>Batal</Button>
+            </Grid>
+          </Grid>
+        </div>
+      </Dialog>
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
