@@ -363,7 +363,7 @@ function ManageUsers(props) {
       let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,tanggal_lahir,_id\n"
       for(let individual_user of array_of_users){
         string+=`${individual_user.active},`
-        string+=`${individual_user.address},`
+        string+=`"${individual_user.address}",`
         string+=`${individual_user.avatar},`
         string+=`${individual_user.email},`
         string+=`${individual_user.emergency_phone},`
@@ -372,7 +372,7 @@ function ManageUsers(props) {
         string+=`${individual_user.phone},`
         string+=`${individual_user.role},`
         string+=`${individual_user.tanggal_lahir},`
-        string+=`${individual_user._id},`
+        string+=`${individual_user._id}`
         string+="\n"
       }
       return(string)
@@ -381,7 +381,7 @@ function ManageUsers(props) {
       let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,subject_teached,tanggal_lahir,_id\n"
       for(let individual_user of array_of_users){
         string+=`${individual_user.active},`
-        string+=`${individual_user.address},`
+        string+=`"${individual_user.address}",`
         string+=`${individual_user.avatar},`
         string+=`${individual_user.email},`
         string+=`${individual_user.emergency_phone},`
@@ -391,7 +391,7 @@ function ManageUsers(props) {
         string+=`${individual_user.role},`
         string+=`${individual_user.subject_teached},`
         string+=`${individual_user.tanggal_lahir},`
-        string+=`${individual_user._id},`
+        string+=`${individual_user._id}`
         string+="\n"
       }
       return(string)
