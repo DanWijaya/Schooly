@@ -9,6 +9,7 @@ export const importUsers = (userData) => dispatch => {
     .then(res => {
       window.location.reload();
       console.log("Data CSV telah tersimpan");
+      // return new Promise(res.data)
     })
     .catch(err => {
       console.log(err);
@@ -54,9 +55,11 @@ export const exportUsers = (userData) => dispatch => {
   }
   
   export const getMockStudents = () => dispatch => {
+    console.log("get mock students is runned")
     axios
       .get("/api/mockusers/getMockStudents")
       .then(res => {
+        console.log("Mock students :", res.data)
         dispatch({
           type: 'GET_ALL_MOCK_STUDENTS',
           payload: res.data

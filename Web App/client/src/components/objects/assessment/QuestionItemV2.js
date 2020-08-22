@@ -27,8 +27,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItemV2(props){
-  const { index, name, options, answer, images, deleteQuestion, handleQuestionOptions , handleChangeQuestion} = props
+  const { index, name, options, answer, images, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
   const classes = useStyles()
+
+  let list_options = JSON.parse(options)
+  let list_images = JSON.parse(images)
+
+  const imageUploader = React.useRef();
 
   return(
     <Grid item>
@@ -39,9 +44,23 @@ function QuestionItemV2(props){
                   <Typography variant="h6" gutterBottom>
                     Soal {index + 1}
                   </Typography>
-                  {/* <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
-                    {buildImgTag(images)}
-                  </GridList> */}
+                  <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
+                    {list_images.map((image, i) =>
+                      <GridListTile key={image} cols={1} >
+                        <img alt="current image" src={image}/>
+                        <GridListTileBar
+                            title={"HAHHA"}
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            actionPosition="right"
+                          />
+                      </GridListTile>
+                    )}
+                  </GridList>
                   <TextField
                     multiline
                     rowsMax={10}
@@ -55,7 +74,7 @@ function QuestionItemV2(props){
                 <Grid item>
                   <FormControl component="fieldset" id="answer" fullWidth>
                     <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer")}>
-                      {options.map((option, index) =>
+                      {list_options.map((option, i) =>
                         <div style={{display: "flex"}}>
                           {/*{console.log(question.answer.toUpperCase() === String.fromCharCode(97 + index).toUpperCase())}
                           <Radio
@@ -71,24 +90,24 @@ function QuestionItemV2(props){
                           />*/}
                           <FormControlLabel
                             style={{width: "100%"}}
-                            value={String.fromCharCode(97 + index).toUpperCase()}
+                            value={String.fromCharCode(97 + i).toUpperCase()}
                             control={<Radio color="primary" />}
                             label={
                               <TextField
                                 style={{flexGrow: 1}}
                                 value={option}
-                                onChange={(e) => handleQuestionOptions(e, index, "Edit" )}
+                                onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
                                 placeholder="Isi Pilihan"
                               />
                             }
                           />
-                          <IconButton onClick={(e) => handleQuestionOptions(e, index, "Delete" )}>
+                          <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
                             <ClearIcon/>
                           </IconButton>
                         </div>
                       )}
                       <div>
-                        <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, "Add")}>
+                        <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
                           Tambah  pilihan
                         </Button>
                       </div>
@@ -99,21 +118,21 @@ function QuestionItemV2(props){
               <Divider flexItem orientation="vertical" />
               <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
                 <Grid item>
-                  {/* <input
+                  <input
                     accept="image/*"
                     multiple
                     type="file"
                     name="avatar"
-                    onChange={(e) => handleQuestionImage(e, i)}
+                    onChange={(e) => handleQuestionImage(e, index)}
                     ref={imageUploader}
                     style={{
                       display: "none",
                       visibility: "hidden",
                     }}
-                  /> */}
+                  />
                   <LightTooltip title="Tambahkan " placement="right">
                     <IconButton 
-                    // onClick={() => imageUploader.current.click()}
+                    onClick={() => imageUploader.current.click()}
                     >
                       <AddPhotoAlternateIcon/>
                     </IconButton>
@@ -122,7 +141,7 @@ function QuestionItemV2(props){
                 <Grid item>
                   <LightTooltip title="Duplikat Soal" placement="right">
                     <IconButton 
-                    // onClick={() => handleDuplicateQueston(i, question)}
+                    onClick={() => handleDuplicateQuestion(index)}
                     >
                       <FilterNoneIcon />
                     </IconButton>

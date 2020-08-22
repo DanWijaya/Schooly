@@ -55,7 +55,7 @@ class QuestionItem extends Component {
 
     return false
   }
-
+  
   // shouldComponentUpdate(nextProps, nextState){
   //   // console.log([...nextState.options])
   //   console.log(this.state.options)

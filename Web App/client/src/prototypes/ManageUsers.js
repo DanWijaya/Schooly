@@ -292,7 +292,7 @@ function ManageUsers(props) {
   const { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } = props; // tugas 3
   // const { all_students, all_teachers, pending_users } = props.auth;
   const { all_students, all_teachers} = props.mockUserCollection; // tugas 3
- 
+  console.log("TEST :", all_students)
   let student_rows = []
   let teacher_rows = []
 
@@ -486,6 +486,7 @@ function ManageUsers(props) {
   };
 
   const onClickSubmitImport = () => {
+
     new Promise((resolve) => {
       importUsers(userObjects.content);
       resolve();
@@ -494,13 +495,14 @@ function ManageUsers(props) {
       getMockTeachers();
       return;
     }).then(() => {
+      console.log(all_students)
       retrieveUsers();
       return;
     }).then(() => {
       fileInput.current.value = '';
       setOpenTabelDialog(false);
     });
-  };
+  }
 
   function SimpleDialog(props) {
     const { onClose, open } = props;
@@ -660,8 +662,7 @@ function ManageUsers(props) {
           <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              onClick={handleCloseDeleteDialog}
-            >
+              onClick={handleCloseDeleteDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>

@@ -147,13 +147,13 @@ class CreateAssessment extends Component {
       end_date: new Date(),
       openDeleteDialog: false,
       page: 0,
-      rowsPerPage: 10
+      rowsPerPage: 10,
+      qnsListitem: []
     }
   }
 
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
-  uploadedImage = React.createRef(null)
 
   componentWillUnmount(){
     this.props.clearErrors()
@@ -209,7 +209,6 @@ class CreateAssessment extends Component {
     // this.setState({questions: questions})
 
     let questions = this.state.questions;
-    // questions.push(<QuestionItemV2 number={questions.length + 1} deleteQuestion={this.deleteQuestion}/>)
     questions.push({
       name: "",
       options: ["Opsi 1", ""],
@@ -220,7 +219,7 @@ class CreateAssessment extends Component {
   }
 
   handleChangeQuestion = (e, i, otherfield=null) => {
-    var questions = this.state.questions
+    var questions = this.state.questions;
 
     if(otherfield === "answer"){
       questions[i]["answer"] = e.target.value
@@ -249,18 +248,21 @@ class CreateAssessment extends Component {
     this.setState({ questions: questions})
   }
 
-  handleDuplicateQueston = (i, question) => {
+  handleDuplicateQuestion = (i) => {
     console.log(i)
     let questions = this.state.questions
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
     // questions.splice(i+1, 0, question)
 
+    // let strings = JSON.stringify(questions[i].options)
+    // let arrays = JSON.parse(strings)
+    // console.log(strings, arrays)
     questions.splice(i+1, 0, {
-      name: question.name,
-      options: [...question.options],
-      answer: question.answer,
-      images: question.images
+      name: questions[i].name,
+      options: [...questions[i].options],
+      answer: questions[i].answer,
+      images: questions[i].images
     })
     this.setState({ questions: questions})
   }
@@ -276,32 +278,43 @@ class CreateAssessment extends Component {
 
   // }
 
-  handleQuestionImage = (e, qnsIndex) => {
-    if(e.target.files){
-      const files = Array.from(e.target.files);
+  handleQuestionImage = (e, qnsIndex, indexToDelete=null) => {
+    console.log("SDSDSD")
+    if(Number.isInteger(indexToDelete)){
+      let questions = this.state.questions
+      questions[qnsIndex].images.splice(indexToDelete, 1);
+      // questions[qnsIndex].images = ;
 
-      Promise.all(files.map(file => {
-        return (new Promise((resolve, reject) => {
-          let reader = new FileReader();
-          reader.onload = e => {
-            resolve(e.target.result);
-          }
-          reader.addEventListener('error', reject);
-          reader.readAsDataURL(file);
-        }))
-      }))
-      .then(images => {
-        console.log("hdwdwendjw")
-        let questions = this.state.questions
-        let temp = questions[qnsIndex].images.concat(images);
-        questions[qnsIndex].images = temp
+      this.setState({ questions: questions})
+    }
+    else{
+      if(e.target.files){
+          const files = Array.from(e.target.files);
 
-        this.setState({ questions: questions})
-      })
-      .catch(err => console.log(err))
+          Promise.all(files.map(file => {
+            return (new Promise((resolve, reject) => {
+              let reader = new FileReader();
+              reader.onload = e => {
+                resolve(e.target.result);
+              }
+              reader.addEventListener('error', reject);
+              reader.readAsDataURL(file);
+            }))
+          }))
+          .then(images => {
+            console.log("hdwdwendjw")
+            let questions = this.state.questions
+            let temp = questions[qnsIndex].images.concat(images);
+            questions[qnsIndex].images = temp
+
+            this.setState({ questions: questions})
+          })
+          .catch(err => console.log(err))
+      }
     }
     // this.readImageURI(e, qnsIndex)
   }
+
 
   buildImgTag = (images) => {
     if(!images)
@@ -331,32 +344,24 @@ class CreateAssessment extends Component {
     // let questionList = []
     let questions = this.state.questions;
     const { page, rowsPerPage} = this.state;
-    questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    const { classes } = this.props;
+
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => 
       <QuestionItemV2
         index={i + page * rowsPerPage} 
         name={question.name} 
-        options={question.options} 
+        options={JSON.stringify(question.options)} 
         answer={question.answer}
-        images={question.images}
+        images={JSON.stringify(question.images)}
         deleteQuestion={this.deleteQuestion}
+        handleDuplicateQuestion={this.handleDuplicateQuestion}
         handleQuestionOptions={this.handleQuestionOptions}
-        handleChangeQuestion={this.handleChangeQuestion}/>
-        )
-    // for( let i = 0; i < length; i++){
-    //   let question = questions[i]
-
-    //   questionList.push(
-    //   <QuestionItemV2 
-    //     number={i+1} 
-    //     name={question.name} 
-    //     options={question.options} 
-    //     images={question.images}
-    //     deleteQuestion={this.deleteQuestion}
-    //     handleQuestionOptions={this.handleQuestionOptions}
-    //     handleChangeQuestion={this.handleChangeQuestion}/>
-    //   )
-    // }
+        handleChangeQuestion={this.handleChangeQuestion}
+        handleQuestionImage={this.handleQuestionImage}
+        buildImgTag={this.buildImgTag}
+        />
+    )
+    
     return questionList
   }
 
@@ -605,6 +610,17 @@ class CreateAssessment extends Component {
               <Paper>
                 <Grid container justify="flex-end" spacing={2} className={classes.content}>
                   <Grid item>
+                    <TablePagination
+                     labelRowsPerPage="Soal per halaman"
+                     rowsPerPageOptions={[5, 10, 20]}
+                     component="div"
+                     count={this.state.questions.length}
+                     rowsPerPage={this.state.rowsPerPage}
+                     page={this.state.page}
+                     onChangePage={this.handleChangePage}
+                     onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+                  </Grid>
+                  <Grid item>
                     <FormHelperText error>
                       {errors.questions}
                     </FormHelperText>
@@ -636,14 +652,6 @@ class CreateAssessment extends Component {
                     </LightTooltip>
                   </Grid>
                   <Grid item>
-                    <TablePagination
-                     rowsPerPageOptions={[5, 10, 20]}
-                     component="div"
-                     count={this.state.questions.length}
-                     rowsPerPage={this.state.rowsPerPage}
-                     page={this.state.page}
-                     onChangePage={this.handleChangePage}
-                     onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
                     <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
                       Batal
                     </Button>
