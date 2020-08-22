@@ -224,6 +224,14 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#A2F7B5",
       color: "#309B94",
     },
+    "&:focus":{
+      backgroundColor: "#50c878",
+      color: "white",
+      "&:hover": {
+        backgroundColor: "#A2F7B5",
+        color: "#309B94",
+    } 
+  }},
     closeButton: {
         color: "black",
         "&:hover": {
@@ -240,7 +248,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#A2F7B5",
         color: "#309B94",
     } 
-  }},
+  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
