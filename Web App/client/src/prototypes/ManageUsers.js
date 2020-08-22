@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../actions/UserActions";
+// import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../actions/UserActions";
 import LightTooltip  from "../components/misc/light-tooltip/LightTooltip";
 import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography,
@@ -19,9 +19,7 @@ import SchoolRoundedIcon from '@material-ui/icons/SchoolRounded';
 import LocalLibraryRoundedIcon from '@material-ui/icons/LocalLibraryRounded';
 
 // tugas 3 -------------------------------------------
-import { importUsers } from "./MockActions";
-// import csv from 'csv-parser';
-// import { Readable } from "stream";
+import { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } from "./MockActions";
 import csv from 'csvtojson';
 // -----------------------------------------------------
 
@@ -32,7 +30,6 @@ import Paper from '@material-ui/core/Paper';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { List, ListItem } from '@material-ui/core';
 
-// const csv = require("csv-parser")
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -227,24 +224,23 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#A2F7B5",
       color: "#309B94",
     },
+    closeButton: {
+        color: "black",
+        "&:hover": {
+          backgroundColor:'#c21807',
+          color: "white",
+        },
+        "&:focus":{
+          color: "white"
+        } },
     "&:focus":{
       backgroundColor: "#50c878",
       color: "white",
       "&:hover": {
         backgroundColor: "#A2F7B5",
         color: "#309B94",
-    },
-     
+    } 
   }},
-  closeButton: {
-    color: "black",
-    "&:hover": {
-      backgroundColor:'#c21807',
-      color: "white",
-    },
-    "&:focus":{
-      color: "white"
-    } },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -263,7 +259,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.button.main,
     },
-  }
+  },
 }));
 
 function ManageUsers(props) {
@@ -282,9 +278,11 @@ function ManageUsers(props) {
   const [selectedUserId, setSelectedUserId] = React.useState(null)
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
-  const { importUsers, setUserDisabled, deleteUser, getTeachers, getStudents } = props;
-  const { all_students, all_teachers, pending_users } = props.auth;
-
+  // const { importUsers, setUserDisabled, deleteUser, getTeachers, getStudents } = props;
+  const { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } = props; // tugas 3
+  // const { all_students, all_teachers, pending_users } = props.auth;
+  const { all_students, all_teachers} = props.mockUserCollection; // tugas 3
+ 
   let student_rows = []
   let teacher_rows = []
 
@@ -299,30 +297,23 @@ function ManageUsers(props) {
       data.tanggal_lahir,
       data.address
     )
-    if (data.role === "Student") {
-      student_rows.push(temp)
+    if (data.role === "MockStudent") {
+      student_rows.push(temp);
     }
-    else if (data.role === "Teacher") {
-      teacher_rows.push(temp)
+    else if (data.role === "MockTeacher") {
+      teacher_rows.push(temp);
     }
   }
 
   React.useEffect(() => {
-    getStudents()
-    getTeachers()
+    getMockStudents();
+    getMockTeachers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const retrieveUsers = () => {
     student_rows = []
     teacher_rows = []
-<<<<<<< HEAD:Web App/client/src/prototypes/ManageUsersTemp.js
-    if(Array.isArray(all_students)){
-      all_students.map((data) => userRowItem(data, "Student"))
-    }
-    if(Array.isArray(all_teachers)){
-      all_teachers.map((data) => userRowItem(data, "Teacher"))
-=======
     if(Array.isArray(all_students)) {
       console.log(all_students);
       all_students.map((data) => userRowItem(data));
@@ -330,7 +321,6 @@ function ManageUsers(props) {
     if(Array.isArray(all_teachers)) {
       console.log(all_teachers);
       all_teachers.map((data) => userRowItem(data));
->>>>>>> 58361301d10410df1e5a6821eb4bd4902b8a54dc:Web App/client/src/prototypes/ManageUsers.js
     }
   }
 
@@ -356,27 +346,49 @@ function ManageUsers(props) {
   const [userObjects, setUserObjects] = React.useState({header: [], content: []});
   const [openTabelDialog, setOpenTabelDialog] = React.useState(false);
   const fileInput = React.createRef(null);
-  const [downloadfile, setDownloadFile] = React.useState("")
  
   // Fitur Download/Export==================================
   const prepareDownload = (array_of_users) => {
-
-    let string = "id,avatar,name,email,phone,emergency_phone,tanggal_lahir,address\n"
-    for(let individual_user of array_of_users){
-      string+=`${individual_user._id},`
-      string+=`${individual_user.avatar},`
-      string+=`${individual_user.name},`
-      string+=`${individual_user.email},`
-      string+=`${individual_user.phone},`
-      string+=`${individual_user.emergency_phone},`
-      string+=`${individual_user.tanggal_lahir},`
-      string+=`${individual_user.address}`
-      string+="\n"
+    if(array_of_users==all_students){
+      let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,tanggal_lahir,_id\n"
+      for(let individual_user of array_of_users){
+        string+=`${individual_user.active},`
+        string+=`${individual_user.address},`
+        string+=`${individual_user.avatar},`
+        string+=`${individual_user.email},`
+        string+=`${individual_user.emergency_phone},`
+        string+=`${individual_user.kelas},`
+        string+=`${individual_user.name},`
+        string+=`${individual_user.phone},`
+        string+=`${individual_user.role},`
+        string+=`${individual_user.tanggal_lahir},`
+        string+=`${individual_user._id},`
+        string+="\n"
+      }
+      return(string)
     }
-    return(string)
+    else if(array_of_users==all_teachers){
+      let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,subject_teached,tanggal_lahir,_id\n"
+      for(let individual_user of array_of_users){
+        string+=`${individual_user.active},`
+        string+=`${individual_user.address},`
+        string+=`${individual_user.avatar},`
+        string+=`${individual_user.email},`
+        string+=`${individual_user.emergency_phone},`
+        string+=`${individual_user.kelas},`
+        string+=`${individual_user.name},`
+        string+=`${individual_user.phone},`
+        string+=`${individual_user.role},`
+        string+=`${individual_user.subject_teached},`
+        string+=`${individual_user.tanggal_lahir},`
+        string+=`${individual_user._id},`
+        string+="\n"
+      }
+      return(string)
+    }
   }
 
-  const handleClickDownload = (data) => {
+  const handleClickDownload = (data,user) => {
 		if(data==""){
 			alert("Belum ada data yang di-submit");
 		}
@@ -385,8 +397,13 @@ function ManageUsers(props) {
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.setAttribute('hidden','')
-			a.setAttribute('href',url)
-			a.setAttribute('download','file.csv')
+      a.setAttribute('href',url)
+      if(user==all_students){
+        a.setAttribute('download','Data_Murid.csv')
+      }
+      else if(user==all_teachers){
+        a.setAttribute('download','Data_Guru.csv')
+      }
 			// document.body.appendChild(a);
 			a.click();
       // document.body.removeChild(a);
@@ -395,11 +412,12 @@ function ManageUsers(props) {
   
   const downloadcsv = (user) => {
     let chosen_user = prepareDownload(user)
-    handleClickDownload(chosen_user)
+    handleClickDownload(chosen_user,user)
   }
 
   
   // ======================================================
+
 
   // Dialog Import/Export
   const [open, setOpen] = React.useState(false);
@@ -434,7 +452,6 @@ function ManageUsers(props) {
         .fromString(fileContent)
         .then((jsonObj) => {
           newUserObjects.content = jsonObj;
-          console.log(jsonObj);
           return newUserObjects;
         })
         .then((newUserObjects) => {
@@ -442,17 +459,15 @@ function ManageUsers(props) {
           .fromString(fileContent)
           .on('header', (header)=>{
             newUserObjects.header = header;
-            console.log(header);
           })
           .on('done', () => {
             setUserObjects(newUserObjects);
+            setOpenTabelDialog(true);
           })
         })
     }).catch((err) => {
 			console.log(err);
     });
-
-    setOpenTabelDialog(true);
   };
 
   const onClickCancelImport = () => {
@@ -461,9 +476,20 @@ function ManageUsers(props) {
   };
 
   const onClickSubmitImport = () => {
-    importUsers(userObjects); 
-    setOpenTabelDialog(false);
-    fileInput.current.value = '';
+    new Promise((resolve) => {
+      importUsers(userObjects.content);
+      resolve();
+    }).then(() => {
+      getMockStudents();
+      getMockTeachers();
+      return;
+    }).then(() => {
+      retrieveUsers();
+      return;
+    }).then(() => {
+      fileInput.current.value = '';
+      setOpenTabelDialog(false);
+    });
   };
 
   function SimpleDialog(props) {
@@ -586,10 +612,10 @@ function ManageUsers(props) {
   // ------------------------------------------------------------------------------------------
 
   const onDeleteUser = (id) => {
-    deleteUser(id)
+    deleteMockUser(id)
   }
   const onDisableUser = (id) => {
-    setUserDisabled(id)
+    setMockUserDisabled(id)
   }
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
@@ -728,7 +754,7 @@ function ManageUsers(props) {
     )
   }
 
-  console.log(pending_users)
+  // console.log(pending_users)
   return (
     <div className={classes.root}>
       {DisableDialog()}
@@ -758,14 +784,14 @@ function ManageUsers(props) {
 				{previewTable()}
         <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
         <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
-			</Dialog>
+	  </Dialog>
       {/* ----------------------------------------------- */}
 
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
         role="Student"
-        deleteUser={deleteUser}
+        deleteUser={deleteMockUser}
         classes={classes}
         order={order_student}
         orderBy={orderBy_student}
@@ -874,7 +900,7 @@ function ManageUsers(props) {
       <ManageUsersToolbar
         heading="Daftar Guru"
         role="Teacher"
-        deleteUser={deleteUser}
+        deleteUser={deleteMockUser}
         classes={classes}
         order={order_teacher}
         orderBy={orderBy_teacher}
@@ -988,10 +1014,11 @@ function ManageUsers(props) {
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
-  auth: state.auth,
-  classesCollection: state.classesCollection,
+  // auth: state.auth,
+  // classesCollection: state.classesCollection,
+  mockUserCollection: state.mockUserCollection, //tugas 3
 })
 
 export default connect(
-  mapStateToProps, { importUsers, setUserDisabled, getStudents, getTeachers, deleteUser }
+  mapStateToProps, { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser }
 ) (ManageUsers);
