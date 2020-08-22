@@ -12,7 +12,9 @@ Botak:
 17. Tidak nihil dan jumlah murid
 18. Disable overflow hidden when opening menu
 19. Fix profile page lagi
-20. Cek
+20. Alternatif latex delete sisanya pilih satu: mathjax, algebra.js, katex
+https://medium.com/@sjorsvanheuveln/displaying-math-in-reactjs-using-es6-5b0739e8447e
+https://stackoverflow.com/questions/45106453/rendering-math-in-react-component
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -55,8 +57,8 @@ Error and To be Fixed:
 - Rapikan code, pecahkan jadi beberapa file lagi
 
 To be fixed (Urgent):
-- Di ViewTaskStudent, ndak muncul file yang dikumpul. 
-- Di ViewClass yang si Student, ndak muncul Murid muridnya. 
+- Di ViewTaskStudent, ndak muncul file yang dikumpul.
+- Di ViewClass yang si Student, ndak muncul Murid muridnya.
 
 Yang belum ada di Schooly:
 1. Ujian/Quiz dengan auto checker juga (https://github.com/bonham000/react-quiz-app)
@@ -65,6 +67,7 @@ Yang belum ada di Schooly:
   - Push notification (real time): https://www.youtube.com/watch?v=HlYFW2zaYQM
 4. Kalendar
   - https://www.youtube.com/watch?v=iNkryf_TtZw&list=PLDzXQPWT8wEBcA9SvNAYDr4IBWsHgo-FO
+  - https://www.npmjs.com/package/gantt-schedule-timeline-calendar
 5. Sync Across Devices
   - https://medium.com/@firasd/interface-from-data-using-react-to-sync-updates-and-offline-activity-across-devices-f672b213701c (Mayhe using WebSockets?) Berhubungan ke bawah
   - https://github.com/firasd/react-sync-demo
