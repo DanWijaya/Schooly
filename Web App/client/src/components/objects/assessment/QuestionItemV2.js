@@ -27,13 +27,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItemV2(props){
-  const { index, name, options, answer, images, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
+  const { index, name, options, answer, images, images_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
   const classes = useStyles()
 
-  let list_options = JSON.parse(options)
-  let list_images = JSON.parse(images)
+  const [imagesToPreview, setImagesToPreview] = React.useState([])
 
+  let list_options = JSON.parse(options)
+  // let list_images = JSON.parse(images)
+  console.log(images)
   const imageUploader = React.useRef();
+
+  const imageUpload = () => {
+    imageUploader.current.value = null
+    imageUploader.current.click()
+  }
+
+  const handlePreviewImage = () => {
+    console.log("handle preview image is runned")
+    console.log(images)
+    if(Array.isArray(images)){
+      Promise.all(images.map((image) => {
+        return (new Promise((resolve, reject) => {
+          let reader = new FileReader();
+          reader.onload = e => {
+            resolve(e.target.result);
+          }
+          reader.addEventListener('error', reject);
+          reader.readAsDataURL(image);
+        }))
+      }))
+      .then(images => {
+        setImagesToPreview(images)
+      })
+      .catch(err => console.log(err))
+    }
+  }
+  
+  React.useEffect(() => {
+    handlePreviewImage()
+  }
+  ,[images_length])
 
   return(
     <Grid item>
@@ -45,11 +78,24 @@ function QuestionItemV2(props){
                     Soal {index + 1}
                   </Typography>
                   <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
-                    {list_images.map((image, i) =>
+                    {/* {list_images.map((image, i) =>
                       <GridListTile key={image} cols={1} >
                         <img alt="current image" src={image}/>
                         <GridListTileBar
-                            title={"HAHHA"}
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            actionPosition="right"
+                          />
+                      </GridListTile>
+                    )} */}
+                    {imagesToPreview.map((image, i) =>
+                      <GridListTile key={image} cols={1} >
+                        <img alt="current image" src={image}/>
+                        <GridListTileBar
                             titlePosition="top"
                             actionIcon={
                               <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
@@ -123,7 +169,17 @@ function QuestionItemV2(props){
                     multiple
                     type="file"
                     name="avatar"
-                    onChange={(e) => handleQuestionImage(e, index)}
+                    onChange={(e) =>{
+                      handleQuestionImage(e, index, null)
+                      // new Promise((resolve, reject) => {
+                      //   handleQuestionImage(e, index, null, resolve)
+                      // })
+                      // .then(() => {
+                      //   handlePreviewImage();
+                      //   return;
+                      // })
+                      
+                    }}
                     ref={imageUploader}
                     style={{
                       display: "none",
@@ -132,7 +188,7 @@ function QuestionItemV2(props){
                   />
                   <LightTooltip title="Tambahkan " placement="right">
                     <IconButton 
-                    onClick={() => imageUploader.current.click()}
+                    onClick={imageUpload}
                     >
                       <AddPhotoAlternateIcon/>
                     </IconButton>
