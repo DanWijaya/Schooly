@@ -19,6 +19,7 @@ import ResetPassword from "./components/auth/reset-password/ResetPassword";
 import About from "./components/layout/about/About";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
+import MockProfile from "./components/layout/profile/MockProfile";
 import Profile from "./components/layout/profile/Profile";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
@@ -180,6 +181,7 @@ class App extends Component {
                     
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
+                    <PrivateRoute exact path="/mockprofil" component={MockProfile} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />

@@ -445,14 +445,6 @@ function ManageUsers(props) {
     setOpen(false);
   };
 
-  // const [anchorEl, setAnchorEl] = React.useState(null);
-  // const handleOpenSortMenu = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleCloseSortMenu = () => {
-  //   setAnchorEl(null);
-  // };
-
   const onInputChange = (event) => {
     event.preventDefault();
 
@@ -487,8 +479,8 @@ function ManageUsers(props) {
 
   const onClickSubmitImport = () => {
     new Promise((resolve) => {
-      importUsers(userObjects.content);
-      resolve();
+      importUsers(resolve, userObjects.content);
+      // resolve();
     }).then(() => {
       getMockStudents();
       getMockTeachers();
@@ -794,7 +786,7 @@ function ManageUsers(props) {
 				{previewTable()}
         <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
         <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
-	  </Dialog>
+	    </Dialog>
       {/* ----------------------------------------------- */}
 
       <Divider className={classes.titleDivider} />
