@@ -445,14 +445,15 @@ function ViewClass(props) {
             </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
-              {all_teachers.get(kelas.walikelas) ?
+              {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+              null
+              :
                 <PersonListItem
                   person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
                   person_name={all_teachers.get(kelas.walikelas).name }
                   person_role={all_teachers.get(kelas.walikelas).subject_teached}
                 />
-              :
-                null
+              
               }
             </List>
           </div>

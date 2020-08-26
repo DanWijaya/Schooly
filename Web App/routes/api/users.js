@@ -407,8 +407,10 @@ router.get("/getstudentsbyclass/:id", (req,res) => {
   Student.find({ kelas: id, active: true}).then((users, err) => {
     if (!users)
       console.log("No students with this class ID")
-    else
+    else{
+      console.log("Users by class : ", users)
       return res.json(users)
+    }
   })
 })
 
