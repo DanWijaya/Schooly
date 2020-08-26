@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -14,6 +15,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
+import PageviewIcon from "@material-ui/icons/Pageview";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -136,6 +138,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
+  },
+  viewMaterialButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
   },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
@@ -521,7 +531,7 @@ function ManageUsers(props) {
                   </ExpansionPanelSummary>
                   <Divider className={classes.profilePanelDivider} />
                   <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
+                    <Grid container direction="column">
                       <Grid item>
                         <Typography variant="body1" gutterBottom>
                           <b>Kontak:</b> {row.phone}
@@ -542,6 +552,18 @@ function ManageUsers(props) {
                           <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
                         </Typography>
                       </Grid>
+                    </Grid>
+                    <Grid item xs container justify="flex-end">
+                      <LightTooltip title="Lihat Profil">
+                        <Link to='/beranda'>
+                          <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                          >
+                            <PageviewIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
+                      </LightTooltip>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
@@ -651,6 +673,34 @@ function ManageUsers(props) {
                           <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
                         </Typography>
                       </Grid>
+                    </Grid>
+                    <Grid item xs container justify="flex-end">
+                      <LightTooltip title="Lihat Profil">
+                        <Link to={{
+                          pathname:'/mockprofil',
+                          state: {
+                            nama: row.name,
+                            tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                            jenis_kelamin: row.jenis_kelamin,
+                            sekolah: row.sekolah,
+                            email: row.email,
+                            phone: row.phone,
+                            emergency_phone : row.emergency_phone,
+                            alamat: row.address,
+                            hobi: row.hobi_minat,
+                            ket: row.ket_non_teknis,
+                            cita: row.cita_cita,
+                            uni: row.uni_impian
+                          }
+                        }}>
+                          <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                          >
+                            <PageviewIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
+                      </LightTooltip>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>

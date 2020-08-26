@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter,useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -26,6 +27,7 @@ import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
+import { BsUnion } from "react-icons/bs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -152,6 +154,19 @@ function ProfileDataItem(props) {
 
 function Profile(props) {
   const classes = useStyles();
+  const location = useLocation();
+  const { nama } = location.state
+  const { tanggal_lahir } = location.state
+  const { jenis_kelamin } = location.state
+  const { sekolah } = location.state
+  const { email } = location.state
+  const { phone } = location.state
+  const { emergency_phone } = location.state
+  const { alamat } = location.state
+  const { hobi } = location.state
+  const { ket } = location.state
+  const { cita } = location.state
+  const { uni } = location.state
 
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection } = props;
@@ -309,25 +324,25 @@ function Profile(props) {
                 <ProfileDataItem
                   profile_data_icon={<PersonIcon />}
                   profile_data_category="Nama"
-                  profile_data_info={user.name}
+                  profile_data_info={nama}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
-                  profile_data_info={moment(user.tanggal_lahir).locale("id").format("DD-MM-YYYY")}
+                  profile_data_info={tanggal_lahir}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
-                  profile_data_info={user.jenis_kelamin}
+                  profile_data_info={jenis_kelamin}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
-                  profile_data_info={user.sekolah}
+                  profile_data_info={sekolah}
                 />
               </List>
             </Paper>
@@ -353,25 +368,25 @@ function Profile(props) {
                 <ProfileDataItem
                   profile_data_icon={<EmailIcon />}
                   profile_data_category="Email"
-                  profile_data_info={user.email}
+                  profile_data_info={email}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<PhoneIcon />}
                   profile_data_category="Nomor Telepon"
-                  profile_data_info={user.phone}
+                  profile_data_info={phone}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<ContactPhoneIcon />}
                   profile_data_category="Nomor Telepon Darurat"
-                  profile_data_info={user.emergency_phone}
+                  profile_data_info={emergency_phone}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<HomeIcon />}
                   profile_data_category="Alamat"
-                  profile_data_info={user.address}
+                  profile_data_info={alamat}
                 />
               </List>
             </Paper>
@@ -398,25 +413,25 @@ function Profile(props) {
                 <ProfileDataItem
                   profile_data_icon={<SportsEsportsIcon />}
                   profile_data_category="Hobi dan Minat"
-                  profile_data_info={user.hobi_minat}
+                  profile_data_info={hobi}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<ColorLensIcon />}
                   profile_data_category="Keterampilan Non-Akademik"
-                  profile_data_info={user.ket_non_teknis}
+                  profile_data_info={ket}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<WorkIcon />}
                   profile_data_category="Cita-Cita"
-                  profile_data_info={user.cita_cita}
+                  profile_data_info={cita}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
                   profile_data_icon={<AccountBalanceIcon />}
                   profile_data_category="Perguruan Tinggi Impian"
-                  profile_data_info={user.uni_impian}
+                  profile_data_info={uni}
                 />
               </List>
             </Paper>
@@ -432,6 +447,9 @@ Profile.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   updateAvatar: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -440,5 +458,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { updateAvatar, setCurrentClass }
-) (Profile);
+    mapStateToProps, { updateAvatar, setCurrentClass }
+  ) (Profile);
