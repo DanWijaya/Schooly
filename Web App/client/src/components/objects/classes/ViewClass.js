@@ -572,6 +572,7 @@ function ViewClass(props) {
                         <Link to={{
                           pathname:'/mockprofil',
                           state: {
+                            kelas: student.kelas,
                             avatar: student.avatar,
                             nama: student.name,
                             viewable_section: 'with_karir',
@@ -817,6 +818,7 @@ function ViewClass(props) {
                                 <Link to={{
                                   pathname:'/mockprofil',
                                   state: {
+                                    kelas: student.kelas,
                                     avatar: student.avatar,
                                     nama: student.name,
                                     viewable_section: 'no_karir',

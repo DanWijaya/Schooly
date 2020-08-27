@@ -202,13 +202,20 @@ function Profile(props) {
     window.location.reload()
   }
 
-  // Initially classesCollection.kelas.name === undefined
-  if (user.role === "Student" && !classesCollection.kelas.name) {
-    setCurrentClass(user.kelas)
-  }
+  React.useEffect(() => {
+    setCurrentClass(kelas);
+    console.log(kelas);
+  }, []);
+
+
+  // if (user.role === "Student" && !classesCollection.kelas.name) {
+  //   console.log(classesCollection)
+  //   setCurrentClass(user.kelas)
+  // }
+  // console.log(classesCollection)
 
   document.title = "Schooly | Profil"
-  console.log(classesCollection.kelas)
+  // console.log(classesCollection.kelas)
   return (
     <div className={classes.root}>
       {/* ProfilePictureEditorDialog Snackbar */}
