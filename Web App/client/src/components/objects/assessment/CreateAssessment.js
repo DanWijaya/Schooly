@@ -27,7 +27,6 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
 
-
 const styles = (theme) => ({
   root: {
     margin: "auto",
@@ -170,7 +169,7 @@ class CreateAssessment extends Component {
       let images = qns.images;
       images.forEach((img, i) => formData.append(`images_no_${i}`, img))
     })
-  
+
     const assessmentData = {
       name: this.state.name,
       start_date: this.state.start_date,
@@ -310,9 +309,9 @@ class CreateAssessment extends Component {
       console.log(question.images)
       return(
         <QuestionItemV2
-          index={i + page * rowsPerPage} 
-          name={question.name} 
-          options={JSON.stringify(question.options)} 
+          index={i + page * rowsPerPage}
+          name={question.name}
+          options={JSON.stringify(question.options)}
           answer={question.answer}
           images={question.images}
           images_length={question.images.length}
@@ -325,7 +324,7 @@ class CreateAssessment extends Component {
       )
     }
     )
-    
+
     return questionList
   }
 
@@ -566,17 +565,18 @@ class CreateAssessment extends Component {
               {this.listQuestion()}
             <Grid item>
               <Paper>
-                <Grid container justify="flex-end" spacing={2} className={classes.content}>
-                  <Grid item>
+                <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                  <Grid item xs={12} sm>
                     <TablePagination
-                     labelRowsPerPage="Soal per halaman"
-                     rowsPerPageOptions={[5, 10]}
-                     component="div"
-                     count={this.state.questions.length}
-                     rowsPerPage={this.state.rowsPerPage}
-                     page={this.state.page}
-                     onChangePage={this.handleChangePage}
-                     onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+                      labelRowsPerPage="Soal per halaman"
+                      rowsPerPageOptions={[5, 10]}
+                      component="div"
+                      count={this.state.questions.length}
+                      rowsPerPage={this.state.rowsPerPage}
+                      page={this.state.page}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                   </Grid>
                   <Grid item>
                     <FormHelperText error>
@@ -609,15 +609,17 @@ class CreateAssessment extends Component {
                       </Badge>
                     </LightTooltip>
                   </Grid>
-                  <Grid item>
-                    <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
-                      Batal
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                      Buat Kuis
-                    </Button>
+                  <Grid item container xs justify="flex-end" spacing={2}>
+                    <Grid item>
+                      <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
+                        Batal
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
+                        Buat Kuis
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Paper>
