@@ -58,7 +58,7 @@ function NavBar(props) {
   const { user } = props.auth;
 
   const isMobileView = useMediaQuery("(max-width:600px)");
-  const { handleDrawerDesktop, handleDrawerMobile } = props;
+  const { handleDrawerDesktop, handleDrawerMobile, sideDrawerExist } = props;
 
   // NavBar Contents
   let leftNavBarContents;
@@ -66,19 +66,19 @@ function NavBar(props) {
   let rightNavBarContents;
 
   if (user.name) {
-    leftNavBarContents = (
-      <div className={classes.navbarContainedLeftItems}>
-        {isMobileView ?
-          <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
-            <MenuIcon />
-          </IconButton>
-          :
-          <IconButton edge="start" color="inherit" onClick={handleDrawerDesktop}>
-            <MenuIcon />
-          </IconButton>
-        }
-      </div>
-    )
+        leftNavBarContents = (
+          <div className={classes.navbarContainedLeftItems} style={{display: !sideDrawerExist ? "none" : "block"}}>
+            {isMobileView ?
+              <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
+                <MenuIcon />
+              </IconButton>
+              :
+              <IconButton edge="start" color="inherit" onClick={handleDrawerDesktop}>
+                <MenuIcon />
+              </IconButton>
+            }
+          </div>
+      )
     middleNavBarContents = (
       <Link to="/beranda">
         <img

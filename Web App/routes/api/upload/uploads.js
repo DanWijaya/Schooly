@@ -49,6 +49,7 @@ var tugas_storage = storageEngine("tugas")
 var lampiran_tugas_storage = storageEngine("lampiran_tugas")
 var lampiran_announcement_storage = storageEngine("lampiran_announcement")
 var lampiran_materi_storage = storageEngine("lampiran_materi");
+var lampiran_assessment_storage = storageEngine("lampiran_assessment");
 
 // Create the middleware which facilitates file uploads
 const uploadAvatar = multer({ storage: avatar_storage });
@@ -56,7 +57,14 @@ const uploadTugas = multer({ storage: tugas_storage });
 const uploadLampiranTugas= multer({ storage: lampiran_tugas_storage});
 const uploadLampiranAnnouncement = multer({ storage: lampiran_announcement_storage});
 const uploadLampiranMateri = multer({ storage: lampiran_materi_storage});
+const uploadLampiranAssessment = multer({ storage: lampiran_assessment_storage})
 
 module.exports = {
    router,
-   uploadAvatar, uploadTugas, uploadLampiranTugas, uploadLampiranAnnouncement, uploadLampiranMateri};
+   uploadAvatar, 
+   uploadTugas, 
+   uploadLampiranTugas,
+   uploadLampiranAnnouncement,
+   uploadLampiranMateri,
+   uploadLampiranAssessment
+};

@@ -7,8 +7,6 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
     axios
       .post("/api/materials/create", materialData)
       .then(res => {
-          console.log("this is the res", res.data)
-          console.log("Will run this")
           console.log(formData.getAll('lampiran_materi'))
           // memebrikan signal ke Store untuk mengubah/menambahkan state aplikasi
           // kalau secara codenya, dilakukan dgn cara dispatch action

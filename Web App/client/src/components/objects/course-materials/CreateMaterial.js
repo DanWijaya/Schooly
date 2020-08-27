@@ -248,7 +248,7 @@ class CreateMaterial extends Component {
         author_id: id,
         errors: {},
       };
-
+      console.log(this.state.fileLampiran)
       this.props.createMaterial(formData, materialData, this.props.history);
   }
 
