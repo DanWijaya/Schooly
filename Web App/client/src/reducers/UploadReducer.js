@@ -32,7 +32,7 @@ export default function(state = initialState, action) {
       }
     }
     case GET_ALL_FILES_BY_USER: {
-      console.log("Paylaod : ", action.payload);
+      // console.log("Paylaod : ", action.payload);
       return{
         ...state,
         all_user_files: action.payload

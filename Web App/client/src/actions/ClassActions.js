@@ -24,8 +24,8 @@ export const getAllClass = (data="array") => dispatch => {
   axios
     .get("/api/classes/viewall")
     .then(res => {
-        console.log("Data should be here")
-
+        // console.log("Data should be here")
+        console.log("run getallclass");
         if(data === "map"){
           dispatch({
             type: GET_ALL_CLASSES_MAP,
@@ -51,7 +51,7 @@ export const getSelectedClasses = (classes_ids) => dispatch => {
   axios
     .get("/api/classes/viewSelectedClasses/", { params: { classes_ids : classes_ids}})
     .then(res => {
-        console.log("Class to be edited");
+        // console.log("Class to be edited");
         // dispatch(setCurrentClass(res.data))
         console.log(res)
         dispatch({
@@ -59,6 +59,7 @@ export const getSelectedClasses = (classes_ids) => dispatch => {
             payload: res.data
         })
         // res.send(classData);
+        console.log("getSelectedClasses completed")
     })
     .catch(err => {
         console.log("error")
@@ -102,16 +103,17 @@ export const deleteClass = (classId) => dispatch => {
 }
 
 export const setCurrentClass = (classId) => dispatch => {
-    console.log("set current class is runned")
+    // console.log("set current class is runned")
     axios
         .get("/api/classes/setCurrentClass/" + classId)
         .then(res => {
-            console.log("Class to be edited");
+            // console.log("Class to be edited");
             // dispatch(setCurrentClass(res.data))
             dispatch({
                 type: SET_CURRENT_CLASS,
                 payload: res.data
             })
+            console.log("setCurrentClass completed")
             // res.send(classData);
         })
         .catch(err => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -297,7 +297,9 @@ function ViewClass(props) {
   const { students_by_class, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
 
-  console.log(props.classesCollection)
+  const [walikelas, setWalikelas] = React.useState({});
+
+  // console.log(props.classesCollection)
   // All actions to retrive datas from Database
 
   function listTasks(category=null, subject={}){
@@ -324,7 +326,7 @@ function ViewClass(props) {
         </Avatar>
       )
       let workStatus = "Belum Dikumpulkan"
-      console.log(all_user_files)
+      // console.log(all_user_files)
       // for (var j = 0; j < all_user_files.length; j++){
       //     if(all_user_files[j].for_task_object === task._id){
       //     workStatus = "Telah Dikumpulkan"
@@ -409,12 +411,20 @@ function ViewClass(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  React.useEffect(() => {
+
+    //isi all_teacher berubah 2 kali, 1 karena getTeacher (berubah dari [] jadi Map), 1 lagi gatau (berubah dari ? jadi [])
+    if (!Array.isArray(all_teachers)) { 
+      setWalikelas(all_teachers.get(kelas.walikelas)); 
+    }
+  }, [all_teachers])
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  console.log(selectedMaterials)
+  // console.log(selectedMaterials)
   document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
 
   function student_role(id) {
@@ -433,20 +443,29 @@ function ViewClass(props) {
     }
   }
 
-  console.log(kelas, all_teachers, kelas.walikelas)
+  function isObjEmpty(obj) {
+    if (obj) {
+      return (Object.keys(obj).length === 0 && obj.constructor === Object);
+    } else {
+      return true;
+    }
+  }
+
+  // console.log( all_teachers)
   return (
     <div className={classes.root}>
-      {user.role === "Admin" || user.role === "Teacher" ?
+      {(user.role === "Admin" || user.role === "Teacher") ? (
         <div>
           <Paper className={classes.classPaper}>
             <Typography variant="h3">
               {kelas.name}
             </Typography>
             <Typography variant="h6">
-              {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+              {/* {!all_teachers.size || !all_teachers.get(kelas.walikelas)  ? */}
+              { (isObjEmpty(walikelas)) ? 
                 null
               :
-                all_teachers.get(kelas.walikelas).name
+                walikelas.name
               }
             </Typography>
           </Paper>
@@ -458,16 +477,16 @@ function ViewClass(props) {
             <List className={classes.listContainer}>
 
               {/* bookmark: button-user-guru-1*/}
-              {all_teachers.get(kelas.walikelas) ? (
+              {!isObjEmpty(walikelas) ? (
                 <Grid container justify="space-between" alignItems="center">
                   
                   {[<Grid item>
                     <PersonListItem
-                      person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
-                      person_name={all_teachers.get(kelas.walikelas).name }
-                      person_role={all_teachers.get(kelas.walikelas).subject_teached}
+                      person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                      person_name={walikelas.name }
+                      person_role={walikelas.subject_teached}
                     />                
-                  </Grid>].concat( (user.email === all_teachers.get(kelas.walikelas).email)
+                  </Grid>].concat( (user.email === walikelas.email)
                   ? (<Grid item xs container justify="flex-end"></Grid>)
                   : (
                     <Grid item xs container justify="flex-end">
@@ -476,21 +495,14 @@ function ViewClass(props) {
                           <Link to={{
                             pathname:'/mockprofil',
                             state: {
-                              avatar: all_teachers.get(kelas.walikelas).avatar, 
-                              nama: all_teachers.get(kelas.walikelas).name,
+                              avatar: walikelas.avatar, 
+                              nama: walikelas.name,
                               viewable_section: 'no_karir',
-                              role: all_teachers.get(kelas.walikelas).role,
-                              // tanggal_lahir: moment(all_teachers.get(kelas.walikelas).tanggal_lahir).locale("id").format("DD MMMM YYYY"),
-                              jenis_kelamin: all_teachers.get(kelas.walikelas).jenis_kelamin,
-                              // sekolah: all_teachers.get(kelas.walikelas).sekolah,
-                              email: all_teachers.get(kelas.walikelas).email,
-                              phone: all_teachers.get(kelas.walikelas).phone,
-                              emergency_phone : all_teachers.get(kelas.walikelas).emergency_phone,
-                              // alamat: walikelas.address,
-                              // hobi: walikelas.hobi_minat,
-                              // ket: walikelas.ket_non_teknis,
-                              // cita: walikelas.cita_cita,
-                              // uni: walikelas.uni_impian
+                              role: walikelas.role,
+                              jenis_kelamin: walikelas.jenis_kelamin,
+                              email: walikelas.email,
+                              phone: walikelas.phone,
+                              emergency_phone : walikelas.emergency_phone,
                             }
                           }}>
                             <IconButton
@@ -538,13 +550,10 @@ function ViewClass(props) {
                             nama: student.name,
                             viewable_section: 'with_karir',
                             role: student.role,
-                            // tanggal_lahir: moment(walikelas.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
                             jenis_kelamin: student.jenis_kelamin,
-                            // sekolah: walikelas.sekolah,
                             email: student.email,
                             phone: student.phone,
                             emergency_phone : student.emergency_phone,
-                            // alamat: walikelas.address,
                             hobi: student.hobi_minat,
                             ket: student.ket_non_teknis,
                             cita: student.cita_cita,
@@ -567,7 +576,7 @@ function ViewClass(props) {
             </List>
           </div>
         </div>
-      :
+      ) : (
         <div>
           <Paper square>
             <div className={classes.classPaper}>
@@ -575,10 +584,11 @@ function ViewClass(props) {
                 {kelas.name}
               </Typography>
               <Typography variant="h6">
-                {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+                {/* {!all_teachers.size || !all_teachers.get(kelas.walikelas) ? */}
+                {isObjEmpty(walikelas) ?
                   null
                 :
-                  all_teachers.get(kelas.walikelas).name
+                  walikelas.name
                 }
               </Typography>
             </div>
@@ -706,16 +716,17 @@ function ViewClass(props) {
                 <List className={classes.listContainer}>
 
                   {/* bookmark: button-user-murid-1 */}
-                  {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+                  {/* {!all_teachers.size || !all_teachers.get(kelas.walikelas) ? */}
+                  {isObjEmpty(walikelas) ? 
                     null
                   : (
                   <Grid container justify="space-between" alignItems="center">
                     <Grid item>
 
                         <PersonListItem
-                          person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
-                          person_name={all_teachers.get(kelas.walikelas).name}
-                          person_role={all_teachers.get(kelas.walikelas).subject_teached}
+                          person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                          person_name={walikelas.name}
+                          person_role={walikelas.subject_teached}
                         />
 
                     </Grid>
@@ -726,17 +737,16 @@ function ViewClass(props) {
                           <Link to={{
                             pathname:'/mockprofil',
                             state: {
-                              avatar: all_teachers.get(kelas.walikelas).avatar,
-                              nama: all_teachers.get(kelas.walikelas).name,
+                              avatar: walikelas.avatar,
+                              nama: walikelas.name,
                               viewable_section: 'no_karir',
-                              role: all_teachers.get(kelas.walikelas).role,
-                              jenis_kelamin: all_teachers.get(kelas.walikelas).jenis_kelamin,
-                              email: all_teachers.get(kelas.walikelas).email,
-                              phone: all_teachers.get(kelas.walikelas).phone,
-                              emergency_phone : all_teachers.get(kelas.walikelas).emergency_phone
+                              role: walikelas.role,
+                              jenis_kelamin: walikelas.jenis_kelamin,
+                              email: walikelas.email,
+                              phone: walikelas.phone,
+                              emergency_phone : walikelas.emergency_phone
                             }
                           }}>
-                          {/* <Link to={'/beranda'}> */}
                             <IconButton
                               size="small"
                               className={classes.viewMaterialButton}
@@ -772,8 +782,8 @@ function ViewClass(props) {
                             person_role={student.role === "Student" ? "Murid" : null}
                           />
 
-                        </Grid>].concat( (user.email === student.email) ? 
-                        (<Grid item xs container justify="flex-end"></Grid>)
+                        </Grid>].concat( (user.email === student.email) 
+                        ? (<Grid item xs container justify="flex-end"></Grid>)
                         : (
                           <Grid item xs container justify="flex-end">
                             <Grid item>
@@ -791,7 +801,6 @@ function ViewClass(props) {
                                     emergency_phone : student.emergency_phone
                                   }
                                 }}>
-                                {/* <Link to={'/beranda'}> */}
                                   <IconButton
                                     size="small"
                                     className={classes.viewMaterialButton}
@@ -812,7 +821,8 @@ function ViewClass(props) {
             </Paper>
           </TabPanel>
         </div>
-      }
+      )
+    }
     </div>
   )
 };

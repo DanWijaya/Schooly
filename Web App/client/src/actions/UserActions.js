@@ -161,10 +161,11 @@ export const getStudents = () => dispatch => {
 }
 
 export const getTeachers = (data="array") => dispatch => {
+  // console.log('getTeacher start')
   axios
     .get("/api/users/getteachers")
     .then(res => {
-      console.log(res.data)
+      // console.log(res.data)
       if(data === "map"){
         let temp = new Map()
         res.data.map((teacher) => temp.set(teacher._id, teacher))
@@ -178,6 +179,7 @@ export const getTeachers = (data="array") => dispatch => {
           payload: res.data
         })
       }
+      console.log('getTeacher completed')
     })
     .catch(err => { console.log("Error in getting all Teachers");})
 }
@@ -214,11 +216,12 @@ export const getStudentsByClass = (classId) => dispatch => {
   axios
       .get("/api/users/getstudentsbyclass/" + classId)
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         dispatch({
           type: GET_STUDENTS_BY_CLASS,
           payload: res.data
         })
+        console.log('getStudentsByClass completed')
       })
       .catch(err => {
         console.log("Error in getting Students by class");

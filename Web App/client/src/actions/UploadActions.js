@@ -64,16 +64,17 @@ export const getTaskFilesByUser = (userId, tugasId) => dispatch => {
   }
 
 export const getAllTaskFilesByUser = (userId) => dispatch => {
-    console.log("getAllTaskFilesByUser is runned")
-    console.log("User ID: ", userId)
+    // console.log("getAllTaskFilesByUser is runned")
+    // console.log("User ID: ", userId)
     axios
         .get(`/api/users/getalltask/${userId}`)
         .then(res =>{
-            console.log(res.data);
+            // console.log(res.data);
             dispatch({
                 type: GET_ALL_FILES_BY_USER,
                 payload: res.data
             })
+            console.log("getAllTaskFilesByUser completed")
         })
         .catch(err => {
             console.log("Error in retrieving all of the user tasks");
