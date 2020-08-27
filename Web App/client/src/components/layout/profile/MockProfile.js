@@ -156,7 +156,7 @@ function Profile(props) {
   const classes = useStyles();
   const location = useLocation();
   const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin, 
-    sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni } = location.state
+    sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
 
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection } = props;
@@ -208,7 +208,7 @@ function Profile(props) {
   }
 
   document.title = "Schooly | Profil"
-
+  console.log(classesCollection.kelas)
   return (
     <div className={classes.root}>
       {/* ProfilePictureEditorDialog Snackbar */}
@@ -303,7 +303,7 @@ function Profile(props) {
                         Informasi Pengguna
                       </Typography>
                       <Typography variant="subtitle1" color="textSecondary">
-                        Subtitle Subtitle Subtitle
+                        User Information
                       </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -360,7 +360,7 @@ function Profile(props) {
                         Karir
                       </Typography>
                       <Typography variant="subtitle1" color="textSecondary">
-                        Subtitle Subtitle Subtitle
+                        Career & Other Informations
                       </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
