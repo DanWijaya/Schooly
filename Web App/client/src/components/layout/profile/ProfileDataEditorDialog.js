@@ -216,6 +216,7 @@ function ProfileDataEditorDialog(props) {
   return (
     <div>
       <Button
+        variant="contained"
         onClick={handleClickOpen}
         startIcon={<EditIcon />}
         className={classes.editProfileButton}
