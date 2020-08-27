@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/id";
@@ -298,6 +298,8 @@ function ViewClass(props) {
   const classId = props.match.params.id;
 
   const [walikelas, setWalikelas] = React.useState({});
+  const [firstRender, setFirstRender] = React.useState(true);
+  const [allow, setAllow] = React.useState(0);
 
   // console.log(props.classesCollection)
   // All actions to retrive datas from Database
@@ -417,7 +419,24 @@ function ViewClass(props) {
     if (!Array.isArray(all_teachers)) { 
       setWalikelas(all_teachers.get(kelas.walikelas)); 
     }
-  }, [all_teachers])
+    // console.log(students_by_class, kelas);
+  }, [all_teachers]);
+
+
+  React.useEffect(() => {
+
+    //isi students_by_class berubah 2 kali, 1 karena getStudentsByClass, 1 lagi gatau
+    if (firstRender) {
+      setFirstRender(false);
+    } else {
+      if (user.role === "Student" && !students_by_class.map((student) => {return student._id}).includes(user.id)) {
+        setAllow(2); //state allow akan diredirect ke halaman tidak-ditemukan
+      } else {
+        setAllow(1); //state allow akan menampilkan halaman
+      }
+    }
+    // }
+  }, [students_by_class]);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -451,10 +470,17 @@ function ViewClass(props) {
     }
   }
 
+
+
   // console.log( all_teachers)
   return (
     <div className={classes.root}>
-      {(user.role === "Admin" || user.role === "Teacher") ? (
+      
+      {
+      (allow === 0) ? null :
+      (allow === 1) ?
+
+      (user.role === "Admin" || user.role === "Teacher") ? (
         <div>
           <Paper className={classes.classPaper}>
             <Typography variant="h3">
@@ -822,7 +848,10 @@ function ViewClass(props) {
           </TabPanel>
         </div>
       )
-    }
+
+      : <Redirect to="/tidak-ditemukan"/>
+
+      }
     </div>
   )
 };
