@@ -12,13 +12,14 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import QuestionItemV2 from "./QuestionItemV2";
-import { Avatar, Badge, Button, Chip, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import CancelIcon from "@material-ui/icons/Cancel";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ClearIcon from "@material-ui/icons/Clear";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -125,6 +126,26 @@ const styles = (theme) => ({
   chip: {
     marginRight: 2,
   },
+  uploadDialogGrid: {
+    maxWidth: "300px",
+    minHeight: "200px",
+    padding: "15px",
+  },
+  uploadSuccessIcon: {
+    color: "green",
+    height: "45px",
+    width: "45px"
+  },
+  uploadFinishButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: theme.palette.create.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.create.main,
+      color: "white",
+    },
+  },
 });
 
 class CreateAssessment extends Component {
@@ -137,7 +158,7 @@ class CreateAssessment extends Component {
         name: "",
         options: ["Opsi 1", ""],
         answer: "A",
-        images: []
+        lampiran: []
       }],
       name: "",
       description: "",
@@ -146,6 +167,8 @@ class CreateAssessment extends Component {
       start_date: new Date(),
       end_date: new Date(),
       openDeleteDialog: false,
+      openUploadDialog: false,
+      success: false,
       page: 0,
       rowsPerPage: 10,
       qnsListitem: []
@@ -167,8 +190,8 @@ class CreateAssessment extends Component {
     const { questions } = this.state;
     const { createAssessment , history} = this.props
     questions.forEach((qns) => {
-      let images = qns.images;
-      images.forEach((img, i) => formData.append(`images_no_${i}`, img))
+      let lampiran = qns.lampiran;
+      lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
     })
   
     const assessmentData = {
@@ -182,7 +205,14 @@ class CreateAssessment extends Component {
       author_id: id,
     }
 
-    createAssessment(formData, assessmentData, history)
+    console.log(assessmentData)
+
+    createAssessment(assessmentData, history)
+    
+  }
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true})
   }
 
   handleOpenDeleteDialog = () => {
@@ -221,7 +251,7 @@ class CreateAssessment extends Component {
       name: "",
       options: ["Opsi 1", ""],
       answer: "A",
-      images: []
+      lampiran: []
     })
     this.setState({ questions: questions})
   }
@@ -266,7 +296,7 @@ class CreateAssessment extends Component {
       name: questions[i].name,
       options: [...questions[i].options],
       answer: questions[i].answer,
-      images: [...questions[i].images]
+      lampiran: [...questions[i].lampiran]
     })
     this.setState({ questions: questions})
   }
@@ -278,22 +308,19 @@ class CreateAssessment extends Component {
     this.setState({ questions: questions})
   }
 
-  // readImageURI = (e, qnsIndex) => {
-
-  // }
 
   handleQuestionImage = (e, qnsIndex, indexToDelete=null) => {
     let questions = this.state.questions
     if(Number.isInteger(indexToDelete)){
-      questions[qnsIndex].images.splice(indexToDelete, 1);
+      questions[qnsIndex].lampiran.splice(indexToDelete, 1);
       console.log(questions)
       this.setState({ questions: questions})
     }
     else{
       if(e.target.files){
           const files = Array.from(e.target.files);
-          let temp = questions[qnsIndex].images.concat(files)
-          questions[qnsIndex].images = temp;
+          let temp = questions[qnsIndex].lampiran.concat(files)
+          questions[qnsIndex].lampiran = temp;
           this.setState({ questions: questions})
       }
     }
@@ -307,15 +334,15 @@ class CreateAssessment extends Component {
     const { classes } = this.props;
 
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-      console.log(question.images)
+      console.log(question.lampiran)
       return(
         <QuestionItemV2
           index={i + page * rowsPerPage} 
           name={question.name} 
           options={JSON.stringify(question.options)} 
           answer={question.answer}
-          images={question.images}
-          images_length={question.images.length}
+          lampiran={question.lampiran}
+          lampiran_length={question.lampiran.length}
           deleteQuestion={this.deleteQuestion}
           handleDuplicateQuestion={this.handleDuplicateQuestion}
           handleQuestionOptions={this.handleQuestionOptions}
@@ -327,6 +354,12 @@ class CreateAssessment extends Component {
     )
     
     return questionList
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
+      this.handleOpenUploadDialog()
+    }
   }
 
   componentDidMount(){
@@ -349,10 +382,43 @@ class CreateAssessment extends Component {
   render() {
     console.log(this.state.questions)
     const { class_assigned } = this.state;
-    const { classes, errors } = this.props;
+    const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
+
+    const UploadDialog = () => {
+        return (
+          <Dialog open={this.state.openUploadDialog}>
+            <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
+              <Grid item>
+                <Typography variant="h6" align="center" gutterBottom>
+                  {!success ? "Materi sedang disunting" : "Materi berhasil disunting"}
+                </Typography>
+              </Grid>
+              <Grid item>
+                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
+              </Grid>
+              <Grid item>
+                {!success ?
+                  <Typography variant="body1" align="center" gutterBottom>
+                    <b>Mohon tetap tunggu di halaman ini.</b>
+                  </Typography>
+                :
+                <Link to="/daftar-kuis/">
+                  <Button
+                    variant="contained"
+                    className={classes.uploadFinishButton}
+                  >
+                    Selesai
+                  </Button>
+                  </Link>
+                }
+              </Grid>
+            </Grid>
+          </Dialog>
+        )
+    }
 
     const DeleteDialog = () => {
       // const classes = makeStyles(styles)
@@ -410,6 +476,7 @@ class CreateAssessment extends Component {
     return (
       <div className={classes.root}>
         {DeleteDialog()}
+        {UploadDialog()}
         <form onSubmit={(e) => this.onSubmit(e, user.id)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>
@@ -636,12 +703,14 @@ CreateAssessment.propTypes = {
   clearErrors: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
   errors:state.errors,
   auth: state.auth,
+  success: state.success,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
 })

@@ -34,7 +34,7 @@ export default function(state = initialState, action) {
       }
     }
     case SET_CURRENT_CLASS: 
-      console.log("Payload: ", action.payload)
+      // console.log("Payload: ", action.payload)
       return {
         ...state,
         kelas: action.payload
