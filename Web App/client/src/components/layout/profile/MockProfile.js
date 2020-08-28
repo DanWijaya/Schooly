@@ -162,6 +162,10 @@ function Profile(props) {
   // const { kelas } = props.classesCollection;
   // Alert control for ProfilePictureEditorDialog
 
+  const [namakelas, setNamaKelas] = React.useState('');
+  const [firstRender, setFirstRender] = React.useState(true);
+
+
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -201,6 +205,21 @@ function Profile(props) {
     window.location.reload()
   }
 
+  React.useEffect(() => {
+    if (role === "Student") {
+      setCurrentClass(kelas);
+    }
+  }, []);
+  
+  React.useEffect(() => {
+    // isi classesCollection pas pertama kali render = classesCollection dari halaman kelas/:id
+    if (firstRender) {
+      setFirstRender(false);
+    } else {
+      setNamaKelas(classesCollection.kelas.name);
+    }
+  }, [classesCollection]);
+
   if(location.state==undefined){
     return(<Redirect to="/tidak-ditemukan"/>)
   }
@@ -208,9 +227,10 @@ function Profile(props) {
     sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
     
   // Initially classesCollection.kelas.name === undefined
-  if (user.role === "Student" && !classesCollection.kelas.name) {
-    setCurrentClass(user.kelas)
-  }
+  // if (user.role === "Student" && !classesCollection.kelas.name) {
+  //   setCurrentClass(user.kelas)
+  // }
+
   console.log(location.state)
 
   
@@ -285,7 +305,8 @@ function Profile(props) {
             }
           </Typography>
           <Typography variant="body1" align="center" color="textSecondary">
-            {!classesCollection.kelas.name ? null : `Kelas ${classesCollection.kelas.name}`}
+            {!namakelas ? null : `Kelas ${namakelas}`}
+            {/* {!kelas ? null : `Kelas ${kelas}`} */}
           </Typography>
         </Grid>
       </Grid>
