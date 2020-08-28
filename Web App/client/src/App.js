@@ -17,6 +17,7 @@ import LoginForgot from "./components/auth/login/LoginForgot";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
 //Layout
 import About from "./components/layout/about/About";
+import Calendar from "./components/layout/calendar/Calendar";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import MockProfile from "./components/layout/profile/MockProfile";
@@ -184,14 +185,14 @@ class App extends Component {
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
-                    <Route exact path="/graph" component={Graph} /> {/*prototype*/}
-                    <Route exact path="/elbert" component={Elbert} />
-                    <Route exact path="/csv" component={CSV} />
-                    <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} />
-
+                    <Route exact path="/graph" component={Graph} />  {/*prototype*/}
+                    <Route exact path="/elbert" component={Elbert} /> {/*prototype*/}
+                    <Route exact path="/csv" component={CSV} /> {/*prototype*/}
+                    <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/mockprofil" component={MockProfile} />
+                    <PrivateRoute exact path="/kalender" component={Calendar} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />

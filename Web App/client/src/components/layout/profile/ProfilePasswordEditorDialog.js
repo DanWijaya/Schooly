@@ -128,6 +128,7 @@ function ProfilePasswordEditorDialog(props) {
     <div>
       <LightTooltip title="Ganti Kata Sandi">
         <Button
+          variant="contained"
           onClick={handleClickOpen}
           className={classes.editPasswordButton}
         >
