@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter,useLocation } from "react-router-dom";
+import { withRouter, useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -155,8 +155,7 @@ function ProfileDataItem(props) {
 function Profile(props) {
   const classes = useStyles();
   const location = useLocation();
-  const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin, 
-    sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
+  
 
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection } = props;
@@ -202,20 +201,22 @@ function Profile(props) {
     window.location.reload()
   }
 
-  React.useEffect(() => {
-    setCurrentClass(kelas);
-    console.log(kelas);
-  }, []);
+  if(location.state==undefined){
+    return(<Redirect to="/tidak-ditemukan"/>)
+  }
+  const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin, 
+    sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
+    
+  // Initially classesCollection.kelas.name === undefined
+  if (user.role === "Student" && !classesCollection.kelas.name) {
+    setCurrentClass(user.kelas)
+  }
+  console.log(location.state)
 
-
-  // if (user.role === "Student" && !classesCollection.kelas.name) {
-  //   console.log(classesCollection)
-  //   setCurrentClass(user.kelas)
-  // }
-  // console.log(classesCollection)
+  
 
   document.title = "Schooly | Profil"
-  // console.log(classesCollection.kelas)
+  console.log(classesCollection.kelas)
   return (
     <div className={classes.root}>
       {/* ProfilePictureEditorDialog Snackbar */}
