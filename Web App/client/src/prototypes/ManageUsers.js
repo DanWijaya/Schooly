@@ -856,26 +856,13 @@ function ManageUsers(props) {
         <SimpleDialog open={open} onClose={handleClose}/>
         <DialogPilihDownload open={openUser} onClose={handleCloseUser}/>
       </div>
-      <Dialog fullWidth={true} maxWidth="lg" open={openTabelDialog}>
-        <div style={{padding: "10px"}}>
-  				{previewTable()}
-          <Grid container spacing={2} justify="center" style={{padding: "20px 0px 10px 0px"}}>
-            <Grid item>
-              {/* Kalau propsnya panjang biasakan dibikin turun biar ga susah scroll ke samping */}
-              <Button
-                variant="contained"
-                onClick={() => {onClickSubmitImport()}}
-                className={classes.confirmButton}
-              >
-                Konfirmasi
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={()=> {onClickCancelImport()}} className={classes.cancelButton}>Batal</Button>
-            </Grid>
-          </Grid>
-        </div>
-      </Dialog>
+      <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
+				{previewTable()}
+        <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
+        <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
+	    </Dialog>
+      {/* ----------------------------------------------- */}
+
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"

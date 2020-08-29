@@ -21,6 +21,7 @@ import Calendar from "./components/layout/calendar/Calendar";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import MockProfile from "./components/layout/profile/MockProfile";
+import ProfileView from "./components/layout/profile/ProfileView";
 import Profile from "./components/layout/profile/Profile";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
@@ -193,6 +194,7 @@ class App extends Component {
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/mockprofil" component={MockProfile} />
                     <PrivateRoute exact path="/kalender" component={Calendar} />
+                    <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />
