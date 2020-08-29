@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter, useLocation , Redirect } from "react-router-dom";
+import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -27,7 +27,6 @@ import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-import { BsUnion } from "react-icons/bs";
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 
@@ -169,8 +168,7 @@ function Profile(props) {
   // Alert control for ProfilePictureEditorDialog
 
   const [namakelas, setNamaKelas] = React.useState('');
-  const [firstRender, setFirstRender] = React.useState(true);
-
+  const [firstAssign, setFirstAssign] = React.useState(true);
 
 
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -192,64 +190,36 @@ function Profile(props) {
   }, []);
   
   React.useEffect(() => {
-    // isi classesCollection pas pertama kali render = classesCollection dari halaman kelas/:id
-    if (firstRender) {
-      setFirstRender(false);
+    if (firstAssign) {
+      setFirstAssign(false);
     } else {
       setNamaKelas(classesCollection.kelas.name);
     }
   }, [classesCollection]);
 
-  React.useEffect(() => {
-    if (role === "Student") {
-      setCurrentClass(kelas);
-    }
-  }, []);
-  
-  React.useEffect(() => {
-    // isi classesCollection pas pertama kali render = classesCollection dari halaman kelas/:id
-    if (firstRender) {
-      setFirstRender(false);
-    } else {
-      setNamaKelas(classesCollection.kelas.name);
-    }
-  }, [classesCollection]);
 
-  if(location.state==undefined){
-    return(<Redirect to="/tidak-ditemukan"/>)
+  if (location.state === undefined) {
+    return(<Redirect to="/tidak-ditemukan"/>);
   }
   const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin, 
     sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
     
-  // Initially classesCollection.kelas.name === undefined
-  // if (user.role === "Student" && !classesCollection.kelas.name) {
-  //   setCurrentClass(user.kelas)
-  // }
-
-  console.log(location.state)
-
-  
 
   document.title = "Schooly | Profil"
-  console.log(classesCollection.kelas)
   return (
     <div className={classes.root}>
       
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
           {avatar ?
-          <StyledBadge
-            
-          >
+          <StyledBadge>
             <Avatar
               src={`/api/upload/avatar/${avatar}`}
               className={classes.avatar}
             />
           </StyledBadge>
           :
-          <StyledBadge
-            
-          >
+          <StyledBadge>
             <Avatar className={classes.avatar} />
           </StyledBadge>
           }
@@ -269,7 +239,6 @@ function Profile(props) {
           </Typography>
           <Typography variant="body1" align="center" color="textSecondary">
             {!namakelas ? null : `Kelas ${namakelas}`}
-            {/* {!kelas ? null : `Kelas ${kelas}`} */}
           </Typography>
         </Grid>
       </Grid>
@@ -277,29 +246,27 @@ function Profile(props) {
       <Grid container direction="column" alignItems="center" spacing={5}>
         
         <Grid item container direction="column" spacing={4} >
-          {/* bookmark: section */}
           {
             (role == 'Teacher' ||  role == 'Student') ? [
               <Grid item  >
                 <Paper className={classes.informationPaper} style={{display:'flex',flexDirection:'column',justifyContent:'flex-start'}}>
                   <Grid container >
                     <Grid item xs={12} sm={12} className={classes.space}>
-                        <div style={{position:'absolute',margin:'3%'}}>
-                    <Typography variant="h5" gutterBottom style={{color:'white'}} >
-                        
-                        INFORMASI PENGGUNA
-                        
-                    </Typography>
-                    <Typography variant="h7" color="textSecondary" style={{color:'#E5E5E5',fontStyle:'italic',marginLeft:'25px',marginRight:'25px',marginBottom:'100px'}}>
-                        User Information
-                      </Typography>
+                      <div style={{position:'absolute',margin:'3%'}}>
+                        <Typography variant="h5" gutterBottom style={{color:'white'}} >
+                            
+                            INFORMASI PENGGUNA
+                            
+                        </Typography>
+                        <Typography variant="h7" color="textSecondary" style={{color:'#E5E5E5',fontStyle:'italic',marginLeft:'25px',marginRight:'25px',marginBottom:'100px'}}>
+                          User Information
+                        </Typography>
                       </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" style={{bottom: 0,left:0,backgroundImage: "linear-gradient(to bottom right, #00b7ff, #2196F3)",color:"#2196F3",borderRadius:'2px',display:'box',boxShadow:'1.2px 0.6px 2px grey'}}><path fill="#2196F3" fill-opacity="1" d="M0,192L48,213.3C96,235,192,277,288,277.3C384,277,480,235,576,202.7C672,171,768,149,864,165.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" style={{bottom: 0,left:0,backgroundImage: "linear-gradient(to bottom right, #00b7ff, #2196F3)",color:"#2196F3",borderRadius:'2px',display:'box',boxShadow:'1.2px 0.6px 2px grey'}}>
+                        <path fill="#2196F3" fill-opacity="1" d="M0,192L48,213.3C96,235,192,277,288,277.3C384,277,480,235,576,202.7C672,171,768,149,864,165.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
                         </path>
-                    </svg>
-                        
+                      </svg>
                     </Grid>
-                    
                   </Grid>
                   <List style={{padding: "22.5px 25px 22.5px 25px"}}>
                     <ProfileDataItem
@@ -338,7 +305,6 @@ function Profile(props) {
                       profile_data_info={emergency_phone}
                     />
                   </List>
-                  
                 </Paper>
               </Grid>
             ].concat((viewable_section == "no_karir") ? (null) : (
@@ -347,19 +313,18 @@ function Profile(props) {
                   <Grid container justify="flex-start">
                     <Grid item xs={12} sm={12} className={classes.space}>
                         <div style={{position:'absolute',margin:'3%'}}>
-                      <Typography variant="h5" gutterBottom style={{color:'white'}}>
-                        KARIR
-                      </Typography>
-                      <Typography variant="h7" color="textSecondary" style={{color:'#e5e5e5',fontStyle:'italic',marginLeft:'25px',marginRight:'25px'}}>
-                        Career & Other Informations
-                      </Typography>
-                      </div>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" style={{backgroundImage: "linear-gradient(to right, #00b7ff, #2196F3)",color:"#2196F3",borderRadius:'2px',display:'box',boxShadow:'1.2px 0.6px 2px grey'}}>
+                          <Typography variant="h5" gutterBottom style={{color:'white'}}>
+                            KARIR
+                          </Typography>
+                          <Typography variant="h7" color="textSecondary" style={{color:'#e5e5e5',fontStyle:'italic',marginLeft:'25px',marginRight:'25px'}}>
+                            Career & Other Informations
+                          </Typography>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" style={{backgroundImage: "linear-gradient(to right, #00b7ff, #2196F3)",color:"#2196F3",borderRadius:'2px',display:'box',boxShadow:'1.2px 0.6px 2px grey'}}>
                           <path fill="currentcolor" fill-opacity="1" d="M0,320L360,224L720,256L1080,64L1440,160L1440,0L1080,0L720,0L360,0L0,0Z">
-                          </path></svg>
-                    
+                          </path>
+                        </svg>
                     </Grid>
-                    
                   </Grid>
                   <List style={{padding: "22.5px 25px 22.5px 25px",marginBottom:'30px'}}>
                     <ProfileDataItem
@@ -386,12 +351,10 @@ function Profile(props) {
                       profile_data_info={uni}
                     />
                   </List>
-                  
                 </Paper>
               </Grid>
             )) : (
               <Grid item container direction="column" spacing={4}>
-
                 <Grid item>
                   <Paper className={classes.informationPaper}>
                     <Grid container justify="space-between">
@@ -482,57 +445,53 @@ function Profile(props) {
                   </Paper>
                 </Grid>
                 <Grid item>
-              <Paper className={classes.informationPaper}>
-                <Grid container justify="space-between">
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="h4" gutterBottom>
-                      Karir
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      Kami ke depannya juga berencana untuk membantu Anda menemukan
-                      jalur karir terbaik untuk Anda.
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <div className={classes.informationPictureContainer}>
-                      <img alt="Career" src={informationJob} className={classes.informationPicture} />
-                    </div>
-                  </Grid>
+                  <Paper className={classes.informationPaper}>
+                    <Grid container justify="space-between">
+                      <Grid item xs={12} sm={6}>
+                        <Typography variant="h4" gutterBottom>
+                          Karir
+                        </Typography>
+                        <Typography variant="subtitle1" color="textSecondary">
+                          Kami ke depannya juga berencana untuk membantu Anda menemukan
+                          jalur karir terbaik untuk Anda.
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <div className={classes.informationPictureContainer}>
+                          <img alt="Career" src={informationJob} className={classes.informationPicture} />
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <List>
+                      <ProfileDataItem
+                        profile_data_icon={<SportsEsportsIcon />}
+                        profile_data_category="Hobi dan Minat"
+                        profile_data_info={hobi}
+                      />
+                      <Divider variant="inset" />
+                      <ProfileDataItem
+                        profile_data_icon={<ColorLensIcon />}
+                        profile_data_category="Keterampilan Non-Akademik"
+                        profile_data_info={ket}
+                      />
+                      <Divider variant="inset" />
+                      <ProfileDataItem
+                        profile_data_icon={<WorkIcon />}
+                        profile_data_category="Cita-Cita"
+                        profile_data_info={cita}
+                      />
+                      <Divider variant="inset" />
+                      <ProfileDataItem
+                        profile_data_icon={<AccountBalanceIcon />}
+                        profile_data_category="Perguruan Tinggi Impian"
+                        profile_data_info={uni}
+                      />
+                    </List>
+                  </Paper>
                 </Grid>
-                <List>
-                  <ProfileDataItem
-                    profile_data_icon={<SportsEsportsIcon />}
-                    profile_data_category="Hobi dan Minat"
-                    profile_data_info={hobi}
-                  />
-                  <Divider variant="inset" />
-                  <ProfileDataItem
-                    profile_data_icon={<ColorLensIcon />}
-                    profile_data_category="Keterampilan Non-Akademik"
-                    profile_data_info={ket}
-                  />
-                  <Divider variant="inset" />
-                  <ProfileDataItem
-                    profile_data_icon={<WorkIcon />}
-                    profile_data_category="Cita-Cita"
-                    profile_data_info={cita}
-                  />
-                  <Divider variant="inset" />
-                  <ProfileDataItem
-                    profile_data_icon={<AccountBalanceIcon />}
-                    profile_data_category="Perguruan Tinggi Impian"
-                    profile_data_info={uni}
-                  />
-                </List>
-              </Paper>
-            </Grid>
-            
               </Grid>
             )
-            
           }
-
-
         </Grid>
       </Grid>
     </div>
