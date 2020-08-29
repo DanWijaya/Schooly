@@ -519,7 +519,7 @@ function ViewClass(props) {
                       <Grid item>
                         <LightTooltip title="Lihat Profil">
                           <Link to={{
-                            pathname:'/mockprofil',
+                            pathname:'/lihat-profil',
                             state: {
                               avatar: walikelas.avatar, 
                               nama: walikelas.name,
@@ -570,7 +570,7 @@ function ViewClass(props) {
                     <Grid item>
                       <LightTooltip title="Lihat Profil">
                         <Link to={{
-                          pathname:'/mockprofil',
+                          pathname:'/lihat-profil',
                           state: {
                             kelas: student.kelas,
                             avatar: student.avatar,

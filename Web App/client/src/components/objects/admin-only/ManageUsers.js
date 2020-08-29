@@ -562,7 +562,7 @@ function ManageUsers(props) {
                     <Grid item xs container justify="flex-end">
                       <LightTooltip title="Lihat Profil">
                         <Link to={{
-                          pathname:'/mockprofil',
+                          pathname:'/lihat-profil',
                           state: {
                             avatar: row.avatar,
                             nama: row.name,
@@ -705,7 +705,7 @@ function ManageUsers(props) {
                       <LightTooltip title="Lihat Profil">
                     
                         <Link to={{
-                          pathname:'/mockprofil',
+                          pathname:'/lihat-profil',
                           state: {
                             avatar: row.avatar,
                             nama: row.name,
