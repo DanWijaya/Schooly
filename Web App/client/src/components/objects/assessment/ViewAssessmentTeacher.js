@@ -274,13 +274,13 @@ function ViewAssessmentTeacher(props) {
               </Link>
             </Grid>
             <Grid item>
-              <Link to="">
-                <LightTooltip title="Sunting Kuis" placement="bottom">
-                  <Fab className={classes.editAssessmentButton}>
-                    <EditIcon />
-                  </Fab>
-                </LightTooltip>
-              </Link>
+            <Link to={`/sunting-kuis/${assessment_id}`}>
+              <LightTooltip title="Sunting Kuis" placement="bottom">
+                <Fab className={classes.editAssessmentButton}>
+                  <EditIcon />
+                </Fab>
+              </LightTooltip>
+            </Link>
             </Grid>
             <Grid item>
               <LightTooltip title="Buang Kuis" placement="bottom">

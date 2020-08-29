@@ -2,7 +2,7 @@ import axios from "axios";
 import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT, GET_SUCCESS_RESPONSE } from "./Types";
 
 // Add Assessment
-export const createAssessment = (assessment, history) => dispatch => {
+export const createAssessment = (formData, assessment, history) => dispatch => {
   console.log(assessment)
   axios
     .post("/api/assessments/create", assessment)
@@ -14,32 +14,27 @@ export const createAssessment = (assessment, history) => dispatch => {
         payload: false
       })
       let { questions } = assessment;
-      console.log(questions)
+
       console.log(res._id)
+      if(formData.has("lampiran_assessment")){
+        let num_lampiran = [];
+        questions.forEach((qns) => {
+          num_lampiran.push(qns.lampiran.length)
+        })
+        formData.append("num_lampiran", num_lampiran)
 
-      let promises = questions.map((qns, i) => {
-        let formData = new FormData();
-
-        qns.lampiran.forEach((lampiran, i) => formData.append("lampiran_assessment", lampiran))
-        return (
-          axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}/${i}`, formData)
-          .then(response => {
-            console.log(response)
-          })
-        )
-      })
-
-      Promise.all(promises).then(() => {
-        console.log('Successfully created Assessment.')
-          dispatch({
-            type: GET_SUCCESS_RESPONSE,
-            payload: true
-          });
-        }
-      ) 
+        return axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}`, formData)
+      }
+      else{
+        return "Successfully created Assessment with no lampiran"
+      }
     })
     .then(res => {
       console.log('Successfully created Assessment.')
+      dispatch({
+          type: GET_SUCCESS_RESPONSE,
+          payload: true
+        });
     })
     .catch(err => 
       dispatch({
@@ -47,6 +42,53 @@ export const createAssessment = (assessment, history) => dispatch => {
         payload: err.response.data
       })
     );
+}
+
+export const updateAssessment = (formData, lampiran_to_delete, current_lampiran, assessmentData, assessmentId, history) => dispatch => {
+  // formData is the lampiran files
+  axios
+    .post(`/api/assessments/update/${assessmentId}`, assessmentData)
+    .then(res => {
+        console.log("Task updated to be :", res.data);
+        console.log("Has lampiran? :", formData.has('lampiran_assessment'))
+        dispatch({
+            type: GET_ERRORS,
+            payload: false
+        })
+        if (lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
+            return axios.delete(`/api/upload/att_assessment/lampiran/${assessmentId}`, 
+            { data: 
+              { 
+                lampiran_to_delete: lampiran_to_delete, 
+                current_lampiran: current_lampiran 
+              } 
+            })
+        else
+            return "No lampiran file is going to be deleted"
+
+    })
+    .then(res => {
+        console.log(formData.has("lampiran_assessment"), formData.getAll("lampiran_assessment"))
+        if (formData.has('lampiran_tugas'))
+            return axios.post(`/api/upload/att_assessment/lampiran/${assessmentId}`, formData);
+        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+            return "Successfully updated task with no lampiran"
+    })
+    .then(res => {
+        console.log("Lampiran file is uploaded")
+        dispatch({
+            type: GET_SUCCESS_RESPONSE,
+            payload: true
+        })
+    })
+
+    .catch(err => {
+        console.log(err);
+        dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    })
 }
 
 // View All Assessment
@@ -94,6 +136,20 @@ export const deleteAssessment = (id) => dispatch => {
     .delete(`/api/assessments/delete/${id}`)
     .then((res) => {
       console.log(res.data)
+      let lampiran_to_delete = [];
+      let { questions } = res.data;
+      questions.forEach((question) => {
+        let temp = [...lampiran_to_delete, ...question.lampiran]
+        lampiran_to_delete = temp;
+      })
+      console.log("Lampiran to delete: ", lampiran_to_delete)
+      if (lampiran_to_delete.length > 0)
+        return axios.delete(`/api/upload/att_assessment/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
+      return "Assessment deleted has no lampiran"
+    })
+    .then((res) => {
+      console.log(res)
+      // history.push("/daftar-kuis")
       window.location.href="/daftar-kuis"
     })
     .catch(err => {

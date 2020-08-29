@@ -5,7 +5,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import { createAssessment } from "../../../actions/AssessmentActions";
+import { getOneAssessment, updateAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
@@ -147,7 +147,7 @@ const styles = (theme) => ({
   },
 });
 
-class CreateAssessment extends Component {
+class EditAssessment extends Component {
   constructor() {
     super();
     this.state = {
@@ -177,9 +177,40 @@ class CreateAssessment extends Component {
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
+  componentDidMount(){
+    const { getOneAssessment, getAllClass, getAllSubjects} = this.props;
+    getAllClass()
+    getOneAssessment(this.props.match.params.id)
+    getAllSubjects()
+  }
+
   componentWillUnmount(){
     this.props.clearErrors()
     this.props.handleSideDrawerExist(true)
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps){
+    const { selectedAssessments } = nextProps.assessmentsCollection
+
+    if (!nextProps.errors) {
+      this.handleOpenUploadDialog()
+    }
+    console.log(selectedAssessments.questions)
+    if (Boolean(selectedAssessments) && nextProps.errors) {
+      this.setState({
+          name: selectedAssessments.name,
+          subject: selectedAssessments.subject,
+          deadline: selectedAssessments.deadline,
+          start_date: selectedAssessments.start_date,
+          end_date: selectedAssessments.end_date,
+          questions: Array.isArray(selectedAssessments.questions) ? selectedAssessments.questions : [],
+          description: selectedAssessments.description,
+          class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : [],
+          fileLampiran: Boolean(selectedAssessments.lampiran) ? selectedAssessments.lampiran : [],
+          // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
+          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      })
+    }
   }
 
   onSubmit = (e, id) => {
@@ -331,24 +362,25 @@ class CreateAssessment extends Component {
     let questions = this.state.questions;
     const { page, rowsPerPage} = this.state;
     const { classes } = this.props;
-
-    let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-      console.log(question.lampiran)
-      return(
-        <QuestionItemV2
-          index={i + page * rowsPerPage}
-          name={question.name}
-          options={JSON.stringify(question.options)}
-          answer={question.answer}
-          lampiran={question.lampiran}
-          lampiran_length={question.lampiran.length}
-          deleteQuestion={this.deleteQuestion}
-          handleDuplicateQuestion={this.handleDuplicateQuestion}
-          handleQuestionOptions={this.handleQuestionOptions}
-          handleChangeQuestion={this.handleChangeQuestion}
-          handleQuestionImage={this.handleQuestionImage}
-          />
-      )
+    let questionList = [];
+      questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
+        console.log(question.lampiran)
+        return(
+          <QuestionItemV2
+            isEdit={true}
+            index={i + page * rowsPerPage}
+            name={question.name}
+            options={JSON.stringify(question.options)}
+            answer={question.answer}
+            lampiran={question.lampiran}
+            lampiran_length={question.lampiran.length}
+            deleteQuestion={this.deleteQuestion}
+            handleDuplicateQuestion={this.handleDuplicateQuestion}
+            handleQuestionOptions={this.handleQuestionOptions}
+            handleChangeQuestion={this.handleChangeQuestion}
+            handleQuestionImage={this.handleQuestionImage}
+            />
+        )
     }
     )
 
@@ -379,11 +411,11 @@ class CreateAssessment extends Component {
   };
 
   render() {
-    console.log(this.state.questions)
     const { class_assigned } = this.state;
     const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
+    const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
 
     const UploadDialog = () => {
@@ -497,6 +529,7 @@ class CreateAssessment extends Component {
                           Judul
                         </Typography>
                         <TextField
+                          value={this.state.name}
                           fullWidth
                           variant="outlined"
                           id="name"
@@ -510,6 +543,7 @@ class CreateAssessment extends Component {
                           Deskripsi
                         </Typography>
                         <TextField
+                          value={this.state.description}
                           multiline
                           rowsMax={10}
                           fullWidth
@@ -698,11 +732,14 @@ class CreateAssessment extends Component {
   }
 };
 
-CreateAssessment.propTypes = {
+EditAssessment.propTypes = {
   createAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  updateAssessment: PropTypes.func.isRequired,
+  getOneAssessment: PropTypes.func.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -715,8 +752,9 @@ const mapStateToProps = state => ({
   success: state.success,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  assessmentsCollection: state.assessmentsCollection,
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createAssessment, clearErrors }
-)(withStyles(styles)(React.memo(CreateAssessment)));
+  mapStateToProps, { getOneAssessment, getAllClass, getAllSubjects, updateAssessment, clearErrors }
+)(withStyles(styles)(React.memo(EditAssessment)));

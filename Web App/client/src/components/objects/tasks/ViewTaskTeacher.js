@@ -427,7 +427,7 @@ console.log(all_classes_map)
           <Link to={`/sunting-tugas/${task_id}`}>
             <LightTooltip title="Sunting Tugas" placement="bottom">
               <Fab className={classes.editTaskButton}>
-                <EditIcon />
+                <EditIcon/>
               </Fab>
             </LightTooltip>
           </Link>

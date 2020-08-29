@@ -36,15 +36,10 @@ router.post('/create', (req,res) => {
           delete qns.lampiran
           return qns
         })
-        console.log(questions)
-        console.log(questions_no_lampiran)
-        console.log("HDHEWJ FNKERNFKERF ",req.body)
         const newAssessment = new Assessment({
           ...req.body, 
           questions: questions_no_lampiran
         });
-        console.log(questions)
-        console.log(questions_no_lampiran)
         console.log({...req.body, questions: questions_no_lampiran})
         newAssessment
             .save()
@@ -54,6 +49,34 @@ router.post('/create', (req,res) => {
     })
 })
 
+router.post("/update/:id", (req,res) => {
+  const {errors, isValid} = validateAssessmentInput(req.body)
+  if(!isValid){
+    console.log("Data is not valid")
+    return res.status(400).json(errors)
+  }
+
+  let id = req.params.id;
+
+  Assessment.findById(id, (err, assessmentData) => {
+    if (!assessmentData)
+        return res.status(404).send("Assessment data is not found");
+
+    else{
+        assessmentData.name = req.body.name;
+        assessmentData.description = req.body.description;
+        assessmentData.class_assigned = req.body.class_assigned;
+        assessmentData.subject = req.body.subject;
+        assessmentData.start_date = req.body.start_date;
+        assessmentData.end_date = req.body.end_date;
+
+        assessmentData
+                    .save()
+                    .then(() => res.json("Update Task complete"))
+                    .catch(err => res.status(400).send("Unable to update task database"));
+    }
+  })
+})
 router.get("/viewall", (req,res) => {
   Assessment.find({})
             .then(assessments => {
