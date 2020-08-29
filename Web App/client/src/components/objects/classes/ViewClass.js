@@ -430,7 +430,6 @@ function ViewClass(props) {
         setAllow('content');
       }
     }
-    // }
   }, [students_by_class]);
 
   const [value, setValue] = React.useState(0);
@@ -496,7 +495,7 @@ function ViewClass(props) {
                           <PersonListItem
                             person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
                             person_name={walikelas.name }
-                            person_role={walikelas.subject_teached}
+                            person_role={(all_subjects_map) ? all_subjects_map.get(walikelas.subject_teached) : null}
                           />                
                         </Grid>].concat( (user.email === walikelas.email)
                         ? (<Grid item xs container justify="flex-end"></Grid>)
