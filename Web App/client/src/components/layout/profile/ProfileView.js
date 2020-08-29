@@ -171,6 +171,35 @@ function Profile(props) {
   const [namakelas, setNamaKelas] = React.useState('');
   const [firstRender, setFirstRender] = React.useState(true);
 
+
+
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const handleOpenAlert = () => {
+    setOpenAlert(true);
+  }
+  const handleCloseAlert = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenAlert(false);
+  }
+  console.log(user.avatar)
+
+  React.useEffect(() => {
+    if (role === "Student") {
+      setCurrentClass(kelas);
+    }
+  }, []);
+  
+  React.useEffect(() => {
+    // isi classesCollection pas pertama kali render = classesCollection dari halaman kelas/:id
+    if (firstRender) {
+      setFirstRender(false);
+    } else {
+      setNamaKelas(classesCollection.kelas.name);
+    }
+  }, [classesCollection]);
+
   React.useEffect(() => {
     if (role === "Student") {
       setCurrentClass(kelas);
