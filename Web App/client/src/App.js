@@ -20,7 +20,6 @@ import About from "./components/layout/about/About";
 import Calendar from "./components/layout/calendar/Calendar";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
-import MockProfile from "./components/layout/profile/MockProfile";
 import ProfileView from "./components/layout/profile/ProfileView";
 import Profile from "./components/layout/profile/Profile";
 import Help from "./components/layout/help/Help";
@@ -192,7 +191,6 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
-                    <PrivateRoute exact path="/mockprofil" component={MockProfile} />
                     <PrivateRoute exact path="/kalender" component={Calendar} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
                     {/* Route Class */}
