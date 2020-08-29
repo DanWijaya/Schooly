@@ -14,6 +14,7 @@ import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -27,8 +28,6 @@ import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-import { fade } from '@material-ui/core/styles/colorManipulator';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,9 +35,9 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
-  space:{
-    
-  },
+  // space:{
+  // Perhatikan classnames yang ngga dipakai ya hapus kalau ngga dipakai biar ngga pusing
+  // },
   avatar: {
     margin: "auto",
     width: theme.spacing(20),
@@ -49,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "15px 0px 15px 0px",
   },
   informationPaper: {
-    
+// line kosong juga dihapus
     backgroundColor: fade(theme.palette.primary.main,0.04),
   },
   informationPictureContainer: {
@@ -160,7 +159,7 @@ function ProfileDataItem(props) {
 function Profile(props) {
   const classes = useStyles();
   const location = useLocation();
-  
+//Line kosong dihapus
 
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection } = props;
@@ -169,7 +168,7 @@ function Profile(props) {
 
   const [namakelas, setNamaKelas] = React.useState('');
   const [firstAssign, setFirstAssign] = React.useState(true);
-
+  //Line kosong dihapus
 
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
@@ -188,7 +187,7 @@ function Profile(props) {
       setCurrentClass(kelas);
     }
   }, []);
-  
+
   React.useEffect(() => {
     if (firstAssign) {
       setFirstAssign(false);
@@ -196,19 +195,19 @@ function Profile(props) {
       setNamaKelas(classesCollection.kelas.name);
     }
   }, [classesCollection]);
-
+  //Line kosong dihapus
 
   if (location.state === undefined) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
-  const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin, 
+  const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin,
     sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
-    
+    //Line kosong dihapus
 
   document.title = "Schooly | Profil"
   return (
     <div className={classes.root}>
-      
+{/*Line koson dihapus*/}
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
           {avatar ?
@@ -243,28 +242,27 @@ function Profile(props) {
         </Grid>
       </Grid>
       <Divider className={classes.profileDivider} style={{marginTop:'10px'}} />
-      <Grid container direction="column" alignItems="center" spacing={5}>
-        
-        <Grid item container direction="column" spacing={4} >
+      {/*Line koson dihapus*/}
+        <Grid container direction="column" spacing={10}>
           {
             (role == 'Teacher' ||  role == 'Student') ? [
-              <Grid item  >
-                <Paper className={classes.informationPaper} style={{display:'flex',flexDirection:'column',justifyContent:'flex-start'}}>
+              <Grid item  > {/*Lebih rapi lagi ya jangan ada spasi antara penutup tag dengan isinya, tolong cek yang lain juga soalnya aga banyak*/}
+                <Paper className={classes.informationPaper} style={{display:'flex',flexDirection:'column',justifyContent:'flex-start'}}> {/*Setelah koma kasi spasi*/}
                   <Grid container >
                     <Grid item xs={12} sm={12} className={classes.space}>
                       <div style={{position:'absolute',margin:'3%'}}>
                         <Typography variant="h5" gutterBottom style={{color:'white'}} >
-                            
+{/*Line koson dihapus*/}
                             INFORMASI PENGGUNA
-                            
+{/*Line koson dihapus*/}
                         </Typography>
-                        <Typography variant="h7" color="textSecondary" style={{color:'#E5E5E5',fontStyle:'italic',marginLeft:'25px',marginRight:'25px',marginBottom:'100px'}}>
+                        <Typography variant="h7" color="textSecondary" style={{color:'#E5E5E5',fontStyle:'italic',marginLeft:'25px',marginRight:'25px',marginBottom:'100px'}}> {/*Setelah koma kasi spasi*/}
                           User Information
                         </Typography>
                       </div>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" style={{bottom: 0,left:0,backgroundImage: "linear-gradient(to bottom right, #00b7ff, #2196F3)",color:"#2196F3",borderRadius:'2px',display:'box',boxShadow:'1.2px 0.6px 2px grey'}}>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 280" style={{bottom: 0,left:0,backgroundImage: "linear-gradient(to bottom right, #00b7ff, #2196F3)",color:"#2196F3",borderRadius:'2px',display:'box',boxShadow:'1.2px 0.6px 2px grey'}}> {/*kalau linenya kepanjang jadi classname aja*/}
                         <path fill="#2196F3" fill-opacity="1" d="M0,192L48,213.3C96,235,192,277,288,277.3C384,277,480,235,576,202.7C672,171,768,149,864,165.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
-                        </path>
+                        </path> {/*Di simplify aja jadi satu tag contoh <path /> kalau ngga bisa pake itu aja*/}
                       </svg>
                     </Grid>
                   </Grid>
@@ -309,7 +307,7 @@ function Profile(props) {
               </Grid>
             ].concat((viewable_section == "no_karir") ? (null) : (
               <Grid item>
-                <Paper className={classes.informationPaper} style={{marginTop:'100px'}}>
+                <Paper className={classes.informationPaper}>
                   <Grid container justify="flex-start">
                     <Grid item xs={12} sm={12} className={classes.space}>
                         <div style={{position:'absolute',margin:'3%'}}>
@@ -493,7 +491,6 @@ function Profile(props) {
             )
           }
         </Grid>
-      </Grid>
     </div>
   )
 }

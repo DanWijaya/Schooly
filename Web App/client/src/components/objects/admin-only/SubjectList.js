@@ -5,6 +5,7 @@ import classnames from "classnames";
 import "moment/locale/id";
 import { createSubject, getAllSubjects, getSubject, editSubject, deleteSubject } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, TextField, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
@@ -464,69 +465,18 @@ function SubjectList(props) {
       </Dialog>)
   }
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Mata Pelajaran berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedSubjectName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteSubject(selectedSubjectId) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
   document.title = "Schooly | Daftar Mata Pelajaran";
-  console.log(errors)
+
   return (
     <div className={classes.root}>
       {FormDialog()}
-      {DeleteDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Mata Pelajaran"
+        itemName={selectedSubjectName}
+        deleteItem={() => { onDeleteSubject(selectedSubjectId) }}
+      />
       <SubjectListToolbar
         handleOpenFormDialog={handleOpenFormDialog}
         role={user.role}

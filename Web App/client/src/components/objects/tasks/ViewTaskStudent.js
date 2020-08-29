@@ -10,6 +10,7 @@ import { getOneTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText,
    Paper, Typography } from "@material-ui/core";
@@ -328,7 +329,7 @@ function ViewTaskStudent(props) {
     getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
   const { all_subjects_map} = props.subjectsCollection;
 
-  // ref itu untuk ngerefer html yang ada di render. 
+  // ref itu untuk ngerefer html yang ada di render.
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -344,7 +345,7 @@ function ViewTaskStudent(props) {
 
   let tugasId = props.match.params.id;
   console.log(filesCollection)
-  
+
   // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
   // useEffect(() => {getAllSubjects("map")}, [])
 
@@ -486,63 +487,6 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus file berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedFileName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteTugas(selectedFileId)}}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
   // Upload Dialog
   const [openUploadDialog, setOpenUploadDialog] = React.useState(null);
   const handleOpenUploadDialog = () => {
@@ -592,8 +536,14 @@ function ViewTaskStudent(props) {
   console.log(success, filesCollection.files)
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
       {UploadDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Berkas"
+        itemName={selectedFileName}
+        deleteItem={() => { onDeleteTugas(selectedFileId)}}
+      />
       <Grid container
         spacing={2}
         justify="space-between"

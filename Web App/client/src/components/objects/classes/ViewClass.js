@@ -537,8 +537,6 @@ function ViewClass(props) {
                 </Typography>
                 <Divider className={classes.personListDivider} />
                 <List className={classes.listContainer}>
-
-                  {/* bookmark: button-user-murid-2 */}
                   {students_by_class.map((student) => (
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
@@ -731,7 +729,7 @@ function ViewClass(props) {
                               <PersonListItem
                                 person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
                                 person_name={walikelas.name}
-                                person_role={walikelas.subject_teached}
+                                person_role={(all_subjects_map) ? all_subjects_map.get(walikelas.subject_teached) : null}
                               />
                           </Grid>
                           <Grid item xs container justify="flex-end">
