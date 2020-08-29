@@ -462,14 +462,6 @@ function ManageUsers(props) {
     setOpen(false);
   };
 
-  // const [anchorEl, setAnchorEl] = React.useState(null);
-  // const handleOpenSortMenu = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleCloseSortMenu = () => {
-  //   setAnchorEl(null);
-  // };
-
   const onInputChange = (event) => {
     event.preventDefault();
 
@@ -505,8 +497,8 @@ function ManageUsers(props) {
   const onClickSubmitImport = () => {
 
     new Promise((resolve) => {
-      importUsers(userObjects.content);
-      resolve();
+      importUsers(resolve, userObjects.content);
+      // resolve();
     }).then(() => {
       getMockStudents();
       getMockTeachers();
@@ -864,6 +856,7 @@ function ManageUsers(props) {
         <SimpleDialog open={open} onClose={handleClose}/>
         <DialogPilihDownload open={openUser} onClose={handleCloseUser}/>
       </div>
+<<<<<<< HEAD
       <Dialog fullWidth={true} maxWidth="lg" open={openTabelDialog}>
         <div style={{padding: "10px"}}>
   				{previewTable()}
@@ -884,6 +877,15 @@ function ManageUsers(props) {
           </Grid>
         </div>
       </Dialog>
+=======
+      <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
+				{previewTable()}
+        <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
+        <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
+	    </Dialog>
+      {/* ----------------------------------------------- */}
+
+>>>>>>> 5ce57151c549ff9ab03274ed8e4c4288bb51d7b4
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
