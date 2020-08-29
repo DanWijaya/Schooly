@@ -248,7 +248,7 @@ function Profile(props) {
         <Grid item>
           {avatar ?
           <StyledBadge
-            
+
           >
             <Avatar
               src={`/api/upload/avatar/${avatar}`}
@@ -257,7 +257,7 @@ function Profile(props) {
           </StyledBadge>
           :
           <StyledBadge
-            
+
           >
             <Avatar className={classes.avatar} />
           </StyledBadge>
@@ -285,10 +285,10 @@ function Profile(props) {
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container spacing={1} justify="flex-end" alignItems="center">
           <Grid item>
-            
+
           </Grid>
           <Grid item>
-            
+
           </Grid>
         </Grid>
         <Grid item container direction="column" spacing={4}>
@@ -534,10 +534,10 @@ function Profile(props) {
                 </List>
               </Paper>
             </Grid>
-            
+
               </Grid>
             )
-            
+
           }
 
 

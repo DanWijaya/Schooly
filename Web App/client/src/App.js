@@ -146,13 +146,13 @@ class App extends Component {
                   handleDrawerMobile={this.handleDrawerMobile}
                   sideDrawerExist={this.state.sideDrawerExist}
                 />
-                {this.state.sideDrawerExist ? 
+                {this.state.sideDrawerExist ?
                 <SideDrawer
                   mobileOpen={this.state.mobileOpen}
                   desktopOpen={this.state.desktopOpen}
                   handleDrawerMobile={this.handleDrawerMobile}
-                /> : 
-                null 
+                /> :
+                null
                 }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />

@@ -245,7 +245,7 @@ function ManageUsers(props) {
 
   const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
   const { all_students, all_teachers, pending_users } = props.auth;
-  
+
 
 
   let student_rows = []
