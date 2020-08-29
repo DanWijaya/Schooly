@@ -248,7 +248,7 @@ class CreateMaterial extends Component {
         author_id: id,
         errors: {},
       };
-
+      console.log(this.state.fileLampiran)
       this.props.createMaterial(formData, materialData, this.props.history);
   }
 
@@ -285,11 +285,10 @@ class CreateMaterial extends Component {
   }
 
   render() {
-    const { classes, success }  = this.props;
+    const { classes, success, errors }  = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran }  = this.state;
-    const { errors } = this.props;
     const { user } = this.props.auth
 
     console.log(class_assigned)

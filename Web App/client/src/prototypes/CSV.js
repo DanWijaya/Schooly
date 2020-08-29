@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import React from 'react';
 import { makeStyles, useTheme } from "@material-ui/core/styles"; 
 import { Grid, Paper, Typography, Button, Dialog, DialogTitle, List, ListItem, 
@@ -170,7 +168,6 @@ export default function CSV() {
 
 		return element;
 	};
-
 	return (
 		<div className={classes.root}>
 			<Grid container style={{ margin: 'auto', display: 'flex', justifyContent: 'center'}}>
@@ -179,7 +176,7 @@ export default function CSV() {
             <label style={{color: "black"}}>
               Pilih file CSV &nbsp;
               <input type="file" ref={fileInput} accept=".csv"/>
-              <Button className={classes.button}> <input type="file" ref={fileInput} accept=".csv" style={{display: "none"}}/> </Button>
+              <Button className={classes.button}> <input type="file" ref={fileInput} accept=".csv" /> </Button>
             </label>
             <button type="submit" ref={submitButton} style={{display:'none'}}>Submit</button>
           </form>
@@ -215,4 +212,4 @@ export default function CSV() {
 		</div>
 	);
 }
->>>>>>> 5189048be3de77ee4233209e50518488f7d8f887
+

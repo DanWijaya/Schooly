@@ -30,9 +30,22 @@ router.post('/create', (req,res) => {
       }
 
       else {
-        console.log("HDHEWJ FNKERNFKERF ",req.body)
-        const newAssessment = new Assessment(req.body);
 
+        let questions = req.body.questions;
+        let questions_no_lampiran = questions.map((qns) => {
+          delete qns.lampiran
+          return qns
+        })
+        console.log(questions)
+        console.log(questions_no_lampiran)
+        console.log("HDHEWJ FNKERNFKERF ",req.body)
+        const newAssessment = new Assessment({
+          ...req.body, 
+          questions: questions_no_lampiran
+        });
+        console.log(questions)
+        console.log(questions_no_lampiran)
+        console.log({...req.body, questions: questions_no_lampiran})
         newAssessment
             .save()
             .then(quiz => res.json(quiz))

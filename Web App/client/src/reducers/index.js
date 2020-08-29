@@ -10,9 +10,11 @@ import AuthReducer from "./AuthReducer";
 import AnnouncementReducer from "./AnnouncementReducer"
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
+import MockReducer from "../prototypes/MockReducer"; // tugas 3
 
 export default combineReducers({
   auth: UserReducer,
+  mockUserCollection : MockReducer, // tugas 3
   announcementsCollection : AnnouncementReducer,
   assessmentsCollection: AssessmentReducer,
   classesCollection: ClassReducer,

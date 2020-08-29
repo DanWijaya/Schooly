@@ -7,8 +7,6 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
     axios
       .post("/api/materials/create", materialData)
       .then(res => {
-          console.log("this is the res", res.data)
-          console.log("Will run this")
           console.log(formData.getAll('lampiran_materi'))
           // memebrikan signal ke Store untuk mengubah/menambahkan state aplikasi
           // kalau secara codenya, dilakukan dgn cara dispatch action
@@ -21,8 +19,9 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
               console.log("Post lampiran material is running")
               return axios.post(`/api/upload/att_material/lampiran/${res.data._id}`, formData);
           }
-          else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+          else { // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created material with no lampiran"
+          }
       })
       .then(res => {
           console.log('Successfully created material.')

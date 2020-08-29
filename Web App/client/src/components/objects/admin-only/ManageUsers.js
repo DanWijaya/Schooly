@@ -1,9 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../../../actions/UserActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
+import { getStudentsByClass } from "../../../actions/UserActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getAllTask } from "../../../actions/TaskActions";
 import LightTooltip  from "../../misc/light-tooltip/LightTooltip";
 import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
@@ -14,6 +19,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
+import PageviewIcon from "@material-ui/icons/Pageview";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -137,6 +143,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "0px",
   },
+  viewMaterialButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
+  },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
@@ -231,6 +245,8 @@ function ManageUsers(props) {
 
   const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
   const { all_students, all_teachers, pending_users } = props.auth;
+
+
 
   let student_rows = []
   let teacher_rows = []
@@ -430,7 +446,7 @@ function ManageUsers(props) {
       </Dialog>
     )
   }
-
+  console.log(all_teachers[0])
   console.log(pending_users)
   return (
     <div className={classes.root}>
@@ -521,7 +537,7 @@ function ManageUsers(props) {
                   </ExpansionPanelSummary>
                   <Divider className={classes.profilePanelDivider} />
                   <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
+                    <Grid container direction="column">
                       <Grid item>
                         <Typography variant="body1" gutterBottom>
                           <b>Kontak:</b> {row.phone}
@@ -542,6 +558,38 @@ function ManageUsers(props) {
                           <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
                         </Typography>
                       </Grid>
+                    </Grid>
+                    <Grid item xs container justify="flex-end">
+                      <LightTooltip title="Lihat Profil">
+                        <Link to={{
+                          pathname:'/lihat-profil',
+                          state: {
+                            avatar: row.avatar,
+                            nama: row.name,
+                            kelas: all_students[index].kelas,
+                            viewable_section: 'with_karir',
+                            tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                            jenis_kelamin: all_students[index].jenis_kelamin,
+                            role: 'Student',
+                            sekolah: row.sekolah,
+                            email: row.email,
+                            phone: row.phone,
+                            emergency_phone : row.emergency_phone,
+                            alamat: row.address,
+                            hobi: all_students[index].hobi_minat,
+                            ket: all_students[index].ket_non_teknis,
+                            cita: all_students[index].cita_cita,
+                            uni: all_students[index].uni_impian
+                          }
+                        }}>
+                          <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                          >
+                            <PageviewIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
+                      </LightTooltip>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
@@ -564,6 +612,7 @@ function ManageUsers(props) {
         {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
+            console.log(all_teachers[index])
             return (
               <Grid item>
                 <ExpansionPanel
@@ -652,6 +701,39 @@ function ManageUsers(props) {
                         </Typography>
                       </Grid>
                     </Grid>
+                    <Grid item xs container justify="flex-end">
+                      <LightTooltip title="Lihat Profil">
+                    
+                        <Link to={{
+                          pathname:'/lihat-profil',
+                          state: {
+                            avatar: row.avatar,
+                            nama: row.name,
+                            subject_teached: all_teachers[index].subject_teached,
+                            viewable_section: 'with_karir',
+                            tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                            jenis_kelamin: all_teachers[index].jenis_kelamin,
+                            role: 'Teacher',
+                            sekolah: row.sekolah,
+                            email: row.email,
+                            phone: row.phone,
+                            emergency_phone : row.emergency_phone,
+                            alamat: row.address,
+                            hobi: all_teachers[index].hobi_minat,
+                            ket: all_teachers[index].ket_non_teknis,
+                            cita: all_teachers[index].cita_cita,
+                            uni: all_teachers[index].uni_impian
+                          }
+                        }}>
+                          <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                          >
+                            <PageviewIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
+                      </LightTooltip>
+                    </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               </Grid>
@@ -680,5 +762,6 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { setUserDisabled, getStudents, getTeachers, deleteUser }
+  mapStateToProps, { setCurrentClass, getStudentsByClass,
+    getAllSubjects, getAllTask, getTeachers,setUserDisabled, getStudents, getTeachers, deleteUser }
 ) (ManageUsers);

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
@@ -9,19 +10,23 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
+import QuestionItem from "./QuestionItem";
+import QuestionItemV2 from "./QuestionItemV2";
+import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ClearIcon from "@material-ui/icons/Clear";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
-
 
 const styles = (theme) => ({
   root: {
@@ -77,6 +82,36 @@ const styles = (theme) => ({
       color: theme.palette.create.main,
     },
   },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.main,
+    },
+  },
+  dialogBox: {
+    maxWidth: "400px",
+    padding: "15px",
+  },
+  dialogDeleteButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.dark,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+    },
+  },
+  dialogCancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    },
+  },
   avatarImg1: { // If width is smaller than height
     width: theme.spacing(25),
   },
@@ -90,6 +125,26 @@ const styles = (theme) => ({
   chip: {
     marginRight: 2,
   },
+  uploadDialogGrid: {
+    maxWidth: "300px",
+    minHeight: "200px",
+    padding: "15px",
+  },
+  uploadSuccessIcon: {
+    color: "green",
+    height: "45px",
+    width: "45px"
+  },
+  uploadFinishButton: {
+    width: "100%",
+    marginTop: "20px",
+    backgroundColor: theme.palette.create.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.create.main,
+      color: "white",
+    },
+  },
 });
 
 class CreateAssessment extends Component {
@@ -97,11 +152,12 @@ class CreateAssessment extends Component {
     super();
     this.state = {
       num_qns: 1,
+      // questions: [<QuestionItemV2 number={1} deleteQuestion={this.deleteQuestion}/>],
       questions: [{ // mau ganti questions ini dalam Hashmap mungkin.
         name: "",
         options: ["Opsi 1", ""],
         answer: "A",
-        images: []
+        lampiran: []
       }],
       name: "",
       description: "",
@@ -109,20 +165,34 @@ class CreateAssessment extends Component {
       class_assigned: [],
       start_date: new Date(),
       end_date: new Date(),
+      openDeleteDialog: false,
+      openUploadDialog: false,
+      success: false,
+      page: 0,
+      rowsPerPage: 10,
+      qnsListitem: []
     }
   }
 
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
-  uploadedImage = React.createRef(null)
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.handleSideDrawerExist(true)
   }
 
   onSubmit = (e, id) => {
     e.preventDefault()
+    let formData = new FormData();
+
+    const { questions } = this.state;
     const { createAssessment , history} = this.props
+    questions.forEach((qns) => {
+      let lampiran = qns.lampiran;
+      lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
+    })
+
     const assessmentData = {
       name: this.state.name,
       start_date: this.state.start_date,
@@ -134,7 +204,22 @@ class CreateAssessment extends Component {
       author_id: id,
     }
 
+    console.log(assessmentData)
+
     createAssessment(assessmentData, history)
+    
+  }
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true})
+  }
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true })
+  }
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false })
   }
 
   onChange = (e, otherfield=null) => {
@@ -155,14 +240,23 @@ class CreateAssessment extends Component {
   }
 
   handleAddQuestion = () => {
-    let questions = this.state.questions
-    questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
-    this.setState({questions: questions})
+    console.log("Add questionnnn")
+    // let questions = this.state.questions
+    // questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
+    // this.setState({questions: questions})
+
+    let questions = this.state.questions;
+    questions.push({
+      name: "",
+      options: ["Opsi 1", ""],
+      answer: "A",
+      lampiran: []
+    })
+    this.setState({ questions: questions})
   }
 
   handleChangeQuestion = (e, i, otherfield=null) => {
-    console.log("BUDI")
-    var questions = this.state.questions
+    var questions = this.state.questions;
 
     if(otherfield === "answer"){
       questions[i]["answer"] = e.target.value
@@ -190,7 +284,7 @@ class CreateAssessment extends Component {
     this.setState({ questions: questions})
   }
 
-  handleDuplicateQueston = (i, question) => {
+  handleDuplicateQuestion = (i) => {
     console.log(i)
     let questions = this.state.questions
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
@@ -198,10 +292,10 @@ class CreateAssessment extends Component {
     // questions.splice(i+1, 0, question)
 
     questions.splice(i+1, 0, {
-      name: question.name,
-      options: [...question.options],
-      answer: question.answer,
-      images: question.images
+      name: questions[i].name,
+      options: [...questions[i].options],
+      answer: questions[i].answer,
+      lampiran: [...questions[i].lampiran]
     })
     this.setState({ questions: questions})
   }
@@ -213,200 +307,175 @@ class CreateAssessment extends Component {
     this.setState({ questions: questions})
   }
 
-  // readImageURI = (e, qnsIndex) => {
 
-  // }
-
-  handleQuestionImage = (e, qnsIndex) => {
-    if(e.target.files){
-      const files = Array.from(e.target.files);
-
-      Promise.all(files.map(file => {
-        return (new Promise((resolve, reject) => {
-          let reader = new FileReader();
-          reader.onload = e => {
-            resolve(e.target.result);
-          }
-          reader.addEventListener('error', reject);
-          reader.readAsDataURL(file);
-        }))
-      }))
-      .then(images => {
-        console.log("hdwdwendjw")
-        let questions = this.state.questions
-        let temp = questions[qnsIndex].images.concat(images);
-        questions[qnsIndex].images = temp
-
-        this.setState({ questions: questions})
-      })
-      .catch(err => console.log(err))
+  handleQuestionImage = (e, qnsIndex, indexToDelete=null) => {
+    let questions = this.state.questions
+    if(Number.isInteger(indexToDelete)){
+      questions[qnsIndex].lampiran.splice(indexToDelete, 1);
+      console.log(questions)
+      this.setState({ questions: questions})
     }
-    // this.readImageURI(e, qnsIndex)
+    else{
+      if(e.target.files){
+          const files = Array.from(e.target.files);
+          let temp = questions[qnsIndex].lampiran.concat(files)
+          questions[qnsIndex].lampiran = temp;
+          this.setState({ questions: questions})
+      }
+    }
   }
 
-  buildImgTag = (images) => {
-    if(!images)
-      return null;
-    else {
-      let result = images.map((image, i) =>
-        <GridListTile key={image} cols={1} >
-          <img alt="current image" src={image}/>
-          <GridListTileBar
-              title={"HAHHA"}
-              titlePosition="top"
-              actionIcon={
-                <IconButton style={{color: "white"}}>
-                  <CloseIcon />
-                </IconButton>
-              }
-              actionPosition="right"
-            />
-        </GridListTile>
-      )
-      return result;
-    }
 
-  }
-
-  listQuestion = (classes) => {
-    let questionList = []
+  listQuestion = () => {
+    // let questionList = []
     let questions = this.state.questions;
-    // const { errors } = this.props
-    let length = questions.length
+    const { page, rowsPerPage} = this.state;
+    const { classes } = this.props;
 
-    for( let i = 0; i < length; i++){
-      let question = questions[i]
-      let images = question.images;
-      let options = question.options;
-
-      questionList.push(
-        <Grid item>
-          <Paper>
-            <Grid container>
-              <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
-                <Grid item>
-                  <Typography variant="h6" gutterBottom>
-                    Soal {i+1}
-                  </Typography>
-                  <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
-                    {this.buildImgTag(images)}
-                  </GridList>
-                  <TextField
-                    multiline
-                    rowsMax={10}
-                    id="name"
-                    fullWidth
-                    variant="filled"
-                    value={question.name}
-                    onChange={(e) => this.handleChangeQuestion(e, i)}
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControl component="fieldset" id="answer" fullWidth>
-                    <RadioGroup value={question.answer.toUpperCase()} id="answer" onChange={(e) => this.handleChangeQuestion(e, i, "answer")}>
-                      {options.map((option, index) =>
-                        <div style={{display: "flex"}}>
-                          {/*{console.log(question.answer.toUpperCase() === String.fromCharCode(97 + index).toUpperCase())}
-                          <Radio
-                            checked={question.answer.toUpperCase() === String.fromCharCode(97 + index).toUpperCase()}
-                            value={String.fromCharCode(97 + index).toUpperCase()}
-                            onChange={(e) => {console.log("AAA"); this.handleChangeQuestion(e, i, "answer")}}
-                          />
-                          <TextField
-                            fullWidth
-                            value={option}
-                            onChange={(e) => this.handleQuestionOptions(e, index, i, "Edit" )}
-                            placeholder="Isi Pilihan"
-                          />*/}
-                          <FormControlLabel
-                            style={{width: "100%"}}
-                            value={String.fromCharCode(97 + index).toUpperCase()}
-                            control={<Radio color="primary" />}
-                            label={
-                              <TextField
-                                style={{flexGrow: 1}}
-                                value={option}
-                                onChange={(e) => this.handleQuestionOptions(e, index, i, "Edit" )}
-                                placeholder="Isi Pilihan"
-                              />
-                            }
-                          />
-                          <IconButton onClick={(e) => this.handleQuestionOptions(e, index, i, "Delete" )}>
-                            <ClearIcon/>
-                          </IconButton>
-                        </div>
-                      )}
-                      <div>
-                        <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => this.handleQuestionOptions(e, null, i, "Add")}>
-                          Tambah  pilihan
-                        </Button>
-                      </div>
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <Divider flexItem orientation="vertical" />
-              <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
-                <Grid item>
-                  <input
-                    accept="image/*"
-                    multiple
-                    type="file"
-                    name="avatar"
-                    onChange={(e) => this.handleQuestionImage(e, i)}
-                    ref={this.imageUploader}
-                    style={{
-                      display: "none",
-                      visibility: "hidden",
-                    }}
-                  />
-                  <LightTooltip title="Tambahkan " placement="right">
-                    <IconButton onClick={() => this.imageUploader.current.click()}>
-                      <AddPhotoAlternateIcon/>
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-                <Grid item>
-                  <LightTooltip title="Duplikat Soal" placement="right">
-                    <IconButton onClick={() => this.handleDuplicateQueston(i, question)}>
-                      <FilterNoneIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-                <Grid item>
-                  <LightTooltip title="Hapus Soal" placement="right">
-                    <IconButton onClick={() => { console.log(i); this.deleteQuestion(i)}}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-        )
+    let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
+      console.log(question.lampiran)
+      return(
+        <QuestionItemV2
+          index={i + page * rowsPerPage}
+          name={question.name}
+          options={JSON.stringify(question.options)}
+          answer={question.answer}
+          lampiran={question.lampiran}
+          lampiran_length={question.lampiran.length}
+          deleteQuestion={this.deleteQuestion}
+          handleDuplicateQuestion={this.handleDuplicateQuestion}
+          handleQuestionOptions={this.handleQuestionOptions}
+          handleChangeQuestion={this.handleChangeQuestion}
+          handleQuestionImage={this.handleQuestionImage}
+          />
+      )
     }
+    )
+
     return questionList
   }
 
+  componentDidUpdate(prevProps, prevState){
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
+      this.handleOpenUploadDialog()
+    }
+  }
+
   componentDidMount(){
-    const { getAllClass, getAllSubjects } = this.props
+    const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props
+    handleSideDrawerExist(false)
     getAllClass()
     getAllSubjects()
   }
 
+
+  handleChangePage = (event, newPage) => {
+    // setPage(newPage);
+    this.setState({ page: newPage})
+  };
+
+  handleChangeRowsPerPage = (event) => {
+    this.setState({ page: 0, rowsPerPage: +event.target.value })
+  };
+
   render() {
     console.log(this.state.questions)
     const { class_assigned } = this.state;
-    const { classes, errors } = this.props;
+    const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
+
+    const UploadDialog = () => {
+        return (
+          <Dialog open={this.state.openUploadDialog}>
+            <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
+              <Grid item>
+                <Typography variant="h6" align="center" gutterBottom>
+                  {!success ? "Materi sedang disunting" : "Materi berhasil disunting"}
+                </Typography>
+              </Grid>
+              <Grid item>
+                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
+              </Grid>
+              <Grid item>
+                {!success ?
+                  <Typography variant="body1" align="center" gutterBottom>
+                    <b>Mohon tetap tunggu di halaman ini.</b>
+                  </Typography>
+                :
+                <Link to="/daftar-kuis/">
+                  <Button
+                    variant="contained"
+                    className={classes.uploadFinishButton}
+                  >
+                    Selesai
+                  </Button>
+                  </Link>
+                }
+              </Grid>
+            </Grid>
+          </Dialog>
+        )
+    }
+
+    const DeleteDialog = () => {
+      // const classes = makeStyles(styles)
+      return (
+        <Dialog
+          open={this.state.openDeleteDialog}
+          onClose={this.handleCloseDeleteDialog}>
+          <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+            <Grid item container justify="flex-end" alignItems="flex-start">
+              <IconButton
+                size="small"
+                onClick={this.handleCloseDeleteDialog}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+            <Grid item container justify="center" style={{marginBottom: "20px"}}>
+              <Typography variant="h6" gutterBottom>
+                Hapus Kuis yang tengah dibuat?
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              spacing={2}
+              style={{marginBottom: "10px"}}
+            >
+              <Grid item>
+                <Link to="/daftar-kuis">
+                  <Button
+                    startIcon={<DeleteOutlineIcon />}
+                    className={classes.dialogDeleteButton}>
+                    Hapus
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={this.handleCloseDeleteDialog}
+                  startIcon={< CancelIcon/>}
+                  className={classes.dialogCancelButton}
+                >
+                  Batalkan
+                </Button>
+              </Grid>
+            </Grid>
+            </Grid>
+        </Dialog>
+      )
+    }
 
     document.title = "Schooly | Buat Kuis";
     console.log(this.state.questions)
     return (
       <div className={classes.root}>
+        {DeleteDialog()}
+        {UploadDialog()}
         <form onSubmit={(e) => this.onSubmit(e, user.id)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>
@@ -560,10 +629,22 @@ class CreateAssessment extends Component {
                 </Grid>
               </Paper>
             </Grid>
-              {this.listQuestion(classes)}
+              {this.listQuestion()}
             <Grid item>
               <Paper>
-                <Grid container justify="flex-end" spacing={2} className={classes.content}>
+                <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                  <Grid item xs={12} sm>
+                    <TablePagination
+                      labelRowsPerPage="Soal per halaman"
+                      rowsPerPageOptions={[5, 10]}
+                      component="div"
+                      count={this.state.questions.length}
+                      rowsPerPage={this.state.rowsPerPage}
+                      page={this.state.page}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
+                  </Grid>
                   <Grid item>
                     <FormHelperText error>
                       {errors.questions}
@@ -595,10 +676,17 @@ class CreateAssessment extends Component {
                       </Badge>
                     </LightTooltip>
                   </Grid>
-                  <Grid item>
-                    <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                      Buat Kuis
-                    </Button>
+                  <Grid item container xs justify="flex-end" spacing={2}>
+                    <Grid item>
+                      <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
+                        Batal
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
+                        Buat Kuis
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Paper>
@@ -617,16 +705,18 @@ CreateAssessment.propTypes = {
   clearErrors: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
   errors:state.errors,
   auth: state.auth,
+  success: state.success,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
 })
 
 export default connect(
   mapStateToProps, { getAllClass, getAllSubjects, createAssessment, clearErrors }
-)(withStyles(styles)(CreateAssessment));
+)(withStyles(styles)(React.memo(CreateAssessment)));

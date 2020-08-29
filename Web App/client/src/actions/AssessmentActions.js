@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT } from "./Types";
+import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT, GET_SUCCESS_RESPONSE } from "./Types";
 
 // Add Assessment
 export const createAssessment = (assessment, history) => dispatch => {
@@ -8,7 +8,38 @@ export const createAssessment = (assessment, history) => dispatch => {
     .post("/api/assessments/create", assessment)
     .then(res => {
       console.log(res.data)
-      history.push("/daftar-kuis")
+
+      dispatch({
+        type: GET_ERRORS,
+        payload: false
+      })
+      let { questions } = assessment;
+      console.log(questions)
+      console.log(res._id)
+
+      let promises = questions.map((qns, i) => {
+        let formData = new FormData();
+
+        qns.lampiran.forEach((lampiran, i) => formData.append("lampiran_assessment", lampiran))
+        return (
+          axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}/${i}`, formData)
+          .then(response => {
+            console.log(response)
+          })
+        )
+      })
+
+      Promise.all(promises).then(() => {
+        console.log('Successfully created Assessment.')
+          dispatch({
+            type: GET_SUCCESS_RESPONSE,
+            payload: true
+          });
+        }
+      ) 
+    })
+    .then(res => {
+      console.log('Successfully created Assessment.')
     })
     .catch(err => 
       dispatch({

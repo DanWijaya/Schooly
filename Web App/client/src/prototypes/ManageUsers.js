@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../actions/UserActions";
+// import { setUserDisabled, getStudents, getTeachers, deleteUser } from "../actions/UserActions";
 import LightTooltip  from "../components/misc/light-tooltip/LightTooltip";
 import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+   Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography,
+   TableContainer, Table, TableHead , TableBody, TableRow, TableCell } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -14,6 +15,21 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from '@material-ui/icons/Block';
+import SchoolRoundedIcon from '@material-ui/icons/SchoolRounded';
+import LocalLibraryRoundedIcon from '@material-ui/icons/LocalLibraryRounded';
+
+// tugas 3 -------------------------------------------
+import { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } from "./MockActions";
+import csv from 'csvtojson';
+// -----------------------------------------------------
+
+import ImportExportIcon from '@material-ui/icons/ImportExport';
+import PublishIcon from '@material-ui/icons/PublishRounded';
+import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+import Paper from '@material-ui/core/Paper';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { List, ListItem } from '@material-ui/core';
+
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -46,6 +62,8 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+
+
 function ManageUsersToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role, heading } = props;
 
@@ -73,51 +91,57 @@ function ManageUsersToolbar(props) {
 
   return (
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h5">
-        {heading}
-      </Typography>
-      <LightTooltip title="Urutkan Akun">
-        <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-          <SortIcon />
-        </IconButton>
-      </LightTooltip>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseSortMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        {headCells.map((headCell, i) => (
-          <MenuItem
-            key={headCell.id}
-            sortDirection={orderBy === headCell.id ? order : false}
-            onClick={props.handleClosePanel}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+      <div>
+        <Typography variant="h5">
+          {heading}
+        </Typography>
+      </div>
+      <div>
+        <LightTooltip title="Urutkan Akun">
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </IconButton>
+        </LightTooltip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+              onClick={props.handleClosePanel}
             >
-              {headCell.label}
-              {orderBy === headCell.id ?
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-                : null
-              }
-            </TableSortLabel>
-          </MenuItem>
-        ))}
-      </Menu>
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ?
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </span>
+                  : null
+                }
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+
+      </div>
     </Toolbar>
+
   );
 };
 
@@ -136,6 +160,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
+
   },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
@@ -151,6 +176,24 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.warning.dark,
+    },
+  },
+  confirmButton: {
+    width: "150px",
+    backgroundColor: theme.palette.create.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.create.main,
+    },
+  },
+  cancelButton: {
+    width: "150px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.main,
     },
   },
   dialogBox: {
@@ -192,6 +235,40 @@ const useStyles = makeStyles((theme) => ({
       color: "black",
     },
   },
+  importButton: {
+    backgroundColor: "#50c878",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#A2F7B5",
+      color: "#309B94",
+    },
+    "&:focus":{
+      backgroundColor: "#50c878",
+      color: "white",
+      "&:hover": {
+        backgroundColor: "#A2F7B5",
+        color: "#309B94",
+    }
+  }},
+    closeButton: {
+        width:'6px',
+        height:'6px',
+        color: "black",
+        "&:hover": {
+          backgroundColor:'#c21807',
+          color: "white",
+        },
+        "&:focus":{
+          color: "white"
+        } },
+    "&:focus":{
+      backgroundColor: "#50c878",
+      color: "white",
+      "&:hover": {
+        backgroundColor: "#A2F7B5",
+        color: "#309B94",
+    }
+  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -229,9 +306,10 @@ function ManageUsers(props) {
   const [selectedUserId, setSelectedUserId] = React.useState(null)
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
-  const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
-  const { all_students, all_teachers, pending_users } = props.auth;
-
+  // const { importUsers, setUserDisabled, deleteUser, getTeachers, getStudents } = props;
+  const { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } = props; // tugas 3
+  // const { all_students, all_teachers, pending_users } = props.auth;
+  const { all_students, all_teachers} = props.mockUserCollection; // tugas 3
   let student_rows = []
   let teacher_rows = []
 
@@ -246,28 +324,30 @@ function ManageUsers(props) {
       data.tanggal_lahir,
       data.address
     )
-    if (data.role === "Student") {
-      student_rows.push(temp)
+    if (data.role === "MockStudent") {
+      student_rows.push(temp);
     }
-    else if (data.role === "Teacher") {
-      teacher_rows.push(temp)
+    else if (data.role === "MockTeacher") {
+      teacher_rows.push(temp);
     }
   }
 
   React.useEffect(() => {
-    getStudents()
-    getTeachers()
+    getMockStudents();
+    getMockTeachers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const retrieveUsers = () => {
     student_rows = []
     teacher_rows = []
-    if(Array.isArray(all_students)){
-      all_students.map((data) => userRowItem(data, "Student"))
+    if(Array.isArray(all_students)) {
+      console.log(all_students);
+      all_students.map((data) => userRowItem(data));
     }
-    if(Array.isArray(all_teachers)){
-      all_teachers.map((data) => userRowItem(data, "Teacher"))
+    if(Array.isArray(all_teachers)) {
+      console.log(all_teachers);
+      all_teachers.map((data) => userRowItem(data));
     }
   }
 
@@ -288,11 +368,331 @@ function ManageUsers(props) {
   // this function is defined above
   retrieveUsers()
 
+
+  // Tugas 3 ------------------------------------------------------------------------------------------
+  const [userObjects, setUserObjects] = React.useState({header: [], content: []});
+  const [openTabelDialog, setOpenTabelDialog] = React.useState(false);
+  const fileInput = React.createRef(null);
+
+  // Fitur Download/Export==================================
+  const prepareDownload = (array_of_users) => {
+    if(array_of_users==all_students){
+      let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,tanggal_lahir,_id\n"
+      for(let individual_user of array_of_users){
+        string+=`${individual_user.active},`
+        string+=`"${individual_user.address}",`
+        string+=`${individual_user.avatar},`
+        string+=`${individual_user.email},`
+        string+=`${individual_user.emergency_phone},`
+        string+=`${individual_user.kelas},`
+        string+=`${individual_user.name},`
+        string+=`${individual_user.phone},`
+        string+=`${individual_user.role},`
+        string+=`${individual_user.tanggal_lahir},`
+        string+=`${individual_user._id}`
+        string+="\n"
+      }
+      return(string)
+    }
+    else if(array_of_users==all_teachers){
+      let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,subject_teached,tanggal_lahir,_id\n"
+      for(let individual_user of array_of_users){
+        string+=`${individual_user.active},`
+        string+=`"${individual_user.address}",`
+        string+=`${individual_user.avatar},`
+        string+=`${individual_user.email},`
+        string+=`${individual_user.emergency_phone},`
+        string+=`${individual_user.kelas},`
+        string+=`${individual_user.name},`
+        string+=`${individual_user.phone},`
+        string+=`${individual_user.role},`
+        string+=`${individual_user.subject_teached},`
+        string+=`${individual_user.tanggal_lahir},`
+        string+=`${individual_user._id}`
+        string+="\n"
+      }
+      return(string)
+    }
+  }
+
+  const handleClickDownload = (data,user) => {
+		if(data==""){
+			alert("Belum ada data yang di-submit");
+		}
+		else {
+			const blob = new Blob([data],{ type : 'text/csv'});
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.setAttribute('hidden','')
+      a.setAttribute('href',url)
+      if(user==all_students){
+        a.setAttribute('download','Data_Murid.csv')
+      }
+      else if(user==all_teachers){
+        a.setAttribute('download','Data_Guru.csv')
+      }
+			// document.body.appendChild(a);
+			a.click();
+      // document.body.removeChild(a);
+		}
+  };
+
+  const downloadcsv = (user) => {
+    let chosen_user = prepareDownload(user)
+    handleClickDownload(chosen_user,user)
+  }
+
+
+  // ======================================================
+
+
+  // Dialog Import/Export
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
+
+  const onClickImportButton = () => {
+    fileInput.current.click();
+    setOpen(false);
+  };
+
+  const onInputChange = (event) => {
+    event.preventDefault();
+
+		fileInput.current.files[0].text().then((fileContent) => {
+        let newUserObjects = {header: null, content: null};
+        csv()
+        .fromString(fileContent)
+        .then((jsonObj) => {
+          newUserObjects.content = jsonObj;
+          return newUserObjects;
+        })
+        .then((newUserObjects) => {
+          csv()
+          .fromString(fileContent)
+          .on('header', (header)=>{
+            newUserObjects.header = header;
+          })
+          .on('done', () => {
+            setUserObjects(newUserObjects);
+            setOpenTabelDialog(true);
+          })
+        })
+    }).catch((err) => {
+			console.log(err);
+    });
+  };
+
+  const onClickCancelImport = () => {
+    setOpenTabelDialog(false);
+    fileInput.current.value = ''; //supaya onchange pasti dipanggil
+  };
+
+  const onClickSubmitImport = () => {
+
+    new Promise((resolve) => {
+      importUsers(resolve, userObjects.content);
+      // resolve();
+    }).then(() => {
+      getMockStudents();
+      getMockTeachers();
+      return;
+    }).then(() => {
+      console.log(all_students)
+      retrieveUsers();
+      return;
+    }).then(() => {
+      fileInput.current.value = '';
+      setOpenTabelDialog(false);
+    });
+  }
+
+  function SimpleDialog(props) {
+    const { onClose, open } = props;
+
+    const handleClose = () => {
+      onClose();
+    };
+
+    return (
+      <Dialog onClose={handleClose} open={open} maxWidth='xs' fullWidth={true}>
+        <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
+          <Grid item container justify="flex-end" alignItems="flex-start"> {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+            <IconButton className={classes.closeButton} onClick={onClose}>
+              <CloseIcon onClick={onClose} />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6" style={{margin: "10px 0px 20px 0px"}}> {/*Kalo bisa jangan pake fontSize gitu sih pake "variant" props dari material ui biar dia bisa auto resize gitu*/}
+              Import/Export CSV Data Pengguna
+            </Typography>
+          </Grid>
+          <Grid item container justify="center" spacing={2}>
+            <Grid item>
+              {/* Untuk icon di button ada props startIcon coba cek di material ui lagi, coba bandingin sama yang dibawah jadi ga perlu margin left dan typography tag lagi */}
+              <Button
+                variant="contained"
+                onClick={() => {onClickImportButton()}}
+                style={{backgroundColor:'#2E8B57',marginRight:'5px',color:'white'}}
+                startIcon={<PublishIcon/>}
+              >
+                Import
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" style={{backgroundColor:'#c21807',color:'white'}} onClick={() => {handleClickOpenUser()}}>
+                <GetAppRoundedIcon/>
+                <Typography style={{marginLeft:'5px'}}>Export</Typography>
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Dialog>
+    );
+  }
+
+  SimpleDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+  };
+
+  // Dialog Pilihan User =========================================
+
+  const [openUser, setOpenUser] = React.useState(false);
+
+  const handleClickOpenUser = () => {
+    setOpenUser(true)
+  }
+
+  const handleCloseUser = (value) => {
+    setOpenUser(false);
+  };
+  function DialogPilihDownload(props) {
+    const { onClose, open } = props;
+
+    const handleCloseUser = () => {
+      onClose();
+    };
+
+    return (
+      <Dialog onClose={handleCloseUser} aria-labelledby="user-dialog-title" open={openUser} maxWidth='sm' fullWidth={true}>
+       {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+       <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
+         <Grid item container justify="flex-end" alignItems="flex-start"> {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+           <IconButton className={classes.closeButton} onClick={onClose}>
+             <CloseIcon onClick={onClose} />
+           </IconButton>
+         </Grid>
+          <Grid item container justify="flex-start" alignItems="center" style={{margin: "10px 0px 20px 0px"}}>
+            <GetAppRoundedIcon
+              style={{
+                backgroundColor: '#c21807',
+                color: 'white',
+                borderRadius: 100,
+                marginRight: "5px",
+              }}
+            />
+            <Typography variant="h6">
+              Pilih Jenis User Untuk di-Export
+            </Typography>
+         </Grid>
+         <Grid item container justify="flex-end" spacing={1}>
+           <Grid item>
+             <Button variant="contained"
+              startIcon={<SchoolRoundedIcon/>}
+              onClick={() => {downloadcsv(all_students)}}
+              style={{backgroundColor:'#621940', marginRight:'5px', color:'white'}}
+            >
+               Siswa
+             </Button>
+           </Grid>
+           <Grid item>
+             <Button
+                variant="contained"
+                startIcon={<LocalLibraryRoundedIcon/>}
+                onClick={() => {downloadcsv(all_teachers)}}
+                style={{backgroundColor:'#0b032d',color:'white'}}
+            >
+               Guru
+             </Button>
+           </Grid>
+         </Grid>
+       </Grid>
+        {/*<div style={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
+          <div style={{display:'flex',alignItems:'center',margin:'18px'}}>
+            <GetAppRoundedIcon style={{backgroundColor:'#c21807',color:'white',borderRadius:100,display:'flex',alignItems:'center',justifyContent:'center'}}/>
+            <Typography style={{fontSize:20,marginLeft:'10px'}}>Pilih Jenis User Untuk di-Export</Typography>
+          </div>
+          <div style={{marginRight:'12px'}}>
+            <IconButton className={classes.closeButton} onClick={onClose}>
+              <CloseIcon onClick={onClose} />
+            </IconButton>
+          </div>
+        </div>
+        <div style={{display:'flex', justifyContent:'flex-end',marginTop:'20px',margin:'17px'}}>
+          <Button variant="contained" onClick={() => {downloadcsv(all_students)}} style={{backgroundColor:'#621940',marginRight:'5px',color:'white'}} >
+            <SchoolRoundedIcon/>
+            <Typography style={{marginLeft:'5px'}}>Siswa</Typography>
+          </Button>
+          <Button variant="contained" style={{backgroundColor:'#0b032d',color:'white'}} onClick={() => {downloadcsv(all_teachers)}}>
+            <LocalLibraryRoundedIcon/>
+            <Typography style={{marginLeft:'5px'}}>Guru</Typography>
+          </Button>
+        </div>*/}
+      </Dialog>
+    );
+  }
+
+  DialogPilihDownload.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+  };
+
+  // ==================================================
+
+  function previewTable() {
+    let element = null;
+		if (userObjects) {
+
+			element = (
+				<TableContainer>
+					<Table>
+						<TableHead>
+							<TableRow>
+								{userObjects.header.map((namaKolom) => {
+									return (<TableCell><b>{namaKolom}</b></TableCell>);
+								})}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+						{userObjects.content.map((baris) => (
+							<TableRow>
+								{userObjects.header.map((namaKolom) => {
+									return (<TableCell>{baris[namaKolom]}</TableCell>);
+								})}
+							</TableRow>
+						))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			);
+		}
+
+		return element;
+  };
+  // ------------------------------------------------------------------------------------------
+
   const onDeleteUser = (id) => {
-    deleteUser(id)
+    deleteMockUser(id)
   }
   const onDisableUser = (id) => {
-    setUserDisabled(id)
+    setMockUserDisabled(id)
   }
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
@@ -327,8 +727,7 @@ function ManageUsers(props) {
           <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton
               size="small"
-              onClick={handleCloseDeleteDialog}
-            >
+              onClick={handleCloseDeleteDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
@@ -431,7 +830,7 @@ function ManageUsers(props) {
     )
   }
 
-  console.log(pending_users)
+  // console.log(pending_users)
   return (
     <div className={classes.root}>
       {DisableDialog()}
@@ -439,11 +838,36 @@ function ManageUsers(props) {
       <Typography variant="h4" align="center" gutterBottom>
         Daftar Pengguna Aktif
       </Typography>
+
+      {/* tugas 3 ----------------------------------------------- */}
+      <input type="file" ref={fileInput} accept=".csv" onChange={(event) => {onInputChange(event)}} style={{display:'none'}} />
+
+      {/* <LightTooltip title="Import CSV">
+        <IconButton className={classes.sortButton} variant="contained" onClick={() => {onClickImportButton()}}>
+            <ImportExportIcon variant="contained" ref={fileInput} />
+        </IconButton>
+      </LightTooltip> */}
+      <div style={{display:'flex',justifyContent:'flex-end',marginTop:'6px',marginBottom:'10px'}}>
+        <LightTooltip title="Import/Export CSV">
+          <IconButton className={classes.importButton} onClick={() => handleClickOpen()}>
+              <ImportExportIcon />
+          </IconButton>
+        </LightTooltip>
+        <SimpleDialog open={open} onClose={handleClose}/>
+        <DialogPilihDownload open={openUser} onClose={handleCloseUser}/>
+      </div>
+      <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
+				{previewTable()}
+        <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
+        <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
+	    </Dialog>
+      {/* ----------------------------------------------- */}
+
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
         role="Student"
-        deleteUser={deleteUser}
+        deleteUser={deleteMockUser}
         classes={classes}
         order={order_student}
         orderBy={orderBy_student}
@@ -552,7 +976,7 @@ function ManageUsers(props) {
       <ManageUsersToolbar
         heading="Daftar Guru"
         role="Teacher"
-        deleteUser={deleteUser}
+        deleteUser={deleteMockUser}
         classes={classes}
         order={order_teacher}
         orderBy={orderBy_teacher}
@@ -663,22 +1087,14 @@ function ManageUsers(props) {
 }
 
 
-ManageUsers.propTypes = {
-  classesCollection: PropTypes.object.isRequired,
-  getStudents: PropTypes.func.isRequired,
-  getTeachers: PropTypes.func.isRequired,
-  setUserDisabled: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  deleteUser: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-}
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
-  auth: state.auth,
-  classesCollection: state.classesCollection,
+  // auth: state.auth,
+  // classesCollection: state.classesCollection,
+  mockUserCollection: state.mockUserCollection, //tugas 3
 })
 
 export default connect(
-  mapStateToProps, { setUserDisabled, getStudents, getTeachers, deleteUser }
+  mapStateToProps, { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser }
 ) (ManageUsers);

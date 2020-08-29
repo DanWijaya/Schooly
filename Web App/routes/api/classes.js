@@ -92,7 +92,7 @@ router.delete("/delete/:id", (req, res) => {
 
 router.get("/setCurrentClass/:id", (req, res) => {
     let id = req.params.id;
-    console.log("set Current class is runned", id);
+    // console.log("set Current class is runned", id);
     Class.findById(id, (err, classData) => {
         if (!classData)
             return res.status(404).json("Class is not found")

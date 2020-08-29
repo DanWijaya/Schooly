@@ -17,8 +17,11 @@ import LoginForgot from "./components/auth/login/LoginForgot";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
 //Layout
 import About from "./components/layout/about/About";
+import Calendar from "./components/layout/calendar/Calendar";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
+import MockProfile from "./components/layout/profile/MockProfile";
+import ProfileView from "./components/layout/profile/ProfileView";
 import Profile from "./components/layout/profile/Profile";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
@@ -62,6 +65,7 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
+import Graph from "./prototypes/Graph";
 import Elbert from "./prototypes/Elbert";
 import Dimas from "./prototypes/Dimas";
 import CSV from "./prototypes/CSV";
@@ -104,6 +108,7 @@ class App extends Component {
     loggedIn: false,
     marginTopValue: 20,
     posts: [],
+    sideDrawerExist: true
   };
 
   //Drawer at Mobile View Hooks
@@ -125,6 +130,10 @@ class App extends Component {
     this.setState({ loggedIn : dataFromChild})
   }
 
+  handleSideDrawerExist = (dataFromChild) => {
+    this.setState({ sideDrawerExist: dataFromChild})
+  }
+
   render() {
     return (
       <div>
@@ -135,12 +144,16 @@ class App extends Component {
                 <NavBar
                   handleDrawerDesktop={this.handleDrawerDesktop}
                   handleDrawerMobile={this.handleDrawerMobile}
+                  sideDrawerExist={this.state.sideDrawerExist}
                 />
+                {this.state.sideDrawerExist ?
                 <SideDrawer
                   mobileOpen={this.state.mobileOpen}
                   desktopOpen={this.state.desktopOpen}
                   handleDrawerMobile={this.handleDrawerMobile}
-                />
+                /> :
+                null
+                }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
                   <Switch>
@@ -165,21 +178,23 @@ class App extends Component {
                       )}
                     />
                     <Route exact path="/dropbox-auth" component={DropboxAuth}/>
-                    
+
                     <Route exact path="/dropbox-connect" component={DropboxConnect}/>
                     <Route exact path="/daftar" component={Register} />
                     <Route exact path="/Dimas" component={Dimas} />
                     <Route exact path="/masuk" component={Login} />
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
-                     {/*prototype*/}
-                    <Route exact path="/tester" component={Tester} />
-                    <Route exact path="/elbert" component={Elbert} />
-                    <Route exact path="/csv" component={CSV} />
-                    <PrivateRoute exact access={["Admin"]} path="/mockusers" component={ManageMockUsers} />
-                    
+                    <Route exact path="/tester" component={Tester} /> {/*prototype*/}
+                    <Route exact path="/graph" component={Graph} />  {/*prototype*/}
+                    <Route exact path="/elbert" component={Elbert} /> {/*prototype*/}
+                    <Route exact path="/csv" component={CSV} /> {/*prototype*/}
+                    <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
+                    <PrivateRoute exact path="/mockprofil" component={MockProfile} />
+                    <PrivateRoute exact path="/kalender" component={Calendar} />
+                    <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />
@@ -204,7 +219,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
                     {/* Route Assessment - Prototype */}
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" component={CreateAssessment} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
                     <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />
@@ -218,7 +233,7 @@ class App extends Component {
                       render={(props) => (
                         <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
                       )}
-                    /> 
+                    />
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
                   <Footer />
@@ -227,7 +242,7 @@ class App extends Component {
             </Router>
           </ThemeProvider>
         </Provider>
-      </div> 
+      </div>
     );
   }
 }

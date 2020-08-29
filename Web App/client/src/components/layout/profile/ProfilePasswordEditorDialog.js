@@ -128,11 +128,11 @@ function ProfilePasswordEditorDialog(props) {
     <div>
       <LightTooltip title="Ganti Kata Sandi">
         <Button
+          startIcon={<LockIcon />}
+          variant="contained"
           onClick={handleClickOpen}
           className={classes.editPasswordButton}
-        >
-          <LockIcon />
-        </Button>
+        />
       </LightTooltip>
       <Dialog open={open} onClose={handleClose}>
         <Grid container direction="column" alignItems="center" className={classes.root}>

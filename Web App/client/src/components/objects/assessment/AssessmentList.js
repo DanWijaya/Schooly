@@ -320,6 +320,7 @@ function AssessmentList(props) {
   }
 
   React.useEffect(() => {
+    console.log("SDD jfeirer kfrelfefrjoerfe")
     getAllAssessments()
     getAllClass("map")
     getAllSubjects("map")
