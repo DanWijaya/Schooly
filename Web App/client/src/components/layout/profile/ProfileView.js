@@ -242,7 +242,7 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <Divider className={classes.profileDivider} style={{marginTop:'10px'}} />
+      <Divider className={classes.profileDivider} style={{marginTop:'30px'}} />
       <Grid container direction="column" alignItems="center" spacing={5}>
         
         <Grid item container direction="column" spacing={4} >
