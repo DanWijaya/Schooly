@@ -245,7 +245,7 @@ function ManageUsers(props) {
 
   const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
   const { all_students, all_teachers, pending_users } = props.auth;
-  
+
 
 
   let student_rows = []
@@ -703,7 +703,6 @@ function ManageUsers(props) {
                     </Grid>
                     <Grid item xs container justify="flex-end">
                       <LightTooltip title="Lihat Profil">
-                    
                         <Link to={{
                           pathname:'/mockprofil',
                           state: {

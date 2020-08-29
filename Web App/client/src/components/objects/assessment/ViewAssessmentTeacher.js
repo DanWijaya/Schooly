@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, Hidden, IconButton, Paper, Typography } from "@material-ui/core";
+import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentActions"
 import { getAllClass } from "../../../actions/ClassActions";
@@ -237,7 +237,18 @@ function ViewAssessmentTeacher(props) {
                     <Typography variant="h6" gutterBottom color="primary">
                       Soal {i+1}
                     </Typography>
-                    <Typography>
+                    <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
+                      {question.lampiran.map((image, i) => 
+                        <GridListTile key={image} cols={1} >
+                        <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                        {/* <GridListTileBar
+                            titlePosition="top"
+                            actionPosition="right"
+                          /> */}
+                      </GridListTile>
+                      )}
+                    </GridList>
+                    <Typography variant="h6">
                       {question.name}
                     </Typography>
                   </Grid>

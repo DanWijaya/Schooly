@@ -2,7 +2,7 @@ import axios from "axios";
 import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT, GET_SUCCESS_RESPONSE } from "./Types";
 
 // Add Assessment
-export const createAssessment = (formData, assessment, history) => dispatch => {
+export const createAssessment = (assessment, history) => dispatch => {
   console.log(assessment)
   axios
     .post("/api/assessments/create", assessment)
@@ -13,21 +13,33 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
         type: GET_ERRORS,
         payload: false
       })
-      if(formData.entries().next().done){
-        return axios.post(`/api/upload/att_assessment/image/${res.data._id}`, formData)
-      }
-      else
-        return "Successfully created Assessment with no images"
-      
+      let { questions } = assessment;
+      console.log(questions)
+      console.log(res._id)
+
+      let promises = questions.map((qns, i) => {
+        let formData = new FormData();
+
+        qns.lampiran.forEach((lampiran, i) => formData.append("lampiran_assessment", lampiran))
+        return (
+          axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}/${i}`, formData)
+          .then(response => {
+            console.log(response)
+          })
+        )
+      })
+
+      Promise.all(promises).then(() => {
+        console.log('Successfully created Assessment.')
+          dispatch({
+            type: GET_SUCCESS_RESPONSE,
+            payload: true
+          });
+        }
+      ) 
     })
     .then(res => {
       console.log('Successfully created Assessment.')
-      dispatch({
-        type: GET_SUCCESS_RESPONSE,
-        payload: true
-      })
-      
-      history.push("/daftar-kuis")
     })
     .catch(err => 
       dispatch({

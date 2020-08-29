@@ -27,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItemV2(props){
-  const { index, name, options, answer, images, images_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
+  const { index, name, options, answer, lampiran, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
   const classes = useStyles()
 
-  const [imagesToPreview, setImagesToPreview] = React.useState([])
+  const [lampiranToPreview, setLampiranToPreview] = React.useState([])
 
   let list_options = JSON.parse(options)
-  // let list_images = JSON.parse(images)
-  console.log(images)
+  // let list_lampiran = JSON.parse(lampiran)
+  console.log(lampiran)
   const imageUploader = React.useRef();
 
   const imageUpload = () => {
@@ -44,20 +44,20 @@ function QuestionItemV2(props){
 
   const handlePreviewImage = () => {
     console.log("handle preview image is runned")
-    console.log(images)
-    if(Array.isArray(images)){
-      Promise.all(images.map((image) => {
+    console.log(lampiran)
+    if(Array.isArray(lampiran)){
+      Promise.all(lampiran.map((l) => {
         return (new Promise((resolve, reject) => {
           let reader = new FileReader();
           reader.onload = e => {
             resolve(e.target.result);
           }
           reader.addEventListener('error', reject);
-          reader.readAsDataURL(image);
+          reader.readAsDataURL(l);
         }))
       }))
-      .then(images => {
-        setImagesToPreview(images)
+      .then(lampiran => {
+        setLampiranToPreview(lampiran)
       })
       .catch(err => console.log(err))
     }
@@ -66,8 +66,7 @@ function QuestionItemV2(props){
   React.useEffect(() => {
     handlePreviewImage()
   }
-  ,[images_length])
-
+  ,[lampiran_length])
   return(
     <Grid item>
           <Paper>
@@ -77,22 +76,8 @@ function QuestionItemV2(props){
                   <Typography variant="h6" gutterBottom>
                     Soal {index + 1}
                   </Typography>
-                  <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
-                    {/* {list_images.map((image, i) =>
-                      <GridListTile key={image} cols={1} >
-                        <img alt="current image" src={image}/>
-                        <GridListTileBar
-                            titlePosition="top"
-                            actionIcon={
-                              <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
-                                <CloseIcon />
-                              </IconButton>
-                            }
-                            actionPosition="right"
-                          />
-                      </GridListTile>
-                    )} */}
-                    {imagesToPreview.map((image, i) =>
+                  <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
+                    {lampiranToPreview.map((image, i) =>
                       <GridListTile key={image} cols={1} >
                         <img alt="current image" src={image}/>
                         <GridListTileBar

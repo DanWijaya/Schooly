@@ -9,6 +9,7 @@ const mockusers = require("./client/src/prototypes/mockusers"); // tugas 3
 
 // untuk uploads punya
 const att_announcement = require("./routes/api/upload/att_announcement");
+const att_assessment = require("./routes/api/upload/att_assessment");
 const att_material = require("./routes/api/upload/att_material");
 const att_task = require("./routes/api/upload/att_task");
 const file_tugas = require("./routes/api/upload/file_tugas");
@@ -75,6 +76,7 @@ app.use("/api/mockusers", mockusers); // tugas 3
 
 // Handle upload routing..
 app.use("/api/upload/att_announcement", att_announcement)
+app.use("/api/upload/att_assessment", att_assessment)
 app.use("/api/upload/att_material", att_material)
 app.use("/api/upload/att_task", att_task);
 app.use("/api/upload/file_tugas", file_tugas);

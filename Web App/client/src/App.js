@@ -191,6 +191,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
+                    <PrivateRoute exact path="/mockprofil" component={MockProfile} />
                     <PrivateRoute exact path="/kalender" component={Calendar} />
                     <PrivateRoute exact path="/mockprofil" component={MockProfile} />
                     {/* Route Class */}

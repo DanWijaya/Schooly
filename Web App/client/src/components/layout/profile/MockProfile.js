@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter, useLocation , Redirect } from "react-router-dom";
+import { withRouter,useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -155,16 +155,13 @@ function ProfileDataItem(props) {
 function Profile(props) {
   const classes = useStyles();
   const location = useLocation();
-  
+  const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin,
+    sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
 
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection } = props;
   // const { kelas } = props.classesCollection;
   // Alert control for ProfilePictureEditorDialog
-
-  const [namakelas, setNamaKelas] = React.useState('');
-  const [firstRender, setFirstRender] = React.useState(true);
-
 
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
@@ -205,35 +202,10 @@ function Profile(props) {
     window.location.reload()
   }
 
-  React.useEffect(() => {
-    if (role === "Student") {
-      setCurrentClass(kelas);
-    }
-  }, []);
-  
-  React.useEffect(() => {
-    // isi classesCollection pas pertama kali render = classesCollection dari halaman kelas/:id
-    if (firstRender) {
-      setFirstRender(false);
-    } else {
-      setNamaKelas(classesCollection.kelas.name);
-    }
-  }, [classesCollection]);
-
-  if(location.state==undefined){
-    return(<Redirect to="/tidak-ditemukan"/>)
-  }
-  const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin, 
-    sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached } = location.state
-    
   // Initially classesCollection.kelas.name === undefined
-  // if (user.role === "Student" && !classesCollection.kelas.name) {
-  //   setCurrentClass(user.kelas)
-  // }
-
-  console.log(location.state)
-
-  
+  if (user.role === "Student" && !classesCollection.kelas.name) {
+    setCurrentClass(user.kelas)
+  }
 
   document.title = "Schooly | Profil"
   console.log(classesCollection.kelas)
@@ -276,7 +248,7 @@ function Profile(props) {
         <Grid item>
           {avatar ?
           <StyledBadge
-            
+
           >
             <Avatar
               src={`/api/upload/avatar/${avatar}`}
@@ -285,7 +257,7 @@ function Profile(props) {
           </StyledBadge>
           :
           <StyledBadge
-            
+
           >
             <Avatar className={classes.avatar} />
           </StyledBadge>
@@ -305,8 +277,7 @@ function Profile(props) {
             }
           </Typography>
           <Typography variant="body1" align="center" color="textSecondary">
-            {!namakelas ? null : `Kelas ${namakelas}`}
-            {/* {!kelas ? null : `Kelas ${kelas}`} */}
+            {!classesCollection.kelas.name ? null : `Kelas ${classesCollection.kelas.name}`}
           </Typography>
         </Grid>
       </Grid>
@@ -314,10 +285,10 @@ function Profile(props) {
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container spacing={1} justify="flex-end" alignItems="center">
           <Grid item>
-            
+
           </Grid>
           <Grid item>
-            
+
           </Grid>
         </Grid>
         <Grid item container direction="column" spacing={4}>
@@ -563,10 +534,10 @@ function Profile(props) {
                 </List>
               </Paper>
             </Grid>
-            
+
               </Grid>
             )
-            
+
           }
 
 

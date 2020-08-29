@@ -471,8 +471,6 @@ function ViewClass(props) {
   }
 
 
-
-  // console.log( all_teachers)
   return (
     <div className={classes.root}>
 
@@ -501,6 +499,7 @@ function ViewClass(props) {
             </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
+
               {/* bookmark: button-user-guru-1*/}
               {!isObjEmpty(walikelas) ? (
                 <Grid container justify="space-between" alignItems="center">
@@ -571,7 +570,6 @@ function ViewClass(props) {
                         <Link to={{
                           pathname:'/mockprofil',
                           state: {
-                            kelas: student.kelas,
                             avatar: student.avatar,
                             nama: student.name,
                             viewable_section: 'with_karir',
@@ -817,7 +815,6 @@ function ViewClass(props) {
                                 <Link to={{
                                   pathname:'/mockprofil',
                                   state: {
-                                    kelas: student.kelas,
                                     avatar: student.avatar,
                                     nama: student.name,
                                     viewable_section: 'no_karir',
