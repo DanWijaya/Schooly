@@ -9,6 +9,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { uploadTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -206,7 +207,7 @@ function LampiranFile(props) {
   )
 }
 
-// component ini akan view task yang teacher dia sendiri buat. 
+// component ini akan view task yang teacher dia sendiri buat.
 function ViewTaskTeacher(props) {
   const classes = useStyles();
 
@@ -277,68 +278,17 @@ console.log(all_classes_map)
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus tugas berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{tasksCollection.name}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteTask(task_id)}}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batalkan
-              </Button>
-            </Grid>
-          </Grid>
-          </Grid>
-      </Dialog>
-    )
-  }
-
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
 
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Tugas"
+        itemName={tasksCollection.name}
+        deleteItem={() => { onDeleteTask(task_id)}}
+      />
       <Paper className={classes.paperBox}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={7}>

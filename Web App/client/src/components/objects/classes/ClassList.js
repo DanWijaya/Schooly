@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { getTeachers } from "../../../actions/UserActions";
 import { getAllClass, deleteClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -296,7 +297,7 @@ function ClassList(props) {
   },[])
 
   React.useEffect(() => {
-    return () => { 
+    return () => {
       clearErrors()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -337,68 +338,6 @@ function ClassList(props) {
     clearErrors()
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Kelas berikut
-            </Typography>
-          </Grid>
-          <Grid item container justify="center">
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedClassName}</b>
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="caption" align="center" color="error">
-              {errors.has_student}
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteClass(selectedClassId) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
   if (user.role === "Student") {
     return (
       <div className={classes.root}>
@@ -411,7 +350,13 @@ function ClassList(props) {
 
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Kelas"
+        itemName={selectedClassName}
+        deleteItem={() => { onDeleteClass(selectedClassId) }}
+      />
       <ClassListToolbar
         classes={classes}
         deleteClass={deleteClass}

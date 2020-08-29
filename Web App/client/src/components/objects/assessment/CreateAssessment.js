@@ -9,6 +9,7 @@ import { createAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import QuestionItemV2 from "./QuestionItemV2";
@@ -207,7 +208,7 @@ class CreateAssessment extends Component {
     console.log(assessmentData)
 
     createAssessment(assessmentData, history)
-    
+
   }
 
   handleOpenUploadDialog = () => {
@@ -324,7 +325,6 @@ class CreateAssessment extends Component {
       }
     }
   }
-
 
   listQuestion = () => {
     // let questionList = []
@@ -474,8 +474,13 @@ class CreateAssessment extends Component {
     console.log(this.state.questions)
     return (
       <div className={classes.root}>
-        {DeleteDialog()}
         {UploadDialog()}
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType="Kuis"
+          deleteItem=""
+        />
         <form onSubmit={(e) => this.onSubmit(e, user.id)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>
