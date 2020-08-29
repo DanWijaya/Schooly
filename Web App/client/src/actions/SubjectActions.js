@@ -24,7 +24,7 @@ export const getAllSubjects = (data="array") => dispatch => {
     axios
         .get("/api/subjects/viewall")
         .then(res => {
-            console.log("Run get all subjects")
+            // console.log("Run get all subjects")
             if(data !== "map"){
             dispatch({
                 type: GET_ALL_SUBJECTS,
@@ -37,6 +37,7 @@ export const getAllSubjects = (data="array") => dispatch => {
               payload: res.data
             })
           }
+          console.log("getAllSubjects ("+ data +") completed");
         })
         .catch(err => {
             console.log(err , "Error in retrieving all subjects")

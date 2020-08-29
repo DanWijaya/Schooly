@@ -20,6 +20,7 @@ import About from "./components/layout/about/About";
 import Calendar from "./components/layout/calendar/Calendar";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
+import MockProfile from "./components/layout/profile/MockProfile";
 import Profile from "./components/layout/profile/Profile";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
@@ -144,13 +145,13 @@ class App extends Component {
                   handleDrawerMobile={this.handleDrawerMobile}
                   sideDrawerExist={this.state.sideDrawerExist}
                 />
-                {this.state.sideDrawerExist ? 
+                {this.state.sideDrawerExist ?
                 <SideDrawer
                   mobileOpen={this.state.mobileOpen}
                   desktopOpen={this.state.desktopOpen}
                   handleDrawerMobile={this.handleDrawerMobile}
-                /> : 
-                null 
+                /> :
+                null
                 }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
@@ -191,6 +192,7 @@ class App extends Component {
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/kalender" component={Calendar} />
+                    <PrivateRoute exact path="/mockprofil" component={MockProfile} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />

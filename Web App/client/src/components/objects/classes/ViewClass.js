@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/id";
@@ -30,6 +30,17 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
+
+  // bookmark: button
+  viewMaterialButton: {
+    backgroundColor: theme.palette.warning.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.warning.main,
+    },
+  },
+
   classPaper: {
     height: "250px",
     padding: "30px",
@@ -242,7 +253,7 @@ function PersonListItem(props) {
             }
             secondary={
               !props.person_role ? null :
-              <Typography variant="caption" color="textSecondary">
+              <Typography variant="caption" color="textSecondary" style={{marginLeft: "10px"}}> {/*bookmark*/}
                 {props.person_role}
               </Typography>
             }
@@ -263,7 +274,7 @@ function PersonListItem(props) {
           />
           <ListItemText
             primary={
-              <Typography align="right" color="textSecondary">
+              <Typography align="right" color="textSecondary" style={{marginLeft: "40px"}}> {/*bookmark*/}
                 {props.person_role}
               </Typography>
             }
@@ -286,7 +297,11 @@ function ViewClass(props) {
   const { students_by_class, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
 
-  console.log(props.classesCollection)
+  const [walikelas, setWalikelas] = React.useState({});
+  const [firstRender, setFirstRender] = React.useState(true);
+  const [allow, setAllow] = React.useState(0);
+
+  // console.log(props.classesCollection)
   // All actions to retrive datas from Database
 
   function listTasks(category=null, subject={}){
@@ -313,7 +328,7 @@ function ViewClass(props) {
         </Avatar>
       )
       let workStatus = "Belum Dikumpulkan"
-      console.log(all_user_files)
+      // console.log(all_user_files)
       // for (var j = 0; j < all_user_files.length; j++){
       //     if(all_user_files[j].for_task_object === task._id){
       //     workStatus = "Telah Dikumpulkan"
@@ -398,12 +413,37 @@ function ViewClass(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  React.useEffect(() => {
+
+    //isi all_teacher berubah 2 kali, 1 karena getTeacher (berubah dari [] jadi Map), 1 lagi gatau (berubah dari ? jadi [])
+    if (!Array.isArray(all_teachers)) {
+      setWalikelas(all_teachers.get(kelas.walikelas));
+    }
+    // console.log(students_by_class, kelas);
+  }, [all_teachers]);
+
+
+  React.useEffect(() => {
+
+    //isi students_by_class berubah 2 kali, 1 karena getStudentsByClass, 1 lagi gatau
+    if (firstRender) {
+      setFirstRender(false);
+    } else {
+      if (user.role === "Student" && !students_by_class.map((student) => {return student._id}).includes(user.id)) {
+        setAllow(2); //state allow akan diredirect ke halaman tidak-ditemukan
+      } else {
+        setAllow(1); //state allow akan menampilkan halaman
+      }
+    }
+    // }
+  }, [students_by_class]);
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  console.log(selectedMaterials)
+  // console.log(selectedMaterials)
   document.title = !kelas.name ? "Schooly | Lihat Kelas" : `Schooly | ${kelas.name}`
 
   function student_role(id) {
@@ -422,20 +462,36 @@ function ViewClass(props) {
     }
   }
 
-  console.log(kelas, all_teachers, kelas.walikelas)
+  function isObjEmpty(obj) {
+    if (obj) {
+      return (Object.keys(obj).length === 0 && obj.constructor === Object);
+    } else {
+      return true;
+    }
+  }
+
+
+
+  // console.log( all_teachers)
   return (
     <div className={classes.root}>
-      {user.role === "Admin" || user.role === "Teacher" ?
+
+      {
+      (allow === 0) ? null :
+      (allow === 1) ?
+
+      (user.role === "Admin" || user.role === "Teacher") ? (
         <div>
           <Paper className={classes.classPaper}>
             <Typography variant="h3">
               {kelas.name}
             </Typography>
             <Typography variant="h6">
-              {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+              {/* {!all_teachers.size || !all_teachers.get(kelas.walikelas)  ? */}
+              { (isObjEmpty(walikelas)) ?
                 null
               :
-                all_teachers.get(kelas.walikelas).name
+                walikelas.name
               }
             </Typography>
           </Paper>
@@ -445,16 +501,50 @@ function ViewClass(props) {
             </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
-              {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
-              null
-              :
-                <PersonListItem
-                  person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
-                  person_name={all_teachers.get(kelas.walikelas).name }
-                  person_role={all_teachers.get(kelas.walikelas).subject_teached}
-                />
-              
-              }
+              {/* bookmark: button-user-guru-1*/}
+              {!isObjEmpty(walikelas) ? (
+                <Grid container justify="space-between" alignItems="center">
+
+                  {[<Grid item>
+                    <PersonListItem
+                      person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                      person_name={walikelas.name }
+                      person_role={walikelas.subject_teached}
+                    />
+                  </Grid>].concat( (user.email === walikelas.email)
+                  ? (<Grid item xs container justify="flex-end"></Grid>)
+                  : (
+                    <Grid item xs container justify="flex-end">
+                      <Grid item>
+                        <LightTooltip title="Lihat Profil">
+                          <Link to={{
+                            pathname:'/mockprofil',
+                            state: {
+                              avatar: walikelas.avatar,
+                              nama: walikelas.name,
+                              viewable_section: 'no_karir',
+                              role: walikelas.role,
+                              jenis_kelamin: walikelas.jenis_kelamin,
+                              email: walikelas.email,
+                              phone: walikelas.phone,
+                              emergency_phone : walikelas.emergency_phone,
+                            }
+                          }}>
+                            <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                              >
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
+                  ))}
+
+                </Grid>
+              ) : null}
+
             </List>
           </div>
           <div style={{padding: "20px"}}>
@@ -463,18 +553,56 @@ function ViewClass(props) {
             </Typography>
             <Divider className={classes.personListDivider} />
             <List className={classes.listContainer}>
+
+              {/* bookmark: button-user-guru-2*/}
               {students_by_class.map((student) => (
-                <PersonListItem
-                  person_avatar={`/api/upload/avatar/${student.avatar}`}
-                  person_name={student.name}
-                  person_id={student._id}
-                  person_role={student_role(student._id)}
-                />
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid item>
+                      <PersonListItem
+                        person_avatar={`/api/upload/avatar/${student.avatar}`}
+                        person_name={student.name}
+                        person_id={student._id}
+                        person_role={student_role(student._id)}
+                      />
+                  </Grid>
+                  <Grid item xs container justify="flex-end">
+                    <Grid item>
+                      <LightTooltip title="Lihat Profil">
+                        <Link to={{
+                          pathname:'/mockprofil',
+                          state: {
+                            kelas: student.kelas,
+                            avatar: student.avatar,
+                            nama: student.name,
+                            viewable_section: 'with_karir',
+                            role: student.role,
+                            jenis_kelamin: student.jenis_kelamin,
+                            email: student.email,
+                            phone: student.phone,
+                            emergency_phone : student.emergency_phone,
+                            hobi: student.hobi_minat,
+                            ket: student.ket_non_teknis,
+                            cita: student.cita_cita,
+                            uni: student.uni_impian
+                          }
+                        }}>
+                          <IconButton
+                            size="small"
+                            className={classes.viewMaterialButton}
+                            >
+                            <PageviewIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
+                      </LightTooltip>
+                    </Grid>
+                  </Grid>
+                </Grid>
               ))}
+
             </List>
           </div>
         </div>
-      :
+      ) : (
         <div>
           <Paper square>
             <div className={classes.classPaper}>
@@ -482,10 +610,11 @@ function ViewClass(props) {
                 {kelas.name}
               </Typography>
               <Typography variant="h6">
-                {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+                {/* {!all_teachers.size || !all_teachers.get(kelas.walikelas) ? */}
+                {isObjEmpty(walikelas) ?
                   null
                 :
-                  all_teachers.get(kelas.walikelas).name
+                  walikelas.name
                 }
               </Typography>
             </div>
@@ -582,7 +711,7 @@ function ViewClass(props) {
                         <Typography variant="h6">
                           {subject.name}
                         </Typography>
-                        <LightTooltip title="Lihat Lebih Lanjut" placement="right">
+                        <LightTooltip title="Lihat Profil" placement="right">
                           <Link to={`/mata-pelajaran/${subject._id}`}>
                             <IconButton
                               size="small"
@@ -611,15 +740,53 @@ function ViewClass(props) {
                 </Typography>
                 <Divider className={classes.personListDivider} />
                 <List className={classes.listContainer}>
-                  {!all_teachers.size || !all_teachers.get(kelas.walikelas) ?
+
+                  {/* bookmark: button-user-murid-1 */}
+                  {/* {!all_teachers.size || !all_teachers.get(kelas.walikelas) ? */}
+                  {isObjEmpty(walikelas) ?
                     null
-                  :
-                    <PersonListItem
-                      person_avatar={`/api/upload/avatar/${all_teachers.get(kelas.walikelas).avatar}`}
-                      person_name={all_teachers.get(kelas.walikelas).name}
-                      person_role={all_teachers.get(kelas.walikelas).subject_teached}
-                    />
-                  }
+                  : (
+                  <Grid container justify="space-between" alignItems="center">
+                    <Grid item>
+
+                        <PersonListItem
+                          person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                          person_name={walikelas.name}
+                          person_role={walikelas.subject_teached}
+                        />
+
+                    </Grid>
+                    <Grid item xs container justify="flex-end">
+
+                      <Grid item>
+                        <LightTooltip title="Lihat Profil">
+                          <Link to={{
+                            pathname:'/mockprofil',
+                            state: {
+                              avatar: walikelas.avatar,
+                              nama: walikelas.name,
+                              viewable_section: 'no_karir',
+                              role: walikelas.role,
+                              jenis_kelamin: walikelas.jenis_kelamin,
+                              email: walikelas.email,
+                              phone: walikelas.phone,
+                              emergency_phone : walikelas.emergency_phone
+                            }
+                          }}>
+                            <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                              >
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
+                        </LightTooltip>
+                      </Grid>
+
+                    </Grid>
+                  </Grid>
+                  )}
+
                 </List>
               </div>
               <div style={{padding: "20px"}}>
@@ -628,18 +795,63 @@ function ViewClass(props) {
                 </Typography>
                 <Divider className={classes.personListDivider} />
                 <List className={classes.listContainer}>
+
+                  {/* bookmark: button-user-murid-2 */}
                   {students_by_class.map((student) => (
-                    <PersonListItem
-                      person_avatar={`/api/upload/avatar/${student.avatar}`}
-                      person_name={student.name}
-                      person_role={student.role === "Student" ? "Murid" : null}
-                    />
+
+                      <Grid container justify="space-between" alignItems="center">
+                        {[<Grid item>
+
+                          <PersonListItem
+                            person_avatar={`/api/upload/avatar/${student.avatar}`}
+                            person_name={student.name}
+                            person_role={student.role === "Student" ? "Murid" : null}
+                          />
+
+                        </Grid>].concat( (user.email === student.email)
+                        ? (<Grid item xs container justify="flex-end"></Grid>)
+                        : (
+                          <Grid item xs container justify="flex-end">
+                            <Grid item>
+                              <LightTooltip title="Lihat Profil">
+                                <Link to={{
+                                  pathname:'/mockprofil',
+                                  state: {
+                                    kelas: student.kelas,
+                                    avatar: student.avatar,
+                                    nama: student.name,
+                                    viewable_section: 'no_karir',
+                                    role: student.role,
+                                    jenis_kelamin: student.jenis_kelamin,
+                                    email: student.email,
+                                    phone: student.phone,
+                                    emergency_phone : student.emergency_phone
+                                  }
+                                }}>
+                                  <IconButton
+                                    size="small"
+                                    className={classes.viewMaterialButton}
+                                    >
+                                    <PageviewIcon fontSize="small" />
+                                  </IconButton>
+                                </Link>
+                              </LightTooltip>
+                            </Grid>
+                          </Grid>)
+                        )}
+                      </Grid>
+
                   ))}
+
                 </List>
               </div>
             </Paper>
           </TabPanel>
         </div>
+      )
+
+      : <Redirect to="/tidak-ditemukan"/>
+
       }
     </div>
   )
