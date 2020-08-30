@@ -9,8 +9,9 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
-import LightTooltip  from "../../misc/light-tooltip/LightTooltip";
-import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -333,63 +334,6 @@ function ManageUsers(props) {
     setOpenDisableDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Pengguna berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedUserName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteUser(selectedUserId) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
   function DisableDialog() {
     return (
       <Dialog
@@ -446,12 +390,20 @@ function ManageUsers(props) {
       </Dialog>
     )
   }
+
   console.log(all_teachers[0])
   console.log(pending_users)
+  
   return (
     <div className={classes.root}>
       {DisableDialog()}
-      {DeleteDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Pengguna"
+        itemName={selectedUserName}
+        deleteItem={() => { onDeleteUser(selectedUserId) }}
+      />
       <Typography variant="h4" align="center" gutterBottom>
         Daftar Pengguna Aktif
       </Typography>
@@ -686,6 +638,64 @@ function ManageUsers(props) {
                       </Grid>
                     </Grid>
                   </ExpansionPanelSummary>
+                  <Divider className={classes.profilePanelDivider} />
+                  <ExpansionPanelDetails>
+                    <Grid conntainer direction="column">
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Kontak:</b> {row.phone}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Kontak Darurat:</b> {row.emergency_phone}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Alamat:</b> {row.address}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" gutterBottom>
+                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs container justify="flex-end">
+                      <LightTooltip title="Lihat Profil">
+
+                        <Link to={{
+                          pathname:'/lihat-profil',
+                          state: {
+                            avatar: row.avatar,
+                            nama: row.name,
+                            subject_teached: all_teachers[index].subject_teached,
+                            viewable_section: 'with_karir',
+                            tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                            jenis_kelamin: all_teachers[index].jenis_kelamin,
+                            role: 'Teacher',
+                            sekolah: row.sekolah,
+                            email: row.email,
+                            phone: row.phone,
+                            emergency_phone : row.emergency_phone,
+                            alamat: row.address,
+                            hobi: all_teachers[index].hobi_minat,
+                            ket: all_teachers[index].ket_non_teknis,
+                            cita: all_teachers[index].cita_cita,
+                            uni: all_teachers[index].uni_impian
+                          }
+                        }}>
+                          <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                          >
+                            <PageviewIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
+                      </LightTooltip>
+                    </Grid>
+                  </ExpansionPanelDetails>
                 </ExpansionPanel>
               </Grid>
             )

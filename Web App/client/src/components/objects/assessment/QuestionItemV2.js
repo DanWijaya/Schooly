@@ -27,10 +27,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItemV2(props){
-  const { index, name, options, answer, lampiran, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
+  const { index, name, options, answer, lampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
   const classes = useStyles()
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
+  const [lampiranToAdd, setLampiranToAdd] = React.useState([])
+  const [lampiranToDelete, setLampiranToDelete] = React.useState([])
+  const [currentLampiran, setCurrentLampiran] = React.useState([])
 
   let list_options = JSON.parse(options)
   // let list_lampiran = JSON.parse(lampiran)
@@ -41,12 +44,18 @@ function QuestionItemV2(props){
     imageUploader.current.value = null
     imageUploader.current.click()
   }
-
+  console.log(lampiran)
   const handlePreviewImage = () => {
     console.log("handle preview image is runned")
     console.log(lampiran)
-    if(Array.isArray(lampiran)){
-      Promise.all(lampiran.map((l) => {
+    let arr_lampiran;
+    if(isEdit){
+      arr_lampiran = lampiranToAdd
+    }else{
+      arr_lampiran = lampiran
+    }
+    if(Array.isArray(arr_lampiran)){
+      Promise.all(arr_lampiran.map((l) => {
         return (new Promise((resolve, reject) => {
           let reader = new FileReader();
           reader.onload = e => {
@@ -56,17 +65,23 @@ function QuestionItemV2(props){
           reader.readAsDataURL(l);
         }))
       }))
-      .then(lampiran => {
-        setLampiranToPreview(lampiran)
+      .then((res) => {
+        setLampiranToPreview(res)
       })
       .catch(err => console.log(err))
     }
   }
+  React.useEffect(() => {
+    console.log(lampiran)
+    setCurrentLampiran(lampiran)
+  }, [])
   
   React.useEffect(() => {
     handlePreviewImage()
   }
   ,[lampiran_length])
+
+  console.log(currentLampiran)
   return(
     <Grid item>
           <Paper>
@@ -77,6 +92,20 @@ function QuestionItemV2(props){
                     Soal {index + 1}
                   </Typography>
                   <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
+                      {/* {currentLampiran.map((image, i) => 
+                          <GridListTile key={image} cols={1} >
+                          <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                          <GridListTileBar
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            actionPosition="right"
+                          />
+                        </GridListTile>
+                      )} */}
                     {lampiranToPreview.map((image, i) =>
                       <GridListTile key={image} cols={1} >
                         <img alt="current image" src={image}/>

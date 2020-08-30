@@ -11,7 +11,6 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
           // memebrikan signal ke Store untuk mengubah/menambahkan state aplikasi
           // kalau secara codenya, dilakukan dgn cara dispatch action
           dispatch({
-            // ini action yang berupa JavaScript object
               type: GET_ERRORS,
               payload: false
           })
