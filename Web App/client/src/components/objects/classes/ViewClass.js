@@ -469,7 +469,7 @@ function ViewClass(props) {
       {
         (allow === 'empty') ? null
           : (allow === 'content') ? 
-            (user.role === "Admin" || user.role === "Teacher") ? (
+            (user.role === "Admin" || user.role === "Teacher" || user.role === "Student") ? (
               <div>
                 <Paper className={classes.classPaper}>
                   <Typography variant="h3">
@@ -514,6 +514,7 @@ function ViewClass(props) {
                                     email: walikelas.email,
                                     phone: walikelas.phone,
                                     emergency_phone : walikelas.emergency_phone,
+                                    admin: false
                                   }
                                 }}>
                                   <IconButton
@@ -549,6 +550,8 @@ function ViewClass(props) {
                       </Grid>
                       <Grid item xs container justify="flex-end">
                         <Grid item>
+                        {(user.name == student.name) ? <div></div> :
+                          <div>
                           <LightTooltip title="Lihat Profil">
                             <Link to={{
                               pathname:'/lihat-profil',
@@ -565,7 +568,8 @@ function ViewClass(props) {
                                 hobi: student.hobi_minat,
                                 ket: student.ket_non_teknis,
                                 cita: student.cita_cita,
-                                uni: student.uni_impian
+                                uni: student.uni_impian,
+                                admin: false
                               }
                             }}>
                               <IconButton
@@ -576,6 +580,7 @@ function ViewClass(props) {
                               </IconButton>
                             </Link>
                           </LightTooltip>
+                          </div>}
                         </Grid>
                       </Grid>
                     </Grid>
@@ -774,7 +779,7 @@ function ViewClass(props) {
                                 <PersonListItem
                                   person_avatar={`/api/upload/avatar/${student.avatar}`}
                                   person_name={student.name}
-                                  person_role={student.role === "Student" ? "Murid" : null}
+                                  person_role={student.role === "Student" ? student_role(student._id) : null}
                                 />
                               </Grid>].concat( (user.email === student.email) 
                               ? (<Grid item xs container justify="flex-end"></Grid>)

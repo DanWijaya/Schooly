@@ -522,45 +522,7 @@ function ManageUsers(props) {
                           </LightTooltip>
                         </Grid>
                         <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.profileDeleteButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid container direction="column">
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak:</b> {row.phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak Darurat:</b> {row.emergency_phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Alamat:</b> {row.address}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs container justify="flex-end">
-                      <LightTooltip title="Lihat Profil">
+                        <LightTooltip title="Lihat Profil">
                         <Link to={{
                           pathname:'/lihat-profil',
                           state: {
@@ -579,19 +541,34 @@ function ManageUsers(props) {
                             hobi: all_students[index].hobi_minat,
                             ket: all_students[index].ket_non_teknis,
                             cita: all_students[index].cita_cita,
-                            uni: all_students[index].uni_impian
+                            uni: all_students[index].uni_impian,
+                            admin: true
                           }
                         }}>
-                          <IconButton
+                              <IconButton
+                                  size="small"
+                                  className={classes.viewMaterialButton}
+                                  style={{marginRight:'7.5px'}}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                          <LightTooltip title="Hapus">
+                            <IconButton
                               size="small"
-                              className={classes.viewMaterialButton}
-                          >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </LightTooltip>
+                              className={classes.profileDeleteButton}
+                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                  </ExpansionPanelDetails>
+                  </ExpansionPanelSummary>
+                  <Divider className={classes.profilePanelDivider} />
+                  
                 </ExpansionPanel>
               </Grid>
             )
@@ -652,6 +629,38 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
+                        <LightTooltip title="Lihat Profil">
+                    
+                            <Link to={{
+                              pathname:'/lihat-profil',
+                              state: {
+                                avatar: row.avatar,
+                                nama: row.name,
+                                subject_teached: all_teachers[index].subject_teached,
+                                viewable_section: 'with_karir',
+                                tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                                jenis_kelamin: all_teachers[index].jenis_kelamin,
+                                role: 'Teacher',
+                                sekolah: row.sekolah,
+                                email: row.email,
+                                phone: row.phone,
+                                emergency_phone : row.emergency_phone,
+                                alamat: row.address,
+                                hobi: all_teachers[index].hobi_minat,
+                                ket: all_teachers[index].ket_non_teknis,
+                                cita: all_teachers[index].cita_cita,
+                                uni: all_teachers[index].uni_impian,
+                                admin: true
+                              }
+                            }}>
+                              <IconButton
+                                  size="small"
+                                  className={classes.viewMaterialButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
                           <LightTooltip title="Nonaktifkan">
                             <IconButton
                               style={{display: "none"}}
@@ -677,64 +686,6 @@ function ManageUsers(props) {
                       </Grid>
                     </Grid>
                   </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak:</b> {row.phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak Darurat:</b> {row.emergency_phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Alamat:</b> {row.address}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs container justify="flex-end">
-                      <LightTooltip title="Lihat Profil">
-                    
-                        <Link to={{
-                          pathname:'/lihat-profil',
-                          state: {
-                            avatar: row.avatar,
-                            nama: row.name,
-                            subject_teached: all_teachers[index].subject_teached,
-                            viewable_section: 'with_karir',
-                            tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
-                            jenis_kelamin: all_teachers[index].jenis_kelamin,
-                            role: 'Teacher',
-                            sekolah: row.sekolah,
-                            email: row.email,
-                            phone: row.phone,
-                            emergency_phone : row.emergency_phone,
-                            alamat: row.address,
-                            hobi: all_teachers[index].hobi_minat,
-                            ket: all_teachers[index].ket_non_teknis,
-                            cita: all_teachers[index].cita_cita,
-                            uni: all_teachers[index].uni_impian
-                          }
-                        }}>
-                          <IconButton
-                              size="small"
-                              className={classes.viewMaterialButton}
-                          >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </LightTooltip>
-                    </Grid>
-                  </ExpansionPanelDetails>
                 </ExpansionPanel>
               </Grid>
             )
