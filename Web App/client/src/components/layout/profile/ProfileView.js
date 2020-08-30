@@ -314,7 +314,6 @@ function Profile(props) {
                 <Paper className={classes.informationPaper}>
                   <Grid container>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
-                        
                         <Grid container xs={12} sm={6} md={6} lg={5} style={{position:'absolute', display:'flex', flexDirection:'column', margin:'2.6%',marginLeft:'3%'}}>
                           <Typography variant="h5" gutterBottom style={{color:'white'}}>
                             KARIR
