@@ -48,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
   informationPictureContainer: {
     display: "flex",
     justifyContent: "center",
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       justifyContent: "flex-end",
     },
   },
   informationPicture: {
     height: "100px",
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       height: "125px",
     },
   },
@@ -302,7 +302,7 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.informationPaper}>
               <Grid container justify="space-between">
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} md={6}>
                   <Typography variant="h4" gutterBottom>
                     Informasi Pribadi
                   </Typography>
@@ -311,7 +311,7 @@ function Profile(props) {
                     database sekolah Anda.
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} md={6}>
                   <div className={classes.informationPictureContainer}>
                     <img alt="Private Information" src={informationPrivate} className={classes.informationPicture} />
                   </div>
@@ -347,7 +347,7 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.informationPaper}>
               <Grid container justify="space-between">
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} md={6}>
                   <Typography variant="h4" gutterBottom>
                     Kontak
                   </Typography>
@@ -355,7 +355,7 @@ function Profile(props) {
                     Pastikan Anda mengecek kembali kontak-kontak yang Anda masukkan.
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} md={6}>
                   <div className={classes.informationPictureContainer}>
                     <img alt="Contacts" src={informationContacts} className={classes.informationPicture} />
                   </div>
@@ -391,7 +391,7 @@ function Profile(props) {
           <Grid item>
             <Paper className={classes.informationPaper}>
               <Grid container justify="space-between">
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} md={6}>
                   <Typography variant="h4" gutterBottom>
                     Karir
                   </Typography>
@@ -400,7 +400,7 @@ function Profile(props) {
                     jalur karir terbaik untuk Anda.
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} md={6}>
                   <div className={classes.informationPictureContainer}>
                     <img alt="Career" src={informationJob} className={classes.informationPicture} />
                   </div>

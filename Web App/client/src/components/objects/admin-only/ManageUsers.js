@@ -393,7 +393,7 @@ function ManageUsers(props) {
 
   console.log(all_teachers[0])
   console.log(pending_users)
-  
+
   return (
     <div className={classes.root}>
       {DisableDialog()}
@@ -520,7 +520,6 @@ function ManageUsers(props) {
                     </Grid>
                   </ExpansionPanelSummary>
                   <Divider className={classes.profilePanelDivider} />
-                  
                 </ExpansionPanel>
               </Grid>
             )
@@ -582,7 +581,7 @@ function ManageUsers(props) {
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
                         <LightTooltip title="Lihat Profil">
-                    
+
                             <Link to={{
                               pathname:'/lihat-profil',
                               state: {

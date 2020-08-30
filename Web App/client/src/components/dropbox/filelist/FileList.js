@@ -1,20 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { FaFile, FaFolder, FaFileExcel, FaFileAlt, FaFileImage, FaFileWord, FaFilePdf, FaFilePowerpoint } from 'react-icons/fa';
-import { convertBytes } from './convertBytes.js';
-import { Dropbox } from "dropbox";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@material-ui/core";
+import PropTypes from "prop-types";
+import path from "path";
 import moment from "moment";
 import "moment/locale/id";
-// import Remove from "../Modals/Remove";
-// import CopyMove from "../Modals/CopyMove";
-import path from "path";
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import { Dropbox } from "dropbox";
 import CustomizedMenu from "../CustomizedMenu";
 import Delete from "../dialog/Delete";
+import { convertBytes } from "./convertBytes.js";
+import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { FaFile, FaFolder, FaFileExcel, FaFileAlt, FaFileImage, FaFileWord, FaFilePdf, FaFilePowerpoint } from "react-icons/fa";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,17 +82,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-  { id: 'name', label: 'Name'},
-  { id: 'size', label: 'Ukuran'},
+  { id: "name", label: "Name"},
+  { id: "size", label: "Ukuran"},
   {
-    id: 'modified',
-    label: 'Terakhir diubah',
-    format: (value) => value.toLocaleString('en-US'),
+    id: "modified",
+    label: "Terakhir diubah",
+    format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: 'type',
-    label: 'Tipe',
-    format: (value) => value.toLocaleString('en-US'),
+    id: "type",
+    label: "Tipe",
+    format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "action",
@@ -181,7 +179,7 @@ function FileList(props) {
 
   const rows = allDocs.map((doc) => {
 
-    if(doc['.tag'] !== "folder"){
+    if(doc[".tag"] !== "folder"){
       menuItemList = [
         {
           text: "Bagikan",
@@ -200,8 +198,8 @@ function FileList(props) {
     }
     return(
     createData(
-    doc.name, doc['.tag'] !== "folder" ? convertBytes(doc.size) : "--",!doc.client_modified ? "--" : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),
-    doc['.tag'] !== "folder" ? fileType(doc.name): "Folder", doc.path_display,
+    doc.name, doc[".tag"] !== "folder" ? convertBytes(doc.size) : "--",!doc.client_modified ? "--" : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),
+    doc[".tag"] !== "folder" ? fileType(doc.name): "Folder", doc.path_display,
      <div>
       <MoreHorizIcon onClick={(e) => handleClickAction(e,doc)} className={classes.moreIcon}/>
       {selectedDoc ? doc.path_display === selectedDoc.path_display ?
@@ -412,7 +410,7 @@ function FileList(props) {
                           {icon}
                           {value}
                         </Typography>
-                        {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
+                        {/* {column.format && typeof value === "number" ? column.format(value) : value} */}
                       </TableCell>
                     );
                   })}

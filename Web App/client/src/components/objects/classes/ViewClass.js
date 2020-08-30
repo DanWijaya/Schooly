@@ -412,8 +412,8 @@ function ViewClass(props) {
   }, [])
 
   React.useEffect(() => {
-    if (!Array.isArray(all_teachers)) { 
-      setWalikelas(all_teachers.get(kelas.walikelas)); 
+    if (!Array.isArray(all_teachers)) {
+      setWalikelas(all_teachers.get(kelas.walikelas));
     }
   }, [all_teachers]);
 
@@ -468,7 +468,7 @@ function ViewClass(props) {
     <div className={classes.root}>
       {
         (allow === 'empty') ? null
-          : (allow === 'content') ? 
+          : (allow === 'content') ?
             (user.role === "Admin" || user.role === "Teacher" || user.role === "Student") ? (
               <div>
                 <Paper className={classes.classPaper}>
@@ -476,7 +476,7 @@ function ViewClass(props) {
                     {kelas.name}
                   </Typography>
                   <Typography variant="h6">
-                    { (isObjEmpty(walikelas)) ? 
+                    { (isObjEmpty(walikelas)) ?
                       null
                     :
                       walikelas.name
@@ -496,7 +496,7 @@ function ViewClass(props) {
                             person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
                             person_name={walikelas.name }
                             person_role={(all_subjects_map) ? all_subjects_map.get(walikelas.subject_teached) : null}
-                          />                
+                          />
                         </Grid>].concat( (user.email === walikelas.email)
                         ? (<Grid item xs container justify="flex-end"></Grid>)
                         : (
@@ -506,7 +506,7 @@ function ViewClass(props) {
                                 <Link to={{
                                   pathname:'/lihat-profil',
                                   state: {
-                                    avatar: walikelas.avatar, 
+                                    avatar: walikelas.avatar,
                                     nama: walikelas.name,
                                     viewable_section: 'no_karir',
                                     role: walikelas.role,
@@ -585,7 +585,7 @@ function ViewClass(props) {
                       </Grid>
                     </Grid>
                   ))}
-                
+
                 </List>
               </div>
             </div>
@@ -726,7 +726,7 @@ function ViewClass(props) {
                       </Typography>
                       <Divider className={classes.personListDivider} />
                       <List className={classes.listContainer}>
-                        {isObjEmpty(walikelas) ? 
+                        {isObjEmpty(walikelas) ?
                           null
                         : (
                         <Grid container justify="space-between" alignItems="center">
@@ -781,7 +781,7 @@ function ViewClass(props) {
                                   person_name={student.name}
                                   person_role={student.role === "Student" ? student_role(student._id) : null}
                                 />
-                              </Grid>].concat( (user.email === student.email) 
+                              </Grid>].concat( (user.email === student.email)
                               ? (<Grid item xs container justify="flex-end"></Grid>)
                               : (
                                 <Grid item xs container justify="flex-end">

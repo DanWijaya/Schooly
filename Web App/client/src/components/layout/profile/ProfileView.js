@@ -249,7 +249,7 @@ function Profile(props) {
                             User Information
                           </Typography>
                           {(isMobile) ?
-                          <div></div> : 
+                          <div></div> :
                           <div>
                             <Typography color="textSecondary" gutterBottom style={{color:fade('#d4d4d3',0.8), fontSize:'12px', display:'flex', justifyContent:'flex-start', marginTop:'2%', marginLeft:'2%', fontWeight:'100'}}>
                             - Jangan lupa untuk menyunting data diri Anda pada Halaman Profil. -
@@ -322,7 +322,7 @@ function Profile(props) {
                             Career & Other Informations
                           </Typography>
                           {(isMobile) ?
-                          <div></div> : 
+                          <div></div> :
                           <div>
                             <Typography color="textSecondary" gutterBottom style={{color:fade('#d4d4d3',0.8), fontSize:'12px', display:'flex', justifyContent:'flex-start', marginTop:'2%', marginLeft:'2%', fontWeight:'100'}}>
                             - Kami ke depannya juga berencana untuk membantu Anda menemukan
