@@ -856,7 +856,6 @@ function ManageUsers(props) {
         <SimpleDialog open={open} onClose={handleClose}/>
         <DialogPilihDownload open={openUser} onClose={handleCloseUser}/>
       </div>
-<<<<<<< HEAD
       <Dialog fullWidth={true} maxWidth="lg" open={openTabelDialog}>
         <div style={{padding: "10px"}}>
   				{previewTable()}
@@ -877,15 +876,6 @@ function ManageUsers(props) {
           </Grid>
         </div>
       </Dialog>
-=======
-      <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
-				{previewTable()}
-        <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
-        <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
-	    </Dialog>
-      {/* ----------------------------------------------- */}
-
->>>>>>> 5ce57151c549ff9ab03274ed8e4c4288bb51d7b4
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
