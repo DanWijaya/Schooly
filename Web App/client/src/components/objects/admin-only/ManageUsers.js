@@ -9,7 +9,6 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, IconButton, Dialog, Divider, Grid, Hidden, ListItemAvatar, 
   Menu, MenuItem, TableSortLabel, Toolbar, Typography, Paper } from "@material-ui/core/";
