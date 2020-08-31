@@ -467,7 +467,6 @@ function ViewClass(props) {
 
   return (
     <div className={classes.root}>
-<<<<<<< HEAD
       {user.role === "Admin" || user.role === "Teacher" ?
         <div>
           <Paper className={classes.classPaper}>
@@ -621,7 +620,6 @@ function ViewClass(props) {
                 return (
                   <ExpansionPanel>
                     <ExpansionPanelSummary>
-=======
       {
         (allow === 'empty') ? null
           : (allow === 'content') ? 
@@ -646,7 +644,6 @@ function ViewClass(props) {
                   <Divider className={classes.personListDivider} />
                   <List className={classes.listContainer}>
                     {!isObjEmpty(walikelas) ? (
->>>>>>> 5ce57151c549ff9ab03274ed8e4c4288bb51d7b4
                       <Grid container justify="space-between" alignItems="center">
                         {[<Grid item>
                           <PersonListItem
