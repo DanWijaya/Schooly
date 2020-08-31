@@ -7,8 +7,7 @@ import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
   Paper, Typography } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -27,35 +26,35 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
-    padding: "10px",
+    padding: "10px"
   },
   avatar: {
     margin: "auto",
     width: theme.spacing(20),
-    height: theme.spacing(20),
+    height: theme.spacing(20)
   },
   profileDivider: {
     backgroundColor: theme.palette.primary.main,
-    margin: "15px 0px 15px 0px",
+    margin: "15px 0px 15px 0px"
   },
   informationPaper: {
-    backgroundColor: fade(theme.palette.primary.main,0.06),
+    backgroundColor: fade(theme.palette.primary.main,0.06)
   },
   informationPictureContainer: {
     display: "flex",
     justifyContent: "center",
     [theme.breakpoints.up("sm")]: {
-      justifyContent: "flex-end",
+      justifyContent: "flex-end"
     },
   },
   informationPicture: {
     height: "100px",
     [theme.breakpoints.up("sm")]: {
-      height: "125px",
+      height: "125px"
     },
   },
   profileDataItemAvatar: {
-    backgroundColor: "#00b7ff",
+    backgroundColor: "#00b7ff"
   },
   emptyProfileData: {
     display: "flex",
@@ -65,17 +64,17 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "10px",
     paddingRight: "10px",
     backgroundColor: theme.palette.error.main,
-    color: "white",
+    color: "white"
   },
   descriptionText: {
     color: "white", 
     marginTop: "10px", 
     marginLeft: "20px", 
     fontWeight: "300",
-    fontStyle: 'italic'
+    fontStyle: "italic"
   },
   background_gradient: {
-    padding:'20px',
+    padding:"20px",
     background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)"
   }
 }));
@@ -84,7 +83,7 @@ const StyledBadge = withStyles((theme) => ({
   badge: {
     right: theme.spacing(2),
     top: theme.spacing(16),
-  },
+  }
 }))(Badge);
 
 
@@ -164,7 +163,7 @@ function Profile(props) {
   // const { kelas } = props.classesCollection;
   // Alert control for ProfilePictureEditorDialog
 
-  const [namakelas, setNamaKelas] = React.useState('');
+  const [namakelas, setNamaKelas] = React.useState("");
   const [firstAssign, setFirstAssign] = React.useState(true);
 
   React.useEffect(() => {
@@ -194,16 +193,16 @@ function Profile(props) {
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
           {avatar ?
-          <StyledBadge>
-            <Avatar
-              src={`/api/upload/avatar/${avatar}`}
-              className={classes.avatar}
-            />
-          </StyledBadge>
+            <StyledBadge>
+              <Avatar
+                src={`/api/upload/avatar/${avatar}`}
+                className={classes.avatar}
+              />
+            </StyledBadge>
           :
-          <StyledBadge>
-            <Avatar className={classes.avatar} />
-          </StyledBadge>
+            <StyledBadge>
+              <Avatar className={classes.avatar} />
+            </StyledBadge>
           }
         </Grid>
         <Grid item>
@@ -224,14 +223,14 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <Divider className={classes.profileDivider} style={{marginTop:'35px'}} />
+      <Divider className={classes.profileDivider} style={{marginTop:"35px"}} />
         <Grid container direction="column" spacing={10}>
           {
-            (user.role === 'Teacher' ||  user.role === 'Student' || user.role === 'Admin') ? [
+            (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
               <Grid item>
                 <Paper className={classes.informationPaper}>
                   <div className={classes.background_gradient}>
-                    <Typography variant="h5" gutterBottom style={{color:'white'}}>
+                    <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       INFORMASI PENGGUNA
                     </Typography>            
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
@@ -283,24 +282,27 @@ function Profile(props) {
                           profile_data_category="Alamat"
                           profile_data_info={alamat}
                           />
-                        </div> : 
+                        </div> 
+                        : 
                         null
                     }
                   </List>
                 </Paper>
               </Grid>
-            ].concat((viewable_section === "no_karir") ? (null) : (
+            ].concat((viewable_section === "no_karir") ? 
+            (null)
+            : (
               <Grid item>
                 <Paper className={classes.informationPaper}>
                   <div className={classes.background_gradient}>
-                    <Typography variant="h5" gutterBottom style={{color:'white'}}>
+                    <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       KARIR
                     </Typography>            
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
                       Berikut ini adalah status karir dan informasi lain yang dimiliki user.
                     </Typography> 
                   </div>
-                  <List style={{padding: "20px", marginBottom:'30px'}}>
+                  <List style={{padding: "20px", marginBottom:"30px"}}>
                     <ProfileDataItem
                       profile_data_icon={<SportsEsportsIcon />}
                       profile_data_category="Hobi dan Minat"

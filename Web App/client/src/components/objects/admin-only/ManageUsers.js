@@ -17,8 +17,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
-import BlockIcon from '@material-ui/icons/Block';
+import BlockIcon from "@material-ui/icons/Block";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -36,9 +37,10 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+  return order === "desc" ? 
+  (a, b) => descendingComparator(a, b, orderBy)
+  :
+  (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function stableSort(array, comparator) {
@@ -116,7 +118,8 @@ function ManageUsersToolbar(props) {
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </span>
-                : null
+                : 
+                null
               }
             </TableSortLabel>
           </MenuItem>
@@ -226,9 +229,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   summary: {
-    padding:'8px', 
-    paddingLeft:'20px', 
-    paddingRight:'20px'
+    padding:"8px", 
+    paddingLeft:"20px", 
+    paddingRight:"20px"
   }
 }));
 
@@ -487,15 +490,15 @@ function ManageUsers(props) {
             return (
               <Grid item>
                 <Link to={{
-                    pathname:'/lihat-profil',
+                    pathname:"/lihat-profil",
                     state: {
                        avatar: row.avatar,
                        nama: row.name,
                        kelas: all_students[index].kelas,
-                       viewable_section: 'with_karir',
+                       viewable_section: "with_karir",
                        tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
                        jenis_kelamin: all_students[index].jenis_kelamin,
-                       role: 'Student',
+                       role: "Student",
                        sekolah: row.sekolah,
                        email: row.email,
                        phone: row.phone,
@@ -591,15 +594,15 @@ function ManageUsers(props) {
             return (
               <Grid item>
                 <Link to={{
-                    pathname:'/lihat-profil',
+                    pathname:"/lihat-profil",
                     state: {
                        avatar: row.avatar,
                        nama: row.name,
                        subject_teached: all_teachers[index].subject_teached,
-                       viewable_section: 'with_karir',
+                       viewable_section: "with_karir",
                        tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
                        jenis_kelamin: all_teachers[index].jenis_kelamin,
-                       role: 'Teacher',
+                       role: "Teacher",
                        sekolah: row.sekolah,
                        email: row.email,
                        phone: row.phone,
