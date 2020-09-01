@@ -31,6 +31,7 @@ Daniel:
 11. Mungkin masukkin warning kalo file size kebesaran (cthnya ndak boleh exceed 512mb)
 12. Dropbox preview file: https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/get-preview-returning-unsupported-extension-for-pdf-jpeg/td-p/372374
 20. Ganti hardcode link di app sama dropbox
+21. Kadang kadang masih ada bug pas di page Create assessment pas duplicate difotonya.
 21. Error di about page
 
 IMPORTANT:

@@ -452,7 +452,7 @@ function AssessmentList(props) {
                         </Grid>
                         <Grid item>
                           <LightTooltip title="Sunting">
-                            <Link to={`/sunting-tugas/${row._id}`}>
+                            <Link to={`/sunting-kuis/${row._id}`}>
                               <IconButton
                                 size="small"
                                 className={classes.editAssessmentButton}

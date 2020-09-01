@@ -11,7 +11,6 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import QuestionItemV2 from "./QuestionItemV2";
 import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -152,7 +151,7 @@ class EditAssessment extends Component {
     super();
     this.state = {
       num_qns: 1,
-      // questions: [<QuestionItemV2 number={1} deleteQuestion={this.deleteQuestion}/>],
+      // questions: [<QuestionItem number={1} deleteQuestion={this.deleteQuestion}/>],
       questions: [{ // mau ganti questions ini dalam Hashmap mungkin.
         name: "",
         options: ["Opsi 1", ""],
@@ -178,7 +177,8 @@ class EditAssessment extends Component {
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
   componentDidMount(){
-    const { getOneAssessment, getAllClass, getAllSubjects} = this.props;
+    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
+    handleSideDrawerExist(false)
     getAllClass()
     getOneAssessment(this.props.match.params.id)
     getAllSubjects()
@@ -205,20 +205,19 @@ class EditAssessment extends Component {
           end_date: selectedAssessments.end_date,
           questions: Array.isArray(selectedAssessments.questions) ? selectedAssessments.questions : [],
           description: selectedAssessments.description,
-          class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : [],
-          fileLampiran: Boolean(selectedAssessments.lampiran) ? selectedAssessments.lampiran : [],
+          class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : []
           // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
           // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
       })
     }
   }
 
-  onSubmit = (e, id) => {
+  onSubmit = (e) => {
     e.preventDefault()
     let formData = new FormData();
 
     const { questions } = this.state;
-    const { createAssessment , history} = this.props
+    const { updateAssessment , history} = this.props
     questions.forEach((qns) => {
       let lampiran = qns.lampiran;
       lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
@@ -232,12 +231,11 @@ class EditAssessment extends Component {
       class_assigned: this.state.class_assigned,
       description: this.state.description,
       questions: this.state.questions,
-      author_id: id,
     }
-
+    const assessmentId = this.props.match.params.id;
     console.log(assessmentData)
 
-    createAssessment(formData, assessmentData, history)
+    updateAssessment(formData, assessmentData, assessmentId, history)
     
   }
 
@@ -348,25 +346,27 @@ class EditAssessment extends Component {
     }
     else{
       if(e.target.files){
-          const files = Array.from(e.target.files);
-          let temp = questions[qnsIndex].lampiran.concat(files)
-          questions[qnsIndex].lampiran = temp;
-          this.setState({ questions: questions})
+        const files = Array.from(e.target.files);
+        let temp = questions[qnsIndex].lampiran.concat(files)
+        questions[qnsIndex].lampiran = temp;
+        this.setState({ questions: questions})
       }
     }
   }
 
-
   listQuestion = () => {
     // let questionList = []
-    let questions = this.state.questions;
+    let { questions } = this.state;
     const { page, rowsPerPage} = this.state;
     const { classes } = this.props;
     let questionList = [];
       questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-        console.log(question.lampiran)
+        
+        let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
+        let currentLampiran = question.lampiran.filter(l => typeof l === "string")
+
         return(
-          <QuestionItemV2
+          <QuestionItem
             isEdit={true}
             index={i + page * rowsPerPage}
             name={question.name}
@@ -374,6 +374,8 @@ class EditAssessment extends Component {
             answer={question.answer}
             lampiran={question.lampiran}
             lampiran_length={question.lampiran.length}
+            lampiranToAdd={lampiranToAdd}
+            currentLampiran={currentLampiran}
             deleteQuestion={this.deleteQuestion}
             handleDuplicateQuestion={this.handleDuplicateQuestion}
             handleQuestionOptions={this.handleQuestionOptions}
@@ -393,13 +395,6 @@ class EditAssessment extends Component {
     }
   }
 
-  componentDidMount(){
-    const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props
-    handleSideDrawerExist(false)
-    getAllClass()
-    getAllSubjects()
-  }
-
 
   handleChangePage = (event, newPage) => {
     // setPage(newPage);
@@ -417,39 +412,47 @@ class EditAssessment extends Component {
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
-
+    
+    console.log("QUESTIONS : ", this.state.questions)
     const UploadDialog = () => {
-        return (
-          <Dialog open={this.state.openUploadDialog}>
-            <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-              <Grid item>
-                <Typography variant="h6" align="center" gutterBottom>
-                  {!success ? "Materi sedang disunting" : "Materi berhasil disunting"}
+      return (
+        <Dialog open={this.state.openUploadDialog}>
+          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
+            <Grid item>
+              <Typography variant="h6" align="center" gutterBottom>
+                {!success ? 
+                  "Materi sedang disunting" 
+                  : 
+                  "Materi berhasil disunting"
+                }
+              </Typography>
+            </Grid>
+            <Grid item>
+              {!success ? 
+                <CircularProgress /> 
+              : 
+                <CheckCircleIcon className={classes.uploadSuccessIcon} />
+              }
+            </Grid>
+            <Grid item>
+              {!success ?
+                <Typography variant="body1" align="center" gutterBottom>
+                  <b>Mohon tetap tunggu di halaman ini.</b>
                 </Typography>
-              </Grid>
-              <Grid item>
-                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-              </Grid>
-              <Grid item>
-                {!success ?
-                  <Typography variant="body1" align="center" gutterBottom>
-                    <b>Mohon tetap tunggu di halaman ini.</b>
-                  </Typography>
-                :
+              :
                 <Link to="/daftar-kuis/">
                   <Button
                     variant="contained"
-                    className={classes.uploadFinishButton}
-                  >
+                    className={classes.uploadFinishButton}>
                     Selesai
                   </Button>
                   </Link>
-                }
-              </Grid>
+              }
             </Grid>
-          </Dialog>
-        )
-    }
+          </Grid>
+        </Dialog>
+      )
+  }
 
     const DeleteDialog = () => {
       // const classes = makeStyles(styles)
@@ -502,22 +505,22 @@ class EditAssessment extends Component {
       )
     }
 
-    document.title = "Schooly | Buat Kuis";
+    document.title = "Schooly | Sunting Kuis";
     console.log(this.state.questions)
     return (
       <div className={classes.root}>
         {DeleteDialog()}
         {UploadDialog()}
-        <form onSubmit={(e) => this.onSubmit(e, user.id)}>
+        <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Buat Kuis</b>
+                    <b>Sunting Kuis</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan kuis untuk membuat kuis.
+                    Tambahkan keterangan kuis untuk menyunting kuis.
                   </Typography>
                 </div>
                 <Divider />
@@ -718,7 +721,7 @@ class EditAssessment extends Component {
                     </Grid>
                     <Grid item>
                       <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                        Buat Kuis
+                        Sunting Kuis
                       </Button>
                     </Grid>
                   </Grid>
@@ -733,7 +736,7 @@ class EditAssessment extends Component {
 };
 
 EditAssessment.propTypes = {
-  createAssessment: PropTypes.func.isRequired,
+  updateAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
