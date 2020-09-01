@@ -7,11 +7,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     padding: "20px 20px 30px 20px",
   },
@@ -24,144 +24,138 @@ const styles = (theme) => ({
       color: theme.palette.primary.main,
     },
   },
-});
+}));
 
-class QuestionItem extends Component {
+function QuestionItem(props){
+  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
+  const classes = useStyles()
 
-  constructor(){
-    super();
+  const [lampiranToPreview, setLampiranToPreview] = React.useState([])
+  // dipakai untuk edit assessment
+  // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
-    this.state = {
-      name: "",
-      options: ["Opsi 1", ""],
-      answer: "A",
-      images: []
+  let list_options = JSON.parse(options)
+  const imageUploader = React.useRef();
+
+  const imageUpload = () => {
+    imageUploader.current.value = null
+    imageUploader.current.click()
+  }
+
+  const handlePreviewImage = (arr_lampiran) => {
+    if(Array.isArray(arr_lampiran)){
+      Promise.all(arr_lampiran.map((l) => {
+        return (new Promise((resolve, reject) => {
+          let reader = new FileReader();
+          reader.onload = e => {
+            resolve(e.target.result);
+          }
+          reader.addEventListener('error', reject);
+          reader.readAsDataURL(l);
+        }))
+      }))
+      .then((res) => {
+        setLampiranToPreview(res)
+      })
+      .catch(err => console.log(err))
     }
   }
 
-  isDifferent(arr1, arr2){
-    if(!Array.isArray(arr2))
-      return false
-
-    if(arr1.length !== arr2.length)
-      return true
-    
-    else{
-      for(var i = 0; i < arr1.length; i++){
-        if(arr1[i] !== arr2[i].length)
-          return true
-      }
-    }
-
-    return false
-  }
+  // React.useEffect(() => {
+  //   console.log("Current lampiran is set")
+  //   setCurrentLampiran(lampiran)
+  // }, [])
   
-  // shouldComponentUpdate(nextProps, nextState){
-  //   // console.log([...nextState.options])
-  //   console.log(this.state.options)
-  //   console.log(nextState.options)
-  //   console.log(JSON.stringify(this.state.options) !== JSON.stringify(nextState.options))
-  //   // return ( 
-  //   //   JSON.stringify(this.state) !== JSON.stringify(nextState) || 
-  //   //   JSON.stringify([...this.state.options]) !== JSON.stringify([...nextState.options]) ||
-  //   //   JSON.stringify([...this.state.images]) !== JSON.stringify([...nextState.images])
-  //   //   )
-  // }
-  // shouldComponentUpdate(nextProps, nextState){
-  //   // return (
-  //   //   JSON.stringify(this.state) !== JSON.stringify(nextState)
-  //   // )
-  // }
-
-  handleChangeQuestion(e, otherfield){
-    if(otherfield === "answer"){
-      console.log(e.target.value)
-      console.log("ASAS")
-      this.setState({ answer: e.target.value})
+  React.useEffect(() => {
+    if(!isEdit){  
+      handlePreviewImage(lampiran)
     }
-    else{
-      this.setState({ [e.target.id]: e.target.value})
+  },[lampiran_length])
+
+  React.useEffect(() => {
+    if(isEdit){
+      handlePreviewImage(lampiranToAdd)
     }
-  }
+  }, [lampiranToAdd.length])
 
-  handleQuestionOptions = (e, optionIndex, action) => {
-    console.log("handle question options is runned")
-    let options = this.state.options;
-    if(action === "Delete"){
-      options.splice(optionIndex, 1)
-    }else if(action === "Add"){
-      options.push("")
-    }else if(action === "Edit"){
-      options[optionIndex] = e.target.value
-    }else {
-      console.log("No action is specified")
-    }
-
-    this.setState({ options: options})
-  }
-
-  render(){
-    const { classes, number, deleteQuestion } = this.props;
-
-    return (
-      <Grid item>
+  console.log("Current lampiran : ", currentLampiran)
+  return(
+    <Grid item>
           <Paper>
             <Grid container>
               <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
                 <Grid item>
                   <Typography variant="h6" gutterBottom>
-                    Soal {number}
+                    Soal {index + 1}
                   </Typography>
-                  {/* <GridList cellHeight={400} style={{margin: "10px 0px 10px 0px"}}>
-                    {this.buildImgTag(images)}
-                  </GridList> */}
+                  <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
+                    {isEdit ? 
+                      currentLampiran.map((image, i) => 
+                        <GridListTile key={image} cols={1} >
+                        <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                        <GridListTileBar
+                          titlePosition="top"
+                          actionIcon={
+                            <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                              <CloseIcon />
+                            </IconButton>
+                          }
+                          actionPosition="right"/>
+                        </GridListTile>
+                      ) 
+                    : 
+                    null
+                    }
+                  {lampiranToPreview.map((image, i) =>
+                    <GridListTile key={image} cols={1} >
+                      <img alt="current image" src={image}/>
+                      <GridListTileBar
+                          titlePosition="top"
+                          actionIcon={
+                            <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                              <CloseIcon />
+                            </IconButton>
+                          }
+                          actionPosition="right"
+                        />
+                    </GridListTile>
+                  )}
+                  </GridList>
                   <TextField
                     multiline
                     rowsMax={10}
                     id="name"
                     fullWidth
                     variant="filled"
-                    value={this.state.name}
-                    onChange={(e) => this.handleChangeQuestion(e)}
+                    value={name}
+                    onChange={(e) => handleChangeQuestion(e, index)}
                   />
                 </Grid>
                 <Grid item>
                   <FormControl component="fieldset" id="answer" fullWidth>
-                    <RadioGroup value={this.state.answer.toUpperCase()} id="answer" onChange={(e) => this.handleChangeQuestion(e, "answer")}>
-                      {this.state.options.map((option, index) =>
+                    <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer")}>
+                      {list_options.map((option, i) =>
                         <div style={{display: "flex"}}>
-                          {/*{console.log(question.answer.toUpperCase() === String.fromCharCode(97 + index).toUpperCase())}
-                          <Radio
-                            checked={question.answer.toUpperCase() === String.fromCharCode(97 + index).toUpperCase()}
-                            value={String.fromCharCode(97 + index).toUpperCase()}
-                            onChange={(e) => {console.log("AAA"); this.handleChangeQuestion(e, i, "answer")}}
-                          />
-                          <TextField
-                            fullWidth
-                            value={option}
-                            onChange={(e) => this.handleQuestionOptions(e, index, i, "Edit" )}
-                            placeholder="Isi Pilihan"
-                          />*/}
                           <FormControlLabel
                             style={{width: "100%"}}
-                            value={String.fromCharCode(97 + index).toUpperCase()}
+                            value={String.fromCharCode(97 + i).toUpperCase()}
                             control={<Radio color="primary" />}
                             label={
                               <TextField
                                 style={{flexGrow: 1}}
                                 value={option}
-                                onChange={(e) => this.handleQuestionOptions(e, index, "Edit" )}
+                                onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
                                 placeholder="Isi Pilihan"
                               />
                             }
                           />
-                          <IconButton onClick={(e) => this.handleQuestionOptions(e, index, "Delete" )}>
+                          <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
                             <ClearIcon/>
                           </IconButton>
                         </div>
                       )}
                       <div>
-                        <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => this.handleQuestionOptions(e, null, "Add")}>
+                        <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
                           Tambah  pilihan
                         </Button>
                       </div>
@@ -172,20 +166,22 @@ class QuestionItem extends Component {
               <Divider flexItem orientation="vertical" />
               <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
                 <Grid item>
-                  {/* <input
+                  <input
                     accept="image/*"
                     multiple
                     type="file"
                     name="avatar"
-                    onChange={(e) => this.handleQuestionImage(e, i)}
-                    ref={this.imageUploader}
+                    onChange={(e) =>{handleQuestionImage(e, index, null)}}
+                    ref={imageUploader}
                     style={{
                       display: "none",
                       visibility: "hidden",
                     }}
-                  /> */}
+                  />
                   <LightTooltip title="Tambahkan " placement="right">
-                    <IconButton onClick={() => this.imageUploader.current.click()}>
+                    <IconButton 
+                    onClick={imageUpload}
+                    >
                       <AddPhotoAlternateIcon/>
                     </IconButton>
                   </LightTooltip>
@@ -193,7 +189,7 @@ class QuestionItem extends Component {
                 <Grid item>
                   <LightTooltip title="Duplikat Soal" placement="right">
                     <IconButton 
-                    // onClick={() => this.handleDuplicateQueston(i, question)}
+                    onClick={() => handleDuplicateQuestion(index)}
                     >
                       <FilterNoneIcon />
                     </IconButton>
@@ -202,7 +198,7 @@ class QuestionItem extends Component {
                 <Grid item>
                   <LightTooltip title="Hapus Soal" placement="right">
                     <IconButton 
-                    onClick={() => { deleteQuestion(number - 1)}}
+                    onClick={() => { deleteQuestion(index)}}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -212,8 +208,8 @@ class QuestionItem extends Component {
             </Grid>
           </Paper>
         </Grid>
-    )
-  }
+  )
 }
 
-export default withStyles(styles)(React.memo(QuestionItem));
+// export default React.memo(QuestionItem)
+export default QuestionItem;

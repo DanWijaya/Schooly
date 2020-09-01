@@ -338,7 +338,6 @@ class EditAnnouncement extends Component {
       formData.append("lampiran_announcement", fileLampiranToAdd[i])
     }
 
-    console.log(fileLampiranToDelete)
     this.props.updateAnnouncement(formData, fileLampiranToDelete,
       selectedAnnouncements.lampiran, announcementObject, id, this.props.history);
     this.setState({ fileLampiranToDelete: []})

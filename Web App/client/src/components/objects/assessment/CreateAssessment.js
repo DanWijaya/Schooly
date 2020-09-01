@@ -12,7 +12,6 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import QuestionItemV2 from "./QuestionItemV2";
 import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -153,7 +152,7 @@ class CreateAssessment extends Component {
     super();
     this.state = {
       num_qns: 1,
-      // questions: [<QuestionItemV2 number={1} deleteQuestion={this.deleteQuestion}/>],
+      // questions: [<QuestionItem number={1} deleteQuestion={this.deleteQuestion}/>],
       questions: [{ // mau ganti questions ini dalam Hashmap mungkin.
         name: "",
         options: ["Opsi 1", ""],
@@ -335,7 +334,10 @@ class CreateAssessment extends Component {
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
       console.log(question.lampiran)
       return(
-        <QuestionItemV2
+        <QuestionItem
+          isEdit={false}
+          lampiranToAdd={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
+          currentLampiran={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
           index={i + page * rowsPerPage}
           name={question.name}
           options={JSON.stringify(question.options)}
@@ -392,11 +394,19 @@ class CreateAssessment extends Component {
             <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
               <Grid item>
                 <Typography variant="h6" align="center" gutterBottom>
-                  {!success ? "Materi sedang disunting" : "Materi berhasil disunting"}
+                  {!success ? 
+                    "Materi sedang disunting" 
+                    : 
+                    "Materi berhasil disunting"
+                  }
                 </Typography>
               </Grid>
               <Grid item>
-                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
+                {!success ? 
+                  <CircularProgress /> 
+                : 
+                  <CheckCircleIcon className={classes.uploadSuccessIcon} />
+                }
               </Grid>
               <Grid item>
                 {!success ?
@@ -404,14 +414,14 @@ class CreateAssessment extends Component {
                     <b>Mohon tetap tunggu di halaman ini.</b>
                   </Typography>
                 :
-                <Link to="/daftar-kuis/">
-                  <Button
-                    variant="contained"
-                    className={classes.uploadFinishButton}
-                  >
-                    Selesai
-                  </Button>
-                  </Link>
+                  <Link to="/daftar-kuis/">
+                    <Button
+                      variant="contained"
+                      className={classes.uploadFinishButton}
+                    >
+                      Selesai
+                    </Button>
+                    </Link>
                 }
               </Grid>
             </Grid>
