@@ -1,6 +1,4 @@
 import axios from "axios";
-import setAuthToken from "../utils/setAuthToken";
-import jwt_decode from "jwt-decode";
 
 // Submit Button
 export const importUsers = (userData) => dispatch => {
@@ -9,7 +7,6 @@ export const importUsers = (userData) => dispatch => {
     .then(res => {
       window.location.reload();
       console.log("Data CSV telah tersimpan");
-      // return new Promise(res.data)
     })
     .catch(err => {
       console.log(err);
@@ -22,7 +19,6 @@ export const exportUsers = (userData) => dispatch => {
     axios
       .get("/api/mockusers/exportUsers", userData)
       .then(res => {
-        // history.push("/masuk")
       })
       .catch(err => {
         dispatch({
@@ -51,7 +47,7 @@ export const exportUsers = (userData) => dispatch => {
           })
         }
       })
-      .catch(err => { console.log("Error in getting all mock teachers");})
+      .catch(err => { console.log("Error in getting all mock teachers:");})
   }
   
   export const getMockStudents = () => dispatch => {
