@@ -80,10 +80,6 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 function ProfileDataItem(props) {
   const classes = useStyles();
 
@@ -152,12 +148,10 @@ function ProfileDataItem(props) {
 
 function Profile(props) {
   const classes = useStyles();
-
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection } = props;
-  // const { kelas } = props.classesCollection;
-  // Alert control for ProfilePictureEditorDialog
 
+  // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
@@ -168,7 +162,6 @@ function Profile(props) {
     }
     setOpenAlert(false);
   }
-  console.log(user.avatar)
 
   // Alert control for ProfileDataEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
@@ -213,9 +206,9 @@ function Profile(props) {
         onClose={handleCloseAlert}
         anchorOrigin={{vertical : "center", horizontal: "center"}}
       >
-        <Alert onClose={handleCloseAlert} severity="success" >
+        <MuiAlert elevation={6} variant="filled" onClose={handleCloseAlert} severity="success" >
           Foto profil berhasil diganti!
-        </Alert>
+        </MuiAlert>
       </Snackbar>
       {/* ProfileDataEditorDialog Snackbar */}
       <Snackbar
@@ -224,9 +217,9 @@ function Profile(props) {
         onClose={handleCloseDataEditorAlert}
         anchorOrigin={{vertical : "center", horizontal: "center"}}
       >
-        <Alert onClose={handleCloseDataEditorAlert} severity="success" >
+        <MuiAlert elevation={6} variant="filled" onClose={handleCloseDataEditorAlert} severity="success" >
           Data profil berhasil diganti!
-        </Alert>
+        </MuiAlert>
       </Snackbar>
       {/* ProfilePasswordEditorDialog Snackbar */}
       <Snackbar
@@ -235,9 +228,9 @@ function Profile(props) {
         onClose={handleClosePasswordEditorAlert}
         anchorOrigin={{vertical : "center", horizontal: "center"}}
       >
-        <Alert onClose={handleClosePasswordEditorAlert} severity="success" >
+        <MuiAlert elevation={6} variant="filled" onClose={handleClosePasswordEditorAlert} severity="success" >
           Kata sandi berhasil diganti!
-        </Alert>
+        </MuiAlert>
       </Snackbar>
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
