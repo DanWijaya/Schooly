@@ -2,8 +2,6 @@ Botak:
 2. nama sekolah di profil
 4. Sort mapping dkk
 5. Rename not graded jadi indo
-7. Download as csv, txt
-8. Search
 9. Cek file dan error
 13. Murid kumpul tugas masih merah
 14. Sticky footer
@@ -33,6 +31,7 @@ Daniel:
 11. Mungkin masukkin warning kalo file size kebesaran (cthnya ndak boleh exceed 512mb)
 12. Dropbox preview file: https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/get-preview-returning-unsupported-extension-for-pdf-jpeg/td-p/372374
 20. Ganti hardcode link di app sama dropbox
+21. Error di about page
 
 IMPORTANT:
 1. Jumlah murid dan absen di kelas

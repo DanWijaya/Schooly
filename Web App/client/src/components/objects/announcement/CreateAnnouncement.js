@@ -301,36 +301,36 @@ class CreateAnnouncement extends Component {
     const { user } = this.props.auth
 
     const UploadDialog = () => {
-        return (
-          <Dialog open={this.state.openUploadDialog}>
-            <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-              <Grid item>
-                <Typography variant="h6" align="center" gutterBottom>
-                  {!success ? "Pengumuman sedang dibuat" : "Pengumuman berhasil dibuat"}
-                </Typography>
-              </Grid>
-              <Grid item>
-                {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-              </Grid>
-              <Grid item>
-                {!success ?
-                  <Typography variant="body1" align="center" gutterBottom>
-                    <b>Mohon tetap tunggu di halaman ini.</b>
-                  </Typography>
-                :
-                <Link to="/daftar-pengumuman">
-                  <Button
-                    variant="contained"
-                    className={classes.uploadFinishButton}
-                  >
-                    Selesai
-                  </Button>
-                </Link>
-                }
-              </Grid>
+      return (
+        <Dialog open={this.state.openUploadDialog}>
+          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
+            <Grid item>
+              <Typography variant="h6" align="center" gutterBottom>
+                {!success ? "Pengumuman sedang dibuat" : "Pengumuman berhasil dibuat"}
+              </Typography>
             </Grid>
-          </Dialog>
-        )
+            <Grid item>
+              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
+            </Grid>
+            <Grid item>
+              {!success ?
+                <Typography variant="body1" align="center" gutterBottom>
+                  <b>Mohon tetap tunggu di halaman ini.</b>
+                </Typography>
+              :
+              <Link to="/daftar-pengumuman">
+                <Button
+                  variant="contained"
+                  className={classes.uploadFinishButton}
+                >
+                  Selesai
+                </Button>
+              </Link>
+              }
+            </Grid>
+          </Grid>
+        </Dialog>
+      )
     }
 
     const fileType = (filename) => {
