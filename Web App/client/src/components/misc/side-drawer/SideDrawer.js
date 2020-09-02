@@ -141,7 +141,7 @@ function SideDrawer(props) {
   if (user.name !== undefined) {
     return (
       <div className={classes.drawerMobile}>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {/* Mobile = Backdrop Drawer */}
           <Drawer
             variant="temporary"
@@ -158,7 +158,7 @@ function SideDrawer(props) {
             <DrawerContent user={user} handleDrawerMobile={handleDrawerMobile}/>
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           {/* Desktop = Mini Variant Drawer */}
           <Drawer
             variant="permanent"

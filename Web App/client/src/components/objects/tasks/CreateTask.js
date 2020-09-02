@@ -6,11 +6,12 @@ import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
 import classnames from "classnames";
-import { createTask } from "../../../actions/TaskActions"
+import { createTask } from "../../../actions/TaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { getOneUser } from "../../../actions/UserActions";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, CircularProgress, Chip, Dialog, Divider, FormControl, FormHelperText, Grid, IconButton,
    ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
@@ -199,7 +200,7 @@ class CreateTask extends Component {
     }
   }
 
-  // ref itu untuk ngerefer html yang ada di render. 
+  // ref itu untuk ngerefer html yang ada di render.
   lampiranUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
   handleClickMenu = (event) => {
@@ -267,7 +268,7 @@ class CreateTask extends Component {
     this.props.clearErrors()
   }
 
-  // akan selalu dirun kalau ada terima state atau props yang berubah. 
+  // akan selalu dirun kalau ada terima state atau props yang berubah.
   componentDidUpdate(prevProps, prevState){
     console.log(this.props.errors)
     // this.props.errors = false, ini berarti kan !this.props.erros itu true
@@ -304,39 +305,6 @@ class CreateTask extends Component {
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth
     console.log(errors)
-
-    const UploadDialog = () => {
-      return (
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item justify="center">
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Tugas sedang dibuat" : "Tugas berhasil dibuat"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-              <Link to="/daftar-tugas">
-                  <Button
-                    variant="contained"
-                    className={classes.uploadFinishButton}
-                  >
-                    Selesai
-                  </Button>
-                </Link>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-    }
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename)
@@ -396,7 +364,13 @@ class CreateTask extends Component {
     if (user.role === "Teacher") {
       return (
         <div className={classes.root}>
-          {UploadDialog()}
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Tugas sedang dibuat"
+            messageSuccess="Tugas telah dibuat"
+            redirectLink="/daftar-tugas"
+          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>

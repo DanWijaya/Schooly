@@ -9,6 +9,7 @@ import { getOneAssessment, updateAssessment } from "../../../actions/AssessmentA
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
@@ -236,7 +237,7 @@ class EditAssessment extends Component {
     console.log(assessmentData)
 
     updateAssessment(formData, assessmentData, assessmentId, history)
-    
+
   }
 
   handleOpenUploadDialog = () => {
@@ -361,7 +362,7 @@ class EditAssessment extends Component {
     const { classes } = this.props;
     let questionList = [];
       questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-        
+
         let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
         let currentLampiran = question.lampiran.filter(l => typeof l === "string")
 
@@ -412,47 +413,8 @@ class EditAssessment extends Component {
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
-    
+
     console.log("QUESTIONS : ", this.state.questions)
-    const UploadDialog = () => {
-      return (
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? 
-                  "Materi sedang disunting" 
-                  : 
-                  "Materi berhasil disunting"
-                }
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? 
-                <CircularProgress /> 
-              : 
-                <CheckCircleIcon className={classes.uploadSuccessIcon} />
-              }
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-                <Link to="/daftar-kuis/">
-                  <Button
-                    variant="contained"
-                    className={classes.uploadFinishButton}>
-                    Selesai
-                  </Button>
-                  </Link>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-  }
 
     const DeleteDialog = () => {
       // const classes = makeStyles(styles)
@@ -510,7 +472,13 @@ class EditAssessment extends Component {
     return (
       <div className={classes.root}>
         {DeleteDialog()}
-        {UploadDialog()}
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Kuis sedang dibuat"
+          messageSuccess="Kuis telah dibuat"
+          redirectLink="/daftar-kuis"
+        />
         <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>

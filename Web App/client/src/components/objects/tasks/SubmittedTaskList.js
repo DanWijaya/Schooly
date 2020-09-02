@@ -361,7 +361,7 @@ function SubmittedTaskList(props) {
   // const listClassTabPanel = () => {
   //   return null;
   // }
-  
+
   const listClassTabPanel = () => {
     let TabPanelList = []
     if (!tasksCollection.class_assigned || !all_students) {
@@ -403,7 +403,7 @@ function SubmittedTaskList(props) {
                 </ListItemAvatar>
                 <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
                 //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
-                 secondary={!tasksCollection.grades ? "Not graded" : !gradeStatus.has(student._id) && !tasksCollection.grades[student._id] ? "Not Graded" : "Graded"}/>
+                 secondary={!tasksCollection.grades ? "Not graded" : !gradeStatus.has(student._id) && !tasksCollection.grades[student._id] ? "Belum Dinilai" : "Telah Dinilai"}/>
             </ListItem>
             </ExpansionPanelSummary>
              <Divider />

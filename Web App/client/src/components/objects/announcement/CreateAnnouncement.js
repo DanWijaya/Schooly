@@ -3,9 +3,10 @@ import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { createAnnouncement } from "../../../actions/AnnouncementActions"
+import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
    Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
@@ -276,7 +277,6 @@ class CreateAnnouncement extends Component {
         formData.append("lampiran_announcement", this.state.fileLampiran[i])
       }
       console.log(formData.getAll("lampiran_announcement"), this.state.fileLampiran)
-      // this.handleOpenUploadDialog()
       this.props.createAnnouncement(formData, announcementData, this.props.history)
   }
 
@@ -299,39 +299,6 @@ class CreateAnnouncement extends Component {
     const { class_assigned, fileLampiran} = this.state;
     const { errors } = this.props;
     const { user } = this.props.auth
-
-    const UploadDialog = () => {
-      return (
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Pengumuman sedang dibuat" : "Pengumuman berhasil dibuat"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-              <Link to="/daftar-pengumuman">
-                <Button
-                  variant="contained"
-                  className={classes.uploadFinishButton}
-                >
-                  Selesai
-                </Button>
-              </Link>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-    }
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename)
@@ -382,10 +349,15 @@ class CreateAnnouncement extends Component {
       return (<Redirect to="/tidak-ditemukan"/>)
     }
 
-
     return (
       <div className={classes.root}>
-        {UploadDialog()}
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Pengumuman sedang dibuat"
+          messageSuccess="Pengumuman telah dibuat"
+          redirectLink="/daftar-pengumuman"
+        />
         <Paper>
           <div className={classes.content}>
             <Typography variant="h5" gutterBottom>

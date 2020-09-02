@@ -27,15 +27,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UploadDialog() {
+function UploadDialog(props) {
   const classes = useStyles();
 
+  const { openUploadDialog, success, messageUploading, messageSuccess, redirectLink } = props;
+
   return (
-    <Dialog open={this.state.openUploadDialog}>
+    <Dialog open={openUploadDialog}>
       <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
         <Grid item>
           <Typography variant="h6" align="center" gutterBottom>
-            {!success ? "Pengumuman sedang disunting" : "Pengumuman berhasil disunting"}
+            {!success ? messageUploading : messageSuccess}
           </Typography>
         </Grid>
         <Grid item>
@@ -43,11 +45,11 @@ function UploadDialog() {
         </Grid>
         <Grid item>
           {!success ?
-            <Typography variant="body1" align="center" gutterBottom>
-              <b>Mohon tetap tunggu di halaman ini.</b>
+            <Typography variant="body2" align="center" gutterBottom>
+              <b>Mohon tunggu sebentar</b>
             </Typography>
           :
-          <Link to={`/pengumuman/${this.props.match.params.id}`}>
+            <Link to={redirectLink}>
               <Button
                 variant="contained"
                 className={classes.uploadFinishButton}
