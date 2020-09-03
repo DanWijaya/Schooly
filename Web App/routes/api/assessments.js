@@ -50,7 +50,7 @@ router.post('/create', (req,res) => {
 })
 
 router.post("/update/:id", (req,res) => {
-  const {errors, isValid} = validateAssessmentInput(req.body)
+  const { errors, isValid } = validateAssessmentInput(req.body)
   if(!isValid){
     console.log("Data is not valid")
     return res.status(400).json(errors)
@@ -70,9 +70,17 @@ router.post("/update/:id", (req,res) => {
         assessmentData.start_date = req.body.start_date;
         assessmentData.end_date = req.body.end_date;
 
+        let questions = req.body.questions;
+        let qns_list = questions.map((qns) => {
+          let lampiran = qns.lampiran.filter(x => typeof x === "string")
+          qns.lampiran = lampiran
+          return qns
+        })
+
+        assessmentData.questions = qns_list;
         assessmentData
                     .save()
-                    .then(() => res.json("Update Task complete"))
+                    .then(quiz => res.json(quiz))
                     .catch(err => res.status(400).send("Unable to update task database"));
     }
   })

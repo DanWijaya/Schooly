@@ -44,7 +44,7 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
     );
 }
 
-export const updateAssessment = (formData, assessmentData, assessmentId, history) => dispatch => {
+export const updateAssessment = (formData, assessmentData, assessmentId, lampiran_to_delete, history) => dispatch => {
   // formData is the lampiran files
   axios
     .post(`/api/assessments/update/${assessmentId}`, assessmentData)
@@ -55,8 +55,21 @@ export const updateAssessment = (formData, assessmentData, assessmentId, history
             type: GET_ERRORS,
             payload: false
         })
+        let { questions } = assessmentData;
 
-        return "Done"
+        if(formData.has("lampiran_assessment")){
+          let num_lampiran = [];
+          questions.forEach((qns) => {
+            let lampiran = qns.lampiran.filter(x => typeof x !== "string")
+            num_lampiran.push(lampiran.length)
+          })
+          formData.append("num_lampiran", num_lampiran)
+          console.log("Lampiran number ", num_lampiran)
+          return axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}`, formData)
+        }
+        else {
+          return "Successfully updated assessment with no lampiran"
+        }
         // if (lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
         //     return axios.delete(`/api/upload/att_assessment/lampiran/${assessmentId}`, 
         //     { data: 
@@ -69,13 +82,15 @@ export const updateAssessment = (formData, assessmentData, assessmentId, history
         //     return "No lampiran file is going to be deleted"
 
     })
-    // .then(res => {
-    //     console.log(formData.has("lampiran_assessment"), formData.getAll("lampiran_assessment"))
-    //     if (formData.has('lampiran_tugas'))
-    //         return axios.post(`/api/upload/att_assessment/lampiran/${assessmentId}`, formData);
-    //     else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-    //         return "Successfully updated task with no lampiran"
-    // })
+    .then(res => {
+      console.log(lampiran_to_delete)
+        if(lampiran_to_delete.length){
+          return axios.delete(`/api/upload/att_assessment/lampiran`, {data: {lampiran_to_delete: lampiran_to_delete}})
+        }
+        else {// harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+            return "Successfully updated task with no lampiran"
+        }
+    })
     .then(res => {
         console.log("Lampiran file is uploaded")
         dispatch({

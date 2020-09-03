@@ -158,6 +158,7 @@ class EditAssessment extends Component {
         answer: "A",
         lampiran: []
       }],
+      lampiranToDelete: [],
       name: "",
       description: "",
       subject: "",
@@ -216,10 +217,11 @@ class EditAssessment extends Component {
     e.preventDefault()
     let formData = new FormData();
 
-    const { questions } = this.state;
+    const { questions, lampiranToDelete } = this.state;
     const { updateAssessment , history} = this.props
+
     questions.forEach((qns) => {
-      let lampiran = qns.lampiran;
+      let lampiran = qns.lampiran.filter(x => typeof x !== "string");
       lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
     })
 
@@ -235,7 +237,7 @@ class EditAssessment extends Component {
     const assessmentId = this.props.match.params.id;
     console.log(assessmentData)
 
-    updateAssessment(formData, assessmentData, assessmentId, history)
+    updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
     
   }
 
@@ -340,9 +342,22 @@ class EditAssessment extends Component {
   handleQuestionImage = (e, qnsIndex, indexToDelete=null) => {
     let questions = this.state.questions
     if(Number.isInteger(indexToDelete)){
+      let item = questions[qnsIndex].lampiran[indexToDelete]
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
-      console.log(questions)
-      this.setState({ questions: questions})
+
+      let all_lampiran_list = []
+      questions.forEach((qns) => qns.lampiran.length ? null : all_lampiran_list = [...all_lampiran_list, ...qns.lampiran])
+      
+      if(typeof item === "string"){
+        if(all_lampiran_list.indexOf(item) !== -1){
+          let temp = this.state.lampiranToDelete
+          temp.push(item)
+          this.setState({ lampiranToDelete: temp, questions: questions})
+        }
+      }
+      else {
+        this.setState({ questions: questions})
+      }
     }
     else{
       if(e.target.files){
@@ -364,7 +379,7 @@ class EditAssessment extends Component {
         
         let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
         let currentLampiran = question.lampiran.filter(l => typeof l === "string")
-
+        console.log(question.lampiran.length)
         return(
           <QuestionItem
             isEdit={true}
