@@ -388,57 +388,7 @@ class CreateAssessment extends Component {
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-
-    const DeleteDialog = () => {
-      return (
-        <Dialog
-          open={this.state.openDeleteDialog}
-          onClose={this.handleCloseDeleteDialog}>
-          <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-            <Grid item container justify="flex-end" alignItems="flex-start">
-              <IconButton
-                size="small"
-                onClick={this.handleCloseDeleteDialog}>
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px"}}>
-              <Typography variant="h6" gutterBottom>
-                Hapus Kuis yang tengah dibuat?
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              spacing={2}
-              style={{marginBottom: "10px"}}
-            >
-              <Grid item>
-                <Link to="/daftar-kuis">
-                  <Button
-                    startIcon={<DeleteOutlineIcon />}
-                    className={classes.dialogDeleteButton}>
-                    Hapus
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={this.handleCloseDeleteDialog}
-                  startIcon={< CancelIcon/>}
-                  className={classes.dialogCancelButton}
-                >
-                  Batalkan
-                </Button>
-              </Grid>
-            </Grid>
-            </Grid>
-        </Dialog>
-      )
-    }
-
+    
     document.title = "Schooly | Buat Kuis";
 
     console.log(this.state.questions)
@@ -450,6 +400,8 @@ class CreateAssessment extends Component {
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
           itemType="Kuis"
           deleteItem=""
+          isLink={true}
+          redirectLink="/daftar-kuis"
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}

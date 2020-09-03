@@ -11,7 +11,7 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaClipboardList, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
+import { FaChalkboardTeacher, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -111,8 +111,7 @@ function DrawerContent(props) {
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
-      ["/kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
+      ["/daftar-kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
     ]
   }
 

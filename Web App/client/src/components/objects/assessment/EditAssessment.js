@@ -9,6 +9,7 @@ import { getOneAssessment, updateAssessment } from "../../../actions/AssessmentA
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
@@ -416,62 +417,19 @@ class EditAssessment extends Component {
 
     console.log("QUESTIONS : ", this.state.questions)
 
-    const DeleteDialog = () => {
-      // const classes = makeStyles(styles)
-      return (
-        <Dialog
-          open={this.state.openDeleteDialog}
-          onClose={this.handleCloseDeleteDialog}>
-          <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-            <Grid item container justify="flex-end" alignItems="flex-start">
-              <IconButton
-                size="small"
-                onClick={this.handleCloseDeleteDialog}>
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px"}}>
-              <Typography variant="h6" gutterBottom>
-                Hapus Kuis yang tengah dibuat?
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              spacing={2}
-              style={{marginBottom: "10px"}}
-            >
-              <Grid item>
-                <Link to="/daftar-kuis">
-                  <Button
-                    startIcon={<DeleteOutlineIcon />}
-                    className={classes.dialogDeleteButton}>
-                    Hapus
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={this.handleCloseDeleteDialog}
-                  startIcon={< CancelIcon/>}
-                  className={classes.dialogCancelButton}
-                >
-                  Batalkan
-                </Button>
-              </Grid>
-            </Grid>
-            </Grid>
-        </Dialog>
-      )
-    }
-
     document.title = "Schooly | Sunting Kuis";
+
     console.log(this.state.questions)
+
     return (
       <div className={classes.root}>
-        {DeleteDialog()}
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType="Kuis"
+          itemName=""
+          deleteItem=""
+        />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
