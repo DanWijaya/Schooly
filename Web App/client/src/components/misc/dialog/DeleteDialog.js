@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Button, Dialog, Grid, IconButton, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 function DeleteDialog(props) {
   const classes = useStyles();
 
-  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem } = props;
+  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, isLink, redirectLink } = props;
 
   return (
     <Dialog open={openDeleteDialog}>
@@ -60,13 +61,24 @@ function DeleteDialog(props) {
             </Button>
           </Grid>
           <Grid item>
-            <Button
-              onClick={handleCloseDeleteDialog}
-              startIcon={<CancelIcon />}
-              className={classes.dialogCancelButton}
-            >
-              Batal
-            </Button>
+            {!isLink ?
+              <Button
+                onClick={handleCloseDeleteDialog}
+                startIcon={<CancelIcon />}
+                className={classes.dialogCancelButton}
+              >
+                Batal
+              </Button>
+            :
+              <Link to={redirectLink}>
+                <Button
+                  startIcon={<CancelIcon />}
+                  className={classes.dialogCancelButton}
+                >
+                  Batal
+                </Button>
+              </Link>
+            }
           </Grid>
         </Grid>
       </Grid>

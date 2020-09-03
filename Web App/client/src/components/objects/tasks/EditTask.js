@@ -8,8 +8,9 @@ import lokal from "date-fns/locale/id";
 import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
-import { getAllSubjects } from "../../../actions/SubjectActions"
-import { clearErrors } from "../../../actions/ErrorActions"
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { clearErrors } from "../../../actions/ErrorActions";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
   Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
@@ -380,38 +381,6 @@ class EditTask extends Component {
     console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
     console.log(class_assigned)
-    const UploadDialog = () => {
-      return (
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Tugas sedang disunting" : "Tugas berhasil disunting"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-              <Link to={`/tugas-guru/${task_id}`}>
-                <Button
-                  variant="contained"
-                  className={classes.uploadFinishButton}
-                >
-                  Selesai
-                </Button>
-                </Link>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-  }
 
     let classIds = []
     const ITEM_HEIGHT = 48;
@@ -480,7 +449,13 @@ class EditTask extends Component {
     if (user.role === "Teacher" || user.role === "Admin") {
       return (
         <div className={classes.root}>
-          {UploadDialog()}
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Tugas sedang disunting"
+            messageSuccess="Tugas telah disunting"
+            redirectLink="/daftar-tugas"
+          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>

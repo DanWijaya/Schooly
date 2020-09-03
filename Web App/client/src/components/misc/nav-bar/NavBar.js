@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  navbarContainedLeftItems: {
+  navbarContainer: {
     flex: "1",
     justifyContent: "flex-start",
     alignItems: "center",
@@ -66,19 +66,19 @@ function NavBar(props) {
   let rightNavBarContents;
 
   if (user.name) {
-        leftNavBarContents = (
-          <div className={classes.navbarContainedLeftItems} style={{display: !sideDrawerExist ? "none" : "block"}}>
-            {isMobileView ?
-              <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
-                <MenuIcon />
-              </IconButton>
-              :
-              <IconButton edge="start" color="inherit" onClick={handleDrawerDesktop}>
-                <MenuIcon />
-              </IconButton>
-            }
-          </div>
-      )
+    leftNavBarContents = (
+      <div className={classes.navbarContainer} style={{display: !sideDrawerExist ? "none" : "block"}}>
+        {isMobileView ?
+          <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
+            <MenuIcon />
+          </IconButton>
+          :
+          <IconButton edge="start" color="inherit" onClick={handleDrawerDesktop}>
+            <MenuIcon />
+          </IconButton>
+        }
+      </div>
+    )
     middleNavBarContents = (
       <Link to="/beranda">
         <img
@@ -95,7 +95,7 @@ function NavBar(props) {
 
   else {
     leftNavBarContents = (
-      <Grid className={classes.navbarContainedLeftItems}>
+      <Grid className={classes.navbarContainer}>
         <Link to="/">
           <img
             alt="SchoolyLogoNavBar"

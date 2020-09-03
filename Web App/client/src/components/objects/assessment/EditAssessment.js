@@ -9,6 +9,8 @@ import { getOneAssessment, updateAssessment } from "../../../actions/AssessmentA
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
@@ -237,8 +239,13 @@ class EditAssessment extends Component {
     const assessmentId = this.props.match.params.id;
     console.log(assessmentData)
 
+<<<<<<< HEAD
     updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
     
+=======
+    updateAssessment(formData, assessmentData, assessmentId, history)
+
+>>>>>>> a2c21381aaacfd0aa3ea22f348b6a253a4a06206
   }
 
   handleOpenUploadDialog = () => {
@@ -376,7 +383,7 @@ class EditAssessment extends Component {
     const { classes } = this.props;
     let questionList = [];
       questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-        
+
         let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
         let currentLampiran = question.lampiran.filter(l => typeof l === "string")
         console.log(question.lampiran.length)
@@ -427,105 +434,29 @@ class EditAssessment extends Component {
     const { all_subjects } = this.props.subjectsCollection;
     const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
-    
-    console.log("QUESTIONS : ", this.state.questions)
-    const UploadDialog = () => {
-      return (
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? 
-                  "Materi sedang disunting" 
-                  : 
-                  "Materi berhasil disunting"
-                }
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? 
-                <CircularProgress /> 
-              : 
-                <CheckCircleIcon className={classes.uploadSuccessIcon} />
-              }
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-                <Link to="/daftar-kuis/">
-                  <Button
-                    variant="contained"
-                    className={classes.uploadFinishButton}>
-                    Selesai
-                  </Button>
-                  </Link>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-  }
 
-    const DeleteDialog = () => {
-      // const classes = makeStyles(styles)
-      return (
-        <Dialog
-          open={this.state.openDeleteDialog}
-          onClose={this.handleCloseDeleteDialog}>
-          <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-            <Grid item container justify="flex-end" alignItems="flex-start">
-              <IconButton
-                size="small"
-                onClick={this.handleCloseDeleteDialog}>
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px"}}>
-              <Typography variant="h6" gutterBottom>
-                Hapus Kuis yang tengah dibuat?
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              spacing={2}
-              style={{marginBottom: "10px"}}
-            >
-              <Grid item>
-                <Link to="/daftar-kuis">
-                  <Button
-                    startIcon={<DeleteOutlineIcon />}
-                    className={classes.dialogDeleteButton}>
-                    Hapus
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={this.handleCloseDeleteDialog}
-                  startIcon={< CancelIcon/>}
-                  className={classes.dialogCancelButton}
-                >
-                  Batalkan
-                </Button>
-              </Grid>
-            </Grid>
-            </Grid>
-        </Dialog>
-      )
-    }
+    console.log("QUESTIONS : ", this.state.questions)
 
     document.title = "Schooly | Sunting Kuis";
+
     console.log(this.state.questions)
+
     return (
       <div className={classes.root}>
-        {DeleteDialog()}
-        {UploadDialog()}
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType="Kuis"
+          itemName=""
+          deleteItem=""
+        />
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Kuis sedang dibuat"
+          messageSuccess="Kuis telah dibuat"
+          redirectLink="/daftar-kuis"
+        />
         <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>

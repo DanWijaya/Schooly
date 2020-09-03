@@ -10,6 +10,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
@@ -207,7 +208,7 @@ class CreateAssessment extends Component {
     console.log(assessmentData)
 
     createAssessment(formData, assessmentData, history)
-    
+
   }
 
   handleOpenUploadDialog = () => {
@@ -349,10 +350,10 @@ class CreateAssessment extends Component {
           handleQuestionOptions={this.handleQuestionOptions}
           handleChangeQuestion={this.handleChangeQuestion}
           handleQuestionImage={this.handleQuestionImage}
-          />
+        />
       )
     }
-    )
+  )
 
     return questionList
   }
@@ -387,109 +388,27 @@ class CreateAssessment extends Component {
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-
-    const UploadDialog = () => {
-        return (
-          <Dialog open={this.state.openUploadDialog}>
-            <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-              <Grid item>
-                <Typography variant="h6" align="center" gutterBottom>
-                  {!success ? 
-                    "Materi sedang disunting" 
-                    : 
-                    "Materi berhasil disunting"
-                  }
-                </Typography>
-              </Grid>
-              <Grid item>
-                {!success ? 
-                  <CircularProgress /> 
-                : 
-                  <CheckCircleIcon className={classes.uploadSuccessIcon} />
-                }
-              </Grid>
-              <Grid item>
-                {!success ?
-                  <Typography variant="body1" align="center" gutterBottom>
-                    <b>Mohon tetap tunggu di halaman ini.</b>
-                  </Typography>
-                :
-                  <Link to="/daftar-kuis/">
-                    <Button
-                      variant="contained"
-                      className={classes.uploadFinishButton}
-                    >
-                      Selesai
-                    </Button>
-                    </Link>
-                }
-              </Grid>
-            </Grid>
-          </Dialog>
-        )
-    }
-
-    const DeleteDialog = () => {
-      // const classes = makeStyles(styles)
-      return (
-        <Dialog
-          open={this.state.openDeleteDialog}
-          onClose={this.handleCloseDeleteDialog}>
-          <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-            <Grid item container justify="flex-end" alignItems="flex-start">
-              <IconButton
-                size="small"
-                onClick={this.handleCloseDeleteDialog}>
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-            <Grid item container justify="center" style={{marginBottom: "20px"}}>
-              <Typography variant="h6" gutterBottom>
-                Hapus Kuis yang tengah dibuat?
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              spacing={2}
-              style={{marginBottom: "10px"}}
-            >
-              <Grid item>
-                <Link to="/daftar-kuis">
-                  <Button
-                    startIcon={<DeleteOutlineIcon />}
-                    className={classes.dialogDeleteButton}>
-                    Hapus
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={this.handleCloseDeleteDialog}
-                  startIcon={< CancelIcon/>}
-                  className={classes.dialogCancelButton}
-                >
-                  Batalkan
-                </Button>
-              </Grid>
-            </Grid>
-            </Grid>
-        </Dialog>
-      )
-    }
-
+    
     document.title = "Schooly | Buat Kuis";
+
     console.log(this.state.questions)
+
     return (
       <div className={classes.root}>
-        {UploadDialog()}
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
           itemType="Kuis"
           deleteItem=""
+          isLink={true}
+          redirectLink="/daftar-kuis"
+        />
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Kuis sedang dibuat"
+          messageSuccess="Kuis telah dibuat"
+          redirectLink="/daftar-kuis"
         />
         <form onSubmit={(e) => this.onSubmit(e, user.id)}>
           <Grid container direction="column" spacing={3}>
@@ -721,7 +640,7 @@ CreateAssessment.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  success: PropTypes.object.isRequired
+  success: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
