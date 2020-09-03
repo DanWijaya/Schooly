@@ -17,7 +17,6 @@ import LoginForgot from "./components/auth/login/LoginForgot";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
 //Layout
 import About from "./components/layout/about/About";
-import Calendar from "./components/layout/calendar/Calendar";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import ProfileView from "./components/layout/profile/ProfileView";
@@ -25,6 +24,7 @@ import Profile from "./components/layout/profile/Profile";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
+import ScheduleCalendar from "./components/layout/schedule-calendar/ScheduleCalendar";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";
@@ -192,7 +192,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
-                    <PrivateRoute exact path="/kalender" component={Calendar} />
+                    <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
