@@ -239,13 +239,8 @@ class EditAssessment extends Component {
     const assessmentId = this.props.match.params.id;
     console.log(assessmentData)
 
-<<<<<<< HEAD
     updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
     
-=======
-    updateAssessment(formData, assessmentData, assessmentId, history)
-
->>>>>>> a2c21381aaacfd0aa3ea22f348b6a253a4a06206
   }
 
   handleOpenUploadDialog = () => {
