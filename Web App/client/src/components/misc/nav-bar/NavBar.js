@@ -57,7 +57,7 @@ function NavBar(props) {
 
   const { user } = props.auth;
 
-  const isMobileView = useMediaQuery("(max-width:600px)");
+  const isMobileView = useMediaQuery("(max-width:960px)");
   const { handleDrawerDesktop, handleDrawerMobile, sideDrawerExist } = props;
 
   // NavBar Contents
