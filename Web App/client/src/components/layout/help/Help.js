@@ -104,13 +104,11 @@ function Help(props) {
 
   useEffect(() => {
     handleMarginTopValue(0);
-  },[handleMarginTopValue])
-
-  useEffect(() => {
     return () => {
       handleMarginTopValue(20)
-    }
-  }, []) // dirun pas komponennya diunmount. 
+    } // dirun pas komponennya diunmount. 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   document.title = "Schooly | Bantuan";
 

@@ -166,7 +166,6 @@ export const deleteAssessment = (id) => dispatch => {
     })
     .then((res) => {
       console.log(res)
-      // history.push("/daftar-kuis")
       window.location.href="/daftar-kuis"
     })
     .catch(err => {

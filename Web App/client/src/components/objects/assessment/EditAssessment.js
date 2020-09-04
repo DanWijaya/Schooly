@@ -456,8 +456,8 @@ class EditAssessment extends Component {
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          messageUploading="Kuis sedang dibuat"
-          messageSuccess="Kuis telah dibuat"
+          messageUploading="Kuis sedang disunting"
+          messageSuccess="Kuis telah disunting"
           redirectLink="/daftar-kuis"
         />
         <form onSubmit={(e) => this.onSubmit(e)}>

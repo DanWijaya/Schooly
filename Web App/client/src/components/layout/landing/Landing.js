@@ -119,8 +119,9 @@ class Landing extends Component {
       this.props.handleMarginTopValue(20)
       this.props.history.push("/beranda");
     }
-    else
+    else{
       this.props.handleMarginTopValue(0);
+    }
   }
 
   componentWillUnmount(){

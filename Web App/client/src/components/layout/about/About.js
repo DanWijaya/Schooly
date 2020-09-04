@@ -55,18 +55,15 @@ const useStyles = makeStyles((theme) => ({
 
 function About(props) {
   const classes = useStyles();
-
   const { handleMarginTopValue } = props;
 
   useEffect(() => {
     handleMarginTopValue(0);
-  },[handleMarginTopValue])
-
-  useEffect(() => {
     return () => {
       handleMarginTopValue(20)
     }
-  }, [handleMarginTopValue])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   document.title = "Schooly | Tentang Schooly";
 
