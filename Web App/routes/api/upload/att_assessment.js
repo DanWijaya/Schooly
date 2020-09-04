@@ -106,26 +106,26 @@ router.delete("/lampiran/:id", (req,res) => {
       }
     })
 
-    if (req.params.id !== "deleteall") {
-      for (var j =0; j < current_lampiran.length; j++) {
-        if (current_lampiran[j].filename === lampiran_to_delete[i].filename) {
-          current_lampiran.splice(j,1)
-          break;
-        }
-      }
+    // if (req.params.id !== "deleteall") {
+    //   for (var j =0; j < current_lampiran.length; j++) {
+    //     if (current_lampiran[j].filename === lampiran_to_delete[i].filename) {
+    //       current_lampiran.splice(j,1)
+    //       break;
+    //     }
+    //   }
 
-    Assessment.findById(id, (err, ass) => {
-      if (!ass) {
-        return res.status(404).json("Ann object is not found in the Database")
-      }
-      else {
-        ass.lampiran = current_lampiran;
-        ass.save()
-            .then(() => {return res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"})})
-            .catch((err) => console.log("Error happened in updating task lampiran field"))
-          }
-        })
-      }
+    // Assessment.findById(id, (err, ass) => {
+    //   if (!ass) {
+    //     return res.status(404).json("Ann object is not found in the Database")
+    //   }
+    //   else {
+    //     ass.lampiran = current_lampiran;
+    //     ass.save()
+    //         .then(ass => res.json({success: "Successfully updated the lampiran file and the lampiran field on Task object"}))
+    //         .catch((err) => console.log("Error happened in updating task lampiran field"))
+    //       }
+    //     })
+    //   }
   }
   return res.json({success: "Succesfully deleted all lampiran materi"})
 })

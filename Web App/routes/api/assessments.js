@@ -72,11 +72,12 @@ router.post("/update/:id", (req,res) => {
 
         let questions = req.body.questions;
         let qns_list = questions.map((qns) => {
-          let lampiran = qns.lampiran.filter(x => typeof x === "string")
-          qns.lampiran = lampiran
-          return qns
+          let q = qns;
+          // let lampiran = q.lampiran.filter(x => typeof x === "string")
+          q.lampiran = qns.lampiran.filter(x => typeof x === "string")
+          return q;
         })
-
+        console.log(qns_list)
         assessmentData.questions = qns_list;
         assessmentData
                     .save()

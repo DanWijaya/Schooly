@@ -85,7 +85,7 @@ export const updateAssessment = (formData, assessmentData, assessmentId, lampira
     .then(res => {
       console.log(lampiran_to_delete)
         if(lampiran_to_delete.length){
-          return axios.delete(`/api/upload/att_assessment/lampiran`, {data: {lampiran_to_delete: lampiran_to_delete}})
+          return axios.delete(`/api/upload/att_assessment/lampiran/${"some"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
         }
         else {// harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"

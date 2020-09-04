@@ -345,17 +345,25 @@ class EditAssessment extends Component {
     let questions = this.state.questions
     if(Number.isInteger(indexToDelete)){
       let item = questions[qnsIndex].lampiran[indexToDelete]
+      // delete question lampiran nya dari list
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
-
+      // lalu setelah itu kita simpan semua lampiran di dalam list untuk mengecek. 
       let all_lampiran_list = []
-      questions.forEach((qns) => qns.lampiran.length ? null : all_lampiran_list = [...all_lampiran_list, ...qns.lampiran])
-      
-      if(typeof item === "string"){
-        if(all_lampiran_list.indexOf(item) !== -1){
-          let temp = this.state.lampiranToDelete
-          temp.push(item)
-          this.setState({ lampiranToDelete: temp, questions: questions})
+      questions.forEach((qns) => {
+        if(qns.lampiran.length){
+         all_lampiran_list = [...all_lampiran_list, ...qns.lampiran]
         }
+      })
+
+      
+      // dipakai untuk handle kalau imagenya dari duplicate, tapi ada satu soal yang imagenya didelete lah. 
+      if(typeof item === "string"){
+        let temp = this.state.lampiranToDelete;
+        if(all_lampiran_list.indexOf(item) === -1){
+          // kalau ngak ada, bakal dibuang. 
+          temp.push(item)
+        }
+        this.setState({ lampiranToDelete: temp, questions: questions})
       }
       else {
         this.setState({ questions: questions})
