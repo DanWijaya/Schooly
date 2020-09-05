@@ -5,7 +5,7 @@ const passport = require("passport");
 
 //untuk users punya
 const users = require("./routes/api/users");
-const mockusers = require("./client/src/prototypes/mockusers"); // tugas 3
+const mockusers = require("./client/src/prototypes/mock-users/mockusers"); // tugas 3
 
 // untuk uploads punya
 const att_announcement = require("./routes/api/upload/att_announcement");
@@ -34,7 +34,7 @@ app.use(
 );
 
 // // for parsing application/json
-// app.use(express.json()); 
+// app.use(express.json());
 
 app.use(bodyParser.json());
 
@@ -72,7 +72,7 @@ app.use("/api/users", users);
 app.use("/api/tasks", tasks);
 app.use("/api/classes", classes);
 
-app.use("/api/mockusers", mockusers); // tugas 3 
+app.use("/api/mockusers", mockusers); // tugas 3
 
 // Handle upload routing..
 app.use("/api/upload/att_announcement", att_announcement)

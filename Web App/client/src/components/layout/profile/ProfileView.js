@@ -12,7 +12,7 @@ import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
+import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import BlockIcon from "@material-ui/icons/Block";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "15px 0px 15px 0px"
   },
   informationPaper: {
-    backgroundColor: fade(theme.palette.primary.main,0.06)
+    backgroundColor: fade(theme.palette.primary.main, 0.06)
   },
   informationPictureContainer: {
     display: "flex",
@@ -163,8 +163,6 @@ function Profile(props) {
 
   const { user } = props.auth;
   const { setCurrentClass, classesCollection } = props;
-  // const { kelas } = props.classesCollection;
-  // Alert control for ProfilePictureEditorDialog
 
   const [namakelas, setNamaKelas] = React.useState("");
   const [firstAssign, setFirstAssign] = React.useState(true);
@@ -226,14 +224,14 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <div style={{display:'flex', justifyContent:'flex-end', marginTop:"30px"}}>
+      <div style={{display:"flex", justifyContent:"flex-end", marginTop:"30px"}}>
         <Link to={{
           pathname:"/lihat-rapor",
         }}>
           <LightTooltip title="Klik Untuk Melihat Rapor">
-            <Button style={{backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", color:"white", borderRadius:'4px','&:focus, &:hover': {
-			backgroundColor: '#e0e0e0'}}}>
-              <AssessmentOutlinedIcon fontSize="large" style={{marginRight:'3px'}}/>
+            <Button style={{backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", color:"white", borderRadius:"4px","&:focus, &:hover": {
+			backgroundColor: "#e0e0e0"}}}>
+              <AssessmentOutlinedIcon fontSize="large" style={{marginRight:"3px"}}/>
               <Typography>Lihat Rapor</Typography>
             </Button>
           </LightTooltip>
