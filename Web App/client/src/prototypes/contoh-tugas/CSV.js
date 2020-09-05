@@ -1,7 +1,6 @@
 import React from 'react';
-import { makeStyles, useTheme } from "@material-ui/core/styles"; 
-import { Grid, Paper, Typography, Button, Dialog, DialogTitle, List, ListItem, 
-	ListItemText, TableContainer, Table, TableHead , TableBody, TableRow, TableCell, Snackbar } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles"; 
+import { Grid, Typography, Button, Dialog, TableContainer, Table, TableHead , TableBody, TableRow, TableCell, Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
@@ -64,13 +63,6 @@ export default function CSV() {
 	};
 	
 	const handleClickSubmit = () => {
-		// if(kontenCSV==""){
-		// 	alert("Harap masukkan file CSV terlebih dahulu")
-		// }
-		// else{
-		// 	submitButton.current.click();
-		// }
-
 		if (fileInput.current.files[0]) {
 			submitButton.current.click();
 			if (openErrorAlert) {
@@ -83,7 +75,7 @@ export default function CSV() {
 	};
 	
 	const handleClickDownload = (data) => {
-		if(data==""){
+		if(data===""){
 			alert("Belum ada data yang di-submit");
 		}
 		else {
@@ -93,9 +85,7 @@ export default function CSV() {
 			a.setAttribute('hidden','')
 			a.setAttribute('href',url)
 			a.setAttribute('download','file.csv')
-			// document.body.appendChild(a);
 			a.click();
-      // document.body.removeChild(a);
 		}
 	};
 

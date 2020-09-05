@@ -10,7 +10,7 @@ import AuthReducer from "./AuthReducer";
 import AnnouncementReducer from "./AnnouncementReducer"
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
-import MockReducer from "../prototypes/MockReducer"; // tugas 3
+import MockReducer from "../prototypes/mock-users/MockReducer"; // tugas 3
 
 export default combineReducers({
   auth: UserReducer,
@@ -20,7 +20,7 @@ export default combineReducers({
   classesCollection: ClassReducer,
   errors: ErrorReducer, // dari null jd false
   filesCollection: UploadReducer,
-  materialsCollection: MaterialReducer, 
+  materialsCollection: MaterialReducer,
   passwordMatters: AuthReducer,
   subjectsCollection: SubjectReducer,
   success: SuccessReducer,

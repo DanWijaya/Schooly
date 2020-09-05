@@ -11,16 +11,16 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, IconButton, Dialog, Divider, Grid, Hidden, ListItemAvatar, 
-  Menu, MenuItem, TableSortLabel, Toolbar, Typography, Paper, } from "@material-ui/core/";
+  Menu, MenuItem, TableSortLabel, Toolbar, Typography, Paper } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import PageviewIcon from '@material-ui/icons/Pageview';
+// import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from "@material-ui/icons/Block";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import PageviewIcon from "@material-ui/icons/Pageview";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {

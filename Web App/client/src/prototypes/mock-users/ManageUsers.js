@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import DeleteDialog from "../components/misc/dialog/DeleteDialog";
+// import DeleteDialog from "../components/misc/dialog/DeleteDialog";
 import LightTooltip from "../components/misc/light-tooltip/LightTooltip";
 import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography,
@@ -26,10 +26,6 @@ import csv from 'csvtojson';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import PublishIcon from '@material-ui/icons/PublishRounded';
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
-import Paper from '@material-ui/core/Paper';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { List, ListItem } from '@material-ui/core';
-
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -376,7 +372,7 @@ function ManageUsers(props) {
 
   // Fitur Download/Export==================================
   const prepareDownload = (array_of_users) => {
-    if(array_of_users==all_students){
+    if(array_of_users===all_students){
       let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,tanggal_lahir,_id\n"
       for(let individual_user of array_of_users){
         string+=`${individual_user.active},`
@@ -394,7 +390,7 @@ function ManageUsers(props) {
       }
       return(string)
     }
-    else if(array_of_users==all_teachers){
+    else if(array_of_users===all_teachers){
       let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,subject_teached,tanggal_lahir,_id\n"
       for(let individual_user of array_of_users){
         string+=`${individual_user.active},`
@@ -416,7 +412,7 @@ function ManageUsers(props) {
   }
 
   const handleClickDownload = (data,user) => {
-		if(data==""){
+		if(data===""){
 			alert("Belum ada data yang di-submit");
 		}
 		else {
@@ -425,10 +421,10 @@ function ManageUsers(props) {
 			const a = document.createElement('a');
 			a.setAttribute('hidden','')
       a.setAttribute('href',url)
-      if(user==all_students){
+      if(user===all_students){
         a.setAttribute('download','Data_Murid.csv')
       }
-      else if(user==all_teachers){
+      else if(user===all_teachers){
         a.setAttribute('download','Data_Guru.csv')
       }
 			// document.body.appendChild(a);
@@ -570,11 +566,11 @@ function ManageUsers(props) {
     setOpenUser(true)
   }
 
-  const handleCloseUser = (value) => {
+  const handleCloseUser = () => {
     setOpenUser(false);
   };
   function DialogPilihDownload(props) {
-    const { onClose, open } = props;
+    const { onClose } = props;
 
     const handleCloseUser = () => {
       onClose();
@@ -856,13 +852,26 @@ function ManageUsers(props) {
         <SimpleDialog open={open} onClose={handleClose}/>
         <DialogPilihDownload open={openUser} onClose={handleCloseUser}/>
       </div>
-      <Dialog fullWidth={true} maxWidth="sm" open={openTabelDialog}>
-				{previewTable()}
-        <Button variant="contained" onClick={() => {onClickSubmitImport()}}>Confirm</Button>
-        <Button variant="contained" onClick={()=> {onClickCancelImport()}}>Cancel</Button>
-	    </Dialog>
-      {/* ----------------------------------------------- */}
-
+      <Dialog fullWidth={true} maxWidth="lg" open={openTabelDialog}>
+        <div style={{padding: "10px"}}>
+  				{previewTable()}
+          <Grid container spacing={2} justify="center" style={{padding: "20px 0px 10px 0px"}}>
+            <Grid item>
+              {/* Kalau propsnya panjang biasakan dibikin turun biar ga susah scroll ke samping */}
+              <Button
+                variant="contained"
+                onClick={() => {onClickSubmitImport()}}
+                className={classes.confirmButton}
+              >
+                Konfirmasi
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={()=> {onClickCancelImport()}} className={classes.cancelButton}>Batal</Button>
+            </Grid>
+          </Grid>
+        </div>
+      </Dialog>
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"

@@ -21,6 +21,7 @@ import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import ProfileView from "./components/layout/profile/ProfileView";
 import Profile from "./components/layout/profile/Profile";
+import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
@@ -66,10 +67,7 @@ import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
 import Graph from "./prototypes/Graph";
-import Elbert from "./prototypes/Elbert";
-import Dimas from "./prototypes/Dimas";
-import CSV from "./prototypes/CSV";
-import ManageMockUsers from "./prototypes/ManageUsers";
+import Timer from "./prototypes/Timer";
 //Dropbox
 import DropboxConnect from "./components/dropbox/DropboxConnect";
 import DropboxAuth from "./components/dropbox/DropboxAuth";
@@ -178,22 +176,18 @@ class App extends Component {
                       )}
                     />
                     <Route exact path="/dropbox-auth" component={DropboxAuth}/>
-
                     <Route exact path="/dropbox-connect" component={DropboxConnect}/>
                     <Route exact path="/daftar" component={Register} />
-                    <Route exact path="/Dimas" component={Dimas} />
                     <Route exact path="/masuk" component={Login} />
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
-                    <Route exact path="/graph" component={Graph} />  {/*prototype*/}
-                    <Route exact path="/elbert" component={Elbert} /> {/*prototype*/}
-                    <Route exact path="/csv" component={CSV} /> {/*prototype*/}
-                    <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} /> {/*prototype*/}
+                    <Route exact path="/timer" component={Timer} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
+                    <PrivateRoute exact path="/lihat-rapor" component={ReportView} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />

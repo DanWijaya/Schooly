@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -76,16 +75,7 @@ function SimpleDialog(props) {
   };
 
   function handleSubject(subject){
-    const useStyles = makeStyles((theme) => ({
-      root: {
-          margin:'5%',
-          backgroundColor: 'blue'
-      },
-      paper: {
-          backgroundColor:fade('#55BCC9',0.9)
-      }
-      }));
-    if(subject=="Fisika"){
+    if(subject==="Fisika"){
       return (
         <div>
           <Paper className={stylesheet.paper}>Nama Pelajaran : Fisika</Paper>
@@ -104,7 +94,7 @@ function SimpleDialog(props) {
         </div>
       )
     }
-    else if(subject=="Matematika"){
+    else if(subject==="Matematika"){
       return (
         <div>
           <Paper className={stylesheet.paper}>Nama Pelajaran : Matematika</Paper>
@@ -123,7 +113,7 @@ function SimpleDialog(props) {
         </div>
       )
     }
-    else if(subject=="Kimia"){
+    else if(subject==="Kimia"){
       return (
         <div>
           <Paper className={stylesheet.paper}>Nama Pelajaran : Kimia</Paper>
