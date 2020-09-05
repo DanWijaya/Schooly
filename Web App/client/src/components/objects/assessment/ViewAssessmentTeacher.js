@@ -243,8 +243,7 @@ function ViewAssessmentTeacher(props) {
                         <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
                         {/* <GridListTileBar
                             titlePosition="top"
-                            actionPosition="right"
-                          /> */}
+                            actionPosition="right"/> */}
                       </GridListTile>
                       )}
                     </GridList>

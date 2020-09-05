@@ -60,11 +60,6 @@ function QuestionItem(props){
       .catch(err => console.log(err))
     }
   }
-
-  // React.useEffect(() => {
-  //   console.log("Current lampiran is set")
-  //   setCurrentLampiran(lampiran)
-  // }, [])
   
   React.useEffect(() => {
     if(!isEdit){  

@@ -36,11 +36,14 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
           payload: true
         });
     })
-    .catch(err => 
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
+    .catch(err => {
+        if(err.response){
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+          })
+      }
+    }
     );
 }
 

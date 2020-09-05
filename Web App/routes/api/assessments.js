@@ -36,15 +36,20 @@ router.post('/create', (req,res) => {
           delete qns.lampiran
           return qns
         })
-        const newAssessment = new Assessment({
-          ...req.body, 
-          questions: questions_no_lampiran
-        });
-        console.log({...req.body, questions: questions_no_lampiran})
-        newAssessment
-            .save()
-            .then(quiz => res.json(quiz))
-            .catch(err => res.json(err))
+        let { class_assigned } = req.body;
+        console.log(req.body.class_assigned)
+        var map = new Map()
+        class_assigned.forEach((a) =>  map.set(a, new Map()))
+        console.log(map)
+        // const newAssessment = new Assessment({
+        //   ...req.body, 
+        //   questions: questions_no_lampiran
+        // });
+        // console.log({...req.body, questions: questions_no_lampiran})
+        // newAssessment
+        //     .save()
+        //     .then(quiz => res.json(quiz))
+        //     .catch(err => res.json(err))
       }
     })
 })

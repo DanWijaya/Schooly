@@ -20,6 +20,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
@@ -81,7 +82,6 @@ function AssessmentListToolbar(props) {
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
-
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
@@ -321,7 +321,6 @@ function AssessmentList(props) {
   }
 
   React.useEffect(() => {
-    console.log("SDD jfeirer kfrelfefrjoerfe")
     getAllAssessments()
     getAllClass("map")
     getAllSubjects("map")
@@ -335,7 +334,7 @@ function AssessmentList(props) {
     if (all_assessments.length) {
       rows = []
       if (user.role === "Teacher") {
-      all_assessments.map((data) => {
+      all_assessments.forEach((data) => {
         if (data.author_id === user.id) {
           return assessmentRowItem(data)
           }
@@ -343,16 +342,24 @@ function AssessmentList(props) {
         })
       }
       else if (user.role === "Student") {
-        all_assessments.map((data) => {
+        let currentDate = new Date();
+        all_assessments.forEach((data) => {
+          console.log(data.name)
           let class_assigned = data.class_assigned;
-          if (class_assigned.indexOf(user.kelas) !== -1) {
-            return assessmentRowItem(data)
+          if (class_assigned.indexOf(user.kelas) !== -1){
+            console.log(new Date(data.start_date))
+            console.log(new Date(data.end_date))
+            console.log(currentDate)
+            if(new Date(data.start_date) <= currentDate && new Date(data.end_date) >= currentDate) {
+              return assessmentRowItem(data)
+            }
+            return null
           }
           return null
         })
       }
       else { //Admin
-        all_assessments.map(data =>  assessmentRowItem(data))
+        all_assessments.forEach(data =>  assessmentRowItem(data))
       }
     }
   }
@@ -384,7 +391,6 @@ function AssessmentList(props) {
   };
 
   document.title = "Schooly | Daftar Kuis";
-
   return (
     <div className={classes.root}>
       <DeleteDialog

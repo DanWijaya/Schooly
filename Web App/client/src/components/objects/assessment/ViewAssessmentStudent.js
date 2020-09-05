@@ -9,6 +9,11 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
+import { getOneAssessment } from "../../../actions/AssessmentActions";
+import PropTypes from "prop-types";
+import { getAllClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,27 +62,63 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     }
   },
+  optionText: {
+    color: "black"
+  }
 }));
 
 function QuestionPage(props) {
-  const { classes } = props;
+  const { classes, handleChangeQuestion, question_number } = props;
 
+  
   return (
     <Grid item>
-      <Link to={props.question_link}>
-        <Paper variant="outlined" button className={classes.questionPaper}>
-          <Typography>
-            {props.question_number}
-          </Typography>
-        </Paper>
-      </Link>
+      <Paper variant="outlined" button className={classes.questionPaper} onClick={() => handleChangeQuestion(question_number-1)}>
+        <Typography>
+          {question_number}
+        </Typography>
+      </Paper>
     </Grid>
   )
 }
 
-function ViewAssessmentStudent() {
+function ViewAssessmentStudent(props) {
   const classes = useStyles();
+  const { selectedAssessments } = props.assessmentsCollection;
+  const { all_subjects_map } = props.subjectsCollection;
+  const { getOneAssessment, getAllSubjects, getAllClass } = props;
+  const [ qnsIndex, setQnsIndex ] = React.useState(0);
+  const [ answer, setAnswer] = React.useState([]);
 
+  let id = props.match.params.id;
+
+  React.useEffect(() => {
+    getOneAssessment(id)
+    getAllSubjects("map")
+    getAllClass("map")
+  }, [])
+
+  let questions = selectedAssessments.questions;
+  let questions_length = !questions ? 0 : questions.length
+
+  React.useEffect(() => {
+    if(questions_length){
+      let arr = Array.apply(null, Array(5))
+      setAnswer(arr)
+    }
+  }, [questions_length])
+
+  const handleChangeQuestion = (i) => {
+    setQnsIndex(i)
+  }
+  const handleChangeAnswer = (e) => {
+    let temp = answer;
+    temp[qnsIndex] = e.target.value;
+    setAnswer(temp)
+  }
+  console.log(answer)
+  console.log(qnsIndex)
+  console.log(answer[qnsIndex])
   return (
     <div className={classes.root}>
       <form>
@@ -87,13 +128,13 @@ function ViewAssessmentStudent() {
               <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
                 <Grid item>
                   <Typography variant="h6" align="center">
-                    Mata Pelajaran
+                    {all_subjects_map.get(selectedAssessments.subject)}
                   </Typography>
                   <Typography variant="h4" align="center" gutterBottom>
-                    Judul Kuis
+                    {selectedAssessments.name}
                   </Typography>
                   <Typography align="center">
-                    Deskripsi Kuis
+                    {selectedAssessments.description}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -111,146 +152,11 @@ function ViewAssessmentStudent() {
                   Pindah ke Soal:
                 </Typography>
                 <Grid container spacing={2} alignItems="center">
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
-                  <QuestionPage
-                    classes={classes}
-                    question_link="/daftar-kuis"
-                    question_number="1"
-                  />
+                  {!questions ? 
+                    null 
+                    : 
+                    questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
+                  }
                 </Grid>
               </div>
             </Paper>
@@ -262,25 +168,35 @@ function ViewAssessmentStudent() {
                   <Grid container direction="column" spacing={2}>
                     <Grid item>
                       <Typography variant="h6" gutterBottom>
-                        Soal 1
+                        Soal {qnsIndex + 1}
                       </Typography>
-                      <TextField multiline fullWidth variant="filled" />
+                      <Typography variant="h5" gutterButtom>
+                        <b>{!questions ? null : questions[qnsIndex].name}</b>
+                      </Typography>
                     </Grid>
                     <Grid item>
-                      <FormControl component="fieldset">
-                        <RadioGroup value="" onChange="">
-                          <FormControlLabel value="female" control={<Radio />} label="Female" />
-                          <FormControlLabel value="male" control={<Radio />} label="Male" />
-                          <FormControlLabel value="other" control={<Radio />} label="Other" />
-                          <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
-                          <FormControlLabel disabled control={<Radio />} label={<TextField />} />
+                      <FormControl component="fieldset" id="answer" fullWidth>
+                        <RadioGroup value={answer[qnsIndex]} id="answer" onChange={handleChangeAnswer}>
+                          {!questions ? 
+                          null 
+                          : 
+                          questions[qnsIndex].options.map((option, i) => 
+                          <div style={{display: "flex"}}>
+                          <FormControlLabel
+                            style={{width: "100%"}}
+                            value={String.fromCharCode(97 + i).toUpperCase()}
+                            control={<Radio color="primary" />}
+                            label={ <Typography className={classes.optionText}>{option}</Typography>}
+                          />
+                        </div>
+                          )}
                         </RadioGroup>
                       </FormControl>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Divider flexItem orientation="vertical" />
-                <Grid item xs={3} sm={1} className={classes.content}>
+                {/* <Grid item xs={3} sm={1} className={classes.content}>
                   <Grid container direction="column" alignItems="center">
                     <Grid item>
                       <LightTooltip title="Tambahkan Berkas" placement="right">
@@ -304,7 +220,7 @@ function ViewAssessmentStudent() {
                       </LightTooltip>
                     </Grid>
                   </Grid>
-                </Grid>
+                </Grid> */}
               </Grid>
             </Paper>
           </Grid>
@@ -313,13 +229,15 @@ function ViewAssessmentStudent() {
               <Grid container>
               <Divider flexItem orientation="vertical" />
               <Grid item container spacing={2} justify="flex-end" alignItems="center" className={classes.content}>
+                {qnsIndex === 0 ? null : 
                 <Grid item>
                   <LightTooltip title="Soal Sebelumnya">
-                    <IconButton className={classes.pageButton}>
+                    <IconButton className={classes.pageButton} onClick={() => handleChangeQuestion(qnsIndex - 1)}>
                       <ChevronLeftIcon />
                     </IconButton>
                   </LightTooltip>
                 </Grid>
+                }
                 <Grid item>
                   <Badge
                     badgeContent={
@@ -337,13 +255,17 @@ function ViewAssessmentStudent() {
                     </Button>
                   </Badge>
                 </Grid>
-                <Grid item>
-                  <LightTooltip title="Soal Selanjutnya">
-                    <IconButton className={classes.pageButton}>
-                      <ChevronRightIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
+                {qnsIndex === questions_length - 1 ? 
+                  null 
+                  : 
+                  <Grid item>
+                    <LightTooltip title="Soal Selanjutnya">
+                      <IconButton className={classes.pageButton} onClick={() => handleChangeQuestion(qnsIndex + 1)}>
+                        <ChevronRightIcon />
+                      </IconButton>
+                    </LightTooltip>
+                  </Grid>
+                }
               </Grid>
               </Grid>
             </Paper>
@@ -354,4 +276,19 @@ function ViewAssessmentStudent() {
   )
 };
 
-export default ViewAssessmentStudent;
+ViewAssessmentStudent.propTypes = {
+  assessmentsCollection: PropTypes.object.isRequired,
+  getOneAssessment: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  assessmentsCollection: state.assessmentsCollection,
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+})
+
+export default connect(
+  mapStateToProps, { getOneAssessment, getAllClass, getAllSubjects }
+)(ViewAssessmentStudent);

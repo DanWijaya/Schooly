@@ -25,6 +25,8 @@ import ClearIcon from "@material-ui/icons/Clear";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
+import ToggleOffIcon from '@material-ui/icons/ToggleOff';
+import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
@@ -171,7 +173,8 @@ class CreateAssessment extends Component {
       success: false,
       page: 0,
       rowsPerPage: 10,
-      qnsListitem: []
+      qnsListitem: [],
+      isPosted: false
     }
   }
 
@@ -381,6 +384,11 @@ class CreateAssessment extends Component {
     this.setState({ page: 0, rowsPerPage: +event.target.value })
   };
 
+  handlePostToggle = () => {
+    this.setState((prevState) => ({
+      isPosted: !prevState.isPosted
+    }))
+  }
   render() {
     console.log(this.state.questions)
     const { class_assigned } = this.state;
@@ -592,7 +600,7 @@ class CreateAssessment extends Component {
                     </LightTooltip>
                   </Grid>
                   <Grid item>
-                    <LightTooltip title="Simpan Kuis">
+                    <LightTooltip title="Tunjukkan Kuis">
                       <Badge
                         badgeContent={
                           <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
@@ -604,8 +612,12 @@ class CreateAssessment extends Component {
                           horizontal: "right",
                         }}
                       >
-                        <IconButton className={classes.draftAssessmentButton}>
-                          <SaveIcon />
+                        <IconButton className={classes.draftAssessmentButton} onClick={this.handlePostToggle}>
+                          {!this.state.isPosted ? 
+                            <ToggleOffIcon/> 
+                              :
+                            <ToggleOnIcon/>
+                          }
                         </IconButton>
                       </Badge>
                     </LightTooltip>
