@@ -151,8 +151,8 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const {getAllTask, getAllTaskFilesByUser, getAllSubjects} = this.props;
-    const { user} = this.props.auth;
+    const { getAllTask, getAllTaskFilesByUser, getAllSubjects } = this.props;
+    const { user } = this.props.auth;
 
     getAllTask() // actions yang membuat GET request ke Database.
     getAllSubjects("map") // untuk dapatin subject"nya gitu
@@ -210,6 +210,7 @@ class Dashboard extends Component {
 
     document.title = "Schooly | Dashboard";
     document.body.style = "background: #FFFFFF";
+
     return (
       <div className={classes.root}>
         <Grid container direction="column" spacing={3}>
