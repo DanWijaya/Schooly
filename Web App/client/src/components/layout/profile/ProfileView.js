@@ -20,7 +20,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-import {isMobile} from 'react-device-detect';
+// import {isMobile} from 'react-device-detect';
 
 const useStyles = makeStyles((theme) => ({
   root: {
