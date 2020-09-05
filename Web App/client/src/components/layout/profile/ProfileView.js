@@ -1,14 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
-  Paper, Typography } from "@material-ui/core";
+  Paper, Typography, IconButton, Button } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
@@ -20,7 +22,8 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-
+import BlockIcon from "@material-ui/icons/Block";
+import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -223,7 +226,20 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <Divider className={classes.profileDivider} style={{marginTop:"35px"}} />
+      <div style={{display:'flex', justifyContent:'flex-end', marginTop:"30px"}}>
+        <Link to={{
+          pathname:"/lihat-rapor",
+        }}>
+          <LightTooltip title="Klik Untuk Melihat Rapor">
+            <Button style={{backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", color:"white", borderRadius:'4px','&:focus, &:hover': {
+			backgroundColor: '#e0e0e0'}}}>
+              <AssessmentOutlinedIcon fontSize="large" style={{marginRight:'3px'}}/>
+              <Typography>Lihat Rapor</Typography>
+            </Button>
+          </LightTooltip>
+        </Link>
+      </div>
+      <Divider className={classes.profileDivider}/>
         <Grid container direction="column" spacing={10}>
           {
             (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
