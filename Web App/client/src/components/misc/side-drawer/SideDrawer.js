@@ -14,6 +14,9 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboardTeacher, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
 
+// bm drawer
+import AssessmentIcon from '@material-ui/icons/Assessment';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -114,6 +117,10 @@ function DrawerContent(props) {
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       ["/daftar-kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
+      [{pathname:"/lihat-rapor", state: {
+        nama: 'Pilih kelas dan mata pelajaran untuk menampikan daftar nilai!',
+        dari: "drawer"
+      }}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"] // bm drawer
     ]
   }
 
