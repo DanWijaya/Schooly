@@ -1,5 +1,3 @@
-const isEmpty = require("is-empty");
-
 const initialState = {
   all_teachers: [], 
   all_students: [],

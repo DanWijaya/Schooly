@@ -2,19 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
-import moment from "moment";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import informationContacts from "./InformationContacts.png";
-import informationJob from "./InformationJob.png";
-import informationPrivate from "./InformationPrivate.png";
-import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
-import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
-import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Typography } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
+  Paper, Typography } from "@material-ui/core";
+import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -25,7 +18,6 @@ import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
-import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 import {isMobile} from 'react-device-detect';
@@ -34,35 +26,35 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
-    padding: "10px",
+    padding: "10px"
   },
   avatar: {
     margin: "auto",
     width: theme.spacing(20),
-    height: theme.spacing(20),
+    height: theme.spacing(20)
   },
   profileDivider: {
     backgroundColor: theme.palette.primary.main,
-    margin: "15px 0px 15px 0px",
+    margin: "15px 0px 15px 0px"
   },
   informationPaper: {
-    backgroundColor: fade(theme.palette.primary.main,0.04),
+    backgroundColor: fade(theme.palette.primary.main,0.06)
   },
   informationPictureContainer: {
     display: "flex",
     justifyContent: "center",
     [theme.breakpoints.up("sm")]: {
-      justifyContent: "flex-end",
+      justifyContent: "flex-end"
     },
   },
   informationPicture: {
     height: "100px",
     [theme.breakpoints.up("sm")]: {
-      height: "125px",
+      height: "125px"
     },
   },
   profileDataItemAvatar: {
-    backgroundColor: '#00b7ff',
+    backgroundColor: "#00b7ff"
   },
   emptyProfileData: {
     display: "flex",
@@ -72,20 +64,29 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "10px",
     paddingRight: "10px",
     backgroundColor: theme.palette.error.main,
-    color: "white",
+    color: "white"
   },
+  descriptionText: {
+    color: "white", 
+    marginTop: "10px", 
+    marginLeft: "20px", 
+    fontWeight: "300",
+    fontStyle: "italic"
+  },
+  background_gradient: {
+    padding:"20px",
+    background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)"
+  }
 }));
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
     right: theme.spacing(2),
     top: theme.spacing(16),
-  },
+  }
 }))(Badge);
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+
 
 function ProfileDataItem(props) {
   const classes = useStyles();
@@ -158,24 +159,12 @@ function Profile(props) {
   const location = useLocation();
 
   const { user } = props.auth;
-  const { updateAvatar, setCurrentClass, classesCollection } = props;
+  const { setCurrentClass, classesCollection } = props;
   // const { kelas } = props.classesCollection;
   // Alert control for ProfilePictureEditorDialog
 
-  const [namakelas, setNamaKelas] = React.useState('');
+  const [namakelas, setNamaKelas] = React.useState("");
   const [firstAssign, setFirstAssign] = React.useState(true);
-
-  const [openAlert, setOpenAlert] = React.useState(false);
-  const handleOpenAlert = () => {
-    setOpenAlert(true);
-  }
-  const handleCloseAlert = (e, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenAlert(false);
-  }
-  console.log(user.avatar)
 
   React.useEffect(() => {
     if (role === "Student") {
@@ -194,8 +183,9 @@ function Profile(props) {
   if (location.state === undefined) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
-  const { avatar, nama, role, viewable_section, tanggal_lahir, jenis_kelamin,
-    sekolah, email, phone, emergency_phone, alamat, hobi, ket, cita, uni, kelas, subject_teached, admin } = location.state
+  const { avatar, nama, role, viewable_section, jenis_kelamin,
+    email, phone, emergency_phone, alamat, hobi, ket, cita, uni, 
+    kelas, admin } = location.state
 
   document.title = "Schooly | Profil"
   return (
@@ -203,16 +193,16 @@ function Profile(props) {
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
           {avatar ?
-          <StyledBadge>
-            <Avatar
-              src={`/api/upload/avatar/${avatar}`}
-              className={classes.avatar}
-            />
-          </StyledBadge>
+            <StyledBadge>
+              <Avatar
+                src={`/api/upload/avatar/${avatar}`}
+                className={classes.avatar}
+              />
+            </StyledBadge>
           :
-          <StyledBadge>
-            <Avatar className={classes.avatar} />
-          </StyledBadge>
+            <StyledBadge>
+              <Avatar className={classes.avatar} />
+            </StyledBadge>
           }
         </Grid>
         <Grid item>
@@ -233,35 +223,21 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <Divider className={classes.profileDivider} style={{marginTop:'35px'}} />
+      <Divider className={classes.profileDivider} style={{marginTop:"35px"}} />
         <Grid container direction="column" spacing={10}>
           {
-            (user.role == 'Teacher' ||  user.role == 'Student' || user.role == 'Admin') ? [
+            (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
               <Grid item>
                 <Paper className={classes.informationPaper}>
-                  <Grid container>
-                    <Grid item xs={12} sm={12} style={{display:'flex', flexDirection:'column'}}>
-                       <Grid container xs={12} sm={6} md={6} lg={5} style={{position:'absolute', display:'flex', flexDirection:'column', margin:'2.6%',marginLeft:'3%'}}>
-                          <Typography variant="h5" gutterBottom style={{color:'white'}}>
-                            INFORMASI PENGGUNA
-                          </Typography>
-                          <Typography variant="h7" color="textSecondary" style={{color:'#e5e5e5', fontStyle:'italic', marginLeft:'40px', marginRight:'40px'}}>
-                            User Information
-                          </Typography>
-                          {(isMobile) ?
-                          <div></div> :
-                          <div>
-                            <Typography color="textSecondary" gutterBottom style={{color:fade('#d4d4d3',0.8), fontSize:'12px', display:'flex', justifyContent:'flex-start', marginTop:'2%', marginLeft:'2%', fontWeight:'100'}}>
-                            - Jangan lupa untuk menyunting data diri Anda pada Halaman Profil. -
-                            </Typography>
-                          </div> }
-                      </Grid>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1360 295" style={{bottom: 0, left:0, backgroundImage: "linear-gradient(to bottom right, #00b7ff, #2196F3)", color:"#2196F3", borderRadius:'5px 5px 0px 0px'}}>
-                        <path fill="#2196F3" fill-opacity="1" d="M0,192L48,213.3C96,235,192,277,288,277.3C384,277,480,235,576,202.7C672,171,768,149,864,165.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"/>
-                      </svg>
-                    </Grid>
-                  </Grid>
-                  <List style={{padding: "1.2% 2.2% 2.2% 2.2%"}}>
+                  <div className={classes.background_gradient}>
+                    <Typography variant="h5" gutterBottom style={{color:"white"}}>
+                      INFORMASI PENGGUNA
+                    </Typography>            
+                    <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
+                      Berikut ini informasi data diri dari user terkait.
+                    </Typography>
+                  </div>
+                  <List style={{padding: "20px"}}>
                     <ProfileDataItem
                       profile_data_icon={<PersonIcon />}
                       profile_data_category="Nama"
@@ -297,46 +273,36 @@ function Profile(props) {
                       profile_data_category="Nomor Telepon Darurat"
                       profile_data_info={emergency_phone}
                     />
-                    {admin==true ?
-                    <div>
-                      <Divider variant="inset" />
-                      <ProfileDataItem
-                      profile_data_icon={<HomeIcon />}
-                      profile_data_category="Alamat"
-                      profile_data_info={alamat}
-                    /></div>  : <div></div>}
+                    {
+                      admin===true ?
+                        <div>
+                          <Divider variant="inset" />
+                          <ProfileDataItem
+                          profile_data_icon={<HomeIcon />}
+                          profile_data_category="Alamat"
+                          profile_data_info={alamat}
+                          />
+                        </div> 
+                        : 
+                        null
+                    }
                   </List>
                 </Paper>
               </Grid>
-            ].concat((viewable_section == "no_karir") ? (null) : (
+            ].concat((viewable_section === "no_karir") ? 
+            (null)
+            : (
               <Grid item>
-                <Divider style={{marginTop:'6%',display:'hidden'}} />
                 <Paper className={classes.informationPaper}>
-                  <Grid container>
-                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Grid container xs={12} sm={6} md={6} lg={5} style={{position:'absolute', display:'flex', flexDirection:'column', margin:'2.6%',marginLeft:'3%'}}>
-                          <Typography variant="h5" gutterBottom style={{color:'white'}}>
-                            KARIR
-                          </Typography>
-                          <Typography variant="h7" color="textSecondary" style={{color:'#e5e5e5', fontStyle:'italic', marginLeft:'40px', marginRight:'40px'}}>
-                            Career & Other Informations
-                          </Typography>
-                          {(isMobile) ?
-                          <div></div> :
-                          <div>
-                            <Typography color="textSecondary" gutterBottom style={{color:fade('#d4d4d3',0.8), fontSize:'12px', display:'flex', justifyContent:'flex-start', marginTop:'2%', marginLeft:'2%', fontWeight:'100'}}>
-                            - Kami ke depannya juga berencana untuk membantu Anda menemukan
-                      jalur karir terbaik untuk Anda. -
-                          </Typography>
-                          </div> }
-                        </Grid>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 302" style={{bottom: 0, left:0, backgroundImage: "linear-gradient(to bottom right, #00b7ff, #2196F3)", color:"#2196F3", borderRadius:'5px 5px 0px 0px'}}>
-                          <path fill="currentcolor" fill-opacity="1" d="M0,320L360,224L720,256L1080,64L1440,160L1440,0L1080,0L720,0L360,0L0,0Z">
-                          </path>
-                        </svg>
-                    </Grid>
-                  </Grid>
-                  <List style={{padding: "1.2% 2.2% 2.2% 2.2%",marginBottom:'30px'}}>
+                  <div className={classes.background_gradient}>
+                    <Typography variant="h5" gutterBottom style={{color:"white"}}>
+                      KARIR
+                    </Typography>            
+                    <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
+                      Berikut ini adalah status karir dan informasi lain yang dimiliki user.
+                    </Typography> 
+                  </div>
+                  <List style={{padding: "20px", marginBottom:"30px"}}>
                     <ProfileDataItem
                       profile_data_icon={<SportsEsportsIcon />}
                       profile_data_category="Hobi dan Minat"
@@ -363,8 +329,9 @@ function Profile(props) {
                   </List>
                 </Paper>
               </Grid>
-            )) : (
-             <div></div>
+            )) : 
+            (
+             null
             )
           }
         </Grid>

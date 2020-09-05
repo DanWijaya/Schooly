@@ -9,18 +9,16 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography } from "@material-ui/core/";
+import { Avatar, Button, IconButton, Dialog, Divider, Grid, Hidden, ListItemAvatar, 
+  Menu, MenuItem, TableSortLabel, Toolbar, Typography, Paper } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
-import BlockIcon from '@material-ui/icons/Block';
-import PageviewIcon from "@material-ui/icons/Pageview";
+import BlockIcon from "@material-ui/icons/Block";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -38,9 +36,10 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+  return order === "desc" ? 
+  (a, b) => descendingComparator(a, b, orderBy)
+  :
+  (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 function stableSort(array, comparator) {
@@ -118,7 +117,8 @@ function ManageUsersToolbar(props) {
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </span>
-                : null
+                : 
+                null
               }
             </TableSortLabel>
           </MenuItem>
@@ -224,8 +224,14 @@ const useStyles = makeStyles((theme) => ({
   profilePanelSummary: {
     "&:hover": {
       backgroundColor: theme.palette.button.main,
+      boxShadow: "0.2px 0.2px 0.6px 0.07px #d8d8d8"
     },
   },
+  summary: {
+    padding:"8px", 
+    paddingLeft:"20px", 
+    paddingRight:"20px"
+  }
 }));
 
 function ManageUsers(props) {
@@ -313,6 +319,7 @@ function ManageUsers(props) {
   }
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
+    e.preventDefault()
     e.stopPropagation();
     setOpenDeleteDialog(true);
     setSelectedUserId(id)
@@ -393,7 +400,7 @@ function ManageUsers(props) {
 
   console.log(all_teachers[0])
   console.log(pending_users)
-
+  
   return (
     <div className={classes.root}>
       {DisableDialog()}
@@ -425,21 +432,40 @@ function ManageUsers(props) {
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <Grid item>
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                >
-                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
+                <Link to={{
+                    pathname:"/lihat-profil",
+                    state: {
+                       avatar: row.avatar,
+                       nama: row.name,
+                       kelas: all_students[index].kelas,
+                       viewable_section: "with_karir",
+                       tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                       jenis_kelamin: all_students[index].jenis_kelamin,
+                       role: "Student",
+                       sekolah: row.sekolah,
+                       email: row.email,
+                       phone: row.phone,
+                       emergency_phone : row.emergency_phone,
+                       alamat: row.address,
+                       hobi: all_students[index].hobi_minat,
+                       ket: all_students[index].ket_non_teknis,
+                       cita: all_students[index].cita_cita,
+                       uni: all_students[index].uni_impian,
+                       admin: true
+                    }
+                  }}>
+                  <Paper variant="outlined" className={classes.profilePanelSummary}>
+                    <Grid container spacing={0} justify="space-between" alignItems="center" className={classes.summary}>
                       <Grid item>
-                        {!row.avatar ?
-                          <ListItemAvatar>
-                            <Avatar />
-                          </ListItemAvatar>
-                        :
-                          <ListItemAvatar>
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
-                          </ListItemAvatar>
+                        {
+                          !row.avatar ?
+                            <ListItemAvatar>
+                              <Avatar />
+                            </ListItemAvatar>
+                          :
+                            <ListItemAvatar>
+                              <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
+                            </ListItemAvatar>
                         }
                       </Grid>
                       <Grid item>
@@ -474,38 +500,6 @@ function ManageUsers(props) {
                           </LightTooltip>
                         </Grid>
                         <Grid item>
-                        <LightTooltip title="Lihat Profil">
-                        <Link to={{
-                          pathname:'/lihat-profil',
-                          state: {
-                            avatar: row.avatar,
-                            nama: row.name,
-                            kelas: all_students[index].kelas,
-                            viewable_section: 'with_karir',
-                            tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
-                            jenis_kelamin: all_students[index].jenis_kelamin,
-                            role: 'Student',
-                            sekolah: row.sekolah,
-                            email: row.email,
-                            phone: row.phone,
-                            emergency_phone : row.emergency_phone,
-                            alamat: row.address,
-                            hobi: all_students[index].hobi_minat,
-                            ket: all_students[index].ket_non_teknis,
-                            cita: all_students[index].cita_cita,
-                            uni: all_students[index].uni_impian,
-                            admin: true
-                          }
-                        }}>
-                              <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
-                                  style={{marginRight:'7.5px'}}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
                           <LightTooltip title="Hapus">
                             <IconButton
                               size="small"
@@ -518,12 +512,11 @@ function ManageUsers(props) {
                         </Grid>
                       </Grid>
                     </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                </ExpansionPanel>
+                  </Paper>   
+                </Link>  
               </Grid>
-            )
-          })}
+          )
+        })}
       </Grid>
       <ManageUsersToolbar
         heading="Daftar Guru"
@@ -536,28 +529,47 @@ function ManageUsers(props) {
         rowCount={student_rows ? student_rows.length : 0}
       />
       <Divider variant="inset" />
-      <Grid container direction="column" spacing={2} style={{marginTop: "10px"}}>
+      <Grid container direction="column" spacing={1} style={{marginTop: "10px"}}>
         {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             console.log(all_teachers[index])
             return (
               <Grid item>
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                >
-                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
+                <Link to={{
+                    pathname:"/lihat-profil",
+                    state: {
+                       avatar: row.avatar,
+                       nama: row.name,
+                       subject_teached: all_teachers[index].subject_teached,
+                       viewable_section: "with_karir",
+                       tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                       jenis_kelamin: all_teachers[index].jenis_kelamin,
+                       role: "Teacher",
+                       sekolah: row.sekolah,
+                       email: row.email,
+                       phone: row.phone,
+                       emergency_phone : row.emergency_phone,
+                       alamat: row.address,
+                       hobi: all_teachers[index].hobi_minat,
+                       ket: all_teachers[index].ket_non_teknis,
+                       cita: all_teachers[index].cita_cita,
+                       uni: all_teachers[index].uni_impian,
+                       admin: true
+                    }
+                  }}>
+                  <Paper variant="outlined" className={classes.profilePanelSummary}>
+                    <Grid container spacing={0} justify="space-between" alignItems="center" className={classes.summary}>
                       <Grid item>
-                        {!row.avatar ?
-                          <ListItemAvatar>
-                            <Avatar />
-                          </ListItemAvatar>
-                        :
-                          <ListItemAvatar>
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
-                          </ListItemAvatar>
+                        {
+                          !row.avatar ?
+                            <ListItemAvatar>
+                              <Avatar />
+                            </ListItemAvatar>
+                          :
+                            <ListItemAvatar>
+                              <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
+                            </ListItemAvatar>
                         }
                       </Grid>
                       <Grid item>
@@ -614,8 +626,8 @@ function ManageUsers(props) {
                           </LightTooltip>
                           <LightTooltip title="Nonaktifkan">
                             <IconButton
-                              style={{display: "none"}}
                               size="small"
+                              style={{display: "none"}}
                               className={classes.profileDisableButton}
                               onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
                             >
@@ -636,66 +648,8 @@ function ManageUsers(props) {
                         </Grid>
                       </Grid>
                     </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak:</b> {row.phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak Darurat:</b> {row.emergency_phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Alamat:</b> {row.address}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs container justify="flex-end">
-                      <LightTooltip title="Lihat Profil">
-
-                        <Link to={{
-                          pathname:'/lihat-profil',
-                          state: {
-                            avatar: row.avatar,
-                            nama: row.name,
-                            subject_teached: all_teachers[index].subject_teached,
-                            viewable_section: 'with_karir',
-                            tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
-                            jenis_kelamin: all_teachers[index].jenis_kelamin,
-                            role: 'Teacher',
-                            sekolah: row.sekolah,
-                            email: row.email,
-                            phone: row.phone,
-                            emergency_phone : row.emergency_phone,
-                            alamat: row.address,
-                            hobi: all_teachers[index].hobi_minat,
-                            ket: all_teachers[index].ket_non_teknis,
-                            cita: all_teachers[index].cita_cita,
-                            uni: all_teachers[index].uni_impian
-                          }
-                        }}>
-                          <IconButton
-                              size="small"
-                              className={classes.viewMaterialButton}
-                          >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </LightTooltip>
-                    </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                  </Paper>   
+                </Link>  
               </Grid>
             )
           })}
@@ -723,5 +677,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { setCurrentClass, getStudentsByClass,
-    getAllSubjects, getAllTask, getTeachers,setUserDisabled, getStudents, getTeachers, deleteUser }
+    getAllSubjects, getAllTask, setUserDisabled, getStudents, getTeachers, deleteUser }
 ) (ManageUsers);
