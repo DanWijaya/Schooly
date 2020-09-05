@@ -1,15 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
-  Paper, Typography } from "@material-ui/core";
+import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText,
+  Paper, Typography, IconButton, Button } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
+import BlockIcon from "@material-ui/icons/Block";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
 import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
@@ -20,7 +24,6 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-// import {isMobile} from 'react-device-detect';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,9 +70,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white"
   },
   descriptionText: {
-    color: "white", 
-    marginTop: "10px", 
-    marginLeft: "20px", 
+    color: "white",
+    marginTop: "10px",
+    marginLeft: "20px",
     fontWeight: "300",
     fontStyle: "italic"
   },
@@ -184,7 +187,7 @@ function Profile(props) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
   const { avatar, nama, role, viewable_section, jenis_kelamin,
-    email, phone, emergency_phone, alamat, hobi, ket, cita, uni, 
+    email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
     kelas, admin } = location.state
 
   document.title = "Schooly | Profil"
@@ -223,7 +226,20 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <Divider className={classes.profileDivider} style={{marginTop:"35px"}} />
+      <div style={{display:'flex', justifyContent:'flex-end', marginTop:"30px"}}>
+        <Link to={{
+          pathname:"/lihat-rapor",
+        }}>
+          <LightTooltip title="Klik Untuk Melihat Rapor">
+            <Button style={{backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", color:"white", borderRadius:'4px','&:focus, &:hover': {
+			backgroundColor: '#e0e0e0'}}}>
+              <AssessmentOutlinedIcon fontSize="large" style={{marginRight:'3px'}}/>
+              <Typography>Lihat Rapor</Typography>
+            </Button>
+          </LightTooltip>
+        </Link>
+      </div>
+      <Divider className={classes.profileDivider}/>
         <Grid container direction="column" spacing={10}>
           {
             (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
@@ -232,7 +248,7 @@ function Profile(props) {
                   <div className={classes.background_gradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       INFORMASI PENGGUNA
-                    </Typography>            
+                    </Typography>
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
                       Berikut ini informasi data diri dari user terkait.
                     </Typography>
@@ -282,14 +298,14 @@ function Profile(props) {
                           profile_data_category="Alamat"
                           profile_data_info={alamat}
                           />
-                        </div> 
-                        : 
+                        </div>
+                        :
                         null
                     }
                   </List>
                 </Paper>
               </Grid>
-            ].concat((viewable_section === "no_karir") ? 
+            ].concat((viewable_section === "no_karir") ?
             (null)
             : (
               <Grid item>
@@ -297,10 +313,10 @@ function Profile(props) {
                   <div className={classes.background_gradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       KARIR
-                    </Typography>            
+                    </Typography>
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
                       Berikut ini adalah status karir dan informasi lain yang dimiliki user.
-                    </Typography> 
+                    </Typography>
                   </div>
                   <List style={{padding: "20px", marginBottom:"30px"}}>
                     <ProfileDataItem
@@ -329,7 +345,7 @@ function Profile(props) {
                   </List>
                 </Paper>
               </Grid>
-            )) : 
+            )) :
             (
              null
             )

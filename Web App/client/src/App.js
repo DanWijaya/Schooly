@@ -21,6 +21,7 @@ import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import ProfileView from "./components/layout/profile/ProfileView";
 import Profile from "./components/layout/profile/Profile";
+import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
@@ -194,6 +195,7 @@ class App extends Component {
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
+                    <PrivateRoute exact path="/lihat-rapor" component={ReportView} />
                     {/* Route Class */}
                     <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
                     <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />
