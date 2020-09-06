@@ -6,8 +6,7 @@ import PropTypes from "prop-types";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText,
-  Paper, Typography, IconButton, Button } from "@material-ui/core";
+import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography, IconButton, Button } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -88,8 +87,6 @@ const StyledBadge = withStyles((theme) => ({
     top: theme.spacing(16),
   }
 }))(Badge);
-
-
 
 function ProfileDataItem(props) {
   const classes = useStyles();
@@ -188,7 +185,8 @@ function Profile(props) {
     email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
     kelas, admin } = location.state
 
-  document.title = "Schooly | Profil"
+  document.title = `Schooly | ${nama}`
+
   return (
     <div className={classes.root}>
       <Grid container direction="column" spacing={1} alignItems="center">

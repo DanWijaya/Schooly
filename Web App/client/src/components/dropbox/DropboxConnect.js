@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback  } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Dropbox } from "dropbox";
-import { tokenUrl } from "../../utils/getDropboxToken";
 import PropTypes from "prop-types";
+import { tokenUrl } from "../../utils/getDropboxToken";
 import { setDropboxToken } from "../../actions/UserActions";
 import FileList from "./filelist/FileList.js";
 import CustomizedMenu from "./CustomizedMenu.js";
@@ -465,10 +465,7 @@ function DropboxConnect(props) {
           </Grid>
           <Grid item container direction="column" spacing={2} alignItems="center">
             <Grid item>
-              <Typography align="center" gutterBottom>
-                Hubungkan ke akun Dropbox Anda ke Schooly untuk mengakses, menggunggah dan mengunduh berkas yang ada di Schooly.
-              </Typography>
-              <Typography variant="body2" align="center" color="textSecondary">
+              <Typography variant="body1" align="center" color="textSecondary">
                 Dengan menghubungkan akun Dropbox Anda ke Schooly, Anda telah menyetujui <a href="https://www.dropbox.com/terms">
                 Kebijakan Penggunan Dropbox</a> dan <Link to="/kebijakan-penggunaan">Kebijakan Penggunaan Schooly</Link> untuk penggunaan aplikasi pihak ketiga di Schooly.
               </Typography>

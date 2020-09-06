@@ -13,7 +13,9 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog,
+   FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar,
+   MenuItem, IconButton, Paper, Radio, RadioGroup, Select, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -25,8 +27,9 @@ import ClearIcon from "@material-ui/icons/Clear";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import ToggleOffIcon from '@material-ui/icons/ToggleOff';
-import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import ToggleOffIcon from "@material-ui/icons/ToggleOff";
+import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
@@ -41,20 +44,9 @@ const styles = (theme) => ({
     padding: "20px 20px 30px 20px",
   },
   divider: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
       width: "100%",
       height: "1px",
-    },
-  },
-  addQuestionButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
     },
   },
   addOptionButton: {
@@ -66,15 +58,25 @@ const styles = (theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  draftAssessmentButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
-    backgroundColor: theme.palette.warning.main,
+  addQuestionButton: {
+    backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.warning.main,
+      color: theme.palette.primary.main,
+    },
+  },
+  pageNavigator: {
+    justifyContent: "flex-start",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
+    },
+  },
+  assessmentSettings: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      justifyContent: "center",
     },
   },
   createAssessmentButton: {
@@ -93,60 +95,12 @@ const styles = (theme) => ({
       color: theme.palette.error.main,
     },
   },
-  dialogBox: {
-    maxWidth: "400px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  avatarImg1: { // If width is smaller than height
-    width: theme.spacing(25),
-  },
-  avatarImg2: { //If height is smaller than width
-    height: theme.spacing(25),
-  },
   chips: {
     display: "flex",
     flexWrap: "wrap",
   },
   chip: {
     marginRight: 2,
-  },
-  uploadDialogGrid: {
-    maxWidth: "300px",
-    minHeight: "200px",
-    padding: "15px",
-  },
-  uploadSuccessIcon: {
-    color: "green",
-    height: "45px",
-    width: "45px"
-  },
-  uploadFinishButton: {
-    width: "100%",
-    marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
-      color: "white",
-    },
   },
 });
 
@@ -396,7 +350,45 @@ class CreateAssessment extends Component {
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-    
+
+    const ToggleViewQuiz = withStyles((theme) => ({
+      root: {
+        width: 42,
+        height: 26,
+        padding: 0,
+        margin: theme.spacing(1),
+      },
+      switchBase: {
+        padding: 2.5,
+        color: theme.palette.warning.light,
+        "&$checked": {
+          transform: "translateX(16px)",
+          color: theme.palette.common.white,
+          "& + $track": {
+            backgroundColor: theme.palette.warning.light,
+            opacity: 1,
+            border: "none",
+          },
+        },
+        "&$focusVisible $thumb": {
+          color: "#52d869",
+          border: "6px solid #fff",
+        },
+      },
+      thumb: {
+        width: 24,
+        height: 24,
+      },
+      track: {
+        borderRadius: 26 / 2,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        backgroundColor: theme.palette.grey[50],
+        opacity: 1,
+        transition: theme.transitions.create(["background-color", "border"]),
+      },
+      checked: {},
+    }))(Switch);
+
     document.title = "Schooly | Buat Kuis";
 
     console.log(this.state.questions)
@@ -571,13 +563,23 @@ class CreateAssessment extends Component {
                 </Grid>
               </Paper>
             </Grid>
-              {this.listQuestion()}
+            {this.listQuestion()}
+            <Grid item container justify="center">
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={this.handleAddQuestion}
+                className={classes.addQuestionButton}
+              >
+                Tambah Soal
+              </Button>
+            </Grid>
             <Grid item>
               <Paper>
                 <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
-                  <Grid item xs={12} sm>
+                  <Grid item container xs={12} sm className={classes.pageNavigator}>
                     <TablePagination
-                      labelRowsPerPage="Soal per halaman"
+                      labelRowsPerPage="Soal Per Halaman"
                       rowsPerPageOptions={[5, 10]}
                       component="div"
                       count={this.state.questions.length}
@@ -592,37 +594,20 @@ class CreateAssessment extends Component {
                       {errors.questions}
                     </FormHelperText>
                   </Grid>
-                  <Grid item>
-                    <LightTooltip title="Tambah Soal">
-                      <IconButton onClick={this.handleAddQuestion} className={classes.addQuestionButton}>
-                        <AddIcon/>
-                      </IconButton>
-                    </LightTooltip>
-                  </Grid>
-                  <Grid item>
-                    <LightTooltip title="Tunjukkan Kuis">
-                      <Badge
-                        badgeContent={
-                          <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-                            <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
-                          </Avatar>
+                  <Grid item container xs spacing={2} className={classes.assessmentSettings}>
+                    <Grid item>
+                      <FormControlLabel
+                        label="Tunjukkan Kuis"
+                        control={
+                          <ToggleViewQuiz
+                            checked={this.state.isPosted}
+                            onChange={this.handlePostToggle}
+                            checkedIcon={<FiberManualRecordIcon />}
+                            icon={<FiberManualRecordIcon />}
+                          />
                         }
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                      >
-                        <IconButton className={classes.draftAssessmentButton} onClick={this.handlePostToggle}>
-                          {!this.state.isPosted ? 
-                            <ToggleOffIcon/> 
-                              :
-                            <ToggleOnIcon/>
-                          }
-                        </IconButton>
-                      </Badge>
-                    </LightTooltip>
-                  </Grid>
-                  <Grid item container xs justify="flex-end" spacing={2}>
+                      />
+                    </Grid>
                     <Grid item>
                       <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
                         Batal
