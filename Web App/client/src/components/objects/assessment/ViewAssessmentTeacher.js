@@ -241,9 +241,10 @@ function ViewAssessmentTeacher(props) {
                       {question.lampiran.map((image, i) => 
                         <GridListTile key={image} cols={1} >
                         <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
-                        {/* <GridListTileBar
+                        <GridListTileBar
+                            title={`Gambar ${i+1}`}
                             titlePosition="top"
-                            actionPosition="right"/> */}
+                            actionPosition="right"/>
                       </GridListTile>
                       )}
                     </GridList>

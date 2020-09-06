@@ -328,7 +328,6 @@ function AssessmentList(props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [])
 
-  console.log(all_assessments)
   const retrieveAssessments = () => {
     // If all_assessments is not undefined or an empty array
     if (all_assessments.length) {
@@ -344,16 +343,13 @@ function AssessmentList(props) {
       else if (user.role === "Student") {
         let currentDate = new Date();
         all_assessments.forEach((data) => {
-          console.log(data.name)
           let class_assigned = data.class_assigned;
-          if (class_assigned.indexOf(user.kelas) !== -1){
-            console.log(new Date(data.start_date))
-            console.log(new Date(data.end_date))
-            console.log(currentDate)
-            if(new Date(data.start_date) <= currentDate && new Date(data.end_date) >= currentDate) {
-              return assessmentRowItem(data)
-            }
-            return null
+          if (class_assigned.indexOf(user.kelas) !== -1 && data.posted){
+            // if(new Date(data.start_date) <= currentDate && new Date(data.end_date) >= currentDate) {
+            //   return assessmentRowItem(data)
+            // }
+            // return null
+            return assessmentRowItem(data)
           }
           return null
         })

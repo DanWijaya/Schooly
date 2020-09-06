@@ -22,7 +22,7 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
           num_lampiran.push(qns.lampiran.length)
         })
         formData.append("num_lampiran", num_lampiran)
-
+        console.log(num_lampiran)
         return axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}`, formData)
       }
       else{
@@ -132,7 +132,7 @@ export const getAllAssessments = () => dispatch => {
 }
 
 //View One Task
-export const getOneAssessment = (id) => dispatch => {
+export const getOneAssessment = (id, rslv=null) => dispatch => {
   axios
     .get(`/api/assessments/view/${id}`)
     .then(res => {
@@ -141,6 +141,9 @@ export const getOneAssessment = (id) => dispatch => {
         type: GET_ASSESSMENT,
         payload: res.data
       })
+      if(rslv){
+        rslv(res)
+      }
     })
     .catch(err => {
       console.log("Error")

@@ -263,9 +263,10 @@ router.get("/gettask/:id/:task_id", (req, res) => {
       let tugasList = []
       if (user.role === "Student") { //Student are the ones has tugas field...
         user.tugas.map((item) => {
-        console.log(item)
-        if (item.for_task_object === tugasId)
+        console.log(item.for_task_object, tugasId)
+        if (String(item.for_task_object) === String(tugasId)){
           tugasList.push(item)
+            }
           }
         )}
       res.json(tugasList)

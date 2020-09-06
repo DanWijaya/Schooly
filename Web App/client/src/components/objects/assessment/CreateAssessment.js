@@ -17,19 +17,9 @@ import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormCon
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ClearIcon from "@material-ui/icons/Clear";
-import CloseIcon from "@material-ui/icons/Close";
-import DeleteIcon from "@material-ui/icons/Delete";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import SaveIcon from "@material-ui/icons/Save";
 
 const styles = (theme) => ({
   root: {
@@ -174,7 +164,7 @@ class CreateAssessment extends Component {
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
-      isPosted: false
+      posted: false
     }
   }
 
@@ -206,6 +196,7 @@ class CreateAssessment extends Component {
       description: this.state.description,
       questions: this.state.questions,
       author_id: id,
+      posted: this.state.posted
     }
 
     console.log(assessmentData)
@@ -386,7 +377,7 @@ class CreateAssessment extends Component {
 
   handlePostToggle = () => {
     this.setState((prevState) => ({
-      isPosted: !prevState.isPosted
+      posted: !prevState.posted
     }))
   }
   render() {
@@ -600,7 +591,7 @@ class CreateAssessment extends Component {
                     </LightTooltip>
                   </Grid>
                   <Grid item>
-                    <LightTooltip title="Tunjukkan Kuis">
+                    <LightTooltip title={ !this.state.posted ? "Tunjukkan ke Murid" : "Sembunyikan dari Murid"}>
                       <Badge
                         badgeContent={
                           <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
@@ -613,7 +604,7 @@ class CreateAssessment extends Component {
                         }}
                       >
                         <IconButton className={classes.draftAssessmentButton} onClick={this.handlePostToggle}>
-                          {!this.state.isPosted ? 
+                          {!this.state.posted ? 
                             <ToggleOffIcon/> 
                               :
                             <ToggleOnIcon/>

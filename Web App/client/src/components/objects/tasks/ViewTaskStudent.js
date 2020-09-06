@@ -518,7 +518,8 @@ function ViewTaskStudent(props) {
         success={success}
         messageUploading="Tugas sedang dikumpul"
         messageSuccess="Tugas telah dikumpul"
-        redirectLink={`/tugas-murid/${tugasId}`}
+        handleCloseUploadDialog={handleCloseUploadDialog}
+        redirectLink={false}
       />
       <Grid container
         spacing={2}

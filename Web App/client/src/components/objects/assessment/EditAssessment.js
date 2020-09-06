@@ -15,19 +15,12 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ClearIcon from "@material-ui/icons/Clear";
-import CloseIcon from "@material-ui/icons/Close";
-import DeleteIcon from "@material-ui/icons/Delete";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import SaveIcon from "@material-ui/icons/Save";
+import ToggleOffIcon from '@material-ui/icons/ToggleOff';
+import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 
 const styles = (theme) => ({
   root: {
@@ -169,6 +162,7 @@ class EditAssessment extends Component {
       end_date: new Date(),
       openDeleteDialog: false,
       openUploadDialog: false,
+      posted: null,
       success: false,
       page: 0,
       rowsPerPage: 10,
@@ -208,7 +202,8 @@ class EditAssessment extends Component {
           end_date: selectedAssessments.end_date,
           questions: Array.isArray(selectedAssessments.questions) ? selectedAssessments.questions : [],
           description: selectedAssessments.description,
-          class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : []
+          class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : [],
+          posted: selectedAssessments.posted
           // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
           // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
       })
@@ -235,6 +230,7 @@ class EditAssessment extends Component {
       class_assigned: this.state.class_assigned,
       description: this.state.description,
       questions: this.state.questions,
+      posted: this.state.posted
     }
     const assessmentId = this.props.match.params.id;
     console.log(assessmentData)
@@ -379,6 +375,12 @@ class EditAssessment extends Component {
     }
   }
 
+  handlePostToggle = () => {
+    this.setState((prevState) => ({
+      posted: !prevState.posted
+    }))
+  }
+
   listQuestion = () => {
     // let questionList = []
     let { questions } = this.state;
@@ -388,8 +390,8 @@ class EditAssessment extends Component {
       questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
 
         let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
+        console.log(lampiranToAdd)
         let currentLampiran = question.lampiran.filter(l => typeof l === "string")
-        console.log(question.lampiran.length)
         return(
           <QuestionItem
             isEdit={true}
@@ -644,7 +646,7 @@ class EditAssessment extends Component {
                     </LightTooltip>
                   </Grid>
                   <Grid item>
-                    <LightTooltip title="Simpan Kuis">
+                  <LightTooltip title={ !this.state.posted ? "Tunjukkan ke Murid" : "Sembunyikan dari Murid"}>
                       <Badge
                         badgeContent={
                           <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
@@ -656,8 +658,12 @@ class EditAssessment extends Component {
                           horizontal: "right",
                         }}
                       >
-                        <IconButton className={classes.draftAssessmentButton}>
-                          <SaveIcon />
+                        <IconButton className={classes.draftAssessmentButton} onClick={this.handlePostToggle}>
+                          {!this.state.posted ? 
+                            <ToggleOffIcon/> 
+                              :
+                            <ToggleOnIcon/>
+                          }
                         </IconButton>
                       </Badge>
                     </LightTooltip>

@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Divider, FormControl, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
+import { Avatar, Badge, Button, Divider, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -57,7 +57,11 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px",
     backgroundColor: theme.palette.action.selected,
     color: "black",
-    "&:focus, &:hover": {
+    "&:focus": {
+      backgroundColor: theme.palette.action.selected,
+      color: "black",
+    },
+    "&:active, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     }
@@ -87,15 +91,23 @@ function ViewAssessmentStudent(props) {
   const { selectedAssessments } = props.assessmentsCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { getOneAssessment, getAllSubjects, getAllClass } = props;
+
   const [ qnsIndex, setQnsIndex ] = React.useState(0);
   const [ answer, setAnswer] = React.useState([]);
+  const [ posted, setPosted] = React.useState(null)
 
   let id = props.match.params.id;
 
   React.useEffect(() => {
-    getOneAssessment(id)
     getAllSubjects("map")
     getAllClass("map")
+
+   new Promise((resolve, reject) => {
+      getOneAssessment(id, resolve)
+    }).then((res) => {
+      console.log(res.data.posted)
+      setPosted(res.data.posted)
+    })
   }, [])
 
   let questions = selectedAssessments.questions;
@@ -103,7 +115,7 @@ function ViewAssessmentStudent(props) {
 
   React.useEffect(() => {
     if(questions_length){
-      let arr = Array.apply(null, Array(5))
+      let arr = Array.apply(null, Array(questions_length))
       setAnswer(arr)
     }
   }, [questions_length])
@@ -114,11 +126,18 @@ function ViewAssessmentStudent(props) {
   const handleChangeAnswer = (e) => {
     let temp = answer;
     temp[qnsIndex] = e.target.value;
-    setAnswer(temp)
+    setAnswer([...temp])
   }
-  console.log(answer)
-  console.log(qnsIndex)
-  console.log(answer[qnsIndex])
+
+  console.log(posted)
+  if(!posted){
+    if(posted!== null){
+      return <Redirect to="/tidak-ditemukan"/>
+    }
+    return (<div>{/* None */} </div>)
+  }
+
+  else {
   return (
     <div className={classes.root}>
       <form>
@@ -170,13 +189,27 @@ function ViewAssessmentStudent(props) {
                       <Typography variant="h6" gutterBottom>
                         Soal {qnsIndex + 1}
                       </Typography>
+                      <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
+                        {!questions ? 
+                          null 
+                          : 
+                          questions[qnsIndex].lampiran.map((image, i) => 
+                            <GridListTile key={image} cols={1} >
+                            <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                            <GridListTileBar
+                                title={`Gambar ${i+1}`}
+                                titlePosition="top"
+                                actionPosition="right"/>
+                          </GridListTile>
+                        )}
+                      </GridList>
                       <Typography variant="h5" gutterButtom>
                         <b>{!questions ? null : questions[qnsIndex].name}</b>
                       </Typography>
                     </Grid>
                     <Grid item>
                       <FormControl component="fieldset" id="answer" fullWidth>
-                        <RadioGroup value={answer[qnsIndex]} id="answer" onChange={handleChangeAnswer}>
+                        <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
                           {!questions ? 
                           null 
                           : 
@@ -196,31 +229,6 @@ function ViewAssessmentStudent(props) {
                   </Grid>
                 </Grid>
                 <Divider flexItem orientation="vertical" />
-                {/* <Grid item xs={3} sm={1} className={classes.content}>
-                  <Grid container direction="column" alignItems="center">
-                    <Grid item>
-                      <LightTooltip title="Tambahkan Berkas" placement="right">
-                        <IconButton>
-                          <AttachFileIcon />
-                        </IconButton>
-                      </LightTooltip>
-                    </Grid>
-                    <Grid item>
-                      <LightTooltip title="Duplikat Soal" placement="right">
-                        <IconButton>
-                          <FilterNoneIcon />
-                        </IconButton>
-                      </LightTooltip>
-                    </Grid>
-                    <Grid item>
-                      <LightTooltip title="Hapus Soal" placement="right">
-                        <IconButton>
-                          <DeleteIcon />
-                        </IconButton>
-                      </LightTooltip>
-                    </Grid>
-                  </Grid>
-                </Grid> */}
               </Grid>
             </Paper>
           </Grid>
@@ -274,6 +282,8 @@ function ViewAssessmentStudent(props) {
       </form>
     </div>
   )
+}
+
 };
 
 ViewAssessmentStudent.propTypes = {

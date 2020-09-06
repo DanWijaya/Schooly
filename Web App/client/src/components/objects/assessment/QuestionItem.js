@@ -62,6 +62,10 @@ function QuestionItem(props){
   }
   
   React.useEffect(() => {
+    console.log("Lampiran to preview set to empty")
+    setLampiranToPreview([])
+  },[])
+  React.useEffect(() => {
     if(!isEdit){  
       handlePreviewImage(lampiran)
     }
@@ -74,6 +78,7 @@ function QuestionItem(props){
   }, [lampiranToAdd.length])
 
   console.log("Current lampiran : ", currentLampiran)
+  console.log("Lampiran to preview: ", lampiranToPreview)
   return(
     <Grid item>
           <Paper>
@@ -95,6 +100,7 @@ function QuestionItem(props){
                               <CloseIcon />
                             </IconButton>
                           }
+                          title={`Gambar ${i+1}`}
                           actionPosition="right"/>
                         </GridListTile>
                       ) 
@@ -111,6 +117,7 @@ function QuestionItem(props){
                               <CloseIcon />
                             </IconButton>
                           }
+                          title={`Gambar ${i+1+currentLampiran.length}`}
                           actionPosition="right"
                         />
                     </GridListTile>
@@ -206,5 +213,5 @@ function QuestionItem(props){
   )
 }
 
-// export default React.memo(QuestionItem)
-export default QuestionItem;
+export default React.memo(QuestionItem)
+// export default QuestionItem;
