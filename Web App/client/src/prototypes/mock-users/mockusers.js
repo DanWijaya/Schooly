@@ -1,21 +1,23 @@
-const avatar = require("../../../routes/api/upload/uploads");
+// const avatar = require("../../../routes/api/upload/uploads");
+const avatar = require("../../../../routes/api/upload/uploads");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../../config/keys");
+const keys = require("../../../../config/keys");
 
 // const passport = require("passport");
 
 // Load input validation
-const validateRegisterInput = require("../../../validation/Register");
-const validateLoginInput = require("../../../validation/Login");
+// const validateRegisterInput = require("../../../validation/Register");
+const validateRegisterInput = require("../../../../validation/Register");
+const validateLoginInput = require("../../../../validation/Login");
 // const validateUserDataInput = require("../../validation/UserData")
 
 // Load User model
-const User= require("../../../models/user_model/User");
+const User= require("../../../../models/user_model/User");
 
-// tugas 3 ------------------------------------------------------------------------------------------
+// tugas 3 ------------------------------------------------/------------------------------------------
 const validateUserImport = require("./ImportValidator");
 
 const MockUser = require("./MockUserModel");
@@ -24,10 +26,10 @@ const MockTeacher = require("./MockTeacher");
 // const MockAdmin = require("./MockAdmin");
 // ------------------------------------------------------------------------------------------
 
-const Student = require("../../../models/user_model/Student");
-const Teacher = require("../../../models/user_model/Teacher");
-const Admin = require("../../../models/user_model/Admin");
-const Class = require("../../../models/Class")
+const Student = require("../../../../models/user_model/Student");
+const Teacher = require("../../../../models/user_model/Teacher");
+const Admin = require("../../../../models/user_model/Admin");
+const Class = require("../../../../models/Class")
 const { ObjectId } = require("mongodb");
 const Validator = require("validator");
 const isEmpty = require("is-empty");
@@ -143,7 +145,6 @@ router.post("/setUserDisabled/:id", (req,res) => {
 	});
 });
 
-//
 router.delete("/delete/:id", (req,res) => {
 	let userId = req.params.id;
 	MockUser.findByIdAndDelete(userId, (err,user) => {
