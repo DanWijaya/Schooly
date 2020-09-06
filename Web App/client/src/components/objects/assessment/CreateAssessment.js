@@ -20,6 +20,9 @@ import AddIcon from "@material-ui/icons/Add";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import FilterNoneIcon from "@material-ui/icons/FilterNone";
+import SaveIcon from "@material-ui/icons/Save";
 
 const styles = (theme) => ({
   root: {
