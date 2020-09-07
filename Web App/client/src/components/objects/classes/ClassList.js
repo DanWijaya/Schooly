@@ -7,12 +7,9 @@ import { getAllClass, deleteClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Dialog, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core";
+import { Avatar, Badge, Divider, Fab, Grid, Hidden, IconButton, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/Sort";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
@@ -236,33 +233,9 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
-  dialogBox: {
-    maxWidth: "350px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
 }));
 
 function ClassList(props) {
-  document.title = "Schooly | Daftar Kelas"
-
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
@@ -347,6 +320,8 @@ function ClassList(props) {
       </div>
     )
   }
+
+  document.title = "Schooly | Daftar Kelas"
 
   return (
     <div className={classes.root}>

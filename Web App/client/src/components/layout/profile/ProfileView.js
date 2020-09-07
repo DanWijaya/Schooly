@@ -6,13 +6,12 @@ import PropTypes from "prop-types";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography, IconButton, Button } from "@material-ui/core";
+import { Avatar, Badge, Button, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-import BlockIcon from "@material-ui/icons/Block";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
 import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
@@ -75,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "300",
     fontStyle: "italic"
   },
-  background_gradient: {
+  backgroundGradient: {
     padding:"20px",
     background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)"
   }
@@ -241,7 +240,7 @@ function Profile(props) {
             (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
               <Grid item>
                 <Paper className={classes.informationPaper}>
-                  <div className={classes.background_gradient}>
+                  <div className={classes.backgroundGradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       INFORMASI PENGGUNA
                     </Typography>
@@ -306,7 +305,7 @@ function Profile(props) {
             : (
               <Grid item>
                 <Paper className={classes.informationPaper}>
-                  <div className={classes.background_gradient}>
+                  <div className={classes.backgroundGradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       KARIR
                     </Typography>

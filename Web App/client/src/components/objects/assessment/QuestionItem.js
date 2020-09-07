@@ -1,15 +1,14 @@
-import React, {Component} from "react";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import ClearIcon from "@material-ui/icons/Clear";
-import CloseIcon from "@material-ui/icons/Close";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import SaveIcon from "@material-ui/icons/Save";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, Typography, Select } from "@material-ui/core";
+import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Button, Divider, FormControl, FormControlLabel, Grid, GridList, GridListTile, GridListTileBar,
+   IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
+ import { makeStyles } from "@material-ui/core/styles";
+ import AddCircleIcon from "@material-ui/icons/AddCircle";
+ import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+ import ClearIcon from "@material-ui/icons/Clear";
+ import CloseIcon from "@material-ui/icons/Close";
+ import DeleteIcon from "@material-ui/icons/Delete";
+ import FilterNoneIcon from "@material-ui/icons/FilterNone";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -60,13 +59,13 @@ function QuestionItem(props){
       .catch(err => console.log(err))
     }
   }
-  
+
   React.useEffect(() => {
     console.log("Lampiran to preview set to empty")
     setLampiranToPreview([])
   },[])
   React.useEffect(() => {
-    if(!isEdit){  
+    if(!isEdit){
       handlePreviewImage(lampiran)
     }
   },[lampiran_length])
@@ -89,8 +88,8 @@ function QuestionItem(props){
                     Soal {index + 1}
                   </Typography>
                   <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
-                    {isEdit ? 
-                      currentLampiran.map((image, i) => 
+                    {isEdit ?
+                      currentLampiran.map((image, i) =>
                         <GridListTile key={image} cols={1} >
                         <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
                         <GridListTileBar
@@ -103,8 +102,8 @@ function QuestionItem(props){
                           title={`Gambar ${i+1}`}
                           actionPosition="right"/>
                         </GridListTile>
-                      ) 
-                    : 
+                      )
+                    :
                     null
                     }
                   {lampiranToPreview.map((image, i) =>
@@ -181,7 +180,7 @@ function QuestionItem(props){
                     }}
                   />
                   <LightTooltip title="Tambahkan " placement="right">
-                    <IconButton 
+                    <IconButton
                     onClick={imageUpload}
                     >
                       <AddPhotoAlternateIcon/>
@@ -190,7 +189,7 @@ function QuestionItem(props){
                 </Grid>
                 <Grid item>
                   <LightTooltip title="Duplikat Soal" placement="right">
-                    <IconButton 
+                    <IconButton
                     onClick={() => handleDuplicateQuestion(index)}
                     >
                       <FilterNoneIcon />
@@ -199,7 +198,7 @@ function QuestionItem(props){
                 </Grid>
                 <Grid item>
                   <LightTooltip title="Hapus Soal" placement="right">
-                    <IconButton 
+                    <IconButton
                     onClick={() => { deleteQuestion(index)}}
                     >
                       <DeleteIcon />

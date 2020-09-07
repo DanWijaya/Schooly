@@ -4,20 +4,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import { getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
 import { getSelectedClasses } from "../../../actions/ClassActions"
 import { getUsers } from "../../../actions/UserActions";
+import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CloseIcon from "@material-ui/icons/Close";
-import CancelIcon from "@material-ui/icons/Cancel";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
@@ -53,28 +50,6 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.primary.main,
-    },
-  },
-  dialogBox: {
-    maxWidth: "350px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
     },
   },
   downloadIconButton: {

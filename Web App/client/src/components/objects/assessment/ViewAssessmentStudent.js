@@ -1,19 +1,18 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Divider, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import AttachFileIcon from "@material-ui/icons/AttachFile";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import { getOneAssessment } from "../../../actions/AssessmentActions";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { connect } from "react-redux";
+import { getOneAssessment } from "../../../actions/AssessmentActions";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Avatar, Badge, Button, Divider, FormControl, FormControlLabel,
+   Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper,
+   Radio, RadioGroup, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 function QuestionPage(props) {
   const { classes, handleChangeQuestion, question_number } = props;
 
-  
+
   return (
     <Grid item>
       <Paper variant="outlined" button className={classes.questionPaper} onClick={() => handleChangeQuestion(question_number-1)}>
@@ -171,9 +170,9 @@ function ViewAssessmentStudent(props) {
                   Pindah ke Soal:
                 </Typography>
                 <Grid container spacing={2} alignItems="center">
-                  {!questions ? 
-                    null 
-                    : 
+                  {!questions ?
+                    null
+                    :
                     questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
                   }
                 </Grid>
@@ -190,10 +189,10 @@ function ViewAssessmentStudent(props) {
                         Soal {qnsIndex + 1}
                       </Typography>
                       <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
-                        {!questions ? 
-                          null 
-                          : 
-                          questions[qnsIndex].lampiran.map((image, i) => 
+                        {!questions ?
+                          null
+                          :
+                          questions[qnsIndex].lampiran.map((image, i) =>
                             <GridListTile key={image} cols={1} >
                             <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
                             <GridListTileBar
@@ -210,10 +209,10 @@ function ViewAssessmentStudent(props) {
                     <Grid item>
                       <FormControl component="fieldset" id="answer" fullWidth>
                         <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
-                          {!questions ? 
-                          null 
-                          : 
-                          questions[qnsIndex].options.map((option, i) => 
+                          {!questions ?
+                          null
+                          :
+                          questions[qnsIndex].options.map((option, i) =>
                           <div style={{display: "flex"}}>
                           <FormControlLabel
                             style={{width: "100%"}}
@@ -237,7 +236,7 @@ function ViewAssessmentStudent(props) {
               <Grid container>
               <Divider flexItem orientation="vertical" />
               <Grid item container spacing={2} justify="flex-end" alignItems="center" className={classes.content}>
-                {qnsIndex === 0 ? null : 
+                {qnsIndex === 0 ? null :
                 <Grid item>
                   <LightTooltip title="Soal Sebelumnya">
                     <IconButton className={classes.pageButton} onClick={() => handleChangeQuestion(qnsIndex - 1)}>
@@ -263,9 +262,9 @@ function ViewAssessmentStudent(props) {
                     </Button>
                   </Badge>
                 </Grid>
-                {qnsIndex === questions_length - 1 ? 
-                  null 
-                  : 
+                {qnsIndex === questions_length - 1 ?
+                  null
+                  :
                   <Grid item>
                     <LightTooltip title="Soal Selanjutnya">
                       <IconButton className={classes.pageButton} onClick={() => handleChangeQuestion(qnsIndex + 1)}>

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
@@ -11,21 +10,14 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog,
-   FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar,
-   MenuItem, IconButton, Paper, Radio, RadioGroup, Select, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
+import { Button, Chip, Divider,
+   FormControl, FormControlLabel, FormHelperText, Grid,
+   MenuItem, Paper, Select, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import ToggleOffIcon from "@material-ui/icons/ToggleOff";
-import ToggleOnIcon from "@material-ui/icons/ToggleOn";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import SaveIcon from "@material-ui/icons/Save";
 
 const styles = (theme) => ({
   root: {
@@ -40,15 +32,6 @@ const styles = (theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: "100%",
       height: "1px",
-    },
-  },
-  addOptionButton: {
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    marginTop: "20px",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
     },
   },
   addQuestionButton: {
@@ -281,7 +264,6 @@ class CreateAssessment extends Component {
     // let questionList = []
     let questions = this.state.questions;
     const { page, rowsPerPage} = this.state;
-    const { classes } = this.props;
 
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
       console.log(question.lampiran)

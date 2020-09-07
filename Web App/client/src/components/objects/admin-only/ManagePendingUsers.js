@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import CancelIcon from '@material-ui/icons/Cancel';
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SortIcon from "@material-ui/icons/Sort";
 
@@ -164,15 +163,6 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
-      color: "white",
-    },
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
       color: "white",
     },
   },
