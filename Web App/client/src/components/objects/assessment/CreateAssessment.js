@@ -571,27 +571,23 @@ class CreateAssessment extends Component {
             <Grid item>
               <Paper>
                 <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
-                  <Grid item container xs={12} sm className={classes.pageNavigator}>
-                    <TablePagination
-                      labelRowsPerPage="Soal Per Halaman"
-                      rowsPerPageOptions={[5, 10]}
-                      component="div"
-                      count={this.state.questions.length}
-                      rowsPerPage={this.state.rowsPerPage}
-                      page={this.state.page}
-                      onChangePage={this.handleChangePage}
-                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <FormHelperText error>
-                      {errors.questions}
-                    </FormHelperText>
-                  </Grid>
-                  <Grid item container xs spacing={2} className={classes.assessmentSettings}>
+                  <Grid item container md={8} alignItems="center" className={classes.pageNavigator}>
+                    <Grid item>
+                      <TablePagination
+                        labelRowsPerPage="Soal Per Halaman"
+                        rowsPerPageOptions={[5, 10]}
+                        component="div"
+                        count={this.state.questions.length}
+                        rowsPerPage={this.state.rowsPerPage}
+                        page={this.state.page}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                      />
+                    </Grid>
                     <Grid item>
                       <FormControlLabel
-                        label={ !this.state.posted ? "Tunjukkan ke Murid" : "Sembunyikan dari Murid"}
+                        label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
+                        labelPlacement="start"
                         control={
                           <ToggleViewQuiz
                             checked={this.state.posted}
@@ -602,6 +598,13 @@ class CreateAssessment extends Component {
                         }
                       />
                     </Grid>
+                    <Grid item>
+                      <FormHelperText error>
+                        {errors.questions}
+                      </FormHelperText>
+                    </Grid>
+                  </Grid>
+                  <Grid item container md={4} spacing={2} className={classes.assessmentSettings}>
                     <Grid item>
                       <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
                         Batal
