@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Divider, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
+import { Avatar, Badge, Button, Box, CircularProgress, Divider, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -14,6 +14,8 @@ import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { connect } from "react-redux";
+import moment from "moment";
+import "moment/locale/id";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +88,59 @@ function QuestionPage(props) {
   )
 }
 
+function Timer(props) {
+  const classes = useStyles();
+  let {start_date, end_date } = props;
+  console.log(start_date, end_date)
+  let startTime = new Date(start_date);
+  let finishTime = new Date(end_date);
+
+  let workTime = Math.floor((finishTime - startTime)/1000)
+  let res = Math.floor((finishTime - new Date())/1000)
+
+  const [time, setTime] = React.useState(res);
+  var hours = Math.floor(time / 3600) % 24;
+  var minutes = Math.floor(time / 60) % 60;
+  var seconds = time % 60;
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((prevTime) => (prevTime - 1));
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  return (
+    <div className={classes.root}>
+      {/* <Typography variant="h5" component="div" color="textSecondary" style={{marginBottom: "20px"}}>
+        Waktu Ujian: {`${moment(startTime).locale("id").format("HH:mm")} - ${moment(finishTime).locale("id").format("HH:mm")}`}
+      </Typography> */}
+      <Box position="relative" display="inline-flex">
+        <CircularProgress variant="static" value={(res/workTime)*100} size={200} />
+        <Box
+          top={0}
+          left={0}
+          bottom={0}
+          right={0}
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography variant="h5" component="div" color="textSecondary">
+            {`${hours} : 
+              ${minutes<10 ? `0${minutes}` : minutes} :
+              ${seconds<10 ? `0${seconds}` : seconds}`
+            }
+          </Typography>
+        </Box>
+      </Box>
+    </div>
+  )
+}
+
 function ViewAssessmentStudent(props) {
   const classes = useStyles();
   const { selectedAssessments } = props.assessmentsCollection;
@@ -95,6 +150,7 @@ function ViewAssessmentStudent(props) {
   const [ qnsIndex, setQnsIndex ] = React.useState(0);
   const [ answer, setAnswer] = React.useState([]);
   const [ posted, setPosted] = React.useState(null)
+  const [ start, setStart ] = React.useState(null);
 
   let id = props.match.params.id;
 
@@ -112,7 +168,7 @@ function ViewAssessmentStudent(props) {
 
   let questions = selectedAssessments.questions;
   let questions_length = !questions ? 0 : questions.length
-
+  
   React.useEffect(() => {
     if(questions_length){
       let arr = Array.apply(null, Array(questions_length))
@@ -127,6 +183,10 @@ function ViewAssessmentStudent(props) {
     let temp = answer;
     temp[qnsIndex] = e.target.value;
     setAnswer([...temp])
+  }
+
+  const handleStart = () => {
+    setStart(true);
   }
 
   console.log(posted)
@@ -152,19 +212,32 @@ function ViewAssessmentStudent(props) {
                   <Typography variant="h4" align="center" gutterBottom>
                     {selectedAssessments.name}
                   </Typography>
-                  <Typography align="center">
+                  <Typography variant="h6" align="center">
                     {selectedAssessments.description}
                   </Typography>
                 </Grid>
+                {!start ? 
+                  <Grid item>
+                    <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
+                      Mulai
+                    </Button>
+                  </Grid> 
+                  : 
+                  <Timer 
+                    start_date={selectedAssessments.start_date}
+                    end_date={selectedAssessments.end_date}/>
+                }
                 <Grid item>
-                  <Button variant="contained" className={classes.startAssessmentButton}>
-                    Mulai
-                  </Button>
+                  <Typography variant="h6" align="center" color="textSecondary">
+                    Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
+                  </Typography>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
-          <Grid item>
+          {!start ? 
+          null :
+          [<Grid item>
             <Paper>
               <div className={classes.content}>
                 <Typography color="primary" style={{marginBottom: "20px"}}>
@@ -179,7 +252,7 @@ function ViewAssessmentStudent(props) {
                 </Grid>
               </div>
             </Paper>
-          </Grid>
+          </Grid>,
           <Grid item>
             <Paper>
               <Grid container>
@@ -231,7 +304,7 @@ function ViewAssessmentStudent(props) {
                 <Divider flexItem orientation="vertical" />
               </Grid>
             </Paper>
-          </Grid>
+          </Grid>,
           <Grid item>
             <Paper>
               <Grid container>
@@ -278,6 +351,8 @@ function ViewAssessmentStudent(props) {
               </Grid>
             </Paper>
           </Grid>
+          ]
+        }
         </Grid>
       </form>
     </div>

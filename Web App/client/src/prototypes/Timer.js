@@ -53,7 +53,7 @@ function Timer() {
           justifyContent="center"
         >
           <Typography variant="h5" component="div" color="textSecondary">
-            {`${Math.floor(time/3600) % 24} : ${Math.floor(time/60) % 60} : ${time % 60}`}
+            {`${Math.floor(time/3600) % 24} ${Math.floor(time/60) % 60} : ${time % 60}`}
           </Typography>
         </Box>
       </Box>
