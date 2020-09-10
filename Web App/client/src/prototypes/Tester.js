@@ -3,7 +3,7 @@ import { Fraction, toTex } from 'algebra.js';
 import { Node, Context } from 'react-mathjax2';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
-import { List, ListItem, ListItemText, FormControlLabel, Switch } from "@material-ui/core";
+import { FormControlLabel, Switch } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 

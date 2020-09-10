@@ -1,28 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useLocation , Redirect } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
-  Paper, Typography, IconButton } from "@material-ui/core";
+import { Badge, Divider, Grid, Paper, Typography } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import CakeIcon from "@material-ui/icons/Cake";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-import EmailIcon from "@material-ui/icons/Email";
-import HomeIcon from "@material-ui/icons/Home";
-import PersonIcon from "@material-ui/icons/Person";
-import PhoneIcon from "@material-ui/icons/Phone";
-import WcIcon from "@material-ui/icons/Wc";
-import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import WorkIcon from "@material-ui/icons/Work";
-import BlockIcon from "@material-ui/icons/Block";
-import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -81,9 +66,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white"
   },
   descriptionText: {
-    color: "white", 
-    marginTop: "10px", 
-    marginLeft: "20px", 
+    color: "white",
+    marginTop: "10px",
+    marginLeft: "20px",
     fontWeight: "300",
     fontStyle: "italic"
   },
@@ -117,10 +102,10 @@ function Profile(props) {
           <Divider className={classes.profileDivider}/>
         </Grid>
         <Grid container item direction="row" spacing={3} alignContent="space-between">
-          <Grid item xs={4} sm={4} md={4} lg={4}> 
+          <Grid item xs={4} sm={4} md={4} lg={4}>
             <Paper className={classes.informationPaper}>NAMA: {(nama) ? nama : "Donald John Trump"}</Paper> {/*bm judul*/}
           </Grid>
-          <Grid item xs={3} sm={4} md={5} lg={5}> 
+          <Grid item xs={3} sm={4} md={5} lg={5}>
           </Grid>
           <Grid item xs={5} sm={4} md={3} lg={3}>
             <Paper style={{display:'flex', flexDirection:'row', padding:'10px', justifyContent:'space-between'}}>
@@ -138,11 +123,11 @@ function Profile(props) {
                   <MenuItem value="20">Fisika</MenuItem>
                 </Select>
               </div>
-            </Paper> 
+            </Paper>
           </Grid>
         </Grid>
         <Grid container direction="column" spacing={5} style={{margin:'auto'}}>
-          <Grid item xs={12} sm={12} md={12} lg={12}> 
+          <Grid item xs={12} sm={12} md={12} lg={12}>
             <Paper className={classes.informationPaper}>TABEL RAPOR</Paper>
           </Grid>
         </Grid>

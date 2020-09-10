@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -224,15 +223,6 @@ const useStyles = makeStyles((theme) => ({
   dialogBox: {
     maxWidth: "350px",
     padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
   },
   dialogCreateButton: {
     width: "150px",

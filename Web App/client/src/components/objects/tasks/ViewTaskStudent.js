@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
@@ -13,16 +12,12 @@ import { getOneUser } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText,
+import { Avatar, Button, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText,
    Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import PublishIcon from "@material-ui/icons/Publish";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
@@ -33,28 +28,6 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
-  },
-  dialogBox: {
-    maxWidth: "350px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
   },
   paperBox: {
     padding: "20px",
@@ -130,26 +103,6 @@ const useStyles = makeStyles((theme) => ({
   },
   otherFileTypeIcon: {
     backgroundColor: "#808080",
-  },
-  uploadDialogGrid: {
-    maxWidth: "300px",
-    minHeight: "200px",
-    padding: "15px",
-  },
-  uploadSuccessIcon: {
-    color: "green",
-    height: "45px",
-    width: "45px"
-  },
-  uploadFinishButton: {
-    width: "100%",
-    marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
-      color: "white",
-    },
   },
 }));
 
@@ -503,7 +456,7 @@ function ViewTaskStudent(props) {
   console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
 
   console.log(success, filesCollection.files)
-  
+
   return (
     <div className={classes.root}>
       <DeleteDialog

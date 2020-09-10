@@ -11,14 +11,11 @@ import { getOneUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Dialog, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CloseIcon from "@material-ui/icons/Close";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
@@ -33,28 +30,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     padding: "10px",
-  },
-  dialogBox: {
-    maxWidth: "350px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
   },
   paperBox: {
     padding: "20px",

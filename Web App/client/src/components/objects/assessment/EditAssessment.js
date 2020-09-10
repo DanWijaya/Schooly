@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
@@ -13,7 +12,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -48,15 +47,6 @@ const styles = (theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  addOptionButton: {
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    marginTop: "20px",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
   draftAssessmentButton: {
     width: "35px",
     height: "35px",
@@ -84,60 +74,12 @@ const styles = (theme) => ({
       color: theme.palette.error.main,
     },
   },
-  dialogBox: {
-    maxWidth: "400px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  avatarImg1: { // If width is smaller than height
-    width: theme.spacing(25),
-  },
-  avatarImg2: { //If height is smaller than width
-    height: theme.spacing(25),
-  },
   chips: {
     display: "flex",
     flexWrap: "wrap",
   },
   chip: {
     marginRight: 2,
-  },
-  uploadDialogGrid: {
-    maxWidth: "300px",
-    minHeight: "200px",
-    padding: "15px",
-  },
-  uploadSuccessIcon: {
-    color: "green",
-    height: "45px",
-    width: "45px"
-  },
-  uploadFinishButton: {
-    width: "100%",
-    marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
-      color: "white",
-    },
   },
 });
 
@@ -236,7 +178,7 @@ class EditAssessment extends Component {
     console.log(assessmentData)
 
     updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
-    
+
   }
 
   handleOpenUploadDialog = () => {
@@ -343,7 +285,7 @@ class EditAssessment extends Component {
       let item = questions[qnsIndex].lampiran[indexToDelete]
       // delete question lampiran nya dari list
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
-      // lalu setelah itu kita simpan semua lampiran di dalam list untuk mengecek. 
+      // lalu setelah itu kita simpan semua lampiran di dalam list untuk mengecek.
       let all_lampiran_list = []
       questions.forEach((qns) => {
         if(qns.lampiran.length){
@@ -351,12 +293,12 @@ class EditAssessment extends Component {
         }
       })
 
-      
-      // dipakai untuk handle kalau imagenya dari duplicate, tapi ada satu soal yang imagenya didelete lah. 
+
+      // dipakai untuk handle kalau imagenya dari duplicate, tapi ada satu soal yang imagenya didelete lah.
       if(typeof item === "string"){
         let temp = this.state.lampiranToDelete;
         if(all_lampiran_list.indexOf(item) === -1){
-          // kalau ngak ada, bakal dibuang. 
+          // kalau ngak ada, bakal dibuang.
           temp.push(item)
         }
         this.setState({ lampiranToDelete: temp, questions: questions})
@@ -659,8 +601,8 @@ class EditAssessment extends Component {
                         }}
                       >
                         <IconButton className={classes.draftAssessmentButton} onClick={this.handlePostToggle}>
-                          {!this.state.posted ? 
-                            <ToggleOffIcon/> 
+                          {!this.state.posted ?
+                            <ToggleOffIcon/>
                               :
                             <ToggleOnIcon/>
                           }
