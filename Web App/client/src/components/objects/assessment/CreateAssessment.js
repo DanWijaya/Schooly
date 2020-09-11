@@ -112,6 +112,7 @@ class CreateAssessment extends Component {
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
   componentWillUnmount(){
+    console.log(this.state.subject)
     this.props.clearErrors()
     this.props.handleSideDrawerExist(true)
   }

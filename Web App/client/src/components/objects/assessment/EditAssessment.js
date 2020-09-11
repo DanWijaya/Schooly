@@ -12,7 +12,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, Switch, TextField, TablePagination, Typography, Select } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -20,6 +20,7 @@ import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import SaveIcon from "@material-ui/icons/Save";
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 const styles = (theme) => ({
   root: {
@@ -37,14 +38,17 @@ const styles = (theme) => ({
     },
   },
   addQuestionButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.primary.main,
+    },
+  },
+  pageNavigator: {
+    justifyContent: "flex-start",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
     },
   },
   draftAssessmentButton: {
@@ -56,6 +60,13 @@ const styles = (theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.warning.main,
+    },
+  },
+  assessmentSettings: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      justifyContent: "center",
     },
   },
   createAssessmentButton: {
@@ -382,8 +393,45 @@ class EditAssessment extends Component {
     const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
 
-    console.log("QUESTIONS : ", this.state.questions)
+    const ToggleViewQuiz = withStyles((theme) => ({
+      root: {
+        width: 42,
+        height: 26,
+        padding: 0,
+        margin: theme.spacing(1),
+      },
+      switchBase: {
+        padding: 2.5,
+        color: theme.palette.warning.light,
+        "&$checked": {
+          transform: "translateX(16px)",
+          color: theme.palette.common.white,
+          "& + $track": {
+            backgroundColor: theme.palette.warning.light,
+            opacity: 1,
+            border: "none",
+          },
+        },
+        "&$focusVisible $thumb": {
+          color: "#52d869",
+          border: "6px solid #fff",
+        },
+      },
+      thumb: {
+        width: 24,
+        height: 24,
+      },
+      track: {
+        borderRadius: 26 / 2,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        backgroundColor: theme.palette.grey[50],
+        opacity: 1,
+        transition: theme.transitions.create(["background-color", "border"]),
+      },
+      checked: {},
+    }))(Switch);
 
+    console.log("QUESTIONS : ", this.state.questions)
     document.title = "Schooly | Sunting Kuis";
 
     console.log(this.state.questions)
@@ -560,10 +608,21 @@ class EditAssessment extends Component {
               </Paper>
             </Grid>
               {this.listQuestion()}
+              <Grid item container justify="center">
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={this.handleAddQuestion}
+                className={classes.addQuestionButton}
+              >
+                Tambah Soal
+              </Button>
+            </Grid>
             <Grid item>
               <Paper>
                 <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
-                  <Grid item xs={12} sm>
+                <Grid item container md={8} alignItems="center" className={classes.pageNavigator}>
+                  <Grid item>
                     <TablePagination
                       labelRowsPerPage="Soal per halaman"
                       rowsPerPageOptions={[5, 10]}
@@ -576,19 +635,20 @@ class EditAssessment extends Component {
                     />
                   </Grid>
                   <Grid item>
-                    <FormHelperText error>
-                      {errors.questions}
-                    </FormHelperText>
-                  </Grid>
-                  <Grid item>
-                    <LightTooltip title="Tambah Soal">
-                      <IconButton onClick={this.handleAddQuestion} className={classes.addQuestionButton}>
-                        <AddIcon/>
-                      </IconButton>
-                    </LightTooltip>
-                  </Grid>
-                  <Grid item>
-                  <LightTooltip title={ !this.state.posted ? "Tunjukkan ke Murid" : "Sembunyikan dari Murid"}>
+                    <FormControlLabel
+                      label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
+                      labelPlacement="start"
+                      control={
+                        <ToggleViewQuiz
+                          checked={this.state.posted}
+                          onChange={this.handlePostToggle}
+                          checkedIcon={<FiberManualRecordIcon />}
+                          icon={<FiberManualRecordIcon />}
+                          />
+                        }
+                      />
+                    </Grid>
+                    {/* <LightTooltip title={ !this.state.posted ? "Tunjukkan ke Murid" : "Sembunyikan dari Murid"}>
                       <Badge
                         badgeContent={
                           <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
@@ -608,9 +668,14 @@ class EditAssessment extends Component {
                           }
                         </IconButton>
                       </Badge>
-                    </LightTooltip>
+                    </LightTooltip> */}
+                  <Grid item>
+                    <FormHelperText error>
+                      {errors.questions}
+                    </FormHelperText>
                   </Grid>
-                  <Grid item container xs justify="flex-end" spacing={2}>
+                  </Grid>
+                  <Grid item container md={4} spacing={2} className={classes.assessmentSettings}>
                     <Grid item>
                       <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
                         Batal

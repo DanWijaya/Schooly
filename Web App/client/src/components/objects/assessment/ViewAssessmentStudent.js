@@ -12,13 +12,9 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import { getOneAssessment } from "../../../actions/AssessmentActions";
-import PropTypes from "prop-types";
-import { getAllClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
-import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/id";
+import { FaWindowRestore } from "react-icons/fa";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,15 +89,15 @@ function QuestionPage(props) {
 
 function Timer(props) {
   const classes = useStyles();
-  let {start_date, end_date } = props;
-  console.log(start_date, end_date)
+  let {start_date, end_date, id } = props;
+  console.log(start_date, end_date);
   let startTime = new Date(start_date);
   let finishTime = new Date(end_date);
 
   let workTime = Math.floor((finishTime - startTime)/1000)
-  let res = Math.floor((finishTime - new Date())/1000)
-
-  const [time, setTime] = React.useState(res);
+  let remainingTime = localStorage.getItem(`remainingTime_${id}`) ? localStorage.getItem(`remainingTime_${id}`) : Math.floor((finishTime - startTime)/1000)
+  // let remainingTime = Math.floor((finishTime - startTime)/1000)
+  const [time, setTime] = React.useState(remainingTime);
   var hours = Math.floor(time / 3600) % 24;
   var minutes = Math.floor(time / 60) % 60;
   var seconds = time % 60;
@@ -111,9 +107,13 @@ function Timer(props) {
       setTime((prevTime) => (prevTime - 1));
     }, 1000);
     return () => {
+      if(time <= 0){
+        localStorage.removeItem(`remainingTime_${id}`)
+      }
+      localStorage.setItem(`remainingTime_${id}`, time - 2)
       clearInterval(timer);
     };
-  }, []);
+  }, [time]);
 
   return (
     <div className={classes.root}>
@@ -121,7 +121,7 @@ function Timer(props) {
         Waktu Ujian: {`${moment(startTime).locale("id").format("HH:mm")} - ${moment(finishTime).locale("id").format("HH:mm")}`}
       </Typography> */}
       <Box position="relative" display="inline-flex">
-        <CircularProgress variant="static" value={(res/workTime)*100} size={200} />
+        <CircularProgress variant="static" value={(time/workTime)*100} size={200} />
         <Box
           top={0}
           left={0}
@@ -156,19 +156,23 @@ function ViewAssessmentStudent(props) {
   const [ start, setStart ] = React.useState(null);
 
   let id = props.match.params.id;
-
+  // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
     getAllSubjects("map")
     getAllClass("map")
-
    new Promise((resolve, reject) => {
       getOneAssessment(id, resolve)
     }).then((res) => {
       console.log(res.data.posted)
       setPosted(res.data.posted)
+      if(localStorage.getItem(`answers_${id}`)){
+        console.log(localStorage.getItem(`answers_${id}`))
+        setAnswer(localStorage.getItem(`answers_${id}`))
+      }
     })
   }, [])
 
+  localStorage.removeItem(`answers_${id}`)
   let questions = selectedAssessments.questions;
   let questions_length = !questions ? 0 : questions.length
   
@@ -185,6 +189,8 @@ function ViewAssessmentStudent(props) {
   const handleChangeAnswer = (e) => {
     let temp = answer;
     temp[qnsIndex] = e.target.value;
+    console.log(temp)
+    localStorage.setItem(`answers_${id}`, temp);
     setAnswer([...temp])
   }
 
@@ -192,7 +198,14 @@ function ViewAssessmentStudent(props) {
     setStart(true);
   }
 
-  console.log(posted)
+  const onSubmit = () => {
+    localStorage.removeItem(`remainingTime_${id}`);
+  }
+
+  const saveAnswer = (question) => {
+
+  }
+
   if(!posted){
     if(posted!== null){
       return <Redirect to="/tidak-ditemukan"/>
@@ -219,7 +232,7 @@ function ViewAssessmentStudent(props) {
                     {selectedAssessments.description}
                   </Typography>
                 </Grid>
-                {!start ? 
+                {!start && !localStorage.getItem(`remainingTime_${id}`) ? 
                   <Grid item>
                     <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
                       Mulai
@@ -228,7 +241,9 @@ function ViewAssessmentStudent(props) {
                   : 
                   <Timer 
                     start_date={selectedAssessments.start_date}
-                    end_date={selectedAssessments.end_date}/>
+                    end_date={selectedAssessments.end_date}
+                    id={id}
+                    />
                 }
                 <Grid item>
                   <Typography variant="h6" align="center" color="textSecondary">
@@ -238,7 +253,7 @@ function ViewAssessmentStudent(props) {
               </Grid>
             </Paper>
           </Grid>
-          {!start ? 
+          {!start && !localStorage.getItem(`remainingTime_${id}`) ? 
           null :
           [<Grid item>
             <Paper>
