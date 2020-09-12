@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -11,7 +12,8 @@ import informationPrivate from "./InformationPrivate.png";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Typography } from "@material-ui/core";
+import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
+  Paper, Snackbar, Typography, Button } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
@@ -26,6 +28,8 @@ import WcIcon from "@material-ui/icons/Wc";
 import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,6 +64,13 @@ const useStyles = makeStyles((theme) => ({
   },
   profileDataItemAvatar: {
     backgroundColor: theme.palette.primary.main,
+  },
+  buttonRapor: {
+    backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", 
+    color:"white", 
+    borderRadius:'4px',
+    '&:focus, &:hover': {
+			backgroundColor: '#e0e0e0'}
   },
   emptyProfileData: {
     display: "flex",
@@ -291,6 +302,24 @@ function Profile(props) {
       <Divider className={classes.profileDivider} />
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container spacing={1} justify="flex-end" alignItems="center">
+          <Grid item>
+            {(user.role=='Student') ? 
+              <div style={{display:'flex', justifyContent:'flex-end'}}>
+                <Link to={{
+                  pathname:"/lihat-rapor",
+                  state: {
+                    role: 'Student'
+                  }
+                }}>
+                  <LightTooltip title="Klik Untuk Melihat Rapor">
+                    <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon />}>
+                      Lihat Rapor
+                    </Button>
+                  </LightTooltip>
+                </Link>
+              </div> : null
+            }
+          </Grid>
           <Grid item>
             <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
           </Grid>

@@ -22,7 +22,6 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-import BlockIcon from "@material-ui/icons/Block";
 import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +57,13 @@ const useStyles = makeStyles((theme) => ({
   },
   profileDataItemAvatar: {
     backgroundColor: "#00b7ff"
+  },
+  buttonRapor: {
+    backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", 
+    color:"white", 
+    borderRadius:'4px',
+    '&:focus, &:hover': {
+			backgroundColor: '#e0e0e0'}
   },
   emptyProfileData: {
     display: "flex",
@@ -226,21 +232,24 @@ function Profile(props) {
           </Typography>
         </Grid>
       </Grid>
-      <div style={{display:'flex', justifyContent:'flex-end', marginTop:"30px"}}>
-        <Link to={{
-          pathname:"/lihat-rapor",
-        }}>
-          <LightTooltip title="Klik Untuk Melihat Rapor">
-            <Button style={{backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", color:"white", borderRadius:'4px','&:focus, &:hover': {
-			backgroundColor: '#e0e0e0'}}}>
-              <AssessmentOutlinedIcon fontSize="large" style={{marginRight:'3px'}}/>
-              <Typography>Lihat Rapor</Typography>
-            </Button>
-          </LightTooltip>
-        </Link>
-      </div>
       <Divider className={classes.profileDivider}/>
-        <Grid container direction="column" spacing={10}>
+      {(role=='Student') ? 
+        <div style={{display:'flex', justifyContent:'flex-end', marginBottom:"20px"}}>
+          <Link to={{
+            pathname: "/lihat-rapor",
+            state: {
+              role: user.role
+            }
+          }}>
+            <LightTooltip title="Klik Untuk Melihat Rapor">
+              <Button className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon/>}>
+                <Typography>Lihat Rapor</Typography>
+              </Button>
+            </LightTooltip>
+          </Link>
+        </div> : null
+      }
+      <Grid container direction="column" spacing={10}>
           {
             (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
               <Grid item>
