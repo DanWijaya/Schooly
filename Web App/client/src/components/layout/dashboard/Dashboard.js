@@ -6,6 +6,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllTask } from "../../../actions/TaskActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
@@ -19,7 +20,6 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { getAllSubjects } from "../../../actions/SubjectActions";
 
 const styles = (theme) => ({
   root: {
@@ -154,7 +154,7 @@ class Dashboard extends Component {
     const {getAllTask, getAllTaskFilesByUser, getAllSubjects} = this.props;
     const { user} = this.props.auth;
 
-    getAllTask() // actions yang membuat GET request ke Database. 
+    getAllTask() // actions yang membuat GET request ke Database.
     getAllSubjects("map") // untuk dapatin subject"nya gitu
     if (user.role === "Student")
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya

@@ -105,21 +105,22 @@ function Delete(props){
 
   console.log(doc)
 	return (
-		<Dialog
-        open={open}
-        onClose={handleCloseDialog}>
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
-          <Grid item container justify="center" spacing={2}>
+		<Dialog open={open} onClose={handleCloseDialog}>
+      <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+        <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
+          <Grid container justify="center" spacing={2}>
             <Grid item container justify="center">
-            {!doc? null : doc[".tag"] === "folder" ?
-            <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
-              Hapus Folder Berikut?
-            </Typography> :
-            <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
-              Hapus File Berikut?
-            </Typography>
-            }
+              {!doc ?
+                null
+              : doc[".tag"] === "folder" ?
+                <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
+                  Hapus Folder Berikut?
+                </Typography>
+              :
+                <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
+                  Hapus File Berikut?
+                </Typography>
+              }
             </Grid>
             <Grid item container justify="center">
               <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
@@ -145,9 +146,9 @@ function Delete(props){
               </Button>
             </Grid>
           </Grid>
-          </form>
-          </Grid>
-      </Dialog>
+        </form>
+      </Grid>
+    </Dialog>
 	);
 };
 

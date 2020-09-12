@@ -132,7 +132,7 @@ function ProfilePasswordEditorDialog(props) {
           onClick={handleClickOpen}
           className={classes.editPasswordButton}
         >
-          <LockIcon />
+          <LockIcon fontSize="default" />
         </Button>
       </LightTooltip>
       <Dialog open={open} onClose={handleClose}>

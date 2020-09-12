@@ -7,6 +7,7 @@ import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getOneMaterial, deleteMaterial } from "../../../actions/MaterialActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Dialog, Fab, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -278,68 +279,17 @@ function ViewMaterial(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Materi berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedMaterials.name}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteTask(materi_id)}}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batalkan
-              </Button>
-            </Grid>
-          </Grid>
-          </Grid>
-      </Dialog>
-    )
-  }
-
   document.title = !selectedMaterials.name ? "Schooly | Lihat Materi" : `Schooly | ${selectedMaterials.name}`
 
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Materi"
+        itemName={selectedMaterials.name}
+        deleteItem={() => { onDeleteTask(materi_id)}}
+      />
       <Paper className={classes.paperBox}>
         <Grid
           container

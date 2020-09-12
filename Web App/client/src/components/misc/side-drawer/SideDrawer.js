@@ -8,10 +8,14 @@ import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
+import EventIcon from "@material-ui/icons/Event";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaClipboardList, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
+import { FaChalkboardTeacher, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
+
+// bm drawer
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 const drawerWidth = 240;
 
@@ -107,12 +111,16 @@ function DrawerContent(props) {
   else {
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
-      ["/kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
+      ["/daftar-kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
+      [{pathname:"/lihat-rapor", state: {
+        nama: 'Pilih kelas dan mata pelajaran untuk menampikan daftar nilai!',
+        dari: "drawer"
+      }}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"] // bm drawer
     ]
   }
 
@@ -141,7 +149,7 @@ function SideDrawer(props) {
   if (user.name !== undefined) {
     return (
       <div className={classes.drawerMobile}>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {/* Mobile = Backdrop Drawer */}
           <Drawer
             variant="temporary"
@@ -158,7 +166,7 @@ function SideDrawer(props) {
             <DrawerContent user={user} handleDrawerMobile={handleDrawerMobile}/>
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           {/* Desktop = Mini Variant Drawer */}
           <Drawer
             variant="permanent"

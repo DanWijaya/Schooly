@@ -3,9 +3,10 @@ import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getOneAnnouncement, updateAnnouncement} from "../../../actions/AnnouncementActions"
+import { getOneAnnouncement, updateAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
    Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
@@ -231,7 +232,7 @@ class EditAnnouncement extends Component {
       })
     }
   }
-  
+
   // componentDidUpdate(prevProps, prevState){
   //   const { selectedAnnouncements } = this.props.announcements
   //   console.log(selectedAnnouncements)
@@ -338,7 +339,6 @@ class EditAnnouncement extends Component {
       formData.append("lampiran_announcement", fileLampiranToAdd[i])
     }
 
-    console.log(fileLampiranToDelete)
     this.props.updateAnnouncement(formData, fileLampiranToDelete,
       selectedAnnouncements.lampiran, announcementObject, id, this.props.history);
     this.setState({ fileLampiranToDelete: []})
@@ -453,7 +453,13 @@ class EditAnnouncement extends Component {
 
     return (
       <div className={classes.root}>
-        {UploadDialog()}
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={success}
+          messageUploading="Pengumuman sedang disunting"
+          messageSuccess="Pengumuman telah disunting"
+          redirectLink={`/pengumuman/${this.props.match.params.id}`}
+        />
         <Paper>
           <div className={classes.content}>
             <Typography variant="h5" gutterBottom>

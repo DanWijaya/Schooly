@@ -40,9 +40,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "flex-end",
     margin: "auto",
-    marginTop: "30px",
-    marginBottom: "30px",
     maxWidth: "1000px",
+    padding: "20px",
   },
   supportSchoolyButton: {
     backgroundColor: theme.palette.primary.main,
@@ -56,19 +55,16 @@ const useStyles = makeStyles((theme) => ({
 
 function About(props) {
   const classes = useStyles();
-
   const { handleMarginTopValue } = props;
-  
+
   useEffect(() => {
     handleMarginTopValue(0);
-  },[handleMarginTopValue])
-
-  useEffect(() => {
     return () => {
       handleMarginTopValue(20)
     }
-  }, [handleMarginTopValue])
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   document.title = "Schooly | Tentang Schooly";
 
   return (
@@ -150,10 +146,10 @@ function About(props) {
       </div>
       <div className={classes.supportSchoolyBackground}>
         <div className={classes.supportSchooly}>
-          <Typography variant="h4" color="primary" gutterBottom >
+          <Typography variant="h4" align="center" color="primary" gutterBottom >
             Sudah menggunakan Schooly tetapi masih belum puas?
           </Typography>
-          <Typography paragraph>
+          <Typography align="center" paragraph>
             Bantu Schooly berkembang dengan pendapat Anda. Saran maupun kritik Anda sangat berarti bagi kami.
           </Typography>
           <Button

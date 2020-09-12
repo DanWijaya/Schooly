@@ -7,6 +7,7 @@ import "moment/locale/id";
 import { getAllTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
@@ -374,68 +375,17 @@ function TaskList(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Tugas berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedTaskName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteTask(selectedTaskId) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
   document.title = "Schooly | Daftar Tugas";
 
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Tugas"
+        itemName={selectedTaskName}
+        deleteItem={() => { onDeleteTask(selectedTaskId) }}
+      />
       <TaskListToolbar
         role={user.role}
         deleteTask={deleteTask}
@@ -522,7 +472,7 @@ function TaskList(props) {
                     <Grid container>
                       <Grid item xs={12}>
                         <Typography variant="body1" gutterBottom>
-                          <b>Kelas yang Ditugaskan: </b> 
+                          <b>Kelas yang Ditugaskan: </b>
                           {!all_classes_map.size  ? null :
                            row.class_assigned.map((id,i) => {
 

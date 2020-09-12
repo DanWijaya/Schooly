@@ -1,9 +1,6 @@
 Botak:
 2. nama sekolah di profil
 4. Sort mapping dkk
-5. Rename not graded jadi indo
-7. Download as csv, txt
-8. Search
 9. Cek file dan error
 13. Murid kumpul tugas masih merah
 14. Sticky footer
@@ -11,10 +8,9 @@ Botak:
 16. Dashboard admin dan guru
 17. Tidak nihil dan jumlah murid
 18. Disable overflow hidden when opening menu
-19. Fix profile page lagi
+19. hide input tag buat file upload
 20. Alternatif latex delete sisanya pilih satu: mathjax, algebra.js, katex
-https://medium.com/@sjorsvanheuveln/displaying-math-in-reactjs-using-es6-5b0739e8447e
-https://stackoverflow.com/questions/45106453/rendering-math-in-react-component
+21. Delete dialog di createassessment dan editassessment
 
 Daniel:
 1. proxy error 5000: https://github.com/StephenGrider/FullstackReactCode/issues/24
@@ -33,6 +29,8 @@ Daniel:
 11. Mungkin masukkin warning kalo file size kebesaran (cthnya ndak boleh exceed 512mb)
 12. Dropbox preview file: https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/get-preview-returning-unsupported-extension-for-pdf-jpeg/td-p/372374
 20. Ganti hardcode link di app sama dropbox
+21. Kadang kadang masih ada bug pas di page Create assessment pas duplicate difotonya.
+21. Error di about page
 
 IMPORTANT:
 1. Jumlah murid dan absen di kelas
@@ -89,4 +87,4 @@ Fitur yg blm ada yang Teams blm ada :
 2. Platform untuk cari universitas gitu
 3. Absensi
 4. Rapor (idenya untuk memudahkan mereka generate xlsx file daftar siswa dgn nilainya)
-5. App block (untuk personal device gitu block akses untuk buka app lain gimana?)
+5. App block (NetSupport)

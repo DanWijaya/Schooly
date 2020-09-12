@@ -9,6 +9,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneMaterial } from "../../../actions/MaterialActions";
 import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
    Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemText, Paper, Select, TextField, Typography } from "@material-ui/core";
@@ -334,11 +335,11 @@ class EditMaterial extends Component {
     if(otherfield){
       if(otherfield === "deadline")
         this.setState({ [otherfield] : e}) // e is the date value itself for KeyboardDatePicker
-      
+
       else
-        this.setState({ [otherfield] : e.target.value}) 
+        this.setState({ [otherfield] : e.target.value})
     }
-    
+
     else
       this.setState({ [e.target.id]: e.target.value });
   }
@@ -374,39 +375,6 @@ class EditMaterial extends Component {
         },
       },
     };
-
-    const UploadDialog = () => {
-      return (
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Materi sedang disunting" : "Materi berhasil disunting"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-              <Link to={`/materi/${this.props.match.params.id}`}>
-                <Button
-                  variant="contained"
-                  className={classes.uploadFinishButton}
-                >
-                  Selesai
-                </Button>
-                </Link>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-  }
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
@@ -463,7 +431,13 @@ class EditMaterial extends Component {
     if (user.role === "Teacher" || user.role === "Admin") {
       return (
         <div className={classes.root}>
-          {UploadDialog()}
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Materi sedang disunting"
+            messageSuccess="Materi telah disunting"
+            redirectLink="/daftar-materi"
+          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>

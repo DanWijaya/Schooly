@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
 function CreateFolder(props){
   const classes = useStyles();
   const [folderName, updateFolderName] = useState('');
-  // const [open, setOpen] = React.useState(null);
   const { errors, open, handleOpen, path, renderToUpdate, handleOpenLoadingAlert, setLoadingMessage, setSuccessMessage } = props;
   const { dropbox_token } = props.auth;
 
@@ -94,39 +93,38 @@ function CreateFolder(props){
 			});
     handleCloseDialog()
   }
+
   return (
-    <Dialog
-        open={open}
-        onClose={handleCloseDialog}>
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
-          <Grid item container justify="center" spacing={2}>
-            <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
-              <FaFolder className={classes.folderIcon}/>Folder Baru
-            </Typography>
-            <TextField
-              style={{margin: "20px 10px"}}
-              fullWidth
-              variant="outlined"
-              placeholder="Nama Folder"
-              id="name"
-              onChange={onChange}
-              value={folderName}
-              error={errors.name}
-              type="text"
-              helperText={errors.name}
-              className={classnames("", {
-                  invalid: errors.name
-              })}
-            />
+    <Dialog open={open} onClose={handleCloseDialog}>
+      <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+        <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
+          <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
+            <FaFolder className={classes.folderIcon}/>Folder Baru
+          </Typography>
+          <TextField
+            style={{margin: "20px 10px"}}
+            fullWidth
+            variant="outlined"
+            placeholder="Nama Folder"
+            id="name"
+            onChange={onChange}
+            value={folderName}
+            error={errors.name}
+            type="text"
+            helperText={errors.name}
+            className={classnames("", {
+                invalid: errors.name
+            })}
+          />
+          <Grid container justify="center" spacing={2}>
             <Grid item>
-                <Button
-                  type="submit"
-                  startIcon={<FaFolder />}
-                  className={classes.dialogCreateButton}
-                >
-                  Buat
-                </Button>
+              <Button
+                type="submit"
+                startIcon={<FaFolder />}
+                className={classes.dialogCreateButton}
+              >
+                Buat
+              </Button>
             </Grid>
             <Grid item>
               <Button
@@ -138,9 +136,9 @@ function CreateFolder(props){
               </Button>
             </Grid>
           </Grid>
-          </form>
-          </Grid>
-      </Dialog>
+        </form>
+      </Grid>
+    </Dialog>
   )
 }
 

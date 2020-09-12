@@ -17,15 +17,14 @@ import LoginForgot from "./components/auth/login/LoginForgot";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
 //Layout
 import About from "./components/layout/about/About";
-import Calendar from "./components/layout/calendar/Calendar";
 import Dashboard from "./components/layout/dashboard/Dashboard";
 import Landing from "./components/layout/landing/Landing";
 import ProfileView from "./components/layout/profile/ProfileView";
 import Profile from "./components/layout/profile/Profile";
-import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
+import ScheduleCalendar from "./components/layout/schedule-calendar/ScheduleCalendar";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";
@@ -56,6 +55,7 @@ import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
+import EditAssessment from "./components/objects/assessment/EditAssessment";
 import AssessmentList from "./components/objects/assessment/AssessmentList";
 import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
@@ -63,6 +63,8 @@ import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmen
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import SubjectList from "./components/objects/admin-only/SubjectList";
+//Report
+import ReportView from "./components/layout/profile/ReportView";
 //Prototypes
 import Tester from "./prototypes/Tester";
 import Graph from "./prototypes/Graph";
@@ -192,6 +194,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/managemockusers" component={ManageMockUsers} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
+                    <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
                     <PrivateRoute exact path="/lihat-rapor" component={ReportView} />
                     {/* Route Class */}
@@ -220,6 +223,7 @@ class App extends Component {
                     {/* Route Assessment - Prototype */}
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
+                    <PrivateRoute exact access={["Teacher"]} path="/sunting-kuis/:id" handleSideDrawerExist={this.handleSideDrawerExist} component={EditAssessment} />
                     <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />
                     {/* Route Admin-Only */}

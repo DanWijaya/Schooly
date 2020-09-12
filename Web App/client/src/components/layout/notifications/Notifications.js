@@ -86,14 +86,14 @@ function Notifications(props) {
         <List>
           <NotificationItemList
             sender_icon={<AccountCircleIcon />}
-            sender_name="Pak Peler"
+            sender_name="User 1"
             notification_title="Ujian Kimia Besok"
             notification_link="/test"
             time={"20m ago"}
           />
           <NotificationItemList
             sender_icon={<AccountCircleIcon />}
-            sender_name="My Nigga"
+            sender_name="User 2"
             notification_title="Ujian Biologi Lusa"
             notification_link="/test"
             time={"20m ago"}

@@ -16,7 +16,7 @@ const Remove = (props) => {
 			.then((response) => {
 				console.log('deleteResponse', response);
 				const newDocuments = props.documents.filter((x) => x.id !== response.metadata.id);
-				props.updateDocs(newDocuments); 
+				props.updateDocs(newDocuments);
 				console.log("RENDER from REMOVE")
 			})
 			.catch((err) => {
@@ -42,18 +42,15 @@ const Remove = (props) => {
 					/>
 					<h5> Delete file?</h5>
 				</div>
-
 				<p>
 					Are you sure you want to delete
 					<span className="itemDelete"> {props.doc.name} </span>
 					from your CloudyBox?
 				</p>
-
 				<div className="modalsButtonsContainer">
 					<button onClick={handleRemoveModal} className="modalButtons">
 						Cancel
 					</button>
-
 					<button
 						onClick={() => {
 							deleteItem(props.doc);

@@ -10,6 +10,8 @@ import { getOneTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, CircularProgress, Dialog, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText,
    Paper, Typography } from "@material-ui/core";
@@ -328,7 +330,7 @@ function ViewTaskStudent(props) {
     getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
   const { all_subjects_map} = props.subjectsCollection;
 
-  // ref itu untuk ngerefer html yang ada di render. 
+  // ref itu untuk ngerefer html yang ada di render.
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
@@ -344,7 +346,7 @@ function ViewTaskStudent(props) {
 
   let tugasId = props.match.params.id;
   console.log(filesCollection)
-  
+
   // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
   // useEffect(() => {getAllSubjects("map")}, [])
 
@@ -486,63 +488,6 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus file berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedFileName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteTugas(selectedFileId)}}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
   // Upload Dialog
   const [openUploadDialog, setOpenUploadDialog] = React.useState(null);
   const handleOpenUploadDialog = () => {
@@ -553,47 +498,28 @@ function ViewTaskStudent(props) {
     clearSuccess()
   };
 
-  function UploadDialog(){
-
-    return (
-      <Dialog open={openUploadDialog}>
-        <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-          <Grid item justify="center">
-            <Typography variant="h6" align="center" gutterBottom>
-              {!success ? "Tugas sedang dikumpul" : "Tugas sedang dikumpul"}
-            </Typography>
-          </Grid>
-          <Grid item>
-            {!success ?  <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-          </Grid>
-          <Grid item>
-            {!success ?
-            <Typography variant="body1" align="center" gutterBottom>
-              <b>Mohon tetap tunggu di halaman ini.</b>
-            </Typography> :
-            <Link to={`/tugas-murid/${tugasId}`}>
-              <Button
-                variant="contained"
-                className={classes.uploadFinishButton}
-                onClick={handleCloseUploadDialog}
-              >
-                Selesai
-              </Button>
-              </Link>
-            }
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-}
-
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
+
   console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
+
   console.log(success, filesCollection.files)
+  
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
-      {UploadDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Berkas"
+        itemName={selectedFileName}
+        deleteItem={() => { onDeleteTugas(selectedFileId)}}
+      />
+      <UploadDialog
+        openUploadDialog={openUploadDialog}
+        success={success}
+        messageUploading="Tugas sedang dikumpul"
+        messageSuccess="Tugas telah dikumpul"
+        redirectLink={`/tugas-murid/${tugasId}`}
+      />
       <Grid container
         spacing={2}
         justify="space-between"

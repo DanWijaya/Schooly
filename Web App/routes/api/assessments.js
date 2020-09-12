@@ -30,9 +30,17 @@ router.post('/create', (req,res) => {
       }
 
       else {
-        console.log("HDHEWJ FNKERNFKERF ",req.body)
-        const newAssessment = new Assessment(req.body);
 
+        let questions = req.body.questions;
+        let questions_no_lampiran = questions.map((qns) => {
+          delete qns.lampiran
+          return qns
+        })
+        const newAssessment = new Assessment({
+          ...req.body, 
+          questions: questions_no_lampiran
+        });
+        console.log({...req.body, questions: questions_no_lampiran})
         newAssessment
             .save()
             .then(quiz => res.json(quiz))
@@ -41,6 +49,43 @@ router.post('/create', (req,res) => {
     })
 })
 
+router.post("/update/:id", (req,res) => {
+  const { errors, isValid } = validateAssessmentInput(req.body)
+  if(!isValid){
+    console.log("Data is not valid")
+    return res.status(400).json(errors)
+  }
+
+  let id = req.params.id;
+
+  Assessment.findById(id, (err, assessmentData) => {
+    if (!assessmentData)
+        return res.status(404).send("Assessment data is not found");
+
+    else{
+        assessmentData.name = req.body.name;
+        assessmentData.description = req.body.description;
+        assessmentData.class_assigned = req.body.class_assigned;
+        assessmentData.subject = req.body.subject;
+        assessmentData.start_date = req.body.start_date;
+        assessmentData.end_date = req.body.end_date;
+
+        let questions = req.body.questions;
+        let qns_list = questions.map((qns) => {
+          let q = qns;
+          // let lampiran = q.lampiran.filter(x => typeof x === "string")
+          q.lampiran = qns.lampiran.filter(x => typeof x === "string")
+          return q;
+        })
+        console.log(qns_list)
+        assessmentData.questions = qns_list;
+        assessmentData
+                    .save()
+                    .then(quiz => res.json(quiz))
+                    .catch(err => res.status(400).send("Unable to update task database"));
+    }
+  })
+})
 router.get("/viewall", (req,res) => {
   Assessment.find({})
             .then(assessments => {

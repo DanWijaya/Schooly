@@ -188,8 +188,6 @@ class Register extends Component {
     const getSteps = () => {
       return ["Kredensial Masuk", "Informasi Pribadi", "Konfirmasi Registrasi"];
     }
-
-    console.log(all_subjects)
     const getStepContent = (stepIndex) => {
       switch (stepIndex) {
         case 0:
@@ -432,9 +430,7 @@ class Register extends Component {
           return "Unknown stepIndex";
       }
     }
-
     const steps = getSteps();
-
     const handleNext = () => {
       if (this.state.activeStep !== 2 || this.state.errors === null)
         this.setState(prevState => ({
@@ -443,7 +439,6 @@ class Register extends Component {
         })
       )
     };
-
     const handleBack = () => {
       if(this.state.snackbarOpen){
         this.setState({ snackbarOpen: false})

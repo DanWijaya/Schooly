@@ -5,7 +5,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import { createAssessment } from "../../../actions/AssessmentActions";
+import { getOneAssessment, updateAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
@@ -148,7 +148,7 @@ const styles = (theme) => ({
   },
 });
 
-class CreateAssessment extends Component {
+class EditAssessment extends Component {
   constructor() {
     super();
     this.state = {
@@ -160,6 +160,7 @@ class CreateAssessment extends Component {
         answer: "A",
         lampiran: []
       }],
+      lampiranToDelete: [],
       name: "",
       description: "",
       subject: "",
@@ -178,19 +179,51 @@ class CreateAssessment extends Component {
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
+  componentDidMount(){
+    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
+    handleSideDrawerExist(false)
+    getAllClass()
+    getOneAssessment(this.props.match.params.id)
+    getAllSubjects()
+  }
+
   componentWillUnmount(){
     this.props.clearErrors()
     this.props.handleSideDrawerExist(true)
   }
 
-  onSubmit = (e, id) => {
+  UNSAFE_componentWillReceiveProps(nextProps){
+    const { selectedAssessments } = nextProps.assessmentsCollection
+
+    if (!nextProps.errors) {
+      this.handleOpenUploadDialog()
+    }
+    console.log(selectedAssessments.questions)
+    if (Boolean(selectedAssessments) && nextProps.errors) {
+      this.setState({
+          name: selectedAssessments.name,
+          subject: selectedAssessments.subject,
+          deadline: selectedAssessments.deadline,
+          start_date: selectedAssessments.start_date,
+          end_date: selectedAssessments.end_date,
+          questions: Array.isArray(selectedAssessments.questions) ? selectedAssessments.questions : [],
+          description: selectedAssessments.description,
+          class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : []
+          // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
+          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      })
+    }
+  }
+
+  onSubmit = (e) => {
     e.preventDefault()
     let formData = new FormData();
 
-    const { questions } = this.state;
-    const { createAssessment , history} = this.props
+    const { questions, lampiranToDelete } = this.state;
+    const { updateAssessment , history} = this.props
+
     questions.forEach((qns) => {
-      let lampiran = qns.lampiran;
+      let lampiran = qns.lampiran.filter(x => typeof x !== "string");
       lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
     })
 
@@ -202,13 +235,12 @@ class CreateAssessment extends Component {
       class_assigned: this.state.class_assigned,
       description: this.state.description,
       questions: this.state.questions,
-      author_id: id,
     }
-
+    const assessmentId = this.props.match.params.id;
     console.log(assessmentData)
 
-    createAssessment(formData, assessmentData, history)
-
+    updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
+    
   }
 
   handleOpenUploadDialog = () => {
@@ -312,48 +344,72 @@ class CreateAssessment extends Component {
   handleQuestionImage = (e, qnsIndex, indexToDelete=null) => {
     let questions = this.state.questions
     if(Number.isInteger(indexToDelete)){
+      let item = questions[qnsIndex].lampiran[indexToDelete]
+      // delete question lampiran nya dari list
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
-      console.log(questions)
-      this.setState({ questions: questions})
+      // lalu setelah itu kita simpan semua lampiran di dalam list untuk mengecek. 
+      let all_lampiran_list = []
+      questions.forEach((qns) => {
+        if(qns.lampiran.length){
+         all_lampiran_list = [...all_lampiran_list, ...qns.lampiran]
+        }
+      })
+
+      
+      // dipakai untuk handle kalau imagenya dari duplicate, tapi ada satu soal yang imagenya didelete lah. 
+      if(typeof item === "string"){
+        let temp = this.state.lampiranToDelete;
+        if(all_lampiran_list.indexOf(item) === -1){
+          // kalau ngak ada, bakal dibuang. 
+          temp.push(item)
+        }
+        this.setState({ lampiranToDelete: temp, questions: questions})
+      }
+      else {
+        this.setState({ questions: questions})
+      }
     }
     else{
       if(e.target.files){
-          const files = Array.from(e.target.files);
-          let temp = questions[qnsIndex].lampiran.concat(files)
-          questions[qnsIndex].lampiran = temp;
-          this.setState({ questions: questions})
+        const files = Array.from(e.target.files);
+        let temp = questions[qnsIndex].lampiran.concat(files)
+        questions[qnsIndex].lampiran = temp;
+        this.setState({ questions: questions})
       }
     }
   }
 
   listQuestion = () => {
     // let questionList = []
-    let questions = this.state.questions;
+    let { questions } = this.state;
     const { page, rowsPerPage} = this.state;
     const { classes } = this.props;
+    let questionList = [];
+      questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
 
-    let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-      console.log(question.lampiran)
-      return(
-        <QuestionItem
-          isEdit={false}
-          lampiranToAdd={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
-          currentLampiran={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
-          index={i + page * rowsPerPage}
-          name={question.name}
-          options={JSON.stringify(question.options)}
-          answer={question.answer}
-          lampiran={question.lampiran}
-          lampiran_length={question.lampiran.length}
-          deleteQuestion={this.deleteQuestion}
-          handleDuplicateQuestion={this.handleDuplicateQuestion}
-          handleQuestionOptions={this.handleQuestionOptions}
-          handleChangeQuestion={this.handleChangeQuestion}
-          handleQuestionImage={this.handleQuestionImage}
-        />
-      )
+        let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
+        let currentLampiran = question.lampiran.filter(l => typeof l === "string")
+        console.log(question.lampiran.length)
+        return(
+          <QuestionItem
+            isEdit={true}
+            index={i + page * rowsPerPage}
+            name={question.name}
+            options={JSON.stringify(question.options)}
+            answer={question.answer}
+            lampiran={question.lampiran}
+            lampiran_length={question.lampiran.length}
+            lampiranToAdd={lampiranToAdd}
+            currentLampiran={currentLampiran}
+            deleteQuestion={this.deleteQuestion}
+            handleDuplicateQuestion={this.handleDuplicateQuestion}
+            handleQuestionOptions={this.handleQuestionOptions}
+            handleChangeQuestion={this.handleChangeQuestion}
+            handleQuestionImage={this.handleQuestionImage}
+            />
+        )
     }
-  )
+    )
 
     return questionList
   }
@@ -362,13 +418,6 @@ class CreateAssessment extends Component {
     if(!this.props.errors && this.props.errors !== prevProps.errors){
       this.handleOpenUploadDialog()
     }
-  }
-
-  componentDidMount(){
-    const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props
-    handleSideDrawerExist(false)
-    getAllClass()
-    getAllSubjects()
   }
 
 
@@ -382,14 +431,16 @@ class CreateAssessment extends Component {
   };
 
   render() {
-    console.log(this.state.questions)
     const { class_assigned } = this.state;
     const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
+    const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
-    
-    document.title = "Schooly | Buat Kuis";
+
+    console.log("QUESTIONS : ", this.state.questions)
+
+    document.title = "Schooly | Sunting Kuis";
 
     console.log(this.state.questions)
 
@@ -399,27 +450,26 @@ class CreateAssessment extends Component {
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
           itemType="Kuis"
+          itemName=""
           deleteItem=""
-          isLink={true}
-          redirectLink="/daftar-kuis"
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          messageUploading="Kuis sedang dibuat"
-          messageSuccess="Kuis telah dibuat"
+          messageUploading="Kuis sedang disunting"
+          messageSuccess="Kuis telah disunting"
           redirectLink="/daftar-kuis"
         />
-        <form onSubmit={(e) => this.onSubmit(e, user.id)}>
+        <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Buat Kuis</b>
+                    <b>Sunting Kuis</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan kuis untuk membuat kuis.
+                    Tambahkan keterangan kuis untuk menyunting kuis.
                   </Typography>
                 </div>
                 <Divider />
@@ -431,6 +481,7 @@ class CreateAssessment extends Component {
                           Judul
                         </Typography>
                         <TextField
+                          value={this.state.name}
                           fullWidth
                           variant="outlined"
                           id="name"
@@ -444,6 +495,7 @@ class CreateAssessment extends Component {
                           Deskripsi
                         </Typography>
                         <TextField
+                          value={this.state.description}
                           multiline
                           rowsMax={10}
                           fullWidth
@@ -618,7 +670,7 @@ class CreateAssessment extends Component {
                     </Grid>
                     <Grid item>
                       <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                        Buat Kuis
+                        Sunting Kuis
                       </Button>
                     </Grid>
                   </Grid>
@@ -632,15 +684,18 @@ class CreateAssessment extends Component {
   }
 };
 
-CreateAssessment.propTypes = {
-  createAssessment: PropTypes.func.isRequired,
+EditAssessment.propTypes = {
+  updateAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  updateAssessment: PropTypes.func.isRequired,
+  getOneAssessment: PropTypes.func.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  success: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -649,8 +704,9 @@ const mapStateToProps = state => ({
   success: state.success,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  assessmentsCollection: state.assessmentsCollection,
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createAssessment, clearErrors }
-)(withStyles(styles)(React.memo(CreateAssessment)));
+  mapStateToProps, { getOneAssessment, getAllClass, getAllSubjects, updateAssessment, clearErrors }
+)(withStyles(styles)(React.memo(EditAssessment)));

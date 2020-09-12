@@ -4,17 +4,13 @@ import PolicyContent from "./PolicyContent";
 function Policy(props) {
   const { handleMarginTopValue } = props;
 
-  //kayak componentDidMount()
   useEffect(() => {
     handleMarginTopValue(0);
-  },[handleMarginTopValue])
-
-  // kayak componentWillUnMount()
-  useEffect(() => {
     return () => {
       handleMarginTopValue(20)
     }
-  }, [handleMarginTopValue])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   document.title = "Schooly | Kebijakan Penggunaan";
 

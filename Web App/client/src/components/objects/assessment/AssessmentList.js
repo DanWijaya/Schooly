@@ -7,6 +7,7 @@ import "moment/locale/id";
 import { getAllAssessments, deleteAssessment  } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
@@ -320,6 +321,7 @@ function AssessmentList(props) {
   }
 
   React.useEffect(() => {
+    console.log("SDD jfeirer kfrelfefrjoerfe")
     getAllAssessments()
     getAllClass("map")
     getAllSubjects("map")
@@ -381,68 +383,17 @@ function AssessmentList(props) {
     setOpenDeleteDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Kuis berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedAssessmentName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteAssessment(selectedAssessmentId) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
   document.title = "Schooly | Daftar Kuis";
-  console.log(rows)
+
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Kuis"
+        itemName={selectedAssessmentName}
+        deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+      />
       <AssessmentListToolbar
         role={user.role}
         deleteAssessment={deleteAssessment}
@@ -501,7 +452,7 @@ function AssessmentList(props) {
                         </Grid>
                         <Grid item>
                           <LightTooltip title="Sunting">
-                            <Link to={`/sunting-tugas/${row._id}`}>
+                            <Link to={`/sunting-kuis/${row._id}`}>
                               <IconButton
                                 size="small"
                                 className={classes.editAssessmentButton}

@@ -404,8 +404,8 @@ function ViewClass(props) {
   }, [])
 
   React.useEffect(() => {
-    if (!Array.isArray(all_teachers)) { 
-      setWalikelas(all_teachers.get(kelas.walikelas)); 
+    if (!Array.isArray(all_teachers)) {
+      setWalikelas(all_teachers.get(kelas.walikelas));
     }
   }, [all_teachers]);
 
@@ -501,7 +501,7 @@ function ViewClass(props) {
                                 <Link to={{
                                   pathname:"/lihat-profil",
                                   state: {
-                                    avatar: walikelas.avatar, 
+                                    avatar: walikelas.avatar,
                                     nama: walikelas.name,
                                     viewable_section: "no_karir",
                                     role: walikelas.role,
@@ -509,6 +509,7 @@ function ViewClass(props) {
                                     email: walikelas.email,
                                     phone: walikelas.phone,
                                     emergency_phone : walikelas.emergency_phone,
+                                    admin: false
                                   }
                                 }}>
                                   <IconButton

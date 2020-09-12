@@ -16,9 +16,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+// import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from "@material-ui/icons/Block";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import PageviewIcon from "@material-ui/icons/Pageview";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -341,62 +343,6 @@ function ManageUsers(props) {
     setOpenDisableDialog(false);
   };
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Pengguna berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedUserName}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteUser(selectedUserId) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
   function DisableDialog() {
     return (
       <Dialog
@@ -648,6 +594,38 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
+                        <LightTooltip title="Lihat Profil">
+
+                            <Link to={{
+                              pathname:'/lihat-profil',
+                              state: {
+                                avatar: row.avatar,
+                                nama: row.name,
+                                subject_teached: all_teachers[index].subject_teached,
+                                viewable_section: 'with_karir',
+                                tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                                jenis_kelamin: all_teachers[index].jenis_kelamin,
+                                role: 'Teacher',
+                                sekolah: row.sekolah,
+                                email: row.email,
+                                phone: row.phone,
+                                emergency_phone : row.emergency_phone,
+                                alamat: row.address,
+                                hobi: all_teachers[index].hobi_minat,
+                                ket: all_teachers[index].ket_non_teknis,
+                                cita: all_teachers[index].cita_cita,
+                                uni: all_teachers[index].uni_impian,
+                                admin: true
+                              }
+                            }}>
+                              <IconButton
+                                  size="small"
+                                  className={classes.viewMaterialButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
                           <LightTooltip title="Nonaktifkan">
                             <IconButton
                               size="small"
