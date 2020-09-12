@@ -118,8 +118,7 @@ function DrawerContent(props) {
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       ["/daftar-kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
       [{pathname:"/lihat-rapor", state: {
-        nama: 'Pilih kelas dan mata pelajaran untuk menampikan daftar nilai!',
-        dari: "drawer"
+        role: "other"
       }}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"] // bm drawer
     ]
   }

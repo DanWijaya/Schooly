@@ -27,15 +27,16 @@ export const getAllClass = (data="array") => dispatch => {
         // console.log("Data should be here")
         console.log("run getallclass");
         if(data === "map"){
-          dispatch({
-            type: GET_ALL_CLASSES_MAP,
-            payload: res.data
+            dispatch({
+                type: GET_ALL_CLASSES_MAP,
+                payload: res.data
           })
+        } else {
+            dispatch({
+                type: GET_ALL_CLASSES,
+                payload: res.data
+            })
         }
-        dispatch({
-            type: GET_ALL_CLASSES,
-            payload: res.data
-        })
     })
 
     .catch(err => {
