@@ -10,17 +10,15 @@ import { getStudentsByClass } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, IconButton, Dialog, Divider, Grid, Hidden, ListItemAvatar, 
+import { Avatar, Button, IconButton, Dialog, Divider, Grid, Hidden, ListItemAvatar,
   Menu, MenuItem, TableSortLabel, Toolbar, Typography, Paper } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
-// import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
 import BlockIcon from "@material-ui/icons/Block";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import PageviewIcon from "@material-ui/icons/Pageview";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -38,7 +36,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === "desc" ? 
+  return order === "desc" ?
   (a, b) => descendingComparator(a, b, orderBy)
   :
   (a, b) => -descendingComparator(a, b, orderBy);
@@ -119,7 +117,7 @@ function ManageUsersToolbar(props) {
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </span>
-                : 
+                :
                 null
               }
             </TableSortLabel>
@@ -230,8 +228,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   summary: {
-    padding:"8px", 
-    paddingLeft:"20px", 
+    padding:"8px",
+    paddingLeft:"20px",
     paddingRight:"20px"
   }
 }));
@@ -402,7 +400,7 @@ function ManageUsers(props) {
 
   console.log(all_teachers[0])
   console.log(pending_users)
-  
+
   return (
     <div className={classes.root}>
       {DisableDialog()}
@@ -514,8 +512,8 @@ function ManageUsers(props) {
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Paper>   
-                </Link>  
+                  </Paper>
+                </Link>
               </Grid>
           )
         })}
@@ -618,12 +616,12 @@ function ManageUsers(props) {
                                 admin: true
                               }
                             }}>
-                              <IconButton
+                              {/* <IconButton
                                   size="small"
                                   className={classes.viewMaterialButton}
                               >
                                 <PageviewIcon fontSize="small" />
-                              </IconButton>
+                              </IconButton> */}
                             </Link>
                           </LightTooltip>
                           <LightTooltip title="Nonaktifkan">
@@ -650,8 +648,8 @@ function ManageUsers(props) {
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Paper>   
-                </Link>  
+                  </Paper>
+                </Link>
               </Grid>
             )
           })}

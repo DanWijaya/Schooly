@@ -12,6 +12,7 @@ import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
 import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "15px 0px 15px 0px"
   },
   informationPaper: {
-    backgroundColor: fade(theme.palette.primary.main,0.06)
+    backgroundColor: fade(theme.palette.primary.main, 0.06)
   },
   informationPictureContainer: {
     display: "flex",
@@ -77,13 +78,13 @@ const useStyles = makeStyles((theme) => ({
     color: "white"
   },
   descriptionText: {
-    color: "white", 
-    marginTop: "10px", 
-    marginLeft: "20px", 
+    color: "white",
+    marginTop: "10px",
+    marginLeft: "20px",
     fontWeight: "300",
     fontStyle: "italic"
   },
-  background_gradient: {
+  backgroundGradient: {
     padding:"20px",
     background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)"
   }
@@ -95,8 +96,6 @@ const StyledBadge = withStyles((theme) => ({
     top: theme.spacing(16),
   }
 }))(Badge);
-
-
 
 function ProfileDataItem(props) {
   const classes = useStyles();
@@ -170,8 +169,6 @@ function Profile(props) {
 
   const { user } = props.auth;
   const { setCurrentClass, classesCollection } = props;
-  // const { kelas } = props.classesCollection;
-  // Alert control for ProfilePictureEditorDialog
 
   const [namakelas, setNamaKelas] = React.useState("");
   const [firstAssign, setFirstAssign] = React.useState(true);
@@ -194,10 +191,11 @@ function Profile(props) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
   const { avatar, nama, role, viewable_section, jenis_kelamin,
-    email, phone, emergency_phone, alamat, hobi, ket, cita, uni, 
+    email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
     kelas, admin } = location.state
 
-  document.title = "Schooly | Profil"
+  document.title = `Schooly | ${nama}`
+
   return (
     <div className={classes.root}>
       <Grid container direction="column" spacing={1} alignItems="center">
@@ -255,10 +253,10 @@ function Profile(props) {
             (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
               <Grid item>
                 <Paper className={classes.informationPaper}>
-                  <div className={classes.background_gradient}>
+                  <div className={classes.backgroundGradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       INFORMASI PENGGUNA
-                    </Typography>            
+                    </Typography>
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
                       Berikut ini informasi data diri dari user terkait.
                     </Typography>
@@ -308,25 +306,25 @@ function Profile(props) {
                           profile_data_category="Alamat"
                           profile_data_info={alamat}
                           />
-                        </div> 
-                        : 
+                        </div>
+                        :
                         null
                     }
                   </List>
                 </Paper>
               </Grid>
-            ].concat((viewable_section === "no_karir") ? 
+            ].concat((viewable_section === "no_karir") ?
             (null)
             : (
               <Grid item>
                 <Paper className={classes.informationPaper}>
-                  <div className={classes.background_gradient}>
+                  <div className={classes.backgroundGradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
                       KARIR
-                    </Typography>            
+                    </Typography>
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
                       Berikut ini adalah status karir dan informasi lain yang dimiliki user.
-                    </Typography> 
+                    </Typography>
                   </div>
                   <List style={{padding: "20px", marginBottom:"30px"}}>
                     <ProfileDataItem
@@ -355,7 +353,7 @@ function Profile(props) {
                   </List>
                 </Paper>
               </Grid>
-            )) : 
+            )) :
             (
              null
             )

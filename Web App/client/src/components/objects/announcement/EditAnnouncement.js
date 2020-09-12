@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -8,12 +8,11 @@ import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
-   Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
+   ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
@@ -85,26 +84,6 @@ const styles = (theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  uploadDialogGrid: {
-    maxWidth: "300px",
-    minHeight: "200px",
-    padding: "15px",
-  },
-  uploadSuccessIcon: {
-    color: "green",
-    height: "45px",
-    width: "45px"
-  },
-  uploadFinishButton: {
-    width: "100%",
-    marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
       color: "white",
     },
   },
@@ -363,39 +342,6 @@ class EditAnnouncement extends Component {
     const { errors, success } = this.props;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
-
-    const UploadDialog = () => {
-      return (
-        <Dialog open={this.state.openUploadDialog}>
-          <Grid container direction="column" justify="space-between" alignItems="center" className={classes.uploadDialogGrid}>
-            <Grid item>
-              <Typography variant="h6" align="center" gutterBottom>
-                {!success ? "Pengumuman sedang disunting" : "Pengumuman berhasil disunting"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
-            </Grid>
-            <Grid item>
-              {!success ?
-                <Typography variant="body1" align="center" gutterBottom>
-                  <b>Mohon tetap tunggu di halaman ini.</b>
-                </Typography>
-              :
-              <Link to={`/pengumuman/${this.props.match.params.id}`}>
-                  <Button
-                    variant="contained"
-                    className={classes.uploadFinishButton}
-                  >
-                    Selesai
-                  </Button>
-                </Link>
-              }
-            </Grid>
-          </Grid>
-        </Dialog>
-      )
-    }
 
     const fileType = (filename) => {
       let ext_file = path.extname(filename)

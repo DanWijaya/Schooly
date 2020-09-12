@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
@@ -11,23 +10,14 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, TextField, TablePagination, Typography, Select } from "@material-ui/core";
+import { Button, Chip, Divider,
+   FormControl, FormControlLabel, FormHelperText, Grid,
+   MenuItem, Paper, Select, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ClearIcon from "@material-ui/icons/Clear";
-import CloseIcon from "@material-ui/icons/Close";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import SaveIcon from "@material-ui/icons/Save";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 const styles = (theme) => ({
   root: {
@@ -39,15 +29,12 @@ const styles = (theme) => ({
     padding: "20px 20px 30px 20px",
   },
   divider: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
       width: "100%",
       height: "1px",
     },
   },
   addQuestionButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -55,24 +42,17 @@ const styles = (theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  addOptionButton: {
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    marginTop: "20px",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
+  pageNavigator: {
+    justifyContent: "flex-start",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
     },
   },
-  draftAssessmentButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
+  assessmentSettings: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      justifyContent: "center",
     },
   },
   createAssessmentButton: {
@@ -91,60 +71,12 @@ const styles = (theme) => ({
       color: theme.palette.error.main,
     },
   },
-  dialogBox: {
-    maxWidth: "400px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  avatarImg1: { // If width is smaller than height
-    width: theme.spacing(25),
-  },
-  avatarImg2: { //If height is smaller than width
-    height: theme.spacing(25),
-  },
   chips: {
     display: "flex",
     flexWrap: "wrap",
   },
   chip: {
     marginRight: 2,
-  },
-  uploadDialogGrid: {
-    maxWidth: "300px",
-    minHeight: "200px",
-    padding: "15px",
-  },
-  uploadSuccessIcon: {
-    color: "green",
-    height: "45px",
-    width: "45px"
-  },
-  uploadFinishButton: {
-    width: "100%",
-    marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
-      color: "white",
-    },
   },
 });
 
@@ -171,7 +103,8 @@ class CreateAssessment extends Component {
       success: false,
       page: 0,
       rowsPerPage: 10,
-      qnsListitem: []
+      qnsListitem: [],
+      posted: false
     }
   }
 
@@ -179,6 +112,7 @@ class CreateAssessment extends Component {
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
   componentWillUnmount(){
+    console.log(this.state.subject)
     this.props.clearErrors()
     this.props.handleSideDrawerExist(true)
   }
@@ -203,6 +137,7 @@ class CreateAssessment extends Component {
       description: this.state.description,
       questions: this.state.questions,
       author_id: id,
+      posted: this.state.posted
     }
 
     console.log(assessmentData)
@@ -330,7 +265,6 @@ class CreateAssessment extends Component {
     // let questionList = []
     let questions = this.state.questions;
     const { page, rowsPerPage} = this.state;
-    const { classes } = this.props;
 
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
       console.log(question.lampiran)
@@ -381,6 +315,11 @@ class CreateAssessment extends Component {
     this.setState({ page: 0, rowsPerPage: +event.target.value })
   };
 
+  handlePostToggle = () => {
+    this.setState((prevState) => ({
+      posted: !prevState.posted
+    }))
+  }
   render() {
     console.log(this.state.questions)
     const { class_assigned } = this.state;
@@ -388,7 +327,45 @@ class CreateAssessment extends Component {
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-    
+
+    const ToggleViewQuiz = withStyles((theme) => ({
+      root: {
+        width: 42,
+        height: 26,
+        padding: 0,
+        margin: theme.spacing(1),
+      },
+      switchBase: {
+        padding: 2.5,
+        color: theme.palette.warning.light,
+        "&$checked": {
+          transform: "translateX(16px)",
+          color: theme.palette.common.white,
+          "& + $track": {
+            backgroundColor: theme.palette.warning.light,
+            opacity: 1,
+            border: "none",
+          },
+        },
+        "&$focusVisible $thumb": {
+          color: "#52d869",
+          border: "6px solid #fff",
+        },
+      },
+      thumb: {
+        width: 24,
+        height: 24,
+      },
+      track: {
+        borderRadius: 26 / 2,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        backgroundColor: theme.palette.grey[50],
+        opacity: 1,
+        transition: theme.transitions.create(["background-color", "border"]),
+      },
+      checked: {},
+    }))(Switch);
+
     document.title = "Schooly | Buat Kuis";
 
     console.log(this.state.questions)
@@ -563,54 +540,54 @@ class CreateAssessment extends Component {
                 </Grid>
               </Paper>
             </Grid>
-              {this.listQuestion()}
+            {this.listQuestion()}
+            <Grid item container justify="center">
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={this.handleAddQuestion}
+                className={classes.addQuestionButton}
+              >
+                Tambah Soal
+              </Button>
+            </Grid>
             <Grid item>
               <Paper>
                 <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
-                  <Grid item xs={12} sm>
-                    <TablePagination
-                      labelRowsPerPage="Soal per halaman"
-                      rowsPerPageOptions={[5, 10]}
-                      component="div"
-                      count={this.state.questions.length}
-                      rowsPerPage={this.state.rowsPerPage}
-                      page={this.state.page}
-                      onChangePage={this.handleChangePage}
-                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <FormHelperText error>
-                      {errors.questions}
-                    </FormHelperText>
-                  </Grid>
-                  <Grid item>
-                    <LightTooltip title="Tambah Soal">
-                      <IconButton onClick={this.handleAddQuestion} className={classes.addQuestionButton}>
-                        <AddIcon/>
-                      </IconButton>
-                    </LightTooltip>
-                  </Grid>
-                  <Grid item>
-                    <LightTooltip title="Simpan Kuis">
-                      <Badge
-                        badgeContent={
-                          <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-                            <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
-                          </Avatar>
+                  <Grid item container md={8} alignItems="center" className={classes.pageNavigator}>
+                    <Grid item>
+                      <TablePagination
+                        labelRowsPerPage="Soal Per Halaman"
+                        rowsPerPageOptions={[5, 10]}
+                        component="div"
+                        count={this.state.questions.length}
+                        rowsPerPage={this.state.rowsPerPage}
+                        page={this.state.page}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <FormControlLabel
+                        label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
+                        labelPlacement="start"
+                        control={
+                          <ToggleViewQuiz
+                            checked={this.state.posted}
+                            onChange={this.handlePostToggle}
+                            checkedIcon={<FiberManualRecordIcon />}
+                            icon={<FiberManualRecordIcon />}
+                          />
                         }
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                      >
-                        <IconButton className={classes.draftAssessmentButton}>
-                          <SaveIcon />
-                        </IconButton>
-                      </Badge>
-                    </LightTooltip>
+                      />
+                    </Grid>
+                    <Grid item>
+                      <FormHelperText error>
+                        {errors.questions}
+                      </FormHelperText>
+                    </Grid>
                   </Grid>
-                  <Grid item container xs justify="flex-end" spacing={2}>
+                  <Grid item container md={4} spacing={2} className={classes.assessmentSettings}>
                     <Grid item>
                       <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
                         Batal

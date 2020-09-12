@@ -2,19 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentActions"
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import moment from "moment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
+import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -180,6 +180,7 @@ function ViewAssessmentTeacher(props) {
     )
   }
 
+
   return (
     <div className={classes.root}>
       {DeleteDialog()}
@@ -228,7 +229,7 @@ function ViewAssessmentTeacher(props) {
               </Grid>
             </Paper>
           </Grid>
-          {!Array.isArray(questions) ? null : 
+          {!Array.isArray(questions) ? null :
           questions.map((question, i) => (
             <Grid item>
               <Paper>
@@ -238,13 +239,13 @@ function ViewAssessmentTeacher(props) {
                       Soal {i+1}
                     </Typography>
                     <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
-                      {question.lampiran.map((image, i) => 
+                      {question.lampiran.map((image, i) =>
                         <GridListTile key={image} cols={1} >
                         <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
-                        {/* <GridListTileBar
+                        <GridListTileBar
+                            title={`Gambar ${i+1}`}
                             titlePosition="top"
-                            actionPosition="right"
-                          /> */}
+                            actionPosition="right"/>
                       </GridListTile>
                       )}
                     </GridList>
@@ -253,7 +254,7 @@ function ViewAssessmentTeacher(props) {
                     </Typography>
                   </Grid>
                   <Grid item>
-                    {question.options.map((option, i) => 
+                    {question.options.map((option, i) =>
                     (
                       <Typography className={question.answer === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
                         {option}

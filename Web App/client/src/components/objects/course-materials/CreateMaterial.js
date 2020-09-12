@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
@@ -9,11 +8,10 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, CircularProgress, Dialog, Divider, FormControl, FormHelperText,
-   Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
+   ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
@@ -80,26 +78,6 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   createMaterialButton: {
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
-      color: "white",
-    },
-  },
-  uploadDialogGrid: {
-    maxWidth: "300px",
-    minHeight: "200px",
-    padding: "15px",
-  },
-  uploadSuccessIcon: {
-    color: "green",
-    height: "45px",
-    width: "45px"
-  },
-  uploadFinishButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {

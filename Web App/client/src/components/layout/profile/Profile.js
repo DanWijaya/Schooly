@@ -206,7 +206,7 @@ function Profile(props) {
     setCurrentClass(user.kelas)
   }
 
-  document.title = "Schooly | Profil"
+  document.title = "Schooly | Profil Saya"
 
   return (
     <div className={classes.root}>

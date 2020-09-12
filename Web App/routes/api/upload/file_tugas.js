@@ -211,7 +211,7 @@ router.delete("/tugas/:userid/:tugasid/", (req,res) => {
     }
     else {
       for (var i = 0; i < user.tugas.length; i++) {
-        if (user.tugas[i].id === tugas_id)
+        if (String(user.tugas[i].id) === String(tugas_id))
           user.tugas.splice(i,1)
       }
 

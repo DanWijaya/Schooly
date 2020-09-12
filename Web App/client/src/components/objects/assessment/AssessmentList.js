@@ -9,17 +9,15 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
    Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
@@ -81,7 +79,6 @@ function AssessmentListToolbar(props) {
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
-
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
@@ -250,28 +247,6 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
-  dialogBox: {
-    maxWidth: "350px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
   assessmentPanelDivider: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -321,7 +296,6 @@ function AssessmentList(props) {
   }
 
   React.useEffect(() => {
-    console.log("SDD jfeirer kfrelfefrjoerfe")
     getAllAssessments()
     getAllClass("map")
     getAllSubjects("map")
@@ -329,13 +303,12 @@ function AssessmentList(props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [])
 
-  console.log(all_assessments)
   const retrieveAssessments = () => {
     // If all_assessments is not undefined or an empty array
     if (all_assessments.length) {
       rows = []
       if (user.role === "Teacher") {
-      all_assessments.map((data) => {
+      all_assessments.forEach((data) => {
         if (data.author_id === user.id) {
           return assessmentRowItem(data)
           }
@@ -343,16 +316,21 @@ function AssessmentList(props) {
         })
       }
       else if (user.role === "Student") {
-        all_assessments.map((data) => {
+        let currentDate = new Date();
+        all_assessments.forEach((data) => {
           let class_assigned = data.class_assigned;
-          if (class_assigned.indexOf(user.kelas) !== -1) {
+          if (class_assigned.indexOf(user.kelas) !== -1 && data.posted){
+            // if(new Date(data.start_date) <= currentDate && new Date(data.end_date) >= currentDate) {
+            //   return assessmentRowItem(data)
+            // }
+            // return null
             return assessmentRowItem(data)
           }
           return null
         })
       }
       else { //Admin
-        all_assessments.map(data =>  assessmentRowItem(data))
+        all_assessments.forEach(data =>  assessmentRowItem(data))
       }
     }
   }
@@ -384,7 +362,6 @@ function AssessmentList(props) {
   };
 
   document.title = "Schooly | Daftar Kuis";
-
   return (
     <div className={classes.root}>
       <DeleteDialog

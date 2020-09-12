@@ -20,7 +20,7 @@ export default combineReducers({
   classesCollection: ClassReducer,
   errors: ErrorReducer, // dari null jd false
   filesCollection: UploadReducer,
-  materialsCollection: MaterialReducer, 
+  materialsCollection: MaterialReducer,
   passwordMatters: AuthReducer,
   subjectsCollection: SubjectReducer,
   success: SuccessReducer,

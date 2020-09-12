@@ -91,9 +91,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white"
   },
   descriptionText: {
-    color: "white", 
-    marginTop: "10px", 
-    marginLeft: "20px", 
+    color: "white",
+    marginTop: "10px",
+    marginLeft: "20px",
     fontWeight: "300",
     fontStyle: "italic"
   },

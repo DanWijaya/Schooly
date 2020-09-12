@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 function UploadDialog(props) {
   const classes = useStyles();
 
-  const { openUploadDialog, success, messageUploading, messageSuccess, redirectLink } = props;
+  const { openUploadDialog, handleCloseUploadDialog, success, messageUploading, messageSuccess, redirectLink } = props;
 
   return (
     <Dialog open={openUploadDialog}>
@@ -49,6 +49,15 @@ function UploadDialog(props) {
               <b>Mohon tunggu sebentar</b>
             </Typography>
           :
+          !redirectLink ? 
+            <Button 
+              variant="contained" 
+              className={classes.uploadFinishButton}
+              onClick={handleCloseUploadDialog}
+              >
+              Selesai
+            </Button>
+            :
             <Link to={redirectLink}>
               <Button
                 variant="contained"
