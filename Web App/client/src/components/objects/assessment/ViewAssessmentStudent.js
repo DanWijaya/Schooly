@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getOneAssessment } from "../../../actions/AssessmentActions";
+import { getOneAssessment, submitAssessment } from "../../../actions/AssessmentActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Box, CircularProgress, Divider, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -26,6 +26,14 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   startAssessmentButton: {
+    backgroundColor: theme.palette.create.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.create.main,
+    },
+  },
+  submitAssessmentButton: {
     backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
@@ -89,7 +97,7 @@ function QuestionPage(props) {
 
 function Timer(props) {
   const classes = useStyles();
-  let {start_date, end_date, id } = props;
+  let {start_date, end_date, id, finish } = props;
   console.log(start_date, end_date);
   let startTime = new Date(start_date);
   let finishTime = new Date(end_date);
@@ -108,9 +116,12 @@ function Timer(props) {
     }, 1000);
     return () => {
       if(time <= 0){
-        localStorage.removeItem(`remainingTime_${id}`)
+        // localStorage.removeItem(`remainingTime_${id}`)
+        localStorage.removeItem(`answers_${id}`)
       }
-      localStorage.setItem(`remainingTime_${id}`, time - 2)
+      else {
+        localStorage.setItem(`remainingTime_${id}`, time - 2)
+      }
       clearInterval(timer);
     };
   }, [time]);
@@ -147,15 +158,19 @@ function Timer(props) {
 function ViewAssessmentStudent(props) {
   const classes = useStyles();
   const { selectedAssessments } = props.assessmentsCollection;
+  const { submissions } = selectedAssessments;
   const { all_subjects_map } = props.subjectsCollection;
-  const { getOneAssessment, getAllSubjects, getAllClass } = props;
+  const { getOneAssessment, getAllSubjects, getAllClass, submitAssessment } = props;
+  const { user } = props.auth;
+
+  let id = props.match.params.id;
 
   const [ qnsIndex, setQnsIndex ] = React.useState(0);
   const [ answer, setAnswer] = React.useState([]);
   const [ posted, setPosted] = React.useState(null)
-  const [ start, setStart ] = React.useState(null);
+  const [ start, setStart ] = React.useState(!localStorage.getItem(`remainingTime_${id}`) ? null : true);
+  const [ finish, setFinish ] = React.useState(null);
 
-  let id = props.match.params.id;
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
     getAllSubjects("map")
@@ -163,34 +178,39 @@ function ViewAssessmentStudent(props) {
    new Promise((resolve, reject) => {
       getOneAssessment(id, resolve)
     }).then((res) => {
-      console.log(res.data.posted)
       setPosted(res.data.posted)
       if(localStorage.getItem(`answers_${id}`)){
-        console.log(localStorage.getItem(`answers_${id}`))
-        setAnswer(localStorage.getItem(`answers_${id}`))
+        setAnswer(JSON.parse(localStorage.getItem(`answers_${id}`)))
       }
     })
   }, [])
 
-  localStorage.removeItem(`answers_${id}`)
   let questions = selectedAssessments.questions;
   let questions_length = !questions ? 0 : questions.length
-  
+  console.log(submissions)
+  console.log(selectedAssessments)
   React.useEffect(() => {
     if(questions_length){
-      let arr = Array.apply(null, Array(questions_length))
+      let arr = Array.apply("", Array(questions_length))
       setAnswer(arr)
     }
   }, [questions_length])
 
+  React.useEffect(() => {
+    if(finish){
+      localStorage.removeItem(`remainingTime_${id}`)
+      localStorage.removeItem(`answers_${id}`)
+    }
+  },[finish])
+
   const handleChangeQuestion = (i) => {
     setQnsIndex(i)
   }
+  
   const handleChangeAnswer = (e) => {
     let temp = answer;
     temp[qnsIndex] = e.target.value;
-    console.log(temp)
-    localStorage.setItem(`answers_${id}`, temp);
+    localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
     setAnswer([...temp])
   }
 
@@ -198,14 +218,25 @@ function ViewAssessmentStudent(props) {
     setStart(true);
   }
 
-  const onSubmit = () => {
-    localStorage.removeItem(`remainingTime_${id}`);
+  const onSubmit = (e) => {
+    setFinish(true)
+    setStart(false);
+    let data = {
+      "answer" : answer,
+      "classId" : user.kelas,
+      "userId" : user.id
+    }
+    // localStorage.removeItem(`remainingTime_${id}`) 
+    // localStorage.removeItem(`answers_${id}`)
+    submitAssessment(id, data)
   }
 
   const saveAnswer = (question) => {
 
   }
 
+  // localStorage.removeItem(`remainingTime_${id}`);
+  // localStorage.removeItem(`answers_${id}`);
   if(!posted){
     if(posted!== null){
       return <Redirect to="/tidak-ditemukan"/>
@@ -213,6 +244,38 @@ function ViewAssessmentStudent(props) {
     return (<div>{/* None */} </div>)
   }
 
+  else if(submissions){
+    if(submissions[user.kelas]){
+      if(submissions[user.kelas][user.id]){
+      return (
+        <div className={classes.root}>
+        <Grid container direction="column" spacing={3}>
+          <Grid item>
+            <Paper>
+              <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
+                <Grid item>
+                  <Typography variant="h6" align="center">
+                    {all_subjects_map.get(selectedAssessments.subject)}
+                  </Typography>
+                  <Typography variant="h4" align="center" gutterBottom>
+                    {selectedAssessments.name}
+                  </Typography>
+                  <Typography variant="h6" align="center">
+                    {selectedAssessments.description}
+                  </Typography>
+                </Grid>
+                  <Typography variant="h6" align="center">
+                    TELAH DIKUMPULKAN
+                  </Typography>
+              </Grid>
+            </Paper>
+          </Grid>
+          </Grid>
+        </div>
+      )
+      }
+    }
+  }
   else {
   return (
     <div className={classes.root}>
@@ -232,7 +295,11 @@ function ViewAssessmentStudent(props) {
                     {selectedAssessments.description}
                   </Typography>
                 </Grid>
-                {!start && !localStorage.getItem(`remainingTime_${id}`) ? 
+                {!start ? finish ? 
+                  <Typography variant="h6" align="center">
+                    TELAH SELESAI
+                  </Typography>
+                  :
                   <Grid item>
                     <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
                       Mulai
@@ -243,6 +310,7 @@ function ViewAssessmentStudent(props) {
                     start_date={selectedAssessments.start_date}
                     end_date={selectedAssessments.end_date}
                     id={id}
+                    finish={finish}
                     />
                 }
                 <Grid item>
@@ -250,10 +318,19 @@ function ViewAssessmentStudent(props) {
                     Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
                   </Typography>
                 </Grid>
+                {!start ? 
+                  null
+                  :
+                  <Grid item>
+                    <Button variant="contained" className={classes.submitAssessmentButton} onClick={onSubmit}>
+                      Kumpulkan
+                    </Button>
+                  </Grid> 
+                }
               </Grid>
             </Paper>
           </Grid>
-          {!start && !localStorage.getItem(`remainingTime_${id}`) ? 
+          {!start ? 
           null :
           [<Grid item>
             <Paper>
@@ -381,17 +458,20 @@ function ViewAssessmentStudent(props) {
 
 ViewAssessmentStudent.propTypes = {
   assessmentsCollection: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   getOneAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
+  submitAssessment: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   assessmentsCollection: state.assessmentsCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  auth: state.auth
 })
 
 export default connect(
-  mapStateToProps, { getOneAssessment, getAllClass, getAllSubjects }
+  mapStateToProps, { submitAssessment, getOneAssessment, getAllClass, getAllSubjects }
 )(ViewAssessmentStudent);

@@ -41,7 +41,8 @@ const AssessmentSchema = new Schema({
     posted: { type: Boolean, required: true, default: false},
     submissions: {
       type: Object,
-      required: false
+      required: false,
+      default: {}
     }
 })
 

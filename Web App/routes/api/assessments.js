@@ -87,11 +87,52 @@ router.post("/update/:id", (req,res) => {
         assessmentData.questions = qns_list;
         assessmentData
                     .save()
-                    .then(quiz => res.json(quiz))
+                    .then(ass => res.json(ass))
                     .catch(err => res.status(400).send("Unable to update task database"));
     }
   })
 })
+
+router.post("/submit/:id", (req,res) => {
+  let id = req.params.id;
+  let { answer, classId, userId } = req.body;
+
+  Assessment.findById(id, (err,assessmentData) => {
+
+    if(!assessmentData){
+      return res.status(404).send("Assessment cannot be found");
+    }
+    else{
+      console.log(answer, classId, userId)
+      console.log("ASSESSMENT : ", assessmentData)
+      submissions = assessmentData.submissions;
+
+      if(!submissions){
+        let obj = {}
+        obj[classId] = {};
+        obj[classId][userId] = answer;
+        console.log(obj)
+      }else{
+        if(!submissions[classId]){
+          submissions[classId] = {};
+          submissions[classId][userId] = answer;
+        }
+        else{
+          submissions[classId][userId] = answer;
+        }
+      }
+      assessmentData.submissions = submissions;
+
+      assessmentData
+          .save()
+          .then(ass => res.json(ass))
+          .catch(err => res.status(400).send("Unable to update task database"));
+    }
+    
+  })
+
+})
+
 router.get("/viewall", (req,res) => {
   Assessment.find({})
             .then(assessments => {
@@ -118,7 +159,8 @@ router.delete("/delete/:id", (req,res) => {
   Assessment.findByIdAndRemove(id, (err, assessment) => {
     if(!assessment)
       return res.status(404).json("Quiz to be deleted not found");
-      
+    
+    
     return res.json(assessment)
   })
 })

@@ -182,3 +182,21 @@ export const deleteAssessment = (id) => dispatch => {
       })
     })
 }
+
+export const submitAssessment = (assessmentId, data) => dispatch => {
+  // data contains the followiung objects:
+  console.log(data) 
+  
+  axios
+    .post(`/api/assessments/submit/${assessmentId}`, data)
+    .then((res) => {
+      console.log(res.data)
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
+      })
+    })
+}
