@@ -63,8 +63,6 @@ import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmen
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import SubjectList from "./components/objects/admin-only/SubjectList";
-//Report
-import ReportView from "./components/layout/profile/ReportView";
 //Prototypes
 import Tester from "./prototypes/Tester";
 import Graph from "./prototypes/Graph";

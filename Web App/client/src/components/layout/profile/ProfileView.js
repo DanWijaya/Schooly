@@ -24,7 +24,6 @@ import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 import BlockIcon from "@material-ui/icons/Block";
-import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 
 const useStyles = makeStyles((theme) => ({
   root: {
