@@ -10,7 +10,7 @@ import AuthReducer from "./AuthReducer";
 import AnnouncementReducer from "./AnnouncementReducer"
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
-import MockReducer from "../prototypes/MockReducer";
+import MockReducer from "../prototypes/mock-users/MockReducer";
 
 export default combineReducers({
   auth: UserReducer,

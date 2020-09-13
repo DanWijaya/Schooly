@@ -124,6 +124,17 @@ router.post("/update/:id", (req, res) => {
                 .catch(err => res.status(400).send("Unable to update task database"));
           }
         });
+});
+
+router.get("/getgrade/:subjectId&:classId", (req, res) => {
+    Task.find({subject: req.params.subjectId, class_assigned: {$elemMatch: {$eq: req.params.classId}}}).then((tasks) => {
+        if (!tasks) {
+            return res.status(200).json("Belum ada tugas");
+        } else {
+            return res.json(tasks);
+        }
     });
+})
+  
 
 module.exports = router;

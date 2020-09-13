@@ -3,37 +3,37 @@ import { connect } from "react-redux";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
-// import { updateAvatar } from "../../../actions/UserActions";
 // import { setCurrentClass } from "../../../actions/ClassActions";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
   Paper, Typography, IconButton } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles/colorManipulator";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-// import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-// import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-// import CakeIcon from "@material-ui/icons/Cake";
-// import ColorLensIcon from "@material-ui/icons/ColorLens";
-// import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-// import EmailIcon from "@material-ui/icons/Email";
-// import HomeIcon from "@material-ui/icons/Home";
-// import PersonIcon from "@material-ui/icons/Person";
-// import PhoneIcon from "@material-ui/icons/Phone";
-// import WcIcon from "@material-ui/icons/Wc";
-// import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-// import WorkIcon from "@material-ui/icons/Work";
-// import BlockIcon from "@material-ui/icons/Block";
-// import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
-
+  import { fade } from "@material-ui/core/styles/colorManipulator";
+  import { makeStyles, withStyles } from "@material-ui/core/styles";
+  // import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+  // import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+  // import CakeIcon from "@material-ui/icons/Cake";
+  // import ColorLensIcon from "@material-ui/icons/ColorLens";
+  // import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
+  // import EmailIcon from "@material-ui/icons/Email";
+  // import HomeIcon from "@material-ui/icons/Home";
+  // import PersonIcon from "@material-ui/icons/Person";
+  // import PhoneIcon from "@material-ui/icons/Phone";
+  // import WcIcon from "@material-ui/icons/Wc";
+  // import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
+  // import WorkIcon from "@material-ui/icons/Work";
+  // import BlockIcon from "@material-ui/icons/Block";
+  // import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
+  import InputLabel from '@material-ui/core/InputLabel';
+  import Select from '@material-ui/core/Select';
+  import MenuItem from '@material-ui/core/MenuItem';
+  import Table from '@material-ui/core/Table';
+  import TableBody from '@material-ui/core/TableBody';
+  import TableCell from '@material-ui/core/TableCell';
+  import TableContainer from '@material-ui/core/TableContainer';
+  import TableHead from '@material-ui/core/TableHead';
+  import TableRow from '@material-ui/core/TableRow';
+  
+import { getStudentsByClass } from "../../../actions/UserActions";
+import { getTaskGrade } from "../../../actions/TaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"; 
 
@@ -116,27 +116,19 @@ function Profile(props) {
   const location = useLocation();
 
   const { role } = location.state
-
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
   
-  const rows = [
-    createData('Fisika', 159, 6.0, 24, 4.0),
-    createData('Kimia', 237, 9.0, 37, 4.3),
-    createData('Matematika', 262, 16.0, 24, 6.0),
-    createData('Biologi', 305, 3.7, 67, 4.3),
-    createData('Bahasa Inggris', 356, 16.0, 49, 3.9),
-  ];
+  const [rows, setRows] = React.useState([]);
+  const [headers, setHeaders] = React.useState([]);
 
-  const { getAllClass, getAllSubjects } = props;
+  const { getTaskGrade, getAllClass, getAllSubjects, getStudentsByClass } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
-  const { user } = props.auth;
+  const { user, students_by_class } = props.auth;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
 
   
-  const countUpdate = React.useRef(0);
+  const countMIDependencyUpdate = React.useRef(0);
+  const countStdByClassUpdate = React.useRef(0);
 
   const [valueKelas, setValueKelas] = React.useState("");
   const [valueMatpel, setValueMatpel] = React.useState("");
@@ -145,16 +137,17 @@ function Profile(props) {
   const [semuaKelas, setSemuaKelas] = React.useState(new Map());
   const [kontenKelas, setKontenKelas] = React.useState(new Map());
   const [kontenMatpel, setKontenMatpel] = React.useState(new Map());
-  const [kelasWali, setKelasWali] = React.useState(new Map());
+  const [kelasWali, setKelasWali] = React.useState(new Map()); // alasan dipisahkan dengan semuaKelas: untuk menghindari pencarian info wali kelas dari banyak kelas
 
-  const [isFirst, setIsFirst] = React.useState(true);
+  const [isClassSelected, setIsClassSelected] = React.useState(false);
+  const [isSubjectSelected, setIsSubjectSelected] = React.useState(false);
 
   function generateKelasMenuItem() {
     let menuItems = [];
 
     if (kelasWali.size !== 0) {
         menuItems.push(
-          <MenuItem key={kelasWali.get("id")} value={kelasWali.get("id")}>{kelasWali.get("name")} (Wali)</MenuItem>
+          <MenuItem key={kelasWali.get("id")} value={kelasWali.get("id")}>{kelasWali.get("name")} (Kelas Wali)</MenuItem>
         );
     }
     kontenKelas.forEach((namaKelas, idKelas) => {
@@ -169,109 +162,113 @@ function Profile(props) {
   function generateMatPelMenuItem() {
     let menuItems = [];
     kontenMatpel.forEach((namaMatPel, idMatPel) => {
-      menuItems.push(
-        <MenuItem key={idMatPel} value={idMatPel}>{namaMatPel}</MenuItem>
-      );
+      if (user.subject_teached.includes(idMatPel)) {
+        menuItems.push(
+          <MenuItem key={idMatPel} value={idMatPel}>{namaMatPel} (Subjek Ajar)</MenuItem>
+        );
+      } else {
+        menuItems.push(
+          <MenuItem key={idMatPel} value={idMatPel}>{namaMatPel}</MenuItem>
+        );
+      }
     });
 
     return menuItems;
   }
 
+  function generateRowCell(row) {
+    let cells = [];
+    row.forEach((value) => {
+      cells.push(<TableCell>{value}</TableCell>);
+    })
+    return (
+      <TableRow key={row.get("namaMurid")}>
+          {cells}
+      </TableRow>
+    );
+  }
   function resetKonten() {
-    //ini perlu dipindain ke setelah request data tabel sudah selesai
     setKontenKelas(semuaKelas);
     setKontenMatpel(semuaMatpel);
-    //
 
-    // restrict guru supaya ga bisa milih selagi data tabel direquest
+    // ? restrict guru supaya ga bisa milih selagi data tabel direquest
 
     setValueKelas("");
     setValueMatpel("");
-    setIsFirst(true);
+    setIsClassSelected(false);
+    setIsSubjectSelected(false);
   }
 
   function handleKelasChange(event) {
-    // event.target.value = berisi value yg sedang dipilih
-    if (event.target.value === "") {
+    // event.target.value berisi value Select yang sedang dipilih
+    
+    if (event.target.value === "") { // kasus: guru sudah pernah memilih kelas, lalu memilih pilihan yg valuenya kosong
       setKontenMatpel(semuaMatpel);
-      setValueKelas("");
-      setIsFirst(true); //kasus dari isi ke kosong
-    } else {
-      // jika sebelum onchange dipanggil, kelas yg dipilih adalah kelas yg bukan diwalikan guru, lakukan ini:
-      // jika guru adalah wali kelas, cek
-      if (kelasWali.size !== 0) {
-        // jika kelas yang dipilih adalah kelas wali, tampilkan semua matpel
-        if ((kelasWali.size !== 0) && (event.target.value === kelasWali.get("id"))) {
-          if (isFirst) {
-            setKontenMatpel(semuaMatpel);
-            setValueKelas(event.target.value);
-            setIsFirst(false);
-          } else {
-            // do req
-            // reset value and konten select
-            resetKonten();
-          }
+      setValueKelas(event.target.value);
+      setIsClassSelected(false);
+    } else { // kasus: (1) guru memilih kelas pertama kali atau (2) sudah memilih kelas, lalu memilih kelas lain 
+
+      // jika guru adalah wali kelas dan kelas yang dipilih adalah kelas wali, tampilkan semua matpel
+      if ((kelasWali.size !== 0) && (event.target.value === kelasWali.get("id"))) {
+        if (isSubjectSelected) {
+          setValueKelas(event.target.value);
+          getStudentsByClass(event.target.value);
         } else {
-          // jika bukan, tampilkan semua matpel yang diajarkan ke kelas yang dipilih
-          // bagian ini sama persis seperti kasus jika guru bukan wali kelas
-          if (isFirst) {
-            let matpel = new Map();
-            Object.keys(user.subject_teached).forEach((key) => { 
-              if (user.subject_teached[key].includes(event.target.value)) {
-                matpel.set(key, semuaMatpel.get(key));
-              }
-            });
-            setKontenMatpel(matpel);
-            setValueKelas(event.target.value);
-            setIsFirst(false);
-          } else {
-            // do req
-            // reset value and konten select
-            resetKonten();
-          }
+          setKontenMatpel(semuaMatpel);
+          setValueKelas(event.target.value);
+          setIsClassSelected(true);
         }
       } else {
-        // jika guru bukan wali kelas
-        if (isFirst) {
+        // jika guru bukan wali kelas atau kelas yang dipilih bukan kelas wali,
+        // tampilkan hanya semua matpel yang diajarkan ke kelas yang dipilih
+        if (isSubjectSelected) {
+          setValueKelas(event.target.value);
+          getStudentsByClass(event.target.value);
+        } else {
+          // let matpel = new Map();
+          // Object.keys(user.subject_teached).forEach((key) => { 
+          //   if (user.subject_teached[key].includes(event.target.value)) {
+          //     matpel.set(key, semuaMatpel.get(key));
+          //   }
+          // });
           let matpel = new Map();
-          Object.keys(user.subject_teached).forEach((key) => { 
-            if (user.subject_teached[key].includes(event.target.value)) {
-              matpel.set(key, semuaMatpel.get(key));
-            }
+          user.subject_teached.forEach((subjectId) => {
+            matpel.set(subjectId, semuaMatpel.get(subjectId));
           });
           setKontenMatpel(matpel);
           setValueKelas(event.target.value);
-          setIsFirst(false);
-        } else {
-          // do req
-          // reset value and konten select
-          resetKonten();
+          setIsClassSelected(true);
         }
       }
     }
   };
 
   function handleMatPelChange(event) {
-    // event.target.value = berisi value yg sedang dipilih
-    if (event.target.value === "") {
+    if (event.target.value === "") { // kasus: guru sudah pernah memilih subject, lalu memilih pilihan yg valuenya kosong
       setKontenKelas(semuaKelas);
-      setValueMatpel("");
-      setIsFirst(true);
-    } else {
-      if (isFirst) {
-        let kelas = new Map();
-        if (Object.keys(user.subject_teached).includes(event.target.value)) {
-          user.subject_teached[event.target.value].forEach((idKelas) => {
-            kelas.set(idKelas, semuaKelas.get(idKelas));
-          })
-        }
-        setKontenKelas(kelas);
+      setValueMatpel(event.target.value);
+      setIsSubjectSelected(false);
+    } else { // kasus: (1) guru memilih subject pertama kali atau (2) sudah memilih subject, lalu memilih subject lain 
+      if (isClassSelected) {
+        getStudentsByClass(valueKelas);
         setValueMatpel(event.target.value);
-        setIsFirst(false);
       } else {
-        // do req
-        // reset value and konten select
-        resetKonten();
+        // // jika guru memilih subject yang diajarnya
+        // if (Object.keys(user.subject_teached).includes(event.target.value)) {
+        //   user.subject_teached[event.target.value].forEach((idKelas) => {
+        //     kelas.set(idKelas, semuaKelas.get(idKelas));
+        //   })
+        // }
+            
+        // jika guru memilih subject yg bukan diajarnya, isi kelas hanyalah kelas yang diwalikannya (jika ada)
+        if (!user.subject_teached.includes(event.target.value)) {
+          setKontenKelas(new Map());
+        } else {
+          setKontenKelas(semuaKelas);
+        }
+
+        setValueMatpel(event.target.value);
+        setIsSubjectSelected(true);
       }
     }
   };
@@ -283,40 +280,73 @@ function Profile(props) {
     getAllSubjects("map");
   }, []);
 
-  let dependency = [all_classes, all_classes_map, all_subjects_map];   
+  // ini berfungsi agar getGrade dipanggil setelah getStudentsByClass selesai (agar alur eksekusinya sekuensial)
   React.useEffect(() => {
-    countUpdate.current++;
+    countStdByClassUpdate.current++;
+    if (countStdByClassUpdate.current === 2) {
+      getTaskGrade(valueMatpel, valueKelas).then((taskArray) => {
+        let headerNames = ["Nama Murid"];
+        taskArray.forEach((task) => {
+          headerNames.push(task.name);
+        });
+        setHeaders(headerNames);
+
+        let newRows = [];
+        students_by_class.forEach((stdInfo) => {
+          let rowData = new Map();
+          rowData.set("namaMurid", stdInfo.name);
+          taskArray.forEach((task) => {
+            rowData.set(task._id, task.grades[stdInfo._id]);
+          });
+          newRows.push(rowData);
+        });
+        setRows(newRows);
+
+        return;
+      }).then(() => {
+        resetKonten();
+      }).catch((err) => {console.log(err)});
+      
+      countStdByClassUpdate.current = 1;
+    }
+  }, [students_by_class]);
+
+  let menuItemDependency = [all_classes, all_classes_map, all_subjects_map];   
+  React.useEffect(() => {
+    countMIDependencyUpdate.current++;
 
     // reminder:
     // -inisialisasi semua variabel di dalam array dependency dilakukan secara bersamaan sehingga useEffect hanya akan terpanggil 1 kali untuk ini
     // -pada kasus ini, masing-masing variabel di dalam array dependency diubah oleh 1 fungsi tersendiri
-    if (countUpdate.current === (1 + dependency.length)) {
+    if (countMIDependencyUpdate.current === (1 + menuItemDependency.length)) {
       let daftarMatpel = new Map();
       let daftarKelas = new Map();
       let infoKelasWali = new Map();
 
-      new Promise((resolve) => { //menentukan status guru: wali atau nonwali
+      new Promise((resolve) => { // menentukan status guru: wali atau nonwali
         resolve(all_classes.find((kelas) => {return (kelas.walikelas === user.id)}));
       }).then((kelasWali) => {
+        // mengisi daftar kelas dengan semua kelas yang ada
+        // (karena guru pasti mengajar minimal satu subject dan setiap subject diajar ke semua kelas)
+        all_classes_map.forEach((classInfo, classId) => {
+          daftarKelas.set(classId, classInfo.name);
+        });
+
         if (kelasWali) { // jika user adalah guru wali
           // mengisi infoKelasWali dengan kelas wali 
           infoKelasWali.set("id", kelasWali._id);
           infoKelasWali.set("name", kelasWali.name);
+          
+          daftarKelas.delete(kelasWali._id);
 
-          //mengisi daftar matpel dengan semua mata pelajaran yang ada
-          all_subjects_map.forEach((value, key) => {daftarMatpel.set(key, value)});
-        } else {// jika user adalah guru nonwali
+          // mengisi daftar matpel dengan semua mata pelajaran yang ada
+          all_subjects_map.forEach((subjectName, subjectId) => {daftarMatpel.set(subjectId, subjectName)});
+
+        } else {// jika user adalah guru yang tidak mewalikan kelas manapun
           // mengisi daftar matpel dengan matpel yang diajar
-          Object.keys(user.subject_teached).forEach((key) => { daftarMatpel.set(key, all_subjects_map.get(key))});
+          user.subject_teached.forEach((subjectId) => { daftarMatpel.set(subjectId, all_subjects_map.get(subjectId))});
         }
-
-        // mengisi daftar kelas dengan kelas yang diajar 
-        Object.keys(user.subject_teached).forEach((key) => { 
-          user.subject_teached[key].forEach((kelas) => {
-            daftarKelas.set(kelas, all_classes_map.get(kelas).name)
-          })
-        });
-
+        
         return;
       }).then(() => {
         setSemuaKelas(daftarKelas);
@@ -326,7 +356,7 @@ function Profile(props) {
         setKelasWali(infoKelasWali);
       }).catch((err) => {console.log(err)})
     }
-  }, dependency);
+  }, menuItemDependency);
 
   return (
     <div className={classes.root}>
@@ -459,23 +489,19 @@ function Profile(props) {
                         <div>
                             <InputLabel id="kelas-label">Kelas</InputLabel>
                             <Select labelId="kelas-label" id="kelas" value={valueKelas} displayEmpty="true" onChange={(event) => {handleKelasChange(event)}}>
-                              {/* <MenuItem value="" disabled> */}
                               <MenuItem value="">
                                   Pilih Kelas
                               </MenuItem>
                               
                               {
-                                  (kontenKelas.size !== 0) ? (generateKelasMenuItem()) : (null)
+                                  ((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)
                               }
 
-                              {/* <MenuItem value="10">VII A</MenuItem>
-                              <MenuItem value="20">VIII B</MenuItem> */}
                             </Select>
                         </div>
                         <div>
                             <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
                             <Select labelId="matpel-label" id="matpel" value={valueMatpel} displayEmpty="true" onChange={(event) => {handleMatPelChange(event)}}>
-                              {/* <MenuItem value="" disabled> */}
                                 <MenuItem value="">
                                     Pilih Mata Pelajaran
                                 </MenuItem>
@@ -484,8 +510,6 @@ function Profile(props) {
                                   (kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)
                               }
 
-                              {/* <MenuItem value="10">Matematika</MenuItem>
-                              <MenuItem value="20">Fisika</MenuItem> */}
                             </Select>
                         </div>
                     </Paper> 
@@ -497,25 +521,15 @@ function Profile(props) {
                         <Table aria-label="simple table" size="medium">
                             <TableHead>
                             <TableRow>
-                                <TableCell>Mata Pelajaran</TableCell>
-                                <TableCell align="right">Total Nilai Tugas</TableCell>
-                                <TableCell align="right">Total Nilai Kuis</TableCell>
-                                <TableCell align="right">Total Nilai Ujian</TableCell>
-                                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                                {headers.map((nama) => {
+                                  return (<TableCell>{nama}</TableCell>);
+                                })}
                             </TableRow>
                             </TableHead>
                             <TableBody>
-                            {rows.map((row) => (
-                                <TableRow key={row.name}>
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
-                                <TableCell align="right">{row.fat}</TableCell>
-                                <TableCell align="right">{row.carbs}</TableCell>
-                                <TableCell align="right">{row.protein}</TableCell>
-                                </TableRow>
-                            ))}
+                            {rows.map((row) => {
+                              return generateRowCell(row);
+                            })}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -545,5 +559,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects }
+  mapStateToProps, { getStudentsByClass, getTaskGrade, getAllClass, getAllSubjects }
 ) (Profile);
