@@ -117,10 +117,12 @@ function DrawerContent(props) {
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       ["/daftar-kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
-      [{pathname:"/lihat-rapor", state: {
-        role: "other"
-      }}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"] // bm drawer
     ]
+    if (user.role === "Teacher") {
+      ListItemContents.push(
+        [{pathname:"/lihat-rapor", state: {role: "other"}}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"]
+      )
+    }
   }
 
   return (

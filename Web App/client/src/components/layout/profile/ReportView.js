@@ -3,34 +3,19 @@ import { connect } from "react-redux";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
-// import { setCurrentClass } from "../../../actions/ClassActions";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
   Paper, Typography, IconButton } from "@material-ui/core";
   import { fade } from "@material-ui/core/styles/colorManipulator";
   import { makeStyles, withStyles } from "@material-ui/core/styles";
-  // import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-  // import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-  // import CakeIcon from "@material-ui/icons/Cake";
-  // import ColorLensIcon from "@material-ui/icons/ColorLens";
-  // import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-  // import EmailIcon from "@material-ui/icons/Email";
-  // import HomeIcon from "@material-ui/icons/Home";
-  // import PersonIcon from "@material-ui/icons/Person";
-  // import PhoneIcon from "@material-ui/icons/Phone";
-  // import WcIcon from "@material-ui/icons/Wc";
-  // import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-  // import WorkIcon from "@material-ui/icons/Work";
-  // import BlockIcon from "@material-ui/icons/Block";
-  // import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
-  import InputLabel from '@material-ui/core/InputLabel';
-  import Select from '@material-ui/core/Select';
-  import MenuItem from '@material-ui/core/MenuItem';
-  import Table from '@material-ui/core/Table';
-  import TableBody from '@material-ui/core/TableBody';
-  import TableCell from '@material-ui/core/TableCell';
-  import TableContainer from '@material-ui/core/TableContainer';
-  import TableHead from '@material-ui/core/TableHead';
-  import TableRow from '@material-ui/core/TableRow';
+  import InputLabel from "@material-ui/core/InputLabel";
+  import Select from "@material-ui/core/Select";
+  import MenuItem from "@material-ui/core/MenuItem";
+  import Table from "@material-ui/core/Table";
+  import TableBody from "@material-ui/core/TableBody";
+  import TableCell from "@material-ui/core/TableCell";
+  import TableContainer from "@material-ui/core/TableContainer";
+  import TableHead from "@material-ui/core/TableHead";
+  import TableRow from "@material-ui/core/TableRow";
   
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getTaskGrade } from "../../../actions/TaskActions";
@@ -54,12 +39,12 @@ const useStyles = makeStyles((theme) => ({
   },
   informationPaper: {
     backgroundColor: fade(theme.palette.primary.main,0.2),
-    padding: '25px'
+    padding: "25px"
   },
   name: {
     backgroundColor: fade(theme.palette.primary.main,0.2),
-    padding:'5px',
-    margin: '5px'
+    padding:"5px",
+    margin: "5px"
   },
   kelas: {
     backgroundColor: fade(theme.palette.primary.main,0.2)
@@ -225,12 +210,6 @@ function Profile(props) {
           setValueKelas(event.target.value);
           getStudentsByClass(event.target.value);
         } else {
-          // let matpel = new Map();
-          // Object.keys(user.subject_teached).forEach((key) => { 
-          //   if (user.subject_teached[key].includes(event.target.value)) {
-          //     matpel.set(key, semuaMatpel.get(key));
-          //   }
-          // });
           let matpel = new Map();
           user.subject_teached.forEach((subjectId) => {
             matpel.set(subjectId, semuaMatpel.get(subjectId));
@@ -360,7 +339,7 @@ function Profile(props) {
 
   return (
     <div className={classes.root}>
-        {(role=='Teacher') ?
+        {(role==="Teacher") ?
         <Grid container direction="column" spacing={5}>
             <Grid item>
             <Typography variant="h4" align="center" color="textPrimary">
@@ -374,26 +353,8 @@ function Profile(props) {
                 </Grid>
                 <Grid item xs={3} sm={4} md={5} lg={5}> 
                 </Grid>
-                <Grid item xs={5} sm={4} md={3} lg={3}>
-                    <Paper style={{display:'flex', flexDirection:'row', padding:'10px', justifyContent:'space-between'}}>
-                        <div>
-                            <InputLabel id="label">Kelas</InputLabel>
-                            <Select labelId="label" id="select">
-                                <MenuItem value="10">VII A</MenuItem>
-                                <MenuItem value="20">VIII B</MenuItem>
-                            </Select>
-                        </div>
-                        <div>
-                            <InputLabel id="label">Mata Pelajaran</InputLabel>
-                            <Select labelId="label" id="select">
-                                <MenuItem value="10">Matematika</MenuItem>
-                                <MenuItem value="20">Fisika</MenuItem>
-                            </Select>
-                        </div>
-                    </Paper> 
-                </Grid>
             </Grid>
-            <Grid container direction="column" spacing={5} style={{margin:'auto'}}>
+            <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
                 <Grid item xs={12} sm={12} md={12} lg={12}> 
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table" size="medium">
@@ -424,7 +385,7 @@ function Profile(props) {
                 </Grid>
             </Grid>
         </Grid>
-        : (role=='Student') ?
+        : (role==="Student") ?
         <Grid container direction="column" spacing={5}>
             <Grid item>
             <Typography variant="h4" align="center" color="textPrimary">
@@ -439,7 +400,7 @@ function Profile(props) {
                 <Grid item xs={3} sm={4} md={5} lg={5}> 
                 </Grid>
             </Grid>
-            <Grid container direction="column" spacing={5} style={{margin:'auto'}}>
+            <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
                 <Grid item xs={12} sm={12} md={12} lg={12}> 
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table" size="medium">
@@ -485,18 +446,14 @@ function Profile(props) {
                 <Grid item xs={3} sm={4} md={5} lg={5}> 
                 </Grid>
                 <Grid item xs={5} sm={4} md={3} lg={3}>
-                    <Paper style={{display:'flex', flexDirection:'row', padding:'10px', justifyContent:'space-between'}}>
+                    <Paper style={{display:"flex", flexDirection:"row", padding:"10px", justifyContent:"space-between"}}>
                         <div>
                             <InputLabel id="kelas-label">Kelas</InputLabel>
                             <Select labelId="kelas-label" id="kelas" value={valueKelas} displayEmpty="true" onChange={(event) => {handleKelasChange(event)}}>
                               <MenuItem value="">
                                   Pilih Kelas
                               </MenuItem>
-                              
-                              {
-                                  ((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)
-                              }
-
+                              {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
                             </Select>
                         </div>
                         <div>
@@ -505,17 +462,13 @@ function Profile(props) {
                                 <MenuItem value="">
                                     Pilih Mata Pelajaran
                                 </MenuItem>
-                              
-                              {
-                                  (kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)
-                              }
-
+                                {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
                             </Select>
                         </div>
                     </Paper> 
                 </Grid>
             </Grid>
-            <Grid container direction="column" spacing={5} style={{margin:'auto'}}>
+            <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
                 <Grid item xs={12} sm={12} md={12} lg={12}> 
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table" size="medium">
