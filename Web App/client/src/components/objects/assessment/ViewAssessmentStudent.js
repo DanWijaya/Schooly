@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.create.main,
     },
   },
-  questionPaper: {
+  questionPage: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
+      cursor: "pointer",
     },
   },
   saveAnswerButton: {
@@ -60,10 +61,19 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  pageButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
+  previousPageButton: {
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
+    "&:focus": {
+      backgroundColor: theme.palette.action.selected,
+      color: "black",
+    },
+    "&:active, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+    }
+  },
+  nextPageButton: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
     "&:focus": {
@@ -79,21 +89,6 @@ const useStyles = makeStyles((theme) => ({
     color: "black"
   }
 }));
-
-function QuestionPage(props) {
-  const { classes, handleChangeQuestion, question_number } = props;
-
-
-  return (
-    <Grid item>
-      <Paper variant="outlined" button className={classes.questionPaper} onClick={() => handleChangeQuestion(question_number-1)}>
-        <Typography>
-          {question_number}
-        </Typography>
-      </Paper>
-    </Grid>
-  )
-}
 
 function Timer(props) {
   const classes = useStyles();
@@ -144,7 +139,7 @@ function Timer(props) {
           justifyContent="center"
         >
           <Typography variant="h5" component="div" color="textSecondary">
-            {`${hours} : 
+            {`${hours} :
               ${minutes<10 ? `0${minutes}` : minutes} :
               ${seconds<10 ? `0${seconds}` : seconds}`
             }
@@ -152,6 +147,37 @@ function Timer(props) {
         </Box>
       </Box>
     </div>
+  )
+}
+
+function QuestionPage(props) {
+  const { classes, handleChangeQuestion, question_number } = props;
+
+  return (
+    <Grid item>
+      <Badge
+        badgeContent={
+          <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
+            <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
+          </Avatar>
+        }
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+      >
+        <Paper
+          button
+          variant="outlined"
+          className={classes.questionPage}
+          onClick={() => handleChangeQuestion(question_number-1)}
+        >
+          <Typography>
+            {question_number}
+          </Typography>
+        </Paper>
+      </Badge>
+    </Grid>
   )
 }
 
@@ -206,7 +232,7 @@ function ViewAssessmentStudent(props) {
   const handleChangeQuestion = (i) => {
     setQnsIndex(i)
   }
-  
+
   const handleChangeAnswer = (e) => {
     let temp = answer;
     temp[qnsIndex] = e.target.value;
@@ -226,7 +252,7 @@ function ViewAssessmentStudent(props) {
       "classId" : user.kelas,
       "userId" : user.id
     }
-    // localStorage.removeItem(`remainingTime_${id}`) 
+    // localStorage.removeItem(`remainingTime_${id}`)
     // localStorage.removeItem(`answers_${id}`)
     submitAssessment(id, data)
   }
@@ -245,7 +271,7 @@ function ViewAssessmentStudent(props) {
   }
 
   else if(submissions){
-    if(submissions[user.kelas]){
+    if(submissions[user.kelas]) {
       if(submissions[user.kelas][user.id]){
       return (
         <div className={classes.root}>
@@ -295,7 +321,7 @@ function ViewAssessmentStudent(props) {
                     {selectedAssessments.description}
                   </Typography>
                 </Grid>
-                {!start ? finish ? 
+                {!start ? finish ?
                   <Typography variant="h6" align="center">
                     TELAH SELESAI
                   </Typography>
@@ -304,9 +330,9 @@ function ViewAssessmentStudent(props) {
                     <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
                       Mulai
                     </Button>
-                  </Grid> 
-                  : 
-                  <Timer 
+                  </Grid>
+                  :
+                  <Timer
                     start_date={selectedAssessments.start_date}
                     end_date={selectedAssessments.end_date}
                     id={id}
@@ -318,31 +344,31 @@ function ViewAssessmentStudent(props) {
                     Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
                   </Typography>
                 </Grid>
-                {!start ? 
+                {!start ?
                   null
                   :
                   <Grid item>
                     <Button variant="contained" className={classes.submitAssessmentButton} onClick={onSubmit}>
                       Kumpulkan
                     </Button>
-                  </Grid> 
+                  </Grid>
                 }
               </Grid>
             </Paper>
           </Grid>
-          {!start ? 
+          {!start ?
           null :
           [<Grid item>
             <Paper>
               <div className={classes.content}>
-                <Typography color="primary" style={{marginBottom: "20px"}}>
+                <Typography color="primary" paragraph>
                   Pindah ke Soal:
                 </Typography>
                 <Grid container spacing={2} alignItems="center">
                   {!questions ?
-                    null
-                    :
-                    questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
+                      null
+                   :
+                      questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
                   }
                 </Grid>
               </div>
@@ -402,47 +428,33 @@ function ViewAssessmentStudent(props) {
           </Grid>,
           <Grid item>
             <Paper>
-              <Grid container>
-              <Divider flexItem orientation="vertical" />
-              <Grid item container spacing={2} justify="flex-end" alignItems="center" className={classes.content}>
+              <Grid container alignItems="center" className={classes.content}>
                 {qnsIndex === 0 ? null :
-                <Grid item>
-                  <LightTooltip title="Soal Sebelumnya">
-                    <IconButton className={classes.pageButton} onClick={() => handleChangeQuestion(qnsIndex - 1)}>
-                      <ChevronLeftIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-                }
-                <Grid item>
-                  <Badge
-                    badgeContent={
-                      <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-                        <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
-                      </Avatar>
-                    }
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                  >
-                    <Button variant="contained" className={classes.saveAnswerButton}>
-                      Simpan Jawaban
+                  <Grid item xs container justify="flex-start">
+                    <Button
+                      variant="outlined"
+                      startIcon={<ChevronLeftIcon />}
+                      className={classes.previousPageButton}
+                      onClick={() => handleChangeQuestion(qnsIndex - 1)}
+                    >
+                      Soal Sebelumnya
                     </Button>
-                  </Badge>
-                </Grid>
+                  </Grid>
+                }
                 {qnsIndex === questions_length - 1 ?
                   null
                   :
-                  <Grid item>
-                    <LightTooltip title="Soal Selanjutnya">
-                      <IconButton className={classes.pageButton} onClick={() => handleChangeQuestion(qnsIndex + 1)}>
-                        <ChevronRightIcon />
-                      </IconButton>
-                    </LightTooltip>
+                  <Grid item xs container justify="flex-end">
+                    <Button
+                      variant="outlined"
+                      endIcon={<ChevronRightIcon />}
+                      className={classes.nextPageButton}
+                      onClick={() => handleChangeQuestion(qnsIndex + 1)}
+                    >
+                      Soal Selanjutnya
+                    </Button>
                   </Grid>
                 }
-              </Grid>
               </Grid>
             </Paper>
           </Grid>
