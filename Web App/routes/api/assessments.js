@@ -13,7 +13,7 @@ const mailgun = require("mailgun-js")({
 })
 const passport = require("passport");
 const validateAssessmentInput = require("../../validation/AssessmentData");
-const Assessment = require("../../models/Assessment")
+const Assessment = require("../../models/Assessment");
 
 router.post('/create', (req,res) => {
 
@@ -85,6 +85,7 @@ router.post("/update/:id", (req,res) => {
         })
         console.log(qns_list)
         assessmentData.questions = qns_list;
+
         assessmentData
                     .save()
                     .then(ass => res.json(ass))
@@ -95,7 +96,7 @@ router.post("/update/:id", (req,res) => {
 
 router.post("/submit/:id", (req,res) => {
   let id = req.params.id;
-  let { answer, classId, userId } = req.body;
+  let { answers, classId, userId } = req.body;
 
   Assessment.findById(id, (err,assessmentData) => {
 
@@ -103,30 +104,39 @@ router.post("/submit/:id", (req,res) => {
       return res.status(404).send("Assessment cannot be found");
     }
     else{
-      console.log(answer, classId, userId)
+      console.log(answers, classId, userId)
       console.log("ASSESSMENT : ", assessmentData)
       submissions = assessmentData.submissions;
+    
+      console.log("Submissions:", submissions);
+      var filteredArray = submissions.filter(function(itm){
+        return itm.userId == userId;
+      });
 
-      if(!submissions){
-        let obj = {}
-        obj[classId] = {};
-        obj[classId][userId] = answer;
-        console.log(obj)
-      }else{
-        if(!submissions[classId]){
-          submissions[classId] = {};
-          submissions[classId][userId] = answer;
-        }
-        else{
-          submissions[classId][userId] = answer;
-        }
+      if(!filteredArray.length){
+        submissions.push(req.body);
       }
+
       assessmentData.submissions = submissions;
 
       assessmentData
           .save()
           .then(ass => res.json(ass))
           .catch(err => res.status(400).send("Unable to update task database"));
+      // if(!submissions){
+      //   let obj = {}
+      //   obj[classId] = {};
+      //   obj[classId][userId] = answer;
+      //   console.log(obj)
+      // }else{
+      //   if(!submissions[classId]){
+      //     submissions[classId] = {};
+      //     submissions[classId][userId] = answer;
+      //   }
+      //   else{
+      //     submissions[classId][userId] = answer;
+      //   }
+      // }
     }
     
   })

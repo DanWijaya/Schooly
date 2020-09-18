@@ -213,8 +213,7 @@ function ViewAssessmentStudent(props) {
 
   let questions = selectedAssessments.questions;
   let questions_length = !questions ? 0 : questions.length
-  console.log(submissions)
-  console.log(selectedAssessments)
+  // console.log(submissions)
   React.useEffect(() => {
     if(questions_length){
       let arr = Array.apply("", Array(questions_length))
@@ -248,7 +247,7 @@ function ViewAssessmentStudent(props) {
     setFinish(true)
     setStart(false);
     let data = {
-      "answer" : answer,
+      "answers" : answer,
       "classId" : user.kelas,
       "userId" : user.id
     }
@@ -257,8 +256,48 @@ function ViewAssessmentStudent(props) {
     submitAssessment(id, data)
   }
 
-  const saveAnswer = (question) => {
+  const showTestStatus = () => {
+    if(submissions){
+      var filteredArray = submissions.filter(function(itm){
+        return itm.userId == user.id;
+      });
 
+      if(filteredArray.length){
+        return(
+          <Typography variant="h6" align="center">
+            TELAH DIKUMPULKAN
+          </Typography>
+        )
+      }
+    }
+    if(!start){
+      if(finish){
+        return(
+          <Typography variant="h6" align="center">
+            TELAH SELESAI
+          </Typography>
+        )
+      }
+      else{
+        return(
+          <Grid item>
+            <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
+              Mulai
+            </Button>
+          </Grid>
+        )
+      }
+    }
+    else{
+      return(
+        <Timer
+          start_date={selectedAssessments.start_date}
+          end_date={selectedAssessments.end_date}
+          id={id}
+          finish={finish}
+          />
+      )
+    }
   }
 
   // localStorage.removeItem(`remainingTime_${id}`);
@@ -270,39 +309,39 @@ function ViewAssessmentStudent(props) {
     return (<div>{/* None */} </div>)
   }
 
-  else if(submissions){
-    if(submissions[user.kelas]) {
-      if(submissions[user.kelas][user.id]){
-      return (
-        <div className={classes.root}>
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <Paper>
-              <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
-                <Grid item>
-                  <Typography variant="h6" align="center">
-                    {all_subjects_map.get(selectedAssessments.subject)}
-                  </Typography>
-                  <Typography variant="h4" align="center" gutterBottom>
-                    {selectedAssessments.name}
-                  </Typography>
-                  <Typography variant="h6" align="center">
-                    {selectedAssessments.description}
-                  </Typography>
-                </Grid>
-                  <Typography variant="h6" align="center">
-                    TELAH DIKUMPULKAN
-                  </Typography>
-              </Grid>
-            </Paper>
-          </Grid>
-          </Grid>
-        </div>
-      )
-      }
-    }
-  }
-  else {
+  // else if(submissions){
+  //   if(submissions[user.kelas]) {
+  //     if(submissions[user.kelas][user.id]){
+  //     return (
+  //       <div className={classes.root}>
+  //       <Grid container direction="column" spacing={3}>
+  //         <Grid item>
+  //           <Paper>
+  //             <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
+  //               <Grid item>
+  //                 <Typography variant="h6" align="center">
+  //                   {all_subjects_map.get(selectedAssessments.subject)}
+  //                 </Typography>
+  //                 <Typography variant="h4" align="center" gutterBottom>
+  //                   {selectedAssessments.name}
+  //                 </Typography>
+  //                 <Typography variant="h6" align="center">
+  //                   {selectedAssessments.description}
+  //                 </Typography>
+  //               </Grid>
+  //                 <Typography variant="h6" align="center">
+  //                   TELAH DIKUMPULKAN
+  //                 </Typography>
+  //             </Grid>
+  //           </Paper>
+  //         </Grid>
+  //         </Grid>
+  //       </div>
+  //     )
+  //     }
+  //   }
+  // }
+
   return (
     <div className={classes.root}>
       <form>
@@ -321,24 +360,7 @@ function ViewAssessmentStudent(props) {
                     {selectedAssessments.description}
                   </Typography>
                 </Grid>
-                {!start ? finish ?
-                  <Typography variant="h6" align="center">
-                    TELAH SELESAI
-                  </Typography>
-                  :
-                  <Grid item>
-                    <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
-                      Mulai
-                    </Button>
-                  </Grid>
-                  :
-                  <Timer
-                    start_date={selectedAssessments.start_date}
-                    end_date={selectedAssessments.end_date}
-                    id={id}
-                    finish={finish}
-                    />
-                }
+                {showTestStatus()}
                 <Grid item>
                   <Typography variant="h6" align="center" color="textSecondary">
                     Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
@@ -464,7 +486,6 @@ function ViewAssessmentStudent(props) {
       </form>
     </div>
   )
-}
 
 };
 
