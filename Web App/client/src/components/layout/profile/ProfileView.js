@@ -231,7 +231,7 @@ function Profile(props) {
         </Grid>
       </Grid>
       <Divider className={classes.profileDivider}/>
-      {(role=='Student') ? 
+      {(role==='Student') ? 
         <div style={{display:'flex', justifyContent:'flex-end', marginBottom:"20px"}}>
           <Link to={{
             pathname: "/lihat-rapor",

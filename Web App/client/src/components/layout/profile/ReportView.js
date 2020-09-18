@@ -5,17 +5,17 @@ import PropTypes from "prop-types";
 import "moment/locale/id";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
   Paper, Typography, IconButton } from "@material-ui/core";
-  import { fade } from "@material-ui/core/styles/colorManipulator";
-  import { makeStyles, withStyles } from "@material-ui/core/styles";
-  import InputLabel from "@material-ui/core/InputLabel";
-  import Select from "@material-ui/core/Select";
-  import MenuItem from "@material-ui/core/MenuItem";
-  import Table from "@material-ui/core/Table";
-  import TableBody from "@material-ui/core/TableBody";
-  import TableCell from "@material-ui/core/TableCell";
-  import TableContainer from "@material-ui/core/TableContainer";
-  import TableHead from "@material-ui/core/TableHead";
-  import TableRow from "@material-ui/core/TableRow";
+import { fade } from "@material-ui/core/styles/colorManipulator";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
   
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getTaskGrade } from "../../../actions/TaskActions";
@@ -100,8 +100,6 @@ function Profile(props) {
   const classes = useStyles();
   const location = useLocation();
 
-  const { role } = location.state
-  
   const [rows, setRows] = React.useState([]);
   const [headers, setHeaders] = React.useState([]);
 
@@ -172,6 +170,7 @@ function Profile(props) {
       </TableRow>
     );
   }
+  
   function resetKonten() {
     setKontenKelas(semuaKelas);
     setKontenMatpel(semuaMatpel);
@@ -185,7 +184,7 @@ function Profile(props) {
   }
 
   function handleKelasChange(event) {
-    // event.target.value berisi value Select yang sedang dipilih
+    // reminder: event.target.value berisi value Select yang sedang dipilih
     
     if (event.target.value === "") { // kasus: guru sudah pernah memilih kelas, lalu memilih pilihan yg valuenya kosong
       setKontenMatpel(semuaMatpel);
@@ -195,9 +194,11 @@ function Profile(props) {
 
       // jika guru adalah wali kelas dan kelas yang dipilih adalah kelas wali, tampilkan semua matpel
       if ((kelasWali.size !== 0) && (event.target.value === kelasWali.get("id"))) {
-        if (isSubjectSelected) {
+
+        // jika subject sudah dipilih
+        if (isSubjectSelected) { 
           setValueKelas(event.target.value);
-          getStudentsByClass(event.target.value);
+          getStudentsByClass(event.target.value); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
         } else {
           setKontenMatpel(semuaMatpel);
           setValueKelas(event.target.value);
@@ -206,9 +207,11 @@ function Profile(props) {
       } else {
         // jika guru bukan wali kelas atau kelas yang dipilih bukan kelas wali,
         // tampilkan hanya semua matpel yang diajarkan ke kelas yang dipilih
+
+        // jika subject sudah dipilih
         if (isSubjectSelected) {
           setValueKelas(event.target.value);
-          getStudentsByClass(event.target.value);
+          getStudentsByClass(event.target.value); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
         } else {
           let matpel = new Map();
           user.subject_teached.forEach((subjectId) => {
@@ -229,16 +232,9 @@ function Profile(props) {
       setIsSubjectSelected(false);
     } else { // kasus: (1) guru memilih subject pertama kali atau (2) sudah memilih subject, lalu memilih subject lain 
       if (isClassSelected) {
-        getStudentsByClass(valueKelas);
+        getStudentsByClass(valueKelas); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
         setValueMatpel(event.target.value);
-      } else {
-        // // jika guru memilih subject yang diajarnya
-        // if (Object.keys(user.subject_teached).includes(event.target.value)) {
-        //   user.subject_teached[event.target.value].forEach((idKelas) => {
-        //     kelas.set(idKelas, semuaKelas.get(idKelas));
-        //   })
-        // }
-            
+      } else {            
         // jika guru memilih subject yg bukan diajarnya, isi kelas hanyalah kelas yang diwalikannya (jika ada)
         if (!user.subject_teached.includes(event.target.value)) {
           setKontenKelas(new Map());
@@ -259,7 +255,7 @@ function Profile(props) {
     getAllSubjects("map");
   }, []);
 
-  // ini berfungsi agar getGrade dipanggil setelah getStudentsByClass selesai (agar alur eksekusinya sekuensial)
+  // ini digunakan agar getGrade dipanggil setelah getStudentsByClass selesai (agar alur eksekusinya sekuensial)
   React.useEffect(() => {
     countStdByClassUpdate.current++;
     if (countStdByClassUpdate.current === 2) {
@@ -290,13 +286,15 @@ function Profile(props) {
     }
   }, [students_by_class]);
 
+  // ini digunakan untuk menginisialisasi isi menu item komponen Select setelah
+  // getAllClass(), getAllClass("map"), dan getAllSubjects("map") sudah selesai dijalankan semuanya
   let menuItemDependency = [all_classes, all_classes_map, all_subjects_map];   
   React.useEffect(() => {
-    countMIDependencyUpdate.current++;
-
     // reminder:
     // -inisialisasi semua variabel di dalam array dependency dilakukan secara bersamaan sehingga useEffect hanya akan terpanggil 1 kali untuk ini
     // -pada kasus ini, masing-masing variabel di dalam array dependency diubah oleh 1 fungsi tersendiri
+    countMIDependencyUpdate.current++;
+   
     if (countMIDependencyUpdate.current === (1 + menuItemDependency.length)) {
       let daftarMatpel = new Map();
       let daftarKelas = new Map();
@@ -336,6 +334,12 @@ function Profile(props) {
       }).catch((err) => {console.log(err)})
     }
   }, menuItemDependency);
+
+  if (location.state === undefined) {
+    return(<Redirect to="/tidak-ditemukan"/>);
+  }
+
+  const { role } = location.state;
 
   return (
     <div className={classes.root}>
