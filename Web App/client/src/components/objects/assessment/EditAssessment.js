@@ -116,6 +116,7 @@ class EditAssessment extends Component {
       openDeleteDialog: false,
       openUploadDialog: false,
       posted: null,
+      type:"",
       success: false,
       page: 0,
       rowsPerPage: 10,
@@ -156,7 +157,8 @@ class EditAssessment extends Component {
           questions: Array.isArray(selectedAssessments.questions) ? selectedAssessments.questions : [],
           description: selectedAssessments.description,
           class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : [],
-          posted: selectedAssessments.posted
+          posted: selectedAssessments.posted,
+          type: selectedAssessments.type
           // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
           // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
       })
@@ -183,7 +185,8 @@ class EditAssessment extends Component {
       class_assigned: this.state.class_assigned,
       description: this.state.description,
       questions: this.state.questions,
-      posted: this.state.posted
+      posted: this.state.posted,
+      type: this.state.type
     }
     const assessmentId = this.props.match.params.id;
     console.log(assessmentData)
@@ -497,6 +500,23 @@ class EditAssessment extends Component {
                           variant="outlined"
                           id="description"
                         />
+                      </Grid>
+                      <Grid item>
+                        <Typography component="label" for="class_assigned" color="primary">
+                          Tipe Penilaian
+                        </Typography>
+                        <FormControl id="role" variant="outlined" color="primary" fullWidth error={Boolean(errors.type)}>
+                          <Select
+                            value={this.state.type}
+                            onChange={(event) => {this.onChange(event, "type")}}
+                            >
+                            <MenuItem value="Kuis">Kuis</MenuItem>
+                            <MenuItem value="Ujian">Ujian</MenuItem>
+                          </Select>
+                          <FormHelperText>
+                            {Boolean(errors.type) ? errors.type : null}
+                          </FormHelperText>
+                        </FormControl>
                       </Grid>
                     </Grid>
                   </Grid>

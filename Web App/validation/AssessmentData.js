@@ -7,13 +7,18 @@ module.exports = function validateAssessmentInput(data){
   data.name = isEmpty(data.name) ? "" : data.name;
   data.subject = isEmpty(data.subject) ? "" : data.subject;
   data.description = isEmpty(data.description) ? "" : data.description;
+  data.type = isEmpty(data.type) ? "" : data.type;
 
     if (Validator.isEmpty(data.name)) {
-      errors.name = "Nama materi belum diisi"
+      errors.name = "Nama belum diisi"
     }
 
     if (Validator.isEmpty(data.subject)) {
         errors.subject = "Mata Pelajaran belum diisi"
+    }
+
+    if (Validator.isEmpty(data.type)) {
+      errors.type = "Tipe penilaian belum diisi"
     }
 
     if (Validator.isEmpty(data.description)) {

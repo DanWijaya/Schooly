@@ -45,10 +45,10 @@ const AssessmentSchema = new Schema({
     submissions:{
       type: Map
     },
-    // submissions: [{
-    //   userId: { type: ObjectId},
-    //   answers: { type: Array },
-    // }],
+    type: {
+      type: String,
+      required: true
+    }
 })
 
 module.exports = Assessment = mongoose.model("assessments", AssessmentSchema);

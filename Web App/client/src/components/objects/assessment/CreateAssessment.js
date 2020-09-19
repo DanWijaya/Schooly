@@ -104,7 +104,8 @@ class CreateAssessment extends Component {
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
-      posted: false
+      posted: false,
+      type: ""
     }
   }
 
@@ -137,7 +138,8 @@ class CreateAssessment extends Component {
       description: this.state.description,
       questions: this.state.questions,
       author_id: id,
-      posted: this.state.posted
+      posted: this.state.posted,
+      type: this.state.type
     }
 
     console.log(assessmentData)
@@ -430,6 +432,23 @@ class CreateAssessment extends Component {
                           variant="outlined"
                           id="description"
                         />
+                      </Grid>
+                      <Grid item>
+                        <Typography component="label" for="class_assigned" color="primary">
+                          Tipe Penilaian
+                        </Typography>
+                        <FormControl id="role" variant="outlined" color="primary" fullWidth error={Boolean(errors.type)}>
+                          <Select
+                            value={this.state.type}
+                            onChange={(event) => {this.onChange(event, "type")}}
+                            >
+                            <MenuItem value="Kuis">Kuis</MenuItem>
+                            <MenuItem value="Ujian">Ujian</MenuItem>
+                          </Select>
+                          <FormHelperText>
+                            {Boolean(errors.type) ? errors.type : null}
+                          </FormHelperText>
+                        </FormControl>
                       </Grid>
                     </Grid>
                   </Grid>

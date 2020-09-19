@@ -38,7 +38,6 @@ router.post('/create', (req,res) => {
           return qns
         })
         let { class_assigned } = req.body;
-        console.log(req.body.class_assigned)
         var map = new Map()
         class_assigned.forEach((a) =>  map.set(a, new Map()))
         console.log(map)
@@ -46,7 +45,6 @@ router.post('/create', (req,res) => {
           ...req.body, 
           questions: questions_no_lampiran
         });
-        console.log({...req.body, questions: questions_no_lampiran})
         newAssessment
             .save()
             .then(quiz => res.json(quiz))
@@ -107,7 +105,8 @@ router.post("/update/:id", (req,res) => {
         assessmentData.start_date = req.body.start_date;
         assessmentData.end_date = req.body.end_date;
         assessmentData.posted = req.body.posted;
-        
+        assessmentData.type = req.body.type;
+
         let questions = req.body.questions;
         let qns_list = questions.map((qns) => {
           let q = qns;
