@@ -301,7 +301,10 @@ function Profile(props) {
                 <Link to={{
                   pathname:"/lihat-rapor",
                   state: {
-                    role: 'Student'
+                    role: 'Student',
+                    nama: user.name,
+                    kelas: classesCollection.kelas,
+                    id: user.id
                   }
                 }}>
                   <LightTooltip title="Klik Untuk Melihat Rapor">

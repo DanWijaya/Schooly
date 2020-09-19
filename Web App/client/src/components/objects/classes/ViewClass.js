@@ -564,7 +564,8 @@ function ViewClass(props) {
                               hobi: student.hobi_minat,
                               ket: student.ket_non_teknis,
                               cita: student.cita_cita,
-                              uni: student.uni_impian
+                              uni: student.uni_impian,
+                              id: student._id
                             }
                           }}>
                             <IconButton
@@ -745,7 +746,8 @@ function ViewClass(props) {
                                     jenis_kelamin: walikelas.jenis_kelamin,
                                     email: walikelas.email,
                                     phone: walikelas.phone,
-                                    emergency_phone : walikelas.emergency_phone
+                                    emergency_phone : walikelas.emergency_phone,
+                                    id: 'no_id'
                                   }
                                 }}>
                                   <IconButton
@@ -793,7 +795,8 @@ function ViewClass(props) {
                                         jenis_kelamin: student.jenis_kelamin,
                                         email: student.email,
                                         phone: student.phone,
-                                        emergency_phone : student.emergency_phone
+                                        emergency_phone : student.emergency_phone,
+                                        id: student._id
                                       }
                                     }}>
                                       <IconButton

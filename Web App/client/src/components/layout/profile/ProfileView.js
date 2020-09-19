@@ -189,10 +189,11 @@ function Profile(props) {
   if (location.state === undefined) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
+  
   const { avatar, nama, role, viewable_section, jenis_kelamin,
     email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
-    kelas, admin } = location.state
-
+    kelas, admin, id } = location.state
+  console.log(id);
   document.title = `Schooly | ${nama}`
 
   return (
@@ -236,7 +237,10 @@ function Profile(props) {
           <Link to={{
             pathname: "/lihat-rapor",
             state: {
-              role: user.role
+              role: user.role,
+              nama: nama,
+              kelas : classesCollection.kelas,
+              id: id
             }
           }}>
             <LightTooltip title="Klik Untuk Melihat Rapor">
