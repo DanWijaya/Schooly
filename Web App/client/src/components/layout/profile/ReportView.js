@@ -409,8 +409,6 @@ function Profile(props) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
 
-  const { role } = location.state;
-
   return (
     <div className={classes.root}>
         {(role=='Teacher') ?
