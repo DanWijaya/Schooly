@@ -14,6 +14,7 @@ const mailgun = require("mailgun-js")({
 const passport = require("passport");
 const validateAssessmentInput = require("../../validation/AssessmentData");
 const Assessment = require("../../models/Assessment");
+const { Double } = require("mongodb");
 
 router.post('/create', (req,res) => {
 
@@ -79,7 +80,6 @@ router.post("/update/:id", (req,res) => {
         let questions = req.body.questions;
         let qns_list = questions.map((qns) => {
           let q = qns;
-          // let lampiran = q.lampiran.filter(x => typeof x === "string")
           q.lampiran = qns.lampiran.filter(x => typeof x === "string")
           return q;
         })
@@ -104,39 +104,53 @@ router.post("/submit/:id", (req,res) => {
       return res.status(404).send("Assessment cannot be found");
     }
     else{
+      if(!assessmentData.posted){
+        return res.json("Assessment not posted")
+      }
       console.log(answers, classId, userId)
-      console.log("ASSESSMENT : ", assessmentData)
-      submissions = assessmentData.submissions;
-    
-      console.log("Submissions:", submissions);
-      var filteredArray = submissions.filter(function(itm){
-        return itm.userId == userId;
-      });
+      let { submissions, grades , questions} = assessmentData;
+      if(submissions){
+        if(!submissions.has(userId)){
+          submissions.set(userId, answers);
+        }
+      }
+      else{
+        let map = new Map();
+        map.set(userId, answers);
+        submissions = map;
+      }
+      let correct_count = 0;
 
-      if(!filteredArray.length){
-        submissions.push(req.body);
+      if(grades){
+        if(!grades.has(userId)){
+          for(let i = 0; i < questions.length; i++){
+            if(questions[i].answer == answers[i]){
+              correct_count = correct_count + 1
+            }
+          }
+          let score = 100 * correct_count/questions.length;
+          grades.set(userId, Double(score.toFixed(2)));
+        }
+      }
+      else {
+        let grade_map = new Map();
+        for(let i = 0; i < questions.length; i++){
+          if(questions[i].answer == answers[i]){
+            correct_count = correct_count + 1
+          }
+        }
+        let score = 100 * correct_count/questions.length;
+        grade_map.set(userId, Double(score.toFixed(2)));
+        grades = grade_map;
       }
 
+      assessmentData.grades = grades;
       assessmentData.submissions = submissions;
 
       assessmentData
           .save()
           .then(ass => res.json(ass))
           .catch(err => res.status(400).send("Unable to update task database"));
-      // if(!submissions){
-      //   let obj = {}
-      //   obj[classId] = {};
-      //   obj[classId][userId] = answer;
-      //   console.log(obj)
-      // }else{
-      //   if(!submissions[classId]){
-      //     submissions[classId] = {};
-      //     submissions[classId][userId] = answer;
-      //   }
-      //   else{
-      //     submissions[classId][userId] = answer;
-      //   }
-      // }
     }
     
   })

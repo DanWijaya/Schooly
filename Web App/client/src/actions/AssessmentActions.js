@@ -1,3 +1,4 @@
+import { reject } from "async";
 import axios from "axios";
 import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT, GET_SUCCESS_RESPONSE } from "./Types";
 
@@ -183,14 +184,17 @@ export const deleteAssessment = (id) => dispatch => {
     })
 }
 
-export const submitAssessment = (assessmentId, data) => dispatch => {
+export const submitAssessment = (assessmentId, data, rslv) => dispatch => {
   // data contains the followiung objects:
-  console.log(data) 
-  
+  // let data = {
+  //   "answers" : answer,
+  //   "classId" : user.kelas,
+  //   "userId" : user.id
+  // }
   axios
     .post(`/api/assessments/submit/${assessmentId}`, data)
     .then((res) => {
-      console.log(res.data)
+      rslv(res.data)
     })
     .catch(err => {
       console.log(err);

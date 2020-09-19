@@ -6,7 +6,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, submitAssessment } from "../../../actions/AssessmentActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Box, CircularProgress, Divider, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
+import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -15,6 +15,7 @@ import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import moment from "moment";
 import "moment/locale/id";
 import { FaWindowRestore } from "react-icons/fa";
+import SubmitDialog from "../../misc/dialog/SubmitDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,12 +88,53 @@ const useStyles = makeStyles((theme) => ({
   },
   optionText: {
     color: "black"
-  }
+  },
+  timeoutDialog: {
+    maxWidth: "450px",
+    minHeight: "175px",
+    padding: "15px",
+  },
+  timeoutDialogButton: {
+    width: "150px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.dark,
+      color: "white",
+    },
+  },
 }));
 
+function TimeoutDialog(props){
+  const classes = useStyles();
+
+  const { openTimeoutDialog, handleCloseTimeoutDialog } = props;
+
+  return (
+    <Dialog open={openTimeoutDialog}>
+      <Grid container direction="column" justify="space-between" alignItems="center" className={classes.timeoutDialog}>
+        <Grid>
+          <Typography variant="h6" align="center" gutterBottom>
+            <b>Waktu pengerjaan sudah selesai, jawaban anda telah terkumpulkan</b>
+          </Typography>
+        </Grid>
+        <Grid container spacing={2} justify="center" alignItems="center">
+          <Grid item>
+            <Button
+              onClick={handleCloseTimeoutDialog}
+              className={classes.timeoutDialogButton}
+              >
+              Selesai
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Dialog>
+  )
+}
 function Timer(props) {
   const classes = useStyles();
-  let {start_date, end_date, id, finish } = props;
+  let {start_date, end_date, id, finish, onSubmit, setOpenTimeoutDialog } = props;
   console.log(start_date, end_date);
   let startTime = new Date(start_date);
   let finishTime = new Date(end_date);
@@ -109,6 +151,11 @@ function Timer(props) {
     const timer = setInterval(() => {
       setTime((prevTime) => (prevTime - 1));
     }, 1000);
+
+    if(time <= 0){
+      setOpenTimeoutDialog()
+      onSubmit()
+    }
     return () => {
       if(time <= 0){
         // localStorage.removeItem(`remainingTime_${id}`)
@@ -123,9 +170,6 @@ function Timer(props) {
 
   return (
     <div className={classes.root}>
-      {/* <Typography variant="h5" component="div" color="textSecondary" style={{marginBottom: "20px"}}>
-        Waktu Ujian: {`${moment(startTime).locale("id").format("HH:mm")} - ${moment(finishTime).locale("id").format("HH:mm")}`}
-      </Typography> */}
       <Box position="relative" display="inline-flex">
         <CircularProgress variant="static" value={(time/workTime)*100} size={200} />
         <Box
@@ -167,7 +211,7 @@ function QuestionPage(props) {
         }}
       >
         <Paper
-          button
+          buttons
           variant="outlined"
           className={classes.questionPage}
           onClick={() => handleChangeQuestion(question_number-1)}
@@ -196,6 +240,8 @@ function ViewAssessmentStudent(props) {
   const [ posted, setPosted] = React.useState(null)
   const [ start, setStart ] = React.useState(!localStorage.getItem(`remainingTime_${id}`) ? null : true);
   const [ finish, setFinish ] = React.useState(null);
+  const [ openSubmitDialog, setOpenSubmitDialog] = React.useState(null);
+  const [ openTimeoutDialog, setOpenTimeoutDialog] = React.useState(null);
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
@@ -243,6 +289,13 @@ function ViewAssessmentStudent(props) {
     setStart(true);
   }
 
+  const handleOpenSubmitDialog = () => {
+    setOpenSubmitDialog(true);
+  }
+  const handleCloseSubmitDialog = () => {
+    setOpenSubmitDialog(false);
+  }
+
   const onSubmit = (e) => {
     setFinish(true)
     setStart(false);
@@ -253,16 +306,18 @@ function ViewAssessmentStudent(props) {
     }
     // localStorage.removeItem(`remainingTime_${id}`)
     // localStorage.removeItem(`answers_${id}`)
-    submitAssessment(id, data)
+
+    return (new Promise((resolve, reject) => {
+      submitAssessment(id, data, resolve)
+    }))
+    .then(() => handleCloseSubmitDialog())
+    .catch(err => console.log(err))
   }
 
   const showTestStatus = () => {
+    console.log(submissions)
     if(submissions){
-      var filteredArray = submissions.filter(function(itm){
-        return itm.userId == user.id;
-      });
-
-      if(filteredArray.length){
+      if(submissions[user.id]){
         return(
           <Typography variant="h6" align="center">
             TELAH DIKUMPULKAN
@@ -295,13 +350,13 @@ function ViewAssessmentStudent(props) {
           end_date={selectedAssessments.end_date}
           id={id}
           finish={finish}
+          onSubmit={onSubmit}
+          setOpenTimeoutDialog={() => setOpenTimeoutDialog(true)}
           />
       )
     }
   }
 
-  // localStorage.removeItem(`remainingTime_${id}`);
-  // localStorage.removeItem(`answers_${id}`);
   if(!posted){
     if(posted!== null){
       return <Redirect to="/tidak-ditemukan"/>
@@ -309,41 +364,19 @@ function ViewAssessmentStudent(props) {
     return (<div>{/* None */} </div>)
   }
 
-  // else if(submissions){
-  //   if(submissions[user.kelas]) {
-  //     if(submissions[user.kelas][user.id]){
-  //     return (
-  //       <div className={classes.root}>
-  //       <Grid container direction="column" spacing={3}>
-  //         <Grid item>
-  //           <Paper>
-  //             <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
-  //               <Grid item>
-  //                 <Typography variant="h6" align="center">
-  //                   {all_subjects_map.get(selectedAssessments.subject)}
-  //                 </Typography>
-  //                 <Typography variant="h4" align="center" gutterBottom>
-  //                   {selectedAssessments.name}
-  //                 </Typography>
-  //                 <Typography variant="h6" align="center">
-  //                   {selectedAssessments.description}
-  //                 </Typography>
-  //               </Grid>
-  //                 <Typography variant="h6" align="center">
-  //                   TELAH DIKUMPULKAN
-  //                 </Typography>
-  //             </Grid>
-  //           </Paper>
-  //         </Grid>
-  //         </Grid>
-  //       </div>
-  //     )
-  //     }
-  //   }
-  // }
-
   return (
     <div className={classes.root}>
+      <SubmitDialog
+        openSubmitDialog={openSubmitDialog}
+        handleCloseSubmitDialog={handleCloseSubmitDialog}
+        itemType="Ujian"
+        itemName={selectedAssessments.name}
+        onSubmit={onSubmit}
+      />
+      <TimeoutDialog
+        openTimeoutDialog={openTimeoutDialog}
+        handleCloseTimeoutDialog={() => setOpenTimeoutDialog(false)}
+      />
       <form>
         <Grid container direction="column" spacing={3}>
           <Grid item>
@@ -370,7 +403,7 @@ function ViewAssessmentStudent(props) {
                   null
                   :
                   <Grid item>
-                    <Button variant="contained" className={classes.submitAssessmentButton} onClick={onSubmit}>
+                    <Button variant="contained" className={classes.submitAssessmentButton} onClick={handleOpenSubmitDialog}>
                       Kumpulkan
                     </Button>
                   </Grid>

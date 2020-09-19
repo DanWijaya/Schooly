@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Button, Dialog, Grid, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,13 +10,13 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "175px",
     padding: "15px",
   },
-  dialogDeleteButton: {
+  dialogSubmitButton: {
     width: "150px",
     backgroundColor: "white",
-    color: theme.palette.error.main,
+    color: theme.palette.success.main,
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.error.dark,
+      color: theme.palette.success.dark,
     },
   },
   dialogCancelButton: {
@@ -31,17 +30,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DeleteDialog(props) {
+function SubmitDialog(props) {
   const classes = useStyles();
 
-  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, isLink, redirectLink } = props;
+  const { openSubmitDialog, handleCloseSubmitDialog, itemType, itemName, onSubmit, isLink, redirectLink } = props;
 
   return (
-    <Dialog open={openDeleteDialog}>
+    <Dialog open={openSubmitDialog}>
       <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
         <Grid item>
           <Typography variant="h5" align="center" gutterBottom>
-            Hapus {itemType} berikut?
+            Kumpul {itemType} berikut?
           </Typography>
         </Grid>
         <Grid item>
@@ -53,32 +52,20 @@ function DeleteDialog(props) {
           <Grid item>
             <Button
               variant="outlined"
-              onClick={deleteItem}
-              startIcon={<DeleteOutlineIcon />}
-              className={classes.dialogDeleteButton}
+              onClick={onSubmit}
+              className={classes.dialogSubmitButton}
             >
-              Hapus
+              Kumpul
             </Button>
           </Grid>
           <Grid item>
-            {!isLink ?
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
+            <Button
+              onClick={handleCloseSubmitDialog}
+              startIcon={<CancelIcon />}
+              className={classes.dialogCancelButton}
               >
-                Batal
-              </Button>
-            :
-              <Link to={redirectLink}>
-                <Button
-                  startIcon={<CancelIcon />}
-                  className={classes.dialogCancelButton}
-                >
-                  Batal
-                </Button>
-              </Link>
-            }
+              Batal
+            </Button>
           </Grid>
         </Grid>
       </Grid>
@@ -86,4 +73,4 @@ function DeleteDialog(props) {
   )
 }
 
-export default DeleteDialog;
+export default SubmitDialog;

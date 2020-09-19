@@ -39,11 +39,16 @@ const AssessmentSchema = new Schema({
         lampiran: [{ type: ObjectId , default: [], _id: false}]
     }],
     posted: { type: Boolean, required: true, default: false},
-    submissions: [{
-      classId: {type: ObjectId},
-      userId: { type: ObjectId},
-      answers: { type: Array },
-    }],
+    grades: {
+      type: Map
+    },
+    submissions:{
+      type: Map
+    },
+    // submissions: [{
+    //   userId: { type: ObjectId},
+    //   answers: { type: Array },
+    // }],
 })
 
 module.exports = Assessment = mongoose.model("assessments", AssessmentSchema);
