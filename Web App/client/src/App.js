@@ -55,11 +55,12 @@ import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
+import AssessmentList from "./components/objects/assessment/AssessmentList";
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
 import EditAssessment from "./components/objects/assessment/EditAssessment";
-import AssessmentList from "./components/objects/assessment/AssessmentList";
 import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
+import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -217,6 +218,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-kuis/:id" handleSideDrawerExist={this.handleSideDrawerExist} component={EditAssessment} />
                     <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />
+                    <PrivateRoute exact access={["Teacher"]} path="/daftar-kuis-terkumpul/:id" component={SubmittedAssessmentList} />
                     {/* Route Admin-Only */}
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />

@@ -267,7 +267,7 @@ function ViewAssessmentTeacher(props) {
           ))}
           <Grid item container spacing={2} justify="flex-end" alignItems="center">
             <Grid item>
-              <Link to="">
+              <Link to={`/daftar-kuis-terkumpul/${assessment_id}`}>
                 <Fab variant="extended" className={classes.seeAllAssessmentButton}>
                   <AssignmentIcon style={{marginRight: "10px"}} />
                   Lihat Hasil

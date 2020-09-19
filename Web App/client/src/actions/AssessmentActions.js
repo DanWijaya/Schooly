@@ -48,6 +48,27 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
     );
 }
 
+export const gradeAssessment = (assessment_id, gradingData, rslv) => dispatch => {
+  axios
+    .post(`/api/assessments/grade/${assessment_id}`, gradingData)
+    .then(res => {
+      console.log("Assessment updated to be :", res.data);
+      rslv(res.data);
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: true
+      })
+      return res.data
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+      })
+    })
+}
+
 export const updateAssessment = (formData, assessmentData, assessmentId, lampiran_to_delete, history) => dispatch => {
   // formData is the lampiran files
   axios

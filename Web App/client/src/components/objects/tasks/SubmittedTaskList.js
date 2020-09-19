@@ -293,7 +293,6 @@ function SubmittedTaskList(props) {
       grade: parseInt(grade.get(studentId)),
       studentId: studentId
     }
-    console.log(taskId, gradingData)
     let gradeStatusMap = gradeStatus
 
     if (grade.has(studentId)) {

@@ -55,6 +55,37 @@ router.post('/create', (req,res) => {
     })
 })
 
+router.post("/grade/:id", (req,res) => {
+  let { id } = req.params;
+
+  Assessment.findById(id, (err, assessmentData) => {
+    if(!assessmentData)
+      return res.status(404).send("Assessment data is not found");
+    else {
+      let { grades } = assessmentData;
+      let { grade, studentId } = req.body;
+      console.log(req.body)
+      if(grades){
+        console.log(grades)
+        console.log(grades.get(studentId));
+        grades.set(studentId, parseFloat(grade.toFixed(2)));
+        console.log(grades.get(studentId));
+      }
+      else {
+        let grade_map = new Map();
+        grade_map.set(studentId, parseFloat(grade.toFixed(2)));
+        grades = grade_map;
+      }
+
+      assessmentData.grades = grades;
+      assessmentData
+                .save()
+                .then(ass => res.json(ass))
+                .catch(err => res.status(400).send("Unable to update task database"));
+
+    }
+  })
+})
 router.post("/update/:id", (req,res) => {
   const { errors, isValid } = validateAssessmentInput(req.body)
 
@@ -129,7 +160,7 @@ router.post("/submit/:id", (req,res) => {
             }
           }
           let score = 100 * correct_count/questions.length;
-          grades.set(userId, Double(score.toFixed(2)));
+          grades.set(userId, parseFloat(score.toFixed(2)));
         }
       }
       else {
@@ -140,7 +171,7 @@ router.post("/submit/:id", (req,res) => {
           }
         }
         let score = 100 * correct_count/questions.length;
-        grade_map.set(userId, Double(score.toFixed(2)));
+        grade_map.set(userId, parseFloat(score.toFixed(2)));
         grades = grade_map;
       }
 
