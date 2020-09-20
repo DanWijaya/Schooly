@@ -650,22 +650,30 @@ function Profile(props) {
                         <Table aria-label="simple table" size="medium">
                             <TableHead>
                             <TableRow style={{backgroundImage:"linear-gradient(to bottom right, #0063b2ff, #263571)"}}>
-                                {headers.map((nama) => {
-                                  return (<TableCell style={{color:'white'}}>{nama}</TableCell>);
-                                })}
+                                {
+                                  // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid, 
+                                  // isi elemen array.
+                                  (headers[0] === "Nama Murid") ? ( 
+                                    headers.map((nama) => {
+                                      return (<TableCell style={{color:'white'}}>{nama}</TableCell>);
+                                    })
+                                  ) : (
+                                    null
+                                  )
+                                }
                             </TableRow>
                             </TableHead>
                             <TableBody>
                               {
-                              // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid, 
-                              // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
-                              ((rows.length !== 0) && (rows[0].constructor === "Map")) ? (
-                                rows.map((row) => {
-                                  return generateRowCellMap(row);
-                                })
-                              ) : (
-                                null
-                              )
+                                // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid, 
+                                // isi elemen array "rows" ("rows" merupakan state) akan berubah dari Object menjadi Map.
+                                ((rows.length !== 0) && (rows[0].constructor === Map)) ? (
+                                  rows.map((row) => {
+                                    return generateRowCellMap(row);
+                                  })
+                                ) : (
+                                  null
+                                )
                               }
                             </TableBody>
                         </Table>
