@@ -105,7 +105,10 @@ const useStyles = makeStyles((theme) => ({
   },
   tableHeader: {
     backgroundColor: theme.palette.primary.main,
-
+  },
+  select: {
+    minWidth:"230px",
+    maxWidth:"230px"
   }
 }));
 
@@ -515,7 +518,7 @@ function Profile(props) {
                     <TableHead className={classes.tableHeader}> 
                       <TableRow>
                         {headers.map((nama) => {
-                          return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                          return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
                         })}
                       </TableRow>
                     </TableHead>
@@ -547,7 +550,7 @@ function Profile(props) {
                     <TableHead className={classes.tableHeader}>
                       <TableRow>
                         {headers.map((nama) => {
-                          return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                          return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
                         })}
                       </TableRow>
                     </TableHead>
@@ -576,33 +579,23 @@ function Profile(props) {
                 <Typography style={{padding:"25px"}}>Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih</Typography>
               </Grid> 
               <Grid item xs={12} sm={3} spacing={0} direction='row-reverse' justify="flex-end">
-                <FormControl style={{marginLeft: "3px"}}>
+                <FormControl style={{marginLeft: "10px"}}>
                   <InputLabel id="kelas-label">Kelas</InputLabel>
-                    <Select labelId="kelas-label" id="kelas" value={valueKelas} displayEmpty="true" onChange={(event) => {handleKelasChange(event)}} style={{maxWidth:'270px'}}>
+                    <Select labelId="kelas-label" id="kelas" value={valueKelas} displayEmpty="true" onChange={(event) => {handleKelasChange(event)}} className={classes.select}>
                       {
                         ((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)
                       }
-                    </Select>
-                    {(valueKelas==="") ? 
-                      <FormHelperText style={{fontStyle:"italic"}}>Harap Pilih Kelas yang Ingin Ditampilkan</FormHelperText>
-                    :
-                      <FormHelperText style={{fontStyle:"italic"}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Kelas Lainnya</FormHelperText>
-                    }        
+                    </Select>  
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <FormControl style={{marginLeft: "3px"}}>
+                <FormControl style={{marginLeft: "10px"}}>
                   <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                    <Select labelId="matpel-label" id="matpel" value={valueMatpel} displayEmpty="true" onChange={(event) => {handleMatPelChange(event)}} style={{maxWidth:'230px'}}>
+                    <Select labelId="matpel-label" id="matpel" value={valueMatpel} displayEmpty="true" onChange={(event) => {handleMatPelChange(event)}} className={classes.select}>
                       {
                         (kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)
                       }
                     </Select>
-                    {(valueMatpel==="") ? 
-                      <FormHelperText style={{fontStyle:"italic"}}>Harap Pilih Mata Pel yang Ingin Ditampilkan</FormHelperText>
-                    :
-                      <FormHelperText style={{fontStyle:"italic"}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Mata Pel Lainnya</FormHelperText>
-                    }
                 </FormControl>
               </Grid>
             </Grid>
@@ -614,7 +607,7 @@ function Profile(props) {
                       <TableRow>
                         {(headers[0] === "Nama Murid") ? (
                           headers.map((nama) => {
-                            return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                            return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
                           }))
                         : 
                           null
