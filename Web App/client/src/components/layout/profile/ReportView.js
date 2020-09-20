@@ -52,11 +52,11 @@ const useStyles = makeStyles((theme) => ({
   },
   profileDivider: {
     backgroundColor: theme.palette.primary.main,
-    margin: "15px 0px 15px 0px"
+    margin: "15px 40px 12px 0px"
   },
   informationPaper: {
     backgroundColor: fade(theme.palette.primary.main,0.2),
-    padding: "25px"
+    padding: "25px",
   },
   name: {
     backgroundColor: fade(theme.palette.primary.main,0.2),
@@ -102,6 +102,10 @@ const useStyles = makeStyles((theme) => ({
   background_gradient: {
     padding:"20px",
     background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)"
+  },
+  tableHeader: {
+    backgroundColor: theme.palette.primary.main,
+
   }
 }));
 
@@ -201,8 +205,12 @@ function Profile(props) {
   function generateRowCellMap(row) { 
     let cells = [];
     row.forEach((value, key) => {
-      if (key !== "idMurid") {
-        cells.push(<TableCell>{value}</TableCell>);
+      if(key !== "idMurid"){
+        if (key === "namaMurid") {
+          cells.push(<TableCell align="left" style={{border: '1px solid rgba(224, 224, 224, 1)'}}>{value}</TableCell>);
+        } else {
+          cells.push(<TableCell align="center" style={{border: '1px solid rgba(224, 224, 224, 1)'}}>{value}</TableCell>);
+        }
       }
     })
     return (
@@ -217,10 +225,10 @@ function Profile(props) {
   function generateRowCellObj(row) {  
     return (
       <TableRow key={row.subject}> {/* nama subjek sudah dipastikan unik*/}
-        <TableCell>{row.subject}</TableCell>
-        <TableCell>{row.taskScore}</TableCell>
-        <TableCell>{row.quizScore}</TableCell>
-        <TableCell>{row.assessmentScore}</TableCell>
+        <TableCell style={{border: '1px solid rgba(224, 224, 224, 1)'}}>{row.subject}</TableCell>
+        <TableCell align="center" style={{border: '1px solid rgba(224, 224, 224, 1)'}}>{row.taskScore}</TableCell>
+        <TableCell align="center" style={{border: '1px solid rgba(224, 224, 224, 1)'}}>{row.quizScore}</TableCell>
+        <TableCell align="center" style={{border: '1px solid rgba(224, 224, 224, 1)'}}>{row.assessmentScore}</TableCell>
       </TableRow>
     );
   }
@@ -486,193 +494,149 @@ function Profile(props) {
 
   return (
     <div className={classes.root}>
-        {(role==='Teacher') ?
+        {(role==="Teacher") ?
           <Grid container direction="column" spacing={5}>
             <Grid item>
-              <Typography variant="h4" align="center" color="textPrimary">
+              <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
                   HALAMAN RAPOR SISWA
               </Typography>
               <Divider className={classes.profileDivider}/>
             </Grid>
-            <Grid container item direction="row" spacing={1} alignContent="space-around" justify="space-around">
-                <Grid item xs={0} sm={4} md={4} lg={4} className={classes.informationPaper}> 
-                    <Typography style={{padding:'20px 20px 10px 20px'}}>Nama  : {nama}</Typography>
-                    <Typography style={{padding:'10px 20px 20px 20px'}}>Kelas : {kelas.name}</Typography>
-                </Grid>
-                <Grid item xs={0} sm={2} md={2} lg={4}> 
-                </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={4} className={classes.select}>
-                    
+            <Grid container item direction="row" spacing={1}>
+              <Grid item xs={7} sm={4} className={classes.informationPaper}> 
+                  <Typography style={{padding:"20px 20px 10px 20px"}}>Nama  : {nama}</Typography>
+                  <Typography style={{padding:"10px 20px 20px 20px"}}>Kelas : {kelas.name}</Typography>
+              </Grid> 
+            </Grid>
+            <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
+              <Grid item xs={12} style={{marginRight:"40px"}}> 
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table" size="medium" style={{overflow:"hidden"}}>
+                    <TableHead className={classes.tableHeader}> 
+                      <TableRow>
+                        {headers.map((nama) => {
+                          return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                        })}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                          rows.map((row) => {
+                            return generateRowCellObj(row);
+                          })
+                        }      
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid container direction="column" spacing={5} style={{margin:'auto'}}>
-              <Grid item xs={12} sm={12} md={12} lg={12} style={{marginRight:'40px'}}> 
-                  <TableContainer component={Paper}>
-                      <Table aria-label="simple table" size="medium">
-                          <TableHead>
-                          <TableRow style={{backgroundImage:"linear-gradient(to bottom right, #0063b2ff, #263571)"}}>
-                              {headers.map((nama) => {
-                                return (<TableCell style={{color:'white'}}>{nama}</TableCell>);
-                              })}
-                              {/* <TableCell style={{color:'white'}}>Mata Pelajaran</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Tugas</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Kuis</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Ujian</TableCell> */}
-                          </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {
-                              rows.map((row) => {
-                                return generateRowCellObj(row);
-                              })
-                              
-                            // handleIndividualReport().map((row) =>
-                            //   <TableRow>
-                            //     <TableCell component="th" scope="row">
-                            //         {row.subject}
-                            //     </TableCell>
-                            //     <TableCell align="right">{row.taskScore}</TableCell>
-                            //     <TableCell align="right">{row.quizScore}</TableCell>
-                            //     <TableCell align="right">{row.assessmentScore}</TableCell>
-                            //   </TableRow>
-                            // )
-                            }      
-                          </TableBody>
-                      </Table>
-                  </TableContainer>
-              </Grid>
-          </Grid>
-          </Grid>
-        : (role==='Student') ?
-        <Grid container direction="column" spacing={5}>
+        : 
+        (role==="Student") ?
+          <Grid container direction="column" spacing={5}>
             <Grid item>
-              <Typography variant="h4" align="center" color="textPrimary">
+              <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
                   Rapot Semester X (Tahun 2XXX)
               </Typography>
               <Divider className={classes.profileDivider}/>
             </Grid>
-            
-          <Grid container direction="column" spacing={5} style={{margin:'auto'}}>
-              <Grid item xs={12} sm={12} md={12} lg={12} style={{marginRight:'40px'}}> 
-                  <TableContainer component={Paper}>
-                      <Table aria-label="simple table" size="medium">
-                          <TableHead>
-                          <TableRow style={{backgroundImage:"linear-gradient(to bottom right, #0063b2ff, #263571)"}}>
-                              {headers.map((nama) => {
-                                return (<TableCell style={{color:'white'}}>{nama}</TableCell>);
-                              })}
-                              {/* <TableCell style={{color:'white'}}>Mata Pelajaran</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Tugas</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Kuis</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Ujian</TableCell> */}
-                          </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {
-                              rows.map((row) => {
-                                return generateRowCellObj(row);
-                              })
-                            // handleIndividualReport().map((row) =>
-                            //   <TableRow>
-                            //     <TableCell component="th" scope="row">
-                            //         {row.subject}
-                            //     </TableCell>
-                            //     <TableCell align="right">{row.taskScore}</TableCell>
-                            //     <TableCell align="right">{row.quizScore}</TableCell>
-                            //     <TableCell align="right">{row.assessmentScore}</TableCell>
-                            //   </TableRow>
-                            // )
-                            }      
-                          </TableBody>
-                      </Table>
-                  </TableContainer>
+            <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
+              <Grid item xs={12} style={{marginRight:"40px"}}> 
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table" size="medium" style={{overflow:"hidden"}}>
+                    <TableHead className={classes.tableHeader}>
+                      <TableRow>
+                        {headers.map((nama) => {
+                          return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                        })}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                          rows.map((row) => {
+                            return generateRowCellObj(row);
+                          })
+                        }      
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Grid>
-          </Grid>
+            </Grid>
           </Grid>
         :
-        <Grid container direction="column" spacing={5}>
+          <Grid container direction="column" spacing={5}>
             <Grid item>
-            <Typography variant="h4" align="center" color="textPrimary">
-                HALAMAN RAPOR
-            </Typography>
-            <Divider className={classes.profileDivider}/>
+              <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
+                  HALAMAN RAPOR
+              </Typography>
+              <Divider className={classes.profileDivider}/>
             </Grid>
-            <Grid container item direction="row" spacing={1} alignContent="space-between">
-                <Grid item xs={0} sm={4} md={4} lg={4}> 
-                    <Paper className={classes.informationPaper}>Pilih Kelas dan Mata Pelajaran</Paper>
-                </Grid>
-                <Grid item xs={0} sm={2} md={2} lg={4}> 
-                </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={4} className={classes.select}>
-                    <div style={{display:'flex', flexDirection:'column', padding:'10px', justifyContent:'space-between'}}>
-                        <div style={{marginLeft:'10px'}}>
-                          <FormControl>
-                            <InputLabel id="kelas-label">Kelas</InputLabel>
-                            <Select labelId="kelas-label" id="kelas" value={valueKelas} displayEmpty="true" onChange={(event) => {handleKelasChange(event)}} style={{maxWidth:'270px'}}>
-
-                              {
-                                ((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)
-                              }
-
-                            </Select>
-                            {(valueKelas==="") ? 
-                              <FormHelperText style={{fontStyle:'italic'}}>Harap Pilih Kelas yang Ingin Ditampilkan</FormHelperText>
-                            :
-                              <FormHelperText style={{fontStyle:'italic'}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Kelas Lainnya</FormHelperText>
-                            }
-                            
-                          </FormControl>
-                        </div>
-                        <div style={{marginLeft:'10px', marginTop:'10px'}}>
-                          <FormControl >
-                            <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                            <Select labelId="matpel-label" id="matpel" value={valueMatpel} displayEmpty="true" onChange={(event) => {handleMatPelChange(event)}} style={{maxWidth:'270px'}}>
-
-                              
-                              {
-                                (kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)
-                              }
-
-                            </Select>
-                            {(valueMatpel==="") ? 
-                              <FormHelperText style={{fontStyle:'italic'}}>Harap Pilih Mata Pel yang Ingin Ditampilkan</FormHelperText>
-                            :
-                              <FormHelperText style={{fontStyle:'italic'}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Mata Pel Lainnya</FormHelperText>
-                            }
-                          </FormControl>
-                        </div>
-                    </div> 
-                </Grid>
+            <Grid container item direction="row" spacing={1}>
+              <Grid item xs={12} sm={6}> 
+                <Typography style={{padding:"25px"}}>Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih</Typography>
+              </Grid> 
+              <Grid item xs={12} sm={3} spacing={0} direction='row-reverse' justify="flex-end">
+                <FormControl style={{marginLeft: "3px"}}>
+                  <InputLabel id="kelas-label">Kelas</InputLabel>
+                    <Select labelId="kelas-label" id="kelas" value={valueKelas} displayEmpty="true" onChange={(event) => {handleKelasChange(event)}} style={{maxWidth:'270px'}}>
+                      {
+                        ((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)
+                      }
+                    </Select>
+                    {(valueKelas==="") ? 
+                      <FormHelperText style={{fontStyle:"italic"}}>Harap Pilih Kelas yang Ingin Ditampilkan</FormHelperText>
+                    :
+                      <FormHelperText style={{fontStyle:"italic"}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Kelas Lainnya</FormHelperText>
+                    }        
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <FormControl style={{marginLeft: "3px"}}>
+                  <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
+                    <Select labelId="matpel-label" id="matpel" value={valueMatpel} displayEmpty="true" onChange={(event) => {handleMatPelChange(event)}} style={{maxWidth:'230px'}}>
+                      {
+                        (kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)
+                      }
+                    </Select>
+                    {(valueMatpel==="") ? 
+                      <FormHelperText style={{fontStyle:"italic"}}>Harap Pilih Mata Pel yang Ingin Ditampilkan</FormHelperText>
+                    :
+                      <FormHelperText style={{fontStyle:"italic"}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Mata Pel Lainnya</FormHelperText>
+                    }
+                </FormControl>
+              </Grid>
             </Grid>
-            <Grid container direction="column" spacing={5} style={{margin:'auto'}}>
-                <Grid item xs={12} sm={12} md={12} lg={12} style={{marginRight:'40px'}}> 
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table" size="medium">
-                            <TableHead>
-                            <TableRow style={{backgroundImage:"linear-gradient(to bottom right, #0063b2ff, #263571)"}}>
-                                {headers.map((nama) => {
-                                  return (<TableCell style={{color:'white'}}>{nama}</TableCell>);
-                                })}
-                            </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {
-                              // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid, 
-                              // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
-                              ((rows.length !== 0) && (rows[0].constructor === "Map")) ? (
-                                rows.map((row) => {
-                                  return generateRowCellMap(row);
-                                })
-                              ) : (
-                                null
-                              )
-                              }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Grid>
+            <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
+              <Grid item xs={12} style={{marginRight:"40px"}}> 
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table" size="medium" style={{overflow:'hidden'}}>
+                    <TableHead className={classes.tableHeader}>
+                      <TableRow>
+                        {(headers[0] === "Nama Murid") ? (
+                          headers.map((nama) => {
+                            return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                          }))
+                        : 
+                          null
+                        }
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid, 
+                        // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
+                        ((rows.length !== 0) && (rows[0].constructor === Map)) ? (
+                          rows.map((row) => {
+                            return generateRowCellMap(row);
+                          }))
+                        : null
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
             </Grid>
-        </Grid>
+          </Grid>
         }
     </div>
   )

@@ -16,6 +16,7 @@ import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, L
   Paper, Snackbar, Typography, Button } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { fade } from "@material-ui/core/styles/colorManipulator";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
@@ -30,6 +31,7 @@ import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,11 +68,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   buttonRapor: {
-    backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", 
+    backgroundColor: "#900c3f",
     color:"white", 
-    borderRadius:'4px',
-    '&:focus, &:hover': {
-			backgroundColor: '#e0e0e0'}
+    "&:focus, &:hover": {
+      backgroundColor: fade("#900c3f", 0.85),
+      color: "white",
+    },
   },
   emptyProfileData: {
     display: "flex",
@@ -295,7 +298,7 @@ function Profile(props) {
       <Divider className={classes.profileDivider} />
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container spacing={1} justify="flex-end" alignItems="center">
-          <Grid item>
+          <Grid item xs={6} sm={4} md={4} lg={2}>
             {(user.role=='Student') ? 
               <div style={{display:'flex', justifyContent:'flex-end'}}>
                 <Link to={{
@@ -316,10 +319,10 @@ function Profile(props) {
               </div> : null
             }
           </Grid>
-          <Grid item>
+          <Grid item xs={6} sm={4} md={4} lg={2}>
             <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
           </Grid>
-          <Grid item>
+          <Grid item xs={7} sm={4} md={4} lg={1}>
             <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
           </Grid>
         </Grid>

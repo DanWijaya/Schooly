@@ -60,11 +60,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#00b7ff"
   },
   buttonRapor: {
-    backgroundImage:"linear-gradient(to bottom right, #581845, #900C3F, #C70039)", 
+    backgroundColor: "#900c3f",
     color:"white", 
-    borderRadius:'4px',
-    '&:focus, &:hover': {
-			backgroundColor: '#e0e0e0'}
+    "&:focus, &:hover": {
+      backgroundColor: fade("#900c3f", 0.85),
+      color: "white",
+    }
   },
   emptyProfileData: {
     display: "flex",
@@ -245,7 +246,7 @@ function Profile(props) {
             }}>
               <LightTooltip title="Klik Untuk Melihat Rapor">
                 <Button className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon/>}>
-                  <Typography>Lihat Rapor</Typography>
+                  Lihat Rapor
                 </Button>
               </LightTooltip>
             </Link>
