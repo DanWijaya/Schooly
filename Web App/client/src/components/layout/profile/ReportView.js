@@ -518,7 +518,11 @@ function Profile(props) {
                     <TableHead className={classes.tableHeader}> 
                       <TableRow>
                         {headers.map((nama) => {
-                          return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
+                          if(nama=="Nama Murid"){
+                            return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                          } else{ 
+                            return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
+                          }
                         })}
                       </TableRow>
                     </TableHead>
@@ -550,7 +554,11 @@ function Profile(props) {
                     <TableHead className={classes.tableHeader}>
                       <TableRow>
                         {headers.map((nama) => {
-                          return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
+                          if(nama=="Nama Murid"){
+                            return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                          } else{ 
+                            return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
+                          }
                         })}
                       </TableRow>
                     </TableHead>
@@ -607,7 +615,11 @@ function Profile(props) {
                       <TableRow>
                         {(headers[0] === "Nama Murid") ? (
                           headers.map((nama) => {
-                            return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
+                            if(nama=="Nama Murid"){
+                              return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
+                            } else{ 
+                              return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
+                            }
                           }))
                         : 
                           null
