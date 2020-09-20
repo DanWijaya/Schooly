@@ -30,7 +30,7 @@ import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
+import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -299,24 +299,28 @@ function Profile(props) {
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container spacing={1} justify="flex-end" alignItems="center">
           <Grid item xs={6} sm={4} md={4} lg={2}>
-            {(user.role=='Student') ? 
-              <div style={{display:'flex', justifyContent:'flex-end'}}>
-                <Link to={{
-                  pathname:"/lihat-rapor",
-                  state: {
-                    role: 'Student',
-                    nama: user.name,
-                    kelas: classesCollection.kelas,
-                    id: user.id
-                  }
-                }}>
-                  <LightTooltip title="Klik Untuk Melihat Rapor">
-                    <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon />}>
-                      Lihat Rapor
-                    </Button>
-                  </LightTooltip>
-                </Link>
-              </div> : null
+            {
+              (user.role==="Student") ? (
+                <div style={{display:"flex", justifyContent:"flex-end"}}>
+                  <Link to={{
+                    pathname:"/lihat-rapor",
+                    state: {
+                      role: "Student",
+                      nama: user.name,
+                      kelas: classesCollection.kelas,
+                      id: user.id
+                    }
+                  }}>
+                    <LightTooltip title="Klik Untuk Melihat Rapor">
+                      <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon />}>
+                        Lihat Rapor
+                      </Button>
+                    </LightTooltip>
+                  </Link>
+                </div>
+              ) : (
+                null
+              )
             }
           </Grid>
           <Grid item xs={6} sm={4} md={4} lg={2}>

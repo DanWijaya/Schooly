@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
-  Paper, Typography, IconButton, Button } from "@material-ui/core";
+  Paper, Typography, Button } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -23,7 +23,6 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
-import BlockIcon from "@material-ui/icons/Block";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -233,8 +232,8 @@ function Profile(props) {
       </Grid>
       <Divider className={classes.profileDivider}/>
       {
-        ((role==='Student') && (user.role==="Teacher")) ? (
-          <div style={{display:'flex', justifyContent:'flex-end', marginBottom:"20px"}}>
+        ((role === "Student") && (user.role === "Teacher")) ? (
+          <div style={{display:"flex", justifyContent:"flex-end", marginBottom:"20px"}}>
             <Link to={{
               pathname: "/lihat-rapor",
               state: {
@@ -305,7 +304,7 @@ function Profile(props) {
                       profile_data_info={emergency_phone}
                     />
                     {
-                      admin===true ?
+                      admin === true ?
                         <div>
                           <Divider variant="inset" />
                           <ProfileDataItem
