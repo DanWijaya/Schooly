@@ -25,17 +25,18 @@ export const getAllClass = (data="array") => dispatch => {
     .get("/api/classes/viewall")
     .then(res => {
         // console.log("Data should be here")
-        console.log("run getallclass");
         if(data === "map"){
             dispatch({
                 type: GET_ALL_CLASSES_MAP,
                 payload: res.data
-          })
+            })
+            console.log("getAllClass(map) completed");
         } else {
             dispatch({
                 type: GET_ALL_CLASSES,
                 payload: res.data
             })
+            console.log("getAllClass(array) completed");
         }
     })
 

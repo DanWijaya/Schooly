@@ -40,11 +40,11 @@ export const getAllTask = () => dispatch => {
   axios
     .get("/api/tasks/viewall")
     .then(res => {
-        console.log(res.data);
         dispatch({
             type: GET_TASKS,
             payload: res.data
         })
+        console.log("getAllTask completed");
     })
     .catch(err => {
         console.log("Error has occured");

@@ -120,7 +120,7 @@ function DrawerContent(props) {
     ]
     if (user.role === "Teacher") {
       ListItemContents.push(
-        [{pathname:"/lihat-rapor", state: {role: "other"}}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"]
+        [{pathname:"/lihat-rapor", state: {role: "Other"}}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"]
       )
     }
   }

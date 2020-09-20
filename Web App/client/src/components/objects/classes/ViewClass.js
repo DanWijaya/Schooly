@@ -464,7 +464,7 @@ function ViewClass(props) {
         (allow === "empty") ?
           null
         : (allow === "content") ?
-          (user.role === "Admin" || user.role === "Teacher") ? (
+          (user.role === "Admin" || user.role === "Teacher") ? ( // ---------- jika halaman kelas dibuka oleh admin atau guru ----------
             <div>
               <Paper className={classes.classPaper}>
                 <Typography variant="h3">
@@ -492,7 +492,7 @@ function ViewClass(props) {
                             person_name={walikelas.name }
                             person_role={(all_subjects_map) ? all_subjects_map.get(walikelas.subject_teached) : null}
                           />                
-                        </Grid>].concat( (user.email === walikelas.email) ? (
+                        </Grid>].concat( (user.email === walikelas.email) ? ( // menghilangkan tombol lihat profil di diri sendiri 
                           null
                         ) : (
                           <Grid item xs container justify="flex-end">
@@ -528,8 +528,8 @@ function ViewClass(props) {
                     </Grid>
                   ) : 
                     null}
-              </List>
-            </div>
+                </List>
+              </div>
             <div style={{padding: "20px"}}>
               <Typography variant="h4" gutterBottom>
                 Murid
@@ -583,7 +583,7 @@ function ViewClass(props) {
               </List>
             </div>
           </div>
-          ) : (
+          ) : ( // ---------- jika halaman kelas dibuka oleh Murid ----------
             <div>
               <Paper square>
                 <div className={classes.classPaper}>
@@ -747,7 +747,6 @@ function ViewClass(props) {
                                     email: walikelas.email,
                                     phone: walikelas.phone,
                                     emergency_phone : walikelas.emergency_phone,
-                                    id: 'no_id'
                                   }
                                 }}>
                                   <IconButton

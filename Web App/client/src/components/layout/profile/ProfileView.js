@@ -192,8 +192,7 @@ function Profile(props) {
   
   const { avatar, nama, role, viewable_section, jenis_kelamin,
     email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
-    kelas, admin, id } = location.state
-  console.log(id);
+    kelas, admin, id } = location.state;
   document.title = `Schooly | ${nama}`
 
   return (
@@ -232,24 +231,28 @@ function Profile(props) {
         </Grid>
       </Grid>
       <Divider className={classes.profileDivider}/>
-      {(role==='Student') ? 
-        <div style={{display:'flex', justifyContent:'flex-end', marginBottom:"20px"}}>
-          <Link to={{
-            pathname: "/lihat-rapor",
-            state: {
-              role: user.role,
-              nama: nama,
-              kelas : classesCollection.kelas,
-              id: id
-            }
-          }}>
-            <LightTooltip title="Klik Untuk Melihat Rapor">
-              <Button className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon/>}>
-                <Typography>Lihat Rapor</Typography>
-              </Button>
-            </LightTooltip>
-          </Link>
-        </div> : null
+      {
+        ((role==='Student') && (user.role==="Teacher")) ? (
+          <div style={{display:'flex', justifyContent:'flex-end', marginBottom:"20px"}}>
+            <Link to={{
+              pathname: "/lihat-rapor",
+              state: {
+                role: user.role,
+                nama: nama,
+                kelas : classesCollection.kelas,
+                id: id
+              }
+            }}>
+              <LightTooltip title="Klik Untuk Melihat Rapor">
+                <Button className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon/>}>
+                  <Typography>Lihat Rapor</Typography>
+                </Button>
+              </LightTooltip>
+            </Link>
+          </div>
+        ) : (
+          null
+        )
       }
       <Grid container direction="column" spacing={10}>
           {

@@ -5,33 +5,33 @@ import PropTypes from "prop-types";
 import "moment/locale/id";
 import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
   Paper, Typography, IconButton } from "@material-ui/core";
-  import { fade } from "@material-ui/core/styles/colorManipulator";
-  import { makeStyles, withStyles } from "@material-ui/core/styles";
-  // import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-  // import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-  // import CakeIcon from "@material-ui/icons/Cake";
-  // import ColorLensIcon from "@material-ui/icons/ColorLens";
-  // import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
-  // import EmailIcon from "@material-ui/icons/Email";
-  // import HomeIcon from "@material-ui/icons/Home";
-  // import PersonIcon from "@material-ui/icons/Person";
-  // import PhoneIcon from "@material-ui/icons/Phone";
-  // import WcIcon from "@material-ui/icons/Wc";
-  // import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-  // import WorkIcon from "@material-ui/icons/Work";
-  // import BlockIcon from "@material-ui/icons/Block";
-  // import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
-  import InputLabel from '@material-ui/core/InputLabel';
-  import Select from '@material-ui/core/Select';
-  import MenuItem from '@material-ui/core/MenuItem';
-  import Table from '@material-ui/core/Table';
-  import TableBody from '@material-ui/core/TableBody';
-  import TableCell from '@material-ui/core/TableCell';
-  import TableContainer from '@material-ui/core/TableContainer';
-  import TableHead from '@material-ui/core/TableHead';
-  import TableRow from '@material-ui/core/TableRow';
-  import FormControl from '@material-ui/core/FormControl';
-  import FormHelperText from '@material-ui/core/FormHelperText';
+import { fade } from "@material-ui/core/styles/colorManipulator";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+// import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+// import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+// import CakeIcon from "@material-ui/icons/Cake";
+// import ColorLensIcon from "@material-ui/icons/ColorLens";
+// import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
+// import EmailIcon from "@material-ui/icons/Email";
+// import HomeIcon from "@material-ui/icons/Home";
+// import PersonIcon from "@material-ui/icons/Person";
+// import PhoneIcon from "@material-ui/icons/Phone";
+// import WcIcon from "@material-ui/icons/Wc";
+// import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
+// import WorkIcon from "@material-ui/icons/Work";
+// import BlockIcon from "@material-ui/icons/Block";
+// import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
   
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getTaskGrade } from "../../../actions/TaskActions";
@@ -116,22 +116,33 @@ const StyledBadge = withStyles((theme) => ({
 function Profile(props) {
   const classes = useStyles();
   const location = useLocation();
+  const { role, nama, kelas, id  } = location.state;
+  // halaman lihat-rapor hanya dapat dibuka melalui link:
+  // <Link to={{
+  //   pathname: "/lihat-rapor",
+  //   state: {
+  //     role: "Teacher" / "Student" / "Other"  ("Other" kalau guru mengklik icon lihat rapor di side drawer)
+  //     nama: nama,                            (ini tidak ada kalau rolenya "Other")
+  //     kelas : classesCollection.kelas,       (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
+  //     id: id                                 (ini tidak ada kalau rolenya "Other")
+  //   }
+  // }}> 
 
-  const { role, nama, kelas, id  } = location.state
-  
-  const [rows, setRows] = React.useState([]);
-  const [headers, setHeaders] = React.useState([]);
+
+  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel  
+  const [headers, setHeaders] = React.useState([]); // elemennya berupa string
 
   const { getTaskGrade, getAllClass, getAllSubjects, getStudentsByClass, getAllTask } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
   const { user, students_by_class } = props.auth;
-  const { all_subjects, all_subjects_map } = props.subjectsCollection;
+  const { all_subjects_map } = props.subjectsCollection;
   const allTaskArray = props.tasksCollection; // Mengambil Data dari DB 
-  console.log(allTaskArray)
-  
+
+  const countAllClassUpdate = React.useRef(0);
   const countMIDependencyUpdate = React.useRef(0);
   const countStdByClassUpdate = React.useRef(0);
+  const countIRDependencyUpdate = React.useRef(0);
 
   const [valueKelas, setValueKelas] = React.useState("");
   const [valueMatpel, setValueMatpel] = React.useState("");
@@ -140,7 +151,10 @@ function Profile(props) {
   const [semuaKelas, setSemuaKelas] = React.useState(new Map());
   const [kontenKelas, setKontenKelas] = React.useState(new Map());
   const [kontenMatpel, setKontenMatpel] = React.useState(new Map());
-  const [kelasWali, setKelasWali] = React.useState(new Map()); // alasan dipisahkan dengan semuaKelas: untuk menghindari pencarian info wali kelas dari banyak kelas
+
+  // alasan dipisahkan dengan semuaKelas: untuk menghindari pencarian info wali kelas dari banyak kelas.
+  // isi kelasWali = Map {"id": <id kelas yang diwalikannya>, "name": <nama kelas yang diwalikannya>} 
+  const [kelasWali, setKelasWali] = React.useState(new Map());
 
   const [isClassSelected, setIsClassSelected] = React.useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = React.useState(false);
@@ -179,14 +193,34 @@ function Profile(props) {
     return menuItems;
   }
 
-  function generateRowCell(row) {
+  // ini hanya digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari side drawer
+  // fungsi ini harus hanya menerima argumen yang tipenya Map
+  // alasan pake Map:
+  // (1) penggunaan  pasangan key - value supaya lebih sederhana daripada Array
+  // (3) urutan kolom TableCell harus sesuai dengan urutan header -> jadi tidak bisa pakai Object
+  function generateRowCellMap(row) { 
     let cells = [];
-    row.forEach((value) => {
-      cells.push(<TableCell>{value}</TableCell>);
+    row.forEach((value, key) => {
+      if (key !== "idMurid") {
+        cells.push(<TableCell>{value}</TableCell>);
+      }
     })
     return (
-      <TableRow key={row.get("namaMurid")}>
+      <TableRow key={row.get("idMurid")}>
           {cells}
+      </TableRow>
+    );
+  }
+
+  // ini digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari profile view murid atau profile
+  // fungsi ini harus hanya menerima argumen yang tipenya Object
+  function generateRowCellObj(row) {  
+    return (
+      <TableRow key={row.subject}> {/* nama subjek sudah dipastikan unik*/}
+        <TableCell>{row.subject}</TableCell>
+        <TableCell>{row.taskScore}</TableCell>
+        <TableCell>{row.quizScore}</TableCell>
+        <TableCell>{row.assessmentScore}</TableCell>
       </TableRow>
     );
   }
@@ -267,65 +301,118 @@ function Profile(props) {
       }
     }
   };
-
-  React.useEffect(() => {
-    if (nama!==null) {
-      getAllTask()
-    }
-    if(role !== 'Teacher' && role !== 'Student')  {
-      getAllClass();
-      getAllClass("map");
-    }
-    // getAllSubjects();
-    getAllSubjects("map");
-  }, []);
-
+  
   function handleIndividualReport() {
-    // array isinya [{subject_id, subject_name},...]
-    let array = Array.from(all_subjects_map, ([name, value]) => ({ name, value }))
-    // Memastikan array sudah ada isinya sebelum diproses
-    if(array.length!==0){
+    let subjectArray = [];
+
+    // fungsi handleIndividualReport hanya dipanggil ketika role === "Student" atau role === "Teacher"
+    if (role === "Student") {
+      // subjectArray isinya [{subject_id, subject_name},...]
+      subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
+    } else {
+      // jika guru adalah wali kelas dan guru membuka rapor murid yang diwalikannya
+      if ((kelasWali.size !== 0) && (kelas._id === kelasWali.get("id"))) {
+        subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
+      } else {
+        subjectArray = user.subject_teached.map((subjectTeachedId) => {return {subjectId: subjectTeachedId, subjectName: all_subjects_map.get(subjectTeachedId)}});
+      }
+    }
+    
+    // Memastikan subjectArray sudah ada isinya sebelum diproses
+    if(subjectArray.length!==0){
       let taskArray = [];
-      let subjectnamechecker = [] // cek apabila subject pada input subject baru sebenarnya sudah ada atau belum, agar tidak ada subject yang tampil 2 kali
-      array.map((bySubject) => {
-        console.log(allTaskArray)
+      let subjectnamechecker = []; // cek apabila subject pada input subject baru sebenarnya sudah ada atau belum, agar tidak ada subject yang tampil 2 kali
+      subjectArray.forEach((bySubject) => {
         for(let task of allTaskArray){
-          if(task.grades!==null && Object.keys(task.grades).length !== 0 && task.grades.constructor === Object){
-            for(let i=0;i<Object.keys(task.grades).length;i++){
-              // bySubject.name adalah id Subject, sementara id adalah id mahasiswa
-              if(bySubject.name===task.subject && id===Object.keys(task.grades)[i] ){
-                console.log(Object.keys(task.grades)[i])
-                // Cek biar misalnya ada dua task bahasa Inggris, menampilkannya hanya sekali saja dengan total yang dijumlah
-                if(!subjectnamechecker.includes(bySubject.value)){
-                  taskArray.push({subject: bySubject.value, taskScore: task.grades[id], quizScore: null, assessmentScore: null})
-                  subjectnamechecker.push(bySubject.value)
-                }
-                else{
-                  for(let singleTask of taskArray){
-                    if(singleTask.subject===bySubject.value){
-                      singleTask.taskScore = singleTask.taskScore + task.grades[id]
-                    }
+          // bySubject.subjectId adalah id Subject, sementara id adalah id mahasiswa
+          if(bySubject.subjectId===task.subject && task.grades!==null && 
+            Object.keys(task.grades).length !== 0 && task.grades.constructor === Object){
+            if (task.grades[id]) {
+              // Cek biar misalnya ada dua task bahasa Inggris, menampilkannya hanya sekali saja dengan total yang dijumlah
+              if(!subjectnamechecker.includes(bySubject.subjectName)){
+                taskArray.push({subject: bySubject.subjectName, taskScore: task.grades[id], quizScore: null, assessmentScore: null});
+                subjectnamechecker.push(bySubject.subjectName);
+              }
+              else{
+                for(let singleTask of taskArray){
+                  if(singleTask.subject===bySubject.subjectName){
+                    singleTask.taskScore = singleTask.taskScore + task.grades[id];
                   }
                 }
-                
               }
             }
           }
         }
+      
         // Menambah mata pelajaran yang belum ada nilainya sama sekali di database
-        if(!subjectnamechecker.includes(bySubject.value)){
-          taskArray.push({subject: bySubject.value, taskScore: null, quizScore: null, assessmentScore: null})
-          subjectnamechecker.push(bySubject.value)
+        if(!subjectnamechecker.includes(bySubject.subjectName)){
+          taskArray.push({subject: bySubject.subjectName, taskScore: null, quizScore: null, assessmentScore: null});
+          subjectnamechecker.push(bySubject.subjectName);
         }
       })
-      console.log(array)
       return (taskArray);
     }
     else{
-      return []
+      return [];
     }
   };
-  // ini berfungsi agar getGrade dipanggil setelah getStudentsByClass selesai (agar alur eksekusinya sekuensial)
+
+  React.useEffect(() => {
+    if (role) {
+      if (role === "Teacher") {
+        getAllClass();
+        getAllTask();
+      } else if (role === "Student") {
+        getAllTask();
+        setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass()
+      } else {
+        getAllClass();
+        getAllClass("map");
+      }
+
+      getAllSubjects("map");
+    }
+  }, [role]);
+
+  // menentukan status guru: wali atau nonwali
+  React.useEffect(() => {
+    countAllClassUpdate.current++;
+
+    if (countAllClassUpdate.current === 2) {
+      new Promise((resolve) => { 
+        resolve(all_classes.find((kelas) => {return (kelas.walikelas === user.id)}));
+      }).then((kelasWali) => {
+        let infoKelasWali = new Map();
+        
+        // jika guru adalah kelas wali, mengisi infoKelasWali dengan id dan nama kelas yang diwalikannya 
+        if (kelasWali) {
+          infoKelasWali.set("id", kelasWali._id);
+          infoKelasWali.set("name", kelasWali.name);
+        }
+
+        return (infoKelasWali);
+      }).then((info) => {
+        setKelasWali(info);
+      });
+    }
+  }, [all_classes]);
+
+  React.useEffect(() => {
+    // reminder:
+    // -inisialisasi semua variabel di dalam array dependency dilakukan secara bersamaan sehingga useEffect hanya akan terpanggil 1 kali untuk ini
+    // -pada kasus ini, masing-masing variabel di dalam array dependency diubah oleh 1 fungsi tersendiri
+    // dengan demikian, semua variabel di dependency array sudah siap dipakai ketika 
+    // sudah terjadi perubahan sebanyak 1 + jumlah elemen dependency array
+    countIRDependencyUpdate.current++;
+    if (countIRDependencyUpdate.current === 4) {
+      setHeaders(["Mata Pelajaran", "Total Nilai Tugas", "Total Nilai Kuis", "Total Nilai Ujian"]);
+      setRows(handleIndividualReport());
+    }
+  }, [allTaskArray, all_subjects_map, kelasWali]); // -> ini dependency array
+  
+
+  // ini berfungsi agar getTaskGrade dipanggil setelah getStudentsByClass selesai (agar alur eksekusinya sekuensial)
+  // getStudentsByClass dipanggil saat guru sudah memilih kelas dan subjek pada Select (saat valueMatpel dan valueKelas sudah ada)
   React.useEffect(() => {
     countStdByClassUpdate.current++;
     if (countStdByClassUpdate.current === 2) {
@@ -339,6 +426,7 @@ function Profile(props) {
         let newRows = [];
         students_by_class.forEach((stdInfo) => {
           let rowData = new Map();
+          rowData.set("idMurid", stdInfo._id);
           rowData.set("namaMurid", stdInfo.name);
           taskArray.forEach((task) => {
             rowData.set(task._id, task.grades[stdInfo._id]);
@@ -352,39 +440,27 @@ function Profile(props) {
         resetKonten();
       }).catch((err) => {console.log(err)});
       
-      countStdByClassUpdate.current = 1;
+      countStdByClassUpdate.current = 1; // karena requestnya perlu bisa dilakukan berkali-kali
     }
   }, [students_by_class]);
 
   // ini digunakan untuk menginisialisasi isi menu item komponen Select setelah
-  // getAllClass(), getAllClass("map"), dan getAllSubjects("map") sudah selesai dijalankan semuanya
-  let menuItemDependency = [all_classes, all_classes_map, all_subjects_map];   
+  // setKelasWali, getAllClass("map"), dan getAllSubjects("map") sudah selesai dijalankan semuanya
   React.useEffect(() => {
-    // reminder:
-    // -inisialisasi semua variabel di dalam array dependency dilakukan secara bersamaan sehingga useEffect hanya akan terpanggil 1 kali untuk ini
-    // -pada kasus ini, masing-masing variabel di dalam array dependency diubah oleh 1 fungsi tersendiri
     countMIDependencyUpdate.current++;
-   
-    if (countMIDependencyUpdate.current === (1 + menuItemDependency.length)) {
-      let daftarMatpel = new Map();
-      let daftarKelas = new Map();
-      let infoKelasWali = new Map();
-
+    if (countMIDependencyUpdate.current === (4)) {      
       new Promise((resolve) => { // menentukan status guru: wali atau nonwali
-        resolve(all_classes.find((kelas) => {return (kelas.walikelas === user.id)}));
-      }).then((kelasWali) => {
+        let daftarMatpel = new Map();
+        let daftarKelas = new Map();
+
         // mengisi daftar kelas dengan semua kelas yang ada
         // (karena guru pasti mengajar minimal satu subject dan setiap subject diajar ke semua kelas)
         all_classes_map.forEach((classInfo, classId) => {
           daftarKelas.set(classId, classInfo.name);
         });
 
-        if (kelasWali) { // jika user adalah guru wali
-          // mengisi infoKelasWali dengan kelas wali 
-          infoKelasWali.set("id", kelasWali._id);
-          infoKelasWali.set("name", kelasWali.name);
-          
-          daftarKelas.delete(kelasWali._id);
+        if (kelasWali.size !== 0) { // jika user adalah guru wali
+          daftarKelas.delete(kelasWali.get("id")); // agar kelas wali tidak muncul 2 kali di menu item Select
 
           // mengisi daftar matpel dengan semua mata pelajaran yang ada
           all_subjects_map.forEach((subjectName, subjectId) => {daftarMatpel.set(subjectId, subjectName)});
@@ -394,24 +470,23 @@ function Profile(props) {
           user.subject_teached.forEach((subjectId) => { daftarMatpel.set(subjectId, all_subjects_map.get(subjectId))});
         }
         
-        return;
-      }).then(() => {
-        setSemuaKelas(daftarKelas);
-        setKontenKelas(daftarKelas);
-        setSemuaMatpel(daftarMatpel);
-        setKontenMatpel(daftarMatpel);
-        setKelasWali(infoKelasWali);
+        resolve({daftarKelas, daftarMatpel});
+      }).then((hasil) => {
+        setSemuaKelas(hasil.daftarKelas);
+        setKontenKelas(hasil.daftarKelas);
+        setSemuaMatpel(hasil.daftarMatpel);
+        setKontenMatpel(hasil.daftarMatpel);
       }).catch((err) => {console.log(err)})
     }
-  }, menuItemDependency);
+  }, [kelasWali, all_classes_map, all_subjects_map]);
 
-  if (location.state === undefined) {
+  if (!location.state) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
 
   return (
     <div className={classes.root}>
-        {(role=='Teacher') ?
+        {(role==='Teacher') ?
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h4" align="center" color="textPrimary">
@@ -436,31 +511,39 @@ function Profile(props) {
                       <Table aria-label="simple table" size="medium">
                           <TableHead>
                           <TableRow style={{backgroundImage:"linear-gradient(to bottom right, #0063b2ff, #263571)"}}>
-                              <TableCell style={{color:'white'}}>Mata Pelajaran</TableCell>
+                              {headers.map((nama) => {
+                                return (<TableCell style={{color:'white'}}>{nama}</TableCell>);
+                              })}
+                              {/* <TableCell style={{color:'white'}}>Mata Pelajaran</TableCell>
                               <TableCell style={{color:'white'}}>Total Nilai Tugas</TableCell>
                               <TableCell style={{color:'white'}}>Total Nilai Kuis</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Ujian</TableCell>
+                              <TableCell style={{color:'white'}}>Total Nilai Ujian</TableCell> */}
                           </TableRow>
                           </TableHead>
                           <TableBody>
                             {
-                            handleIndividualReport().map((row) =>
-                              <TableRow>
-                                <TableCell component="th" scope="row">
-                                    {row.subject}
-                                </TableCell>
-                                <TableCell align="right">{row.taskScore}</TableCell>
-                                <TableCell align="right">{row.quizScore}</TableCell>
-                                <TableCell align="right">{row.assessmentScore}</TableCell>
-                              </TableRow>
-                            )}      
+                              rows.map((row) => {
+                                return generateRowCellObj(row);
+                              })
+                              
+                            // handleIndividualReport().map((row) =>
+                            //   <TableRow>
+                            //     <TableCell component="th" scope="row">
+                            //         {row.subject}
+                            //     </TableCell>
+                            //     <TableCell align="right">{row.taskScore}</TableCell>
+                            //     <TableCell align="right">{row.quizScore}</TableCell>
+                            //     <TableCell align="right">{row.assessmentScore}</TableCell>
+                            //   </TableRow>
+                            // )
+                            }      
                           </TableBody>
                       </Table>
                   </TableContainer>
               </Grid>
           </Grid>
           </Grid>
-        : (role=='Student') ?
+        : (role==='Student') ?
         <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h4" align="center" color="textPrimary">
@@ -475,24 +558,31 @@ function Profile(props) {
                       <Table aria-label="simple table" size="medium">
                           <TableHead>
                           <TableRow style={{backgroundImage:"linear-gradient(to bottom right, #0063b2ff, #263571)"}}>
-                              <TableCell style={{color:'white'}}>Mata Pelajaran</TableCell>
+                              {headers.map((nama) => {
+                                return (<TableCell style={{color:'white'}}>{nama}</TableCell>);
+                              })}
+                              {/* <TableCell style={{color:'white'}}>Mata Pelajaran</TableCell>
                               <TableCell style={{color:'white'}}>Total Nilai Tugas</TableCell>
                               <TableCell style={{color:'white'}}>Total Nilai Kuis</TableCell>
-                              <TableCell style={{color:'white'}}>Total Nilai Ujian</TableCell>
+                              <TableCell style={{color:'white'}}>Total Nilai Ujian</TableCell> */}
                           </TableRow>
                           </TableHead>
                           <TableBody>
                             {
-                            handleIndividualReport().map((row) =>
-                              <TableRow>
-                                <TableCell component="th" scope="row">
-                                    {row.subject}
-                                </TableCell>
-                                <TableCell align="right">{row.taskScore}</TableCell>
-                                <TableCell align="right">{row.quizScore}</TableCell>
-                                <TableCell align="right">{row.assessmentScore}</TableCell>
-                              </TableRow>
-                            )}      
+                              rows.map((row) => {
+                                return generateRowCellObj(row);
+                              })
+                            // handleIndividualReport().map((row) =>
+                            //   <TableRow>
+                            //     <TableCell component="th" scope="row">
+                            //         {row.subject}
+                            //     </TableCell>
+                            //     <TableCell align="right">{row.taskScore}</TableCell>
+                            //     <TableCell align="right">{row.quizScore}</TableCell>
+                            //     <TableCell align="right">{row.assessmentScore}</TableCell>
+                            //   </TableRow>
+                            // )
+                            }      
                           </TableBody>
                       </Table>
                   </TableContainer>
@@ -521,11 +611,11 @@ function Profile(props) {
                             <Select labelId="kelas-label" id="kelas" value={valueKelas} displayEmpty="true" onChange={(event) => {handleKelasChange(event)}} style={{maxWidth:'270px'}}>
 
                               {
-                                  ((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)
+                                ((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)
                               }
 
                             </Select>
-                            {(valueKelas=="") ? 
+                            {(valueKelas==="") ? 
                               <FormHelperText style={{fontStyle:'italic'}}>Harap Pilih Kelas yang Ingin Ditampilkan</FormHelperText>
                             :
                               <FormHelperText style={{fontStyle:'italic'}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Kelas Lainnya</FormHelperText>
@@ -540,11 +630,11 @@ function Profile(props) {
 
                               
                               {
-                                  (kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)
+                                (kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)
                               }
 
                             </Select>
-                            {(valueMatpel=="") ? 
+                            {(valueMatpel==="") ? 
                               <FormHelperText style={{fontStyle:'italic'}}>Harap Pilih Mata Pel yang Ingin Ditampilkan</FormHelperText>
                             :
                               <FormHelperText style={{fontStyle:'italic'}}>Silahkan Pilih Kembali Apabila Ingin Menampilkan Mata Pel Lainnya</FormHelperText>
@@ -566,9 +656,17 @@ function Profile(props) {
                             </TableRow>
                             </TableHead>
                             <TableBody>
-                              {rows.map((row) => {
-                                return generateRowCell(row);
-                              })}
+                              {
+                              // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid, 
+                              // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
+                              ((rows.length !== 0) && (rows[0].constructor === "Map")) ? (
+                                rows.map((row) => {
+                                  return generateRowCellMap(row);
+                                })
+                              ) : (
+                                null
+                              )
+                              }
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -585,11 +683,6 @@ Profile.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.array.isRequired,
-  // updateAvatar: PropTypes.func.isRequired,
-  // setCurrentClass: PropTypes.func.isRequired,
-  // match: PropTypes.object.isRequired,
-  // location: PropTypes.object.isRequired,
-  // history: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
