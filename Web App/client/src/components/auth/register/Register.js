@@ -253,9 +253,9 @@ class Register extends Component {
                     value={this.state.role}
                     onChange={(event) => {this.onChange(event, "role")}}
                   >
-                    <MenuItem value={"Student"}>Murid</MenuItem>
-                    <MenuItem value={"Teacher"}>Guru</MenuItem>
-                    <MenuItem value={"Admin"}>Pengelola</MenuItem>
+                    <MenuItem value="Student">Murid</MenuItem>
+                    <MenuItem value="Teacher">Guru</MenuItem>
+                    <MenuItem value="Admin">Pengelola</MenuItem>
                   </Select>
                   <FormHelperText>
                     {Boolean(errors.role) ? errors.role : null}

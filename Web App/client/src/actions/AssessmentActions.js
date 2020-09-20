@@ -1,3 +1,4 @@
+import { reject } from "async";
 import axios from "axios";
 import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT, GET_SUCCESS_RESPONSE } from "./Types";
 
@@ -45,6 +46,27 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
       }
     }
     );
+}
+
+export const gradeAssessment = (assessment_id, gradingData, rslv) => dispatch => {
+  axios
+    .post(`/api/assessments/grade/${assessment_id}`, gradingData)
+    .then(res => {
+      console.log("Assessment updated to be :", res.data);
+      rslv(res.data);
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: true
+      })
+      return res.data
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+      })
+    })
 }
 
 export const updateAssessment = (formData, assessmentData, assessmentId, lampiran_to_delete, history) => dispatch => {
@@ -179,6 +201,27 @@ export const deleteAssessment = (id) => dispatch => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
+      })
+    })
+}
+
+export const submitAssessment = (assessmentId, data, rslv) => dispatch => {
+  // data contains the followiung objects:
+  // let data = {
+  //   "answers" : answer,
+  //   "classId" : user.kelas,
+  //   "userId" : user.id
+  // }
+  axios
+    .post(`/api/assessments/submit/${assessmentId}`, data)
+    .then((res) => {
+      rslv(res.data)
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err
       })
     })
 }

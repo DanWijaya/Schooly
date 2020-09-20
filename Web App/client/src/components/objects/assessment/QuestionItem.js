@@ -80,135 +80,135 @@ function QuestionItem(props){
   console.log("Lampiran to preview: ", lampiranToPreview)
   return(
     <Grid item>
-          <Paper>
-            <Grid container>
-              <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
-                <Grid item>
-                  <Typography variant="h6" gutterBottom>
-                    Soal {index + 1}
-                  </Typography>
-                  <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
-                    {isEdit ?
-                      currentLampiran.map((image, i) =>
-                        <GridListTile key={image} cols={1} >
-                        <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
-                        <GridListTileBar
-                          titlePosition="top"
-                          actionIcon={
-                            <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
-                              <CloseIcon />
-                            </IconButton>
-                          }
-                          title={`Gambar ${i+1}`}
-                          actionPosition="right"/>
-                        </GridListTile>
-                      )
-                    :
-                    null
-                    }
-                  {lampiranToPreview.map((image, i) =>
+      <Paper>
+        <Grid container>
+          <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
+            <Grid item>
+              <Typography variant="h6" gutterBottom>
+                Soal {index + 1}
+              </Typography>
+              <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
+                {isEdit ?
+                  currentLampiran.map((image, i) =>
                     <GridListTile key={image} cols={1} >
-                      <img alt="current image" src={image}/>
-                      <GridListTileBar
-                          titlePosition="top"
-                          actionIcon={
-                            <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
-                              <CloseIcon />
-                            </IconButton>
-                          }
-                          title={`Gambar ${i+1+currentLampiran.length}`}
-                          actionPosition="right"
-                        />
+                    <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                    <GridListTileBar
+                      titlePosition="top"
+                      actionIcon={
+                        <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                          <CloseIcon />
+                        </IconButton>
+                      }
+                      title={`Gambar ${i+1}`}
+                      actionPosition="right"/>
                     </GridListTile>
-                  )}
-                  </GridList>
-                  <TextField
-                    multiline
-                    rowsMax={10}
-                    id="name"
-                    fullWidth
-                    variant="filled"
-                    value={name}
-                    onChange={(e) => handleChangeQuestion(e, index)}
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControl component="fieldset" id="answer" fullWidth>
-                    <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer")}>
-                      {list_options.map((option, i) =>
-                        <div style={{display: "flex"}}>
-                          <FormControlLabel
-                            style={{width: "100%"}}
-                            value={String.fromCharCode(97 + i).toUpperCase()}
-                            control={<Radio color="primary" />}
-                            label={
-                              <TextField
-                                style={{flexGrow: 1}}
-                                value={option}
-                                onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
-                                placeholder="Isi Pilihan"
-                              />
-                            }
-                          />
-                          <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
-                            <ClearIcon/>
-                          </IconButton>
-                        </div>
-                      )}
-                      <div>
-                        <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
-                          Tambah  pilihan
-                        </Button>
-                      </div>
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <Divider flexItem orientation="vertical" />
-              <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
-                <Grid item>
-                  <input
-                    accept="image/*"
-                    multiple
-                    type="file"
-                    name="avatar"
-                    onChange={(e) =>{handleQuestionImage(e, index, null)}}
-                    ref={imageUploader}
-                    style={{
-                      display: "none",
-                      visibility: "hidden",
-                    }}
-                  />
-                  <LightTooltip title="Tambahkan " placement="right">
-                    <IconButton
-                    onClick={imageUpload}
-                    >
-                      <AddPhotoAlternateIcon/>
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-                <Grid item>
-                  <LightTooltip title="Duplikat Soal" placement="right">
-                    <IconButton
-                    onClick={() => handleDuplicateQuestion(index)}
-                    >
-                      <FilterNoneIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-                <Grid item>
-                  <LightTooltip title="Hapus Soal" placement="right">
-                    <IconButton
-                    onClick={() => { deleteQuestion(index)}}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-              </Grid>
+                  )
+                :
+                null
+                }
+              {lampiranToPreview.map((image, i) =>
+                <GridListTile key={image} cols={1} >
+                  <img alt="current image" src={image}/>
+                  <GridListTileBar
+                      titlePosition="top"
+                      actionIcon={
+                        <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                          <CloseIcon />
+                        </IconButton>
+                      }
+                      title={`Gambar ${i+1+currentLampiran.length}`}
+                      actionPosition="right"
+                    />
+                </GridListTile>
+              )}
+              </GridList>
+              <TextField
+                multiline
+                rowsMax={10}
+                id="name"
+                fullWidth
+                variant="filled"
+                value={name}
+                onChange={(e) => handleChangeQuestion(e, index)}
+              />
             </Grid>
-          </Paper>
+            <Grid item>
+              <FormControl component="fieldset" id="answer" fullWidth>
+                <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer")}>
+                  {list_options.map((option, i) =>
+                    <div style={{display: "flex"}}>
+                      <FormControlLabel
+                        style={{width: "100%"}}
+                        value={String.fromCharCode(97 + i).toUpperCase()}
+                        control={<Radio color="primary" />}
+                        label={
+                          <TextField
+                            style={{flexGrow: 1}}
+                            value={option}
+                            onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
+                            placeholder="Isi Pilihan"
+                          />
+                        }
+                      />
+                      <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
+                        <ClearIcon/>
+                      </IconButton>
+                    </div>
+                  )}
+                  <div>
+                    <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
+                      Tambah  pilihan
+                    </Button>
+                  </div>
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Divider flexItem orientation="vertical" />
+          <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
+            <Grid item>
+              <input
+                accept="image/*"
+                multiple
+                type="file"
+                name="avatar"
+                onChange={(e) =>{handleQuestionImage(e, index, null)}}
+                ref={imageUploader}
+                style={{
+                  display: "none",
+                  visibility: "hidden",
+                }}
+              />
+              <LightTooltip title="Tambahkan " placement="right">
+                <IconButton
+                onClick={imageUpload}
+                >
+                  <AddPhotoAlternateIcon/>
+                </IconButton>
+              </LightTooltip>
+            </Grid>
+            <Grid item>
+              <LightTooltip title="Duplikat Soal" placement="right">
+                <IconButton
+                onClick={() => handleDuplicateQuestion(index)}
+                >
+                  <FilterNoneIcon />
+                </IconButton>
+              </LightTooltip>
+            </Grid>
+            <Grid item>
+              <LightTooltip title="Hapus Soal" placement="right">
+                <IconButton
+                onClick={() => { deleteQuestion(index)}}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </LightTooltip>
+            </Grid>
+          </Grid>
         </Grid>
+      </Paper>
+    </Grid>
   )
 }
 

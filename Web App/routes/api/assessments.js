@@ -13,7 +13,8 @@ const mailgun = require("mailgun-js")({
 })
 const passport = require("passport");
 const validateAssessmentInput = require("../../validation/AssessmentData");
-const Assessment = require("../../models/Assessment")
+const Assessment = require("../../models/Assessment");
+const { Double } = require("mongodb");
 
 router.post('/create', (req,res) => {
 
@@ -37,7 +38,6 @@ router.post('/create', (req,res) => {
           return qns
         })
         let { class_assigned } = req.body;
-        console.log(req.body.class_assigned)
         var map = new Map()
         class_assigned.forEach((a) =>  map.set(a, new Map()))
         console.log(map)
@@ -45,7 +45,6 @@ router.post('/create', (req,res) => {
           ...req.body, 
           questions: questions_no_lampiran
         });
-        console.log({...req.body, questions: questions_no_lampiran})
         newAssessment
             .save()
             .then(quiz => res.json(quiz))
@@ -54,6 +53,37 @@ router.post('/create', (req,res) => {
     })
 })
 
+router.post("/grade/:id", (req,res) => {
+  let { id } = req.params;
+
+  Assessment.findById(id, (err, assessmentData) => {
+    if(!assessmentData)
+      return res.status(404).send("Assessment data is not found");
+    else {
+      let { grades } = assessmentData;
+      let { grade, studentId } = req.body;
+      console.log(req.body)
+      if(grades){
+        console.log(grades)
+        console.log(grades.get(studentId));
+        grades.set(studentId, parseFloat(grade.toFixed(2)));
+        console.log(grades.get(studentId));
+      }
+      else {
+        let grade_map = new Map();
+        grade_map.set(studentId, parseFloat(grade.toFixed(2)));
+        grades = grade_map;
+      }
+
+      assessmentData.grades = grades;
+      assessmentData
+                .save()
+                .then(ass => res.json(ass))
+                .catch(err => res.status(400).send("Unable to update task database"));
+
+    }
+  })
+})
 router.post("/update/:id", (req,res) => {
   const { errors, isValid } = validateAssessmentInput(req.body)
 
@@ -75,23 +105,88 @@ router.post("/update/:id", (req,res) => {
         assessmentData.start_date = req.body.start_date;
         assessmentData.end_date = req.body.end_date;
         assessmentData.posted = req.body.posted;
-        
+        assessmentData.type = req.body.type;
+
         let questions = req.body.questions;
         let qns_list = questions.map((qns) => {
           let q = qns;
-          // let lampiran = q.lampiran.filter(x => typeof x === "string")
           q.lampiran = qns.lampiran.filter(x => typeof x === "string")
           return q;
         })
         console.log(qns_list)
         assessmentData.questions = qns_list;
+
         assessmentData
                     .save()
-                    .then(quiz => res.json(quiz))
+                    .then(ass => res.json(ass))
                     .catch(err => res.status(400).send("Unable to update task database"));
     }
   })
 })
+
+router.post("/submit/:id", (req,res) => {
+  let id = req.params.id;
+  let { answers, classId, userId } = req.body;
+
+  Assessment.findById(id, (err,assessmentData) => {
+
+    if(!assessmentData){
+      return res.status(404).send("Assessment cannot be found");
+    }
+    else{
+      if(!assessmentData.posted){
+        return res.json("Assessment not posted")
+      }
+      console.log(answers, classId, userId)
+      let { submissions, grades , questions} = assessmentData;
+      if(submissions){
+        if(!submissions.has(userId)){
+          submissions.set(userId, answers);
+        }
+      }
+      else{
+        let map = new Map();
+        map.set(userId, answers);
+        submissions = map;
+      }
+      let correct_count = 0;
+
+      if(grades){
+        if(!grades.has(userId)){
+          for(let i = 0; i < questions.length; i++){
+            if(questions[i].answer == answers[i]){
+              correct_count = correct_count + 1
+            }
+          }
+          let score = 100 * correct_count/questions.length;
+          grades.set(userId, parseFloat(score.toFixed(2)));
+        }
+      }
+      else {
+        let grade_map = new Map();
+        for(let i = 0; i < questions.length; i++){
+          if(questions[i].answer == answers[i]){
+            correct_count = correct_count + 1
+          }
+        }
+        let score = 100 * correct_count/questions.length;
+        grade_map.set(userId, parseFloat(score.toFixed(2)));
+        grades = grade_map;
+      }
+
+      assessmentData.grades = grades;
+      assessmentData.submissions = submissions;
+
+      assessmentData
+          .save()
+          .then(ass => res.json(ass))
+          .catch(err => res.status(400).send("Unable to update task database"));
+    }
+    
+  })
+
+})
+
 router.get("/viewall", (req,res) => {
   Assessment.find({})
             .then(assessments => {
@@ -118,7 +213,8 @@ router.delete("/delete/:id", (req,res) => {
   Assessment.findByIdAndRemove(id, (err, assessment) => {
     if(!assessment)
       return res.status(404).json("Quiz to be deleted not found");
-      
+    
+    
     return res.json(assessment)
   })
 })

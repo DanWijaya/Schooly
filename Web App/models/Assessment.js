@@ -39,9 +39,15 @@ const AssessmentSchema = new Schema({
         lampiran: [{ type: ObjectId , default: [], _id: false}]
     }],
     posted: { type: Boolean, required: true, default: false},
-    submissions: {
-      type: Object,
-      required: false
+    grades: {
+      type: Map
+    },
+    submissions:{
+      type: Map
+    },
+    type: {
+      type: String,
+      required: true
     }
 })
 
