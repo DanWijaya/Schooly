@@ -14,18 +14,22 @@ const useStyles = makeStyles((theme) => ({
     width: "150px",
     backgroundColor: theme.palette.create.main,
     color: "white",
+    border: `1px solid ${theme.palette.create.main}`,
     "&:focus, &:hover": {
       backgroundColor: theme.palette.create.dark,
       color: "white",
+      border: `1px solid ${theme.palette.create.dark}`,
     },
   },
   dialogCancelButton: {
     width: "150px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
+    backgroundColor: "white",
+    color: theme.palette.create.main,
+    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
+      backgroundColor: "white",
+      color: theme.palette.create.dark,
+      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
 }));
@@ -36,7 +40,7 @@ function SubmitDialog(props) {
   const { openSubmitDialog, handleCloseSubmitDialog, itemType, itemName, onSubmit, isLink, redirectLink } = props;
 
   return (
-    <Dialog open={openSubmitDialog}>
+    <Dialog open={openSubmitDialog} onClose={handleCloseSubmitDialog}>
       <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
         <Grid item>
           <Typography variant="h5" align="center" gutterBottom>
@@ -51,7 +55,6 @@ function SubmitDialog(props) {
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
             <Button
-              variant="outlined"
               onClick={onSubmit}
               className={classes.dialogSubmitButton}
             >
