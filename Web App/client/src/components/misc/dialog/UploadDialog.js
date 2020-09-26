@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.create.dark,
       color: "white",
     },
   },
@@ -33,7 +33,7 @@ function UploadDialog(props) {
   const { openUploadDialog, handleCloseUploadDialog, success, messageUploading, messageSuccess, redirectLink } = props;
 
   return (
-    <Dialog open={openUploadDialog}>
+    <Dialog open={openUploadDialog} onClose={handleCloseUploadDialog}>
       <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
         <Grid item>
           <Typography variant="h6" align="center" gutterBottom>
@@ -49,9 +49,9 @@ function UploadDialog(props) {
               <b>Mohon tunggu sebentar</b>
             </Typography>
           :
-          !redirectLink ? 
-            <Button 
-              variant="contained" 
+          !redirectLink ?
+            <Button
+              variant="contained"
               className={classes.uploadFinishButton}
               onClick={handleCloseUploadDialog}
               >

@@ -556,7 +556,7 @@ function ViewTaskStudent(props) {
             <Divider />
             <Grid item container direction="column" alignItems="center" style={{padding: "10px"}}>
               <Typography variant="h6">
-                <b><u>File Terpilih</u></b>
+                <b><u>Berkas Terpilih</u></b>
               </Typography>
               {listFileChosen()}
             </Grid>
@@ -587,7 +587,7 @@ function ViewTaskStudent(props) {
                     className={classes.selectFileButton}
                     onClick={() => {tugasUploader.current.click()}}
                   >
-                    Pilih File
+                    Pilih Berkas
                   </Button>
                 </div>
                 <div>
