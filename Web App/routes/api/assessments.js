@@ -20,7 +20,6 @@ router.post('/create', (req,res) => {
 
   const {errors, isValid} = validateAssessmentInput(req.body)
   if(!isValid){
-    console.log("Data is not valid")
     return res.status(400).json(errors)
   }
 

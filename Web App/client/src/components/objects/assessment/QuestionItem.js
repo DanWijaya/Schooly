@@ -123,6 +123,8 @@ function QuestionItem(props){
               )}
               </GridList>
               <TextField
+                helperText={!name.length ? "Belum diisi" : null}
+                error={!name.length}
                 multiline
                 rowsMax={10}
                 id="name"
@@ -143,6 +145,9 @@ function QuestionItem(props){
                         control={<Radio color="primary" />}
                         label={
                           <TextField
+                            helperText={!option.length ? "Belum diisi" : null}
+                            error={!option.length}
+                            onError={() => console.log("ERROR textfield")}
                             style={{flexGrow: 1}}
                             value={option}
                             onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}

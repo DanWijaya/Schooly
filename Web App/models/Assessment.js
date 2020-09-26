@@ -33,8 +33,8 @@ const AssessmentSchema = new Schema({
       required: true
     },
     questions: [{
-        name: {type: String, required: true},
-        options: [{ type: String, required: true }],
+        name: {type: String, required: true, default: ""},
+        options: {type: [String], required: true},
         answer: {type: String, required: true},
         lampiran: [{ type: ObjectId , default: [], _id: false}]
     }],

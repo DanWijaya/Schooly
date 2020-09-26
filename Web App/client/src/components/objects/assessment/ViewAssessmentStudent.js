@@ -255,6 +255,7 @@ function ViewAssessmentStudent(props) {
         setAnswer(JSON.parse(localStorage.getItem(`answers_${id}`)))
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   let questions = selectedAssessments.questions;
@@ -265,6 +266,7 @@ function ViewAssessmentStudent(props) {
       let arr = Array.apply("", Array(questions_length))
       setAnswer(arr)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions_length])
 
   React.useEffect(() => {
@@ -272,6 +274,7 @@ function ViewAssessmentStudent(props) {
       localStorage.removeItem(`remainingTime_${id}`)
       localStorage.removeItem(`answers_${id}`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[finish])
 
   const handleChangeQuestion = (i) => {
@@ -304,21 +307,18 @@ function ViewAssessmentStudent(props) {
       "classId" : user.kelas,
       "userId" : user.id
     }
-    // localStorage.removeItem(`remainingTime_${id}`)
-    // localStorage.removeItem(`answers_${id}`)
-
-    return (new Promise((resolve, reject) => {
-      submitAssessment(id, data, resolve)
-    }))
-    .then(() => handleCloseSubmitDialog())
-    .catch(err => console.log(err))
+    submitAssessment(id, data)
+      .then(() => handleCloseSubmitDialog())
+      .catch(err => console.log(err))
   }
 
   console.log(localStorage.getItem(`remainingTime_${id}`));
   const showSubmitButton = () => {
     console.log(localStorage.getItem(`remainingTime_${id}`));
-    if(submissions[user.id]){
-      return null
+    if(submissions){
+      if(submissions[user.id]){
+        return null
+      }
     }
     if(start){
       return (
@@ -375,8 +375,10 @@ function ViewAssessmentStudent(props) {
   }
 
   const showQuestions = () => {
-    if(submissions[user.id]){
-      return null
+    if(submissions){
+      if(submissions[user.id]){
+        return null
+      }
     }
     if(start){
       return [<Grid item>

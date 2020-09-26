@@ -13,11 +13,12 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import QuestionItem from "./QuestionItem";
 import { Button, Chip, Divider,
    FormControl, FormControlLabel, FormHelperText, Grid,
-   MenuItem, Paper, Select, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
+   MenuItem, Paper, Select, Snackbar, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import MuiAlert from "@material-ui/lab/Alert";
 
 const styles = (theme) => ({
   root: {
@@ -105,7 +106,9 @@ class CreateAssessment extends Component {
       rowsPerPage: 10,
       qnsListitem: [],
       posted: false,
-      type: ""
+      type: "",
+      snackbarOpen: false,
+      snackbarMessage: ""
     }
   }
 
@@ -118,33 +121,61 @@ class CreateAssessment extends Component {
     this.props.handleSideDrawerExist(true)
   }
 
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({snackbarOpen: false});
+  }
+
+  handleOpenErrorSnackbar = (message) => {
+    this.setState({ snackbarOpen: true, snackbarMessage: message});
+  }
+
   onSubmit = (e, id) => {
     e.preventDefault()
+    let validToSubmit = true;
     let formData = new FormData();
 
     const { questions } = this.state;
     const { createAssessment , history} = this.props
-    questions.forEach((qns) => {
-      let lampiran = qns.lampiran;
-      lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
-    })
 
-    const assessmentData = {
-      name: this.state.name,
-      start_date: this.state.start_date,
-      end_date: this.state.end_date,
-      subject: this.state.subject,
-      class_assigned: this.state.class_assigned,
-      description: this.state.description,
-      questions: this.state.questions,
-      author_id: id,
-      posted: this.state.posted,
-      type: this.state.type
+    for(var i = 0; i < questions.length; i++){
+      let qns = questions[i];
+      if(!qns.name || qns.options.includes("")){
+        validToSubmit = false;
+        break;
+      }
     }
 
-    console.log(assessmentData)
+    if(validToSubmit){
+      questions.forEach((qns) => {
+        let lampiran = qns.lampiran;
+        lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
+      })
 
-    createAssessment(formData, assessmentData, history)
+      const assessmentData = {
+        name: this.state.name,
+        start_date: this.state.start_date,
+        end_date: this.state.end_date,
+        subject: this.state.subject,
+        class_assigned: this.state.class_assigned,
+        description: this.state.description,
+        questions: this.state.questions,
+        author_id: id,
+        posted: this.state.posted,
+        type: this.state.type
+      }
+
+      createAssessment(formData, assessmentData, history)
+        .then(res => {
+          console.log("Assessment is created successfully")
+        })
+        .catch(err => this.handleOpenErrorSnackbar(`Keterangan Kuis/Ujian masih kosong!`))
+    }
+    else{
+      this.handleOpenErrorSnackbar("Keterangan soal masih ada yang kosong!");
+    }
 
   }
 
@@ -207,7 +238,6 @@ class CreateAssessment extends Component {
   }
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
-    console.log("AAAA")
     let questions = this.state.questions
     if(action === "Delete"){
       questions[qnsIndex].options.splice(optionIndex, 1)
@@ -623,6 +653,16 @@ class CreateAssessment extends Component {
             </Grid>
           </Grid>
         </form>
+        <Snackbar
+          open={this.state.snackbarOpen}
+          autoHideDuration={4000}
+          onClose={this.handleCloseErrorSnackbar}
+          anchorOrigin={{vertical : "bottom", horizontal: "center"}}
+        >
+          <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
+            {this.state.snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
       </div>
     )
   }

@@ -160,8 +160,7 @@ function ViewAssessmentTeacher(props) {
               <Button
                 onClick={() => { onDeleteAssessment(assessment_id) }}
                 startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}
-              >
+                className={classes.dialogDeleteButton}>
                 Hapus
               </Button>
             </Grid>
