@@ -315,7 +315,6 @@ function ViewAssessmentStudent(props) {
   }
 
   const showTestStatus = () => {
-    console.log(submissions)
     if(submissions){
       if(submissions[user.id]){
         return(
@@ -399,7 +398,9 @@ function ViewAssessmentStudent(props) {
                     Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
                   </Typography>
                 </Grid>
-                {!start ?
+                {submissions[user.id]?
+                  !start ? 
+                  null :
                   null
                   :
                   <Grid item>
@@ -411,8 +412,10 @@ function ViewAssessmentStudent(props) {
               </Grid>
             </Paper>
           </Grid>
-          {!start ?
-          null :
+          {submissions[user.id]?
+            !start ? 
+            null :
+            null :
           [<Grid item>
             <Paper>
               <div className={classes.content}>
