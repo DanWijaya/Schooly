@@ -407,6 +407,7 @@ function ViewClass(props) {
     if (!Array.isArray(all_teachers)) {
       setWalikelas(all_teachers.get(kelas.walikelas));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_teachers]);
 
 
@@ -423,6 +424,7 @@ function ViewClass(props) {
         setAllow("content");
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [students_by_class, user]);
 
   const [value, setValue] = React.useState(0);

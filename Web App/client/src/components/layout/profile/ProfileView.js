@@ -162,7 +162,7 @@ function ProfileDataItem(props) {
   )
 }
 
-function Profile(props) {
+function ProfileView(props) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -176,6 +176,7 @@ function Profile(props) {
     if (role === "Student") {
       setCurrentClass(kelas);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -184,6 +185,7 @@ function Profile(props) {
     } else {
       setNamaKelas(classesCollection.kelas.name);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classesCollection]);
 
   if (location.state === undefined) {
@@ -369,7 +371,7 @@ function Profile(props) {
   )
 }
 
-Profile.propTypes = {
+ProfileView.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   updateAvatar: PropTypes.func.isRequired,
@@ -386,4 +388,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
     mapStateToProps, { updateAvatar, setCurrentClass }
-  ) (Profile);
+  ) (ProfileView);

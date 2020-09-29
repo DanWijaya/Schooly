@@ -153,7 +153,7 @@ export const deleteTask = (taskId, history) => dispatch => {
     })
 }
 
-export const getTaskGrade = (subjectId, classId) => dispatch => {
+export const getTaskGrade = (subjectId, classId) => () => {
     return axios
         .get(`/api/tasks/getgrade/${subjectId}&${classId}`)
         .then((res) => {
