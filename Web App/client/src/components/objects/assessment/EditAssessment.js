@@ -217,7 +217,7 @@ class EditAssessment extends Component {
 
       updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
         .then(res => {
-          console.log("Assessment is created successfully")
+          console.log("Assessment is updated successfully")
         })
         .catch(err => this.handleOpenErrorSnackbar(`Keterangan ${this.state.type} masih kosong!`))
     }

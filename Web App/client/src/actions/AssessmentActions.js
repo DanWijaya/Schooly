@@ -77,15 +77,21 @@ export const updateAssessment = (formData, assessmentData, assessmentId, lampira
   return (
     axios
     .post(`/api/assessments/update/${assessmentId}`, assessmentData)
+    // .then(res => {
+    //     if(res){
+    //       return updateAssessmentGrades;
+    //     }
+    //     else{
+    //       return "Assessment answers are still the same";
+    //     }
+    // })
     .then(res => {
-        console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_assessment'))
         dispatch({
             type: GET_ERRORS,
             payload: false
         })
         let { questions } = assessmentData;
-
         if(formData.has("lampiran_assessment")){
           let num_lampiran = [];
           questions.forEach((qns) => {
@@ -94,7 +100,7 @@ export const updateAssessment = (formData, assessmentData, assessmentId, lampira
           })
           formData.append("num_lampiran", num_lampiran)
           console.log("Lampiran number ", num_lampiran)
-          return axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}`, formData)
+          return axios.post(`/api/upload/att_assessment/lampiran/${assessmentId}`, formData)
         }
         else {
           return "Successfully updated assessment with no lampiran"
@@ -125,6 +131,14 @@ export const updateAssessment = (formData, assessmentData, assessmentId, lampira
         })
         throw new Error("Assessment is not updated successfully");
     })
+  )
+}
+
+export const updateAssessmentGrades = (assessmentId, ans_list) => dispatch => {
+  return (
+    axios.post(`/api/assessments/updategrades/${assessmentId}`, ans_list)
+        .then(res => { return res;})
+        .catch(err => { throw new Error("Assessment grades are not updated successfully")})
   )
 }
 

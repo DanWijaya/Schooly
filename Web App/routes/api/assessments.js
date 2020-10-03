@@ -15,6 +15,7 @@ const passport = require("passport");
 const validateAssessmentInput = require("../../validation/AssessmentData");
 const Assessment = require("../../models/Assessment");
 const { Double } = require("mongodb");
+const { update } = require("../../models/Assessment");
 
 router.post('/create', (req,res) => {
 
@@ -112,12 +113,33 @@ router.post("/update/:id", (req,res) => {
           q.lampiran = qns.lampiran.filter(x => typeof x === "string")
           return q;
         })
-        console.log(qns_list)
-        assessmentData.questions = qns_list;
 
+        let curr_ans_list = assessmentData.questions.map((qns) => { return qns.answer; })
+        let new_ans_list = req.body.questions.map((qns) => {return qns.answer; })
+
+        let update_answer = false;
+        if(JSON.stringify(curr_ans_list) != JSON.stringify(new_ans_list)){
+          update_answer = true;
+        }
+
+        if(update_answer){
+          for (const [key, value] of assessmentData.submissions.entries()) {
+            console.log(key, value);
+            let correct_count = 0;
+            for(let i = 0; i < value.length; i++){
+              if(value[i] === new_ans_list[i]){
+                correct_count = correct_count + 1
+              }
+            }
+            let score = 100 * (correct_count/value.length);
+            assessmentData.grades.set(key, parseFloat(score.toFixed(1)))
+          }
+        }
+
+        assessmentData.questions = qns_list;
         assessmentData
                     .save()
-                    .then(ass => res.json(ass))
+                    .then(ass => res.json(update_answer))
                     .catch(err => res.status(400).send("Unable to update task database"));
     }
   })
@@ -169,7 +191,7 @@ router.post("/submit/:id", (req,res) => {
           }
         }
         let score = 100 * correct_count/questions.length;
-        grade_map.set(userId, parseFloat(score.toFixed(2)));
+        grade_map.set(userId, parseFloat(score.toFixed(1)));
         grades = grade_map;
       }
 
