@@ -66,12 +66,12 @@ router.post("/grade/:id", (req,res) => {
       if(grades){
         console.log(grades)
         console.log(grades.get(studentId));
-        grades.set(studentId, parseFloat(grade.toFixed(2)));
+        grades.set(studentId, parseFloat(grade.toFixed(1)));
         console.log(grades.get(studentId));
       }
       else {
         let grade_map = new Map();
-        grade_map.set(studentId, parseFloat(grade.toFixed(2)));
+        grade_map.set(studentId, parseFloat(grade.toFixed(1)));
         grades = grade_map;
       }
 
