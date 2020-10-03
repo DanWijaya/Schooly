@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profileDivider: {
     backgroundColor: theme.palette.primary.main,
-    margin: "15px 40px 5px 0px"
+    margin: "15px 15px 5px 0px"
   },
   informationPaper: {
     backgroundColor: fade(theme.palette.primary.main,0.2),
@@ -522,7 +522,7 @@ function ReportView(props) {
       {(role === "Teacher") ?
         <Grid container direction="column" spacing={3}>
           <Grid item>
-            <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
+            <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"15px"}}>
               Rapor Semester X (Tahun {(new Date()).getFullYear()})
             </Typography>
             <Divider className={classes.profileDivider}/>
@@ -534,7 +534,7 @@ function ReportView(props) {
             </Grid> 
           </Grid>
           <Grid container direction="column" spacing={3} style={{margin:"auto"}}>
-            <Grid item xs={12} style={{marginRight:"40px"}}> 
+            <Grid item xs={12} style={{marginRight:"20px"}}> 
               <TableContainer component={Paper}>
                 <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
                   <TableHead className={classes.tableHeader}> 
@@ -558,13 +558,13 @@ function ReportView(props) {
       (role === "Student") ?
         <Grid container direction="column" spacing={1}>
           <Grid item>
-            <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
+            <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"15px"}}>
               Rapor Semester X (Tahun {(new Date()).getFullYear()})
             </Typography>
             <Divider className={classes.profileDivider}/>
           </Grid>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
-            <Grid item xs={12} style={{marginRight:"40px"}}> 
+            <Grid item xs={12} style={{marginRight:"20px"}}> 
               <TableContainer component={Paper}>
                 <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
                   <TableHead className={classes.tableHeader}>
@@ -587,7 +587,7 @@ function ReportView(props) {
       :
         <Grid container direction="column" spacing={3}>
           <Grid item>
-            <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
+            <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"15px"}}>
               Daftar Nilai Tahun {(new Date()).getFullYear()}
             </Typography>
             <Divider className={classes.profileDivider}/>
@@ -630,7 +630,7 @@ function ReportView(props) {
             </Grid> 
           </Grid>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
-            <Grid item sm={12} style={{marginRight:"40px"}}> 
+            <Grid item sm={12} style={{marginRight:"20px"}}> 
               {
                 (emptyCondition.length === 0) ? (
                   <TableContainer component={Paper}>
