@@ -68,12 +68,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   buttonRapor: {
-    backgroundColor: "#900c3f",
+    backgroundColor: theme.palette.warning.main,
     color:"white", 
     "&:focus, &:hover": {
-      backgroundColor: fade("#900c3f", 0.85),
+      backgroundColor: theme.palette.warning.dark,
       color: "white",
-    },
+    }
   },
   emptyProfileData: {
     display: "flex",
@@ -298,37 +298,74 @@ function Profile(props) {
       <Divider className={classes.profileDivider} />
       <Grid container direction="column" alignItems="center" spacing={5}>
         <Grid item container spacing={1} justify="flex-end" alignItems="center">
-          <Grid item xs={6} sm={4} md={4} lg={2}>
-            {
-              (user.role==="Student") ? (
-                <div style={{display:"flex", justifyContent:"flex-end"}}>
-                  <Link to={{
-                    pathname:"/lihat-rapor",
-                    state: {
-                      role: "Student",
-                      nama: user.name,
-                      kelas: classesCollection.kelas,
-                      id: user.id
-                    }
-                  }}>
-                    <LightTooltip title="Klik Untuk Melihat Rapor">
-                      <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon />}>
-                        Lihat Rapor
-                      </Button>
-                    </LightTooltip>
-                  </Link>
-                </div>
-              ) : (
-                null
-              )
-            }
-          </Grid>
-          <Grid item xs={6} sm={4} md={4} lg={2}>
-            <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
-          </Grid>
-          <Grid item xs={7} sm={4} md={4} lg={1}>
-            <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
-          </Grid>
+          <Hidden smUp>
+            {/* Mobile = Backdrop Drawer */}
+            <Grid item>
+              {
+                (user.role==="Student") ? (
+                  <div style={{display:"flex", justifyContent:"flex-end"}}>
+                    <Link to={{
+                      pathname:"/lihat-rapor",
+                      state: {
+                        role: "Student",
+                        nama: user.name,
+                        kelas: classesCollection.kelas,
+                        id: user.id
+                      }
+                    }}>
+                      <LightTooltip title="Klik Untuk Melihat Rapor">
+                        <Button variant="contained" className={classes.buttonRapor}>
+                          <AssessmentOutlinedIcon />
+                        </Button>
+                      </LightTooltip>
+                    </Link>
+                  </div>
+                ) : (
+                  null
+                )
+              }
+            </Grid>
+            <Grid item>
+              <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
+            </Grid>
+            <Grid item>
+              <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
+            </Grid>
+          </Hidden>
+          <Hidden xsDown>
+            {/* Desktop = Mini Variant Drawer */}
+            <Grid item>
+              {
+                (user.role==="Student") ? (
+                  <div style={{display:"flex", justifyContent:"flex-end"}}>
+                    <Link to={{
+                      pathname:"/lihat-rapor",
+                      state: {
+                        role: "Student",
+                        nama: user.name,
+                        kelas: classesCollection.kelas,
+                        id: user.id
+                      }
+                    }}>
+                      <LightTooltip title="Klik Untuk Melihat Rapor">
+                        <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon />}>
+                          Lihat Rapor
+                        </Button>
+                      </LightTooltip>
+                    </Link>
+                  </div>
+                ) : (
+                  null
+                )
+              }
+            </Grid>
+            <Grid item>
+              <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
+            </Grid>
+            <Grid item>
+              <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
+            </Grid>
+          </Hidden>
         </Grid>
         <Grid item container direction="column" spacing={4}>
           <Grid item>

@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profileDivider: {
     backgroundColor: theme.palette.primary.main,
-    margin: "15px 40px 12px 0px"
+    margin: "15px 40px 5px 0px"
   },
   informationPaper: {
     backgroundColor: fade(theme.palette.primary.main,0.2),
@@ -520,23 +520,23 @@ function ReportView(props) {
   return (
     <div className={classes.root}>
       {(role === "Teacher") ?
-        <Grid container direction="column" spacing={5}>
+        <Grid container direction="column" spacing={3}>
           <Grid item>
             <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
               Rapor Semester X (Tahun {(new Date()).getFullYear()})
             </Typography>
             <Divider className={classes.profileDivider}/>
           </Grid>
-          <Grid container item direction="row" spacing={1}>
+          <Grid container item direction="row" spacing={5}>
             <Grid item xs={7} sm={4}> 
-                <Typography style={{padding:"20px 20px 10px 20px"}}>Nama : {nama}</Typography>
-                <Typography style={{padding:"10px 20px 20px 20px"}}>Kelas : {kelas.name}</Typography>
+                <Typography style={{padding:"10px 20px 10px 5px"}}>Nama : {nama}</Typography>
+                <Typography style={{padding:"5px 20px 10px 5px"}}>Kelas : {kelas.name}</Typography>
             </Grid> 
           </Grid>
-          <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
+          <Grid container direction="column" spacing={3} style={{margin:"auto"}}>
             <Grid item xs={12} style={{marginRight:"40px"}}> 
               <TableContainer component={Paper}>
-                <Table aria-label="simple table" size="medium" style={{overflow:"hidden"}}>
+                <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
                   <TableHead className={classes.tableHeader}> 
                     <TableRow>
                       {headers.map((nama) => {
@@ -556,17 +556,17 @@ function ReportView(props) {
         </Grid>
       : 
       (role === "Student") ?
-        <Grid container direction="column" spacing={5}>
+        <Grid container direction="column" spacing={1}>
           <Grid item>
             <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
               Rapor Semester X (Tahun {(new Date()).getFullYear()})
             </Typography>
             <Divider className={classes.profileDivider}/>
           </Grid>
-          <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
+          <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
             <Grid item xs={12} style={{marginRight:"40px"}}> 
               <TableContainer component={Paper}>
-                <Table aria-label="simple table" size="medium" style={{overflow:"hidden"}}>
+                <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
                   <TableHead className={classes.tableHeader}>
                     <TableRow>
                       {headers.map((nama) => {
@@ -585,48 +585,52 @@ function ReportView(props) {
           </Grid>
         </Grid>
       :
-        <Grid container direction="column" spacing={5}>
+        <Grid container direction="column" spacing={3}>
           <Grid item>
             <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"45px"}}>
               Daftar Nilai Tahun {(new Date()).getFullYear()}
             </Typography>
             <Divider className={classes.profileDivider}/>
           </Grid>
-          <Grid container item direction="row" spacing={1}>
-            <Grid item xs={12} sm={6}> 
-              <Typography style={{padding:"25px"}}>Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih</Typography>
+          <Grid container item direction="row">
+            <Grid container xs={12} md={5} lg={6} alignItems="center">
+              <Grid item style={{marginRight:'10px'}}> 
+                <Typography variant="caption">Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih</Typography>
+              </Grid>
+            </Grid>
+            <Grid container xs={12} md={7} lg={6} direction="row" justify="center">
+              <Grid item xs={12} md={6}>
+                <FormControl margin="dense">
+                  <InputLabel id="kelas-label">Kelas</InputLabel>
+                  <Select
+                    labelId="kelas-label"
+                    id="kelas"
+                    value={valueKelas}
+                    onChange={(event) => {handleKelasChange(event)}}
+                    className={classes.select}
+                  >
+                    {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
+                  </Select>  
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl margin="dense">
+                  <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
+                  <Select 
+                    labelId="matpel-label"
+                    id="matpel"
+                    value={valueMatpel}
+                    onChange={(event) => {handleMatPelChange(event)}}
+                    className={classes.select}
+                  >
+                    {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid> 
-            <Grid item xs={12} sm={3} spacing={0} direction="row-reverse" justify="flex-end">
-              <FormControl style={{marginLeft: "10px"}}>
-                <InputLabel id="kelas-label">Kelas</InputLabel>
-                <Select
-                  labelId="kelas-label"
-                  id="kelas"
-                  value={valueKelas}
-                  onChange={(event) => {handleKelasChange(event)}}
-                  className={classes.select}
-                >
-                  {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
-                </Select>  
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <FormControl style={{marginLeft: "10px"}}>
-                <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                <Select 
-                  labelId="matpel-label"
-                  id="matpel"
-                  value={valueMatpel}
-                  onChange={(event) => {handleMatPelChange(event)}}
-                  className={classes.select}
-                >
-                  {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
-                </Select>
-              </FormControl>
-            </Grid>
           </Grid>
-          <Grid container direction="column" spacing={5} style={{margin:"auto"}}>
-            <Grid item xs={12} style={{marginRight:"40px"}}> 
+          <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
+            <Grid item sm={12} style={{marginRight:"40px"}}> 
               {
                 (emptyCondition.length === 0) ? (
                   <TableContainer component={Paper}>

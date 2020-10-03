@@ -215,14 +215,25 @@ function ProfileDataEditorDialog(props) {
 
   return (
     <div>
-      <Button
-        variant="contained"
-        onClick={handleClickOpen}
-        startIcon={<EditIcon />}
-        className={classes.editProfileButton}
-      >
-        Sunting Profil
-      </Button>
+      <Hidden smUp>
+        <Button
+          variant="contained"
+          onClick={handleClickOpen}
+          className={classes.editProfileButton}
+        >
+          <EditIcon />
+        </Button>
+      </Hidden>
+      <Hidden xsDown>
+        <Button
+          variant="contained"
+          onClick={handleClickOpen}
+          startIcon={<EditIcon />}
+          className={classes.editProfileButton}
+        >
+          Sunting Profil
+        </Button>
+      </Hidden>
       <Dialog fullWidth open={open} onClose={handleClose}>
         <Grid container direction="column" alignItems="center" className={classes.root}>
           <Grid item container justify="flex-end" alignItems="flex-start" style={{marginBottom: "10px"}}>

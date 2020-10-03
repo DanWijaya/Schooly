@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "15px 0px 15px 0px"
   },
   informationPaper: {
-    backgroundColor: fade(theme.palette.primary.main, 0.06)
+    backgroundColor: "white"
   },
   informationPictureContainer: {
     display: "flex",
@@ -59,10 +59,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#00b7ff"
   },
   buttonRapor: {
-    backgroundColor: "#900c3f",
+    backgroundColor: theme.palette.warning.main,
     color:"white", 
     "&:focus, &:hover": {
-      backgroundColor: fade("#900c3f", 0.85),
+      backgroundColor: theme.palette.warning.dark,
       color: "white",
     }
   },
@@ -115,12 +115,10 @@ function ProfileDataItem(props) {
               </Typography>
             }
             secondary={
-              !props.profile_data_info ?
-                <Paper className={classes.emptyProfileData}>
-                  <Typography variant="button">
-                    Kosong
+              !props.profile_data_info ?                
+                  <Typography>
+                    -
                   </Typography>
-                </Paper>
               :
                 <Typography variant="body1">
                   {props.profile_data_info}
@@ -144,11 +142,9 @@ function ProfileDataItem(props) {
             </Grid>
             <Grid item xs={7}>
               {!props.profile_data_info ?
-                <Paper className={classes.emptyProfileData}>
-                  <Typography variant="button">
-                    Kosong
+                  <Typography>
+                    -
                   </Typography>
-                </Paper>
                 :
                 <Typography>
                   {props.profile_data_info}
