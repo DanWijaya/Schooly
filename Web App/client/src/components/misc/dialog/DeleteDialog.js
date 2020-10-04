@@ -13,20 +13,24 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogDeleteButton: {
     width: "150px",
-    backgroundColor: "white",
-    color: theme.palette.error.main,
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
   dialogCancelButton: {
     width: "150px",
-    backgroundColor: theme.palette.error.main,
-    color: "white",
+    backgroundColor: "white",
+    color: theme.palette.error.main,
+    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
 }));
@@ -37,7 +41,7 @@ function DeleteDialog(props) {
   const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, isLink, redirectLink } = props;
 
   return (
-    <Dialog open={openDeleteDialog}>
+    <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
       <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
         <Grid item>
           <Typography variant="h5" align="center" gutterBottom>
@@ -45,14 +49,13 @@ function DeleteDialog(props) {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h6" align="center" gutterBottom>
+          <Typography align="center" gutterBottom>
             <b>{itemName}</b>
           </Typography>
         </Grid>
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
             <Button
-              variant="outlined"
               onClick={deleteItem}
               startIcon={<DeleteOutlineIcon />}
               className={classes.dialogDeleteButton}

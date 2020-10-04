@@ -253,7 +253,7 @@ function SubmittedAssessmentList(props) {
                   <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{marginRight: "10px"}}/>}
                 </ListItemAvatar>
                 <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
-                 secondary={!selectedAssessments.grades ? "Belum Dinilai" : !gradeStatus.has(student._id) && !selectedAssessments.grades[student._id] ? "Belum Dinilai" : "Telah Dinilai"}/>
+                 secondary={!selectedAssessments.grades ? "Belum Dinilai" : !gradeStatus.has(student._id) && selectedAssessments.grades[student._id] === undefined ? "Belum Dinilai" : "Telah Dinilai"}/>
             </ListItem>
             </ExpansionPanelSummary>
              <Divider />
@@ -262,7 +262,7 @@ function SubmittedAssessmentList(props) {
                 {task_list_on_panel}
               </List>
               {selectedAssessments ? 
-                selectedAssessments.grades[student._id] ?
+                selectedAssessments.grades[student._id] !== undefined ?
                   <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
                     <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
                       <TextField

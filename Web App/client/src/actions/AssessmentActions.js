@@ -5,7 +5,8 @@ import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT, GET_SUCCESS_RESPONSE }
 // Add Assessment
 export const createAssessment = (formData, assessment, history) => dispatch => {
   console.log(assessment)
-  axios
+  return (
+    axios
     .post("/api/assessments/create", assessment)
     .then(res => {
       console.log(res.data)
@@ -43,9 +44,11 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
             type: GET_ERRORS,
             payload: err.response.data
           })
+          throw new Error("Assessment is not created successfully")
       }
     }
-    );
+    )
+  );
 }
 
 export const gradeAssessment = (assessment_id, gradingData, rslv) => dispatch => {
@@ -71,17 +74,24 @@ export const gradeAssessment = (assessment_id, gradingData, rslv) => dispatch =>
 
 export const updateAssessment = (formData, assessmentData, assessmentId, lampiran_to_delete, history) => dispatch => {
   // formData is the lampiran files
-  axios
+  return (
+    axios
     .post(`/api/assessments/update/${assessmentId}`, assessmentData)
+    // .then(res => {
+    //     if(res){
+    //       return updateAssessmentGrades;
+    //     }
+    //     else{
+    //       return "Assessment answers are still the same";
+    //     }
+    // })
     .then(res => {
-        console.log("Task updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_assessment'))
         dispatch({
             type: GET_ERRORS,
             payload: false
         })
         let { questions } = assessmentData;
-
         if(formData.has("lampiran_assessment")){
           let num_lampiran = [];
           questions.forEach((qns) => {
@@ -90,22 +100,11 @@ export const updateAssessment = (formData, assessmentData, assessmentId, lampira
           })
           formData.append("num_lampiran", num_lampiran)
           console.log("Lampiran number ", num_lampiran)
-          return axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}`, formData)
+          return axios.post(`/api/upload/att_assessment/lampiran/${assessmentId}`, formData)
         }
         else {
           return "Successfully updated assessment with no lampiran"
         }
-        // if (lampiran_to_delete.length > 0)// axios.delete put the data is quite different..
-        //     return axios.delete(`/api/upload/att_assessment/lampiran/${assessmentId}`, 
-        //     { data: 
-        //       { 
-        //         lampiran_to_delete: lampiran_to_delete, 
-        //         current_lampiran: current_lampiran 
-        //       } 
-        //     })
-        // else
-        //     return "No lampiran file is going to be deleted"
-
     })
     .then(res => {
       console.log(lampiran_to_delete)
@@ -130,7 +129,17 @@ export const updateAssessment = (formData, assessmentData, assessmentId, lampira
             type: GET_ERRORS,
             payload: err.response.data
         })
+        throw new Error("Assessment is not updated successfully");
     })
+  )
+}
+
+export const updateAssessmentGrades = (assessmentId, ans_list) => dispatch => {
+  return (
+    axios.post(`/api/assessments/updategrades/${assessmentId}`, ans_list)
+        .then(res => { return res;})
+        .catch(err => { throw new Error("Assessment grades are not updated successfully")})
+  )
 }
 
 // View All Assessment
@@ -205,23 +214,26 @@ export const deleteAssessment = (id) => dispatch => {
     })
 }
 
-export const submitAssessment = (assessmentId, data, rslv) => dispatch => {
+export const submitAssessment = (assessmentId, data) => dispatch => {
   // data contains the followiung objects:
   // let data = {
   //   "answers" : answer,
   //   "classId" : user.kelas,
   //   "userId" : user.id
   // }
-  axios
-    .post(`/api/assessments/submit/${assessmentId}`, data)
-    .then((res) => {
-      rslv(res.data)
-    })
-    .catch(err => {
-      console.log(err);
-      dispatch({
-        type: GET_ERRORS,
-        payload: err
+  return (
+    axios
+      .post(`/api/assessments/submit/${assessmentId}`, data)
+      .then((res) => {
+        return res.data;
       })
-    })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: GET_ERRORS,
+          payload: err
+        })
+        return new Error("Assessment fail to be submitted");
+      })
+  )
 }

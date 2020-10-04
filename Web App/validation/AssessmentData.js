@@ -3,7 +3,6 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateAssessmentInput(data){
   let errors = {}
-
   data.name = isEmpty(data.name) ? "" : data.name;
   data.subject = isEmpty(data.subject) ? "" : data.subject;
   data.description = isEmpty(data.description) ? "" : data.description;

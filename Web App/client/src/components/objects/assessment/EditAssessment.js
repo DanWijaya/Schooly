@@ -12,7 +12,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, Switch, TextField, TablePagination, Typography, Select } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -21,6 +21,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import MuiAlert from "@material-ui/lab/Alert";
 
 const styles = (theme) => ({
   root: {
@@ -120,7 +121,9 @@ class EditAssessment extends Component {
       success: false,
       page: 0,
       rowsPerPage: 10,
-      qnsListitem: []
+      qnsListitem: [],
+      snackbarOpen: false,
+      snackbarMessage: ""
     }
   }
 
@@ -165,34 +168,62 @@ class EditAssessment extends Component {
     }
   }
 
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({snackbarOpen: false});
+  }
+
+  handleOpenErrorSnackbar = (message) => {
+    this.setState({ snackbarOpen: true, snackbarMessage: message});
+  }
+  
   onSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    let validToSubmit = true;
     let formData = new FormData();
 
     const { questions, lampiranToDelete } = this.state;
     const { updateAssessment , history} = this.props
 
-    questions.forEach((qns) => {
-      let lampiran = qns.lampiran.filter(x => typeof x !== "string");
-      lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
-    })
-
-    const assessmentData = {
-      name: this.state.name,
-      start_date: this.state.start_date,
-      end_date: this.state.end_date,
-      subject: this.state.subject,
-      class_assigned: this.state.class_assigned,
-      description: this.state.description,
-      questions: this.state.questions,
-      posted: this.state.posted,
-      type: this.state.type
+    for(var i = 0; i < questions.length; i++){
+      let qns = questions[i];
+      if(!qns.name || qns.options.includes("")){
+        validToSubmit = false;
+        break;
+      }
     }
-    const assessmentId = this.props.match.params.id;
-    console.log(assessmentData)
 
-    updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
+    if(validToSubmit){
+      questions.forEach((qns) => {
+        let lampiran = qns.lampiran.filter(x => typeof x !== "string");
+        lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
+      })
 
+      const assessmentData = {
+        name: this.state.name,
+        start_date: this.state.start_date,
+        end_date: this.state.end_date,
+        subject: this.state.subject,
+        class_assigned: this.state.class_assigned,
+        description: this.state.description,
+        questions: this.state.questions,
+        posted: this.state.posted,
+        type: this.state.type
+      }
+      const assessmentId = this.props.match.params.id;
+      console.log(assessmentData)
+
+      updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
+        .then(res => {
+          console.log("Assessment is updated successfully")
+        })
+        .catch(err => this.handleOpenErrorSnackbar(`Keterangan ${this.state.type} masih kosong!`))
+    }
+    else{
+      this.handleOpenErrorSnackbar("Keterangan soal masih ada yang kosong!");
+    }
   }
 
   handleOpenUploadDialog = () => {
@@ -338,7 +369,6 @@ class EditAssessment extends Component {
   }
 
   listQuestion = () => {
-    // let questionList = []
     let { questions } = this.state;
     const { page, rowsPerPage} = this.state;
     const { classes } = this.props;
@@ -712,6 +742,16 @@ class EditAssessment extends Component {
             </Grid>
           </Grid>
         </form>
+        <Snackbar
+          open={this.state.snackbarOpen}
+          autoHideDuration={4000}
+          onClose={this.handleCloseErrorSnackbar}
+          anchorOrigin={{vertical : "bottom", horizontal: "center"}}
+        >
+          <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
+            {this.state.snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
       </div>
     )
   }

@@ -255,6 +255,7 @@ function ViewAssessmentStudent(props) {
         setAnswer(JSON.parse(localStorage.getItem(`answers_${id}`)))
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   let questions = selectedAssessments.questions;
@@ -265,6 +266,7 @@ function ViewAssessmentStudent(props) {
       let arr = Array.apply("", Array(questions_length))
       setAnswer(arr)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions_length])
 
   React.useEffect(() => {
@@ -272,6 +274,7 @@ function ViewAssessmentStudent(props) {
       localStorage.removeItem(`remainingTime_${id}`)
       localStorage.removeItem(`answers_${id}`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[finish])
 
   const handleChangeQuestion = (i) => {
@@ -304,18 +307,32 @@ function ViewAssessmentStudent(props) {
       "classId" : user.kelas,
       "userId" : user.id
     }
-    // localStorage.removeItem(`remainingTime_${id}`)
-    // localStorage.removeItem(`answers_${id}`)
+    submitAssessment(id, data)
+      .then(() => handleCloseSubmitDialog())
+      .catch(err => console.log(err))
+  }
 
-    return (new Promise((resolve, reject) => {
-      submitAssessment(id, data, resolve)
-    }))
-    .then(() => handleCloseSubmitDialog())
-    .catch(err => console.log(err))
+  console.log(localStorage.getItem(`remainingTime_${id}`));
+  const showSubmitButton = () => {
+    console.log(localStorage.getItem(`remainingTime_${id}`));
+    if(submissions){
+      if(submissions[user.id]){
+        return null
+      }
+    }
+    if(start){
+      return (
+        <Grid item>
+          <Button variant="contained" className={classes.submitAssessmentButton} onClick={handleOpenSubmitDialog}>
+            Kumpulkan
+          </Button>
+        </Grid> 
+      )
+    } 
+    return null
   }
 
   const showTestStatus = () => {
-    console.log(submissions)
     if(submissions){
       if(submissions[user.id]){
         return(
@@ -355,6 +372,118 @@ function ViewAssessmentStudent(props) {
           />
       )
     }
+  }
+
+  const showQuestions = () => {
+    if(submissions){
+      if(submissions[user.id]){
+        return null
+      }
+    }
+    if(start){
+      return [<Grid item>
+        <Paper>
+          <div className={classes.content}>
+            <Typography color="primary" paragraph>
+              Pindah ke Soal:
+            </Typography>
+            <Grid container spacing={2} alignItems="center">
+              {!questions ?
+                  null
+               :
+                  questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
+              }
+            </Grid>
+          </div>
+        </Paper>
+      </Grid>,
+      <Grid item>
+        <Paper>
+          <Grid container>
+            <Grid item xs sm className={classes.content}>
+              <Grid container direction="column" spacing={2}>
+                <Grid item>
+                  <Typography variant="h6" gutterBottom>
+                    Soal {qnsIndex + 1}
+                  </Typography>
+                  <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
+                    {!questions ?
+                      null
+                      :
+                      questions[qnsIndex].lampiran.map((image, i) =>
+                        <GridListTile key={image} cols={1} >
+                        <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                        <GridListTileBar
+                            title={`Gambar ${i+1}`}
+                            titlePosition="top"
+                            actionPosition="right"/>
+                      </GridListTile>
+                    )}
+                  </GridList>
+                  <Typography variant="h5" gutterButtom>
+                    <b>{!questions ? null : questions[qnsIndex].name}</b>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <FormControl component="fieldset" id="answer" fullWidth>
+                    <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
+                      {!questions ?
+                      null
+                      :
+                      questions[qnsIndex].options.map((option, i) =>
+                      <div style={{display: "flex"}}>
+                      <FormControlLabel
+                        style={{width: "100%"}}
+                        value={String.fromCharCode(97 + i).toUpperCase()}
+                        control={<Radio color="primary" />}
+                        label={ <Typography className={classes.optionText}>{option}</Typography>}
+                      />
+                    </div>
+                      )}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Divider flexItem orientation="vertical" />
+          </Grid>
+        </Paper>
+      </Grid>,
+      <Grid item>
+        <Paper>
+          <Grid container alignItems="center" className={classes.content}>
+            {qnsIndex === 0 ? null :
+              <Grid item xs container justify="flex-start">
+                <Button
+                  variant="outlined"
+                  startIcon={<ChevronLeftIcon />}
+                  className={classes.previousPageButton}
+                  onClick={() => handleChangeQuestion(qnsIndex - 1)}
+                >
+                  Soal Sebelumnya
+                </Button>
+              </Grid>
+            }
+            {qnsIndex === questions_length - 1 ?
+              null
+              :
+              <Grid item xs container justify="flex-end">
+                <Button
+                  variant="outlined"
+                  endIcon={<ChevronRightIcon />}
+                  className={classes.nextPageButton}
+                  onClick={() => handleChangeQuestion(qnsIndex + 1)}
+                >
+                  Soal Selanjutnya
+                </Button>
+              </Grid>
+            }
+          </Grid>
+        </Paper>
+      </Grid>
+      ]
+    } 
+    return null
   }
 
   if(!posted){
@@ -399,122 +528,11 @@ function ViewAssessmentStudent(props) {
                     Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
                   </Typography>
                 </Grid>
-                {!start ?
-                  null
-                  :
-                  <Grid item>
-                    <Button variant="contained" className={classes.submitAssessmentButton} onClick={handleOpenSubmitDialog}>
-                      Kumpulkan
-                    </Button>
-                  </Grid>
-                }
+                {showSubmitButton()}
               </Grid>
             </Paper>
           </Grid>
-          {!start ?
-          null :
-          [<Grid item>
-            <Paper>
-              <div className={classes.content}>
-                <Typography color="primary" paragraph>
-                  Pindah ke Soal:
-                </Typography>
-                <Grid container spacing={2} alignItems="center">
-                  {!questions ?
-                      null
-                   :
-                      questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
-                  }
-                </Grid>
-              </div>
-            </Paper>
-          </Grid>,
-          <Grid item>
-            <Paper>
-              <Grid container>
-                <Grid item xs sm className={classes.content}>
-                  <Grid container direction="column" spacing={2}>
-                    <Grid item>
-                      <Typography variant="h6" gutterBottom>
-                        Soal {qnsIndex + 1}
-                      </Typography>
-                      <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
-                        {!questions ?
-                          null
-                          :
-                          questions[qnsIndex].lampiran.map((image, i) =>
-                            <GridListTile key={image} cols={1} >
-                            <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
-                            <GridListTileBar
-                                title={`Gambar ${i+1}`}
-                                titlePosition="top"
-                                actionPosition="right"/>
-                          </GridListTile>
-                        )}
-                      </GridList>
-                      <Typography variant="h5" gutterButtom>
-                        <b>{!questions ? null : questions[qnsIndex].name}</b>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <FormControl component="fieldset" id="answer" fullWidth>
-                        <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
-                          {!questions ?
-                          null
-                          :
-                          questions[qnsIndex].options.map((option, i) =>
-                          <div style={{display: "flex"}}>
-                          <FormControlLabel
-                            style={{width: "100%"}}
-                            value={String.fromCharCode(97 + i).toUpperCase()}
-                            control={<Radio color="primary" />}
-                            label={ <Typography className={classes.optionText}>{option}</Typography>}
-                          />
-                        </div>
-                          )}
-                        </RadioGroup>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Divider flexItem orientation="vertical" />
-              </Grid>
-            </Paper>
-          </Grid>,
-          <Grid item>
-            <Paper>
-              <Grid container alignItems="center" className={classes.content}>
-                {qnsIndex === 0 ? null :
-                  <Grid item xs container justify="flex-start">
-                    <Button
-                      variant="outlined"
-                      startIcon={<ChevronLeftIcon />}
-                      className={classes.previousPageButton}
-                      onClick={() => handleChangeQuestion(qnsIndex - 1)}
-                    >
-                      Soal Sebelumnya
-                    </Button>
-                  </Grid>
-                }
-                {qnsIndex === questions_length - 1 ?
-                  null
-                  :
-                  <Grid item xs container justify="flex-end">
-                    <Button
-                      variant="outlined"
-                      endIcon={<ChevronRightIcon />}
-                      className={classes.nextPageButton}
-                      onClick={() => handleChangeQuestion(qnsIndex + 1)}
-                    >
-                      Soal Selanjutnya
-                    </Button>
-                  </Grid>
-                }
-              </Grid>
-            </Paper>
-          </Grid>
-          ]
-        }
+          {showQuestions()}
         </Grid>
       </form>
     </div>
