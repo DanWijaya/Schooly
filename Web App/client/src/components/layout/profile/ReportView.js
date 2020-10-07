@@ -16,7 +16,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import FormControl from "@material-ui/core/FormControl";
-  
+
 import { getStudentsByClass } from "../../../actions/UserActions";
 import { getTaskGrade, getAllTask } from "../../../actions/TaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
@@ -105,7 +105,7 @@ function ReportView(props) {
   // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
   // id                                     (ini tidak ada kalau rolenya "Other")
 
-  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel  
+  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string
 
   const { getTaskGrade, getAllClass, getAllSubjects, getStudentsByClass, getAllTask } = props;
@@ -113,7 +113,7 @@ function ReportView(props) {
 
   const { user, students_by_class } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
-  const allTaskArray = props.tasksCollection; // mengambil data dari DB 
+  const allTaskArray = props.tasksCollection; // mengambil data dari DB
 
   const countAllClassUpdate = React.useRef(0);
   const countMIDependencyUpdate = React.useRef(0);
@@ -122,31 +122,29 @@ function ReportView(props) {
 
   const [valueKelas, setValueKelas] = React.useState(""); // nama kelas yang sedang terpilih di Select
   const [valueMatpel, setValueMatpel] = React.useState(""); // nama matpel yang sedang terpilih di Select
-  
 
   // berisi semua matpel yang boleh diakses saat pertama kali memilih di Select matpel
   const [semuaMatpel, setSemuaMatpel] = React.useState(new Map());
 
   // berisi semua kelas yang ada di database (karena guru minimal mengajar 1 matpel dan setiap matpel diajar ke semua kelas)
-  const [semuaKelas, setSemuaKelas] = React.useState(new Map()); 
+  const [semuaKelas, setSemuaKelas] = React.useState(new Map());
 
   // berisi current menu item di Select.  key = idKelas, value = namaKelas
   // info kelas wali TIDAK akan pernah dimasukkan ke sini, kelas wali disimpan di state kelasWali
   const [kontenKelas, setKontenKelas] = React.useState(new Map());
 
   // alasan dipisahkan dengan semuaKelas: untuk menghindari pencarian info wali kelas dari banyak kelas.
-  // isi kelasWali = Map {"id": <id kelas yang diwalikannya>, "name": <nama kelas yang diwalikannya>} 
+  // isi kelasWali = Map {"id": <id kelas yang diwalikannya>, "name": <nama kelas yang diwalikannya>}
   const [kelasWali, setKelasWali] = React.useState(new Map());
-  
+
   // berisi current menu item di Select. key = idMatpel, value = namaMatpel
   const [kontenMatpel, setKontenMatpel] = React.useState(new Map());
-
 
   const [isClassSelected, setIsClassSelected] = React.useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = React.useState(false);
 
   // elemen array: (1) kode bahwa tidak ada murid dan (2) kode bahwa tidak ada task, kuis, dan assessment
-  const [emptyCondition, setEmptyCondition] = React.useState([]); 
+  const [emptyCondition, setEmptyCondition] = React.useState([]);
 
   function generateKelasMenuItem() {
     let menuItems = [];
@@ -202,7 +200,7 @@ function ReportView(props) {
 
   // ini digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari profile view murid atau profile
   // tipe argumen = Object
-  function generateRowCellObj(row) {  
+  function generateRowCellObj(row) {
     let emptyCellSymbol = "-"; // jika sel isi kosong, masukkan "-"
     return (
       <TableRow key={row.subject}> {/* nama subjek sudah dipastikan unik*/}
@@ -213,11 +211,11 @@ function ReportView(props) {
       </TableRow>
     );
   }
-  
+
   function generateHeaderCell(nama) {
     if ((nama === "Nama Murid") || (nama === "Mata Pelajaran")){
       return (<TableCell style={{color:"white"}}>{nama}</TableCell>);
-    } else{ 
+    } else{
       return (<TableCell style={{color:"white"}} align="center">{nama}</TableCell>);
     }
   }
@@ -225,10 +223,18 @@ function ReportView(props) {
   function generateEmptyMessage() {
     let message = [];
     if (emptyCondition.includes("noStudent")) {
-      message.push(<Typography style={{padding:"25px"}}>Kelas ini tidak memiliki murid</Typography>);
+      message.push(
+        <Typography variant="h5" color="textSecondary" align="center">
+          Kelas ini tidak memiliki murid
+        </Typography>
+      );
     }
     if (emptyCondition.includes("noGrade")) {
-      message.push(<Typography style={{padding:"25px"}}>Belum ada tugas, kuis, atau assessment</Typography>);
+      message.push(
+        <Typography variant="h5" color="textSecondary" align="center">
+          Belum ada tugas, kuis, atau ujian
+        </Typography>
+      );
     }
     return (message);
   }
@@ -242,7 +248,7 @@ function ReportView(props) {
 
   function handleKelasChange(event) {
     // reminder: event.target.value berisi value Select yang sedang dipilih
-    if (isSubjectSelected) { 
+    if (isSubjectSelected) {
       setValueKelas(event.target.value);
       getStudentsByClass(event.target.value); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
     } else {
@@ -269,7 +275,7 @@ function ReportView(props) {
     if (isClassSelected) {
       setValueMatpel(event.target.value);
       getStudentsByClass(valueKelas); // ini akan membuat useEffect yg depend terhadap students_by_class menjadi dipanggil
-    } else {            
+    } else {
       // jika guru memilih subject yg diajarnya, isi Select kelas dengan semua kelas
       if (user.subject_teached.includes(event.target.value)) {
         setKontenKelas(semuaKelas);
@@ -282,7 +288,7 @@ function ReportView(props) {
       setValueKelas("");
     }
   };
-  
+
   function handleIndividualReport() {
     let subjectArray = [];
     // fungsi handleIndividualReport hanya dipanggil ketika role === "Student" atau role === "Teacher"
@@ -297,7 +303,7 @@ function ReportView(props) {
         subjectArray = user.subject_teached.map((subjectTeachedId) => {return {subjectId: subjectTeachedId, subjectName: all_subjects_map.get(subjectTeachedId)}});
       }
     }
-    
+
     // Memastikan subjectArray sudah ada isinya sebelum diproses
     if (subjectArray.length !== 0) {
       // let emptySymbol = "-";
@@ -305,7 +311,7 @@ function ReportView(props) {
       subjectArray.forEach((bySubject) => {
         scores[bySubject.subjectId] = {
           subject: bySubject.subjectName,
-          totalTaskScore: null, 
+          totalTaskScore: null,
           countTask: 0,
           totalQuizScore: null,
           countQuiz: 0,
@@ -352,7 +358,7 @@ function ReportView(props) {
   // reminder:
   // -inisialisasi semua variabel di dalam array dependency dilakukan secara bersamaan sehingga useEffect hanya akan terpanggil 1 kali untuk ini
   // -pada semua kasus di sini, masing-masing variabel di dalam array dependency diubah oleh 1 fungsi tersendiri
-  // dengan demikian, semua variabel di dependency array sudah siap dipakai ketika 
+  // dengan demikian, semua variabel di dependency array sudah siap dipakai ketika
   // sudah terjadi perubahan sebanyak 1 + jumlah elemen dependency array
   // React.useEffect(() => {
   //   ...
@@ -360,7 +366,7 @@ function ReportView(props) {
 
 
   // ini dipanggil setelah selesai mount.
-  // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman lihat-rapor untuk suatu murid 
+  // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman lihat-rapor untuk suatu murid
   // mengklik tombol rapor di side drawer.
   React.useEffect(() => {
     if (role) {
@@ -383,11 +389,11 @@ function ReportView(props) {
   React.useEffect(() => {
     countAllClassUpdate.current++;
     if (countAllClassUpdate.current === 2) {
-      new Promise((resolve) => { 
+      new Promise((resolve) => {
         resolve(all_classes.find((kelas) => {return (kelas.walikelas === user.id)}));
       }).then((kelasWali) => {
         let infoKelasWali = new Map();
-        // jika guru adalah kelas wali, mengisi infoKelasWali dengan id dan nama kelas yang diwalikannya 
+        // jika guru adalah kelas wali, mengisi infoKelasWali dengan id dan nama kelas yang diwalikannya
         if (kelasWali) {
           infoKelasWali.set("id", kelasWali._id);
           infoKelasWali.set("name", kelasWali.name);
@@ -408,8 +414,8 @@ function ReportView(props) {
       setRows(handleIndividualReport());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTaskArray, all_subjects_map, kelasWali]); 
-  
+  }, [allTaskArray, all_subjects_map, kelasWali]);
+
   // menggenerate konten tabel untuk halaman rapor yg ada komponen Select setelah data-data yang diperlukan sudah ada.
   // getStudentsByClass ada di fungsi handler Select dan dipanggil saat guru sudah memilih kelas DAN subjek.
   // valueMatpel dan valueKelas sudah dipastikan ada.
@@ -425,8 +431,8 @@ function ReportView(props) {
       let newRows = [];
 
       // akan berisi: { id_student_1: map_row_1, id_student_2: map_row_2, ... }
-      let newRowsObj = {}; 
-      
+      let newRowsObj = {};
+
       students_by_class.forEach((stdInfo) => {
         let temp = new Map();
 
@@ -438,14 +444,14 @@ function ReportView(props) {
       if (students_by_class.length === 0) {
         condition.push("noStudent");
       }
-      
+
       getTaskGrade(valueMatpel, valueKelas).then((taskArray) => {
         if (taskArray.length !== 0) {
           taskArray.forEach((task) => {
             headerNames.push(task.name);
           });
           hasGrade = true;
-          
+
           students_by_class.forEach((stdInfo) => {
             taskArray.forEach((task) => {
               newRowsObj[stdInfo._id].set(task._id, task.grades[stdInfo._id]); // task.grades sudah dipastikan ada saat pembuatan task baru
@@ -466,11 +472,11 @@ function ReportView(props) {
           condition.push("noGrade");
         }
         setEmptyCondition(condition);
-        
+
         setHeaders(headerNames);
         resetKonten();
       }).catch((err) => {console.log(err)});
-      
+
       countStdByClassUpdate.current = 1; // karena requestnya perlu bisa dilakukan berkali-kali
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -480,7 +486,7 @@ function ReportView(props) {
   // setKelasWali, getAllClass("map"), dan getAllSubjects("map") sudah selesai dijalankan semuanya.
   React.useEffect(() => {
     countMIDependencyUpdate.current++;
-    if (countMIDependencyUpdate.current === (4)) {      
+    if (countMIDependencyUpdate.current === (4)) {
       new Promise((resolve) => { // menentukan status guru: wali atau nonwali
         let daftarMatpel = new Map();
         let daftarKelas = new Map();
@@ -497,7 +503,7 @@ function ReportView(props) {
 
           // mengisi daftar matpel dengan semua mata pelajaran yang ada
           all_subjects_map.forEach((subjectName, subjectId) => {daftarMatpel.set(subjectId, subjectName)});
-          
+
         } else {// jika user adalah guru yang tidak mewalikan kelas manapun
           // mengisi daftar matpel dengan matpel yang diajar
           user.subject_teached.forEach((subjectId) => { daftarMatpel.set(subjectId, all_subjects_map.get(subjectId))});
@@ -528,16 +534,16 @@ function ReportView(props) {
             <Divider className={classes.profileDivider}/>
           </Grid>
           <Grid container item direction="row" spacing={5}>
-            <Grid item xs={7} sm={4}> 
+            <Grid item xs={7} sm={4}>
                 <Typography style={{padding:"10px 20px 10px 5px"}}>Nama : {nama}</Typography>
                 <Typography style={{padding:"5px 20px 10px 5px"}}>Kelas : {kelas.name}</Typography>
-            </Grid> 
+            </Grid>
           </Grid>
           <Grid container direction="column" spacing={3} style={{margin:"auto"}}>
-            <Grid item xs={12} style={{marginRight:"20px"}}> 
+            <Grid item xs={12} style={{marginRight:"20px"}}>
               <TableContainer component={Paper}>
                 <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
-                  <TableHead className={classes.tableHeader}> 
+                  <TableHead className={classes.tableHeader}>
                     <TableRow>
                       {headers.map((nama) => {
                         return generateHeaderCell(nama);
@@ -547,14 +553,14 @@ function ReportView(props) {
                   <TableBody>
                       {rows.map((row) => {
                         return generateRowCellObj(row);
-                      })}      
+                      })}
                   </TableBody>
                 </Table>
               </TableContainer>
             </Grid>
           </Grid>
         </Grid>
-      : 
+      :
       (role === "Student") ?
         <Grid container direction="column" spacing={1}>
           <Grid item>
@@ -564,7 +570,7 @@ function ReportView(props) {
             <Divider className={classes.profileDivider}/>
           </Grid>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
-            <Grid item xs={12} style={{marginRight:"20px"}}> 
+            <Grid item xs={12} style={{marginRight:"20px"}}>
               <TableContainer component={Paper}>
                 <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
                   <TableHead className={classes.tableHeader}>
@@ -577,7 +583,7 @@ function ReportView(props) {
                   <TableBody>
                     {rows.map((row) => {
                       return generateRowCellObj(row);
-                    })}      
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -592,13 +598,13 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider}/>
           </Grid>
-          <Grid container item direction="row">
-            <Grid container xs={12} md={5} lg={6} alignItems="center">
-              <Grid item style={{marginRight:'10px'}}> 
-                <Typography variant="caption">Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih</Typography>
-              </Grid>
+          <Grid item container justify="space-between" alignItems="center">
+            <Grid item xs={12} md={4}>
+              <Typography>
+                Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih
+              </Typography>
             </Grid>
-            <Grid container xs={12} md={7} lg={6} direction="row" justify="center">
+            <Grid container xs={12} md={7} style={{marginLeft: "5px"}}>
               <Grid item xs={12} md={6}>
                 <FormControl margin="dense">
                   <InputLabel id="kelas-label">Kelas</InputLabel>
@@ -610,13 +616,13 @@ function ReportView(props) {
                     className={classes.select}
                   >
                     {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
-                  </Select>  
+                  </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
                 <FormControl margin="dense">
                   <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                  <Select 
+                  <Select
                     labelId="matpel-label"
                     id="matpel"
                     value={valueMatpel}
@@ -627,10 +633,10 @@ function ReportView(props) {
                   </Select>
                 </FormControl>
               </Grid>
-            </Grid> 
+            </Grid>
           </Grid>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
-            <Grid item sm={12} style={{marginRight:"20px"}}> 
+            <Grid item sm={12} style={{marginRight:"20px"}}>
               {
                 (emptyCondition.length === 0) ? (
                   <TableContainer component={Paper}>
@@ -638,7 +644,7 @@ function ReportView(props) {
                       <TableHead className={classes.tableHeader}>
                         <TableRow>
                           {
-                            (headers[0] === "Nama Murid") ? ( // untuk memastikan isi state "header" sudah berubah ke format baru 
+                            (headers[0] === "Nama Murid") ? ( // untuk memastikan isi state "header" sudah berubah ke format baru
                               headers.map((nama) => {
                                 return generateHeaderCell(nama);
                               })
@@ -650,7 +656,7 @@ function ReportView(props) {
                       </TableHead>
                       <TableBody>
                         {
-                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid, 
+                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid,
                           // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
                           ((rows.length !== 0) && (rows[0].constructor === Map)) ? (
                             rows.map((row) => {
