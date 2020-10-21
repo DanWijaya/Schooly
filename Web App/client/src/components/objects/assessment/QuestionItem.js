@@ -1,7 +1,7 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, Divider, FormControl, FormControlLabel, Grid, GridList, GridListTile, GridListTileBar,
-   IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
+   IconButton, Paper, Radio, RadioGroup, TextField, Typography, Checkbox, FormGroup } from "@material-ui/core";
  import { makeStyles } from "@material-ui/core/styles";
  import AddCircleIcon from "@material-ui/icons/AddCircle";
  import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItem(props){
-  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag} = props
+  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type} = props
   const classes = useStyles()
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
@@ -40,6 +40,9 @@ function QuestionItem(props){
     imageUploader.current.value = null
     imageUploader.current.click()
   }
+
+  console.log(options)
+  console.log(type)
 
   const handlePreviewImage = (arr_lampiran) => {
     if(Array.isArray(arr_lampiran)){
@@ -136,29 +139,30 @@ function QuestionItem(props){
             </Grid>
             <Grid item>
               <FormControl component="fieldset" id="answer" fullWidth>
-                <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer")}>
-                  {list_options.map((option, i) =>
-                    <div style={{display: "flex"}}>
-                      <FormControlLabel
-                        style={{width: "100%"}}
-                        value={String.fromCharCode(97 + i).toUpperCase()}
-                        control={<Radio color="primary" />}
-                        label={
-                          <TextField
-                            helperText={!option.length ? "Belum diisi" : null}
-                            error={!option.length}
-                            onError={() => console.log("ERROR textfield")}
-                            style={{flexGrow: 1}}
-                            value={option}
-                            onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
-                            placeholder="Isi Pilihan"
-                          />
-                        }
-                      />
-                      <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
-                        <ClearIcon/>
-                      </IconButton>
-                    </div>
+                {(props.type === "radio") ? 
+                  <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer")}>
+                    {list_options.map((option, i) =>
+                      <div style={{display: "flex"}}>
+                        <FormControlLabel
+                          style={{width: "100%"}}
+                          value={String.fromCharCode(97 + i).toUpperCase()}
+                          control={<Radio color="primary" />}
+                          label={
+                            <TextField
+                              helperText={!option.length ? "Belum diisi" : null}
+                              error={!option.length}
+                              onError={() => console.log("ERROR textfield")}
+                              style={{flexGrow: 1}}
+                              value={option}
+                              onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
+                              placeholder="Isi Pilihan"
+                            />
+                          }
+                        />
+                        <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
+                          <ClearIcon/>
+                        </IconButton>
+                      </div>
                   )}
                   <div>
                     <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
@@ -166,6 +170,41 @@ function QuestionItem(props){
                     </Button>
                   </div>
                 </RadioGroup>
+                :
+                  <div>
+                    <FormGroup >
+                    {list_options.map((option, i) =>
+                      <div style={{display: "flex"}}>
+                        <FormControlLabel
+                          style={{width: "100%"}}
+                          value={String.fromCharCode(97 + i).toUpperCase()}
+                          control={<Checkbox name="gilad" color="primary" onChange={(e) => handleChangeQuestion(e, index, "answer")}/>}
+                          label={
+                            <TextField
+                              helperText={!option.length ? "Belum diisi" : null}
+                              error={!option.length}
+                              onError={() => console.log("ERROR textfield")}
+                              style={{flexGrow: 1}}
+                              value={option}
+                              onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
+                              placeholder="Isi Pilihan"
+                            />
+                          }
+                        />
+                        <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
+                          <ClearIcon/>
+                        </IconButton>
+                      </div>
+                    )}
+                    <div>
+                      <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
+                        Tambah  pilihan
+                      </Button>
+                    </div>
+                    </FormGroup>
+                  </div>
+                  
+              }
               </FormControl>
             </Grid>
           </Grid>

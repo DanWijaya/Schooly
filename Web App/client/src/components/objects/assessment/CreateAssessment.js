@@ -13,7 +13,7 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import QuestionItem from "./QuestionItem";
 import { Button, Chip, Divider,
    FormControl, FormControlLabel, FormHelperText, Grid,
-   MenuItem, Paper, Select, Snackbar, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
+   MenuItem, Paper, Select, Snackbar, Switch, TextField, TablePagination, Typography, Menu } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -91,7 +91,8 @@ class CreateAssessment extends Component {
         name: "",
         options: ["Opsi 1", ""],
         answer: "A",
-        lampiran: []
+        lampiran: [],
+        type: "radio"
       }],
       name: "",
       description: "",
@@ -108,7 +109,9 @@ class CreateAssessment extends Component {
       posted: false,
       type: "",
       snackbarOpen: false,
-      snackbarMessage: ""
+      snackbarMessage: "",
+      anchorEl: null,
+      currentQuestionOption: null
     }
   }
 
@@ -208,25 +211,45 @@ class CreateAssessment extends Component {
     this.setState({ end_date: date })
   }
 
-  handleAddQuestion = () => {
+  // FITUR 2 -----------------------------------------
+
+  handleClickMenuTambah = (event) => {
+    this.setState({anchorEl: event.currentTarget}); 
+  };
+
+  handleCloseMenuTambah = (option) => {
+    this.setState({ anchorEl: null });
+    this.setState({ currentQuestionOption: option })
+    console.log(option)
+    console.log(this.state.currentQuestionOption)
+    if(option === "radio" || option === "checkbox" || option === "text"){
+      this.handleAddQuestion(option);
+    }
+  };
+
+  handleAddQuestion = (option) => {
     console.log("Add questionnnn")
     // let questions = this.state.questions
     // questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
     // this.setState({questions: questions})
+
+    // FITUR 2
 
     let questions = this.state.questions;
     questions.push({
       name: "",
       options: ["Opsi 1", ""],
       answer: "A",
-      lampiran: []
+      lampiran: [],
+      type: option
     })
-    this.setState({ questions: questions})
+    this.setState({ questions: questions })
+    this.setState({ currentQuestionOption: null })
   }
 
   handleChangeQuestion = (e, i, otherfield=null) => {
     var questions = this.state.questions;
-
+    console.log(e.target.checked)
     if(otherfield === "answer"){
       questions[i]["answer"] = e.target.value
       console.log(e.target.value)
@@ -238,6 +261,8 @@ class CreateAssessment extends Component {
   }
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
+    console.log(optionIndex)
+    console.log(qnsIndex)
     let questions = this.state.questions
     if(action === "Delete"){
       questions[qnsIndex].options.splice(optionIndex, 1)
@@ -302,6 +327,7 @@ class CreateAssessment extends Component {
       console.log(question.lampiran)
       return(
         <QuestionItem
+          type={question.type}
           isEdit={false}
           lampiranToAdd={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
           currentLampiran={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
@@ -594,11 +620,22 @@ class CreateAssessment extends Component {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-                onClick={this.handleAddQuestion}
+                onClick={this.handleClickMenuTambah}
                 className={classes.addQuestionButton}
               >
                 Tambah Soal
               </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={this.state.anchorEl}
+                keepMounted
+                open={Boolean(this.state.anchorEl)}
+                onClose={this.handleCloseMenuTambah}
+              >
+                <MenuItem onClick={() => this.handleCloseMenuTambah("radio")}>Pilihan Ganda (Dengan Satu Pilihan)</MenuItem>
+                <MenuItem onClick={() => this.handleCloseMenuTambah("checkbox")}>Pilihan Ganda (Dengan Banyak Pilihan)</MenuItem>
+                <MenuItem onClick={() => this.handleCloseMenuTambah("text")}>Isian / Esai</MenuItem>
+            </Menu>
             </Grid>
             <Grid item>
               <Paper>
