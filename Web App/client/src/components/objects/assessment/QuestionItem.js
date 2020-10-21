@@ -140,7 +140,7 @@ function QuestionItem(props){
             <Grid item>
               <FormControl component="fieldset" id="answer" fullWidth>
                 {(props.type === "radio") ? 
-                  <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer")}>
+                  <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer", "radio")}>
                     {list_options.map((option, i) =>
                       <div style={{display: "flex"}}>
                         <FormControlLabel
@@ -178,7 +178,7 @@ function QuestionItem(props){
                         <FormControlLabel
                           style={{width: "100%"}}
                           value={String.fromCharCode(97 + i).toUpperCase()}
-                          control={<Checkbox name="gilad" color="primary" onChange={(e) => handleChangeQuestion(e, index, "answer")}/>}
+                          control={<Checkbox name="gilad" color="primary" onChange={(e) => handleChangeQuestion(e, index, "answer", "checkbox")}/>}
                           label={
                             <TextField
                               helperText={!option.length ? "Belum diisi" : null}

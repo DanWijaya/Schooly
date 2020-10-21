@@ -111,7 +111,7 @@ class CreateAssessment extends Component {
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
-      currentQuestionOption: null
+      currentQuestionOption: null,
     }
   }
 
@@ -247,16 +247,32 @@ class CreateAssessment extends Component {
     this.setState({ currentQuestionOption: null })
   }
 
-  handleChangeQuestion = (e, i, otherfield=null) => {
+  handleChangeQuestion = (e, i, otherfield=null, type) => {
     var questions = this.state.questions;
     console.log(e.target.checked)
     if(otherfield === "answer"){
-      questions[i]["answer"] = e.target.value
-      console.log(e.target.value)
+      if(type === "radio"){
+        questions[i]["answer"] = e.target.value
+        console.log(e.target.value)
+      }
+      else if(type === "checkbox"){
+        if(typeof questions[i]["answer"] === "string"){
+          questions[i]["answer"] = []
+        }
+        if(e.target.checked){
+          questions[i]["answer"].push(e.target.value)
+        }
+        if(!e.target.checked){
+          questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
+            console.log("testttt")
+            return value !== e.target.value
+          })
+        }
+      }
     }else {
       questions[i][e.target.id] = e.target.value
     }
-
+    console.log(questions[i]["answer"])
     this.setState({ questions: questions})
   }
 
