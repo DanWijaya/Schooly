@@ -147,7 +147,8 @@ export const getAllAssessments = () => dispatch => {
   axios
     .get("/api/assessments/viewall")
     .then(res => {
-      console.log(res.data)
+      // console.log(res.data)
+      console.log("getAllAssessments completed")
       dispatch({
         type: GET_ALL_ASSESSMENTS,
         payload: res.data
@@ -236,4 +237,28 @@ export const submitAssessment = (assessmentId, data) => dispatch => {
         return new Error("Assessment fail to be submitted");
       })
   )
+}
+
+export const getKuisBySC = (subjectId, classId) => () => {
+  return axios
+      .get(`/api/assessments/getkuisbysc/${subjectId}&${classId}`)
+      .then((res) => {
+          console.log("getKuisBySC completed");
+          return res.data;
+      })
+      .catch(() => {
+          throw new Error("getKuisBySC error has occured");
+      })
+}
+
+export const getUjianBySC = (subjectId, classId) => () => {
+  return axios
+      .get(`/api/assessments/getujianbysc/${subjectId}&${classId}`)
+      .then((res) => {
+          console.log("getUjianBySC completed");
+          return res.data;
+      })
+      .catch(() => {
+          throw new Error("getUjianBySC error has occured");
+      })
 }

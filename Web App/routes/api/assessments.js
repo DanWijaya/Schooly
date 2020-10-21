@@ -210,12 +210,12 @@ router.post("/submit/:id", (req,res) => {
 
 router.get("/viewall", (req,res) => {
   Assessment.find({})
-            .then(assessments => {
-              if(!assessments)
-                res.status(400).json("Assessments are not found")
-              else 
-                res.json(assessments)
-            })
+    .then(assessments => {
+      if(!assessments)
+        res.status(400).json("Assessments are not found")
+      else 
+        res.json(assessments)
+    })
 })
 
 router.get("/view/:id", (req,res) => {
@@ -238,6 +238,26 @@ router.delete("/delete/:id", (req,res) => {
     
     return res.json(assessment)
   })
+})
+
+router.get("/getkuisbysc/:subjectId&:classId", (req, res) => {
+  Assessment.find({subject: req.params.subjectId, class_assigned: {$elemMatch: {$eq: req.params.classId}}, type: "Kuis"}).then((kuis) => {
+    if (!kuis) {
+      return res.status(200).json("Belum ada kuis");
+    } else {
+      return res.json(kuis);
+    }
+  });
+})
+
+router.get("/getujianbysc/:subjectId&:classId", (req, res) => {
+  Assessment.find({subject: req.params.subjectId, class_assigned: {$elemMatch: {$eq: req.params.classId}}, type: "Ujian"}).then((ujian) => {
+    if (!ujian) {
+      return res.status(200).json("Belum ada ujian");
+    } else {
+      return res.json(ujian);
+    }
+  });
 })
 
 module.exports = router;

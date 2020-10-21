@@ -153,14 +153,14 @@ export const deleteTask = (taskId, history) => dispatch => {
     })
 }
 
-export const getTaskGrade = (subjectId, classId) => () => {
+export const getTasksBySC = (subjectId, classId) => () => {
     return axios
-        .get(`/api/tasks/getgrade/${subjectId}&${classId}`)
+        .get(`/api/tasks/gettasksbysc/${subjectId}&${classId}`)
         .then((res) => {
-            console.log("getTaskGrade completed");
+            console.log("getTasksBySC completed");
             return res.data;
         })
         .catch(() => {
-            throw new Error("getTaskGrade error has occured");
+            throw new Error("getTasksBySC error has occured");
         })
 }

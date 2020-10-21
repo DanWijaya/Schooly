@@ -126,7 +126,7 @@ router.post("/update/:id", (req, res) => {
         });
 });
 
-router.get("/getgrade/:subjectId&:classId", (req, res) => {
+router.get("/gettasksbysc/:subjectId&:classId", (req, res) => {
     Task.find({subject: req.params.subjectId, class_assigned: {$elemMatch: {$eq: req.params.classId}}}).then((tasks) => {
         if (!tasks) {
             return res.status(200).json("Belum ada tugas");
