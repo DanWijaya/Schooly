@@ -111,7 +111,6 @@ class CreateAssessment extends Component {
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
-      currentQuestionOption: null,
     }
   }
 
@@ -233,16 +232,27 @@ class CreateAssessment extends Component {
     // questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
     // this.setState({questions: questions})
 
-    // FITUR 2
+    // FITUR 2 ---------------------------------------------------------------------------------------------------
 
     let questions = this.state.questions;
-    questions.push({
-      name: "",
-      options: ["Opsi 1", ""],
-      answer: "A",
-      lampiran: [],
-      type: option
-    })
+    if(option == "radio"){
+      questions.push({
+        name: "",
+        options: ["Opsi 1", ""],
+        answer: "A",
+        lampiran: [],
+        type: option
+      })
+    }
+    else if(option == "checkbox"){
+      questions.push({
+        name: "",
+        options: ["Opsi 1", ""],
+        answer: [],
+        lampiran: [],
+        type: option
+      })
+    }
     this.setState({ questions: questions })
     this.setState({ currentQuestionOption: null })
   }
@@ -259,7 +269,7 @@ class CreateAssessment extends Component {
         if(typeof questions[i]["answer"] === "string"){
           questions[i]["answer"] = []
         }
-        if(e.target.checked){
+        if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
           questions[i]["answer"].push(e.target.value)
         }
         if(!e.target.checked){
@@ -276,6 +286,7 @@ class CreateAssessment extends Component {
     this.setState({ questions: questions})
   }
 
+  // --------------------------------------------------------------------------------------------------
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
     console.log(optionIndex)
     console.log(qnsIndex)
@@ -304,7 +315,8 @@ class CreateAssessment extends Component {
       name: questions[i].name,
       options: [...questions[i].options],
       answer: questions[i].answer,
-      lampiran: [...questions[i].lampiran]
+      lampiran: [...questions[i].lampiran],
+      type: questions[i].type
     })
     this.setState({ questions: questions})
   }
@@ -338,9 +350,37 @@ class CreateAssessment extends Component {
     // let questionList = []
     let questions = this.state.questions;
     const { page, rowsPerPage} = this.state;
+    
+    let answerListArray = []
+    this.state.questions.forEach(function(value,index){
+      answerListArray.push(value.answer)
+    })
+
 
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-      console.log(question.lampiran)
+      
+      console.log(answerListArray)
+      console.log(question.answer)
+
+      console.log(i)
+      let tempArray = [];
+      if(typeof question.answer=="object"){
+        question.answer.forEach(function(value,index){
+          tempArray.push(Number(value.charCodeAt(0))-65)
+          
+        })
+      }
+      let booleanArray = [];
+      for(let j=0;j<this.state.questions[i].options.length;j++){
+        if(tempArray.includes(j)){
+          booleanArray[j] = true;
+        }
+        else{
+          booleanArray[j] = false;
+        }
+      }
+      console.log(booleanArray)
+    
       return(
         <QuestionItem
           type={question.type}
@@ -358,6 +398,8 @@ class CreateAssessment extends Component {
           handleQuestionOptions={this.handleQuestionOptions}
           handleChangeQuestion={this.handleChangeQuestion}
           handleQuestionImage={this.handleQuestionImage}
+          answerList={answerListArray}
+          check_data={booleanArray}
         />
       )
     }

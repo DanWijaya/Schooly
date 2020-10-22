@@ -26,16 +26,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItem(props){
-  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type} = props
+  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type, answerList, check_data} = props
   const classes = useStyles()
+  const [switchCheckbox, setSwitchCheckbox] = React.useState(false)
+  const [checkboxChecker, setcheckboxChecker] = React.useState(null)
 
+  console.log(options)
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
   let list_options = JSON.parse(options)
   const imageUploader = React.useRef();
-
+  console.log("A".charCodeAt(0))
   const imageUpload = () => {
     imageUploader.current.value = null
     imageUploader.current.click()
@@ -43,6 +46,8 @@ function QuestionItem(props){
 
   console.log(options)
   console.log(type)
+
+  console.log(switchCheckbox)
 
   const handlePreviewImage = (arr_lampiran) => {
     if(Array.isArray(arr_lampiran)){
@@ -170,7 +175,7 @@ function QuestionItem(props){
                     </Button>
                   </div>
                 </RadioGroup>
-                :
+                : (props.type === "checkbox") ?
                   <div>
                     <FormGroup >
                     {list_options.map((option, i) =>
@@ -178,7 +183,7 @@ function QuestionItem(props){
                         <FormControlLabel
                           style={{width: "100%"}}
                           value={String.fromCharCode(97 + i).toUpperCase()}
-                          control={<Checkbox name="gilad" color="primary" onChange={(e) => handleChangeQuestion(e, index, "answer", "checkbox")}/>}
+                          control={<Checkbox name="gilad" checked={check_data[i]} color="primary" onChange={(e) => handleChangeQuestion(e, index, "answer", "checkbox")}/>}
                           label={
                             <TextField
                               helperText={!option.length ? "Belum diisi" : null}
@@ -204,7 +209,7 @@ function QuestionItem(props){
                     </FormGroup>
                   </div>
                   
-              }
+              : null }
               </FormControl>
             </Grid>
           </Grid>
