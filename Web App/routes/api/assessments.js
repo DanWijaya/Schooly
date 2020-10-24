@@ -123,16 +123,18 @@ router.post("/update/:id", (req,res) => {
         }
 
         if(update_answer){
-          for (const [key, value] of assessmentData.submissions.entries()) {
-            console.log(key, value);
-            let correct_count = 0;
-            for(let i = 0; i < value.length; i++){
-              if(value[i] === new_ans_list[i]){
-                correct_count = correct_count + 1
+          if(assessmentData.submissions){
+            for (const [key, value] of assessmentData.submissions.entries()) {
+              console.log(key, value);
+              let correct_count = 0;
+              for(let i = 0; i < value.length; i++){
+                if(value[i] === new_ans_list[i]){
+                  correct_count = correct_count + 1
+                }
               }
+              let score = 100 * (correct_count/value.length);
+              assessmentData.grades.set(key, parseFloat(score.toFixed(1)))
             }
-            let score = 100 * (correct_count/value.length);
-            assessmentData.grades.set(key, parseFloat(score.toFixed(1)))
           }
         }
 
