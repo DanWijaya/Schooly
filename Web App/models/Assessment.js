@@ -34,16 +34,17 @@ const AssessmentSchema = new Schema({
     },
     questions: [{
         name: {type: String, required: true, default: ""},
-        options: {type: [String], required: true},
-        answer: {type: String, required: true},
-        lampiran: [{ type: ObjectId , default: [], _id: false}]
+        options: {type: [String]},
+        answer: {type: String},
+        lampiran: [{ type: ObjectId , default: [], _id: false}],
+        type: {type: String, required: true}
     }],
     posted: { type: Boolean, required: true, default: false},
     grades: {
       type: Map
     },
     submissions:{
-      type: Map
+      type: Map, default: []
     },
     type: {
       type: String,

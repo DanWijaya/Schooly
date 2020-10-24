@@ -12,7 +12,9 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography } from "@material-ui/core";
+import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
+   Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
+   Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Menu} from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -105,7 +107,8 @@ class EditAssessment extends Component {
         name: "",
         options: ["Opsi 1", ""],
         answer: "A",
-        lampiran: []
+        lampiran: [],
+        type: "radio"
       }],
       lampiranToDelete: [],
       name: "",
@@ -123,7 +126,8 @@ class EditAssessment extends Component {
       rowsPerPage: 10,
       qnsListitem: [],
       snackbarOpen: false,
-      snackbarMessage: ""
+      snackbarMessage: "",
+      anchorEl: null
     }
   }
 
@@ -189,9 +193,21 @@ class EditAssessment extends Component {
 
     for(var i = 0; i < questions.length; i++){
       let qns = questions[i];
-      if(!qns.name || qns.options.includes("")){
-        validToSubmit = false;
-        break;
+      if (qns.type === "shorttext") {
+        if (!qns.name) {
+          validToSubmit = false
+          break;
+        }
+      } else if (qns.type === "longtext") {
+        if (!qns.name) {
+          validToSubmit = false
+          break;
+        }
+      } else {
+        if(!qns.name || qns.options.includes("")){
+          validToSubmit = false;
+          break;
+        }
       }
     }
 
@@ -255,28 +271,96 @@ class EditAssessment extends Component {
     this.setState({ end_date: date })
   }
 
-  handleAddQuestion = () => {
+  handleClickMenuTambah = (event) => {
+    this.setState({anchorEl: event.currentTarget}); 
+  };
+
+  handleCloseMenuTambah = (option) => {
+    this.setState({ anchorEl: null });
+    this.setState({ currentQuestionOption: option })
+    console.log(option)
+    console.log(this.state.currentQuestionOption)
+    if(option === "radio" || option === "checkbox" || option === "shorttext" || option === "longtext") {
+      this.handleAddQuestion(option);
+    }
+  };
+
+  handleAddQuestion = (option) => {
     console.log("Add questionnnn")
     // let questions = this.state.questions
     // questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
     // this.setState({questions: questions})
 
     let questions = this.state.questions;
-    questions.push({
-      name: "",
-      options: ["Opsi 1", ""],
-      answer: "A",
-      lampiran: []
-    })
+    if(option === "radio"){
+      questions.push({
+        name: "",
+        options: ["Opsi 1", ""],
+        answer: "A",
+        lampiran: [],
+        type: option
+      })
+    }
+    else if(option === "checkbox"){
+      questions.push({
+        name: "",
+        options: ["Opsi 1", ""],
+        answer: [],
+        lampiran: [],
+        type: option
+      })
+    }
+    else if(option === "shorttext"){
+      questions.push({
+        name: "",
+        options: null,
+        answer: [],
+        lampiran: [],
+        type: option
+      })
+    }
+    else if(option === "longtext"){
+      questions.push({
+        name: "",
+        options: null,
+        answer: "",
+        lampiran: [],
+        type: option
+      })
+    }
     this.setState({ questions: questions})
+    this.setState({ currentQuestionOption: null })
+
   }
 
-  handleChangeQuestion = (e, i, otherfield=null) => {
+  handleChangeQuestion = (e, i, otherfield=null, type) => {
     var questions = this.state.questions;
 
     if(otherfield === "answer"){
-      questions[i]["answer"] = e.target.value
-      console.log(e.target.value)
+      if(type === "radio"){
+        questions[i]["answer"] = e.target.value
+        console.log(e.target.value)
+      }
+      else if(type === "checkbox"){
+        if(typeof questions[i]["answer"] === "string"){
+          questions[i]["answer"] = []
+        }
+        if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
+          questions[i]["answer"].push(e.target.value)
+        }
+        if(!e.target.checked){
+          questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
+            console.log("testttt")
+            return value !== e.target.value
+          })
+        }
+      }
+      else if (type === "shorttext") {
+        questions[i]["answer"] = e.target.value;
+      }
+      else {
+        questions[i]["answer"] = e.target.value;
+      }
     }else {
       questions[i][e.target.id] = e.target.value
     }
@@ -306,13 +390,32 @@ class EditAssessment extends Component {
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
     // questions.splice(i+1, 0, question)
-
-    questions.splice(i+1, 0, {
-      name: questions[i].name,
-      options: [...questions[i].options],
-      answer: questions[i].answer,
-      lampiran: [...questions[i].lampiran]
-    })
+    
+    if (questions[i].type === "longtext") {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: null,
+        answer: null,
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    } else if (questions[i].type === "shorttext") {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: null,
+        answer: [...questions[i].answer],
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    } else {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: [...questions[i].options],
+        answer: questions[i].answer,
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    }
     this.setState({ questions: questions})
   }
 
@@ -383,7 +486,7 @@ class EditAssessment extends Component {
             isEdit={true}
             index={i + page * rowsPerPage}
             name={question.name}
-            options={JSON.stringify(question.options)}
+            options={JSON.stringify(question.options)}handleAddQuestion
             answer={question.answer}
             lampiran={question.lampiran}
             lampiran_length={question.lampiran.length}
@@ -662,11 +765,23 @@ class EditAssessment extends Component {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-                onClick={this.handleAddQuestion}
+                onClick={this.handleClickMenuTambah}
                 className={classes.addQuestionButton}
               >
                 Tambah Soal
               </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={this.state.anchorEl}
+                keepMounted
+                open={Boolean(this.state.anchorEl)}
+                onClose={this.handleCloseMenuTambah}
+              >
+                <MenuItem onClick={() => this.handleCloseMenuTambah("radio")}>Pilihan Ganda (Dengan Satu Pilihan)</MenuItem>
+                <MenuItem onClick={() => this.handleCloseMenuTambah("checkbox")}>Pilihan Ganda (Dengan Banyak Pilihan)</MenuItem>
+                <MenuItem onClick={() => this.handleCloseMenuTambah("shorttext")}>Isian Pendek</MenuItem>
+                <MenuItem onClick={() => this.handleCloseMenuTambah("longtext")}>Uraian</MenuItem>
+            </Menu>
             </Grid>
             <Grid item>
               <Paper>

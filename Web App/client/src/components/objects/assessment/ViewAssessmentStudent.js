@@ -426,21 +426,33 @@ function ViewAssessmentStudent(props) {
                 </Grid>
                 <Grid item>
                   <FormControl component="fieldset" id="answer" fullWidth>
-                    <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
-                      {!questions ?
+                    {(!questions) ? (
                       null
-                      :
-                      questions[qnsIndex].options.map((option, i) =>
-                      <div style={{display: "flex"}}>
-                      <FormControlLabel
-                        style={{width: "100%"}}
-                        value={String.fromCharCode(97 + i).toUpperCase()}
-                        control={<Radio color="primary" />}
-                        label={ <Typography className={classes.optionText}>{option}</Typography>}
-                      />
-                    </div>
-                      )}
-                    </RadioGroup>
+                    ) : ((questions[qnsIndex].type === "radio") ? (
+                        <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
+                          
+                          {questions[qnsIndex].options.map((option, i) =>
+                          <div style={{display: "flex"}}>
+                            <FormControlLabel
+                              style={{width: "100%"}}
+                              value={String.fromCharCode(97 + i).toUpperCase()}
+                              control={<Radio color="primary" />}
+                              label={ <Typography className={classes.optionText}>{option}</Typography>}
+                            />
+                          </div>
+                          )}
+
+                        </RadioGroup>
+                      ) : (questions[qnsIndex].type === "checkbox") ? (
+                        null
+                      ) : (questions[qnsIndex].type === "shorttext") ? (
+                        null
+                      ) : (questions[qnsIndex].type === "longtext") ? (
+                        <TextField id="answer" label="Jawaban Anda" variant="outlined" onChange={handleChangeAnswer} />
+                      ) : (
+                        null
+                      )
+                    )}
                   </FormControl>
                 </Grid>
               </Grid>

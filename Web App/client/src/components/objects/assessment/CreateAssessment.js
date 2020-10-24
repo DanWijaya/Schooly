@@ -144,9 +144,21 @@ class CreateAssessment extends Component {
 
     for(var i = 0; i < questions.length; i++){
       let qns = questions[i];
-      if(!qns.name || qns.options.includes("")){
-        validToSubmit = false;
-        break;
+      if (qns.type === "shorttext") {
+        if (!qns.name) {
+          validToSubmit = false
+          break;
+        }
+      } else if (qns.type === "longtext") {
+        if (!qns.name) {
+          validToSubmit = false
+          break;
+        }
+      } else {
+        if(!qns.name || qns.options.includes("")){
+          validToSubmit = false;
+          break;
+        }
       }
     }
 
@@ -221,7 +233,7 @@ class CreateAssessment extends Component {
     this.setState({ currentQuestionOption: option })
     console.log(option)
     console.log(this.state.currentQuestionOption)
-    if(option === "radio" || option === "checkbox" || option === "text"){
+    if(option === "radio" || option === "checkbox" || option === "shorttext" || option === "longtext") {
       this.handleAddQuestion(option);
     }
   };
@@ -235,7 +247,7 @@ class CreateAssessment extends Component {
     // FITUR 2 ---------------------------------------------------------------------------------------------------
 
     let questions = this.state.questions;
-    if(option == "radio"){
+    if(option === "radio"){
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
@@ -244,11 +256,29 @@ class CreateAssessment extends Component {
         type: option
       })
     }
-    else if(option == "checkbox"){
+    else if(option === "checkbox"){
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
         answer: [],
+        lampiran: [],
+        type: option
+      })
+    }
+    else if(option === "shorttext"){
+      questions.push({
+        name: "",
+        options: null,
+        answer: [],
+        lampiran: [],
+        type: option
+      })
+    }
+    else if(option === "longtext"){
+      questions.push({
+        name: "",
+        options: null,
+        answer: "",
         lampiran: [],
         type: option
       })
@@ -278,6 +308,12 @@ class CreateAssessment extends Component {
             return value !== e.target.value
           })
         }
+      }
+      else if (type === "shorttext") {
+        questions[i]["answer"] = e.target.value;
+      }
+      else if (type === "longtext") {
+        questions[i]["answer"] = e.target.value;
       }
     }else {
       questions[i][e.target.id] = e.target.value
@@ -311,13 +347,31 @@ class CreateAssessment extends Component {
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
     // questions.splice(i+1, 0, question)
 
-    questions.splice(i+1, 0, {
-      name: questions[i].name,
-      options: [...questions[i].options],
-      answer: questions[i].answer,
-      lampiran: [...questions[i].lampiran],
-      type: questions[i].type
-    })
+    if (questions[i].type === "longtext") {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: null,
+        answer: null,
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    } else if (questions[i].type === "shorttext") {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: null,
+        answer: [...questions[i].answer],
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    } else {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: [...questions[i].options],
+        answer: questions[i].answer,
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    }
     this.setState({ questions: questions})
   }
 
@@ -363,23 +417,25 @@ class CreateAssessment extends Component {
       console.log(question.answer)
 
       console.log(i)
-      let tempArray = [];
-      if(typeof question.answer=="object"){
-        question.answer.forEach(function(value,index){
-          tempArray.push(Number(value.charCodeAt(0))-65)
-          
-        })
-      }
       let booleanArray = [];
-      for(let j=0;j<this.state.questions[i].options.length;j++){
-        if(tempArray.includes(j)){
-          booleanArray[j] = true;
+      if (question.type === "checkbox") {
+        let tempArray = [];
+        if(typeof question.answer=="object"){
+          question.answer.forEach(function(value,index){
+            tempArray.push(Number(value.charCodeAt(0))-65)
+            
+          })
         }
-        else{
-          booleanArray[j] = false;
+        for(let j=0;j<this.state.questions[i].options.length;j++){
+          if(tempArray.includes(j)){
+            booleanArray[j] = true;
+          }
+          else{
+            booleanArray[j] = false;
+          }
         }
+        console.log(booleanArray)
       }
-      console.log(booleanArray)
     
       return(
         <QuestionItem
@@ -692,7 +748,8 @@ class CreateAssessment extends Component {
               >
                 <MenuItem onClick={() => this.handleCloseMenuTambah("radio")}>Pilihan Ganda (Dengan Satu Pilihan)</MenuItem>
                 <MenuItem onClick={() => this.handleCloseMenuTambah("checkbox")}>Pilihan Ganda (Dengan Banyak Pilihan)</MenuItem>
-                <MenuItem onClick={() => this.handleCloseMenuTambah("text")}>Isian / Esai</MenuItem>
+                <MenuItem onClick={() => this.handleCloseMenuTambah("shorttext")}>Isian Pendek</MenuItem>
+                <MenuItem onClick={() => this.handleCloseMenuTambah("longtext")}>Uraian</MenuItem>
             </Menu>
             </Grid>
             <Grid item>

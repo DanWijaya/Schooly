@@ -144,7 +144,7 @@ function QuestionItem(props){
             </Grid>
             <Grid item>
               <FormControl component="fieldset" id="answer" fullWidth>
-                {(props.type === "radio") ? 
+                {(props.type === "radio") ?
                   <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer", "radio")}>
                     {list_options.map((option, i) =>
                       <div style={{display: "flex"}}>
@@ -208,8 +208,10 @@ function QuestionItem(props){
                     </div>
                     </FormGroup>
                   </div>
-                  
-              : null }
+                : 
+                  <div>
+                  </div>
+              }
               </FormControl>
             </Grid>
           </Grid>
