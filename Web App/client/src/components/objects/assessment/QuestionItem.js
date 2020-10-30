@@ -263,5 +263,10 @@ function QuestionItem(props){
   )
 }
 
-export default React.memo(QuestionItem)
-// export default QuestionItem;
+export default React.memo(QuestionItem, function arePropsEqual(prevProps, nextProps) { // second argument
+  return (
+    prevProps.name === nextProps.name &&
+    prevProps.options === nextProps.options &&
+    prevProps.answer === nextProps.answer &&
+    prevProps.lampiran_length === nextProps.lampiran_length)
+})
