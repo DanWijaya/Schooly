@@ -414,14 +414,11 @@ class Register extends Component {
                   </Grid>
                 </Dialog>
                 <Typography align="center" style={{marginTop: "20px"}}>
-                  Setelah berhasil mendaftar, silahkan menunggu admin sekolah Anda untuk mengaktifkan akses akun Anda.
+                  Setelah registrasi selesai, silahkan hubungi pengelola sekolah Anda untuk mengaktifkan akun Anda.
                 </Typography>
                 <Typography variant="body2" color="textSecondary" align="center" style={{marginTop: "20px"}}>
                   Jangan lupa untuk melengkapi profil Anda pada halaman profil yang dapat diakses pada
                   foto profil pada bagian kanan atas aplikasi.
-                </Typography>
-                <Typography variant="body2" align="center" style={{marginTop: "20px"}}>
-                  Silahkan hubungi pengelola sekolah Anda untuk mengaktifkan akun Anda, setelah registrasi selesai.
                 </Typography>
               </Grid>
             </Grid>
