@@ -111,6 +111,7 @@ class CreateAssessment extends Component {
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
+      checkboxSnackbarOpen: false
     }
   }
 
@@ -260,7 +261,7 @@ class CreateAssessment extends Component {
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
-        answer: [],
+        answer: ["A"],
         lampiran: [],
         type: option
       })
@@ -296,17 +297,24 @@ class CreateAssessment extends Component {
         console.log(e.target.value)
       }
       else if(type === "checkbox"){
+        console.log(e.target.checked)
         if(typeof questions[i]["answer"] === "string"){
           questions[i]["answer"] = []
         }
-        if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
-          questions[i]["answer"].push(e.target.value)
+        if(!e.target.checked || questions[i]["answer"].includes(e.target.value)){
+          console.log("tidak checked")
+          if(questions[i]["answer"].length === 1){
+            this.handleOpenCheckboxErrorSnackBar()
+          }
+          else{
+            questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
+              return value != e.target.value
+            })
+          }
         }
-        if(!e.target.checked){
-          questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
-            console.log("testttt")
-            return value !== e.target.value
-          })
+        else if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
+          questions[i]["answer"].push(e.target.value)
+          console.log("checked")
         }
       }
       else if (type === "shorttext") {
@@ -413,19 +421,16 @@ class CreateAssessment extends Component {
 
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
       
-      console.log(answerListArray)
-      console.log(question.answer)
-
-      console.log(i)
+      // Fitur 2 -- Untuk Memastikan Bahwa Checkbox yang tercentang (ditampilkan ke layar) sinkron dengan value "answer" yang tersimpan
       let booleanArray = [];
       if (question.type === "checkbox") {
         let tempArray = [];
         if(typeof question.answer=="object"){
           question.answer.forEach(function(value,index){
-            tempArray.push(Number(value.charCodeAt(0))-65)
-            
+            tempArray.push(Number(value.charCodeAt(0))-65)           
           })
         }
+        console.log(tempArray)
         for(let j=0;j<this.state.questions[i].options.length;j++){
           if(tempArray.includes(j)){
             booleanArray[j] = true;
@@ -436,7 +441,8 @@ class CreateAssessment extends Component {
         }
         console.log(booleanArray)
       }
-    
+      console.log(booleanArray)
+
       return(
         <QuestionItem
           type={question.type}
@@ -492,6 +498,14 @@ class CreateAssessment extends Component {
       posted: !prevState.posted
     }))
   }
+
+  handleOpenCheckboxErrorSnackBar = () => {
+    this.setState({checkboxSnackbarOpen: true})
+  }
+
+  handleCloseCheckboxErrorSnackBar = () => {
+    this.setState({checkboxSnackbarOpen: false})
+  }
   render() {
     console.log(this.state.questions)
     const { class_assigned } = this.state;
@@ -544,6 +558,11 @@ class CreateAssessment extends Component {
 
     return (
       <div className={classes.root}>
+        <Snackbar open={this.state.checkboxSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCheckboxErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseCheckboxErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}

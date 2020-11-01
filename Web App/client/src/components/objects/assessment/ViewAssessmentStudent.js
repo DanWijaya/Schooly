@@ -6,7 +6,9 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, submitAssessment } from "../../../actions/AssessmentActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
+import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormGroup,
+        Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, Checkbox, 
+        RadioGroup, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -242,6 +244,7 @@ function ViewAssessmentStudent(props) {
   const [ finish, setFinish ] = React.useState(null);
   const [ openSubmitDialog, setOpenSubmitDialog] = React.useState(null);
   const [ openTimeoutDialog, setOpenTimeoutDialog] = React.useState(null);
+  const [ dummy, setDummy ] = React.useState(false)
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
@@ -281,14 +284,58 @@ function ViewAssessmentStudent(props) {
     setQnsIndex(i)
   }
 
-  const handleChangeAnswer = (e) => {
-    let temp = answer;
-    temp[qnsIndex] = e.target.value;
-    localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
-    setAnswer([...temp])
+  const handleChangeAnswer = (e, i, type) => {
+    if(type === "radio" || type === "longtext"){
+      let temp = answer;
+      temp[qnsIndex] = e.target.value;
+      localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
+      setAnswer([...temp])
+      console.log(answer)
+    }
+    else if(type === "checkbox"){
+      if(!answer[qnsIndex]){
+        let temp = answer;
+        temp[qnsIndex] = [e.target.value]
+        setAnswer([...temp])
+      }
+      else if(!e.target.checked || answer[qnsIndex].includes(e.target.value)){
+        console.log("tidak checked")
+        let temp = answer;
+        temp[qnsIndex] = temp[qnsIndex].filter(function(value,index){
+          return value != e.target.value
+        })
+        setAnswer([...temp])
+      }
+      else if(e.target.checked && !answer[qnsIndex].includes(e.target.value)){
+        let temp = answer;
+        temp[qnsIndex].push(e.target.value)
+        setAnswer([...temp])
+        console.log("checked")
+      }
+      console.log(answer)
+    }
   }
 
   const handleStart = () => {
+    /*if(localStorage.getItem(`status`) === "tidak_ujian"){
+      localStorage.setItem(`status`, "ujian")
+      console.log(localStorage.getItem(`status`))
+      window.location.reload(false);
+    }
+    if(localStorage.getItem(`status`) === "ujian"){
+      startTest()
+    }*/
+    localStorage.setItem(`status`, "ujian")
+    window.location.reload(false);
+  }
+
+  React.useEffect(() => {
+    if(localStorage.getItem(`status`) === "ujian"){
+      startTest()
+    }
+  },[])
+
+  const startTest = () => {
     setStart(true);
   }
 
@@ -300,8 +347,12 @@ function ViewAssessmentStudent(props) {
   }
 
   const onSubmit = (e) => {
+    localStorage.setItem(`status`, "tidak_ujian")
+    window.location.reload(false);
+    setDummy(false)
     setFinish(true)
     setStart(false);
+    console.log(localStorage.getItem(`status`))
     let data = {
       "answers" : answer,
       "classId" : user.kelas,
@@ -429,7 +480,7 @@ function ViewAssessmentStudent(props) {
                     {(!questions) ? (
                       null
                     ) : ((questions[qnsIndex].type === "radio") ? (
-                        <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
+                        <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={(e) => handleChangeAnswer(e, null, "radio")}>
                           
                           {questions[qnsIndex].options.map((option, i) =>
                           <div style={{display: "flex"}}>
@@ -444,11 +495,22 @@ function ViewAssessmentStudent(props) {
 
                         </RadioGroup>
                       ) : (questions[qnsIndex].type === "checkbox") ? (
-                        null
+                        <FormGroup>
+                          {questions[qnsIndex].options.map((option, i) =>
+                          <div style={{display: "flex"}}>
+                            <FormControlLabel
+                              style={{width: "100%"}}
+                              value={String.fromCharCode(97 + i).toUpperCase()}
+                              control={<Checkbox color="primary" onChange={(e) => handleChangeAnswer(e, i, "checkbox")}/>}
+                              label={ <Typography className={classes.optionText}>{option}</Typography>}
+                            />
+                          </div>
+                          )}
+                        </FormGroup>
                       ) : (questions[qnsIndex].type === "shorttext") ? (
                         null
                       ) : (questions[qnsIndex].type === "longtext") ? (
-                        <TextField id="answer" label="Jawaban Anda" variant="outlined" onChange={handleChangeAnswer} />
+                        <TextField id="answer" label="Jawaban Anda" variant="outlined" onChange={(e) => handleChangeAnswer(e,null, "longtext")} />
                       ) : (
                         null
                       )

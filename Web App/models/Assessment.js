@@ -35,7 +35,7 @@ const AssessmentSchema = new Schema({
     questions: [{
         name: {type: String, required: true, default: ""},
         options: {type: [String]},
-        answer: {type: String},
+        answer: {type: [String]},
         lampiran: [{ type: ObjectId , default: [], _id: false}],
         type: {type: String, required: true}
     }],

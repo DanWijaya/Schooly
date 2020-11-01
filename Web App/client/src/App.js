@@ -134,24 +134,29 @@ class App extends Component {
   }
 
   render() {
+    console.log(localStorage.getItem(`status`))
     return (
       <div>
         <Provider store={store}>
           <ThemeProvider theme={globalStyles}>
             <Router>
               <div style={{display: "flex"}}>
-                <NavBar
-                  handleDrawerDesktop={this.handleDrawerDesktop}
-                  handleDrawerMobile={this.handleDrawerMobile}
-                  sideDrawerExist={this.state.sideDrawerExist}
-                />
-                {this.state.sideDrawerExist ?
-                <SideDrawer
-                  mobileOpen={this.state.mobileOpen}
-                  desktopOpen={this.state.desktopOpen}
-                  handleDrawerMobile={this.handleDrawerMobile}
-                /> :
-                null
+                {(localStorage.getItem(`status`) !== "ujian") ? 
+                  <NavBar
+                    handleDrawerDesktop={this.handleDrawerDesktop}
+                    handleDrawerMobile={this.handleDrawerMobile}
+                    sideDrawerExist={this.state.sideDrawerExist}
+                  /> 
+                :
+                  null
+                }
+                {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ?
+                  <SideDrawer
+                    mobileOpen={this.state.mobileOpen}
+                    desktopOpen={this.state.desktopOpen}
+                    handleDrawerMobile={this.handleDrawerMobile}
+                  /> :
+                  null
                 }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
@@ -232,7 +237,11 @@ class App extends Component {
                     />
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
-                  <Footer />
+                  {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ?
+                    <Footer/>
+                  :
+                    null
+                  }
                 </div>
               </div>
             </Router>

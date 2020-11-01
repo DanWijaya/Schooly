@@ -27,14 +27,33 @@ const useStyles = makeStyles((theme) => ({
 
 function QuestionItem(props){
   const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type, answerList, check_data} = props
+  console.log(check_data)
   const classes = useStyles()
-  const [switchCheckbox, setSwitchCheckbox] = React.useState(false)
-  const [checkboxChecker, setcheckboxChecker] = React.useState(null)
 
+  const [checked, setChecked] = React.useState(check_data)
+  const [dummyRender, setDummyRender] = React.useState(0) // Hanya Untuk Force Re-render
+  console.log(checked)
   console.log(options)
+
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
+
+  // Fitur 2 - Fungsi Untuk Memastikan Kondisi Checked Pada Checkbox Ketika Dicentang
+  function handleCheck(e, i, index, answer, type){
+    let temp_cek = checked
+    temp_cek[i] = e.target.checked
+    if(check_data[i]){
+      check_data[i] = false
+    }
+    if(!check_data[i]){
+      check_data[i] = true
+    }
+    setChecked(temp_cek)
+    setDummyRender(dummyRender+1) // Force Re-render
+    console.log(dummyRender)
+    handleChangeQuestion(e, index, answer, type)
+  }
 
   let list_options = JSON.parse(options)
   const imageUploader = React.useRef();
@@ -46,8 +65,6 @@ function QuestionItem(props){
 
   console.log(options)
   console.log(type)
-
-  console.log(switchCheckbox)
 
   const handlePreviewImage = (arr_lampiran) => {
     if(Array.isArray(arr_lampiran)){
@@ -177,13 +194,13 @@ function QuestionItem(props){
                 </RadioGroup>
                 : (props.type === "checkbox") ?
                   <div>
-                    <FormGroup >
+                    <FormGroup>
                     {list_options.map((option, i) =>
                       <div style={{display: "flex"}}>
                         <FormControlLabel
                           style={{width: "100%"}}
                           value={String.fromCharCode(97 + i).toUpperCase()}
-                          control={<Checkbox name="gilad" checked={check_data[i]} color="primary" onChange={(e) => handleChangeQuestion(e, index, "answer", "checkbox")}/>}
+                          control={<Checkbox checked={check_data[i]} color="primary" onChange={(e) => handleCheck(e, i, index, "answer", "checkbox")}/>}
                           label={
                             <TextField
                               helperText={!option.length ? "Belum diisi" : null}
@@ -241,7 +258,7 @@ function QuestionItem(props){
             <Grid item>
               <LightTooltip title="Duplikat Soal" placement="right">
                 <IconButton
-                onClick={() => handleDuplicateQuestion(index)}
+                  onClick={() => handleDuplicateQuestion(index)}
                 >
                   <FilterNoneIcon />
                 </IconButton>

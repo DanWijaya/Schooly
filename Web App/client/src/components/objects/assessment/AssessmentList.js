@@ -10,7 +10,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
+   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography, Dialog } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -263,6 +263,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
+    cursor: "pointer"
   },
 }));
 
@@ -279,6 +280,19 @@ function AssessmentList(props) {
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map} = props.subjectsCollection;
   const { user } = props.auth;
+  // Fitur 2 -- Dialog
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
+
+  const handleOpenDialog = (title, subject, start_date, end_date) => {
+    setCurrentDialogInfo({title, subject, start_date, end_date})
+    setOpenDialog(true)
+    console.log(title)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
 
   var rows = [];
   const assessmentRowItem = (data) => {
@@ -371,6 +385,25 @@ function AssessmentList(props) {
         itemName={selectedAssessmentName}
         deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
       />
+      <Dialog
+        fullScreen={false}
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth={true}
+        maxWidth="sm"
+       >
+         <div style={{padding: "20px"}}>
+            <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
+            <Typography variant="h5" align="center" color="primary" style={{marginTop: "10px"}}>
+              {currentDialogInfo.subject}
+            </Typography>
+            <Typography variant="subtitle1" align="center">Waktu Mulai : {currentDialogInfo.start_date}</Typography>
+            <Typography variant="subtitle1" align="center">Waktu Selesai : {currentDialogInfo.end_date}</Typography>
+            <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
+              Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
+            </Typography>
+        </div>
+      </Dialog>
       <AssessmentListToolbar
         role={user.role}
         deleteAssessment={deleteAssessment}
@@ -485,11 +518,11 @@ function AssessmentList(props) {
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               :
-              <Link to={viewpage}>
                 <Paper
                   button component="a"
                   variant="outlined"
                   className={classes.assessmentPaper}
+                  onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD/MMM/YYYY - HH:mm"), moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm"))}
                 >
                   <div>
                     <Typography variant="h6" id={labelId}>
@@ -515,7 +548,6 @@ function AssessmentList(props) {
                     </Hidden>
                   </div>
                 </Paper>
-                </Link>
               }
             </Grid>
           );
