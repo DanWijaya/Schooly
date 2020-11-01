@@ -1,14 +1,16 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, Divider, FormControl, FormControlLabel, Grid, GridList, GridListTile, GridListTileBar,
-   IconButton, Paper, Radio, RadioGroup, TextField, Typography, Checkbox, FormGroup } from "@material-ui/core";
- import { makeStyles } from "@material-ui/core/styles";
- import AddCircleIcon from "@material-ui/icons/AddCircle";
- import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
- import ClearIcon from "@material-ui/icons/Clear";
- import CloseIcon from "@material-ui/icons/Close";
- import DeleteIcon from "@material-ui/icons/Delete";
- import FilterNoneIcon from "@material-ui/icons/FilterNone";
+  IconButton, Paper, Radio, RadioGroup, TextField, Typography, Checkbox, FormGroup, InputAdornment, FilledInput,
+  Tooltip } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import ClearIcon from "@material-ui/icons/Clear";
+import CloseIcon from "@material-ui/icons/Close";
+import DeleteIcon from "@material-ui/icons/Delete";
+import FilterNoneIcon from "@material-ui/icons/FilterNone";
+import HelpIcon from '@material-ui/icons/Help';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -26,13 +28,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItem(props){
-  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type, answerList, check_data} = props
-  console.log(check_data)
+  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, 
+    handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type, answerList,
+    check_data, parseAnswer, handleClickAdornment } = props
   const classes = useStyles()
 
   const [checked, setChecked] = React.useState(check_data)
   const [dummyRender, setDummyRender] = React.useState(0) // Hanya Untuk Force Re-render
-  console.log(checked)
+  const [val, setValue] = React.useState("");
+  const textRef = React.useRef(null);
+  const bactickCounter = React.useRef(0);
+  
   console.log(options)
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
@@ -51,8 +57,7 @@ function QuestionItem(props){
     }
     setChecked(temp_cek)
     setDummyRender(dummyRender+1) // Force Re-render
-    console.log(dummyRender)
-    handleChangeQuestion(e, index, answer, type)
+    handleChangeQuestion(e, index, null, answer, type)
   }
 
   let list_options = JSON.parse(options)
@@ -84,6 +89,30 @@ function QuestionItem(props){
       .catch(err => console.log(err))
     }
   }
+
+  const handleTextFieldChange = (e) => {
+    if (e.target.value.length <= 1) { //agar setelah mengetikan karakter, error "belum diisi" langsung hilang
+      handleChangeQuestion(e, index);
+    }
+    setValue(e.target.value);
+  }
+
+  const handleBlur = (e, index) => {
+    if (document.activeElement !== textRef.current) {
+      // document.activeElement !== textRef.current ketika beralih dari textfield ke elemen lain di halaman tersebut,
+      // document.activeElement === textRef.current ketika fokus beralih dari textfield ke window lain
+      // if (type === "shorttext") {
+        parseAnswer(textRef.current.value, index);
+      // }
+      parseAnswer(textRef.current.value, index);
+      handleChangeQuestion(e, index, textRef.current.value); // e.target.id berisi id elemen pemanggil handleBlur ini
+    }
+  }
+
+
+  React.useEffect(() => {
+    setValue(name);
+  }, [name])
 
   React.useEffect(() => {
     console.log("Lampiran to preview set to empty")
@@ -147,22 +176,53 @@ function QuestionItem(props){
                 </GridListTile>
               )}
               </GridList>
-              <TextField
-                helperText={!name.length ? "Belum diisi" : null}
-                error={!name.length}
-                multiline
-                rowsMax={10}
-                id="name"
-                fullWidth
-                variant="filled"
-                value={name}
-                onChange={(e) => handleChangeQuestion(e, index)}
-              />
+              {
+                (type === "shorttext") ? (
+                  <TextField 
+                    helperText={!name.length ? "Belum diisi" : null}
+                    error={!name.length}
+                    multiline
+                    rowsMax={10}
+                    id="name"
+                    fullWidth
+                    variant="filled"
+                    value={val}
+                    inputRef={textRef}
+                    onChange={(e) => {handleTextFieldChange(e)}}
+                    onBlur={(e) => {handleBlur(e, index)}}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
+                            <IconButton>
+                              <HelpIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment> 
+                      )
+                    }}
+                  />
+                ) : (
+                  <TextField
+                    helperText={!name.length ? "Belum diisi" : null}
+                    error={!name.length}
+                    multiline
+                    rowsMax={10}
+                    id="name"
+                    fullWidth
+                    variant="filled"
+                    value={val}
+                    inputRef={textRef}
+                    onChange={(e) => {handleTextFieldChange(e)}}
+                    onBlur={(e) => {handleChangeQuestion(e, index, textRef.current.value)}}
+                  />
+                )
+              }
             </Grid>
             <Grid item>
               <FormControl component="fieldset" id="answer" fullWidth>
                 {(props.type === "radio") ?
-                  <RadioGroup value={answer.toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, "answer", "radio")}>
+                  <RadioGroup value={answer[0].toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, null,"answer", "radio")}>
                     {list_options.map((option, i) =>
                       <div style={{display: "flex"}}>
                         <FormControlLabel
@@ -226,8 +286,7 @@ function QuestionItem(props){
                     </FormGroup>
                   </div>
                 : 
-                  <div>
-                  </div>
+                  null
               }
               </FormControl>
             </Grid>

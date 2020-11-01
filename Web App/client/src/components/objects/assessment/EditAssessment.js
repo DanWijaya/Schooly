@@ -106,7 +106,7 @@ class EditAssessment extends Component {
       questions: [{ // mau ganti questions ini dalam Hashmap mungkin.
         name: "",
         options: ["Opsi 1", ""],
-        answer: "A",
+        answer: ["A"],
         lampiran: [],
         type: "radio"
       }],
@@ -127,7 +127,9 @@ class EditAssessment extends Component {
       qnsListitem: [],
       snackbarOpen: false,
       snackbarMessage: "",
-      anchorEl: null
+      anchorEl: null,
+      checkboxSnackbarOpen: false,
+      radioSnackbarOpen: false
     }
   }
 
@@ -183,35 +185,54 @@ class EditAssessment extends Component {
     this.setState({ snackbarOpen: true, snackbarMessage: message});
   }
   
+  formatQstNumber = (numberIndexArray) => {
+    let qstNumbers = "";
+    if (numberIndexArray.length === 1) {
+      qstNumbers += (numberIndexArray[0] + 1);
+    } else if (numberIndexArray.length === 2) {
+      qstNumbers += ((numberIndexArray[0] + 1) + " dan " + (numberIndexArray[1] + 1));
+    } else {
+      numberIndexArray.forEach((val, idx) => {
+        if (idx === numberIndexArray.length - 2) {
+          qstNumbers += ((val + 1) + ", dan ");
+        } else if (idx === numberIndexArray.length - 1) {
+          qstNumbers += (val + 1);
+        } else {
+          qstNumbers += ((val + 1) + ", ");
+        }
+      });
+    }
+    return qstNumbers;
+  }
+
   onSubmit = (e) => {
     e.preventDefault();
-    let validToSubmit = true;
     let formData = new FormData();
+    let invalidQuestionIndex = [];
 
     const { questions, lampiranToDelete } = this.state;
     const { updateAssessment , history} = this.props
 
-    for(var i = 0; i < questions.length; i++){
-      let qns = questions[i];
-      if (qns.type === "shorttext") {
+    if (this.state.posted) {
+      for (var i = 0; i < questions.length; i++) {
+        let qns = questions[i];
         if (!qns.name) {
-          validToSubmit = false
-          break;
-        }
-      } else if (qns.type === "longtext") {
-        if (!qns.name) {
-          validToSubmit = false
-          break;
-        }
-      } else {
-        if(!qns.name || qns.options.includes("")){
-          validToSubmit = false;
-          break;
+          invalidQuestionIndex.push(i);
+        } else {
+          if (qns.type === "shorttext") {
+            if (qns.answer.length === 0) {
+              invalidQuestionIndex.push(i);
+            }
+          } else if ((qns.type === "radio") || (qns.type === "checkbox")) {
+            if (qns.options.includes("")) {
+              invalidQuestionIndex.push(i);
+            }
+          }
         }
       }
     }
 
-    if(validToSubmit){
+    if (invalidQuestionIndex.length === 0) {
       questions.forEach((qns) => {
         let lampiran = qns.lampiran.filter(x => typeof x !== "string");
         lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
@@ -238,7 +259,7 @@ class EditAssessment extends Component {
         .catch(err => this.handleOpenErrorSnackbar(`Keterangan ${this.state.type} masih kosong!`))
     }
     else{
-      this.handleOpenErrorSnackbar("Keterangan soal masih ada yang kosong!");
+      this.handleOpenErrorSnackbar(`Keterangan soal nomor ${this.formatQstNumber(invalidQuestionIndex)} masih kosong!`);
     }
   }
 
@@ -280,9 +301,7 @@ class EditAssessment extends Component {
     this.setState({ currentQuestionOption: option })
     console.log(option)
     console.log(this.state.currentQuestionOption)
-    if(option === "radio" || option === "checkbox" || option === "shorttext" || option === "longtext") {
       this.handleAddQuestion(option);
-    }
   };
 
   handleAddQuestion = (option) => {
@@ -296,7 +315,7 @@ class EditAssessment extends Component {
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
-        answer: "A",
+        answer: ["A"],
         lampiran: [],
         type: option
       })
@@ -323,7 +342,7 @@ class EditAssessment extends Component {
       questions.push({
         name: "",
         options: null,
-        answer: "",
+        answer: null,
         lampiran: [],
         type: option
       })
@@ -333,12 +352,12 @@ class EditAssessment extends Component {
 
   }
 
-  handleChangeQuestion = (e, i, otherfield=null, type) => {
+  handleChangeQuestion = (e, i, name=null, otherfield=null, type=null) => {
     var questions = this.state.questions;
 
     if(otherfield === "answer"){
       if(type === "radio"){
-        questions[i]["answer"] = e.target.value
+        questions[i]["answer"] = [e.target.value]
         console.log(e.target.value)
       }
       else if(type === "checkbox"){
@@ -355,17 +374,26 @@ class EditAssessment extends Component {
           })
         }
       }
-      else if (type === "shorttext") {
-        questions[i]["answer"] = e.target.value;
-      }
-      else {
-        questions[i]["answer"] = e.target.value;
-      }
     }else {
-      questions[i][e.target.id] = e.target.value
+      questions[i][e.target.id] = name;
     }
 
     this.setState({ questions: questions})
+  }
+
+  parseAnswer = (txtFieldVal, qstIndex) => {
+    let qst = this.state.questions;
+    let splitResult = txtFieldVal.split("`"); // length hasil split ini pasti >= 1
+    if ((splitResult.length !== 1) && (splitResult.length % 2 !== 0)) {
+      let answerArray = [];
+      for (let i=1; i<=splitResult.length-2; i+=2) {
+        answerArray.push(splitResult[i]);
+      }
+      qst[qstIndex]["answer"] = answerArray;
+    } else {
+      qst[qstIndex]["answer"] = [];
+    }
+    this.setState({questions: qst})
   }
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
@@ -391,19 +419,19 @@ class EditAssessment extends Component {
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
     // questions.splice(i+1, 0, question)
     
-    if (questions[i].type === "longtext") {
-      questions.splice(i+1, 0, {
-        name: questions[i].name,
-        options: null,
-        answer: null,
-        lampiran: [...questions[i].lampiran],
-        type: questions[i].type
-      })
-    } else if (questions[i].type === "shorttext") {
+ if (questions[i].type === "shorttext") {
       questions.splice(i+1, 0, {
         name: questions[i].name,
         options: null,
         answer: [...questions[i].answer],
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    } else if (questions[i].type === "longtext") {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: null,
+        answer: null,
         lampiran: [...questions[i].lampiran],
         type: questions[i].type
       })
@@ -471,6 +499,22 @@ class EditAssessment extends Component {
     }))
   }
 
+  handleOpenCheckboxErrorSnackBar = () => {
+    this.setState({ checkboxSnackbarOpen: true });
+  }
+
+  handleCloseCheckboxErrorSnackBar = () => {
+    this.setState({ checkboxSnackbarOpen: false });
+  }
+
+  handleOpenRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: true });
+  }
+
+  handleCloseRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: false });
+  }
+  
   listQuestion = () => {
     let { questions } = this.state;
     const { page, rowsPerPage} = this.state;
@@ -486,7 +530,7 @@ class EditAssessment extends Component {
             isEdit={true}
             index={i + page * rowsPerPage}
             name={question.name}
-            options={JSON.stringify(question.options)}handleAddQuestion
+            options={JSON.stringify(question.options)}
             answer={question.answer}
             lampiran={question.lampiran}
             lampiran_length={question.lampiran.length}
@@ -497,6 +541,8 @@ class EditAssessment extends Component {
             handleQuestionOptions={this.handleQuestionOptions}
             handleChangeQuestion={this.handleChangeQuestion}
             handleQuestionImage={this.handleQuestionImage}
+            parseAnswer={this.parseAnswer}
+            type={question.type}
             />
         )
     }
@@ -574,6 +620,16 @@ class EditAssessment extends Component {
 
     return (
       <div className={classes.root}>
+        <Snackbar open={this.state.checkboxSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCheckboxErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseCheckboxErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Radio Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}

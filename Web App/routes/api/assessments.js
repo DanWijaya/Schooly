@@ -128,9 +128,38 @@ router.post("/update/:id", (req,res) => {
               console.log(key, value);
               let correct_count = 0;
               for(let i = 0; i < value.length; i++){
-                if(value[i] === new_ans_list[i]){
-                  correct_count = correct_count + 1
+                if (questions[i].type === "radio") {
+                  if (questions[i].answer.includes(value[i])) {
+                    correct_count = correct_count + 1;
+                  }
+                  number_of_gradeable_questions = number_of_gradeable_questions + 1;
                 }
+                else if (questions[i].type === "checkbox") {
+                  let temp_correct = 0;
+                  value[i].forEach((student_answer) => {
+                    if (questions[i].answer.includes(student_answer)) {
+                      temp_correct = temp_correct + 1;
+                    }
+                    else {
+                      temp_correct = temp_correct - 2;
+                    }
+                  })
+                  number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                  if (temp_correct > 0) {
+                    correct_count = correct_count + temp_correct / questions[i].answer.length;
+                  }
+                }
+                else if (questions[i].type === "shorttext") {
+                  let temp_correct = 0;
+                  for (let j = 0; j < questions[i].answer.length; j++) {
+                    if (value[i][j] === questions[i].answer[j]) {
+                      temp_correct++;
+                    }
+                  }
+                  number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                  correct_count = correct_count + temp_correct / questions[i].answer.length;
+                }
+
               }
               let score = 100 * (correct_count/value.length);
               assessmentData.grades.set(key, parseFloat(score.toFixed(1)))
@@ -172,32 +201,42 @@ router.post("/submit/:id", (req,res) => {
         map.set(userId, answers);
         submissions = map;
       }
+
       let correct_count = 0;
-      console.log(answers)
       if(grades){
         if(!grades.has(userId)){
           let number_of_gradeable_questions = 0 // Karena Isian dan Esai tidak bisa autograde, maka yang dihitung hanya radio dan checkbox saja.
           for(let i = 0; i < questions.length; i++){
             if(questions[i].type === "radio"){
               if(questions[i].answer.includes(answers[i])){
-                correct_count = correct_count + 1
+                correct_count = correct_count + 1;
               }
-              number_of_gradeable_questions = number_of_gradeable_questions + 1
+              number_of_gradeable_questions = number_of_gradeable_questions + 1;
             }
             else if(questions[i].type === "checkbox"){
               let temp_correct = 0;
               answers[i].forEach((student_answer) => {
                 if(questions[i].answer.includes(student_answer)){
-                  temp_correct = temp_correct + 1
+                  temp_correct = temp_correct + 1;
                 }
                 else{
-                  temp_correct = temp_correct - 2
+                  temp_correct = temp_correct - 2;
                 }
               })
-              number_of_gradeable_questions = number_of_gradeable_questions + 1
+              number_of_gradeable_questions = number_of_gradeable_questions + 1;
               if(temp_correct > 0){
-                correct_count = correct_count + temp_correct/questions[i].answer.length
+                correct_count = correct_count + temp_correct/questions[i].answer.length;
               }
+            }
+            else if (questions[i].type === "shorttext"){
+              let temp_correct = 0;
+              for (let j = 0; j < questions[i].answer.length; j++) {
+                if (answers[i][j] === questions[i].answer[j]) {
+                  temp_correct++;
+                }
+              }
+              number_of_gradeable_questions = number_of_gradeable_questions + 1;
+              correct_count = correct_count + temp_correct / questions[i].answer.length;
             }
           }
           let score = 100 * correct_count/number_of_gradeable_questions;
@@ -208,27 +247,37 @@ router.post("/submit/:id", (req,res) => {
         let grade_map = new Map();
         let number_of_gradeable_questions = 0
         for(let i = 0; i < questions.length; i++){
-          if(questions[i].type === "radio"){
-            if(questions[i].answer.includes(answers[i])){
-              correct_count = correct_count + 1
+          if (questions[i].type === "radio") {
+            if (questions[i].answer.includes(answers[i])) {
+              correct_count = correct_count + 1;
             }
-            number_of_gradeable_questions = number_of_gradeable_questions + 1
+            number_of_gradeable_questions = number_of_gradeable_questions + 1;
           }
-          else if(questions[i].type === "checkbox"){
+          else if (questions[i].type === "checkbox") {
             let temp_correct = 0;
             answers[i].forEach((student_answer) => {
-              if(questions[i].answer.includes(student_answer)){
-                temp_correct = temp_correct + 1
+              if (questions[i].answer.includes(student_answer)) {
+                temp_correct = temp_correct + 1;
               }
-              else{
-                temp_correct = temp_correct - 2
-              }       
+              else {
+                temp_correct = temp_correct - 2;
+              }
             })
-            number_of_gradeable_questions = number_of_gradeable_questions + 1
-            if(temp_correct > 0){
-              correct_count = correct_count + temp_correct/questions[i].answer.length
+            number_of_gradeable_questions = number_of_gradeable_questions + 1;
+            if (temp_correct > 0) {
+              correct_count = correct_count + temp_correct / questions[i].answer.length;
             }
           }
+          else if (questions[i].type === "shorttext") {
+            let temp_correct = 0;
+            for (let j = 0; j < questions[i].answer.length; j++) {
+              if (answers[i][j] === questions[i].answer[j]) {
+                temp_correct++;
+              }
+            }
+            number_of_gradeable_questions = number_of_gradeable_questions + 1;
+            correct_count = correct_count + temp_correct / questions[i].answer.length;
+          }        
         }
         let score = 100 * correct_count/number_of_gradeable_questions;
         grade_map.set(userId, parseFloat(score.toFixed(1)));

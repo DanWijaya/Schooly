@@ -7,8 +7,8 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, submitAssessment } from "../../../actions/AssessmentActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormGroup,
-        Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, Checkbox, 
-        RadioGroup, TextField, Typography } from "@material-ui/core";
+  Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, Checkbox, 
+  RadioGroup, TextField, Typography, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -238,7 +238,7 @@ function ViewAssessmentStudent(props) {
   let id = props.match.params.id;
 
   const [ qnsIndex, setQnsIndex ] = React.useState(0);
-  const [ answer, setAnswer] = React.useState([]);
+  const [ answer, setAnswer] = React.useState([]); // contoh isi answer: [["A"], ["sedang", "menulis"], [null, "harian"]]
   const [ posted, setPosted] = React.useState(null)
   const [ start, setStart ] = React.useState(!localStorage.getItem(`remainingTime_${id}`) ? null : true);
   const [ finish, setFinish ] = React.useState(null);
@@ -266,7 +266,14 @@ function ViewAssessmentStudent(props) {
   // console.log(submissions)
   React.useEffect(() => {
     if(questions_length){
-      let arr = Array.apply("", Array(questions_length))
+      // let arr = Array.apply("", Array(questions_length))
+      let arr = [];
+
+      // reminder: jangan pakai fill([])
+      for (let i = 1; i <= questions_length; i++) {
+        arr.push([]);
+      }
+
       setAnswer(arr)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -284,13 +291,12 @@ function ViewAssessmentStudent(props) {
     setQnsIndex(i)
   }
 
-  const handleChangeAnswer = (e, i, type) => {
+  const handleChangeAnswer = (e, type) => {
     if(type === "radio" || type === "longtext"){
       let temp = answer;
-      temp[qnsIndex] = e.target.value;
+      temp[qnsIndex] = [e.target.value];
       localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
       setAnswer([...temp])
-      console.log(answer)
     }
     else if(type === "checkbox"){
       if(!answer[qnsIndex]){
@@ -299,7 +305,6 @@ function ViewAssessmentStudent(props) {
         setAnswer([...temp])
       }
       else if(!e.target.checked || answer[qnsIndex].includes(e.target.value)){
-        console.log("tidak checked")
         let temp = answer;
         temp[qnsIndex] = temp[qnsIndex].filter(function(value,index){
           return value != e.target.value
@@ -310,10 +315,39 @@ function ViewAssessmentStudent(props) {
         let temp = answer;
         temp[qnsIndex].push(e.target.value)
         setAnswer([...temp])
-        console.log("checked")
       }
-      console.log(answer)
     }
+    else{ // type === "shorttext"
+      let temp = answer;
+      temp[qnsIndex][e.target.id] = e.target.value;
+      localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
+      setAnswer([...temp]);
+    }
+  }
+
+  const generateSoalShortText = () => {
+    let splitResult = questions[qnsIndex].name.split("`");
+    let idIterator = 0;
+
+    for (let i=1; i<=splitResult.length-2; i+=2) {
+      splitResult[i] = (
+      <Input 
+        type="text" 
+        key={`${qnsIndex}-${idIterator}`} 
+        id={idIterator}
+        value={answer[qnsIndex][idIterator]} 
+        onChange={(e) => { handleChangeAnswer(e)}} 
+      />);
+      idIterator++;
+    }
+    
+    return (
+      <Typography variant="body1" gutterButtom>
+        <form id="form">
+          {splitResult}
+        </form>
+      </Typography>
+    ); 
   }
 
   const handleStart = () => {
@@ -471,17 +505,24 @@ function ViewAssessmentStudent(props) {
                       </GridListTile>
                     )}
                   </GridList>
-                  <Typography variant="h5" gutterButtom>
-                    <b>{!questions ? null : questions[qnsIndex].name}</b>
-                  </Typography>
+                    {(!questions) ? ( 
+                      null
+                    ) : (
+                      (questions[qnsIndex].type === "shorttext") ? (
+                        generateSoalShortText()
+                      ) : (
+                        <Typography variant="h5" gutterButtom>
+                          <b>{questions[qnsIndex].name}</b>
+                        </Typography>
+                      )
+                    )}
                 </Grid>
                 <Grid item>
                   <FormControl component="fieldset" id="answer" fullWidth>
                     {(!questions) ? (
                       null
                     ) : ((questions[qnsIndex].type === "radio") ? (
-                        <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={(e) => handleChangeAnswer(e, null, "radio")}>
-                          
+                        <RadioGroup value={answer[qnsIndex][0] ? answer[qnsIndex][0] : ""} id="answer" onChange={(e) => handleChangeAnswer(e, "radio")}>                          
                           {questions[qnsIndex].options.map((option, i) =>
                           <div style={{display: "flex"}}>
                             <FormControlLabel
@@ -492,7 +533,6 @@ function ViewAssessmentStudent(props) {
                             />
                           </div>
                           )}
-
                         </RadioGroup>
                       ) : (questions[qnsIndex].type === "checkbox") ? (
                         <FormGroup>
@@ -501,7 +541,7 @@ function ViewAssessmentStudent(props) {
                             <FormControlLabel
                               style={{width: "100%"}}
                               value={String.fromCharCode(97 + i).toUpperCase()}
-                              control={<Checkbox color="primary" onChange={(e) => handleChangeAnswer(e, i, "checkbox")}/>}
+                              control={<Checkbox color="primary" onChange={(e) => handleChangeAnswer(e, "checkbox")}/>}
                               label={ <Typography className={classes.optionText}>{option}</Typography>}
                             />
                           </div>
@@ -509,8 +549,15 @@ function ViewAssessmentStudent(props) {
                         </FormGroup>
                       ) : (questions[qnsIndex].type === "shorttext") ? (
                         null
-                      ) : (questions[qnsIndex].type === "longtext") ? (
-                        <TextField id="answer" label="Jawaban Anda" variant="outlined" onChange={(e) => handleChangeAnswer(e,null, "longtext")} />
+                      ) : (questions[qnsIndex].type === "longtext") ? ( // bookmark
+                        <TextField
+                          key={`${user.id}-${qnsIndex}`}
+                          id="answer"
+                          value={answer[qnsIndex][0]}
+                          label="Jawaban Anda"
+                          variant="outlined"
+                          onChange={(e) => { handleChangeAnswer(e, "longtext") }}
+                        />
                       ) : (
                         null
                       )

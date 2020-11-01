@@ -90,7 +90,7 @@ class CreateAssessment extends Component {
       questions: [{ // mau ganti questions ini dalam Hashmap mungkin.
         name: "",
         options: ["Opsi 1", ""],
-        answer: "A",
+        answer: ["A"],
         lampiran: [],
         type: "radio"
       }],
@@ -111,7 +111,8 @@ class CreateAssessment extends Component {
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
-      checkboxSnackbarOpen: false
+      checkboxSnackbarOpen: false,
+      radioSnackbarOpen: false
     }
   }
 
@@ -135,35 +136,54 @@ class CreateAssessment extends Component {
     this.setState({ snackbarOpen: true, snackbarMessage: message});
   }
 
+  formatQstNumber = (numberIndexArray) => {
+    let qstNumbers = "";
+    if (numberIndexArray.length === 1) {
+      qstNumbers += (numberIndexArray[0] + 1);
+    } else if (numberIndexArray.length === 2) {
+      qstNumbers += ((numberIndexArray[0] + 1) + " dan " + (numberIndexArray[1] + 1));
+    } else {
+      numberIndexArray.forEach((val, idx) => {
+        if (idx === numberIndexArray.length - 2) {
+          qstNumbers += ((val + 1) + ", dan ");
+        } else if (idx === numberIndexArray.length - 1) {
+          qstNumbers += (val + 1);
+        } else {
+          qstNumbers += ((val + 1) + ", ");
+        }
+      });
+    }
+    return qstNumbers;
+  }
+
   onSubmit = (e, id) => {
     e.preventDefault()
-    let validToSubmit = true;
     let formData = new FormData();
+    let invalidQuestionIndex = [];
 
     const { questions } = this.state;
     const { createAssessment , history} = this.props
 
-    for(var i = 0; i < questions.length; i++){
-      let qns = questions[i];
-      if (qns.type === "shorttext") {
+    if (this.state.posted) {
+      for(var i = 0; i < questions.length; i++){
+        let qns = questions[i];
         if (!qns.name) {
-          validToSubmit = false
-          break;
-        }
-      } else if (qns.type === "longtext") {
-        if (!qns.name) {
-          validToSubmit = false
-          break;
-        }
-      } else {
-        if(!qns.name || qns.options.includes("")){
-          validToSubmit = false;
-          break;
+          invalidQuestionIndex.push(i);
+        } else {
+          if (qns.type === "shorttext") {
+            if (qns.answer.length === 0) {
+              invalidQuestionIndex.push(i);
+            }
+          } else if ((qns.type === "radio") || (qns.type === "checkbox")) {
+            if (qns.options.includes("")) {
+              invalidQuestionIndex.push(i);
+            }
+          }
         }
       }
     }
-
-    if(validToSubmit){
+    
+    if (invalidQuestionIndex.length === 0) {
       questions.forEach((qns) => {
         let lampiran = qns.lampiran;
         lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
@@ -189,9 +209,8 @@ class CreateAssessment extends Component {
         .catch(err => this.handleOpenErrorSnackbar(`Keterangan Kuis/Ujian masih kosong!`))
     }
     else{
-      this.handleOpenErrorSnackbar("Keterangan soal masih ada yang kosong!");
+      this.handleOpenErrorSnackbar(`Keterangan soal nomor ${this.formatQstNumber(invalidQuestionIndex)} masih kosong!`);
     }
-
   }
 
   handleOpenUploadDialog = () => {
@@ -223,8 +242,6 @@ class CreateAssessment extends Component {
     this.setState({ end_date: date })
   }
 
-  // FITUR 2 -----------------------------------------
-
   handleClickMenuTambah = (event) => {
     this.setState({anchorEl: event.currentTarget}); 
   };
@@ -234,9 +251,7 @@ class CreateAssessment extends Component {
     this.setState({ currentQuestionOption: option })
     console.log(option)
     console.log(this.state.currentQuestionOption)
-    if(option === "radio" || option === "checkbox" || option === "shorttext" || option === "longtext") {
-      this.handleAddQuestion(option);
-    }
+    this.handleAddQuestion(option);
   };
 
   handleAddQuestion = (option) => {
@@ -245,14 +260,12 @@ class CreateAssessment extends Component {
     // questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
     // this.setState({questions: questions})
 
-    // FITUR 2 ---------------------------------------------------------------------------------------------------
-
     let questions = this.state.questions;
     if(option === "radio"){
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
-        answer: "A",
+        answer: ["A"],
         lampiran: [],
         type: option
       })
@@ -279,7 +292,7 @@ class CreateAssessment extends Component {
       questions.push({
         name: "",
         options: null,
-        answer: "",
+        answer: null,
         lampiran: [],
         type: option
       })
@@ -288,21 +301,18 @@ class CreateAssessment extends Component {
     this.setState({ currentQuestionOption: null })
   }
 
-  handleChangeQuestion = (e, i, otherfield=null, type) => {
+  handleChangeQuestion = (e, i, name=null, otherfield=null, type=null) => {
     var questions = this.state.questions;
-    console.log(e.target.checked)
+
     if(otherfield === "answer"){
       if(type === "radio"){
-        questions[i]["answer"] = e.target.value
-        console.log(e.target.value)
+        questions[i]["answer"] = [e.target.value]
       }
       else if(type === "checkbox"){
-        console.log(e.target.checked)
         if(typeof questions[i]["answer"] === "string"){
           questions[i]["answer"] = []
         }
         if(!e.target.checked || questions[i]["answer"].includes(e.target.value)){
-          console.log("tidak checked")
           if(questions[i]["answer"].length === 1){
             this.handleOpenCheckboxErrorSnackBar()
           }
@@ -314,29 +324,44 @@ class CreateAssessment extends Component {
         }
         else if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
           questions[i]["answer"].push(e.target.value)
-          console.log("checked")
         }
       }
-      else if (type === "shorttext") {
-        questions[i]["answer"] = e.target.value;
-      }
-      else if (type === "longtext") {
-        questions[i]["answer"] = e.target.value;
-      }
     }else {
-      questions[i][e.target.id] = e.target.value
+      questions[i][e.target.id] = (name ? name : e.target.value);
     }
-    console.log(questions[i]["answer"])
     this.setState({ questions: questions})
   }
 
-  // --------------------------------------------------------------------------------------------------
+  // -untuk tipe soal shorttext, agar string soal tidak ditraversal secara menyeluruh (untuk mencari 
+  // kunci jawaban) setiap kali guru mengetik huruf, string soal akan disimpan sebagai ref di komponen soal tersebut.
+  // string ini baru akan diproses hanya ketika guru mengklik elemen lain selain textfield tersebut.
+  parseAnswer = (txtFieldVal, qstIndex) => {
+    let qst = this.state.questions;
+    let splitResult = txtFieldVal.split("`"); // length hasil split ini pasti >= 1
+    if ((splitResult.length !== 1) && (splitResult.length % 2 !== 0)) {
+      let answerArray = [];
+      for (let i=1; i<=splitResult.length-2; i+=2) {
+        answerArray.push(splitResult[i]);
+      }
+      qst[qstIndex]["answer"] = answerArray;
+    } else {
+      qst[qstIndex]["answer"] = [];
+    }
+    this.setState({questions: qst})
+  }
+
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
     console.log(optionIndex)
     console.log(qnsIndex)
     let questions = this.state.questions
     if(action === "Delete"){
-      questions[qnsIndex].options.splice(optionIndex, 1)
+      // mencegah adanya soal radio yang tidak memiliki opsi 
+      if (questions[qnsIndex].options.length === 1) { 
+        questions[qnsIndex].options[0] = ""
+        this.handleOpenRadioErrorSnackBar()
+      } else {
+        questions[qnsIndex].options.splice(optionIndex, 1)
+      }
     }else if(action === "Add"){
       questions[qnsIndex].options.push("")
     }else if(action === "Edit"){
@@ -355,19 +380,19 @@ class CreateAssessment extends Component {
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
     // questions.splice(i+1, 0, question)
 
-    if (questions[i].type === "longtext") {
-      questions.splice(i+1, 0, {
-        name: questions[i].name,
-        options: null,
-        answer: null,
-        lampiran: [...questions[i].lampiran],
-        type: questions[i].type
-      })
-    } else if (questions[i].type === "shorttext") {
+    if (questions[i].type === "shorttext") {
       questions.splice(i+1, 0, {
         name: questions[i].name,
         options: null,
         answer: [...questions[i].answer],
+        lampiran: [...questions[i].lampiran],
+        type: questions[i].type
+      })
+    } else if (questions[i].type === "longtext") {
+      questions.splice(i+1, 0, {
+        name: questions[i].name,
+        options: null,
+        answer: null,
         lampiran: [...questions[i].lampiran],
         type: questions[i].type
       })
@@ -445,21 +470,25 @@ class CreateAssessment extends Component {
 
       return(
         <QuestionItem
-          type={question.type}
           isEdit={false}
-          lampiranToAdd={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
-          currentLampiran={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
           index={i + page * rowsPerPage}
           name={question.name}
           options={JSON.stringify(question.options)}
           answer={question.answer}
           lampiran={question.lampiran}
           lampiran_length={question.lampiran.length}
+          lampiranToAdd={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
+          currentLampiran={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
           deleteQuestion={this.deleteQuestion}
           handleDuplicateQuestion={this.handleDuplicateQuestion}
           handleQuestionOptions={this.handleQuestionOptions}
           handleChangeQuestion={this.handleChangeQuestion}
           handleQuestionImage={this.handleQuestionImage}
+          // handleClickAdornment={this.handleClickAdornment}
+          parseAnswer={this.parseAnswer}
+          type={question.type}
+          userId={this.props.auth.user.id}
+          onSubmit={this.onSubmit}
           answerList={answerListArray}
           check_data={booleanArray}
         />
@@ -500,12 +529,21 @@ class CreateAssessment extends Component {
   }
 
   handleOpenCheckboxErrorSnackBar = () => {
-    this.setState({checkboxSnackbarOpen: true})
+    this.setState({checkboxSnackbarOpen: true});
   }
 
   handleCloseCheckboxErrorSnackBar = () => {
-    this.setState({checkboxSnackbarOpen: false})
+    this.setState({checkboxSnackbarOpen: false});
   }
+
+  handleOpenRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: true });
+  }
+
+  handleCloseRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: false });
+  }
+
   render() {
     console.log(this.state.questions)
     const { class_assigned } = this.state;
@@ -561,6 +599,11 @@ class CreateAssessment extends Component {
         <Snackbar open={this.state.checkboxSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCheckboxErrorSnackBar}>
           <MuiAlert onClose={this.handleCloseCheckboxErrorSnackBar} severity="error">
             Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Radio Minimal Memiliki Satu Jawaban.
           </MuiAlert>
         </Snackbar>
         <DeleteDialog
