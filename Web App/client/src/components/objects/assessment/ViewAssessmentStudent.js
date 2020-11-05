@@ -325,7 +325,7 @@ function ViewAssessmentStudent(props) {
     }
   }
 
-  const generateSoalShortText = () => {
+  const generateSoalShortTextStudent = () => {
     let splitResult = questions[qnsIndex].name.split("`");
     let idIterator = 0;
 
@@ -343,7 +343,7 @@ function ViewAssessmentStudent(props) {
     
     return (
       <Typography variant="body1" gutterButtom>
-        <form id="form">
+        <form>
           {splitResult}
         </form>
       </Typography>
@@ -386,7 +386,7 @@ function ViewAssessmentStudent(props) {
     setDummy(false)
     setFinish(true)
     setStart(false);
-    console.log(localStorage.getItem(`status`))
+    // console.log(localStorage.getItem(`status`))
     let data = {
       "answers" : answer,
       "classId" : user.kelas,
@@ -509,7 +509,7 @@ function ViewAssessmentStudent(props) {
                       null
                     ) : (
                       (questions[qnsIndex].type === "shorttext") ? (
-                        generateSoalShortText()
+                        generateSoalShortTextStudent()
                       ) : (
                         <Typography variant="h5" gutterButtom>
                           <b>{questions[qnsIndex].name}</b>

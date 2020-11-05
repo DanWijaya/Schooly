@@ -13,12 +13,13 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import QuestionItem from "./QuestionItem";
 import { Button, Chip, Divider,
    FormControl, FormControlLabel, FormHelperText, Grid,
-   MenuItem, Paper, Select, Snackbar, Switch, TextField, TablePagination, Typography, Menu } from "@material-ui/core";
+   MenuItem, Paper, Select, Snackbar, Switch, TextField, TablePagination, Typography, Menu, Tooltip, IconButton } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
+import { RadioButtonChecked, CheckBox, TextFormat, Subject, Assignment } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
@@ -36,13 +37,45 @@ const styles = (theme) => ({
     },
   },
   addQuestionButton: {
-    backgroundColor: theme.palette.primary.main,
+    boxShadow: theme.shadows[2],
+    margin: "0 16px",
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.primary.main,
     },
   },
+  RadioQst: {
+    backgroundColor: "#02AFF8",
+    "&:focus, &:hover": {
+      color: "#02AFF8"
+    },
+  },
+  CheckboxQst: {
+    backgroundColor: "#049F90",
+    "&:focus, &:hover": {
+      color: "#049F90"
+    },
+  },
+  ShorttextQst: {
+    backgroundColor: "#FD7D2E",
+    "&:focus, &:hover": {
+      color: "#FD7D2E"
+    },
+  },
+  LongtextQst: {
+    backgroundColor: "#B2417C",
+    "&:focus, &:hover": {
+      color: "#B2417C"
+    },
+  },
+  // addQuestionButton: {
+  //   backgroundColor: theme.palette.primary.main,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "white",
+  //     color: theme.palette.primary.main,
+  //   },
+  // },
   pageNavigator: {
     justifyContent: "flex-start",
     [theme.breakpoints.down("sm")]: {
@@ -249,8 +282,8 @@ class CreateAssessment extends Component {
   handleCloseMenuTambah = (option) => {
     this.setState({ anchorEl: null });
     this.setState({ currentQuestionOption: option })
-    console.log(option)
-    console.log(this.state.currentQuestionOption)
+    // console.log(option)
+    // console.log(this.state.currentQuestionOption)
     this.handleAddQuestion(option);
   };
 
@@ -350,9 +383,32 @@ class CreateAssessment extends Component {
     this.setState({questions: qst})
   }
 
+  copyToClipboard = (e) => {
+    let textArea = document.createElement("textarea");
+
+    textArea.value = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
+    textArea.style.position = 'fixed';
+    textArea.style.top = 0;
+    textArea.style.left = 0;
+    textArea.style.width = '2em';
+    textArea.style.height = '2em';
+    textArea.style.padding = 0;
+    textArea.style.border = 'none';
+    textArea.style.outline = 'none';
+    textArea.style.boxShadow = 'none';
+    textArea.style.background = 'transparent';
+
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    e.target.focus();
+    document.body.removeChild(textArea);
+  }; 
+
+
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
-    console.log(optionIndex)
-    console.log(qnsIndex)
+    // console.log(optionIndex)
+    // console.log(qnsIndex)
     let questions = this.state.questions
     if(action === "Delete"){
       // mencegah adanya soal radio yang tidak memiliki opsi 
@@ -369,7 +425,7 @@ class CreateAssessment extends Component {
     }else{
       console.log("No action is specified")
     }
-    console.log(questions)
+    // console.log(questions)
     this.setState({ questions: questions})
   }
 
@@ -438,10 +494,10 @@ class CreateAssessment extends Component {
     let questions = this.state.questions;
     const { page, rowsPerPage} = this.state;
     
-    let answerListArray = []
-    this.state.questions.forEach(function(value,index){
-      answerListArray.push(value.answer)
-    })
+    // let answerListArray = []
+    // this.state.questions.forEach(function(value,index){
+    //   answerListArray.push(value.answer)
+    // })
 
 
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
@@ -450,12 +506,12 @@ class CreateAssessment extends Component {
       let booleanArray = [];
       if (question.type === "checkbox") {
         let tempArray = [];
-        if(typeof question.answer=="object"){
+        if(typeof question.answer === "object"){
           question.answer.forEach(function(value,index){
             tempArray.push(Number(value.charCodeAt(0))-65)           
           })
         }
-        console.log(tempArray)
+        // console.log(tempArray)
         for(let j=0;j<this.state.questions[i].options.length;j++){
           if(tempArray.includes(j)){
             booleanArray[j] = true;
@@ -464,9 +520,9 @@ class CreateAssessment extends Component {
             booleanArray[j] = false;
           }
         }
-        console.log(booleanArray)
+        // console.log(booleanArray)
       }
-      console.log(booleanArray)
+      // console.log(booleanArray)
 
       return(
         <QuestionItem
@@ -484,12 +540,8 @@ class CreateAssessment extends Component {
           handleQuestionOptions={this.handleQuestionOptions}
           handleChangeQuestion={this.handleChangeQuestion}
           handleQuestionImage={this.handleQuestionImage}
-          // handleClickAdornment={this.handleClickAdornment}
           parseAnswer={this.parseAnswer}
           type={question.type}
-          userId={this.props.auth.user.id}
-          onSubmit={this.onSubmit}
-          answerList={answerListArray}
           check_data={booleanArray}
         />
       )
@@ -793,7 +845,7 @@ class CreateAssessment extends Component {
             </Grid>
             {this.listQuestion()}
             <Grid item container justify="center">
-              <Button
+              {/* <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={this.handleClickMenuTambah}
@@ -812,7 +864,56 @@ class CreateAssessment extends Component {
                 <MenuItem onClick={() => this.handleCloseMenuTambah("checkbox")}>Pilihan Ganda (Dengan Banyak Pilihan)</MenuItem>
                 <MenuItem onClick={() => this.handleCloseMenuTambah("shorttext")}>Isian Pendek</MenuItem>
                 <MenuItem onClick={() => this.handleCloseMenuTambah("longtext")}>Uraian</MenuItem>
-            </Menu>
+              </Menu> */}
+              <Grid item>
+                <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("radio")} style={{ margin: "0 16px", backgroundColor: "#02AFF8", color: "white" }}>
+                    <RadioButtonChecked />
+                  </Button>
+
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
+                    <RadioButtonChecked />
+                  </IconButton> */}
+
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("checkbox")} style={{ margin: "0 16px", backgroundColor: "#049F90", color: "white" }}>
+                    <CheckBox />
+                  </Button>
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
+                    <CheckBox />
+                  </IconButton> */}
+
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Tambah soal isian pendek">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("shorttext")} style={{ margin: "0 16px", backgroundColor: "#FD7D2E", color: "white" }}>
+                    <TextFormat />
+                  </Button>
+
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
+                    <TextFormat />
+                  </IconButton> */}
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Tambah soal uraian">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("longtext")} style={{ margin: "0 16px", backgroundColor: "#B2417C", color: "white" }}>
+                    <Subject />
+                  </Button>
+
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
+                    <Subject />
+                  </IconButton> */}
+                </Tooltip>
+              </Grid>
+
             </Grid>
             <Grid item>
               <Paper>
@@ -862,6 +963,15 @@ class CreateAssessment extends Component {
                       </Button>
                     </Grid>
                   </Grid>
+
+                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                    <Tooltip title="Salin ID kuis/ujian ke clipboard">
+                      <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
+                        <Assignment />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+
                 </Grid>
               </Paper>
             </Grid>

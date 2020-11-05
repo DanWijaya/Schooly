@@ -30,9 +30,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Footer() {
+function Footer(props) {
   const classes = useStyles();
-
+  const { hideLink } = props;
   return (
     <div className={classes.root}>
       <Divider style={{marginBottom: "10px"}} />
@@ -51,16 +51,19 @@ function Footer() {
             <div className={classes.footerMobileContainer}>
               <Typography variant="caption">
                 <Link to="/bantuan">
+                  {/* {(hideLink) ? null : "Bantuan"} */}
                   Bantuan
                 </Link>
               </Typography>
               <Typography variant="caption">
                 <Link to="/tentang-schooly">
+                  {/* {(hideLink) ? null : "Tentang Schooly"} */}
                   Tentang Schooly
                 </Link>
               </Typography>
               <Typography variant="caption">
                 <Link to="/kebijakan-penggunaan">
+                  {/* {(hideLink) ? null : "Kebijakan Pengunaan"} */}
                   Kebijakan Pengunaan
                 </Link>
               </Typography>
@@ -70,11 +73,13 @@ function Footer() {
             <div className={classes.footerMobileContainer}>
               <Typography variant="caption">
                 <Link to="mailto:schoolysystem@gmail.com">
+                  {/* {(hideLink) ? null : "Hubungi Kami"} */}
                   Hubungi Kami
                 </Link>
               </Typography>
               <Typography variant="caption">
                 <Link to="http://www.instagram.com">
+                  {/* {(hideLink) ? null : "Instagram"} */}
                   Instagram
                 </Link>
               </Typography>
@@ -91,11 +96,13 @@ function Footer() {
             </Grid>
             <Grid item>
               <Link to="/bantuan">
+                {/* {(hideLink) ? null : "Bantuan"} */}
                 Bantuan
               </Link>
             </Grid>
             <Grid item>
               <Link to="/kebijakan-penggunaan">
+                {/* {(hideLink) ? null : "Kebijakan Pengunaan"} */}
                 Kebijakan Pengunaan
               </Link>
             </Grid>
@@ -104,16 +111,19 @@ function Footer() {
           <Grid container spacing={2} justify="flex-end">
             <Grid item>
               <Link to="/tentang-schooly">
+                {/* {(hideLink) ? null : "Tentang Schooly"} */}
                 Tentang Schooly
               </Link>
             </Grid>
             <Grid item>
               <a href="mailto:schoolysystem@gmail.com">
+                {/* {(hideLink) ? null : "Hubungi Kami"} */}
                 Hubungi Kami
               </a>
             </Grid>
             <Grid item>
               <a href="http://www.instagram.com">
+                {/* {(hideLink) ? null : "Instagram"} */}
                 Instagram
               </a>
             </Grid>

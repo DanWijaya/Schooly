@@ -7,7 +7,7 @@ import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentA
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Typography } from "@material-ui/core";
+import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Typography, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -122,6 +122,30 @@ function ViewAssessmentTeacher(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
+  const generateSoalShortTextTeacher = (qst, qstIndex) => {
+    let splitResult = qst.name.split("`");
+    let iterator = 0;
+
+    for (let i = 1; i <= splitResult.length - 2; i += 2) {
+      splitResult[i] = (
+        <Input
+          type="text"
+          key={`${qstIndex}-${iterator}`}
+          disabled={true}
+          value={qst.answer[iterator]}
+        />);
+      iterator++;
+    }
+    
+    return (
+      <Typography variant="body1" gutterButtom>
+        <form>
+          {splitResult}
+        </form>
+      </Typography>
+    ); 
+  }
 
   function DeleteDialog() {
     return (
@@ -249,16 +273,38 @@ function ViewAssessmentTeacher(props) {
                       )}
                     </GridList>
                     <Typography variant="h6">
-                      {question.name}
+                      {
+                        (question.type === "shorttext") ? (
+                          generateSoalShortTextTeacher(question, i)
+                        ) : (question.type === "longtext") ? (
+                          <Typography variant="body1" gutterButtom>
+                            {question.name}
+                          </Typography>
+                        ) : (
+                          <Typography variant="h5" gutterButtom>
+                            <b>{question.name}</b>
+                          </Typography>
+                        )
+                      }
                     </Typography>
                   </Grid>
                   <Grid item>
-                    {question.options.map((option, i) =>
-                    (
-                      <Typography className={question.answer === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
-                        {option}
-                      </Typography>
-                    ))}
+                    {(question.type === "radio") ? (
+                      question.options.map((option, i) => (
+                        <Typography className={question.answer[0] === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
+                          {option}
+                        </Typography>
+                      ))
+                    ) : (question.type === "checkbox") ? (
+                      question.options.map((option, i) => (
+                        <Typography className={question.answer.includes(String.fromCharCode(97 + i).toUpperCase()) ? classes.answerText : classes.optionText}>
+                          {option}
+                        </Typography>
+                      ))
+                    ) : ( // question.type === "shorttext" || question.type === "shorttext" 
+                      null
+                    )
+                    }
                   </Grid>
                 </Grid>
               </Paper>

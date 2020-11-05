@@ -10,7 +10,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
-import HelpIcon from '@material-ui/icons/Help';
+import HelpIcon from "@material-ui/icons/Help";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -29,17 +29,16 @@ const useStyles = makeStyles((theme) => ({
 
 function QuestionItem(props){
   const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, 
-    handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type, answerList,
-    check_data, parseAnswer, handleClickAdornment } = props
+    handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type,
+    check_data, parseAnswer } = props
   const classes = useStyles()
 
   const [checked, setChecked] = React.useState(check_data)
   const [dummyRender, setDummyRender] = React.useState(0) // Hanya Untuk Force Re-render
   const [val, setValue] = React.useState("");
   const textRef = React.useRef(null);
-  const bactickCounter = React.useRef(0);
   
-  console.log(options)
+  // console.log(options)
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
   // dipakai untuk edit assessment
@@ -62,14 +61,14 @@ function QuestionItem(props){
 
   let list_options = JSON.parse(options)
   const imageUploader = React.useRef();
-  console.log("A".charCodeAt(0))
+  // console.log("A".charCodeAt(0))
   const imageUpload = () => {
     imageUploader.current.value = null
     imageUploader.current.click()
   }
 
-  console.log(options)
-  console.log(type)
+  // console.log(options)
+  // console.log(type)
 
   const handlePreviewImage = (arr_lampiran) => {
     if(Array.isArray(arr_lampiran)){
@@ -101,9 +100,6 @@ function QuestionItem(props){
     if (document.activeElement !== textRef.current) {
       // document.activeElement !== textRef.current ketika beralih dari textfield ke elemen lain di halaman tersebut,
       // document.activeElement === textRef.current ketika fokus beralih dari textfield ke window lain
-      // if (type === "shorttext") {
-        parseAnswer(textRef.current.value, index);
-      // }
       parseAnswer(textRef.current.value, index);
       handleChangeQuestion(e, index, textRef.current.value); // e.target.id berisi id elemen pemanggil handleBlur ini
     }
@@ -221,7 +217,7 @@ function QuestionItem(props){
             </Grid>
             <Grid item>
               <FormControl component="fieldset" id="answer" fullWidth>
-                {(props.type === "radio") ?
+                {(props.type === "radio") ? (
                   <RadioGroup value={answer[0].toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, null,"answer", "radio")}>
                     {list_options.map((option, i) =>
                       <div style={{display: "flex"}}>
@@ -245,48 +241,47 @@ function QuestionItem(props){
                           <ClearIcon/>
                         </IconButton>
                       </div>
-                  )}
-                  <div>
-                    <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
-                      Tambah  pilihan
-                    </Button>
-                  </div>
-                </RadioGroup>
-                : (props.type === "checkbox") ?
-                  <div>
-                    <FormGroup>
-                    {list_options.map((option, i) =>
-                      <div style={{display: "flex"}}>
-                        <FormControlLabel
-                          style={{width: "100%"}}
-                          value={String.fromCharCode(97 + i).toUpperCase()}
-                          control={<Checkbox checked={check_data[i]} color="primary" onChange={(e) => handleCheck(e, i, index, "answer", "checkbox")}/>}
-                          label={
-                            <TextField
-                              helperText={!option.length ? "Belum diisi" : null}
-                              error={!option.length}
-                              onError={() => console.log("ERROR textfield")}
-                              style={{flexGrow: 1}}
-                              value={option}
-                              onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
-                              placeholder="Isi Pilihan"
-                            />
-                          }
-                        />
-                        <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
-                          <ClearIcon/>
-                        </IconButton>
-                      </div>
                     )}
                     <div>
                       <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
                         Tambah  pilihan
                       </Button>
                     </div>
-                    </FormGroup>
-                  </div>
-                : 
+                  </RadioGroup>
+                ) : (props.type === "checkbox") ? (
+                  <FormGroup>
+                  {list_options.map((option, i) =>
+                    <div style={{display: "flex"}}>
+                      <FormControlLabel
+                        style={{width: "100%"}}
+                        value={String.fromCharCode(97 + i).toUpperCase()}
+                        control={<Checkbox checked={check_data[i]} color="primary" onChange={(e) => handleCheck(e, i, index, "answer", "checkbox")}/>}
+                        label={
+                          <TextField
+                            helperText={!option.length ? "Belum diisi" : null}
+                            error={!option.length}
+                            onError={() => console.log("ERROR textfield")}
+                            style={{flexGrow: 1}}
+                            value={option}
+                            onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
+                            placeholder="Isi Pilihan"
+                          />
+                        }
+                      />
+                      <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
+                        <ClearIcon/>
+                      </IconButton>
+                    </div>
+                  )}
+                    <div>
+                      <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
+                        Tambah  pilihan
+                      </Button>
+                    </div>
+                  </FormGroup>
+                ) : (
                   null
+                )
               }
               </FormControl>
             </Grid>
@@ -317,7 +312,7 @@ function QuestionItem(props){
             <Grid item>
               <LightTooltip title="Duplikat Soal" placement="right">
                 <IconButton
-                  onClick={() => handleDuplicateQuestion(index)}
+                onClick={() => handleDuplicateQuestion(index)}
                 >
                   <FilterNoneIcon />
                 </IconButton>

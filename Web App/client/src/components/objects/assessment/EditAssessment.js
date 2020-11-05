@@ -13,8 +13,8 @@ import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
-   Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
-   Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Menu} from "@material-ui/core";
+  Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
+  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Menu, Tooltip } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -24,12 +24,45 @@ import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
+import { RadioButtonChecked, CheckBox, TextFormat, Subject, Assignment } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
+  },
+  addQuestionButton: {
+    boxShadow: theme.shadows[2],
+    margin: "0 16px", 
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+    },
+  },
+  RadioQst: {
+    backgroundColor: "#02AFF8",
+    "&:focus, &:hover": {
+      color: "#02AFF8"
+    },
+  },
+  CheckboxQst: {
+    backgroundColor: "#049F90",
+    "&:focus, &:hover": {
+      color: "#049F90"
+    },
+  },
+  ShorttextQst: {
+    backgroundColor: "#FD7D2E",
+    "&:focus, &:hover": {
+      color: "#FD7D2E"
+    },
+  },
+  LongtextQst: {
+    backgroundColor: "#B2417C",
+    "&:focus, &:hover": {
+      color: "#B2417C"
+    },
   },
   content: {
     padding: "20px 20px 30px 20px",
@@ -40,14 +73,14 @@ const styles = (theme) => ({
       height: "1px",
     },
   },
-  addQuestionButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
+  // addQuestionButton: {
+  //   backgroundColor: theme.palette.primary.main,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "white",
+  //     color: theme.palette.primary.main,
+  //   },
+  // },
   pageNavigator: {
     justifyContent: "flex-start",
     [theme.breakpoints.down("sm")]: {
@@ -120,16 +153,16 @@ class EditAssessment extends Component {
       openDeleteDialog: false,
       openUploadDialog: false,
       posted: null,
-      type:"",
       success: false,
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
+      type:"",
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
       checkboxSnackbarOpen: false,
-      radioSnackbarOpen: false
+      radioSnackbarOpen: false,
     }
   }
 
@@ -299,9 +332,9 @@ class EditAssessment extends Component {
   handleCloseMenuTambah = (option) => {
     this.setState({ anchorEl: null });
     this.setState({ currentQuestionOption: option })
-    console.log(option)
-    console.log(this.state.currentQuestionOption)
-      this.handleAddQuestion(option);
+    // console.log(option)
+    // console.log(this.state.currentQuestionOption)
+    this.handleAddQuestion(option);
   };
 
   handleAddQuestion = (option) => {
@@ -358,24 +391,28 @@ class EditAssessment extends Component {
     if(otherfield === "answer"){
       if(type === "radio"){
         questions[i]["answer"] = [e.target.value]
-        console.log(e.target.value)
+        // console.log(e.target.value)
       }
       else if(type === "checkbox"){
-        if(typeof questions[i]["answer"] === "string"){
+        if (typeof questions[i]["answer"] === "string") {
           questions[i]["answer"] = []
         }
-        if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
-          questions[i]["answer"].push(e.target.value)
+        if (!e.target.checked || questions[i]["answer"].includes(e.target.value)) {
+          if (questions[i]["answer"].length === 1) {
+            this.handleOpenCheckboxErrorSnackBar()
+          }
+          else {
+            questions[i]["answer"] = questions[i]["answer"].filter(function (value, index) {
+              return value != e.target.value
+            })
+          }
         }
-        if(!e.target.checked){
-          questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
-            console.log("testttt")
-            return value !== e.target.value
-          })
+        else if (e.target.checked && !questions[i]["answer"].includes(e.target.value)) {
+          questions[i]["answer"].push(e.target.value)
         }
       }
     }else {
-      questions[i][e.target.id] = name;
+      questions[i][e.target.id] = (name ? name : e.target.value);
     }
 
     this.setState({ questions: questions})
@@ -396,11 +433,39 @@ class EditAssessment extends Component {
     this.setState({questions: qst})
   }
 
+  copyToClipboard = (e) => {
+    let textArea = document.createElement("textarea");
+    
+    textArea.value = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
+    textArea.style.position = 'fixed';
+    textArea.style.top = 0;
+    textArea.style.left = 0;
+    textArea.style.width = '2em';
+    textArea.style.height = '2em';
+    textArea.style.padding = 0;
+    textArea.style.border = 'none';
+    textArea.style.outline = 'none';
+    textArea.style.boxShadow = 'none';
+    textArea.style.background = 'transparent';
+
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    e.target.focus();
+    document.body.removeChild(textArea);
+  }; 
+
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
-    console.log("AAAA")
+    // console.log("AAAA")
     let questions = this.state.questions
     if(action === "Delete"){
-      questions[qnsIndex].options.splice(optionIndex, 1)
+      // mencegah adanya soal radio yang tidak memiliki opsi 
+      if (questions[qnsIndex].options.length === 1) {
+        questions[qnsIndex].options[0] = ""
+        this.handleOpenRadioErrorSnackBar()
+      } else {
+        questions[qnsIndex].options.splice(optionIndex, 1)
+      }
     }else if(action === "Add"){
       questions[qnsIndex].options.push("")
     }else if(action === "Edit"){
@@ -408,7 +473,7 @@ class EditAssessment extends Component {
     }else{
       console.log("No action is specified")
     }
-    console.log(questions)
+    // console.log(questions)
     this.setState({ questions: questions})
   }
 
@@ -520,33 +585,56 @@ class EditAssessment extends Component {
     const { page, rowsPerPage} = this.state;
     const { classes } = this.props;
     let questionList = [];
-      questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
+    questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
 
-        let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
-        console.log(lampiranToAdd)
-        let currentLampiran = question.lampiran.filter(l => typeof l === "string")
-        return(
-          <QuestionItem
-            isEdit={true}
-            index={i + page * rowsPerPage}
-            name={question.name}
-            options={JSON.stringify(question.options)}
-            answer={question.answer}
-            lampiran={question.lampiran}
-            lampiran_length={question.lampiran.length}
-            lampiranToAdd={lampiranToAdd}
-            currentLampiran={currentLampiran}
-            deleteQuestion={this.deleteQuestion}
-            handleDuplicateQuestion={this.handleDuplicateQuestion}
-            handleQuestionOptions={this.handleQuestionOptions}
-            handleChangeQuestion={this.handleChangeQuestion}
-            handleQuestionImage={this.handleQuestionImage}
-            parseAnswer={this.parseAnswer}
-            type={question.type}
-            />
-        )
-    }
-    )
+      let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
+      console.log(lampiranToAdd)
+      let currentLampiran = question.lampiran.filter(l => typeof l === "string")
+
+      let booleanArray = [];
+      if (question.type === "checkbox") {
+        let tempArray = [];
+        if (typeof question.answer === "object") {
+          question.answer.forEach(function (value, index) {
+            tempArray.push(Number(value.charCodeAt(0)) - 65)
+          })
+        }
+        console.log(tempArray)
+        for (let j = 0; j < this.state.questions[i].options.length; j++) {
+          if (tempArray.includes(j)) {
+            booleanArray[j] = true;
+          }
+          else {
+            booleanArray[j] = false;
+          }
+        }
+        // console.log(booleanArray)
+      }
+      // console.log(booleanArray)
+
+      return(
+        <QuestionItem
+          isEdit={true}
+          index={i + page * rowsPerPage}
+          name={question.name}
+          options={JSON.stringify(question.options)}
+          answer={question.answer}
+          lampiran={question.lampiran}
+          lampiran_length={question.lampiran.length}
+          lampiranToAdd={lampiranToAdd}
+          currentLampiran={currentLampiran}
+          deleteQuestion={this.deleteQuestion}
+          handleDuplicateQuestion={this.handleDuplicateQuestion}
+          handleQuestionOptions={this.handleQuestionOptions}
+          handleChangeQuestion={this.handleChangeQuestion}
+          handleQuestionImage={this.handleQuestionImage}
+          parseAnswer={this.parseAnswer}
+          type={question.type}
+          check_data={booleanArray}
+          />
+      )
+  }
+  )
 
     return questionList
   }
@@ -816,9 +904,9 @@ class EditAssessment extends Component {
                 </Grid>
               </Paper>
             </Grid>
-              {this.listQuestion()}
-              <Grid item container justify="center">
-              <Button
+            {this.listQuestion()}
+            <Grid item container justify="center">
+              {/* <Button
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={this.handleClickMenuTambah}
@@ -837,7 +925,56 @@ class EditAssessment extends Component {
                 <MenuItem onClick={() => this.handleCloseMenuTambah("checkbox")}>Pilihan Ganda (Dengan Banyak Pilihan)</MenuItem>
                 <MenuItem onClick={() => this.handleCloseMenuTambah("shorttext")}>Isian Pendek</MenuItem>
                 <MenuItem onClick={() => this.handleCloseMenuTambah("longtext")}>Uraian</MenuItem>
-            </Menu>
+              </Menu> */}
+              <Grid item>
+                <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("radio")} style={{ margin: "0 16px", backgroundColor: "#02AFF8", color: "white" }}>
+                    <RadioButtonChecked />
+                  </Button>
+
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
+                    <RadioButtonChecked />
+                  </IconButton> */}
+
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("checkbox")} style={{ margin: "0 16px", backgroundColor: "#049F90", color: "white" }}>
+                    <CheckBox />
+                  </Button>
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
+                    <CheckBox />
+                  </IconButton> */}
+
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Tambah soal isian pendek">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("shorttext")} style={{ margin: "0 16px", backgroundColor: "#FD7D2E", color: "white" }}>
+                    <TextFormat />
+                  </Button>
+
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
+                    <TextFormat />
+                  </IconButton> */}
+                </Tooltip>
+              </Grid>
+
+              <Grid item>
+                <Tooltip title="Tambah soal uraian">
+                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("longtext")} style={{ margin: "0 16px", backgroundColor: "#B2417C", color: "white" }}>
+                    <Subject />
+                  </Button>
+
+                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
+                    <Subject />
+                  </IconButton> */}
+                </Tooltip>
+              </Grid>
+
             </Grid>
             <Grid item>
               <Paper>
@@ -908,6 +1045,15 @@ class EditAssessment extends Component {
                       </Button>
                     </Grid>
                   </Grid>
+
+                  <Grid item xs={12} style={{ textAlign: "center"}}>
+                      <Tooltip title="Salin ID kuis/ujian ke clipboard">
+                        <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
+                          <Assignment />
+                        </IconButton>
+                      </Tooltip>
+                  </Grid>
+
                 </Grid>
               </Paper>
             </Grid>
