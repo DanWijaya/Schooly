@@ -631,7 +631,7 @@ class CreateAssessment extends Component {
         height: 24,
       },
       track: {
-        borderRadius: 26 / 2,
+        borderRadius: 24 / 2,
         border: `1px solid ${theme.palette.grey[400]}`,
         backgroundColor: theme.palette.grey[50],
         opacity: 1,
@@ -876,7 +876,7 @@ class CreateAssessment extends Component {
             <Grid item>
               <Paper>
                 <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
-                  <Grid item container md={8} alignItems="center" className={classes.pageNavigator}>
+                  <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
                     <Grid item>
                       <TablePagination
                         labelRowsPerPage="Soal Per Halaman"
@@ -911,7 +911,7 @@ class CreateAssessment extends Component {
                       </FormHelperText>
                     </Grid>
                   </Grid>
-                  <Grid item container md={4} spacing={2} className={classes.assessmentSettings}>
+                  <Grid item container md={3} spacing={1} className={classes.assessmentSettings}>
                     <Grid item>
                       <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
                         Batal
