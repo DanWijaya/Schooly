@@ -380,7 +380,6 @@ class CreateAssessment extends Component {
     // console.log(qnsIndex)
     let questions = this.state.questions
     if(action === "Delete"){
-      // mencegah adanya soal radio yang tidak memiliki opsi 
       if(questions[qnsIndex].type === "checkbox"){
         if(questions[qnsIndex].answer.length === 1){
           let i = 0
@@ -395,11 +394,11 @@ class CreateAssessment extends Component {
             questions[qnsIndex].answer[0] = "A"
           }
         }
+         // mencegah adanya soal radio yang tidak memiliki opsi 
         if (questions[qnsIndex].options.length === 1) { 
           questions[qnsIndex].options[0] = ""
           this.handleOpenCheckboxErrorSnackBar()
         } else {
-          console.log("Hi")
           questions[qnsIndex].answer = questions[qnsIndex].answer.filter((value) => {
             if(value.charCodeAt(0)-65 !== optionIndex){
               return value

@@ -350,7 +350,7 @@ class EditAssessment extends Component {
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
-        answer: [],
+        answer: ["A"],
         lampiran: [],
         type: option
       })
@@ -453,12 +453,40 @@ class EditAssessment extends Component {
     // console.log("AAAA")
     let questions = this.state.questions
     if(action === "Delete"){
-      // mencegah adanya soal radio yang tidak memiliki opsi 
-      if (questions[qnsIndex].options.length === 1) {
-        questions[qnsIndex].options[0] = ""
-        this.handleOpenRadioErrorSnackBar()
-      } else {
-        questions[qnsIndex].options.splice(optionIndex, 1)
+      if(questions[qnsIndex].type === "checkbox"){
+        if(questions[qnsIndex].answer.length === 1){
+          let i = 0
+          let found = false
+          while(i<questions[qnsIndex].answer.length && !found){
+            if(questions[qnsIndex].answer[i].charCodeAt(0)-65 === optionIndex){
+              found = true
+            }
+            i = i + 1
+          }
+          if(found){
+            questions[qnsIndex].answer[0] = "A"
+          }
+        }
+         // mencegah adanya soal radio yang tidak memiliki opsi 
+        if (questions[qnsIndex].options.length === 1) { 
+          questions[qnsIndex].options[0] = ""
+          this.handleOpenCheckboxErrorSnackBar()
+        } else {
+          questions[qnsIndex].answer = questions[qnsIndex].answer.filter((value) => {
+            if(value.charCodeAt(0)-65 !== optionIndex){
+              return value
+            }
+          })
+          questions[qnsIndex].options.splice(optionIndex, 1)
+        }
+      }
+      else{
+        if (questions[qnsIndex].options.length === 1) { 
+          questions[qnsIndex].options[0] = ""
+          this.handleOpenRadioErrorSnackBar()
+        } else {
+          questions[qnsIndex].options.splice(optionIndex, 1)
+        }
       }
     }else if(action === "Add"){
       questions[qnsIndex].options.push("")
@@ -468,6 +496,7 @@ class EditAssessment extends Component {
       console.log("No action is specified")
     }
     // console.log(questions)
+    console.log(questions)
     this.setState({ questions: questions})
   }
 
