@@ -14,7 +14,7 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
   Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
-  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Menu, Tooltip } from "@material-ui/core";
+  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Tooltip } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -73,14 +73,6 @@ const styles = (theme) => ({
       height: "1px",
     },
   },
-  // addQuestionButton: {
-  //   backgroundColor: theme.palette.primary.main,
-  //   color: "white",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: "white",
-  //     color: theme.palette.primary.main,
-  //   },
-  // },
   pageNavigator: {
     justifyContent: "flex-start",
     [theme.breakpoints.down("sm")]: {
@@ -906,75 +898,35 @@ class EditAssessment extends Component {
             </Grid>
             {this.listQuestion()}
             <Grid item container justify="center">
-              {/* <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={this.handleClickMenuTambah}
-                className={classes.addQuestionButton}
-              >
-                Tambah Soal
-              </Button>
-              <Menu
-                id="simple-menu"
-                anchorEl={this.state.anchorEl}
-                keepMounted
-                open={Boolean(this.state.anchorEl)}
-                onClose={this.handleCloseMenuTambah}
-              >
-                <MenuItem onClick={() => this.handleCloseMenuTambah("radio")}>Pilihan Ganda (Dengan Satu Pilihan)</MenuItem>
-                <MenuItem onClick={() => this.handleCloseMenuTambah("checkbox")}>Pilihan Ganda (Dengan Banyak Pilihan)</MenuItem>
-                <MenuItem onClick={() => this.handleCloseMenuTambah("shorttext")}>Isian Pendek</MenuItem>
-                <MenuItem onClick={() => this.handleCloseMenuTambah("longtext")}>Uraian</MenuItem>
-              </Menu> */}
               <Grid item>
                 <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
-                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("radio")} style={{ margin: "0 16px", backgroundColor: "#02AFF8", color: "white" }}>
+                  <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
                     <RadioButtonChecked />
-                  </Button>
-
-                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
-                    <RadioButtonChecked />
-                  </IconButton> */}
-
+                  </IconButton>
                 </Tooltip>
               </Grid>
-
               <Grid item>
                 <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
-                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("checkbox")} style={{ margin: "0 16px", backgroundColor: "#049F90", color: "white" }}>
+                  <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
                     <CheckBox />
-                  </Button>
-                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
-                    <CheckBox />
-                  </IconButton> */}
+                  </IconButton>
 
                 </Tooltip>
               </Grid>
-
               <Grid item>
                 <Tooltip title="Tambah soal isian pendek">
-                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("shorttext")} style={{ margin: "0 16px", backgroundColor: "#FD7D2E", color: "white" }}>
+                  <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
                     <TextFormat />
-                  </Button>
-
-                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
-                    <TextFormat />
-                  </IconButton> */}
+                  </IconButton>
                 </Tooltip>
               </Grid>
-
               <Grid item>
                 <Tooltip title="Tambah soal uraian">
-                  <Button variant="contained" onClick={() => this.handleCloseMenuTambah("longtext")} style={{ margin: "0 16px", backgroundColor: "#B2417C", color: "white" }}>
+                  <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
                     <Subject />
-                  </Button>
-
-                  {/* <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
-                    <Subject />
-                  </IconButton> */}
+                  </IconButton>
                 </Tooltip>
               </Grid>
-
             </Grid>
             <Grid item>
               <Paper>
