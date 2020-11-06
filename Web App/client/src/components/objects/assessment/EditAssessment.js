@@ -14,7 +14,7 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
   Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
-  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Tooltip } from "@material-ui/core";
+  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Tooltip, Hidden } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -34,7 +34,7 @@ const styles = (theme) => ({
   },
   addQuestionButton: {
     boxShadow: theme.shadows[2],
-    margin: "0 16px", 
+    margin: "16px", 
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
@@ -897,37 +897,72 @@ class EditAssessment extends Component {
               </Paper>
             </Grid>
             {this.listQuestion()}
-            <Grid item container justify="center">
-              <Grid item>
-                <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
-                  <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
-                    <RadioButtonChecked />
-                  </IconButton>
-                </Tooltip>
+            <Hidden xsDown implementation="css"> 
+              <Grid item container justify="center">
+                <Grid item>
+                  <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
+                      <RadioButtonChecked />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
+                      <CheckBox />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Tambah soal isian pendek">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
+                      <TextFormat />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Tambah soal uraian">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
+                      <Subject />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
-                  <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
-                    <CheckBox />
-                  </IconButton>
-
-                </Tooltip>
+            </Hidden>
+            <Hidden smUp implementation="css">
+              <Grid item container justify="center">
+                <Grid item>
+                  <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
+                      <RadioButtonChecked />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
+                      <CheckBox />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Tooltip title="Tambah soal isian pendek">
-                  <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
-                    <TextFormat />
-                  </IconButton>
-                </Tooltip>
+              <Grid item container justify="center">
+                <Grid item>
+                  <Tooltip title="Tambah soal isian pendek">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
+                      <TextFormat />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Tambah soal uraian">
+                    <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
+                      <Subject />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Tooltip title="Tambah soal uraian">
-                  <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
-                    <Subject />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid>
+            </Hidden>
             <Grid item>
               <Paper>
                 <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
@@ -998,11 +1033,11 @@ class EditAssessment extends Component {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "center"}}>
-                      <Tooltip title="Salin ID kuis/ujian ke clipboard">
-                        <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
-                          <Assignment />
-                        </IconButton>
-                      </Tooltip>
+                    <Tooltip title="Salin ID kuis/ujian ke clipboard">
+                      <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
+                        <Assignment />
+                      </IconButton>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </Paper>
