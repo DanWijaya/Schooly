@@ -234,7 +234,6 @@ class App extends Component {
                     />
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
-                  {/* {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ? */}
                   <Footer assessmentState={localStorage.getItem(`status`)}/>
                 </div>
               </div>

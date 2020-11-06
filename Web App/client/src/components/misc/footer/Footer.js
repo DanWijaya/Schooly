@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Footer(props) {
   const classes = useStyles();
-  const { hideLink } = props;
   return (
     <div className={classes.root}>
       <Divider style={{marginBottom: "10px"}} />
@@ -57,19 +56,16 @@ function Footer(props) {
               <div className={classes.footerMobileContainer}>
                 <Typography variant="caption">
                   <Link to="/bantuan">
-                    {/* {(hideLink) ? null : "Bantuan"} */}
                     Bantuan
                   </Link>
                 </Typography>
                 <Typography variant="caption">
                   <Link to="/tentang-schooly">
-                    {/* {(hideLink) ? null : "Tentang Schooly"} */}
                     Tentang Schooly
                   </Link>
                 </Typography>
                 <Typography variant="caption">
                   <Link to="/kebijakan-penggunaan">
-                    {/* {(hideLink) ? null : "Kebijakan Pengunaan"} */}
                     Kebijakan Pengunaan
                   </Link>
                 </Typography>
@@ -79,13 +75,11 @@ function Footer(props) {
               <div className={classes.footerMobileContainer}>
                 <Typography variant="caption">
                   <Link to="mailto:schoolysystem@gmail.com">
-                    {/* {(hideLink) ? null : "Hubungi Kami"} */}
                     Hubungi Kami
                   </Link>
                 </Typography>
                 <Typography variant="caption">
                   <Link to="http://www.instagram.com">
-                    {/* {(hideLink) ? null : "Instagram"} */}
                     Instagram
                   </Link>
                 </Typography>
@@ -98,52 +92,45 @@ function Footer(props) {
       </Hidden>
       <Hidden smDown implementation="css">
         {/* Desktop = Row View */}
+        {(props.assessmentState !== "ujian") ? 
         <div className={classes.footerDesktopContainer}>
-          {(props.assessmentState !== "ujian") ?
-            <>
-              <Grid container spacing={2} justify="flex-start">
-                <Grid item style={{color: "grey"}}>
-                  Schooly System
-                </Grid>
-                <Grid item>
-                  <Link to="/bantuan">
-                    {/* {(hideLink) ? null : "Bantuan"} */}
-                    Bantuan
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link to="/kebijakan-penggunaan">
-                    {/* {(hideLink) ? null : "Kebijakan Pengunaan"} */}
-                    Kebijakan Pengunaan
-                  </Link>
-                </Grid>
-              </Grid>
-              <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolDesktop} />
-              <Grid container spacing={2} justify="flex-end">
-                <Grid item>
-                  <Link to="/tentang-schooly">
-                    {/* {(hideLink) ? null : "Tentang Schooly"} */}
-                    Tentang Schooly
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <a href="mailto:schoolysystem@gmail.com">
-                    {/* {(hideLink) ? null : "Hubungi Kami"} */}
-                    Hubungi Kami
-                  </a>
-                </Grid>
-                <Grid item>
-                  <a href="http://www.instagram.com">
-                    {/* {(hideLink) ? null : "Instagram"} */}
-                    Instagram
-                  </a>
-                </Grid>
-              </Grid>
-            </>
-          :
-            null
-          }
+          <Grid item container spacing={2} justify="flex-start">
+            <Grid item style={{color: "grey"}}>
+              Schooly System
+            </Grid>
+            <Grid item>
+              <Link to="/bantuan">
+                Bantuan
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link to="/kebijakan-penggunaan">
+                Kebijakan Pengunaan
+              </Link>
+            </Grid>
+          </Grid>
+          <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolDesktop} />
+          <Grid container spacing={2} justify="flex-end">
+            <Grid item>
+              <Link to="/tentang-schooly">
+                Tentang Schooly
+              </Link>
+            </Grid>
+            <Grid item>
+              <a href="mailto:schoolysystem@gmail.com">
+                Hubungi Kami
+              </a>
+            </Grid>
+            <Grid item>
+              <a href="http://www.instagram.com">
+                Instagram
+              </a>
+            </Grid>
+          </Grid>
         </div>
+        :
+        null
+        }
       </Hidden>
     </div>
   )

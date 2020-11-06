@@ -155,6 +155,7 @@ class EditAssessment extends Component {
       anchorEl: null,
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
+      copySnackbarOpen: false
     }
   }
 
@@ -445,6 +446,7 @@ class EditAssessment extends Component {
     document.execCommand('copy');
     e.target.focus();
     document.body.removeChild(textArea);
+    this.handleOpenCopySnackBar();
   }; 
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
@@ -572,6 +574,14 @@ class EditAssessment extends Component {
     this.setState({ radioSnackbarOpen: false });
   }
   
+  handleOpenCopySnackBar = () => {
+    this.setState({ copySnackbarOpen: true });
+  }
+
+  handleCloseCopySnackBar = () => {
+    this.setState({ copySnackbarOpen: false });
+  }
+
   listQuestion = () => {
     let { questions } = this.state;
     const { page, rowsPerPage} = this.state;
@@ -708,6 +718,11 @@ class EditAssessment extends Component {
         <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
           <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
             Soal Dalam Bentuk Radio Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar open={this.state.copySnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCopySnackBar}>
+          <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
+            Link kuis/ujian berhasil disalin ke clipboard Anda!
           </MuiAlert>
         </Snackbar>
         <DeleteDialog
@@ -1033,7 +1048,7 @@ class EditAssessment extends Component {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "center"}}>
-                    <Tooltip title="Salin ID kuis/ujian ke clipboard">
+                    <Tooltip title="Salin link kuis/ujian ke clipboard">
                       <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
                         <Assignment />
                       </IconButton>
