@@ -997,7 +997,6 @@ class EditAssessment extends Component {
                       </Button>
                     </Grid>
                   </Grid>
-
                   <Grid item xs={12} style={{ textAlign: "center"}}>
                       <Tooltip title="Salin ID kuis/ujian ke clipboard">
                         <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
@@ -1005,7 +1004,6 @@ class EditAssessment extends Component {
                         </IconButton>
                       </Tooltip>
                   </Grid>
-
                 </Grid>
               </Paper>
             </Grid>

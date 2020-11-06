@@ -375,29 +375,6 @@ class CreateAssessment extends Component {
     this.setState({questions: qst})
   }
 
-  copyToClipboard = (e) => {
-    let textArea = document.createElement("textarea");
-
-    textArea.value = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
-    textArea.style.position = 'fixed';
-    textArea.style.top = 0;
-    textArea.style.left = 0;
-    textArea.style.width = '2em';
-    textArea.style.height = '2em';
-    textArea.style.padding = 0;
-    textArea.style.border = 'none';
-    textArea.style.outline = 'none';
-    textArea.style.boxShadow = 'none';
-    textArea.style.background = 'transparent';
-
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    e.target.focus();
-    document.body.removeChild(textArea);
-  }; 
-
-
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
     // console.log(optionIndex)
     // console.log(qnsIndex)
@@ -915,15 +892,6 @@ class CreateAssessment extends Component {
                       </Button>
                     </Grid>
                   </Grid>
-
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
-                    <Tooltip title="Salin ID kuis/ujian ke clipboard">
-                      <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
-                        <Assignment />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
-
                 </Grid>
               </Paper>
             </Grid>
