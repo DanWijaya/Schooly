@@ -89,7 +89,7 @@ function NavBar(props) {
       </Link>
     )
     rightNavBarContents = (
-      <NavBarLoggedInContents isMobileView={isMobileView} />
+      <NavBarLoggedInContents isMobileView={isMobileView}/>
     )
   }
 
@@ -128,11 +128,17 @@ function NavBar(props) {
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar>
-        {leftNavBarContents}
-        {middleNavBarContents}
-        {rightNavBarContents}
-      </Toolbar>
+      {(props.assessmentState !== "ujian") ?
+        <Toolbar>
+          {leftNavBarContents}
+          {middleNavBarContents}   
+          {rightNavBarContents}  
+        </Toolbar>
+      :
+        <Toolbar>
+          {middleNavBarContents}   
+        </Toolbar>
+      }    
     </AppBar>
   )
 }

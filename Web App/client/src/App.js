@@ -141,15 +141,12 @@ class App extends Component {
           <ThemeProvider theme={globalStyles}>
             <Router>
               <div style={{display: "flex"}}>
-                {(localStorage.getItem(`status`) !== "ujian") ? 
-                  <NavBar
-                    handleDrawerDesktop={this.handleDrawerDesktop}
-                    handleDrawerMobile={this.handleDrawerMobile}
-                    sideDrawerExist={this.state.sideDrawerExist}
-                  /> 
-                :
-                  null
-                }
+                <NavBar
+                  handleDrawerDesktop={this.handleDrawerDesktop}
+                  handleDrawerMobile={this.handleDrawerMobile}
+                  sideDrawerExist={this.state.sideDrawerExist}
+                  assessmentState={localStorage.getItem(`status`)}
+                /> 
                 {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ?
                   <SideDrawer
                     mobileOpen={this.state.mobileOpen}
@@ -238,11 +235,7 @@ class App extends Component {
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
                   {/* {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ? */}
-                  {(localStorage.getItem(`status`) !== "ujian") ?
-                    <Footer />
-                  :
-                    null
-                  }
+                  <Footer assessmentState={localStorage.getItem(`status`)}/>
                 </div>
               </div>
             </Router>

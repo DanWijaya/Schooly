@@ -23,12 +23,12 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogCancelButton: {
     width: "150px",
-    backgroundColor: "white",
-    color: theme.palette.create.main,
+    backgroundColor: theme.palette.error.main,
+    color: "white",
     border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.create.dark,
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
       border: `1px solid ${theme.palette.error.dark}`,
     },
   },

@@ -13,6 +13,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import moment from "moment";
 import "moment/locale/id";
@@ -197,15 +199,19 @@ function Timer(props) {
 }
 
 function QuestionPage(props) {
-  const { classes, handleChangeQuestion, question_number } = props;
-
+  const { classes, handleChangeQuestion, question_number, answer } = props;
+  console.log(answer)
   return (
     <Grid item>
       <Badge
-        badgeContent={
-          <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-            <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
-          </Avatar>
+        badgeContent={(answer[question_number-1].length>0 && answer[question_number-1][0] ) ?
+            <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
+              <CheckCircleIcon style={{width: "15px", height: "15px"}} />
+            </Avatar>
+          :
+            <Avatar style={{backgroundColor: "red", color: "white", width: "20px", height: "20px"}}>
+              <ErrorIcon style={{width: "15px", height: "15px"}} />
+            </Avatar>
         }
         anchorOrigin={{
           vertical: "bottom",
@@ -476,7 +482,7 @@ function ViewAssessmentStudent(props) {
               {!questions ?
                   null
                :
-                  questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
+                  questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion} answer={answer}/>)})
               }
             </Grid>
           </div>
