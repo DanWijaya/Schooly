@@ -198,6 +198,10 @@ class CreateAssessment extends Component {
           if (qns.type === "shorttext") {
             if (qns.answer.length === 0) {
               invalidQuestionIndex.push(i);
+            } else {
+              if (qns.answer.includes("")) {
+                invalidQuestionIndex.push(i);
+              }
             }
           } else if ((qns.type === "radio") || (qns.type === "checkbox")) {
             if (qns.options.includes("")) {
@@ -234,7 +238,7 @@ class CreateAssessment extends Component {
         .catch(err => this.handleOpenErrorSnackbar(`Keterangan Kuis/Ujian masih kosong!`))
     }
     else{
-      this.handleOpenErrorSnackbar(`Keterangan soal nomor ${this.formatQstNumber(invalidQuestionIndex)} masih kosong!`);
+      this.handleOpenErrorSnackbar(`Soal nomor ${this.formatQstNumber(invalidQuestionIndex)} masih belum lengkap!`);
     }
   }
 

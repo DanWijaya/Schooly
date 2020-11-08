@@ -125,11 +125,17 @@ router.post("/update/:id", (req,res) => {
         if(update_answer){
           if(assessmentData.submissions){
             for (const [key, value] of assessmentData.submissions.entries()) {
+              // key berisi id murid, sedangkan value berisi semua jawaban murid tersebut untuk assessment ini.
               console.log(key, value);
               let correct_count = 0;
-              for(let i = 0; i < value.length; i++){
+              let number_of_gradeable_questions = 0;
+              for (let i = 0; i < questions.length; i++){
+                // value.length sudah dipastikan sama dengan questions.length ViewAssessmentStudent.js
+                // value[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal value[0] adalah jawaban murid untuk pertanyaan pertama.
+                // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
+                // value dan questions[i].answer adalah array of array
                 if (questions[i].type === "radio") {
-                  if (questions[i].answer.includes(value[i])) {
+                  if (questions[i].answer[0] === value[i][0]) {
                     correct_count = correct_count + 1;
                   }
                   number_of_gradeable_questions = number_of_gradeable_questions + 1;
@@ -146,6 +152,8 @@ router.post("/update/:id", (req,res) => {
                   })
                   number_of_gradeable_questions = number_of_gradeable_questions + 1;
                   if (temp_correct > 0) {
+                    // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+                    // karena itu, questions[i].answer.length pasti tidak 0
                     correct_count = correct_count + temp_correct / questions[i].answer.length;
                   }
                 }
@@ -156,13 +164,18 @@ router.post("/update/:id", (req,res) => {
                       temp_correct++;
                     }
                   }
+                  // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+                  // karena itu, questions[i].answer.length pasti tidak 0
                   number_of_gradeable_questions = number_of_gradeable_questions + 1;
                   correct_count = correct_count + temp_correct / questions[i].answer.length;
                 }
 
               }
-              let score = 100 * (correct_count/value.length);
-              assessmentData.grades.set(key, parseFloat(score.toFixed(1)))
+              let score = 0;
+              if (number_of_gradeable_questions > 0) {
+                score = 100 * correct_count / number_of_gradeable_questions;
+              } // number_of_gradeable_questions === 0 ketika semua soal pada assessment ini bertipe uraian
+              assessmentData.grades.set(key, parseFloat(score.toFixed(1)));
             }
           }
         }
@@ -207,8 +220,12 @@ router.post("/submit/:id", (req,res) => {
         if(!grades.has(userId)){
           let number_of_gradeable_questions = 0 // Karena Isian dan Esai tidak bisa autograde, maka yang dihitung hanya radio dan checkbox saja.
           for(let i = 0; i < questions.length; i++){
+            // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
+            // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
+            // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
+            // answers dan questions[i].answer adalah array of array
             if(questions[i].type === "radio"){
-              if(questions[i].answer.includes(answers[i])){
+              if(questions[i].answer[0] === answers[i][0]){
                 correct_count = correct_count + 1;
               }
               number_of_gradeable_questions = number_of_gradeable_questions + 1;
@@ -225,6 +242,8 @@ router.post("/submit/:id", (req,res) => {
               })
               number_of_gradeable_questions = number_of_gradeable_questions + 1;
               if(temp_correct > 0){
+                // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+                // karena itu, questions[i].answer.length pasti tidak 0
                 correct_count = correct_count + temp_correct/questions[i].answer.length;
               }
             }
@@ -236,19 +255,29 @@ router.post("/submit/:id", (req,res) => {
                 }
               }
               number_of_gradeable_questions = number_of_gradeable_questions + 1;
+              
+              // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+              // karena itu, questions[i].answer.length pasti tidak 0
               correct_count = correct_count + temp_correct / questions[i].answer.length;
             }
           }
-          let score = 100 * correct_count/number_of_gradeable_questions;
-          grades.set(userId, parseFloat(score.toFixed(2)));
+          let score = 0;
+          if (number_of_gradeable_questions > 0) {
+            score = 100 * correct_count / number_of_gradeable_questions;
+          } // number_of_gradeable_questions === 0 ketika semua soal pada assessment ini bertipe uraian
+          grades.set(userId, parseFloat(score.toFixed(1)));
         }
       }
       else {
         let grade_map = new Map();
         let number_of_gradeable_questions = 0
         for(let i = 0; i < questions.length; i++){
+          // answers.length sudah dipastikan sama dengan questions.length ViewAssessmentStudent.js
+          // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.
+          // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
+          // answers dan questions[i].answer adalah array of array
           if (questions[i].type === "radio") {
-            if (questions[i].answer.includes(answers[i])) {
+            if (questions[i].answer[0] === answers[i][0]) {
               correct_count = correct_count + 1;
             }
             number_of_gradeable_questions = number_of_gradeable_questions + 1;
@@ -265,6 +294,8 @@ router.post("/submit/:id", (req,res) => {
             })
             number_of_gradeable_questions = number_of_gradeable_questions + 1;
             if (temp_correct > 0) {
+              // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+              // karena itu, questions[i].answer.length pasti tidak 0
               correct_count = correct_count + temp_correct / questions[i].answer.length;
             }
           }
@@ -276,10 +307,16 @@ router.post("/submit/:id", (req,res) => {
               }
             }
             number_of_gradeable_questions = number_of_gradeable_questions + 1;
-            correct_count = correct_count + temp_correct / questions[i].answer.length;
-          }        
+
+            // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+            // karena itu, questions[i].answer.length pasti tidak 0
+            correct_count = correct_count + temp_correct / questions[i].answer.length; 
+          }
         }
-        let score = 100 * correct_count/number_of_gradeable_questions;
+        let score = 0;
+        if (number_of_gradeable_questions > 0) {
+          score = 100 * correct_count/number_of_gradeable_questions;
+        } // number_of_gradeable_questions === 0 ketika semua soal pada assessment ini bertipe uraian
         grade_map.set(userId, parseFloat(score.toFixed(1)));
         grades = grade_map;
       }

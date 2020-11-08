@@ -204,7 +204,7 @@ function QuestionPage(props) {
   return (
     <Grid item>
       <Badge
-        badgeContent={(answer[question_number-1].length>0 && answer[question_number-1][0] ) ?
+        badgeContent={(answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => {return elm !== ""})) ?
             <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
               <CheckCircleIcon style={{width: "15px", height: "15px"}} />
             </Avatar>
@@ -272,14 +272,10 @@ function ViewAssessmentStudent(props) {
   // console.log(submissions)
   React.useEffect(() => {
     if(questions_length){
-      // let arr = Array.apply("", Array(questions_length))
       let arr = [];
-
-      // reminder: jangan pakai fill([])
       for (let i = 1; i <= questions_length; i++) {
         arr.push([]);
       }
-
       setAnswer(arr)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -555,7 +551,7 @@ function ViewAssessmentStudent(props) {
                         </FormGroup>
                       ) : (questions[qnsIndex].type === "shorttext") ? (
                         null
-                      ) : (questions[qnsIndex].type === "longtext") ? ( // bookmark
+                      ) : (questions[qnsIndex].type === "longtext") ? (
                         <TextField
                           key={`${user.id}-${qnsIndex}`}
                           id="answer"

@@ -261,7 +261,7 @@ function SubmittedAssessmentList(props) {
               <List>
                 {task_list_on_panel}
               </List>
-              {selectedAssessments ? 
+                {(selectedAssessments && selectedAssessments.grades) ?
                 selectedAssessments.grades[student._id] !== undefined ?
                   <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
                     <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
