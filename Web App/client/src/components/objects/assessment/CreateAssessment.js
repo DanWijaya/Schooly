@@ -1068,7 +1068,7 @@ class CreateAssessment extends Component {
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
                       </MenuItem>
-                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e)}>
+                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e, user.id)}>
                       <ListItemIcon>
                         <SendIcon  />
                       </ListItemIcon>
