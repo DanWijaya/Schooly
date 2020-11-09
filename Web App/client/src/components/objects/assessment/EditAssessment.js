@@ -1141,7 +1141,7 @@ class EditAssessment extends Component {
                         horizontal: "center",
                       }}
                   >
-                    <MenuItem key="1" button component="a" className={classes.menuVisible} onClick={this.handlePostToggle}>
+                    <MenuItem button component="a" className={classes.menuVisible} onClick={this.handlePostToggle}>
                       <ListItemIcon >
                         {!this.state.posted ?
                           <VisibilityIcon  />
@@ -1151,19 +1151,20 @@ class EditAssessment extends Component {
                       </ListItemIcon>
                       <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
                     </MenuItem>
-                    <MenuItem key="2" className={classes.menuCopy} onClick={(e) => { this.copyToClipboard(e)}}>
+                    <MenuItem button component="a" className={classes.menuCopy} onClick={() => { this.handleOpenCopySnackBar(); navigator.clipboard.writeText(`http://localhost:3000/kuis-murid/${this.props.match.params.id}`)}}>
+
                       <ListItemIcon>
                         <LinkIcon/>
                       </ListItemIcon>
                       <ListItemText primary="Copy Link Kuis" />
                     </MenuItem>
-                    <MenuItem key="3" button className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
+                    <MenuItem button component="a" className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
                       <ListItemIcon>
                         <CancelIcon/>
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
                       </MenuItem>
-                    <MenuItem key="4" button type="submit" className={classes.menuSubmit} onClick={(e) => {this.onSubmit(e)}}>
+                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => {this.onSubmit(e)}}>
                       <ListItemIcon>
                         <SendIcon />
                       </ListItemIcon>

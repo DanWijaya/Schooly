@@ -286,7 +286,7 @@ class CreateAssessment extends Component {
         .then(res => {
           console.log("Assessment is created successfully")
         })
-        .catch(err => this.handleOpenErrorSnackbar(`Keterangan Kuis/Ujian masih kosong!`))
+        .catch(err => this.handleOpenErrorSnackbar(`Keterangan ${this.state.type} masih kosong!`))
     }
     else{
       this.handleOpenErrorSnackbar(`Soal nomor ${this.formatQstNumber(invalidQuestionIndex)} masih belum lengkap!`);
@@ -972,7 +972,7 @@ class CreateAssessment extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <Tooltip title={!this.state.posted ? "Murid dapat melihat deskripsi Kuis/Ujian (Muncul Pada Layar Murid)" : "Murid tidak dapat melihat deskripsi Kuis/Ujian (Tidak Muncul Pada Layar Murid)"}>
+                        <Tooltip title={!this.state.posted ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)` : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`}>
                           <FormControlLabel
                             label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
                             labelPlacement="start"
@@ -986,11 +986,6 @@ class CreateAssessment extends Component {
                             }
                           />
                         </Tooltip>
-                      </Grid>
-                      <Grid item>
-                        <FormHelperText error>
-                          {errors.questions}
-                        </FormHelperText>
                       </Grid>
                     </Grid>
                     <Grid item container md={3} spacing={1} className={classes.assessmentSettings}>
@@ -1092,7 +1087,19 @@ class CreateAssessment extends Component {
           anchorOrigin={{vertical : "bottom", horizontal: "center"}}
         >
           <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-            {this.state.snackbarMessage}
+            {(Object.keys(errors).length !== 0) ? (
+              (Object.keys(errors).includes("questions")) ? (
+                (Object.keys(errors).length === 1) ? (
+                  errors.questions
+                ) : (
+                    this.state.snackbarMessage + " " + errors.questions
+                  )
+              ) : (
+                  this.state.snackbarMessage
+                )
+            ) :
+              null
+            }
           </MuiAlert>
         </Snackbar>
       </div>
