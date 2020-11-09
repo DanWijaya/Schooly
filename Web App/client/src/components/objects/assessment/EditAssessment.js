@@ -274,6 +274,30 @@ class EditAssessment extends Component {
   handleOpenErrorSnackbar = (message) => {
     this.setState({ snackbarOpen: true, snackbarMessage: message});
   }
+
+  handleOpenCheckboxErrorSnackBar = () => {
+    this.setState({ checkboxSnackbarOpen: true });
+  }
+
+  handleCloseCheckboxErrorSnackBar = () => {
+    this.setState({ checkboxSnackbarOpen: false });
+  }
+
+  handleOpenRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: true });
+  }
+
+  handleCloseRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: false });
+  }
+
+  handleOpenCopySnackBar = () => {
+    this.setState({ copySnackbarOpen: true });
+  }
+
+  handleCloseCopySnackBar = () => {
+    this.setState({ copySnackbarOpen: false });
+  }
   
   formatQstNumber = (numberIndexArray) => {
     let qstNumbers = "";
