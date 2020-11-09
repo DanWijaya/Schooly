@@ -122,43 +122,39 @@ const styles = (theme) => ({
     },
     marginInlineEnd: "2em"
   },
-  eyeIcon: {
-    color: theme.palette.warning.main,
-    "&:focus, &:hover": {
-      color: "white",
-    },
-  },
-  cancelIcon: {
-    color: theme.palette.error.main
-  },
-  sendIcon: {
-    color: theme.palette.create.main
-  },
   menuVisible: {
-    "&:focus": {
+    "& .MuiListItemIcon-root" : {
+      color: theme.palette.warning.main
+    },
+    "&:hover, &:focus": {
       backgroundColor: theme.palette.warning.main,
-      color: "white",
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
     },
   },
   menuCancel: {
-    "&:focus, &:hover": {
+    "& .MuiListItemIcon-root" : {
+      color: theme.palette.error.main
+    },
+    "&:hover, &:focus": {
       backgroundColor: theme.palette.error.main,
-      color: "white",
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
     },
   },
   menuSubmit: {
-    "&:focus, &:hover": {
+    "& .MuiListItemIcon-root" : {
+      color: theme.palette.create.main
+    },
+    "&:hover, &:focus": {
       backgroundColor: theme.palette.create.main,
-      color: "white",
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
     },
   },
-  textVisible: {
-    transform: "translateX(-16px)",
-    color: "black",
-    "&:focus, &:hover": {
-      color: "white",
-    }
-  }
 });
 
 class CreateAssessment extends Component {
@@ -1055,26 +1051,15 @@ class CreateAssessment extends Component {
                         horizontal: "center",
                       }}
                   >
-                    <MenuItem button component="a" className={classes.menuVisible}>
+                    <MenuItem button component="a" className={classes.menuVisible} onClick={this.handlePostToggle}>
                       <ListItemIcon >
                         {!this.state.posted ?
-                          <VisibilityIcon className={classes.eyeIcon} />
+                          <VisibilityIcon  />
                         :
-                          <VisibilityOffIcon className={classes.eyeIcon} />
+                          <VisibilityOffIcon  />
                         }
                       </ListItemIcon>
-                      <FormControlLabel
-                        label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
-                        labelPlacement="start"
-                        control={
-                          <ToggleViewQuizMobile
-                            checked={this.state.posted}
-                            onChange={this.handlePostToggle}
-                            style={{display: "none"}}
-                          />
-                        }
-                        className={classes.textVisible}
-                      />
+                      <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
                     </MenuItem>
                     {/*<MenuItem button component="a" className={classes.menuItem}>
                       <ListItemIcon>
@@ -1084,13 +1069,13 @@ class CreateAssessment extends Component {
                       </MenuItem>*/}
                     <MenuItem button component="a" className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
                       <ListItemIcon>
-                        <CancelIcon className={classes.cancelIcon} />
+                        <CancelIcon />
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
                       </MenuItem>
-                    <MenuItem button type="submit" className={classes.menuSubmit}>
+                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e)}>
                       <ListItemIcon>
-                        <SendIcon className={classes.sendIcon} />
+                        <SendIcon  />
                       </ListItemIcon>
                       <ListItemText primary="Buat Kuis" />
                     </MenuItem>

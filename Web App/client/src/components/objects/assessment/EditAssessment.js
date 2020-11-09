@@ -136,18 +136,50 @@ const styles = (theme) => ({
     },
     marginInlineEnd: "2em"
   },
-  eyeIcon: {
-    color: theme.palette.warning.main
+  menuVisible: {
+    "& .MuiListItemIcon-root" : {
+      color: theme.palette.warning.main
+    },
+    "&:hover, &:focus": {
+      backgroundColor: theme.palette.warning.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
+    },
   },
-  cancelIcon: {
-    color: theme.palette.error.main
+  menuCopy: {
+    "& .MuiListItemIcon-root" : {
+      color: theme.palette.primary.main
+    },
+    "&:hover, &:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
+    },
   },
-  sendIcon: {
-    color: theme.palette.create.main
+  menuCancel: {
+    "& .MuiListItemIcon-root" : {
+      color: theme.palette.error.main
+    },
+    "&:hover, &:focus": {
+      backgroundColor: theme.palette.error.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
+    },
   },
-  linkIcon: {
-    color: theme.palette.primary.main
-  }
+  menuSubmit: {
+    "& .MuiListItemIcon-root" : {
+      color: theme.palette.create.main
+    },
+    "&:hover, &:focus": {
+      backgroundColor: theme.palette.create.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: "white",
+      },
+    },
+  },
 });
 
 class EditAssessment extends Component {
@@ -1118,44 +1150,33 @@ class EditAssessment extends Component {
                         horizontal: "center",
                       }}
                   >
-                    <MenuItem button component="a" className={classes.menuItem}>
+                    <MenuItem button component="a" className={classes.menuVisible} onClick={this.handlePostToggle}>
                       <ListItemIcon >
                         {!this.state.posted ?
-                          <VisibilityIcon className={classes.eyeIcon} />
+                          <VisibilityIcon  />
                         :
-                          <VisibilityOffIcon className={classes.eyeIcon} />
+                          <VisibilityOffIcon  />
                         }
                       </ListItemIcon>
-                      <FormControlLabel
-                        label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
-                        labelPlacement="start"
-                        control={
-                          <ToggleViewQuizMobile
-                            checked={this.state.posted}
-                            onChange={this.handlePostToggle}
-                            style={{display: "none"}}
-                          />
-                        }
-                        style={{transform: "translateX(-16px)", color: "black"}}
-                      />
+                      <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
                     </MenuItem>
-                    <MenuItem button component="a" className={classes.menuItem} onClick={(e) => this.copyToClipboard(e)}>
+                    <MenuItem button component="a" className={classes.menuCopy} onClick={(e) => this.copyToClipboard(e)}>
                       <ListItemIcon>
-                        <LinkIcon className={classes.linkIcon}/>
+                        <LinkIcon/>
                       </ListItemIcon>
-                      <ListItemText primary="Copy Clipboard" />
+                      <ListItemText primary="Copy Link Kuis" />
                     </MenuItem>
-                    <MenuItem button component="a" className={classes.menuItem} onClick={this.handleOpenDeleteDialog}>
+                    <MenuItem button component="a" className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
                       <ListItemIcon>
-                        <CancelIcon className={classes.cancelIcon} />
+                        <CancelIcon/>
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
                       </MenuItem>
-                    <MenuItem button type="submit" className={classes.menuItem}>
+                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e)}>
                       <ListItemIcon>
-                        <SendIcon className={classes.sendIcon} />
+                        <SendIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Kuis" />
+                      <ListItemText primary="Sunting Kuis" />
                     </MenuItem>
                   </Menu>
                 </Grid>        
