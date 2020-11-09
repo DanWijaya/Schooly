@@ -14,7 +14,8 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
   Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
-  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Tooltip, Hidden } from "@material-ui/core";
+  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Tooltip, Hidden,
+  Fab, ListItemIcon, ListItemText, Menu } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -22,6 +23,12 @@ import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import SaveIcon from "@material-ui/icons/Save";
 import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import SettingsIcon from '@material-ui/icons/Settings';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import LinkIcon from '@material-ui/icons/Link';
+import CancelIcon from '@material-ui/icons/Cancel';
+import SendIcon from '@material-ui/icons/Send';
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
 import { RadioButtonChecked, CheckBox, TextFormat, Subject, Assignment } from '@material-ui/icons';
@@ -120,6 +127,27 @@ const styles = (theme) => ({
   chip: {
     marginRight: 2,
   },
+  settingsButton: {
+    backgroundColor: "grey",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#555555",
+      color: "white",
+    },
+    marginInlineEnd: "2em"
+  },
+  eyeIcon: {
+    color: theme.palette.warning.main
+  },
+  cancelIcon: {
+    color: theme.palette.error.main
+  },
+  sendIcon: {
+    color: theme.palette.create.main
+  },
+  linkIcon: {
+    color: theme.palette.primary.main
+  }
 });
 
 class EditAssessment extends Component {
@@ -615,6 +643,14 @@ class EditAssessment extends Component {
     this.setState({ copySnackbarOpen: false });
   }
 
+  handleMenuOpen = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
   listQuestion = () => {
     let { questions } = this.state;
     const { page, rowsPerPage} = this.state;
@@ -732,6 +768,16 @@ class EditAssessment extends Component {
         backgroundColor: theme.palette.grey[50],
         opacity: 1,
         transition: theme.transitions.create(["background-color", "border"]),
+      },
+      checked: {},
+    }))(Switch);
+
+    const ToggleViewQuizMobile = withStyles((theme) => ({
+      root: {
+        width: 0,
+        height: 0,
+        padding: 0,
+        margin: theme.spacing(1),
       },
       checked: {},
     }))(Switch);
@@ -945,151 +991,176 @@ class EditAssessment extends Component {
               </Paper>
             </Grid>
             {this.listQuestion()}
-            <Hidden xsDown implementation="css"> 
-              <Grid item container justify="center">
-                <Grid item>
-                  <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
-                      <RadioButtonChecked />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
-                      <CheckBox />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Tambah soal isian pendek">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
-                      <TextFormat />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Tambah soal uraian">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
-                      <Subject />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
+            <Grid item container justify="center">
+              <Grid item>
+                <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                  <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
+                    <RadioButtonChecked />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                  <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
+                    <CheckBox />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Tambah soal isian pendek">
+                  <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
+                    <TextFormat />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Tambah soal uraian">
+                  <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
+                    <Subject />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+            <Hidden xsDown implementation="css">
+              <Grid item>
+                <Paper>
+                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                    <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
+                      <Grid item>
+                        <TablePagination
+                          labelRowsPerPage="Soal Per Halaman"
+                          rowsPerPageOptions={[5, 10]}
+                          component="div"
+                          count={this.state.questions.length}
+                          rowsPerPage={this.state.rowsPerPage}
+                          page={this.state.page}
+                          onChangePage={this.handleChangePage}
+                          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Tooltip title={!this.state.posted ? "Murid dapat melihat deskripsi Kuis/Ujian (Muncul Pada Layar Murid)" : "Murid tidak dapat melihat deskripsi Kuis/Ujian (Tidak Muncul Pada Layar Murid)"}>
+                          <FormControlLabel
+                            label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
+                            labelPlacement="start"
+                            control={
+                              <ToggleViewQuiz
+                                checked={this.state.posted}
+                                onChange={this.handlePostToggle}
+                                checkedIcon={<FiberManualRecordIcon />}
+                                icon={<FiberManualRecordIcon />}
+                              />
+                            }
+                          />
+                        </Tooltip>
+                      </Grid>
+                      <Grid item>
+                        <FormHelperText error>
+                          {errors.questions}
+                        </FormHelperText>
+                      </Grid>
+                    </Grid>
+                    <Grid item container md={3} spacing={1} className={classes.assessmentSettings}>
+                      <Grid item>
+                        <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
+                          Batal
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
+                          Buat Kuis
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Paper>
               </Grid>
             </Hidden>
             <Hidden smUp implementation="css">
-              <Grid item container justify="center">
-                <Grid item>
-                  <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
-                      <RadioButtonChecked />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
-                      <CheckBox />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-              <Grid item container justify="center">
-                <Grid item>
-                  <Tooltip title="Tambah soal isian pendek">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
-                      <TextFormat />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Tambah soal uraian">
-                    <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
-                      <Subject />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-            </Hidden>
-            <Grid item>
-              <Paper>
-                <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
-                <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
-                  <Grid item>
-                    <TablePagination
-                      labelRowsPerPage="Soal per halaman"
-                      rowsPerPageOptions={[5, 10]}
-                      component="div"
-                      count={this.state.questions.length}
-                      rowsPerPage={this.state.rowsPerPage}
-                      page={this.state.page}
-                      onChangePage={this.handleChangePage}
-                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    />
+              <Grid item>
+                <Paper>
+                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                    <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
+                      <Grid item>
+                        <TablePagination
+                          labelRowsPerPage="Soal Per Halaman"
+                          rowsPerPageOptions={[5, 10]}
+                          component="div"
+                          count={this.state.questions.length}
+                          rowsPerPage={this.state.rowsPerPage}
+                          page={this.state.page}
+                          onChangePage={this.handleChangePage}
+                          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <FormControlLabel
-                      label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
-                      labelPlacement="start"
-                      control={
-                        <ToggleViewQuiz
-                          checked={this.state.posted}
-                          onChange={this.handlePostToggle}
-                          checkedIcon={<FiberManualRecordIcon />}
-                          icon={<FiberManualRecordIcon />}
+                </Paper>
+              </Grid>
+              <Grid container justify="flex-end" style={{marginTop: "20px"}} spacing={5}>
+                <Grid item>
+                  <Fab className={classes.settingsButton} onClick={(event) => this.handleMenuOpen(event)}>
+                    <SettingsIcon/>
+                  </Fab>
+                  <Menu
+                      keepMounted
+                      anchorEl={this.state.anchorEl}
+                      open={Boolean(this.state.anchorEl)}
+                      onClose={this.handleMenuClose}
+                      getContentAnchorEl={null}
+                      style={{marginTop: "10px"}}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                      transformOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                      }}
+                  >
+                    <MenuItem button component="a" className={classes.menuItem}>
+                      <ListItemIcon >
+                        {!this.state.posted ?
+                          <VisibilityIcon className={classes.eyeIcon} />
+                        :
+                          <VisibilityOffIcon className={classes.eyeIcon} />
+                        }
+                      </ListItemIcon>
+                      <FormControlLabel
+                        label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
+                        labelPlacement="start"
+                        control={
+                          <ToggleViewQuizMobile
+                            checked={this.state.posted}
+                            onChange={this.handlePostToggle}
+                            style={{display: "none"}}
                           />
                         }
+                        style={{transform: "translateX(-16px)", color: "black"}}
                       />
-                    </Grid>
-                    {/* <LightTooltip title={ !this.state.posted ? "Tunjukkan ke Murid" : "Sembunyikan dari Murid"}>
-                      <Badge
-                        badgeContent={
-                          <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-                            <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
-                          </Avatar>
-                        }
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                      >
-                        <IconButton className={classes.draftAssessmentButton} onClick={this.handlePostToggle}>
-                          {!this.state.posted ?
-                            <ToggleOffIcon/>
-                              :
-                            <ToggleOnIcon/>
-                          }
-                        </IconButton>
-                      </Badge>
-                    </LightTooltip> */}
-                  <Grid item>
-                    <FormHelperText error>
-                      {errors.questions}
-                    </FormHelperText>
-                  </Grid>
-                  </Grid>
-                  <Grid item container md={3} spacing={1} className={classes.assessmentSettings}>
-                    <Grid item>
-                      <Button variant="contained" className={classes.cancelButton} onClick={this.handleOpenDeleteDialog}>
-                        Batal
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                        Sunting Kuis
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} style={{ textAlign: "center"}}>
-                    <Tooltip title="Salin link kuis/ujian ke clipboard">
-                      <IconButton onClick={(e) => { this.copyToClipboard(e) }}>
-                        <Assignment />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
+                    </MenuItem>
+                    <MenuItem button component="a" className={classes.menuItem} onClick={(e) => this.copyToClipboard(e)}>
+                      <ListItemIcon>
+                        <LinkIcon className={classes.linkIcon}/>
+                      </ListItemIcon>
+                      <ListItemText primary="Copy Clipboard" />
+                    </MenuItem>
+                    <MenuItem button component="a" className={classes.menuItem} onClick={this.handleOpenDeleteDialog}>
+                      <ListItemIcon>
+                        <CancelIcon className={classes.cancelIcon} />
+                      </ListItemIcon>
+                      <ListItemText primary="Batal" />
+                      </MenuItem>
+                    <MenuItem button type="submit" className={classes.menuItem}>
+                      <ListItemIcon>
+                        <SendIcon className={classes.sendIcon} />
+                      </ListItemIcon>
+                      <ListItemText primary="Buat Kuis" />
+                    </MenuItem>
+                  </Menu>
+                </Grid>        
+              </Grid>
+            </Hidden>
           </Grid>
         </form>
         <Snackbar
