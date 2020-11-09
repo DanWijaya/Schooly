@@ -7,12 +7,13 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "350px",
+    width: "300px",
+    maxWidth: "100%",
     minHeight: "175px",
     padding: "15px",
   },
   dialogDeleteButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.error.main,
     color: "white",
     border: `1px solid ${theme.palette.error.main}`,
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogCancelButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: "white",
     color: theme.palette.error.main,
     border: `1px solid ${theme.palette.error.main}`,

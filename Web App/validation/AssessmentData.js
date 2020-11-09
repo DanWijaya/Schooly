@@ -28,7 +28,7 @@ module.exports = function validateAssessmentInput(data){
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
     if(!data.questions.length){
-      errors.questions = "Soal belum diberikan"
+      errors.questions = "Soal belum diberikan!"
     }
 
     return{

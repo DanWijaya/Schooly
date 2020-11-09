@@ -97,6 +97,10 @@ const styles = (theme) => ({
       color: theme.palette.warning.main,
     },
   },
+  copyToClipboardButton: {
+    marginLeft: "24px",
+    color: theme.palette.primary.main,
+  },
   assessmentSettings: {
     justifyContent: "flex-end",
     alignItems: "center",
@@ -651,30 +655,6 @@ class EditAssessment extends Component {
     }))
   }
 
-  handleOpenCheckboxErrorSnackBar = () => {
-    this.setState({ checkboxSnackbarOpen: true });
-  }
-
-  handleCloseCheckboxErrorSnackBar = () => {
-    this.setState({ checkboxSnackbarOpen: false });
-  }
-
-  handleOpenRadioErrorSnackBar = () => {
-    this.setState({ radioSnackbarOpen: true });
-  }
-
-  handleCloseRadioErrorSnackBar = () => {
-    this.setState({ radioSnackbarOpen: false });
-  }
-  
-  handleOpenCopySnackBar = () => {
-    this.setState({ copySnackbarOpen: true });
-  }
-
-  handleCloseCopySnackBar = () => {
-    this.setState({ copySnackbarOpen: false });
-  }
-
   handleMenuOpen = (event) => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -821,21 +801,6 @@ class EditAssessment extends Component {
 
     return (
       <div className={classes.root}>
-        <Snackbar open={this.state.checkboxSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCheckboxErrorSnackBar}>
-          <MuiAlert onClose={this.handleCloseCheckboxErrorSnackBar} severity="error">
-            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
-          <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
-            Soal Dalam Bentuk Radio Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar open={this.state.copySnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCopySnackBar}>
-          <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
-            Link kuis/ujian berhasil disalin ke clipboard Anda!
-          </MuiAlert>
-        </Snackbar>
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
@@ -1071,7 +1036,7 @@ class EditAssessment extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <Tooltip title={!this.state.posted ? "Murid dapat melihat deskripsi Kuis/Ujian (Muncul Pada Layar Murid)" : "Murid tidak dapat melihat deskripsi Kuis/Ujian (Tidak Muncul Pada Layar Murid)"}>
+                        <Tooltip title={!this.state.posted ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)` : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`}>
                           <FormControlLabel
                             label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
                             labelPlacement="start"
@@ -1087,9 +1052,11 @@ class EditAssessment extends Component {
                         </Tooltip>
                       </Grid>
                       <Grid item>
-                        <FormHelperText error>
-                          {errors.questions}
-                        </FormHelperText>
+                        <Tooltip title={`Salin ID ${this.state.type} ke clipboard`}>
+                          <IconButton onClick={(e) => { this.copyToClipboard(e) }} className={classes.copyToClipboardButton}>
+                            <LinkIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Grid>
                     </Grid>
                     <Grid item container md={3} spacing={1} className={classes.assessmentSettings}>
@@ -1100,7 +1067,7 @@ class EditAssessment extends Component {
                       </Grid>
                       <Grid item>
                         <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                          Buat Kuis
+                          Sunting Kuis
                         </Button>
                       </Grid>
                     </Grid>
@@ -1150,7 +1117,7 @@ class EditAssessment extends Component {
                         horizontal: "center",
                       }}
                   >
-                    <MenuItem button component="a" className={classes.menuVisible} onClick={this.handlePostToggle}>
+                    <MenuItem key="1" button component="a" className={classes.menuVisible} onClick={this.handlePostToggle}>
                       <ListItemIcon >
                         {!this.state.posted ?
                           <VisibilityIcon  />
@@ -1160,19 +1127,19 @@ class EditAssessment extends Component {
                       </ListItemIcon>
                       <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
                     </MenuItem>
-                    <MenuItem button component="a" className={classes.menuCopy} onClick={(e) => this.copyToClipboard(e)}>
+                    <MenuItem key="2" className={classes.menuCopy} onClick={(e) => { this.copyToClipboard(e)}}>
                       <ListItemIcon>
                         <LinkIcon/>
                       </ListItemIcon>
                       <ListItemText primary="Copy Link Kuis" />
                     </MenuItem>
-                    <MenuItem button component="a" className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
+                    <MenuItem key="3" button className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
                       <ListItemIcon>
                         <CancelIcon/>
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
                       </MenuItem>
-                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e)}>
+                    <MenuItem key="4" button type="submit" className={classes.menuSubmit} onClick={(e) => {this.onSubmit(e)}}>
                       <ListItemIcon>
                         <SendIcon />
                       </ListItemIcon>
@@ -1184,6 +1151,21 @@ class EditAssessment extends Component {
             </Hidden>
           </Grid>
         </form>
+        <Snackbar open={this.state.checkboxSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCheckboxErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseCheckboxErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Radio Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar open={this.state.copySnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCopySnackBar}>
+          <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
+            Link {this.state.type} berhasil disalin ke clipboard Anda!
+          </MuiAlert>
+        </Snackbar>
         <Snackbar
           open={this.state.snackbarOpen}
           autoHideDuration={4000}
@@ -1191,9 +1173,22 @@ class EditAssessment extends Component {
           anchorOrigin={{vertical : "bottom", horizontal: "center"}}
         >
           <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-            {this.state.snackbarMessage}
+            {(Object.keys(errors).length !== 0) ? (
+              (Object.keys(errors).includes("questions")) ? (
+                (Object.keys(errors).length === 1) ? (
+                  errors.questions
+                ) : (
+                  this.state.snackbarMessage + " " + errors.questions
+                )
+              ) : (
+                this.state.snackbarMessage
+              )
+            ) : 
+              null
+            }
           </MuiAlert>
         </Snackbar>
+        
       </div>
     )
   }

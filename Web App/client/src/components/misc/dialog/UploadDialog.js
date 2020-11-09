@@ -6,7 +6,8 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "350px",
+    width: "300px",
+    maxWidth: "100%",
     minHeight: "175px",
     padding: "15px",
   },
