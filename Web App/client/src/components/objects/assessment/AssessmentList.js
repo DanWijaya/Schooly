@@ -378,6 +378,7 @@ function AssessmentList(props) {
   document.title = "Schooly | Daftar Kuis";
   return (
     <div className={classes.root}>
+      {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}

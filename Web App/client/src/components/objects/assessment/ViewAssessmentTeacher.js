@@ -15,6 +15,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,6 +102,7 @@ function ViewAssessmentTeacher(props) {
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
 
+  console.log(selectedAssessmentName)
   React.useEffect(() => {
     getOneAssessment(assessment_id)
     getAllClass("map")
@@ -147,66 +149,18 @@ function ViewAssessmentTeacher(props) {
     ); 
   }
 
-  function DeleteDialog() {
-    return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h5" gutterBottom>
-              Hapus Kuis berikut?
-            </Typography>
-          </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
-            <Typography variant="h6" align="center" gutterBottom>
-              <b>{selectedAssessments.name}</b>
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-            style={{marginBottom: "10px"}}
-          >
-            <Grid item>
-              <Button
-                onClick={() => { onDeleteAssessment(assessment_id) }}
-                startIcon={<DeleteOutlineIcon />}
-                className={classes.dialogDeleteButton}>
-                Hapus
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
-                className={classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Dialog>
-    )
-  }
-
 
   return (
     <div className={classes.root}>
-      {DeleteDialog()}
+      {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="Kuis"
+        deleteItem=""
+        itemName={selectedAssessments.name}
+        deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+        />
         <Grid container direction="column" spacing={3}>
           <Grid item>
             <Paper className={classes.content}>

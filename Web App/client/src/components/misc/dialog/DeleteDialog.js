@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
       border: `1px solid ${theme.palette.error.dark}`,
     },
   },
+  
   dialogCancelButton: {
     width: "125px",
     backgroundColor: "white",

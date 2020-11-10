@@ -735,14 +735,16 @@ class CreateAssessment extends Component {
         </Snackbar>
         <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
           <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
-            Soal Dalam Bentuk Radio Minimal Memiliki Satu Jawaban.
+            Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
           </MuiAlert>
         </Snackbar>
+        {/* Ini Delete Dialog yang untuk cancel action saja, blm ada di DB*/}
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
           itemType="Kuis"
           deleteItem=""
+          itemName={this.state.name}
           isLink={true}
           redirectLink="/daftar-kuis"
         />

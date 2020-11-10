@@ -225,6 +225,7 @@ class EditAssessment extends Component {
 
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
+  // linkToShare = "TEST";
 
   componentDidMount(){
     const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
@@ -518,10 +519,10 @@ class EditAssessment extends Component {
     this.setState({questions: qst})
   }
 
-  copyToClipboard = (e) => {
+  copyToClipboard = (e, linkToShare) => {
     let textArea = document.createElement("textarea");
     
-    textArea.value = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
+    textArea.value = linkToShare;
     textArea.style.position = 'fixed';
     textArea.style.top = 0;
     textArea.style.left = 0;
@@ -770,6 +771,7 @@ class EditAssessment extends Component {
     const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
 
+    const linkToShare = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
         width: 42,
@@ -821,16 +823,17 @@ class EditAssessment extends Component {
     console.log("QUESTIONS : ", this.state.questions)
     document.title = "Schooly | Sunting Kuis";
 
-    console.log(this.state.questions)
 
     return (
       <div className={classes.root}>
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType="Kuis"
-          itemName=""
+          itemType="Perubahan Kuis"
+          itemName={this.state.name}
           deleteItem=""
+          isLink={true}
+          redirectLink="/daftar-kuis"
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
@@ -1077,7 +1080,7 @@ class EditAssessment extends Component {
                       </Grid>
                       <Grid item>
                         <Tooltip title={`Salin ID ${this.state.type} ke clipboard`}>
-                          <IconButton onClick={(e) => { this.copyToClipboard(e) }} className={classes.copyToClipboardButton}>
+                          <IconButton onClick={(e) => { this.copyToClipboard(e, linkToShare) }} className={classes.copyToClipboardButton}>
                             <LinkIcon />
                           </IconButton>
                         </Tooltip>
@@ -1151,7 +1154,7 @@ class EditAssessment extends Component {
                       </ListItemIcon>
                       <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
                     </MenuItem>
-                    <MenuItem button component="a" className={classes.menuCopy} onClick={() => { this.handleOpenCopySnackBar(); navigator.clipboard.writeText(`http://localhost:3000/kuis-murid/${this.props.match.params.id}`)}}>
+                    <MenuItem button component="a" className={classes.menuCopy} onClick={() => { navigator.clipboard.writeText(linkToShare); this.handleOpenCopySnackBar(); }}>
 
                       <ListItemIcon>
                         <LinkIcon/>
@@ -1183,7 +1186,7 @@ class EditAssessment extends Component {
         </Snackbar>
         <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
           <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
-            Soal Dalam Bentuk Radio Minimal Memiliki Satu Jawaban.
+            Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
           </MuiAlert>
         </Snackbar>
         <Snackbar open={this.state.copySnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCopySnackBar}>
