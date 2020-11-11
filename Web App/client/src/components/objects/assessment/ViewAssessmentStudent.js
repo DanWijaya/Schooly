@@ -538,15 +538,19 @@ function ViewAssessmentStudent(props) {
                         </RadioGroup>
                       ) : (questions[qnsIndex].type === "checkbox") ? (
                         <FormGroup>
-                          {questions[qnsIndex].options.map((option, i) =>
-                          <div style={{display: "flex"}}>
-                            <FormControlLabel
-                              style={{width: "100%"}}
-                              value={String.fromCharCode(97 + i).toUpperCase()}
-                              control={<Checkbox color="primary" onChange={(e) => handleChangeAnswer(e, "checkbox")}/>}
-                              label={ <Typography className={classes.optionText}>{option}</Typography>}
-                            />
-                          </div>
+                          {questions[qnsIndex].options.map((option, i) => {
+                            let val = String.fromCharCode(97 + i).toUpperCase()
+                              return(
+                                <div style={{display: "flex"}}>
+                                  <FormControlLabel
+                                    style={{width: "100%"}}
+                                    value={String.fromCharCode(97 + i).toUpperCase()}
+                                    control={<Checkbox checked={answer[qnsIndex].includes(val)} color="primary" onChange={(e) => handleChangeAnswer(e, "checkbox")}/>}
+                                    label={ <Typography className={classes.optionText}>{option}</Typography>}
+                                  />
+                                </div>
+                              )
+                            }
                           )}
                         </FormGroup>
                       ) : (questions[qnsIndex].type === "shorttext") ? (
