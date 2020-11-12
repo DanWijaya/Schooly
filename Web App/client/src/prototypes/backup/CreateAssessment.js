@@ -1,37 +1,38 @@
+// FILE BACKUP
+// Waktu pembuatan: 11/11/2020
+// Tujuan pembuatan: menyimpan progress terakhir error snackbar
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DateFnsUtils from "@date-io/date-fns";
 import PropTypes from "prop-types";
 import lokal from "date-fns/locale/id";
 import "date-fns";
-import { getOneAssessment, updateAssessment } from "../../../actions/AssessmentActions";
+import { createAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
-  Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
-  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Hidden,
-  Fab, ListItemIcon, ListItemText, Menu } from "@material-ui/core";
+import { Button, Chip, Divider,
+  FormControl, FormControlLabel, FormHelperText, Grid, Menu,
+  MenuItem, Paper, Select, Snackbar, Switch, TextField, 
+  TablePagination, Typography, Tooltip, IconButton, Hidden, Fab, ListItemIcon, ListItemText } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import SaveIcon from "@material-ui/icons/Save";
-import ToggleOffIcon from '@material-ui/icons/ToggleOff';
-import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import SpeedDial from '@material-ui/lab/SpeedDial';
 import SettingsIcon from '@material-ui/icons/Settings';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import AddIcon from "@material-ui/icons/Add";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import MuiAlert from "@material-ui/lab/Alert";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SendIcon from '@material-ui/icons/Send';
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import MuiAlert from "@material-ui/lab/Alert";
-import { RadioButtonChecked, CheckBox, TextFormat, Subject, Assignment } from '@material-ui/icons';
+import { RadioButtonChecked, CheckBox, TextFormat, Subject, Assignment, Send } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
@@ -39,9 +40,18 @@ const styles = (theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
+  content: {
+    padding: "20px 20px 30px 20px",
+  },
+  divider: {
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      height: "1px",
+    },
+  },
   addQuestionButton: {
     boxShadow: theme.shadows[2],
-    margin: "16px", 
+    margin: "16px",
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
@@ -71,35 +81,11 @@ const styles = (theme) => ({
       color: "#B2417C"
     },
   },
-  content: {
-    padding: "20px 20px 30px 20px",
-  },
-  divider: {
-    [theme.breakpoints.down("md")]: {
-      width: "100%",
-      height: "1px",
-    },
-  },
   pageNavigator: {
     justifyContent: "flex-start",
     [theme.breakpoints.down("sm")]: {
       justifyContent: "center",
     },
-  },
-  draftAssessmentButton: {
-    width: "35px",
-    height: "35px",
-    padding: "0px",
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.warning.main,
-    },
-  },
-  copyToClipboardButton: {
-    marginLeft: "24px",
-    color: theme.palette.primary.main,
   },
   assessmentSettings: {
     justifyContent: "flex-end",
@@ -135,7 +121,7 @@ const styles = (theme) => ({
     backgroundColor: "grey",
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#555555",
+      backgroundColor: "#333333",
       color: "white",
     },
     marginInlineEnd: "2em"
@@ -146,17 +132,6 @@ const styles = (theme) => ({
     },
     "&:hover, &:focus": {
       backgroundColor: theme.palette.warning.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: "white",
-      },
-    },
-  },
-  menuCopy: {
-    "& .MuiListItemIcon-root" : {
-      color: theme.palette.primary.main
-    },
-    "&:hover, &:focus": {
-      backgroundColor: theme.palette.primary.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },
@@ -186,7 +161,7 @@ const styles = (theme) => ({
   },
 });
 
-class EditAssessment extends Component {
+class CreateAssessment extends Component {
   constructor() {
     super();
     this.state = {
@@ -199,7 +174,6 @@ class EditAssessment extends Component {
         lampiran: [],
         type: "radio"
       }],
-      lampiranToDelete: [],
       name: "",
       description: "",
       subject: "",
@@ -208,61 +182,27 @@ class EditAssessment extends Component {
       end_date: new Date(),
       openDeleteDialog: false,
       openUploadDialog: false,
-      posted: null,
       success: false,
       page: 0,
       rowsPerPage: 10,
       qnsListitem: [],
-      type:"",
+      posted: false,
+      type: "",
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
-      copySnackbarOpen: false
     }
   }
 
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
-  // linkToShare = "TEST";
-
-  componentDidMount(){
-    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
-    handleSideDrawerExist(false)
-    getAllClass()
-    getOneAssessment(this.props.match.params.id)
-    getAllSubjects()
-  }
 
   componentWillUnmount(){
+    console.log(this.state.subject)
     this.props.clearErrors()
     this.props.handleSideDrawerExist(true)
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps){
-    const { selectedAssessments } = nextProps.assessmentsCollection
-
-    if (!nextProps.errors) {
-      this.handleOpenUploadDialog()
-    }
-    console.log(selectedAssessments.questions)
-    if (Boolean(selectedAssessments) && nextProps.errors) {
-      this.setState({
-          name: selectedAssessments.name,
-          subject: selectedAssessments.subject,
-          deadline: selectedAssessments.deadline,
-          start_date: selectedAssessments.start_date,
-          end_date: selectedAssessments.end_date,
-          questions: Array.isArray(selectedAssessments.questions) ? selectedAssessments.questions : [],
-          description: selectedAssessments.description,
-          class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : [],
-          posted: selectedAssessments.posted,
-          type: selectedAssessments.type
-          // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
-          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      })
-    }
   }
 
   handleCloseErrorSnackbar = (event, reason) => {
@@ -272,8 +212,16 @@ class EditAssessment extends Component {
     this.setState({snackbarOpen: false});
   }
 
-  handleOpenErrorSnackbar = () => {
-    this.setState({ snackbarOpen: true });
+  handleOpenErrorSnackbar = (message) => {
+    this.setState({ snackbarOpen: true, snackbarMessage: message});
+  }
+
+  handleCloseInvalidQstSnackbar = () => {
+    this.setState({ invalidQstOpen: false });
+  }
+
+  handleOpenInvalidQstSnackbar = (message) => {
+    this.setState({ invalidQstOpen: true, invalidQstMessage: message });
   }
 
   handleOpenCheckboxErrorSnackBar = () => {
@@ -292,24 +240,36 @@ class EditAssessment extends Component {
     this.setState({ radioSnackbarOpen: false });
   }
 
-  handleOpenCopySnackBar = () => {
-    this.setState({ copySnackbarOpen: true });
+  formatQstNumber = (numberIndexArray) => {
+    let qstNumbers = "";
+    if (numberIndexArray.length === 1) {
+      qstNumbers += (numberIndexArray[0] + 1);
+    } else if (numberIndexArray.length === 2) {
+      qstNumbers += ((numberIndexArray[0] + 1) + " dan " + (numberIndexArray[1] + 1));
+    } else {
+      numberIndexArray.forEach((val, idx) => {
+        if (idx === numberIndexArray.length - 2) {
+          qstNumbers += ((val + 1) + ", dan ");
+        } else if (idx === numberIndexArray.length - 1) {
+          qstNumbers += (val + 1);
+        } else {
+          qstNumbers += ((val + 1) + ", ");
+        }
+      });
+    }
+    return qstNumbers;
   }
 
-  handleCloseCopySnackBar = () => {
-    this.setState({ copySnackbarOpen: false });
-  }
-
-  onSubmit = (e) => {
-    e.preventDefault();
+  onSubmit = (e, id) => {
+    e.preventDefault()
     let formData = new FormData();
     let invalidQuestionIndex = [];
 
-    const { questions, lampiranToDelete } = this.state;
-    const { updateAssessment , history} = this.props;
+    const { questions } = this.state;
+    const { createAssessment , history} = this.props
 
     if (this.state.posted) {
-      for (var i = 0; i < questions.length; i++) {
+      for(var i = 0; i < questions.length; i++){
         let qns = questions[i];
         if (!qns.name) {
           invalidQuestionIndex.push(i);
@@ -330,10 +290,10 @@ class EditAssessment extends Component {
         }
       }
     }
-
+    
     if (invalidQuestionIndex.length === 0) {
       questions.forEach((qns) => {
-        let lampiran = qns.lampiran.filter(x => typeof x !== "string");
+        let lampiran = qns.lampiran;
         lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
       })
 
@@ -345,20 +305,19 @@ class EditAssessment extends Component {
         class_assigned: this.state.class_assigned,
         description: this.state.description,
         questions: this.state.questions,
+        author_id: id,
         posted: this.state.posted,
         type: this.state.type
       }
-      const assessmentId = this.props.match.params.id;
-      console.log(assessmentData)
 
-      updateAssessment(formData, assessmentData, assessmentId, lampiranToDelete, history)
+      createAssessment(formData, assessmentData, history)
         .then(res => {
-          console.log("Assessment is updated successfully")
+          console.log("Assessment is created successfully")
         })
-        .catch(() => this.handleOpenErrorSnackbar())
+        .catch(err => this.handleOpenErrorSnackbar(`Keterangan ${this.state.type} masih kosong!`))
     }
     else{
-      this.handleOpenErrorSnackbar();
+      this.handleOpenInvalidQstSnackbar(`Soal nomor ${this.formatQstNumber(invalidQuestionIndex)} masih belum lengkap!`);
     }
   }
 
@@ -405,6 +364,9 @@ class EditAssessment extends Component {
 
   handleAddQuestion = (option) => {
     console.log("Add questionnnn")
+    // let questions = this.state.questions
+    // questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
+    // this.setState({questions: questions})
 
     let questions = this.state.questions;
     if(option === "radio"){
@@ -443,9 +405,8 @@ class EditAssessment extends Component {
         type: option
       })
     }
-    this.setState({ questions: questions})
+    this.setState({ questions: questions })
     this.setState({ currentQuestionOption: null })
-
   }
 
   handleChangeQuestion = (e, i, name=null, otherfield=null, type=null) => {
@@ -456,30 +417,32 @@ class EditAssessment extends Component {
         questions[i]["answer"] = [e.target.value]
       }
       else if(type === "checkbox"){
-        if (typeof questions[i]["answer"] === "string") {
+        if(typeof questions[i]["answer"] === "string"){
           questions[i]["answer"] = []
         }
-        if (!e.target.checked || questions[i]["answer"].includes(e.target.value)) {
-          if (questions[i]["answer"].length === 1) {
+        if(!e.target.checked || questions[i]["answer"].includes(e.target.value)){
+          if(questions[i]["answer"].length === 1){
             this.handleOpenCheckboxErrorSnackBar()
           }
-          else {
-            questions[i]["answer"] = questions[i]["answer"].filter(function (value, index) {
+          else{
+            questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
               return value != e.target.value
             })
           }
         }
-        else if (e.target.checked && !questions[i]["answer"].includes(e.target.value)) {
+        else if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
           questions[i]["answer"].push(e.target.value)
         }
       }
     }else {
       questions[i][e.target.id] = (name ? name : e.target.value);
     }
-
     this.setState({ questions: questions})
   }
 
+  // -untuk tipe soal shorttext, agar string soal tidak ditraversal secara menyeluruh (untuk mencari 
+  // kunci jawaban) setiap kali guru mengetik huruf, string soal akan disimpan sebagai ref di komponen soal tersebut.
+  // string ini baru akan diproses hanya ketika guru mengklik elemen lain selain textfield tersebut.
   parseAnswer = (txtFieldVal, qstIndex) => {
     let qst = this.state.questions;
     let splitResult = txtFieldVal.split("`"); // length hasil split ini pasti >= 1
@@ -495,31 +458,9 @@ class EditAssessment extends Component {
     this.setState({questions: qst})
   }
 
-  copyToClipboard = (e, linkToShare) => {
-    let textArea = document.createElement("textarea");
-    
-    textArea.value = linkToShare;
-    textArea.style.position = 'fixed';
-    textArea.style.top = 0;
-    textArea.style.left = 0;
-    textArea.style.width = '2em';
-    textArea.style.height = '2em';
-    textArea.style.padding = 0;
-    textArea.style.border = 'none';
-    textArea.style.outline = 'none';
-    textArea.style.boxShadow = 'none';
-    textArea.style.background = 'transparent';
-
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    e.target.focus();
-    document.body.removeChild(textArea);
-    this.handleOpenCopySnackBar();
-  }; 
-
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
-    // console.log("AAAA")
+    // console.log(optionIndex)
+    // console.log(qnsIndex)
     let questions = this.state.questions
     if(action === "Delete"){
       if(questions[qnsIndex].type === "checkbox"){
@@ -565,7 +506,6 @@ class EditAssessment extends Component {
       console.log("No action is specified")
     }
     // console.log(questions)
-    console.log(questions)
     this.setState({ questions: questions})
   }
 
@@ -575,7 +515,7 @@ class EditAssessment extends Component {
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
     // questions.splice(i+1, 0, question)
-    
+
     if (questions[i].type === "shorttext") {
       questions.splice(i+1, 0, {
         name: questions[i].name,
@@ -615,40 +555,104 @@ class EditAssessment extends Component {
   handleQuestionImage = (e, qnsIndex, indexToDelete=null) => {
     let questions = this.state.questions
     if(Number.isInteger(indexToDelete)){
-      let item = questions[qnsIndex].lampiran[indexToDelete]
-      // delete question lampiran nya dari list
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
-      // lalu setelah itu kita simpan semua lampiran di dalam list untuk mengecek.
-      let all_lampiran_list = []
-      questions.forEach((qns) => {
-        if(qns.lampiran.length){
-         all_lampiran_list = [...all_lampiran_list, ...qns.lampiran]
-        }
-      })
-
-
-      // dipakai untuk handle kalau imagenya dari duplicate, tapi ada satu soal yang imagenya didelete lah.
-      if(typeof item === "string"){
-        let temp = this.state.lampiranToDelete;
-        if(all_lampiran_list.indexOf(item) === -1){
-          // kalau ngak ada, bakal dibuang.
-          temp.push(item)
-        }
-        this.setState({ lampiranToDelete: temp, questions: questions})
-      }
-      else {
-        this.setState({ questions: questions})
-      }
+      console.log(questions)
+      this.setState({ questions: questions})
     }
     else{
       if(e.target.files){
-        const files = Array.from(e.target.files);
-        let temp = questions[qnsIndex].lampiran.concat(files)
-        questions[qnsIndex].lampiran = temp;
-        this.setState({ questions: questions})
+          const files = Array.from(e.target.files);
+          let temp = questions[qnsIndex].lampiran.concat(files)
+          questions[qnsIndex].lampiran = temp;
+          this.setState({ questions: questions})
       }
     }
   }
+
+  listQuestion = () => {
+    // let questionList = []
+    let questions = this.state.questions;
+    const { page, rowsPerPage} = this.state;
+    
+    // let answerListArray = []
+    // this.state.questions.forEach(function(value,index){
+    //   answerListArray.push(value.answer)
+    // })
+
+
+    let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
+      
+      // Fitur 2 -- Untuk Memastikan Bahwa Checkbox yang tercentang (ditampilkan ke layar) sinkron dengan value "answer" yang tersimpan
+      let booleanArray = [];
+      if (question.type === "checkbox") {
+        let tempArray = [];
+        if(typeof question.answer === "object"){
+          question.answer.forEach(function(value,index){
+            tempArray.push(Number(value.charCodeAt(0))-65)           
+          })
+        }
+        // console.log(tempArray)
+        for(let j=0;j<this.state.questions[i].options.length;j++){
+          if(tempArray.includes(j)){
+            booleanArray[j] = true;
+          }
+          else{
+            booleanArray[j] = false;
+          }
+        }
+        // console.log(booleanArray)
+      }
+      // console.log(booleanArray)
+
+      return(
+        <QuestionItem
+          isEdit={false}
+          index={i + page * rowsPerPage}
+          name={question.name}
+          options={JSON.stringify(question.options)}
+          answer={question.answer}
+          lampiran={question.lampiran}
+          lampiran_length={question.lampiran.length}
+          lampiranToAdd={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
+          currentLampiran={[]} // dipakai untuk edit assessment, jadi pass array kosong aja.
+          deleteQuestion={this.deleteQuestion}
+          handleDuplicateQuestion={this.handleDuplicateQuestion}
+          handleQuestionOptions={this.handleQuestionOptions}
+          handleChangeQuestion={this.handleChangeQuestion}
+          handleQuestionImage={this.handleQuestionImage}
+          parseAnswer={this.parseAnswer}
+          type={question.type}
+          check_data={booleanArray}
+        />
+      )
+    }
+  )
+
+    return questionList
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
+      this.handleOpenUploadDialog()
+    }
+  }
+
+  componentDidMount(){
+    const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props
+    handleSideDrawerExist(false)
+    getAllClass()
+    getAllSubjects()
+  }
+
+
+  handleChangePage = (event, newPage) => {
+    // setPage(newPage);
+    this.setState({ page: newPage})
+  };
+
+  handleChangeRowsPerPage = (event) => {
+    this.setState({ page: 0, rowsPerPage: +event.target.value })
+  };
 
   handlePostToggle = () => {
     this.setState((prevState) => ({
@@ -664,90 +668,24 @@ class EditAssessment extends Component {
     this.setState({ anchorEl: null });
   };
 
-  listQuestion = () => {
-    let { questions } = this.state;
-    const { page, rowsPerPage} = this.state;
-    const { classes } = this.props;
-    let questionList = [];
-    questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-
-      let lampiranToAdd = question.lampiran.filter(l => typeof l !== "string")
-      console.log(lampiranToAdd)
-      let currentLampiran = question.lampiran.filter(l => typeof l === "string")
-
-      let booleanArray = [];
-      if (question.type === "checkbox") {
-        let tempArray = [];
-        if (typeof question.answer === "object") {
-          question.answer.forEach(function (value, index) {
-            tempArray.push(Number(value.charCodeAt(0)) - 65)
-          })
-        }
-        console.log(tempArray)
-        for (let j = 0; j < this.state.questions[i].options.length; j++) {
-          if (tempArray.includes(j)) {
-            booleanArray[j] = true;
-          }
-          else {
-            booleanArray[j] = false;
-          }
-        }
-        // console.log(booleanArray)
-      }
-      // console.log(booleanArray)
-
-      return(
-        <QuestionItem
-          isEdit={true}
-          index={i + page * rowsPerPage}
-          name={question.name}
-          options={JSON.stringify(question.options)}
-          answer={question.answer}
-          lampiran={question.lampiran}
-          lampiran_length={question.lampiran.length}
-          lampiranToAdd={lampiranToAdd}
-          currentLampiran={currentLampiran}
-          deleteQuestion={this.deleteQuestion}
-          handleDuplicateQuestion={this.handleDuplicateQuestion}
-          handleQuestionOptions={this.handleQuestionOptions}
-          handleChangeQuestion={this.handleChangeQuestion}
-          handleQuestionImage={this.handleQuestionImage}
-          parseAnswer={this.parseAnswer}
-          type={question.type}
-          check_data={booleanArray}
-          />
-      )
+  submitForm = () => {
+    document.getElementById("submitForm").submit();
   }
-  )
-
-    return questionList
-  }
-
-  componentDidUpdate(prevProps, prevState){
-    if(!this.props.errors && this.props.errors !== prevProps.errors){
-      this.handleOpenUploadDialog()
-    }
-  }
-
-
-  handleChangePage = (event, newPage) => {
-    // setPage(newPage);
-    this.setState({ page: newPage})
-  };
-
-  handleChangeRowsPerPage = (event) => {
-    this.setState({ page: 0, rowsPerPage: +event.target.value })
-  };
 
   render() {
+    console.log(this.state.questions)
     const { class_assigned } = this.state;
     const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
+    const actions = [
+      { icon: <VisibilityIcon />, name: 'Tampilkan Ke Murid' },
+      { icon: <LinkIcon />, name: 'Copy Ke Clipboard' },
+      { icon: <CancelIcon />, name: 'Batal' },
+      { icon: <SendIcon />, name: 'Buat Kuis' },
+    ];
 
-    const linkToShare = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
         width: 42,
@@ -777,7 +715,7 @@ class EditAssessment extends Component {
         height: 24,
       },
       track: {
-        borderRadius: 26 / 2,
+        borderRadius: 24 / 2,
         border: `1px solid ${theme.palette.grey[400]}`,
         backgroundColor: theme.palette.grey[50],
         opacity: 1,
@@ -796,38 +734,49 @@ class EditAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    console.log("QUESTIONS : ", this.state.questions)
-    document.title = "Schooly | Sunting Kuis";
+    document.title = "Schooly | Buat Kuis";
 
+    console.log(this.state.questions)
 
     return (
       <div className={classes.root}>
+        <Snackbar open={this.state.checkboxSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCheckboxErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseCheckboxErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
+          <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
+            Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
+          </MuiAlert>
+        </Snackbar>
+        {/* Ini Delete Dialog yang untuk cancel action saja, blm ada di DB*/}
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType="Perubahan Kuis"
-          itemName={this.state.name}
+          itemType="Kuis"
           deleteItem=""
+          itemName={this.state.name}
           isLink={true}
           redirectLink="/daftar-kuis"
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          messageUploading="Kuis sedang disunting"
-          messageSuccess="Kuis telah disunting"
+          messageUploading="Kuis sedang dibuat"
+          messageSuccess="Kuis telah dibuat"
           redirectLink="/daftar-kuis"
         />
-        <form onSubmit={(e) => this.onSubmit(e)}>
+        <form onSubmit={(e) => this.onSubmit(e, user.id)} id="submitForm">
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Sunting Kuis</b>
+                    <b>Buat Kuis</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan kuis untuk menyunting kuis.
+                    Tambahkan keterangan kuis untuk membuat kuis.
                   </Typography>
                 </div>
                 <Divider />
@@ -839,7 +788,6 @@ class EditAssessment extends Component {
                           Judul
                         </Typography>
                         <TextField
-                          value={this.state.name}
                           fullWidth
                           variant="outlined"
                           id="name"
@@ -853,7 +801,6 @@ class EditAssessment extends Component {
                           Deskripsi
                         </Typography>
                         <TextField
-                          value={this.state.description}
                           multiline
                           rowsMax={10}
                           fullWidth
@@ -993,35 +940,35 @@ class EditAssessment extends Component {
             {this.listQuestion()}
             <Grid item container justify="center">
               <Grid item>
-                <LightTooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
                   <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
                     <RadioButtonChecked />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               </Grid>
               <Grid item>
-                <LightTooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
                   <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
                     <CheckBox />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               </Grid>
               <Grid item>
-                <LightTooltip title="Tambah soal isian pendek">
+                <Tooltip title="Tambah soal isian pendek">
                   <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
                     <TextFormat />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               </Grid>
               <Grid item>
-                <LightTooltip title="Tambah soal uraian">
+                <Tooltip title="Tambah soal uraian">
                   <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
                     <Subject />
                   </IconButton>
-                </LightTooltip>
+                </Tooltip>
               </Grid>
             </Grid>
-            <Hidden smDown implementation="css">
+            <Hidden xsDown implementation="css">
               <Grid item>
                 <Paper>
                   <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
@@ -1039,7 +986,7 @@ class EditAssessment extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <LightTooltip title={!this.state.posted ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)` : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`}>
+                        <Tooltip title={!this.state.posted ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)` : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`}>
                           <FormControlLabel
                             label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
                             labelPlacement="start"
@@ -1052,14 +999,7 @@ class EditAssessment extends Component {
                               />
                             }
                           />
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip title={`Salin tautan ${this.state.type} ke Clipboard`}>
-                          <IconButton onClick={(e) => { this.copyToClipboard(e, linkToShare) }} className={classes.copyToClipboardButton}>
-                            <LinkIcon />
-                          </IconButton>
-                        </LightTooltip>
+                        </Tooltip>
                       </Grid>
                     </Grid>
                     <Grid item container md={3} spacing={1} className={classes.assessmentSettings}>
@@ -1070,7 +1010,7 @@ class EditAssessment extends Component {
                       </Grid>
                       <Grid item>
                         <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                          Sunting Kuis
+                          Buat Kuis
                         </Button>
                       </Grid>
                     </Grid>
@@ -1078,7 +1018,7 @@ class EditAssessment extends Component {
                 </Paper>
               </Grid>
             </Hidden>
-            <Hidden mdUp implementation="css">
+            <Hidden smUp implementation="css">
               <Grid item>
                 <Paper>
                   <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
@@ -1130,23 +1070,23 @@ class EditAssessment extends Component {
                       </ListItemIcon>
                       <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
                     </MenuItem>
-                    <MenuItem button component="a" className={classes.menuCopy} onClick={() => { navigator.clipboard.writeText(linkToShare); this.handleOpenCopySnackBar(); }}>
+                    {/*<MenuItem button component="a" className={classes.menuItem}>
                       <ListItemIcon>
-                        <LinkIcon/>
+                        <LinkIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Copy Link Kuis" />
-                    </MenuItem>
+                      <ListItemText primary="Copy Clipboard" />
+                      </MenuItem>*/}
                     <MenuItem button component="a" className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
                       <ListItemIcon>
-                        <CancelIcon/>
+                        <CancelIcon />
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
                       </MenuItem>
-                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => {this.onSubmit(e)}}>
+                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e, user.id)}>
                       <ListItemIcon>
-                        <SendIcon />
+                        <SendIcon  />
                       </ListItemIcon>
-                      <ListItemText primary="Sunting Kuis" />
+                      <ListItemText primary="Buat Kuis" />
                     </MenuItem>
                   </Menu>
                 </Grid>        
@@ -1154,21 +1094,6 @@ class EditAssessment extends Component {
             </Hidden>
           </Grid>
         </form>
-        <Snackbar open={this.state.checkboxSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCheckboxErrorSnackBar}>
-          <MuiAlert onClose={this.handleCloseCheckboxErrorSnackBar} severity="error">
-            Soal Dalam Bentuk Checkbox Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar open={this.state.radioSnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseRadioErrorSnackBar}>
-          <MuiAlert onClose={this.handleCloseRadioErrorSnackBar} severity="error">
-            Soal Dalam Bentuk Pilihan Ganda Minimal Memiliki Satu Jawaban.
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar open={this.state.copySnackbarOpen} autoHideDuration={6000} onClose={this.handleCloseCopySnackBar}>
-          <MuiAlert onClose={this.handleCloseCopySnackBar} severity="success">
-            Link {this.state.type} berhasil disalin ke Clipboard Anda!
-          </MuiAlert>
-        </Snackbar>
         <Snackbar
           open={this.state.snackbarOpen}
           autoHideDuration={4000}
@@ -1176,7 +1101,30 @@ class EditAssessment extends Component {
           anchorOrigin={{vertical : "bottom", horizontal: "center"}}
         >
           <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-            Masih ada bagian yang belum diisi, silahkan diperiksa kembali!
+            {
+              (Object.keys(errors).includes("questions")) ? (
+                (Object.keys(errors).length === 1) ? (
+                  // kasus: hanya ada error jumlah soal 0 
+                  errors.questions
+                ) : (
+                    // kasus: ada error deskripsi dan error jumlah soal 0 
+                    this.state.snackbarMessage + " " + errors.questions
+                  )
+              ) : (
+                  // kasus: hanya ada error deskripsi 
+                  this.state.snackbarMessage
+                )
+            }
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={this.state.invalidQstOpen}
+          autoHideDuration={4000}
+          onClose={this.handleCloseInvalidQstSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseInvalidQstSnackbar} severity="error">
+            {this.state.invalidQstMessage}
           </MuiAlert>
         </Snackbar>
       </div>
@@ -1184,18 +1132,15 @@ class EditAssessment extends Component {
   }
 };
 
-EditAssessment.propTypes = {
-  updateAssessment: PropTypes.func.isRequired,
+CreateAssessment.propTypes = {
+  createAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  updateAssessment: PropTypes.func.isRequired,
-  getOneAssessment: PropTypes.func.isRequired,
-  assessmentsCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  success: PropTypes.object.isRequired
+  success: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -1204,9 +1149,8 @@ const mapStateToProps = state => ({
   success: state.success,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
-  assessmentsCollection: state.assessmentsCollection,
 })
 
 export default connect(
-  mapStateToProps, { getOneAssessment, getAllClass, getAllSubjects, updateAssessment, clearErrors }
-)(withStyles(styles)(React.memo(EditAssessment)));
+  mapStateToProps, { getAllClass, getAllSubjects, createAssessment, clearErrors }
+)(withStyles(styles)(React.memo(CreateAssessment)));

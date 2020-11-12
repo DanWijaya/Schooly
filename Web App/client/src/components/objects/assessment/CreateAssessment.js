@@ -10,11 +10,12 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
 import { Button, Chip, Divider,
   FormControl, FormControlLabel, FormHelperText, Grid, Menu,
   MenuItem, Paper, Select, Snackbar, Switch, TextField, 
-  TablePagination, Typography, Tooltip, IconButton, Hidden, Fab, ListItemIcon, ListItemText } from "@material-ui/core";
+  TablePagination, Typography, IconButton, Hidden, Fab, ListItemIcon, ListItemText } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -188,7 +189,7 @@ class CreateAssessment extends Component {
       snackbarMessage: "",
       anchorEl: null,
       checkboxSnackbarOpen: false,
-      radioSnackbarOpen: false,
+      radioSnackbarOpen: false
     }
   }
 
@@ -208,28 +209,25 @@ class CreateAssessment extends Component {
     this.setState({snackbarOpen: false});
   }
 
-  handleOpenErrorSnackbar = (message) => {
-    this.setState({ snackbarOpen: true, snackbarMessage: message});
+  handleOpenErrorSnackbar = () => {
+    this.setState({ snackbarOpen: true});
   }
 
-  formatQstNumber = (numberIndexArray) => {
-    let qstNumbers = "";
-    if (numberIndexArray.length === 1) {
-      qstNumbers += (numberIndexArray[0] + 1);
-    } else if (numberIndexArray.length === 2) {
-      qstNumbers += ((numberIndexArray[0] + 1) + " dan " + (numberIndexArray[1] + 1));
-    } else {
-      numberIndexArray.forEach((val, idx) => {
-        if (idx === numberIndexArray.length - 2) {
-          qstNumbers += ((val + 1) + ", dan ");
-        } else if (idx === numberIndexArray.length - 1) {
-          qstNumbers += (val + 1);
-        } else {
-          qstNumbers += ((val + 1) + ", ");
-        }
-      });
-    }
-    return qstNumbers;
+
+  handleOpenCheckboxErrorSnackBar = () => {
+    this.setState({ checkboxSnackbarOpen: true });
+  }
+
+  handleCloseCheckboxErrorSnackBar = () => {
+    this.setState({ checkboxSnackbarOpen: false });
+  }
+
+  handleOpenRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: true });
+  }
+
+  handleCloseRadioErrorSnackBar = () => {
+    this.setState({ radioSnackbarOpen: false });
   }
 
   onSubmit = (e, id) => {
@@ -286,10 +284,10 @@ class CreateAssessment extends Component {
         .then(res => {
           console.log("Assessment is created successfully")
         })
-        .catch(err => this.handleOpenErrorSnackbar(`Keterangan ${this.state.type} masih kosong!`))
+        .catch(() => this.handleOpenErrorSnackbar())
     }
     else{
-      this.handleOpenErrorSnackbar(`Soal nomor ${this.formatQstNumber(invalidQuestionIndex)} masih belum lengkap!`);
+      this.handleOpenErrorSnackbar();
     }
   }
 
@@ -336,9 +334,6 @@ class CreateAssessment extends Component {
 
   handleAddQuestion = (option) => {
     console.log("Add questionnnn")
-    // let questions = this.state.questions
-    // questions.push({name: "", options: ["Opsi 1", ""], answer: "A"})
-    // this.setState({questions: questions})
 
     let questions = this.state.questions;
     if(option === "radio"){
@@ -542,16 +537,9 @@ class CreateAssessment extends Component {
   }
 
   listQuestion = () => {
-    // let questionList = []
     let questions = this.state.questions;
     const { page, rowsPerPage} = this.state;
     
-    // let answerListArray = []
-    // this.state.questions.forEach(function(value,index){
-    //   answerListArray.push(value.answer)
-    // })
-
-
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
       
       // Fitur 2 -- Untuk Memastikan Bahwa Checkbox yang tercentang (ditampilkan ke layar) sinkron dengan value "answer" yang tersimpan
@@ -630,22 +618,6 @@ class CreateAssessment extends Component {
     this.setState((prevState) => ({
       posted: !prevState.posted
     }))
-  }
-
-  handleOpenCheckboxErrorSnackBar = () => {
-    this.setState({checkboxSnackbarOpen: true});
-  }
-
-  handleCloseCheckboxErrorSnackBar = () => {
-    this.setState({checkboxSnackbarOpen: false});
-  }
-
-  handleOpenRadioErrorSnackBar = () => {
-    this.setState({ radioSnackbarOpen: true });
-  }
-
-  handleCloseRadioErrorSnackBar = () => {
-    this.setState({ radioSnackbarOpen: false });
   }
 
   handleMenuOpen = (event) => {
@@ -928,35 +900,35 @@ class CreateAssessment extends Component {
             {this.listQuestion()}
             <Grid item container justify="center">
               <Grid item>
-                <Tooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                <LightTooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
                   <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
                     <RadioButtonChecked />
                   </IconButton>
-                </Tooltip>
+                </LightTooltip>
               </Grid>
               <Grid item>
-                <Tooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                <LightTooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
                   <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
                     <CheckBox />
                   </IconButton>
-                </Tooltip>
+                </LightTooltip>
               </Grid>
               <Grid item>
-                <Tooltip title="Tambah soal isian pendek">
+                <LightTooltip title="Tambah soal isian pendek">
                   <IconButton className={`${classes.addQuestionButton} ${classes.ShorttextQst}`} onClick={() => this.handleCloseMenuTambah("shorttext")}>
                     <TextFormat />
                   </IconButton>
-                </Tooltip>
+                </LightTooltip>
               </Grid>
               <Grid item>
-                <Tooltip title="Tambah soal uraian">
+                <LightTooltip title="Tambah soal uraian">
                   <IconButton className={`${classes.addQuestionButton} ${classes.LongtextQst}`} onClick={() => this.handleCloseMenuTambah("longtext")}>
                     <Subject />
                   </IconButton>
-                </Tooltip>
+                </LightTooltip>
               </Grid>
             </Grid>
-            <Hidden xsDown implementation="css">
+            <Hidden smDown implementation="css">
               <Grid item>
                 <Paper>
                   <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
@@ -974,7 +946,7 @@ class CreateAssessment extends Component {
                         />
                       </Grid>
                       <Grid item>
-                        <Tooltip title={!this.state.posted ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)` : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`}>
+                        <LightTooltip title={!this.state.posted ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)` : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`}>
                           <FormControlLabel
                             label={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"}
                             labelPlacement="start"
@@ -987,7 +959,7 @@ class CreateAssessment extends Component {
                               />
                             }
                           />
-                        </Tooltip>
+                        </LightTooltip>
                       </Grid>
                     </Grid>
                     <Grid item container md={3} spacing={1} className={classes.assessmentSettings}>
@@ -1006,7 +978,7 @@ class CreateAssessment extends Component {
                 </Paper>
               </Grid>
             </Hidden>
-            <Hidden smUp implementation="css">
+            <Hidden mdUp implementation="css">
               <Grid item>
                 <Paper>
                   <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
@@ -1058,12 +1030,6 @@ class CreateAssessment extends Component {
                       </ListItemIcon>
                       <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
                     </MenuItem>
-                    {/*<MenuItem button component="a" className={classes.menuItem}>
-                      <ListItemIcon>
-                        <LinkIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Copy Clipboard" />
-                      </MenuItem>*/}
                     <MenuItem button component="a" className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
                       <ListItemIcon>
                         <CancelIcon />
@@ -1089,19 +1055,7 @@ class CreateAssessment extends Component {
           anchorOrigin={{vertical : "bottom", horizontal: "center"}}
         >
           <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-            {(Object.keys(errors).length !== 0) ? (
-              (Object.keys(errors).includes("questions")) ? (
-                (Object.keys(errors).length === 1) ? (
-                  errors.questions
-                ) : (
-                    this.state.snackbarMessage + " " + errors.questions
-                  )
-              ) : (
-                  this.state.snackbarMessage
-                )
-            ) :
-              null
-            }
+            Masih ada bagian yang belum diisi, silahkan diperiksa kembali!
           </MuiAlert>
         </Snackbar>
       </div>
