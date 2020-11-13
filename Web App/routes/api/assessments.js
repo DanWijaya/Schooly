@@ -122,6 +122,13 @@ router.post("/update/:id", (req,res) => {
           update_answer = true;
         }
 
+        let currQstIdList = assessmentData.questions.map((qns) => { return qns._id; })
+        let newQstIdList = req.body.questions.map((qns) => { return qns._id; })
+
+        let transformIdx = newQstIdList.map((qstId) => {
+          return currQstIdList.indexOf(qstId);
+        })
+        
         if(update_answer){
           if(assessmentData.submissions){
             for (const [key, value] of assessmentData.submissions.entries()) {
@@ -130,52 +137,68 @@ router.post("/update/:id", (req,res) => {
               let correct_count = 0;
               let number_of_gradeable_questions = 0;
               for (let i = 0; i < questions.length; i++){
-                // value.length sudah dipastikan sama dengan questions.length ViewAssessmentStudent.js
-                // value[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal value[0] adalah jawaban murid untuk pertanyaan pertama.
-                // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
-                // value dan questions[i].answer adalah array of array
-                if (questions[i].type === "radio") {
-                  if (questions[i].answer[0] === value[i][0]) {
-                    correct_count = correct_count + 1;
+
+                // penambahan soal baru tidak berpengaruh terhadap nilai yang sudah ada.
+                // penghapusan soal akan mengubah nilai.
+                if (transformIdx[i] !== -1) {
+
+                  // value.length sudah dipastikan sama dengan questions.length sebelum assessment diubah (ViewAssessmentStudent.js)
+                  // value[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal value[0] adalah jawaban murid untuk pertanyaan pertama.
+                  // value[i] sudah dipastikan berbentuk array (tidak mungkin undefined atau null). value[i] bisa berupa array kosong.
+                  // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
+                  // value dan questions[i].answer adalah array of array
+                  if (questions[i].type === "radio") {
+                    // if (questions[i].answer[0] === value[i][0]) {
+                    if (questions[i].answer[0] === value[transformIdx[i]][0]) {
+                      correct_count = correct_count + 1;
+                    }
+                    number_of_gradeable_questions = number_of_gradeable_questions + 1;
                   }
-                  number_of_gradeable_questions = number_of_gradeable_questions + 1;
-                }
-                else if (questions[i].type === "checkbox") {
-                  let temp_correct = 0;
-                  value[i].forEach((student_answer) => {
-                    if (questions[i].answer.includes(student_answer)) {
-                      temp_correct = temp_correct + 1;
+                  else if (questions[i].type === "checkbox") {
+                    let temp_correct = 0;
+                    // value[i].forEach((student_answer) => {
+                    value[transformIdx[i]].forEach((student_answer) => {
+                      if (questions[i].answer.includes(student_answer)) {
+                        temp_correct = temp_correct + 1;
+                      }
+                      else {
+                        temp_correct = temp_correct - 2;
+                      }
+                    })
+                    number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                    if (temp_correct > 0) {
+                      // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
+                      // karena itu, questions[i].answer.length pasti tidak 0
+                      correct_count = correct_count + temp_correct / questions[i].answer.length;
                     }
-                    else {
-                      temp_correct = temp_correct - 2;
+                  }
+                  else if (questions[i].type === "shorttext") {
+                    let temp_correct = 0;
+                    for (let j = 0; j < questions[i].answer.length; j++) {
+                      // if (value[i][j] === questions[i].answer[j]) {
+                      if (value[transformIdx[i]][j] === questions[i].answer[j]) {
+                        temp_correct++;
+                      }
                     }
-                  })
-                  number_of_gradeable_questions = number_of_gradeable_questions + 1;
-                  if (temp_correct > 0) {
                     // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
                     // karena itu, questions[i].answer.length pasti tidak 0
+                    number_of_gradeable_questions = number_of_gradeable_questions + 1;
                     correct_count = correct_count + temp_correct / questions[i].answer.length;
                   }
                 }
-                else if (questions[i].type === "shorttext") {
-                  let temp_correct = 0;
-                  for (let j = 0; j < questions[i].answer.length; j++) {
-                    if (value[i][j] === questions[i].answer[j]) {
-                      temp_correct++;
-                    }
-                  }
-                  // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
-                  // karena itu, questions[i].answer.length pasti tidak 0
-                  number_of_gradeable_questions = number_of_gradeable_questions + 1;
-                  correct_count = correct_count + temp_correct / questions[i].answer.length;
-                }
-
               }
               let score = 0;
               if (number_of_gradeable_questions > 0) {
                 score = 100 * correct_count / number_of_gradeable_questions;
               } // number_of_gradeable_questions === 0 ketika semua soal pada assessment ini bertipe uraian
               assessmentData.grades.set(key, parseFloat(score.toFixed(1)));
+              assessmentData.submissions.set(key, transformIdx.map((idx) => {
+                if (idx === -1) {
+                  return [];
+                } else {
+                  return value[idx];
+                }
+              }));
             }
           }
         }

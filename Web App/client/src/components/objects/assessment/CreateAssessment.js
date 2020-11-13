@@ -412,7 +412,7 @@ class CreateAssessment extends Component {
   // string ini baru akan diproses hanya ketika guru mengklik elemen lain selain textfield tersebut.
   parseAnswer = (txtFieldVal, qstIndex) => {
     let qst = this.state.questions;
-    let splitResult = txtFieldVal.split("`"); // length hasil split ini pasti >= 1
+    let splitResult = txtFieldVal.split("`");
     if ((splitResult.length !== 1) && (splitResult.length % 2 !== 0)) {
       let answerArray = [];
       for (let i=1; i<=splitResult.length-2; i+=2) {

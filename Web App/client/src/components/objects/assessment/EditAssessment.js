@@ -472,7 +472,6 @@ class EditAssessment extends Component {
         else if (e.target.checked && !questions[i]["answer"].includes(e.target.value)) {
           questions[i]["answer"].push(e.target.value)
         }
-        console.log(questions[i]["answer"]);
       }
     }else {
       questions[i][e.target.id] = (name ? name : e.target.value);
@@ -483,7 +482,7 @@ class EditAssessment extends Component {
 
   parseAnswer = (txtFieldVal, qstIndex) => {
     let qst = this.state.questions;
-    let splitResult = txtFieldVal.split("`"); // length hasil split ini pasti >= 1
+    let splitResult = txtFieldVal.split("`");
     if ((splitResult.length !== 1) && (splitResult.length % 2 !== 0)) {
       let answerArray = [];
       for (let i=1; i<=splitResult.length-2; i+=2) {
@@ -631,7 +630,7 @@ class EditAssessment extends Component {
       questions.splice(i+1, 0, {
         name: questions[i].name,
         options: [...questions[i].options],
-        answer: questions[i].answer,
+        answer: [...questions[i].answer],
         lampiran: [...questions[i].lampiran],
         type: questions[i].type
       })
