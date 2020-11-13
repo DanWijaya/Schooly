@@ -472,6 +472,7 @@ class EditAssessment extends Component {
         else if (e.target.checked && !questions[i]["answer"].includes(e.target.value)) {
           questions[i]["answer"].push(e.target.value)
         }
+        console.log(questions[i]["answer"]);
       }
     }else {
       questions[i][e.target.id] = (name ? name : e.target.value);
@@ -523,29 +524,52 @@ class EditAssessment extends Component {
     let questions = this.state.questions
     if(action === "Delete"){
       if(questions[qnsIndex].type === "checkbox"){
-        if(questions[qnsIndex].answer.length === 1){
-          let i = 0
-          let found = false
-          while(i<questions[qnsIndex].answer.length && !found){
-            if(questions[qnsIndex].answer[i].charCodeAt(0)-65 === optionIndex){
-              found = true
-            }
-            i = i + 1
-          }
-          if(found){
-            questions[qnsIndex].answer[0] = "A"
-          }
-        }
-         // mencegah adanya soal radio yang tidak memiliki opsi 
+        // if(questions[qnsIndex].answer.length === 1){
+        //   let i = 0
+        //   let found = false
+        //   while(i<questions[qnsIndex].answer.length && !found){
+        //     if(questions[qnsIndex].answer[i].charCodeAt(0)-65 === optionIndex){
+        //       found = true
+        //     }
+        //     i = i + 1
+        //   }
+        //   if(found){
+        //     questions[qnsIndex].answer[0] = "A"
+        //   }
+        // }        
+        // mencegah adanya soal radio yang tidak memiliki opsi 
         if (questions[qnsIndex].options.length === 1) { 
           questions[qnsIndex].options[0] = ""
           this.handleOpenCheckboxErrorSnackBar()
         } else {
-          questions[qnsIndex].answer = questions[qnsIndex].answer.filter((value) => {
-            if(value.charCodeAt(0)-65 !== optionIndex){
-              return value
+          if (questions[qnsIndex].answer.length === 1) { // jika hanya ada satu kunci jawaban (misal ["E"])
+            if (questions[qnsIndex].answer[0].charCodeAt(0) - 65 === optionIndex) {
+              // jika opsi yang dihapus adalah opsi kunci jawaban, set kunci jawaban ke opsi pertama 
+              questions[qnsIndex].answer[0] = "A"
+            } else { //jika opsi yang dihapus bukan opsi kunci jawaban, 
+              if (questions[qnsIndex].answer[0].charCodeAt(0) - 65 > optionIndex) {
+                // nilai kunci jawaban akan dikurangi 1.
+                // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D",
+                // tapi kunci jawaban "B" tidak akan diubah jadi "A"
+                questions[qnsIndex].answer[0] = String.fromCharCode(97 + questions[qnsIndex].answer[0].charCodeAt(0) - 65 - 1).toUpperCase();
+              }
             }
-          })
+          } else { // jika ada lebih dari satu kunci jawaban (misal ["E", "B", "Z"])
+            // hapus kunci jawaban
+            questions[qnsIndex].answer = questions[qnsIndex].answer.filter((value) => {
+              if(value.charCodeAt(0)-65 !== optionIndex){
+                return value;
+              }
+            })
+            // semua nilai kunci jawaban lain akan dikurangi 1.
+            // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D", kunci jawaban "Z" akan diubah jadi "Y",
+            // tapi kunci jawaban "B" tidak diubah jadi "A"
+            for (let i = 0; i < questions[qnsIndex].answer.length; i++) {
+              if (questions[qnsIndex].answer[i].charCodeAt(0) - 65 > optionIndex) {
+                questions[qnsIndex].answer[i] = String.fromCharCode(97 + questions[qnsIndex].answer[i].charCodeAt(0) - 65 - 1).toUpperCase();
+              }
+            }
+          }
           questions[qnsIndex].options.splice(optionIndex, 1)
         }
       }
@@ -554,6 +578,17 @@ class EditAssessment extends Component {
           questions[qnsIndex].options[0] = ""
           this.handleOpenRadioErrorSnackBar()
         } else {
+          if (questions[qnsIndex].answer[0].charCodeAt(0) - 65 === optionIndex) {
+            // jika opsi yang dihapus adalah opsi kunci jawaban, set kunci jawaban ke opsi pertama 
+            questions[qnsIndex].answer[0] = "A"
+          } else { //jika opsi yang dihapus bukan opsi kunci jawaban, 
+            if (questions[qnsIndex].answer[0].charCodeAt(0) - 65 > optionIndex) {
+              // nilai kunci jawaban akan dikurangi 1.
+              // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D",
+              // tapi kunci jawaban "B" tidak akan diubah jadi "A"
+              questions[qnsIndex].answer[0] = String.fromCharCode(97 + questions[qnsIndex].answer[0].charCodeAt(0) - 65 - 1).toUpperCase();
+            }
+          }
           questions[qnsIndex].options.splice(optionIndex, 1)
         }
       }

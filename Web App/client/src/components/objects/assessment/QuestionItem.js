@@ -189,11 +189,11 @@ function QuestionItem(props){
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Tooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
+                          <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
                             <IconButton>
                               <HelpIcon />
                             </IconButton>
-                          </Tooltip>
+                          </LightTooltip>
                         </InputAdornment> 
                       )
                     }}
