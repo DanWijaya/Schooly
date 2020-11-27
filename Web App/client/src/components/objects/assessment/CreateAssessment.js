@@ -537,7 +537,7 @@ class CreateAssessment extends Component {
       questions.splice(i+1, 0, {
         name: questions[i].name,
         options: [...questions[i].options],
-        answer: questions[i].answer,
+        answer: [...questions[i].answer],
         lampiran: [...questions[i].lampiran],
         type: questions[i].type
       })

@@ -620,6 +620,12 @@ function ViewAssessmentStudent(props) {
     return (<div>{/* None */} </div>)
   }
 
+  if (selectedAssessments) {
+    if (!selectedAssessments.class_assigned.includes(user.kelas)) {
+      return <Redirect to="/tidak-ditemukan" /> 
+    }
+  } 
+
   return (
     <div className={classes.root}>
       <SubmitDialog
