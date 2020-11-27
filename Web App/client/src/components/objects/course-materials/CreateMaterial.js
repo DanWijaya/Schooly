@@ -167,7 +167,8 @@ class CreateMaterial extends Component {
       errors: {},
       fileLampiran: [],
       openUploadDialog: null,
-      anchorEl: null
+      anchorEl: null,
+      sortFlag: false
     }
   }
 
@@ -227,6 +228,7 @@ class CreateMaterial extends Component {
         author_id: id,
         errors: {},
       };
+      
       console.log(this.state.fileLampiran)
       this.props.createMaterial(formData, materialData, this.props.history);
   }
@@ -267,11 +269,12 @@ class CreateMaterial extends Component {
     const { classes, success, errors }  = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran }  = this.state;
+    const { class_assigned, fileLampiran, sortFlag }  = this.state;
     const { user } = this.props.auth
 
     console.log(class_assigned)
     console.log(errors)
+
     const fileType = (filename) => {
       let ext_file = path.extname(filename)
       switch(ext_file) {
@@ -326,8 +329,10 @@ class CreateMaterial extends Component {
     };
 
     document.title = "Schooly | Buat Materi";
-
+    
     if (user.role === "Teacher") {
+      // all_subjects.sort((a, b) => (a.name > b.name) ? 1 : -1)
+      // all_classes.sort((a, b) => (a.name > b.name) ? 1 : -1)
       return (
         <div className={classes.root}>
           <UploadDialog
@@ -399,7 +404,7 @@ class CreateMaterial extends Component {
                       <Typography component="label" for="subject" color="primary">
                         Mata Pelajaran
                       </Typography>
-                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                      {/* <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
                         <Select
                           value={this.state.subject}
                           onChange={(event) => {this.onChange(event, "subject")}}
@@ -411,7 +416,7 @@ class CreateMaterial extends Component {
                         <FormHelperText>
                           {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
                         </FormHelperText>
-                      </FormControl>
+                      </FormControl> */}
                     </Grid>
                     <Grid item>
                       <Typography component="label" for="class_assigned" color="primary">

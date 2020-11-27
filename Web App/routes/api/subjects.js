@@ -77,8 +77,10 @@ router.get("/viewall", (req, res) => {
     Subject.find({}).then((subjects, err) => {
         if (!subjects)
             res.status(400).json(err);
-        else
+        else{
+            subjects.sort((a,b) => (a.name > b.name) ? 1 : -1)
             res.json(subjects);
+        }
     });
 });
 

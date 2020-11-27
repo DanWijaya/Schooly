@@ -57,8 +57,10 @@ router.get("/viewall", (req, res) => {
     Class.find({}).then((classes, err) => {
         if (!classes)
             res.status(400).json(err);
-        else
+        else{
+            classes.sort((a, b) => (a.name > b.name) ? 1 : -1)
             res.json(classes);
+        }
     });
 });
 

@@ -15,6 +15,7 @@ import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
 import { Button, Dialog, Divider, FormControl, FormHelperText, Grid,
    MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, TextField, Typography } from "@material-ui/core";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
@@ -280,6 +281,14 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item>
+                  <Autocomplete/>
+                  {/* <Autocomplete 
+                      id="combo-box-demo"
+                      options={all_classes.map((kelas) => kelas.name)}
+                      getOptionLabel={(option) => option.title}
+                      style={{width: 300}}
+                      renderInput={(params) => <TextField {...params} label="Isi combo box" variant="outlined"/>}
+                      /> */}
                   <label id="kelas">Kelas</label>
                   <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
                     <Select

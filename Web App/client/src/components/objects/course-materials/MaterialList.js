@@ -8,14 +8,16 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core/";
+import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+   Fab, Grid, InputAdornment, IconButton, Hidden, Menu, MenuItem, Paper, TableSortLabel, TextField, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import { GoSearch } from "react-icons/go";
+import ClearIcon from '@material-ui/icons/Clear';
 
 function createData(_id, materialtitle, subject, author, class_assigned) {
   return { _id, materialtitle, subject, author, class_assigned };
@@ -50,7 +52,7 @@ function stableSort(array, comparator) {
 }
 
 function MaterialListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role } = props;
+  const { classes, order, orderBy, onRequestSort, role, searchFilter, updateSearchFilter } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -76,11 +78,40 @@ function MaterialListToolbar(props) {
     setAnchorEl(null);
   };
 
+  const onChange = (e) => {
+    switch(e.target.id){
+      case "searchFilter":
+        updateSearchFilter(e.target.value)
+        break;
+
+      default:
+        break;
+    }
+  }
+
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
         Daftar Materi
       </Typography>
+      <TextField
+          fullWidth
+          variant="outlined"
+          id="searchFilter"
+          value={searchFilter}
+          onChange={onChange}
+          style={{
+            maxWidth: "300px"
+          }}
+          InputProps={{
+            startAdornment:
+              <InputAdornment position="start">
+                <IconButton size="small" className={classes.searchButton}>
+                  <GoSearch />
+                </IconButton>
+              </InputAdornment>
+          }}
+        />
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {role === "Student" ?
@@ -267,6 +298,7 @@ function MaterialList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
+  const [searchFilter, updateSearchFilter] = React.useState("");
 
   const { getAllSubjects, getMaterial, deleteMaterial, getAllClass, getTeachers } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
@@ -304,12 +336,19 @@ function MaterialList(props) {
   const retrieveMaterials = () => {
     // If all_materials is not undefined or an empty array
     rows = []
+    
     if (user.role === "Admin") {
-      all_materials.map(data =>  materialRowItem(data))
+      all_materials.filter(item => item.name.toLowerCase()
+                  .includes(searchFilter.toLowerCase()))
+                  .map(data =>  materialRowItem(data))
+      // all_materials.map(data =>  materialRowItem(data))
     }
     else {
       if (selectedMaterials.length) {
-        selectedMaterials.map(data => materialRowItem(data))
+        selectedMaterials.filter(item => item.name.toLowerCase()
+                        .includes(searchFilter.toLowerCase()))
+                        .map(data =>  materialRowItem(data))
+        // selectedMaterials.map(data => materialRowItem(data))
       }
     }
   }
@@ -359,6 +398,9 @@ function MaterialList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
+        //Two props added for search filter. 
+        searchFilter={searchFilter}
+        updateSearchFilter={updateSearchFilter}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>

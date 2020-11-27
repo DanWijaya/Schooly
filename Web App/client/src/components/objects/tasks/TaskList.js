@@ -10,13 +10,15 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
+   Fab, Grid, InputAdornment, Hidden, Paper, Menu, MenuItem, TableSortLabel, TextField, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import { GoSearch } from "react-icons/go";
+import ClearIcon from '@material-ui/icons/Clear';
 
 function createData(_id, tasktitle, subject, deadline, class_assigned) {
   return { _id, tasktitle, subject, deadline, class_assigned };
@@ -51,7 +53,7 @@ function stableSort(array, comparator) {
 }
 
 function TaskListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role } = props;
+  const { classes, order, orderBy, onRequestSort, role, searchFilter, updateSearchFilter } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -78,11 +80,51 @@ function TaskListToolbar(props) {
     setAnchorEl(null);
   };
 
+  // FOR SEARCH FILTER. 
+  const onChange = (e) => {
+    switch(e.target.id){
+      case "searchFilter":
+        updateSearchFilter(e.target.value)
+        break;
+
+      default:
+        break;
+    }
+  }
+
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
         Daftar Tugas
       </Typography>
+      {/* For search filter */}
+      <TextField
+        fullWidth
+        variant="outlined"
+        id="searchFilter"
+        value={searchFilter}
+        onChange={onChange}
+        style={{
+          maxWidth: "300px",
+          padding: "0px 0px"
+        }}
+        InputProps={{
+          startAdornment:(
+            <InputAdornment position="start">
+              <IconButton size="small" className={classes.searchButton}>
+                <GoSearch/>
+              </IconButton>
+            </InputAdornment>)
+            ,
+          // endAdornment:( 
+          //   <InputAdornment position="end">
+          //     <IconButton size="small" className={classes.searchButton}>
+          //       <ClearIcon/>
+          //     </IconButton>
+          //   </InputAdornment>)
+        }}
+        
+      />
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {role === "Student" ?
@@ -270,6 +312,8 @@ function TaskList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
+  const [searchFilter, updateSearchFilter] = React.useState("");
+
   const { tasksCollection, getAllTask, deleteTask, getAllClass, getAllSubjects } = props;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map} = props.subjectsCollection;
@@ -300,7 +344,8 @@ function TaskList(props) {
     if (tasksCollection.length) {
       rows = []
       if (user.role === "Teacher") {
-      tasksCollection.map((data) => {
+      tasksCollection.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+      .map((data) => {
         if (data.person_in_charge_id === user.id) {
           return taskRowItem(data)
           }
@@ -308,7 +353,8 @@ function TaskList(props) {
         })
       }
       else if (user.role === "Student") {
-        tasksCollection.map((data) => {
+        tasksCollection.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+          .map((data) => {
           let class_assigned = data.class_assigned;
           if (class_assigned.indexOf(user.kelas) !== -1) {
             return taskRowItem(data)
@@ -317,7 +363,8 @@ function TaskList(props) {
         })
       }
       else { //Admin
-        tasksCollection.map(data =>  taskRowItem(data))
+        tasksCollection.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+        .map(data =>  taskRowItem(data))
       }
     }
   }
@@ -367,6 +414,9 @@ function TaskList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
+        //Two props added for search filter. 
+        searchFilter={searchFilter}
+        updateSearchFilter={updateSearchFilter}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
