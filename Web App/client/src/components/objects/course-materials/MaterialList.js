@@ -89,29 +89,49 @@ function MaterialListToolbar(props) {
     }
   }
 
+  const onClear = (e) => {
+    updateSearchFilter("");
+  }
+
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
         Daftar Materi
       </Typography>
-      <TextField
-          fullWidth
+      <div style={{display: "flex"}}>
+      <Hidden xsDown implementation="css">
+        <TextField
           variant="outlined"
           id="searchFilter"
           value={searchFilter}
           onChange={onChange}
           style={{
-            maxWidth: "300px"
+            maxWidth: "250px",
+            marginRight: "10px"
           }}
           InputProps={{
-            startAdornment:
-              <InputAdornment position="start">
-                <IconButton size="small" className={classes.searchButton}>
-                  <GoSearch />
+            startAdornment:(
+              <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                <IconButton size="small">
+                  <GoSearch/>
                 </IconButton>
-              </InputAdornment>
+              </InputAdornment>)
+             ,
+              endAdornment:( 
+              <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                <IconButton 
+                  size="small" 
+                  onClick={onClear} 
+                  style={{ 
+                    opacity: 0.5, 
+                    visibility: !searchFilter ? "hidden" : "visible"
+                  }}>
+                  <ClearIcon/>
+                </IconButton>
+              </InputAdornment>)
           }}
         />
+        </Hidden>
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {role === "Student" ?
@@ -181,6 +201,7 @@ function MaterialListToolbar(props) {
         </Menu>
       </div>
     </div>
+  </div>
   );
 };
 

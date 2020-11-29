@@ -9,14 +9,16 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography } from "@material-ui/core/";
+import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+   Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, TextField, TableSortLabel, Typography} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import { GoSearch } from "react-icons/go";
+import ClearIcon from '@material-ui/icons/Clear';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -52,7 +54,7 @@ function stableSort(array, comparator) {
 }
 
 function AssessmentListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role } = props;
+  const { classes, order, orderBy, onRequestSort, role, searchFilter, updateSearchFilter} = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -79,12 +81,62 @@ function AssessmentListToolbar(props) {
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
+
+  // FOR SEARCH FILTER. 
+  const onChange = (e) => {
+    switch(e.target.id){
+      case "searchFilter":
+        updateSearchFilter(e.target.value)
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  const onClear = (e) => {
+    updateSearchFilter("");
+  }
+  
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
         Daftar Kuis
       </Typography>
-      <div style={{display: "flex", alignItems: "center"}}>
+      <div style={{display: "flex"}}>
+        <Hidden xsDown implementation="css">
+          <TextField
+            variant="outlined"
+            id="searchFilter"
+            value={searchFilter}
+            onChange={onChange}
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px"
+            }}
+            InputProps={{
+              startAdornment:(
+                <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                  <IconButton size="small">
+                    <GoSearch/>
+                  </IconButton>
+                </InputAdornment>)
+                ,
+                endAdornment:( 
+                <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                  <IconButton 
+                    size="small" 
+                    onClick={onClear} 
+                    style={{ 
+                      opacity: 0.5, 
+                      visibility: !searchFilter ? "hidden" : "visible"
+                    }}>
+                    <ClearIcon/>
+                  </IconButton>
+                </InputAdornment>)
+            }}
+          />
+        </Hidden>
         <Hidden smUp implementation="css">
           {role === "Student" ?
             null
@@ -274,6 +326,8 @@ function AssessmentList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+  const [searchFilter, updateSearchFilter] = React.useState("");
+
   const { getAllAssessments, deleteAssessment, getAllClass, getAllSubjects } = props;
   const { all_assessments } = props.assessmentsCollection
   const { all_classes_map } = props.classesCollection;
@@ -282,7 +336,6 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    console.log("HDJSKDJSK")
     rows.push(
       createData(
         data._id,
@@ -308,29 +361,27 @@ function AssessmentList(props) {
     if (all_assessments.length) {
       rows = []
       if (user.role === "Teacher") {
-      all_assessments.forEach((data) => {
+      all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+      .forEach((data) => {
         if (data.author_id === user.id) {
-          return assessmentRowItem(data)
+          assessmentRowItem(data)
           }
         return null;
         })
       }
       else if (user.role === "Student") {
-        let currentDate = new Date();
-        all_assessments.forEach((data) => {
+        all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+        .forEach((data) => {
           let class_assigned = data.class_assigned;
           if (class_assigned.indexOf(user.kelas) !== -1 && data.posted){
-            // if(new Date(data.start_date) <= currentDate && new Date(data.end_date) >= currentDate) {
-            //   return assessmentRowItem(data)
-            // }
-            // return null
-            return assessmentRowItem(data)
+            assessmentRowItem(data)
           }
           return null
         })
       }
       else { //Admin
-        all_assessments.forEach(data =>  assessmentRowItem(data))
+        all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+        .forEach(data =>  assessmentRowItem(data))
       }
     }
   }
@@ -379,6 +430,8 @@ function AssessmentList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
+        searchFilter={searchFilter}
+        updateSearchFilter={updateSearchFilter}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>

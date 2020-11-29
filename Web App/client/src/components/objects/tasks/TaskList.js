@@ -92,39 +92,49 @@ function TaskListToolbar(props) {
     }
   }
 
+  const onClear = (e) => {
+    updateSearchFilter("");
+  }
+  
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
         Daftar Tugas
       </Typography>
-      {/* For search filter */}
-      <TextField
-        fullWidth
-        variant="outlined"
-        id="searchFilter"
-        value={searchFilter}
-        onChange={onChange}
-        style={{
-          maxWidth: "300px",
-          padding: "0px 0px"
-        }}
-        InputProps={{
-          startAdornment:(
-            <InputAdornment position="start">
-              <IconButton size="small" className={classes.searchButton}>
-                <GoSearch/>
-              </IconButton>
-            </InputAdornment>)
-            ,
-          // endAdornment:( 
-          //   <InputAdornment position="end">
-          //     <IconButton size="small" className={classes.searchButton}>
-          //       <ClearIcon/>
-          //     </IconButton>
-          //   </InputAdornment>)
-        }}
-        
-      />
+      <div style={{display: "flex"}}>
+        <Hidden xsDown implementation="css">
+          <TextField
+            variant="outlined"
+            id="searchFilter"
+            value={searchFilter}
+            onChange={onChange}
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px"
+            }}
+            InputProps={{
+              startAdornment:(
+                <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                  <IconButton size="small" >
+                    <GoSearch/>
+                  </IconButton>
+                </InputAdornment>)
+                ,
+                endAdornment:( 
+                <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                  <IconButton 
+                    size="small" 
+                    onClick={onClear} 
+                    style={{ 
+                      opacity: 0.5, 
+                      visibility: !searchFilter ? "hidden" : "visible"
+                    }}>
+                    <ClearIcon/>
+                  </IconButton>
+                </InputAdornment>)
+            }}
+          />
+      </Hidden>
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {role === "Student" ?
@@ -192,6 +202,7 @@ function TaskListToolbar(props) {
           ))}
         </Menu>
       </div>
+    </div>
     </div>
   );
 };

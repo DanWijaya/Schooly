@@ -8,7 +8,7 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Divider, Fab, Grid, Hidden, ListItem, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Divider, Fab, Grid, IconButton, Hidden, ListItem, ListItemText, Paper, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -182,7 +182,7 @@ function AnnouncementList(props) {
       <Grid container direction="column" spacing={2}>
         {listAnnouncements()}
       </Grid>
-    </div>
+      </div>
   )
 }
 
