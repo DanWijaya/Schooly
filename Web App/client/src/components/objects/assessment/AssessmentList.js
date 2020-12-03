@@ -10,21 +10,23 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, TextField, TableSortLabel, Typography} from "@material-ui/core/";
+   Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import LinkIcon from '@material-ui/icons/Link';
+import MuiAlert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
-function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned) {
-  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned };
+function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type) {
+  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -299,6 +301,14 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  copyToClipboardButton: {
+    backgroundColor: "#974994",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#974994",
+      color: "#white"
+    },
+  },
   assessmentPanelDivider: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -326,8 +336,9 @@ function AssessmentList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+  const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
-
+  const [type, setAssessmentType] = React.useState(null)
   const { getAllAssessments, deleteAssessment, getAllClass, getAllSubjects } = props;
   const { all_assessments } = props.assessmentsCollection
   const { all_classes_map } = props.classesCollection;
@@ -344,6 +355,7 @@ function AssessmentList(props) {
         data.start_date,
         data.end_date,
         data.class_assigned,
+        data.type
       )
     )
   }
@@ -412,6 +424,29 @@ function AssessmentList(props) {
     setOpenDeleteDialog(false);
   };
 
+  const handleOpenCopySnackBar = (type) => {
+    console.log("Open di RUN")
+    setOpenCopySnackBar(true);
+    setAssessmentType(type)
+  }
+
+  const handleCloseCopySnackBar = () => {
+    console.log("Close di RUN")
+    setOpenCopySnackBar(false);
+  }
+  
+  const copyToClipboardButton = (e, linkToShare, type) => {
+    e.stopPropagation()
+    let textArea = document.createElement("textarea");
+    textArea.value = linkToShare;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    e.target.focus();
+    document.body.removeChild(textArea);
+    handleOpenCopySnackBar(type)
+  }
+
   document.title = "Schooly | Daftar Kuis";
   return (
     <div className={classes.root}>
@@ -439,14 +474,13 @@ function AssessmentList(props) {
         .map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;
           let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
-          console.log(row)
+          let linkToShare = `http://localhost:3000/kuis-murid/${row._id}`;
           return (
             <Grid item>
               {user.role === "Teacher" ?
                 <ExpansionPanel
                   button
-                  variant="outlined"
-                >
+                  variant="outlined">
                   <ExpansionPanelSummary className={classes.assessmentPanelSummary}>
                     <Grid container spacing={1} justify="space-between" alignItems="center">
                       <Grid item>
@@ -468,6 +502,16 @@ function AssessmentList(props) {
                         </Hidden>
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Copy Link">
+                            <IconButton
+                              size="small"
+                              className={classes.copyToClipboardButton}
+                              onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
+                              <LinkIcon fontSize="small"/>
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
                         <Grid item>
                           <LightTooltip title="Lihat Lebih Lanjut">
                             <Link to={viewpage}>
@@ -574,6 +618,11 @@ function AssessmentList(props) {
           );
         })}
       </Grid>
+      <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
+        <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
+          Link {type} berhasil disalin ke Clipboard Anda!
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

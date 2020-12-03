@@ -7,7 +7,7 @@ import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentA
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Typography } from "@material-ui/core";
+import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Snackbar, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -15,6 +15,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
+import LinkIcon from '@material-ui/icons/Link';
+import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +49,14 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: "white",
       color: theme.palette.error.dark,
+    },
+  },
+  copyToClipboardButton: {
+    backgroundColor: "#974994",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#974994",
+      color: "#white"
     },
   },
   dialogBox: {
@@ -96,6 +106,7 @@ function ViewAssessmentTeacher(props) {
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const { questions } = selectedAssessments;
+  const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
@@ -122,6 +133,14 @@ function ViewAssessmentTeacher(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
+  const handleOpenCopySnackBar = (type) => {
+    setOpenCopySnackBar(true);
+  }
+
+  const handleCloseCopySnackBar = () => {
+    setOpenCopySnackBar(false);
+  }
 
   function DeleteDialog() {
     return (
@@ -179,7 +198,20 @@ function ViewAssessmentTeacher(props) {
     )
   }
 
+  const copyToClipboardButton = (e, linkToShare, type) => {
+    e.stopPropagation()
+    let textArea = document.createElement("textarea");
+    textArea.value = linkToShare;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    e.target.focus();
+    document.body.removeChild(textArea);
+    handleOpenCopySnackBar(type)
+  }
 
+  let linkToShare = `http://localhost:3000/kuis-murid/${assessment_id}`;
+  const type = selectedAssessments.type
   return (
     <div className={classes.root}>
       {DeleteDialog()}
@@ -266,6 +298,14 @@ function ViewAssessmentTeacher(props) {
           ))}
           <Grid item container spacing={2} justify="flex-end" alignItems="center">
             <Grid item>
+              <LightTooltip title="Copy Link">
+                <Fab className={classes.copyToClipboardButton}
+                  onClick={(e) => copyToClipboardButton(e, linkToShare, type)}>
+                  <LinkIcon/>
+                  </Fab>
+              </LightTooltip>
+            </Grid>
+            <Grid item>
               <Link to={`/daftar-kuis-terkumpul/${assessment_id}`}>
                 <Fab variant="extended" className={classes.seeAllAssessmentButton}>
                   <AssignmentIcon style={{marginRight: "10px"}} />
@@ -291,6 +331,11 @@ function ViewAssessmentTeacher(props) {
             </Grid>
           </Grid>
         </Grid>
+        <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
+          <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
+            Link {type} berhasil disalin ke Clipboard Anda!
+          </MuiAlert>
+        </Snackbar>
     </div>
   )
 };
