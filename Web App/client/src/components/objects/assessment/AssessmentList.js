@@ -21,6 +21,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import MuiAlert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -58,7 +59,7 @@ function stableSort(array, comparator) {
 function AssessmentListToolbar(props) {
   const { classes, order, orderBy, onRequestSort, 
     role, searchFilter, updateSearchFilter, 
-    setMobileSearchBar, mobileSearchBar} = props;
+    setSearchBarFocus, searchBarFocus} = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -88,141 +89,125 @@ function AssessmentListToolbar(props) {
 
   // FOR SEARCH FILTER. 
   const onChange = (e) => {
-    switch(e.target.id){
-      case "searchFilter":
-        updateSearchFilter(e.target.value)
-        break;
-
-      default:
-        break;
-    }
+    updateSearchFilter(e.target.value)
   }
 
-  const onClear = (e) => {
+  const onClear = (e, id) => {
     updateSearchFilter("");
+    document.getElementById(id).focus();
   }
 
   return (
     <div className={classes.toolbar}>
       <div style={{display: "flex", alignItems: "center"}}>
+        {searchBarFocus ? 
+        <IconButton 
+          onClick={() => {
+          setSearchBarFocus(false)
+          updateSearchFilter("")}}>
+          <ArrowBackIcon/>
+        </IconButton> 
+        :
         <Typography variant="h4">
           Daftar Kuis
         </Typography>
-        <LightTooltip title="Search" style={{marginLeft: "10px"}}>
-          <Fab size="small" className={classes.goSearchButton}>
-            <GoSearch className={classes.newAssessmentIconMobile} onClick={() => setMobileSearchBar(true)}/>
-          </Fab>
-        </LightTooltip>
-        <TextField
-            variant="outlined"
-            id="searchFilter"
-            value={searchFilter}
-            onChange={onChange}
-            style={{
-              maxWidth: "250px", marginLeft: "10px", borderRadius: 25
-            }}
-            InputProps={{
-              startAdornment:(
-                <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                  <IconButton size="small">
-                    <GoSearch/>
-                  </IconButton>
-                </InputAdornment>)
-                ,
-                endAdornment:( 
-                <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                  <IconButton 
-                    size="small" 
-                    onClick={onClear} 
-                    style={{ 
-                      opacity: 0.5, 
-                      visibility: !searchFilter ? "hidden" : "visible"
-                    }}>
-                    <ClearIcon/>
-                  </IconButton>
-                </InputAdornment>)
-            }}
-          />
-      </div>
-      <div style={{display: "flex"}}>
-        {/*  
+        }
         <Hidden xsDown implementation="css">
-          <TextField
-            variant="outlined"
-            id="searchFilter"
-            value={searchFilter}
-            onChange={onChange}
-            style={{
-              maxWidth: "250px",
-              marginRight: "10px"
-            }}
-            InputProps={{
-              startAdornment:(
-                <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                  <IconButton size="small">
-                    <GoSearch/>
-                  </IconButton>
-                </InputAdornment>)
-                ,
-                endAdornment:( 
-                <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                  <IconButton 
-                    size="small" 
-                    onClick={onClear} 
-                    style={{ 
-                      opacity: 0.5, 
-                      visibility: !searchFilter ? "hidden" : "visible"
-                    }}>
-                    <ClearIcon/>
-                  </IconButton>
-                </InputAdornment>)
-            }}
-          />
+            <TextField
+              fullWidth
+              variant="outlined"
+              id="searchFilterDesktop"
+              value={searchFilter}
+              onChange={onChange}
+              onClick={() => setSearchBarFocus(true)}
+              placeholder="Search Kuis"
+              // onBlur={() => setSearchBarFocus(false)}
+              style={{
+                // maxWidth: "300px",
+                marginLeft: "10px"
+              }}
+              InputProps={{
+                startAdornment:(
+                  searchBarFocus ? null :
+                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                      <IconButton size="small">
+                        <GoSearch/>
+                      </IconButton>
+                    </InputAdornment>)
+                  ,
+                  endAdornment:( 
+                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                    <IconButton 
+                      size="small" 
+                      onClick={(e) => {
+                        e.stopPropagation() 
+                        onClear(e, "searchFilterDesktop")}
+                      } 
+                      style={{ 
+                        opacity: 0.5, 
+                        visibility: !searchFilter ? "hidden" : "visible"
+                      }}>
+                      <ClearIcon/>
+                    </IconButton>
+                  </InputAdornment>)
+              }}
+            />
         </Hidden>
         <Hidden smUp implementation="css">
-          {mobileSearchBar ? 
+          {searchBarFocus ? 
           <TextField
-          variant="outlined"
-          id="searchFilter"
-          value={searchFilter}
-          onChange={onChange}
-          style={{
-            // maxWidth: "250px",
-            marginRight: "10px"
-          }}
-          InputProps={{
-            startAdornment:(
-              <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                <IconButton size="small">
-                  <GoSearch/>
-                </IconButton>
-              </InputAdornment>)
-              ,
-              endAdornment:( 
-              <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                <IconButton 
-                  size="small" 
-                  onClick={onClear} 
-                  style={{ 
-                    opacity: 0.5, 
-                    visibility: !searchFilter ? "hidden" : "visible"
-                  }}>
-                  <ClearIcon/>
-                </IconButton>
-              </InputAdornment>)
-          }}
-        />
-          :
-          <LightTooltip title="Search">
-            <Fab size="small" className={classes.goSearchButton}>
-              <GoSearch className={classes.newAssessmentIconMobile} onClick={() => setMobileSearchBar(true)}/>
-            </Fab>
-          </LightTooltip> 
-        }
-        </Hidden
-      */}
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) =>setSearchBarFocus(true)}
+                placeholder="Search Kuis"
+                // onBlur={() => setSearchBarFocus(false)}
+                style={{
+                  maxWidth: "200px",
+                  marginLeft: "10px"
+                }}
+                InputProps={{
+                  startAdornment:(
+                    searchBarFocus ? null :
+                      <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                        <IconButton size="small">
+                          <GoSearch/>
+                        </IconButton>
+                      </InputAdornment>)
+                    ,
+                    endAdornment:( 
+                    <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                      <IconButton 
+                        size="small" 
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation() 
+                          onClear(e, "searchFilterMobile")}
+                        } 
+                        style={{ 
+                          opacity: 0.5, 
+                          visibility: !searchFilter ? "hidden" : "visible"
+                        }}>
+                        <ClearIcon/>
+                      </IconButton>
+                    </InputAdornment>)
+                }}
+              />
+              :
+          <LightTooltip title="Search" style={{marginLeft: "10px"}}>
+            <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
+              <GoSearch className={classes.goSearchIconMobile} />
+            </IconButton>
+          </LightTooltip>
+          }
+        </Hidden>
+      </div>
+      <div style={{display: "flex"}}>
         <Hidden smUp implementation="css">
-          {role === "Student" || mobileSearchBar?
+          {role === "Student"?
             null
           :
             <LightTooltip title="Buat Kuis">
@@ -235,7 +220,7 @@ function AssessmentListToolbar(props) {
           }
         </Hidden>
         <Hidden xsDown implementation="css">
-          {role === "Student" || mobileSearchBar?
+          {role === "Student"?
             null
           :
             <Link to="/kuis">
@@ -246,15 +231,11 @@ function AssessmentListToolbar(props) {
             </Link>
           }
         </Hidden>
-        {mobileSearchBar ? 
-          null
-          :
-        <LightTooltip title="Urutkan Kuis">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
-        }
+          <LightTooltip title="Urutkan Kuis">
+            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+              <SortIcon />
+            </IconButton>
+          </LightTooltip>
         <Menu
           keepMounted
           anchorEl={anchorEl}
@@ -347,6 +328,11 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
+  goSearchIconMobile: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+  }
+  ,
   sortButton: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
@@ -433,7 +419,7 @@ function AssessmentList(props) {
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
   const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
-  const [mobileSearchBar, setMobileSearchBar] = React.useState(false);
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   const [type, setAssessmentType] = React.useState(null)
   const { getAllAssessments, deleteAssessment, getAllClass, getAllSubjects } = props;
@@ -564,8 +550,8 @@ function AssessmentList(props) {
         rowCount={rows ? rows.length : 0}
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
-        setMobileSearchBar={setMobileSearchBar}
-        mobileSearchBar={mobileSearchBar}
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
