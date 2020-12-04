@@ -3,8 +3,11 @@ import { Fraction, toTex } from 'algebra.js';
 import { Node, Context } from 'react-mathjax2';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
-import { FormControlLabel, Switch } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
+import { AppBar, Button, Dialog, FormControlLabel, Switch, Slide, Toolbar, TextField, IconButton, Typography, List, ListItem, ListItemText, Divider } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/styles";
+import CloseIcon from '@material-ui/icons/Close';
+import SearchIcon from '@material-ui/icons/Search';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const PurpleSwitch = withStyles((theme) => ({
@@ -109,6 +112,20 @@ const IOSSwitch = withStyles((theme) => ({
   );
 });
 
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    position: 'relative',
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+}));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function Formula(props) {
   return (
     <Context input="tex">
@@ -126,6 +143,18 @@ export default function Tester() {
   const question = <Formula tex={`${toTex(a)} × ${toTex(b)} = ${toTex(answer)}`} />;
 
   document.getElementById('math')
+
+  const classes = useStyles();
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div style={{margin: "auto", maxWidth: "1000px"}}>
@@ -146,6 +175,28 @@ export default function Tester() {
       />
       <InlineMath math="\\int_0^\\infty x^2 dx"/>
       <BlockMath math="\\int_0^\\infty x^2 dx"/>
+      <IconButton onClick={handleClickOpen} style={{backgroundColor: "blue", color: "white"}}>
+        <SearchIcon />
+      </IconButton>
+      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+              <ArrowBackIosIcon />
+            </IconButton>
+            <TextField variant="outlined" className={classes.title} />
+          </Toolbar>
+        </AppBar>
+        <List>
+          <ListItem button>
+            <ListItemText primary="Phone ringtone" secondary="Titania" />
+          </ListItem>
+          <Divider />
+          <ListItem button>
+            <ListItemText primary="Default notification ringtone" secondary="Tethys" />
+          </ListItem>
+        </List>
+      </Dialog>
     </div>
   );
 }
