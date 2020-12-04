@@ -105,7 +105,7 @@ function ViewAssessmentTeacher(props) {
   // const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
-  const { questions } = selectedAssessments;
+  const { questions, type } = selectedAssessments;
   const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -211,7 +211,7 @@ function ViewAssessmentTeacher(props) {
   }
 
   let linkToShare = `http://localhost:3000/kuis-murid/${assessment_id}`;
-  const type = selectedAssessments.type
+
   return (
     <div className={classes.root}>
       {DeleteDialog()}

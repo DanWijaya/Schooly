@@ -56,7 +56,9 @@ function stableSort(array, comparator) {
 }
 
 function AssessmentListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role, searchFilter, updateSearchFilter} = props;
+  const { classes, order, orderBy, onRequestSort, 
+    role, searchFilter, updateSearchFilter, 
+    setMobileSearchBar, mobileSearchBar} = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -99,13 +101,51 @@ function AssessmentListToolbar(props) {
   const onClear = (e) => {
     updateSearchFilter("");
   }
-  
+
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">
-        Daftar Kuis
-      </Typography>
+      <div style={{display: "flex", alignItems: "center"}}>
+        <Typography variant="h4">
+          Daftar Kuis
+        </Typography>
+        <LightTooltip title="Search" style={{marginLeft: "10px"}}>
+          <Fab size="small" className={classes.goSearchButton}>
+            <GoSearch className={classes.newAssessmentIconMobile} onClick={() => setMobileSearchBar(true)}/>
+          </Fab>
+        </LightTooltip>
+        <TextField
+            variant="outlined"
+            id="searchFilter"
+            value={searchFilter}
+            onChange={onChange}
+            style={{
+              maxWidth: "250px", marginLeft: "10px", borderRadius: 25
+            }}
+            InputProps={{
+              startAdornment:(
+                <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                  <IconButton size="small">
+                    <GoSearch/>
+                  </IconButton>
+                </InputAdornment>)
+                ,
+                endAdornment:( 
+                <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                  <IconButton 
+                    size="small" 
+                    onClick={onClear} 
+                    style={{ 
+                      opacity: 0.5, 
+                      visibility: !searchFilter ? "hidden" : "visible"
+                    }}>
+                    <ClearIcon/>
+                  </IconButton>
+                </InputAdornment>)
+            }}
+          />
+      </div>
       <div style={{display: "flex"}}>
+        {/*  
         <Hidden xsDown implementation="css">
           <TextField
             variant="outlined"
@@ -140,7 +180,49 @@ function AssessmentListToolbar(props) {
           />
         </Hidden>
         <Hidden smUp implementation="css">
-          {role === "Student" ?
+          {mobileSearchBar ? 
+          <TextField
+          variant="outlined"
+          id="searchFilter"
+          value={searchFilter}
+          onChange={onChange}
+          style={{
+            // maxWidth: "250px",
+            marginRight: "10px"
+          }}
+          InputProps={{
+            startAdornment:(
+              <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                <IconButton size="small">
+                  <GoSearch/>
+                </IconButton>
+              </InputAdornment>)
+              ,
+              endAdornment:( 
+              <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                <IconButton 
+                  size="small" 
+                  onClick={onClear} 
+                  style={{ 
+                    opacity: 0.5, 
+                    visibility: !searchFilter ? "hidden" : "visible"
+                  }}>
+                  <ClearIcon/>
+                </IconButton>
+              </InputAdornment>)
+          }}
+        />
+          :
+          <LightTooltip title="Search">
+            <Fab size="small" className={classes.goSearchButton}>
+              <GoSearch className={classes.newAssessmentIconMobile} onClick={() => setMobileSearchBar(true)}/>
+            </Fab>
+          </LightTooltip> 
+        }
+        </Hidden
+      */}
+        <Hidden smUp implementation="css">
+          {role === "Student" || mobileSearchBar?
             null
           :
             <LightTooltip title="Buat Kuis">
@@ -153,7 +235,7 @@ function AssessmentListToolbar(props) {
           }
         </Hidden>
         <Hidden xsDown implementation="css">
-          {role === "Student" ?
+          {role === "Student" || mobileSearchBar?
             null
           :
             <Link to="/kuis">
@@ -164,11 +246,15 @@ function AssessmentListToolbar(props) {
             </Link>
           }
         </Hidden>
+        {mobileSearchBar ? 
+          null
+          :
         <LightTooltip title="Urutkan Kuis">
           <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
           </IconButton>
         </LightTooltip>
+        }
         <Menu
           keepMounted
           anchorEl={anchorEl}
@@ -241,6 +327,15 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.create.main,
       color: "white",
+    },
+  },
+  goSearchButton: {
+    marginRight: "10px",
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.divider,
+      color: "black",
     },
   },
   newAssessmentIconDesktop: {
@@ -325,7 +420,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
-  },
+  }
 }));
 
 
@@ -338,6 +433,8 @@ function AssessmentList(props) {
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
   const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
+  const [mobileSearchBar, setMobileSearchBar] = React.useState(false);
+
   const [type, setAssessmentType] = React.useState(null)
   const { getAllAssessments, deleteAssessment, getAllClass, getAllSubjects } = props;
   const { all_assessments } = props.assessmentsCollection
@@ -434,7 +531,7 @@ function AssessmentList(props) {
     console.log("Close di RUN")
     setOpenCopySnackBar(false);
   }
-  
+
   const copyToClipboardButton = (e, linkToShare, type) => {
     e.stopPropagation()
     let textArea = document.createElement("textarea");
@@ -467,6 +564,8 @@ function AssessmentList(props) {
         rowCount={rows ? rows.length : 0}
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
+        setMobileSearchBar={setMobileSearchBar}
+        mobileSearchBar={mobileSearchBar}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
