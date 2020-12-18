@@ -345,8 +345,6 @@ class EditTask extends Component {
     const { all_subjects } = this.props.subjectsCollection
     const { user } = this.props.auth;
 
-    const task_id = this.props.match.params.id;
-
     console.log("FileLampiran:", this.state.fileLampiran)
     console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);

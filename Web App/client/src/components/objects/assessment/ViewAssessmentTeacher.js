@@ -7,13 +7,10 @@ import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentA
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Dialog, Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, IconButton, Paper, Typography, Input, Snackbar} from "@material-ui/core";
+import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LinkIcon from '@material-ui/icons/Link';
@@ -118,6 +115,7 @@ function ViewAssessmentTeacher(props) {
     getOneAssessment(assessment_id)
     getAllClass("map")
     getAllSubjects("map")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onDeleteAssessment = (id) => {
@@ -167,7 +165,7 @@ function ViewAssessmentTeacher(props) {
   const handleCloseCopySnackBar = () => {
     setOpenCopySnackBar(false);
   }
-    
+
   const copyToClipboardButton = (e, linkToShare, type) => {
     e.stopPropagation()
     let textArea = document.createElement("textarea");
@@ -189,7 +187,7 @@ function ViewAssessmentTeacher(props) {
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Kuis"
-        deleteItem=""
+        // deleteItem=""
         itemName={selectedAssessments.name}
         deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
         />
@@ -250,7 +248,7 @@ function ViewAssessmentTeacher(props) {
                     <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
                       {question.lampiran.map((image, i) =>
                         <GridListTile key={image} cols={1} >
-                        <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                        <img alt="current img" src={`/api/upload/att_assessment/${image}`}/>
                         <GridListTileBar
                             title={`Gambar ${i+1}`}
                             titlePosition="top"

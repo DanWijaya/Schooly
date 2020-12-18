@@ -16,7 +16,6 @@ import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, L
   Paper, Snackbar, Typography, Button } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { fade } from "@material-ui/core/styles/colorManipulator";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";

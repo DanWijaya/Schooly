@@ -244,7 +244,7 @@ function ClassList(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  const { getAllClass, deleteClass, classesCollection, getTeachers, errors, clearErrors } = props;
+  const { getAllClass, deleteClass, classesCollection, getTeachers, clearErrors } = props;
 
   const { user, all_teachers } = props.auth;
 

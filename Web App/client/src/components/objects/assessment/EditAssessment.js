@@ -12,17 +12,11 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Avatar, Badge, Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
-  Grid, GridList, GridListTile, GridListTileBar, MenuItem, IconButton, Paper, 
-  Radio, RadioGroup, Select, Snackbar, Switch, TextField, TablePagination, Typography, Hidden,
+import { Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
+  Grid, MenuItem, IconButton, Paper, Select, Snackbar, Switch, TextField, TablePagination, Typography, Hidden,
   Fab, ListItemIcon, ListItemText, Menu } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import SaveIcon from "@material-ui/icons/Save";
-import ToggleOffIcon from '@material-ui/icons/ToggleOff';
-import ToggleOnIcon from '@material-ui/icons/ToggleOn';
 import SettingsIcon from '@material-ui/icons/Settings';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -31,7 +25,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import SendIcon from '@material-ui/icons/Send';
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
-import { RadioButtonChecked, CheckBox, TextFormat, Subject, Assignment } from '@material-ui/icons';
+import { RadioButtonChecked, CheckBox, TextFormat, Subject } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
@@ -465,7 +459,7 @@ class EditAssessment extends Component {
           }
           else {
             questions[i]["answer"] = questions[i]["answer"].filter(function (value, index) {
-              return value != e.target.value
+              return value !== e.target.value
             })
           }
         }
@@ -556,9 +550,7 @@ class EditAssessment extends Component {
           } else { // jika ada lebih dari satu kunci jawaban (misal ["E", "B", "Z"])
             // hapus kunci jawaban
             questions[qnsIndex].answer = questions[qnsIndex].answer.filter((value) => {
-              if(value.charCodeAt(0)-65 !== optionIndex){
-                return value;
-              }
+              return (value.charCodeAt(0)-65 !== optionIndex);
             })
             // semua nilai kunci jawaban lain akan dikurangi 1.
             // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D", kunci jawaban "Z" akan diubah jadi "Y",
@@ -701,7 +693,6 @@ class EditAssessment extends Component {
   listQuestion = () => {
     let { questions } = this.state;
     const { page, rowsPerPage} = this.state;
-    const { classes } = this.props;
     let questionList = [];
     questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
 
@@ -751,7 +742,7 @@ class EditAssessment extends Component {
           check_data={booleanArray}
           />
       )
-  }
+    }
   )
 
     return questionList
@@ -778,8 +769,6 @@ class EditAssessment extends Component {
     const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { selectedAssessments } = this.props.assessmentsCollection;
-    const { user } = this.props.auth;
 
     const linkToShare = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
     const ToggleViewQuiz = withStyles((theme) => ({
@@ -820,15 +809,15 @@ class EditAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    const ToggleViewQuizMobile = withStyles((theme) => ({
-      root: {
-        width: 0,
-        height: 0,
-        padding: 0,
-        margin: theme.spacing(1),
-      },
-      checked: {},
-    }))(Switch);
+    // const ToggleViewQuizMobile = withStyles((theme) => ({
+    //   root: {
+    //     width: 0,
+    //     height: 0,
+    //     padding: 0,
+    //     margin: theme.spacing(1),
+    //   },
+    //   checked: {},
+    // }))(Switch);
 
     console.log("QUESTIONS : ", this.state.questions)
     document.title = "Schooly | Sunting Kuis";
@@ -1223,18 +1212,15 @@ EditAssessment.propTypes = {
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  updateAssessment: PropTypes.func.isRequired,
   getOneAssessment: PropTypes.func.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
   errors:state.errors,
-  auth: state.auth,
   success: state.success,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,

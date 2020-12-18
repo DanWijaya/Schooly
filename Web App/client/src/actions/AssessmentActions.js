@@ -1,4 +1,4 @@
-import { reject } from "async";
+// import { reject } from "async";
 import axios from "axios";
 import { GET_ERRORS, GET_ALL_ASSESSMENTS, GET_ASSESSMENT, GET_SUCCESS_RESPONSE } from "./Types";
 

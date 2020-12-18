@@ -5,20 +5,16 @@ import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, submitAssessment } from "../../../actions/AssessmentActions";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormGroup,
-  Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, Checkbox, 
+  Grid, GridListTile, GridListTileBar, GridList, Paper, Radio, Checkbox, 
   RadioGroup, TextField, Typography, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import moment from "moment";
 import "moment/locale/id";
-import { FaWindowRestore } from "react-icons/fa";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
 
 const useStyles = makeStyles((theme) => ({
@@ -138,7 +134,7 @@ function TimeoutDialog(props){
 }
 function Timer(props) {
   const classes = useStyles();
-  let {start_date, end_date, id, finish, onSubmit, setOpenTimeoutDialog } = props;
+  let {start_date, end_date, id, onSubmit, setOpenTimeoutDialog } = props;
   console.log(start_date, end_date);
   let startTime = new Date(start_date);
   let finishTime = new Date(end_date);
@@ -170,6 +166,7 @@ function Timer(props) {
       }
       clearInterval(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time]);
 
   return (
@@ -250,7 +247,6 @@ function ViewAssessmentStudent(props) {
   const [ finish, setFinish ] = React.useState(null);
   const [ openSubmitDialog, setOpenSubmitDialog] = React.useState(null);
   const [ openTimeoutDialog, setOpenTimeoutDialog] = React.useState(null);
-  const [ dummy, setDummy ] = React.useState(false)
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
@@ -309,7 +305,7 @@ function ViewAssessmentStudent(props) {
       else if(!e.target.checked || answer[qnsIndex].includes(e.target.value)){
         let temp = answer;
         temp[qnsIndex] = temp[qnsIndex].filter(function(value,index){
-          return value != e.target.value
+          return value !== e.target.value
         })
         setAnswer([...temp])
       }
@@ -385,7 +381,6 @@ function ViewAssessmentStudent(props) {
   const onSubmit = (e) => {
     localStorage.setItem(`status`, "tidak_ujian")
     window.location.reload(false);
-    setDummy(false)
     setFinish(true)
     setStart(false);
     // console.log(localStorage.getItem(`status`))
@@ -499,7 +494,7 @@ function ViewAssessmentStudent(props) {
                       :
                       questions[qnsIndex].lampiran.map((image, i) =>
                         <GridListTile key={image} cols={1} >
-                        <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                        <img alt="current img" src={`/api/upload/att_assessment/${image}`}/>
                         <GridListTileBar
                             title={`Gambar ${i+1}`}
                             titlePosition="top"

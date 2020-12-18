@@ -20,9 +20,9 @@ function Timer() {
 
   let workTime = Math.floor((finishTime - startTime)/1000)
   let res = Math.floor((finishTime - new Date())/1000)
-  var hours = Math.floor(res / 3600) % 24;
-  var minutes = Math.floor(res / 60) % 60;
-  var seconds = res % 60;
+  // var hours = Math.floor(res / 3600) % 24;
+  // var minutes = Math.floor(res / 60) % 60;
+  // var seconds = res % 60;
 
   const [time, setTime] = React.useState(res);
 

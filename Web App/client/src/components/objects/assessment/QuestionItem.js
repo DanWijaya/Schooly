@@ -1,8 +1,7 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Button, Divider, FormControl, FormControlLabel, Grid, GridList, GridListTile, GridListTileBar,
-  IconButton, Paper, Radio, RadioGroup, TextField, Typography, Checkbox, FormGroup, InputAdornment, FilledInput,
-  Tooltip } from "@material-ui/core";
+  IconButton, Paper, Radio, RadioGroup, TextField, Typography, Checkbox, FormGroup, InputAdornment} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 function QuestionItem(props){
   const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, 
-    handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, buildImgTag, type,
+    handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, type,
     check_data, parseAnswer } = props
   const classes = useStyles()
 
@@ -118,12 +117,14 @@ function QuestionItem(props){
     if(!isEdit){
       handlePreviewImage(lampiran)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[lampiran_length])
 
   React.useEffect(() => {
     if(isEdit){
       handlePreviewImage(lampiranToAdd)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lampiranToAdd.length])
 
   console.log("Current lampiran : ", currentLampiran)
@@ -141,7 +142,7 @@ function QuestionItem(props){
                 {isEdit ?
                   currentLampiran.map((image, i) =>
                     <GridListTile key={image} cols={1} >
-                    <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                    <img alt="current img" src={`/api/upload/att_assessment/${image}`}/>
                     <GridListTileBar
                       titlePosition="top"
                       actionIcon={
@@ -158,7 +159,7 @@ function QuestionItem(props){
                 }
               {lampiranToPreview.map((image, i) =>
                 <GridListTile key={image} cols={1} >
-                  <img alt="current image" src={image}/>
+                  <img alt="current img" src={image}/>
                   <GridListTileBar
                       titlePosition="top"
                       actionIcon={

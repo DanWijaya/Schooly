@@ -18,18 +18,14 @@ import { Button, Chip, Divider,
   TablePagination, Typography, IconButton, Hidden, Fab, ListItemIcon, ListItemText } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
-import SpeedDial from '@material-ui/lab/SpeedDial';
 import SettingsIcon from '@material-ui/icons/Settings';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import AddIcon from "@material-ui/icons/Add";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import LinkIcon from '@material-ui/icons/Link';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SendIcon from '@material-ui/icons/Send';
-import { RadioButtonChecked, CheckBox, TextFormat, Subject, Assignment, Send } from '@material-ui/icons';
+import { RadioButtonChecked, CheckBox, TextFormat, Subject } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
@@ -393,7 +389,7 @@ class CreateAssessment extends Component {
           }
           else{
             questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
-              return value != e.target.value
+              return value !== e.target.value
             })
           }
         }
@@ -464,9 +460,7 @@ class CreateAssessment extends Component {
           } else { // jika ada lebih dari satu kunci jawaban (misal ["E", "B", "Z"])
             // hapus kunci jawaban
             questions[qnsIndex].answer = questions[qnsIndex].answer.filter((value) => {
-              if (value.charCodeAt(0) - 65 !== optionIndex) {
-                return value;
-              }
+                return (value.charCodeAt(0) - 65 !== optionIndex);
             })
             // semua nilai kunci jawaban lain akan dikurangi 1.
             // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D", kunci jawaban "Z" akan diubah jadi "Y",
@@ -673,12 +667,6 @@ class CreateAssessment extends Component {
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
-    const actions = [
-      { icon: <VisibilityIcon />, name: 'Tampilkan Ke Murid' },
-      { icon: <LinkIcon />, name: 'Copy Ke Clipboard' },
-      { icon: <CancelIcon />, name: 'Batal' },
-      { icon: <SendIcon />, name: 'Buat Kuis' },
-    ];
 
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
@@ -718,15 +706,15 @@ class CreateAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    const ToggleViewQuizMobile = withStyles((theme) => ({
-      root: {
-        width: 0,
-        height: 0,
-        padding: 0,
-        margin: theme.spacing(1),
-      },
-      checked: {},
-    }))(Switch);
+    // const ToggleViewQuizMobile = withStyles((theme) => ({
+    //   root: {
+    //     width: 0,
+    //     height: 0,
+    //     padding: 0,
+    //     margin: theme.spacing(1),
+    //   },
+    //   checked: {},
+    // }))(Switch);
 
     document.title = "Schooly | Buat Kuis";
 

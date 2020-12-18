@@ -4,16 +4,14 @@ import PropTypes from "prop-types";
 import { getOneAssessment, gradeAssessment } from "../../../actions/AssessmentActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
-import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
-   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography } from "@material-ui/core";
+import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, 
+   List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import MuiAlert from "@material-ui/lab/Alert";
 
-const path = require("path");
+// const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,7 +120,7 @@ function TabIndex(index) {
 
 function GradeButton(props) {
   const classes = useStyles()
-  const {onGradeAssessment, assessment_id, student_id, grade, student_name} = props
+  const {onGradeAssessment, student_id, grade, student_name} = props
 
   return (
     <Button
@@ -139,7 +137,7 @@ function GradeButton(props) {
 function SubmittedAssessmentList(props) {
   const classes = useStyles();
 
-  const { getOneAssessment, getAllClass, assessmentsCollection, getStudents, gradeAssessment } = props;
+  const { getOneAssessment, getAllClass, getStudents, gradeAssessment } = props;
   const { selectedAssessments } = props.assessmentsCollection;
   const { all_classes } = props.classesCollection;
   const { all_students } = props.auth;
@@ -281,7 +279,7 @@ function SubmittedAssessmentList(props) {
                         }}
                       />
                     </div>
-                    <GradeButton onGradeAssessment={onGradeAssessment} assessment_id={assessment_id} student_id={student._id} student_name ={student.name} grade={grade}/>
+                    <GradeButton onGradeAssessment={onGradeAssessment} student_id={student._id} student_name ={student.name} grade={grade}/>
                   <div>
                   </div>
                 </div> 
