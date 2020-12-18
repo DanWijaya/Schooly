@@ -9,20 +9,25 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, Paper, Menu, MenuItem, TableSortLabel, Typography, Dialog } from "@material-ui/core/";
+import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+   Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography, Dialog} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import LinkIcon from '@material-ui/icons/Link';
+import MuiAlert from "@material-ui/lab/Alert";
+import { GoSearch } from "react-icons/go";
+import ClearIcon from '@material-ui/icons/Clear';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
-function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned) {
-  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned };
+function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type) {
+  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -52,7 +57,9 @@ function stableSort(array, comparator) {
 }
 
 function AssessmentListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role } = props;
+  const { classes, order, orderBy, onRequestSort, 
+    role, searchFilter, updateSearchFilter, 
+    setSearchBarFocus, searchBarFocus} = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -79,14 +86,141 @@ function AssessmentListToolbar(props) {
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
+
+  // FOR SEARCH FILTER. 
+  const onChange = (e) => {
+    updateSearchFilter(e.target.value)
+  }
+
+  const onClear = (e, id) => {
+    updateSearchFilter("");
+    document.getElementById(id).focus();
+  }
+
   return (
+    // <div className={classes.toolbar}>
     <div className={classes.toolbar}>
-      <Typography variant="h4">
-        Daftar Kuis
-      </Typography>
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
-          {role === "Student" ?
+          {searchBarFocus ?
+            null 
+            :
+            <Typography variant="h4">
+              Daftar Kuis
+            </Typography>
+          }
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <Typography variant="h4">
+            Daftar Kuis
+          </Typography>
+        </Hidden>
+        <Hidden smUp implementation="css">
+          {searchBarFocus ? 
+          <div style={{display: "flex"}}>
+            <IconButton 
+            onClick={() => {
+            setSearchBarFocus(false)
+            updateSearchFilter("")}}>
+              <ArrowBackIcon/>
+            </IconButton> 
+            <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="searchFilterMobile"
+                  value={searchFilter}
+                  onChange={onChange}
+                  autoFocus
+                  onClick={(e) =>setSearchBarFocus(true)}
+                  placeholder="Search Kuis"
+                  // onBlur={() => setSearchBarFocus(false)}
+                  style={{
+                    maxWidth: "200px",
+                    marginLeft: "10px"
+                  }}
+                  InputProps={{
+                    startAdornment:(
+                      searchBarFocus ? null :
+                        <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                          <IconButton size="small">
+                            <GoSearch/>
+                          </IconButton>
+                        </InputAdornment>)
+                      ,
+                      endAdornment:( 
+                      <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                        <IconButton 
+                          size="small" 
+                          id="searchFilterMobile"
+                          onClick={(e) => {
+                            e.stopPropagation() 
+                            onClear(e, "searchFilterMobile")}
+                          } 
+                          style={{ 
+                            opacity: 0.5, 
+                            visibility: !searchFilter ? "hidden" : "visible"
+                          }}>
+                          <ClearIcon/>
+                        </IconButton>
+                      </InputAdornment>)
+                  }}
+                />
+              </div>
+              :
+            // <div style={{display: "flex"}}>
+            <LightTooltip title="Search" style={{marginLeft: "10px"}}>
+              <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
+                <GoSearch className={classes.goSearchIconMobile} />
+              </IconButton>
+            </LightTooltip>
+          // </div>
+          }
+        </Hidden>
+      </div>
+      <div style={{display: "flex"}}>
+      <Hidden xsDown implementation="css">
+            <TextField
+              // fullWidth
+              variant="outlined"
+              id="searchFilterDesktop"
+              value={searchFilter}
+              onChange={onChange}
+              onClick={() => setSearchBarFocus(true)}
+              onBlur={() => setSearchBarFocus(false)}
+              placeholder="Search Kuis"
+              // onBlur={() => setSearchBarFocus(false)}
+              style={{
+                maxWidth: "250px",
+                marginRight: "10px"
+              }}
+              InputProps={{
+                startAdornment:(
+                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                      <IconButton size="small">
+                        <GoSearch/>
+                      </IconButton>
+                    </InputAdornment>)
+                  ,
+                  endAdornment:( 
+                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                    <IconButton 
+                      size="small" 
+                      onClick={(e) => {
+                        e.stopPropagation() 
+                        onClear(e, "searchFilterDesktop")}
+                      } 
+                      style={{ 
+                        opacity: 0.5, 
+                        visibility: !searchFilter ? "hidden" : "visible"
+                      }}>
+                      <ClearIcon/>
+                    </IconButton>
+                  </InputAdornment>)
+              }}
+            />
+        </Hidden>
+        <Hidden smUp implementation="css">
+          {role === "Student"?
             null
           :
             <LightTooltip title="Buat Kuis">
@@ -99,7 +233,7 @@ function AssessmentListToolbar(props) {
           }
         </Hidden>
         <Hidden xsDown implementation="css">
-          {role === "Student" ?
+          {role === "Student"?
             null
           :
             <Link to="/kuis">
@@ -110,11 +244,11 @@ function AssessmentListToolbar(props) {
             </Link>
           }
         </Hidden>
-        <LightTooltip title="Urutkan Kuis">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
+          <LightTooltip title="Urutkan Kuis">
+            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+              <SortIcon />
+            </IconButton>
+          </LightTooltip>
         <Menu
           keepMounted
           anchorEl={anchorEl}
@@ -175,6 +309,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  toolbarDesktopFocused: {
+    // display: "flex",
+    // justifyContent: "flex-end",
+
+    alignItems: "center",
+  },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
     marginTop: "15px",
@@ -189,6 +329,15 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  goSearchButton: {
+    marginRight: "10px",
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.divider,
+      color: "black",
+    },
+  },
   newAssessmentIconDesktop: {
     width: theme.spacing(3),
     height: theme.spacing(3),
@@ -198,6 +347,11 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
+  goSearchIconMobile: {
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+  }
+  ,
   sortButton: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
@@ -247,6 +401,14 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  copyToClipboardButton: {
+    backgroundColor: "#974994",
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "#974994",
+      color: "#white"
+    },
+  },
   assessmentPanelDivider: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -263,8 +425,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
-    cursor: "pointer"
-  },
+  }
 }));
 
 
@@ -275,6 +436,11 @@ function AssessmentList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+  const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
+
+  const [type, setAssessmentType] = React.useState(null)
   const { getAllAssessments, deleteAssessment, getAllClass, getAllSubjects } = props;
   const { all_assessments } = props.assessmentsCollection
   const { all_classes_map } = props.classesCollection;
@@ -296,7 +462,6 @@ function AssessmentList(props) {
 
   var rows = [];
   const assessmentRowItem = (data) => {
-    console.log("HDJSKDJSK")
     rows.push(
       createData(
         data._id,
@@ -305,6 +470,7 @@ function AssessmentList(props) {
         data.start_date,
         data.end_date,
         data.class_assigned,
+        data.type
       )
     )
   }
@@ -322,29 +488,27 @@ function AssessmentList(props) {
     if (all_assessments.length) {
       rows = []
       if (user.role === "Teacher") {
-      all_assessments.forEach((data) => {
+      all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+      .forEach((data) => {
         if (data.author_id === user.id) {
-          return assessmentRowItem(data)
+          assessmentRowItem(data)
           }
         return null;
         })
       }
       else if (user.role === "Student") {
-        let currentDate = new Date();
-        all_assessments.forEach((data) => {
+        all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+        .forEach((data) => {
           let class_assigned = data.class_assigned;
           if (class_assigned.indexOf(user.kelas) !== -1 && data.posted){
-            // if(new Date(data.start_date) <= currentDate && new Date(data.end_date) >= currentDate) {
-            //   return assessmentRowItem(data)
-            // }
-            // return null
-            return assessmentRowItem(data)
+            assessmentRowItem(data)
           }
           return null
         })
       }
       else { //Admin
-        all_assessments.forEach(data =>  assessmentRowItem(data))
+        all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
+        .forEach(data =>  assessmentRowItem(data))
       }
     }
   }
@@ -374,6 +538,29 @@ function AssessmentList(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
+  const handleOpenCopySnackBar = (type) => {
+    console.log("Open di RUN")
+    setOpenCopySnackBar(true);
+    setAssessmentType(type)
+  }
+
+  const handleCloseCopySnackBar = () => {
+    console.log("Close di RUN")
+    setOpenCopySnackBar(false);
+  }
+
+  const copyToClipboardButton = (e, linkToShare, type) => {
+    e.stopPropagation()
+    let textArea = document.createElement("textarea");
+    textArea.value = linkToShare;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    e.target.focus();
+    document.body.removeChild(textArea);
+    handleOpenCopySnackBar(type)
+  }
 
   document.title = "Schooly | Daftar Kuis";
   return (
@@ -414,20 +601,32 @@ function AssessmentList(props) {
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
       />
+        <AssessmentListToolbar
+          role={user.role}
+          deleteAssessment={deleteAssessment}
+          classes={classes}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          rowCount={rows ? rows.length : 0}
+          searchFilter={searchFilter}
+          updateSearchFilter={updateSearchFilter}
+          setSearchBarFocus={setSearchBarFocus}
+          searchBarFocus={searchBarFocus}
+        />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
       {stableSort(rows, getComparator(order, orderBy))
         .map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;
           let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
-          console.log(row)
+          let linkToShare = `http://localhost:3000/kuis-murid/${row._id}`;
           return (
             <Grid item>
               {user.role === "Teacher" ?
                 <ExpansionPanel
                   button
-                  variant="outlined"
-                >
+                  variant="outlined">
                   <ExpansionPanelSummary className={classes.assessmentPanelSummary}>
                     <Grid container spacing={1} justify="space-between" alignItems="center">
                       <Grid item>
@@ -449,6 +648,16 @@ function AssessmentList(props) {
                         </Hidden>
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Copy Link">
+                            <IconButton
+                              size="small"
+                              className={classes.copyToClipboardButton}
+                              onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
+                              <LinkIcon fontSize="small"/>
+                            </IconButton>
+                          </LightTooltip>
+                        </Grid>
                         <Grid item>
                           <LightTooltip title="Lihat Lebih Lanjut">
                             <Link to={viewpage}>
@@ -554,6 +763,12 @@ function AssessmentList(props) {
           );
         })}
       </Grid>
+      {/* </div> */}
+      <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
+        <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
+          Link {type} berhasil disalin ke Clipboard Anda!
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

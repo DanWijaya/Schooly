@@ -15,6 +15,7 @@ import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
 import { Button, Dialog, Divider, FormControl, FormHelperText, Grid,
    MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, TextField, Typography } from "@material-ui/core";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
@@ -280,6 +281,14 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item>
+                  <Autocomplete/>
+                  {/* <Autocomplete 
+                      id="combo-box-demo"
+                      options={all_classes.map((kelas) => kelas.name)}
+                      getOptionLabel={(option) => option.title}
+                      style={{width: 300}}
+                      renderInput={(params) => <TextField {...params} label="Isi combo box" variant="outlined"/>}
+                      /> */}
                   <label id="kelas">Kelas</label>
                   <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
                     <Select
@@ -414,14 +423,11 @@ class Register extends Component {
                   </Grid>
                 </Dialog>
                 <Typography align="center" style={{marginTop: "20px"}}>
-                  Setelah berhasil mendaftar, silahkan menunggu admin sekolah Anda untuk mengaktifkan akses akun Anda.
+                  Setelah registrasi selesai, silahkan hubungi pengelola sekolah Anda untuk mengaktifkan akun Anda.
                 </Typography>
                 <Typography variant="body2" color="textSecondary" align="center" style={{marginTop: "20px"}}>
                   Jangan lupa untuk melengkapi profil Anda pada halaman profil yang dapat diakses pada
                   foto profil pada bagian kanan atas aplikasi.
-                </Typography>
-                <Typography variant="body2" align="center" style={{marginTop: "20px"}}>
-                  Silahkan hubungi pengelola sekolah Anda untuk mengaktifkan akun Anda, setelah registrasi selesai.
                 </Typography>
               </Grid>
             </Grid>
