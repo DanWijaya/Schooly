@@ -69,6 +69,11 @@ import SubjectList from "./components/objects/admin-only/SubjectList";
 import Tester from "./prototypes/Tester";
 import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
+import S3Upload from "./prototypes/S3Upload";
+import S3MaterialView from "./prototypes/S3ViewMaterial";
+import S3CreateMaterial from "./prototypes/S3CreateMaterial";
+import S3EditMaterial from "./prototypes/S3EditMaterial";
+
 //Dropbox
 import DropboxConnect from "./components/dropbox/DropboxConnect";
 import DropboxAuth from "./components/dropbox/DropboxAuth";
@@ -185,6 +190,10 @@ class App extends Component {
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                     <Route exact path="/timer" component={Timer} /> {/*prototype*/}
                     <Route exact path="/graph" component={Graph} /> {/*prototype*/}
+                    <Route exact path="/s3upload" component={S3Upload} /> {/*prototype*/}
+                    <Route exact path="/s3materialview/:id" component={S3MaterialView} />
+                    <Route exact path="/s3-buat-materi" component={S3CreateMaterial}/>
+                    <Route exact path="/s3-sunting-materi/:id" component={S3EditMaterial}/>
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />

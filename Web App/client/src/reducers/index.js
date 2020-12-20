@@ -11,6 +11,7 @@ import AnnouncementReducer from "./AnnouncementReducer"
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
 import MockReducer from "../prototypes/mock-users/MockReducer";
+import FMaterialReducer from "./files/FMaterialReducer"
 
 export default combineReducers({
   auth: UserReducer,
@@ -25,4 +26,5 @@ export default combineReducers({
   subjectsCollection: SubjectReducer,
   success: SuccessReducer,
   tasksCollection: TasksReducer,
+  materialsFiles: FMaterialReducer
 });

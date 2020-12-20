@@ -138,7 +138,7 @@ function MaterialListToolbar(props) {
             null
           :
             <LightTooltip title="Buat Materi">
-              <Link to="/buat-materi">
+              <Link to="/s3-buat-materi">
                 <Fab size="small" className={classes.newMaterialButton}>
                   <MenuBookIcon className={classes.newMaterialIconMobile} />
                 </Fab>
@@ -150,7 +150,7 @@ function MaterialListToolbar(props) {
           {role === "Student" ?
             null
           :
-            <Link to="/buat-materi">
+            <Link to="/s3-buat-materi">
               <Fab size="medium" variant="extended" className={classes.newMaterialButton}>
                 <MenuBookIcon className={classes.newMaterialIconDesktop} />
                 Buat Materi
@@ -428,7 +428,8 @@ function MaterialList(props) {
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
-            let viewpage = `/materi/${row._id}`
+            // let viewpage = `/materi/${row._id}` UNTUK TESTING
+            let viewpage = `/s3materialview/${row._id}`
             return (
               <Grid item>
                 {user.role === "Teacher" ?
@@ -471,7 +472,8 @@ function MaterialList(props) {
                           </Grid>
                           <Grid item>
                             <LightTooltip title="Sunting">
-                              <Link to={`/sunting-materi/${row._id}`}>
+                            {/* <Link to={`/sunting-materi/${row._id}`}> UNTUK TESTING*/}
+                              <Link to={`/s3-sunting-materi/${row._id}`}>
                                 <IconButton
                                   size="small"
                                   className={classes.editMaterialButton}

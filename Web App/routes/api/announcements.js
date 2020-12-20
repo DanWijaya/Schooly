@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const validateAnnouncementInput = require("../../validation/AnnouncementData");
-
 const Announcement = require("../../models/Announcement");
 
 router.post("/create", (req, res) => {
@@ -68,6 +67,7 @@ router.post("/update/:id", (req,res) => {
 
 //Define View one announcement
 router.get("/viewOne/:id", (req,res) => {
+    console.log("Link: ", process.env.HELLO);
     console.log("view one is runned")
     let id = req.params.id;
     Announcement.findById(id, (err, announcementData) => {

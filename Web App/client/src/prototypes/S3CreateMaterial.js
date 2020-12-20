@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getAllClass } from "../../../actions/ClassActions";
-import { clearErrors } from "../../../actions/ErrorActions";
-import { getAllSubjects } from "../../../actions/SubjectActions";
-import { createMaterial } from "../../../actions/MaterialActions";
-import UploadDialog from "../../misc/dialog/UploadDialog";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import { getAllClass } from "../actions/ClassActions";
+import { clearErrors } from "../actions/ErrorActions";
+import { clearSuccess } from "../actions/SuccessActions";
+import { getAllSubjects } from "../actions/SubjectActions";
+import { createMaterial } from "../actions/MaterialActions";
+import UploadDialog from "../components/misc/dialog/UploadDialog";
+import LightTooltip from "../components/misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
    ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -155,7 +156,7 @@ function LampiranFile(props) {
   )
 }
 
-class CreateMaterial extends Component {
+class S3CreateMaterial extends Component {
   constructor() {
     super();
     this.state = {
@@ -246,6 +247,7 @@ class CreateMaterial extends Component {
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   handleLampiranDelete = (e, i) => {
@@ -507,7 +509,7 @@ class CreateMaterial extends Component {
   }
 }
 
-CreateMaterial.propTypes = {
+S3CreateMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -515,6 +517,7 @@ CreateMaterial.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   createMaterial: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -526,5 +529,6 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createMaterial, clearErrors }
-) (withStyles(styles)(CreateMaterial))
+  mapStateToProps, { getAllClass, getAllSubjects, 
+    createMaterial, clearErrors, clearSuccess }
+) (withStyles(styles)(S3CreateMaterial))

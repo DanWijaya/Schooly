@@ -1,4 +1,4 @@
-import { GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK, GET_SUCCESS_RESPONSE } from "./Types";
+import { GET_FILE_BY_USER, GET_ALL_FILES_BY_USER, GET_ERRORS, GET_ALL_LAMPIRAN_BY_TASK, GET_SUCCESS_RESPONSE, GET_ALL_MATERIALS } from "./Types";
 import axios from "axios";
 import { Dropbox } from "dropbox"
 
@@ -203,4 +203,22 @@ export const previewLampiranMateri = (materi_id) => dispatch => {
     console.log("Previewing lampiran")
     console.log(materi_id)
     window.open(`http://${window.location.hostname}:5000/api/upload/att_material/previewlampiran_materi/${materi_id}` , "_blank")
+}
+
+// TESTING DENGAN S3
+
+export const getAllS3 = () => dispatch => {
+    axios.get("/api/upload/s3/")
+    .then(res => {
+        console.log(res.data)
+        dispatch({
+            // Hanya coba dengan GET_ALL_MATERIALS type. 
+            type: GET_ALL_MATERIALS,
+            payload: res.data
+        })
+    })
+    .catch(err => {
+        console.log("Get all S3 error")
+        return new Error("Error in getting S3 files")
+    })
 }
