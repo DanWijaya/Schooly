@@ -21,6 +21,9 @@ import BallotIcon from "@material-ui/icons/Ballot";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import ExploreIcon from '@material-ui/icons/Explore';
 import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -153,6 +156,14 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.dark,
       },
   },
+  mobileNav: {
+      display: "flex", 
+      flexDirection: "column", 
+      alignItems: "center"
+  },
+  mobileNavButton: {
+      color: theme.palette.text.secondary
+  }
 }));
 
 function ViewAssessmentTeacher(props) {
@@ -451,6 +462,7 @@ function ViewAssessmentTeacher(props) {
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
+                <Hidden xsDown>
                 <Grid item xs={12} md={2} style={{display: "flex", flexDirection: "row", marginTop: "10px"}}>
                     <Typography>Navigasi Soal :</Typography>
                     <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
@@ -460,6 +472,29 @@ function ViewAssessmentTeacher(props) {
                         </Badge>
                     </LightTooltip>
                 </Grid>
+                </Hidden>
+                <Hidden smUp>
+                    <Grid item xs={12} md={2} style={{display: "flex", flexDirection: "row", marginTop: "10px", justifyContent: "space-between"}}>
+                        <Button>
+                            <div className={classes.mobileNav}>
+                                <NavigateBeforeIcon className={classes.mobileNavButton}/>
+                                <Typography variant="subtitle-2">Sebelum</Typography>
+                            </div>
+                        </Button>
+                        <Button>
+                            <div className={classes.mobileNav}>
+                                <ExploreIcon className={classes.mobileNavButton}/>
+                                <Typography variant="subtitle-2">Navigasi Soal</Typography>
+                            </div>
+                        </Button>
+                        <Button>
+                            <div className={classes.mobileNav}>
+                                <NavigateNextIcon className={classes.mobileNavButton}/>
+                                <Typography variant="subtitle-2">Sesudah</Typography>
+                            </div>
+                        </Button>
+                    </Grid>
+                </Hidden>
               </Grid>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={12}>
