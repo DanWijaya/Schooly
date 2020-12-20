@@ -81,13 +81,13 @@ const AssessmentSchema = new Schema({
       type: String,
       required: true
     },
-    // suspect: [ObjectId],
-    // question_weight: {
-    //   radio: Number,
-    //   checkbox: Number,
-    //   shorttext: Number,
-    //   longtext: Object
-    // }
+    suspect: [ObjectId],
+    question_weight: {
+      radio: Number,
+      checkbox: Number,
+      shorttext: Number,
+      longtext: Object
+    }
     
     
     // value longtext adalah Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<bobot>

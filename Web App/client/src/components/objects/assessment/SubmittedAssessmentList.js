@@ -426,19 +426,20 @@ function SubmittedAssessmentList(props) {
             )
         }
       };
-
+      
+      //ANCHOR columnTemplate
       const columnTemplate = {
         radio: {
-          root: classes.RadioQst, text: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>)
+          root: classes.RadioQst, text: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>), icon: (<RadioButtonChecked/>)
         },
         checkbox: {
-          root: classes.CheckboxQst, text: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>)
+          root: classes.CheckboxQst, text: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>), icon: (<CheckBox/>)
         },
         shorttext: {
-          root: classes.ShorttextQst, text: (<b>Isian Pendek</b>)
+          root: classes.ShorttextQst, text: (<b>Isian Pendek</b>), icon: (<TextFormat />)
         },
         longtext: {
-          root: classes.LongtextQst, text: (<b>Uraian</b>)
+          root: classes.LongtextQst, text: (<b>Uraian</b>), icon: (<Subject />)
         }
       }
 
@@ -530,7 +531,7 @@ function SubmittedAssessmentList(props) {
                 <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
                   <Grid item>
                     <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
-                      <RadioButtonChecked />
+                      {columnTemplate[type].icon}
                     </IconButton>
                   </Grid>
                   <Grid item>
@@ -613,8 +614,6 @@ function SubmittedAssessmentList(props) {
                       />
                     </div> */}
                     <GradeButton onGradeAssessment={onGradeAssessment} student_id={student._id} student_name ={student.name} grade={grade}/>
-                  <div>
-                  </div>
                 </div> 
                 : 
                 null

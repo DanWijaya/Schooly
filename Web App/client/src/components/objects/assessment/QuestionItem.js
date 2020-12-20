@@ -27,17 +27,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItem(props){
+  //ANCHOR props
   const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, 
     handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, type,
-    check_data, parseAnswer } = props
+    check_data, parseAnswer, handleLongtextWeight, longtextWeight } = props
   const classes = useStyles()
 
   const [checked, setChecked] = React.useState(check_data)
   const [dummyRender, setDummyRender] = React.useState(0) // Hanya Untuk Force Re-render
   const [val, setValue] = React.useState("");
   const textRef = React.useRef(null);
-  
-  // console.log(options)
+  const [longtextValue, setLongtextValue] = React.useState("");
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
   // dipakai untuk edit assessment
@@ -108,6 +108,9 @@ function QuestionItem(props){
   React.useEffect(() => {
     setValue(name);
   }, [name])
+  React.useEffect(() => {
+    setLongtextValue(longtextWeight);
+  }, [longtextWeight]);
 
   React.useEffect(() => {
     console.log("Lampiran to preview set to empty")
@@ -330,6 +333,37 @@ function QuestionItem(props){
             </Grid>
           </Grid>
         </Grid>
+
+        {/* ANCHOR bobot */}
+        {(props.type === "longtext") ? (
+          <div>
+          <Divider />
+          <Grid container style={{ padding: "20px" }} justify="flex-end" alignItems="center" >
+            <Grid item style={{ marginRight: "20px" }}>
+              <Typography color="primary">Bobot: </Typography>
+            </Grid>
+            <Grid item>
+              <TextField
+                value={longtextValue}
+                onChange={(e) => { setLongtextValue(e.target.value); handleLongtextWeight(e, index); }}
+                inputProps={{
+                  style: {
+                    borderBottom: "none",
+                    boxShadow: "none",
+                    margin: "0px",
+                    width: "35px"
+                  }
+                }}
+                InputProps={{
+                  endAdornment: " Poin"
+                }}
+              />
+            </Grid>
+          </Grid>
+          </div>
+        ) : (
+          null
+        )}
       </Paper>
     </Grid>
   )
@@ -340,5 +374,6 @@ export default React.memo(QuestionItem, function arePropsEqual(prevProps, nextPr
     prevProps.name === nextProps.name &&
     prevProps.options === nextProps.options &&
     prevProps.answer === nextProps.answer &&
-    prevProps.lampiran_length === nextProps.lampiran_length)
+    prevProps.lampiran_length === nextProps.lampiran_length) &&
+    prevProps.longtextWeight === nextProps.longtextWeight
 })
