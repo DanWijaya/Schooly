@@ -95,9 +95,14 @@ function MaterialListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">
-        Daftar Materi
-      </Typography>
+      <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+        <Fab className={classes.titleIcon} size="small" disabled>
+          <MenuBookIcon/>
+        </Fab>
+        <Typography variant="h4">
+          Daftar Materi
+        </Typography>
+      </div>
       <div style={{display: "flex"}}>
       <Hidden xsDown implementation="css">
         <TextField
@@ -308,6 +313,12 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
+  titleIcon: {
+    '&$disabled': {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+    }
+  }
 }));
 
 function MaterialList(props) {

@@ -275,15 +275,17 @@ function ProfileDataEditorDialog(props) {
                 }
                 {...TabIndex(1)}
               />
-              <Tab
-                icon={<EmojiPeopleIcon />}
-                label={
-                  <Typography className={classes.tabTitle}>
-                    Karir
-                  </Typography>
-                }
-                {...TabIndex(2)}
-              />
+              {(user.role === "Student") ? (
+                <Tab
+                  icon={<EmojiPeopleIcon />}
+                  label={
+                    <Typography className={classes.tabTitle}>
+                      Karir
+                    </Typography>
+                  }
+                  {...TabIndex(2)}
+                />
+              ) : null}
             </Tabs>
             <TabPanel value={value} index={0}>
               <List>
@@ -343,14 +345,14 @@ function ProfileDataEditorDialog(props) {
                     </div>
                   }
                 />
-                <ProfileDataItemEdit
+                {/*<ProfileDataItemEdit
                   profile_data_icon={<SchoolIcon />}
                   profile_data_category="Sekolah"
                   is_textfield
                   value={dataProfil.sekolah}
                   id="sekolah"
                   on_change={handleChangeDataProfil}
-                />
+                />*/}
               </List>
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -390,42 +392,44 @@ function ProfileDataEditorDialog(props) {
                 />
               </List>
             </TabPanel>
-            <TabPanel value={value} index={2}>
-              <List>
-                <ProfileDataItemEdit
-                  profile_data_icon={<SportsEsportsIcon />}
-                  profile_data_category="Hobi dan Minat"
-                  is_textfield
-                  value={dataProfil.hobi_minat}
-                  id="hobi_minat"
-                  on_change={handleChangeDataProfil}
-                />
-                <ProfileDataItemEdit
-                  profile_data_icon={<ColorLensIcon />}
-                  profile_data_category="Keterampilan Non-Akademik"
-                  is_textfield
-                  value={dataProfil.ket_non_teknis}
-                  id="ket_non_teknis"
-                  on_change={handleChangeDataProfil}
-                />
-                <ProfileDataItemEdit
-                  profile_data_icon={<WorkIcon />}
-                  profile_data_category="Cita-Cita"
-                  is_textfield
-                  value={dataProfil.cita_cita}
-                  id="cita_cita"
-                  on_change={handleChangeDataProfil}
-                />
-                <ProfileDataItemEdit
-                  profile_data_icon={<AccountBalanceIcon />}
-                  profile_data_category="Universitas Impian"
-                  is_textfield
-                  value={dataProfil.uni_impian}
-                  id="uni_impian"
-                  on_change={handleChangeDataProfil}
-                />
-              </List>
-            </TabPanel>
+            {(user.role==="Student") ? (
+              <TabPanel value={value} index={2}>
+                <List>
+                  <ProfileDataItemEdit
+                    profile_data_icon={<SportsEsportsIcon />}
+                    profile_data_category="Hobi dan Minat"
+                    is_textfield
+                    value={dataProfil.hobi_minat}
+                    id="hobi_minat"
+                    on_change={handleChangeDataProfil}
+                  />
+                  <ProfileDataItemEdit
+                    profile_data_icon={<ColorLensIcon />}
+                    profile_data_category="Keterampilan Non-Akademik"
+                    is_textfield
+                    value={dataProfil.ket_non_teknis}
+                    id="ket_non_teknis"
+                    on_change={handleChangeDataProfil}
+                  />
+                  <ProfileDataItemEdit
+                    profile_data_icon={<WorkIcon />}
+                    profile_data_category="Cita-Cita"
+                    is_textfield
+                    value={dataProfil.cita_cita}
+                    id="cita_cita"
+                    on_change={handleChangeDataProfil}
+                  />
+                  <ProfileDataItemEdit
+                    profile_data_icon={<AccountBalanceIcon />}
+                    profile_data_category="Universitas Impian"
+                    is_textfield
+                    value={dataProfil.uni_impian}
+                    id="uni_impian"
+                    on_change={handleChangeDataProfil}
+                  />
+                </List>
+              </TabPanel>
+            ) : null}
             <Grid container justify="center" style={{marginTop: "10px"}}>
               <Button
                 type="submit"

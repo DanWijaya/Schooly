@@ -276,6 +276,8 @@ function ClassList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  console.log(classesCollection)
+
   console.log(all_teachers)
   const retrieveClasses = () => {
     if (classesCollection.all_classes.length > 0) {
@@ -346,6 +348,7 @@ function ClassList(props) {
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
+            console.log(row)
             let viewpage = `/kelas/${row._id}`;
             return (
               <Grid item xs={12} sm={6} md={4}>
@@ -380,11 +383,6 @@ function ClassList(props) {
                     </div>
                     <Divider />
                     <Grid container direction="row" justify="space-between" alignItems="center" className={classes.classActionContainer}>
-                      <Grid item xs>
-                        <Typography variant="overline">
-                          {row.absent}
-                        </Typography>
-                      </Grid>
                       {user.role === "Admin" ?
                         <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
                           <Grid item>
@@ -427,21 +425,23 @@ function ClassList(props) {
                           </Grid>
                         </Grid>
                       :
-                        <Grid item>
-                          <LightTooltip title="Jumlah Peserta">
-                            <Badge
-                              badgeContent={row.size}
-                              color="secondary"
-                              anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                              }}
-                            >
-                              <IconButton size="small" disabled>
-                                <SupervisorAccountIcon className={classes.classPersonIcon} />
-                              </IconButton>
-                            </Badge>
-                          </LightTooltip>
+                        <Grid container direction="row" justify="flex-end" alignItems="center">
+                          <Grid item>
+                            <LightTooltip title="Jumlah Peserta">
+                              <Badge
+                                badgeContent={row.size}
+                                color="secondary"
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "left",
+                                }}
+                              >
+                                <IconButton size="small" disabled>
+                                  <SupervisorAccountIcon className={classes.classPersonIcon} />
+                                </IconButton>
+                              </Badge>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       }
                     </Grid>

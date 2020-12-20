@@ -711,6 +711,7 @@ function ViewClass(props) {
                         <List className={classes.expansionPanelList}>
                           {listMaterials("subject", subject)}
                           {listTasks("subject", subject)}
+                          {(listMaterials("subject", subject).length === 0 && listTasks("subject", subject).length === 0) ? <Typography color="textSecondary" align="center" variant="subtitle1">Kosong</Typography> : null}
                         </List>
                       </ExpansionPanel>
                     )
