@@ -251,6 +251,8 @@ function SubmittedAssessmentList(props) {
   const { all_students } = props.auth;
   const assessment_id = props.match.params.id;
 
+  console.log(all_students)
+
   const [grade, setGrade] = React.useState(new Map());
   const [gradeStatus, setGradeStatus] = React.useState(new Map());
   const [openAlert, setOpenAlert] = React.useState(null);

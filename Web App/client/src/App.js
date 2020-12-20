@@ -61,6 +61,7 @@ import EditAssessment from "./components/objects/assessment/EditAssessment";
 import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
+import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -187,6 +188,7 @@ class App extends Component {
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                     <Route exact path="/timer" component={Timer} /> {/*prototype*/}
                     <Route exact path="/graph" component={Graph} /> {/*prototype*/}
+                    <Route exact path="/lihat-jawaban-kuis" component={ViewAssessmentAnswer} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />
