@@ -391,10 +391,54 @@ function SubmittedAssessmentList(props) {
     }
     else {
       // asumsi: jika selectedAssessments.class_assigned sudah ada, 
-      // selectedAssessments pasti sudah ada sehingga selectedAssessments.question_weight juga pasti ada
-      let weights = selectedAssessments.question_weight;
-      let longtextWeights = weights.longtext;
-      let longtextPtTotal = Object.values(longtextWeights).reduce((sum, currentVal) => { return (sum + currentVal) }); 
+      // selectedAssessments pasti sudah ada sehingga selectedAssessments.questions dan selectedAssessments.question_weight juga pasti ada
+      let types = new Set();
+      for (let questionIdx = 0; questionIdx < selectedAssessments.questions.length; questionIdx++) {
+        // tipe soal yg ada: ['radio', 'checkbox', 'shorttext', 'longtext'];
+        types.add(selectedAssessments.questions[questionIdx].type);
+        if (types.size === 4) {
+          break;
+        }
+      }
+
+      const scoresTemplate = {
+        radio: {
+          totalpoint: 0, 
+          totalweight: 0,
+        }, 
+        checkbox: {
+          totalpoint: 0,
+          totalweight: 0,
+        }, 
+        shorttext: {
+          totalpoint: 0,
+          totalweight: 0,
+        }, 
+        longtext: {
+          totalpoint: null,
+          totalweight: 
+            (types.has('longtext')) ? (
+              Object.values(selectedAssessments.question_weight.longtext).reduce((sum, currentVal) => { return (sum + currentVal) })
+            ) : (
+              null
+            )
+        }
+      };
+
+      const columnTemplate = {
+        radio: {
+          root: classes.RadioQst, text: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>)
+        },
+        checkbox: {
+          root: classes.CheckboxQst, text: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>)
+        },
+        shorttext: {
+          root: classes.ShorttextQst, text: (<b>Isian Pendek</b>)
+        },
+        longtext: {
+          root: classes.LongtextQst, text: (<b>Uraian</b>)
+        }
+      }
 
       for (var i = 0; i < selectedAssessments.class_assigned.length; i++) {
         let students_in_class = [];
@@ -405,56 +449,36 @@ function SubmittedAssessmentList(props) {
             // let student_task = all_students[j].tugas
             
             // REVIEW hitung nilai per murid
+            
+            let scores = null;
+            // jika murid mengerjakan assessment ini
             if (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) {
-              let scores = {
-                radioPt: null,
-                radioPtTotal: null,
-                checkboxPt: null,
-                checkboxPtTotal: null,
-                shorttextPt: null,
-                shorttextPtTotal: null,
-                longtextPt: null,
-                longtextPtTotal: longtextPtTotal
-              };              
-              let longtextGrades = selectedAssessments.grades[student._id].longtext;
-              
+              // harus deep cloning
+              scores = JSON.parse(JSON.stringify(scoresTemplate));
+              console.log(scores);
 
-
-              // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
-              // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
-              if (Object.keys(longtextGrades).length === Object.keys(longtextWeights).length) {
-                scores.longtextPt = Object.values(longtextGrades).reduce((sum, currentVal) => { return (sum + currentVal) }); 
-              } // jika tidak, tampilkan pesan belum dinilai
-
-              for (let questionIdx = 0; questionIdx < selectedAssessments.questions.length; questionIdx++) {
-                let types = new Set();
-                
+              if (types.has('longtext')) {                
+                // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
+                // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
+                if (Object.keys(selectedAssessments.grades[student._id].longtext).length === 
+                  Object.keys(selectedAssessments.question_weight.longtex).length) {
+                  scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext).reduce((sum, currentVal) => (sum + currentVal));
+                } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
               }
-
+              
+              let weights = selectedAssessments.question_weight;
               for (let questionIdx = 0; questionIdx < selectedAssessments.questions.length; questionIdx++) {
                 let questionType = selectedAssessments.questions[questionIdx].type;
                 let questionAnswer = selectedAssessments.questions[questionIdx].answer;
                 let studentAnswer = selectedAssessments.submissions[student._id][questionIdx];
 
-                if (studentAnswer) {
+                if (studentAnswer) { // jika murid menjawab soal ini
                   if (questionType === "radio") {
                     if (questionAnswer[0] === studentAnswer[0]) {
-                      if (scores.radioPt === null) {
-                        scores.radioPt = 1 * weights.radio;
-                      } else {
-                        scores.radioPt += 1 * weights.radio;
-                      }
-                    } else {
-                      if (scores.radioPt === null) {
-                        scores.radioPt = 0;
-                      }
+                      scores.radio.totalpoint += 1 * weights.radio;
                     }
 
-                    if (scores.radioPtTotal === null) {
-                      scores.radioPtTotal = 1 * weights.radio;
-                    } else {
-                      scores.radioPtTotal += 1 * weights.radio;
-                    }
+                    scores.radio.totalweight += 1 * weights.radio;
                   } else if (questionType === "checkbox") {
                     let temp_correct = 0;
 
@@ -468,22 +492,10 @@ function SubmittedAssessmentList(props) {
                     });
 
                     if (temp_correct > 0) {
-                      if (scores.checkboxPt === null) {
-                        scores.checkboxPt = temp_correct / questionAnswer.length
-                      } else {
-                        scores.checkboxPt += temp_correct / questionAnswer.length
-                      }
-                    } else {
-                      if (scores.checkboxPt === null) {
-                        scores.checkboxPt = 0;
-                      } // jika checkboxPt sudah ada, tidak ditambahkan apa-apa
+                      scores.checkbox.totalpoint += temp_correct / questionAnswer.length
                     }
 
-                    if (scores.checkboxPtTotal === null) {
-                      scores.checkboxPtTotal = 1 * weights.checkbox;
-                    } else {
-                      scores.checkboxPtTotal += 1 * weights.checkbox;
-                    }
+                    scores.checkbox.totalweight += 1 * weights.checkbox;
                   } else if (questionType === "shorttext") {
                     let temp_correct = 0;
                     for (let answerIdx = 0; answerIdx < questionAnswer.length; answerIdx++) {
@@ -492,58 +504,67 @@ function SubmittedAssessmentList(props) {
                       }
                     }
 
-                    if (scores.shorttextPt === null) {
-                      scores.shorttextPt = temp_correct / questionAnswer.length
-                    } else {
-                      scores.shorttextPt += temp_correct / questionAnswer.length
-                    }
-
-                    if (scores.shorttextPtTotal === null) {
-                      scores.shorttextPtTotal = 1 * weights.shorttext;
-                    } else {
-                      scores.shorttextPtTotal += 1 * weights.shorttext;
-                    }
+                    scores.shorttext.totalpoint += temp_correct / questionAnswer.length
+                    scores.shorttext.totalweight += 1 * weights.shorttext;
                   }
-                } else {
+                } else { // jika murid ga menjawab soal ini
                   if (questionType === "radio") {
-                    if (scores.radioPt === null) {
-                      scores.radioPt = 0;
-                    }
-
-                    if (scores.radioPtTotal === null) {
-                      scores.radioPtTotal = 1 * weights.radio;
-                    } else {
-                      scores.radioPtTotal += 1 * weights.radio;
-                    }
+                    scores.radio.totalweight += 1 * weights.radio;
                   } else if (questionType === "checkbox") {
-                    if (scores.checkboxPt === null) {
-                      scores.checkboxPt = 0;
-                    }
-
-                    if (scores.checkboxPtTotal === null) {
-                      scores.checkboxPtTotal = 1 * weights.radio;
-                    } else {
-                      scores.checkboxPtTotal += 1 * weights.radio;
-                    }
+                    scores.checkbox.totalweight += 1 * weights.checkbox;
                   } else if (questionType === "shorttext") {
-                    if (scores.shorttextPt === null) {
-                      scores.shorttextPt = 0;
-                    }
-
-                    if (scores.shorttextPtTotal === null) {
-                      scores.shorttextPtTotal = 1 * weights.radio;
-                    } else {
-                      scores.shorttextPtTotal += 1 * weights.radio;
-                    }
+                    scores.shorttext.totalweight += 1 * weights.shorttext;
                   }
                 }
-               
               }
+            } // jika murid tidak mengerjakan assessment ini, scores tetap = null
+
+            
+            let columns = [];
+            let c = 0;
+            for (let typeArray of types.entries()) {
+              let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
+              columns.push(
+                <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
+                  <Grid item>
+                    <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
+                      <RadioButtonChecked />
+                    </IconButton>
+                  </Grid>
+                  <Grid item>
+                    <Typography align='center'>
+                      {columnTemplate[type].text}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      {(scores) ? (
+                        (type === 'longtext') ? (
+                          (scores[type].totalpoint !== null) ? (
+                            `${scores[type].totalpoint}/${scores[type].totalweight}`
+                          ) : (
+                            `Belum dinilai`
+                          )
+                        ) : (
+                          `${scores[type].totalpoint}/${scores[type].totalweight}`
+                        )
+                     ) : (
+                      `/${scores[type].totalweight}`
+                     )}               
+                    </Typography>
+                  </Grid>
+                </Grid>
+              );
+              // jika elemen ini bukan elemen terakhir pada set type, tambahkan divider
+              if (c + 1 < types.size) {
+                columns.push(
+                  <Divider orientation="vertical" flexItem />
+                );
+              }
+              c++;
             }
 
-
             // console.log(student_task)
-            // let task_list_on_panel = []
             students_in_class.push(
               <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -563,73 +584,10 @@ function SubmittedAssessmentList(props) {
             </ListItem>
             </ExpansionPanelSummary>
             <Divider />
-            {/* <List>*/}
             {/* ANCHOR ikon soal */}
-                  <Grid container style={{padding: "20px"}} >
-
-                  <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
-                    <Grid item>
-                      <IconButton disabled classes={{ root: classes.RadioQst, disabled: classes.disabled }}>
-                        <RadioButtonChecked />
-                      </IconButton>
-                    </Grid>
-                    <Grid item>
-                      <Typography align='center'>
-                        <b>
-                          Pilihan Ganda <br />(Satu Jawaban)
-                        </b>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography>{4}/{10}</Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Divider orientation="vertical" flexItem />
-
-                  <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
-                    <IconButton disabled classes={{ root: classes.CheckboxQst, disabled: classes.disabled }}>
-                      <CheckBox />
-                    </IconButton>
-                    <Typography align='center' >
-                      <b>
-                        Pilihan Ganda <br />(Banyak Jawaban)
-                        </b>
-                    </Typography>
-                    <Typography>{4}/{10}</Typography>
-                  </Grid>
-
-                  <Divider orientation="vertical" flexItem />
-
-                  <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
-                    <IconButton disabled classes={{ root: classes.ShorttextQst, disabled: classes.disabled }}>
-                      <TextFormat />
-                    </IconButton>
-                    <Typography align='center'>
-                        <b>
-                        Isian Pendek
-                        </b>
-                    </Typography>
-                    <Typography>{4}/{10}</Typography>
-                  </Grid>
-
-                  <Divider orientation="vertical" flexItem />
-
-                  <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
-                    <IconButton disabled classes={{ root: classes.LongtextQst, disabled: classes.disabled }}>
-                      <Subject />
-                    </IconButton>
-                    <Typography align='center'>
-                          <b>
-                        Uraian
-                        </b>
-                    </Typography>
-                    <Typography>{4}/{10}</Typography>
-                  </Grid>
-
-                  </Grid>
-              {/* {task_list_on_panel} */}
-            {/* </List> */}
+            <Grid container style={{padding: "20px"}} >
+              {columns}
+            </Grid>
             <Divider />
             <div className={classes.studentFileListContainer}>
                 {(selectedAssessments && selectedAssessments.grades) ?

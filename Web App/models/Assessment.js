@@ -70,8 +70,9 @@ const AssessmentSchema = new Schema({
     // }
 
     // TODO 
-    // jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades
-    // jika belum dinilai, pasangan tidak ditambahkan  
+    // -jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades.
+    // jika belum dinilai, pasangan tidak ditambahkan.
+    // -jika longtext_grades sudah lengkap, total_grade baru ada
 
     submissions:{
       type: Map,
