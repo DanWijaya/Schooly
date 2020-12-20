@@ -239,6 +239,7 @@ router.post("/submit/:id", (req,res) => {
       }
 
       let correct_count = 0;
+      // REVIEW scoring
       if(grades){
         if(!grades.has(userId)){
           let number_of_gradeable_questions = 0 // Karena Isian dan Esai tidak bisa autograde, maka yang dihitung hanya radio dan checkbox saja.

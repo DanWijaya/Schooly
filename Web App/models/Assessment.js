@@ -41,15 +41,71 @@ const AssessmentSchema = new Schema({
     }],
     posted: { type: Boolean, required: true, default: false},
     grades: {
-      type: Map
+      type: Map,
+      // of: Object
     },
+    // isi grades adalah pasangan <id murid> - <value>.
+    // <value> adalah Object yang memiliki 2 pasangan key-value:
+    // 1) "total_grade" - <nilai dengan range 0-100> 
+    // 2) "longtext_grades" - < Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<nilai dengan range 0-bobot soal> > 
+
+    // contoh value grades:
+    // Map {
+    //   5e9486667f32fa38946dc963: {
+    //     total_grade: 95,
+    //     longtext_grades: {
+    //       0: 10,
+    //       1: 10,
+    //       2: 10,
+    //     }
+    //   },
+    //   5ed4ee415caa50389efaf014: {
+    //     total_grade: 87,
+    //     longtext_grades: {
+    //       0: 0,
+    //       1: 0,
+    //       2: 10,
+    //     }
+    //   },
+    // }
+
+    // TODO 
+    // jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades
+    // jika belum dinilai, pasangan tidak ditambahkan  
+
     submissions:{
       type: Map,
     },
     type: {
       type: String,
       required: true
-    }
+    },
+    // suspect: [ObjectId],
+    // question_weight: {
+    //   radio: Number,
+    //   checkbox: Number,
+    //   shorttext: Number,
+    //   longtext: Object
+    // }
+    
+    
+    // value longtext adalah Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<bobot>
+    // contoh value question_weight:
+    // {
+    //   radio: 5,
+    //   checkbox: 5,
+    //   shorttext: 3,
+    //   longtext: {
+    //     0: 20,
+    //     1: 20,
+    //     2: 20
+    //   }
+    // }
+
+    // TODO 
+    // jika assessment tidak punya suatu tipe soal, value untuk key tipe soal tersebut = null
+    // bobot semua soal uraian harus dipastikan diisi di halaman buat/edit assessment
+
 })
 
 module.exports = Assessment = mongoose.model("assessments", AssessmentSchema);

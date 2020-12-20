@@ -236,7 +236,8 @@ function AssessmentListToolbar(props) {
           {role === "Student"?
             null
           :
-            <Link to="/kuis">
+          // ANCHOR
+            <Link to="/kuis"> 
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
                 <AssignmentIcon className={classes.newAssessmentIconDesktop} />
                 Buat Kuis
@@ -600,22 +601,14 @@ function AssessmentList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-      />
-        <AssessmentListToolbar
-          role={user.role}
-          deleteAssessment={deleteAssessment}
-          classes={classes}
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          rowCount={rows ? rows.length : 0}
-          searchFilter={searchFilter}
-          updateSearchFilter={updateSearchFilter}
-          setSearchBarFocus={setSearchBarFocus}
-          searchBarFocus={searchBarFocus}
+        searchFilter={searchFilter}
+        updateSearchFilter={updateSearchFilter}
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
         />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
+      {/* REVIEW stablesort */}
       {stableSort(rows, getComparator(order, orderBy))
         .map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;
