@@ -190,9 +190,9 @@ class CreateAssessment extends Component {
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
       weights: {
-        radio: 0,
-        checkbox: 0,
-        shorttext: 0,
+        radio: null,
+        checkbox: null,
+        shorttext: null,
       },
       longtextWeight: [null]
     }
@@ -246,6 +246,17 @@ class CreateAssessment extends Component {
     const { questions, weights, longtextWeight } = this.state;
     const { createAssessment , history} = this.props
 
+    let typeCount = {
+      radio: 0,
+      checkbox: 0,
+      shorttext: 0,
+      longtext: 0
+    };
+
+    for (let question of this.state.questions) {
+      typeCount[question.type]++;
+    }
+
     if (this.state.posted) {
       // pengecekan isi soal
       for(var i = 0; i < questions.length; i++){
@@ -270,17 +281,6 @@ class CreateAssessment extends Component {
       }
 
       //pengecekan bobot
-      let typeCount = {
-        radio: 0,
-        checkbox: 0,
-        shorttext: 0,
-        longtext: 0
-      };
-
-      for (let question of this.state.questions) {
-        typeCount[question.type]++;
-      }
-
       let filteredtypeCount = Object.entries(typeCount).filter((pair) => (pair[1] > 0));
       if (filteredtypeCount.length !== 0) {
 
@@ -308,16 +308,21 @@ class CreateAssessment extends Component {
     
     // jika soal dan bobot sudah lengkap dan benar, submit 
     if (invalidQuestionIndex.length === 0 && completeWeight) {
-      let longtext = {};
-      this.state.longtextWeight.forEach((val, idx) => {
-        if (val !== null) {
-          longtext[idx] = Number(val);
-        }
-      })
+      let longtext;
+      if (typeCount.longtext === 0) {
+        longtext = null;
+      } else {
+        longtext = {};
+        this.state.longtextWeight.forEach((val, idx) => {
+          if (val !== null) {
+            longtext[idx] = Number(val);
+          }
+        })
+      }
       let question_weight = {
-        radio: this.state.weights.radio,
-        checkbox: this.state.weights.checkbox,
-        shorttext: this.state.weights.shorttext,
+        radio: (typeCount.radio === 0) ? null :  this.state.weights.radio,
+        checkbox: (typeCount.checkbox === 0) ? null : this.state.weights.checkbox,
+        shorttext: (typeCount.shorttext === 0) ? null : this.state.weights.shorttext,
         longtext: longtext
       }
 

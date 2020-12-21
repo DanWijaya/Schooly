@@ -262,3 +262,11 @@ export const getUjianBySC = (subjectId, classId) => () => {
           throw new Error("getUjianBySC error has occured");
       })
 }
+
+export const updateAssessmentSuspects = (assessmentId, suspects) => {
+  return axios
+    .post(`/api/assessments/updateSuspects/${assessmentId}`, suspects)
+    .catch(() => {
+      throw new Error("updateAssessmentSuspects error has occured");
+    });
+}

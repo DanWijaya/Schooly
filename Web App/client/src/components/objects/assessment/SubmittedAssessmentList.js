@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { getOneAssessment, gradeAssessment } from "../../../actions/AssessmentActions";
+import { getOneAssessment, gradeAssessment, updateAssessmentSuspects } from "../../../actions/AssessmentActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -19,7 +19,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import EditIcon from "@material-ui/icons/Edit";
 import MuiAlert from "@material-ui/lab/Alert";
 
-import { BsFlag } from 'react-icons/bs';
+import { BsFlagFill, BsFlag } from 'react-icons/bs';
 // ANCHOR import
 // const path = require("path");
 
@@ -31,9 +31,9 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
-  studentFileListContainer: {
-    margin: "20px",
-  },
+  // studentFileListContainer: {
+  //   margin: "20px",
+  // },
   personListContainer: {
     display: "flex",
     alignItems: "center",
@@ -176,6 +176,20 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(3),
     marginRight: "7.5px",
   },
+  redFlagIcon: {
+    color: theme.palette.error.main,
+    fontSize: "1.6em",
+    stroke: theme.palette.text.secondary,
+    strokeWidth: '0.6px',
+    strokeLinejoin: "round"
+  },
+  flagIcon: {
+    color: theme.palette.text.secondary,
+    fontSize: "1.6em",
+    // stroke: theme.palette.text.secondary,
+    // strokeWidth: '0.6px',
+    // strokeLinejoin: "round"
+  }
 }));
 
 // ANCHOR classes
@@ -217,27 +231,27 @@ function TabIndex(index) {
 
 function GradeButton(props) {
   const classes = useStyles()
-  const {onGradeAssessment, student_id, grade, student_name} = props
+  const {onGradeAssessment, student_id, kelas} = props
 
   return (
-    // <Button
-    //   variant="contained"
-    //   startIcon={<CheckCircleIcon/>}
-    //   className={classes.checkCircleIcon}
-    //   onClick={() => onGradeAssessment(student_id, student_name, grade)}
-    // >
-    //   Simpan
-    // </Button>
-    <Button
-      variant="contained"
-      startIcon={
-          <EditIcon />
+    <Link to={{
+      pathname: "/lihat-jawaban-kuis",
+      state: {
+        kelas: kelas,
+        id: student_id
       }
-      className={classes.editIcon}
-      onClick={() => onGradeAssessment(student_id, student_name, grade)} // TODO ganti jadi link ke halaman viewanswer + state id murid
-    >
-      Periksa
-    </Button>
+    }}>
+      <Button
+        variant="contained"
+        startIcon={
+          <EditIcon />
+        }
+        className={classes.editIcon}
+        // onClick={() => onGradeAssessment(student_id, student_name, grade)} 
+      >
+        Periksa
+      </Button>
+    </Link>
   )
 }
 
@@ -251,7 +265,7 @@ function SubmittedAssessmentList(props) {
   const { all_students } = props.auth;
   const assessment_id = props.match.params.id;
 
-  console.log(all_students)
+  // console.log(all_students)
 
   const [grade, setGrade] = React.useState(new Map());
   const [gradeStatus, setGradeStatus] = React.useState(new Map());
@@ -259,7 +273,9 @@ function SubmittedAssessmentList(props) {
   const [gradedStudentId, setGradedStudentId] = React.useState(null);
   const [gradedStudentName, setGradedStudentName] = React.useState("");
   const [value, setValue] = React.useState(0);
-
+  const status = React.useRef(false);
+  const [suspects, setSuspects] = React.useState([]);
+ 
   React.useEffect(() => {
     getOneAssessment(assessment_id)
     getStudents()
@@ -267,6 +283,23 @@ function SubmittedAssessmentList(props) {
     getAllSubjects("map")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // TODO stub grade
+  React.useEffect(() => {
+    // console.log(selectedAssessments);
+    if (!Array.isArray(selectedAssessments)) {
+      selectedAssessments.grades = {
+        "5f44d55155cedc284824f5c1": {
+          total_grade: selectedAssessments.grades["5f44d55155cedc284824f5c1"],
+          longtext_grades: {
+            '3': 1
+          }
+        }
+      }
+      setSuspects(selectedAssessments.suspects);
+      status.current = true;
+    }
+  }, [selectedAssessments])
 
   const handleOpenAlert = (id, name) => {
     setOpenAlert(true);
@@ -281,10 +314,27 @@ function SubmittedAssessmentList(props) {
     setOpenAlert(false);
   }
 
-  // Sort Menu
+  // ANCHOR Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("subject");
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("name");
+
+  const rows = React.useRef([]);
+  function createData(_id, name) {
+    return { _id, name };
+  }
+  const assessmentRowItem = (data) => {
+    let newRows = rows.current;
+    newRows.push(
+      createData(
+        data._id,
+        data.name,
+      )
+    )
+    
+    rows.current = newRows;
+  }
+
   const handleOpenSortMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -297,12 +347,7 @@ function SubmittedAssessmentList(props) {
     setOrderBy(property);
   };
   const headCells = [
-    { id: "studentName", numeric: false, disablePadding: true, label: "Nama Murid" }
-    // { id: "assessmenttitle", numeric: false, disablePadding: true, label: "Nama Ujian/Kuis" },
-    // { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    // { id: "start_date", numeric: false, disablePadding: false, label: "Mulai Waktu" },
-    // { id: "end_date", numeric: false, disablePadding: false, label: "Batas Waktu" },
-    // { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
+    { id: "name", numeric: false, disablePadding: true, label: "Nama Murid" }
   ];
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -386,6 +431,21 @@ function SubmittedAssessmentList(props) {
     }
   }
 
+  // ANCHOR fungsi handleflag
+  const handleFlag = (e, studentId) => {
+    e.stopPropagation();
+    let newSuspects = [...suspects];
+    let index = newSuspects.indexOf(studentId);
+    if (index > -1) {
+      newSuspects.splice(index, 1);
+    } else {
+      newSuspects.push(studentId);
+    }
+    updateAssessmentSuspects(assessment_id, newSuspects).then(() => {
+      setSuspects(newSuspects);
+    });
+  }
+
   const listClassTabPanel = () => {
     let TabPanelList = []
     if (!selectedAssessments.class_assigned || !all_students) {
@@ -427,8 +487,7 @@ function SubmittedAssessmentList(props) {
         }
       };
       
-      //ANCHOR columnTemplate
-      const columnTemplate = {
+        const columnTemplate = {
         radio: {
           root: classes.RadioQst, text: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>), icon: (<RadioButtonChecked/>)
         },
@@ -445,27 +504,39 @@ function SubmittedAssessmentList(props) {
 
       for (var i = 0; i < selectedAssessments.class_assigned.length; i++) {
         let students_in_class = [];
+
+        let all_student_object = {};
+        rows.current = []
         for (var j = 0; j < all_students.length; j++) {
-          // check if the id of the class is the same or not (means student is inside)
           if (all_students[j].kelas === selectedAssessments.class_assigned[i]) {
-            let student = all_students[j]
+            let student = all_students[j];
+            assessmentRowItem(student);
+            all_student_object[student._id] = student;
+          }
+        }
+
+        let sortedRows = stableSort(rows.current, getComparator(order, orderBy));
+        // for (var j = 0; j < all_students.length; j++) {
+        for (let row of sortedRows) {
+          // check if the id of the class is the same or not (means student is inside)
+          // if (all_students[j].kelas === selectedAssessments.class_assigned[i]) {
+            // let student = all_students[j]
+          let student = all_student_object[row._id];
+
             // let student_task = all_students[j].tugas
             
-            // REVIEW hitung nilai per murid
-            
+            // ANCHOR hitung nilai per murid
             let scores = null;
             // jika murid mengerjakan assessment ini
             if (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) {
               // harus deep cloning
               scores = JSON.parse(JSON.stringify(scoresTemplate));
-              console.log(scores);
 
               if (types.has('longtext')) {                
                 // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
                 // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
-                if (Object.keys(selectedAssessments.grades[student._id].longtext).length === 
-                  Object.keys(selectedAssessments.question_weight.longtex).length) {
-                  scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext).reduce((sum, currentVal) => (sum + currentVal));
+                if (Object.keys(selectedAssessments.grades[student._id].longtext_grades).length === Object.keys(selectedAssessments.question_weight.longtext).length) {
+                  scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext_grades).reduce((sum, currentVal) => (sum + currentVal));
                 } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
               }
               
@@ -524,107 +595,129 @@ function SubmittedAssessmentList(props) {
 
             
             let columns = [];
-            let c = 0;
-            for (let typeArray of types.entries()) {
-              let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
-              columns.push(
-                <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
-                  <Grid item>
-                    <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
-                      {columnTemplate[type].icon}
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <Typography align='center'>
-                      {columnTemplate[type].text}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography>
-                      {(scores) ? (
-                        (type === 'longtext') ? (
+            if (scores) {
+              let c = 0;
+              for (let typeArray of types.entries()) {
+                let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
+                columns.push(
+                  <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
+                    <Grid item>
+                      <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
+                        {columnTemplate[type].icon}
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <Typography align='center'>
+                        {columnTemplate[type].text}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography>
+                        {(type === 'longtext') ? (
                           (scores[type].totalpoint !== null) ? (
                             `${scores[type].totalpoint}/${scores[type].totalweight}`
                           ) : (
-                            `Belum dinilai`
-                          )
+                              `Belum dinilai`
+                            )
                         ) : (
-                          `${scores[type].totalpoint}/${scores[type].totalweight}`
-                        )
-                     ) : (
-                      `/${scores[type].totalweight}`
-                     )}               
-                    </Typography>
+                            `${scores[type].totalpoint}/${scores[type].totalweight}`
+                        )}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-              );
-              // jika elemen ini bukan elemen terakhir pada set type, tambahkan divider
-              if (c + 1 < types.size) {
-                columns.push(
-                  <Divider orientation="vertical" flexItem />
                 );
+                // jika elemen ini bukan elemen terakhir pada set type, tambahkan divider
+                if (c + 1 < types.size) {
+                  columns.push(
+                    <Divider orientation="vertical" flexItem />
+                  );
+                }
+                c++;
               }
-              c++;
+            } else {
+              columns.push(<Typography variant="h5" color="textSecondary">Belum mengerjakan</Typography>)
             }
 
             // console.log(student_task)
             students_in_class.push(
               <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <ListItem className={classes.personListContainer}>
-                <ListItemAvatar>
-                  {!student.avatar ? <Avatar style={{marginRight: "10px"}}/> :
-                  <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{marginRight: "10px"}}/>}
-                </ListItemAvatar>
-                <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
-                 secondary={!selectedAssessments.grades ? "Belum Dinilai" : !gradeStatus.has(student._id) && selectedAssessments.grades[student._id] === undefined ? "Belum Dinilai" : "Telah Dinilai"}/>
-                  {/* <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                        <EditIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction> */}
-                    <Typography>Total Nilai {selectedAssessments.grades[student._id]} <BsFlag /></Typography>
-            </ListItem>
-            </ExpansionPanelSummary>
-            <Divider />
-            {/* ANCHOR ikon soal */}
-            <Grid container style={{padding: "20px"}} >
-              {columns}
-            </Grid>
-            <Divider />
-            <div className={classes.studentFileListContainer}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <ListItem className={classes.personListContainer}>
+                    <ListItemAvatar>
+                      {!student.avatar ? <Avatar style={{ marginRight: "10px" }} /> :
+                        <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{ marginRight: "10px" }} />}
+                    </ListItemAvatar>
+                    <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
+                      secondary={!selectedAssessments.grades ? "Belum Dinilai" : !gradeStatus.has(student._id) && selectedAssessments.grades[student._id] === undefined ? "Belum Dinilai" : "Telah Dinilai"} />
+                    {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
+                      <div style={{display: "flex"}}>
+                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center",}}>
+                          <Grid item>
+                            <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
+                          </Grid>
+                        </div>
+                      {/* ANCHOR elemen flag */}
+                        <Grid item alignItem="center">
+                          <Grid item>
+                            <IconButton 
+                              onClick={(e) => {handleFlag(e, student._id)}}
+                            >
+                              {(suspects.includes(student._id)) ? (
+                                <BsFlagFill className={classes.redFlagIcon} />
+                              ) : (
+                                <BsFlag className={classes.flagIcon} />
+                              )}
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      </div>
+                    ) : (
+                      null
+                    )}
+                  </ListItem>
+                </ExpansionPanelSummary>
+                <Divider />
+                {/* ANCHOR elemen icon soal */}
+                <Grid container style={{ padding: "20px" }} justify="center">
+                  {columns}
+                </Grid>
                 {(selectedAssessments && selectedAssessments.grades) ?
-                selectedAssessments.grades[student._id] !== undefined ?
-                  <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
-                    {/* <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
-                      <TextField
-                        defaultValue={grade.has(student._id) || selectedAssessments.grades === null ? grade.get(student._id) : selectedAssessments.grades[student._id]}
-                        onChange={(e) => {handleChangeGrade(e, student._id)}}
-                        inputProps={{
-                          style: {
-                            borderBottom: "none",
-                            boxShadow: "none",
-                            margin: "0px",
-                            width: "35px"
-                          }
-                        }}
-                        InputProps={{
-                          endAdornment: "/ 100"
-                        }}
-                      />
-                    </div> */}
-                    <GradeButton onGradeAssessment={onGradeAssessment} student_id={student._id} student_name ={student.name} grade={grade}/>
-                </div> 
-                : 
-                null
-                :
-                null
-              }
-            </div>
-             </ExpansionPanel>
-            )
-          }
+                  selectedAssessments.grades[student._id] !== undefined ?
+                    <div>
+                      <Divider />
+
+                      <Grid container style={{ padding: "20px" }} justify="flex-end" alignItems="center" >
+                          {/* <TextField
+                                defaultValue={grade.has(student._id) || selectedAssessments.grades === null ? grade.get(student._id) : selectedAssessments.grades[student._id]}
+                                onChange={(e) => {handleChangeGrade(e, student._id)}}
+                                inputProps={{
+                                  style: {
+                                    borderBottom: "none",
+                                    boxShadow: "none",
+                                    margin: "0px",
+                                    width: "35px"
+                                  }
+                                }}
+                                InputProps={{
+                                  endAdornment: "/ 100"
+                                }}
+                              />
+                            </div> */}
+                          <GradeButton student_id={student._id} kelas={selectedAssessments.class_assigned[i]} />
+                      </Grid>
+                    </div>
+                    :
+                    null
+                  :
+                  null
+                }
+              </ExpansionPanel>
+          )
         }
+
         TabPanelList.push(
         <TabPanel value={value} index={i}>
           {students_in_class}
@@ -653,7 +746,6 @@ function SubmittedAssessmentList(props) {
           <b>{selectedAssessments.name}</b>
         </Typography> */}
         
-        {/* ------------------------------------------------------------------------------------------------ */}
         <Grid container spacing={2} className={classes.content}>
           <Grid item xs={12} md={7}>
             <Typography variant="h5" gutterBottom>
@@ -665,7 +757,7 @@ function SubmittedAssessmentList(props) {
             <Typography color="primary" gutterBottom style={{marginTop: "20px"}}>
               Deskripsi Tugas:
             </Typography>
-            <Typography>
+            <Typography align="justify">
               {selectedAssessments.description}
             </Typography>
           </Grid>
@@ -677,29 +769,17 @@ function SubmittedAssessmentList(props) {
               <Typography variant="body2" className={classes.endDateText}>
                 Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
               </Typography>
-              
-              {/* <Typography variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
-                Nilai Maksimum: 100
-              </Typography> */}
             </Hidden>
             <Hidden smDown implementation="css">
-              {/* <Grid item> */}
-                <Typography align="right" variant="body2" className={classes.startDateText}>
-                  Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
-                </Typography>
-              {/* </Grid> */}
-              {/* <Grid item> */}
-                <Typography align="right" variant="body2" className={classes.endDateText}>
-                  Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
-                </Typography>
-              {/* </Grid> */}
-              <Grid container item justify='flex-end' style={{ marginTop: "20px" }}>
-                {/* <Typography align="right" variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
-                Nilai Maksimum: 100
-              </Typography> */}
+              <Typography align="right" variant="body2" className={classes.startDateText}>
+                Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+              </Typography>
+              <Typography align="right" variant="body2" className={classes.endDateText}>
+                Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+              </Typography>
 
-                {/* TODO ganti link jadi ke halaman viewanswer */}
-                <Link to="/">
+              <Grid container item justify='flex-end' style={{ marginTop: "20px" }}>
+                <Link to="/lihat-jawaban-kuis">
                   <Fab size="medium" variant="extended" className={classes.editFab}>
                     <EditIcon className={classes.editIconDesktop} />
                     Periksa
@@ -748,15 +828,13 @@ function SubmittedAssessmentList(props) {
                 </Menu>
               </Grid>
 
-              
-             
-
             </Hidden>
           </Grid>
         </Grid>
         {listClassTab()}
       </Paper>
-      {listClassTabPanel()}
+      {/* TODO stub  */}
+      {(status.current) ? listClassTabPanel() : null}
     </div>
   )
 };

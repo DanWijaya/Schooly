@@ -46,6 +46,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
+// ANCHOR stablesort function
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -236,7 +237,7 @@ function AssessmentListToolbar(props) {
           {role === "Student"?
             null
           :
-          // ANCHOR
+          // ANCHOR contoh tombol round edge
             <Link to="/kuis"> 
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
                 <AssignmentIcon className={classes.newAssessmentIconDesktop} />
@@ -461,6 +462,7 @@ function AssessmentList(props) {
     setOpenDialog(false)
   }
 
+  // ANCHOR rows
   var rows = [];
   const assessmentRowItem = (data) => {
     rows.push(
@@ -608,7 +610,7 @@ function AssessmentList(props) {
         />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-      {/* REVIEW stablesort */}
+      {/* REVIEW stablesort element*/}
       {stableSort(rows, getComparator(order, orderBy))
         .map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;

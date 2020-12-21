@@ -401,13 +401,27 @@ router.get("/getkuisbysc/:subjectId&:classId", (req, res) => {
 })
 
 router.get("/getujianbysc/:subjectId&:classId", (req, res) => {
-  Assessment.find({subject: req.params.subjectId, class_assigned: {$elemMatch: {$eq: req.params.classId}}, type: "Ujian"}).then((ujian) => {
+Assessment.find({subject: req.params.subjectId, class_assigned: {$elemMatch: {$eq: req.params.classId}}, type: "Ujian"}).then((ujian) => {
     if (!ujian) {
       return res.status(200).json("Belum ada ujian");
     } else {
       return res.json(ujian);
     }
   });
+})
+
+router.post("/updateSuspects/:id", (req, res) => {
+  Assessment.findById(req.params.id, (err, assessmentData) => {
+    if (!assessmentData) {
+      return res.status(404).send("Assessment data is not found");
+    } else {
+      assessmentData.suspects = req.body;
+      assessmentData
+        .save()
+        .then(() => res.json(req.body))
+        .catch(() => res.status(400).send(`Unable to update suspects attribute for assessment ${id}`));
+    }
+  })
 })
 
 module.exports = router;

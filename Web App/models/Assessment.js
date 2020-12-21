@@ -81,15 +81,13 @@ const AssessmentSchema = new Schema({
       type: String,
       required: true
     },
-    suspect: [ObjectId],
+    suspects: [ObjectId],
     question_weight: {
       radio: Number,
       checkbox: Number,
       shorttext: Number,
       longtext: Object
     }
-    
-    
     // value longtext adalah Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<bobot>
     // contoh value question_weight:
     // {
@@ -103,9 +101,9 @@ const AssessmentSchema = new Schema({
     //   }
     // }
 
-    // TODO 
-    // jika assessment tidak punya suatu tipe soal, value untuk key tipe soal tersebut = null
-    // bobot semua soal uraian harus dipastikan diisi di halaman buat/edit assessment
+    // TODO
+    // (di CreateAssessment.js, di fungsi onSubmit) jika assessment tidak punya suatu tipe soal, value untuk key tipe soal tersebut = null
+    // (di CreateAssessment.js, di fungsi onSubmit) bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai 0 
 
 })
 
