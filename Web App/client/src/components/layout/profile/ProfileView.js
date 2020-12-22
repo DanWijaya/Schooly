@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
+import moment from "moment";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
@@ -189,7 +190,7 @@ function ProfileView(props) {
   
   const { avatar, nama, role, viewable_section, jenis_kelamin,
     email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
-    kelas, admin, id } = location.state;
+    kelas, admin, id, tanggal_lahir } = location.state;
   document.title = `Schooly | ${nama}`
 
   return (
@@ -273,8 +274,8 @@ function ProfileView(props) {
                     <Divider variant="inset" />
                     <ProfileDataItem
                       profile_data_icon={<CakeIcon />}
-                      profile_data_category="Role"
-                      profile_data_info={role}
+                      profile_data_category="Tanggal Lahir"
+                      profile_data_info={moment(tanggal_lahir).locale("id").format("DD-MM-YYYY")}
                     />
                     <Divider variant="inset" />
                     <ProfileDataItem

@@ -511,7 +511,8 @@ function ViewClass(props) {
                                     email: walikelas.email,
                                     phone: walikelas.phone,
                                     emergency_phone : walikelas.emergency_phone,
-                                    admin: false
+                                    admin: false,
+                                    tanggal_lahir: walikelas.tanggal_lahir
                                   }
                                 }}>
                                   <IconButton
@@ -567,7 +568,8 @@ function ViewClass(props) {
                               ket: student.ket_non_teknis,
                               cita: student.cita_cita,
                               uni: student.uni_impian,
-                              id: student._id
+                              id: student._id,
+                              tanggal_lahir: student.tanggal_lahir
                             }
                           }}>
                             <IconButton
@@ -750,6 +752,7 @@ function ViewClass(props) {
                                     email: walikelas.email,
                                     phone: walikelas.phone,
                                     emergency_phone : walikelas.emergency_phone,
+                                    tanggal_lahir: walikelas.tanggal_lahir
                                   }
                                 }}>
                                   <IconButton
@@ -798,7 +801,8 @@ function ViewClass(props) {
                                         email: student.email,
                                         phone: student.phone,
                                         emergency_phone : student.emergency_phone,
-                                        id: student._id
+                                        id: student._id,
+                                        tanggal_lahir: student.tanggal_lahir
                                       }
                                     }}>
                                       <IconButton
