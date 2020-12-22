@@ -482,7 +482,7 @@ function ViewTaskStudent(props) {
       >
         <Grid item xs={12} md={8}>
           <Paper className={classes.paperBox}>
-            <Grid container spacing={2}>
+            <Grid container spacing={6}>
               <Grid item xs={12} md={7}>
                 <Typography variant="h4">
                   {tasksCollection.name}
@@ -497,7 +497,7 @@ function ViewTaskStudent(props) {
               <Grid item xs={12} md={5}>
                 <Hidden mdUp implementation="css">
                   <Typography variant="body2" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm.ss")}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     Nilai Maksimum: 100
@@ -505,7 +505,7 @@ function ViewTaskStudent(props) {
                 </Hidden>
                 <Hidden smDown implementation="css">
                   <Typography variant="body2" align="right" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm.ss")}
                   </Typography>
                   <Typography variant="body2" align="right" color="textSecondary">
                     Nilai Maksimum: 100
@@ -513,31 +513,35 @@ function ViewTaskStudent(props) {
                 </Hidden>
               </Grid>
             </Grid>
-            <div style={{marginTop: "30px"}}>
-              <Typography color="primary" gutterBottom>
-                Deskripsi Tugas:
-              </Typography>
-              <Typography>
-                {tasksCollection.description}
-              </Typography>
-            </div>
-            <div style={{marginTop: "30px"}}>
-              <Typography color="primary" gutterBottom>
-                Lampiran Berkas:
-              </Typography>
-              <Grid container spacing={1}>
-                {!tasksCollection.lampiran ? null :
-                tasksCollection.lampiran.map((lampiran) => (
-                  <LampiranFile
-                    file_id={lampiran.id}
-                    onPreviewFile ={onPreviewFile}
-                    onDownloadFile ={onDownloadFile}
-                    filename={lampiran.filename}
-                    filetype={fileType(lampiran.filename)}
-                  />
-                ))}
+            {!tasksCollection.description ? null :
+              <Grid item style={{marginTop: "40px"}}>
+                <Typography color="primary" gutterBottom>
+                  Deskripsi Tugas:
+                </Typography>
+                <Typography>
+                  {tasksCollection.description}
+                </Typography>
               </Grid>
-            </div>
+            }
+            {(!tasksCollection.lampiran || tasksCollection.lampiran.length === 0) ? null :
+              <div style={{marginTop: "30px"}}>
+                <Typography color="primary" gutterBottom>
+                  Lampiran Berkas:
+                </Typography>
+                <Grid container spacing={1}>
+                  {!tasksCollection.lampiran ? null :
+                  tasksCollection.lampiran.map((lampiran) => (
+                    <LampiranFile
+                      file_id={lampiran.id}
+                      onPreviewFile ={onPreviewFile}
+                      onDownloadFile ={onDownloadFile}
+                      filename={lampiran.filename}
+                      filetype={fileType(lampiran.filename)}
+                    />
+                  ))}
+                </Grid>
+              </div>
+            }
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>

@@ -98,9 +98,12 @@ function TaskListToolbar(props) {
   
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">
-        Daftar Tugas
-      </Typography>
+      <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+        <AssignmentIcon className={classes.titleIcon} fontSize="large"/>
+        <Typography variant="h4">
+          Daftar Tugas
+        </Typography>
+      </div>
       <div style={{display: "flex"}}>
         <Hidden xsDown implementation="css">
           <TextField
@@ -134,75 +137,75 @@ function TaskListToolbar(props) {
                 </InputAdornment>)
             }}
           />
-      </Hidden>
-      <div style={{display: "flex", alignItems: "center"}}>
-        <Hidden smUp implementation="css">
-          {role === "Student" ?
-            null
-          :
-            <LightTooltip title="Buat Tugas">
+        </Hidden>
+        <div style={{display: "flex", alignItems: "center"}}>
+          <Hidden smUp implementation="css">
+            {role === "Student" ?
+              null
+            :
+              <LightTooltip title="Buat Tugas">
+                <Link to="/buat-tugas">
+                  <Fab size="small" className={classes.newTaskButton}>
+                    <AssignmentIcon className={classes.newTaskIconMobile} />
+                  </Fab>
+                </Link>
+              </LightTooltip>
+            }
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            {role === "Student" ?
+              null
+            :
               <Link to="/buat-tugas">
-                <Fab size="small" className={classes.newTaskButton}>
-                  <AssignmentIcon className={classes.newTaskIconMobile} />
+                <Fab size="medium" variant="extended" className={classes.newTaskButton}>
+                  <AssignmentIcon className={classes.newTaskIconDesktop} />
+                  Buat Tugas
                 </Fab>
               </Link>
-            </LightTooltip>
-          }
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          {role === "Student" ?
-            null
-          :
-            <Link to="/buat-tugas">
-              <Fab size="medium" variant="extended" className={classes.newTaskButton}>
-                <AssignmentIcon className={classes.newTaskIconDesktop} />
-                Buat Tugas
-              </Fab>
-            </Link>
-          }
-        </Hidden>
-        <LightTooltip title="Urutkan Tugas">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-            <SortIcon />
-          </IconButton>
-        </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
+            }
+          </Hidden>
+          <LightTooltip title="Urutkan Tugas">
+            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+              <SortIcon />
+            </IconButton>
+          </LightTooltip>
+          <Menu
+            keepMounted
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseSortMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            {headCells.map((headCell, i) => (
+              <MenuItem
+                key={headCell.id}
+                sortDirection={orderBy === headCell.id ? order : false}
               >
-                {headCell.label}
-                {orderBy === headCell.id ?
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
-                  </span>
-                  : null
-                }
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu>
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ?
+                    <span className={classes.visuallyHidden}>
+                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    </span>
+                    : null
+                  }
+                </TableSortLabel>
+              </MenuItem>
+            ))}
+          </Menu>
+        </div>
       </div>
-    </div>
     </div>
   );
 };
@@ -313,6 +316,17 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
+  titleIcon: {
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    boxShadow: theme.shadows[0],
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+      cursor: "default"
+    },
+    marginRight: "10px"
+  }
 }));
 
 function TaskList(props) {

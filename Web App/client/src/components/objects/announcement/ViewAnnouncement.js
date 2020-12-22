@@ -21,14 +21,16 @@ const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
     margin: "auto",
     maxWidth: "1000px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     padding: "10px",
   },
   paper: {
-    padding: "30px",
+    padding: "20px",
+    marginBottom: "10px",
   },
   listItemPaper: {
     marginBottom: "10px"
@@ -89,6 +91,9 @@ const useStyles = makeStyles((theme) => ({
   },
   otherFileTypeIcon: {
     backgroundColor: "#808080",
+  },
+  deadlineWarningText: {
+    color: theme.palette.warning.main,
   },
 }));
 
@@ -255,7 +260,7 @@ function ViewAnnouncement(props) {
         deleteItem={() => { onDeleteAnnouncement(announcement_id)}}
       />
       <Paper className={classes.paper}>
-        <Grid container direction="column" spacing={3}>
+        <Grid container direction="column" spacing={6}>
           <Grid item container direction="row">
             <Grid item xs={12} md={6}>
               <ListItemText
@@ -265,8 +270,8 @@ function ViewAnnouncement(props) {
                   </Typography>
                 }
                 secondary={
-                  <Typography variant="h6" color="textSecondary">
-                    {!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id) ?  "" : retrieved_users.get(selectedAnnouncements.author_id).name }
+                  <Typography variant="body2" color="textSecondary" style={{marginTop: "10px"}}>
+                    Oleh : <b>{!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id) ?  "" : retrieved_users.get(selectedAnnouncements.author_id).name }</b>
                   </Typography>
                 }
               />
@@ -274,45 +279,51 @@ function ViewAnnouncement(props) {
             <Grid item xs={12} md={6}>
               <Hidden mdUp implementation="css">
                 <ListItemText
-                  primary={`Tanggal diumumkan: ${moment(selectedAnnouncements.date_announced).locale("id").format("DD-MM-YYYY")}`}
-                  secondary={`Pukul: ${moment(selectedAnnouncements.date_announced).locale("id").format("HH:mm:ss")}`}
+                  primary={
+                    <Typography variant="body2" className={classes.deadlineWarningText}>
+                      Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                    </Typography>
+                  }
                 />
               </Hidden>
               <Hidden smDown implementation="css">
                 <ListItemText
                   align="right"
-                  primary={`Tanggal diumumkan: ${moment(selectedAnnouncements.date_announced).locale("id").format("DD-MM-YYYY")}`}
-                  secondary={`Pukul: ${moment(selectedAnnouncements.date_announced).locale("id").format("HH:mm:ss")}`}
+                  primary={
+                    <Typography variant="body2" className={classes.deadlineWarningText}>
+                      Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                    </Typography>
+                  }
                 />
               </Hidden>
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="h6" color="primary" gutterBottom>
+            <Typography color="primary" gutterBottom>
               Deskripsi:
             </Typography>
             <Typography variant="body1">
             {selectedAnnouncements.description}
             </Typography>
           </Grid>
-          <Grid item>
-            <Typography variant="h6" color="primary" gutterBottom>
-              Lampiran Berkas:
-            </Typography>
-            <Grid item container spacing={1}>
-              {!selectedAnnouncements.lampiran ? null
-              :
-              selectedAnnouncements.lampiran.map((lampiran) => (
-                <LampiranFile
-                  file_id={lampiran.id}
-                  onPreviewFile={onPreviewFile}
-                  onDownloadFile ={onDownloadFile}
-                  filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}
-                />
-              ))}
+          {(!selectedAnnouncements.lampiran || selectedAnnouncements.lampiran.length === 0) ? null :
+            <Grid item>
+              <Typography color="primary" gutterBottom>
+                Lampiran Berkas:
+              </Typography>
+              <Grid item container spacing={1}>
+                {selectedAnnouncements.lampiran.map((lampiran) => (
+                  <LampiranFile
+                    file_id={lampiran.id}
+                    onPreviewFile={onPreviewFile}
+                    onDownloadFile ={onDownloadFile}
+                    filename={lampiran.filename}
+                    filetype={fileType(lampiran.filename)}
+                  />
+                ))}
+              </Grid>
             </Grid>
-          </Grid>
+          }
         </Grid>
       </Paper>
       { user.role === "Admin" || user.id === selectedAnnouncements.author_id? // kalau studentnya ketua kelas yang buat pengumumannya

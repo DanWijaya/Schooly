@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     padding: "10px",
   },
   content: {
@@ -194,16 +197,16 @@ function ViewAssessmentTeacher(props) {
         <Grid container direction="column" spacing={3}>
           <Grid item>
             <Paper className={classes.content}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={7}>
-                  <Typography variant="h5" gutterBottom>
-                    <b>{selectedAssessments.name}</b>
+              <Grid container spacing={6}>
+                <Grid item xs={12} md={7} spacing={8}>
+                  <Typography variant="h4" gutterBottom>
+                    {selectedAssessments.name}
                   </Typography>
                   <Typography variant="caption" color="textSecondary">
                     <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
                   </Typography>
-                  <Typography color="primary" gutterBottom style={{marginTop: "20px"}}>
-                    Deskripsi Tugas:
+                  <Typography color="primary" gutterBottom style={{marginTop: "30px"}}>
+                    Deskripsi Kuis/Ujian:
                   </Typography>
                   <Typography>
                     {selectedAssessments.description}
@@ -212,10 +215,10 @@ function ViewAssessmentTeacher(props) {
                 <Grid item xs={12} md={5} spacing={2}>
                   <Hidden mdUp implementation="css">
                     <Typography variant="body2" className={classes.startDateText}>
-                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
                     </Typography>
                     <Typography variant="body2" className={classes.endDateText}>
-                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
                       Nilai Maksimum: 100
@@ -223,10 +226,10 @@ function ViewAssessmentTeacher(props) {
                   </Hidden>
                   <Hidden smDown implementation="css">
                     <Typography align="right" variant="body2" className={classes.startDateText}>
-                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
                     </Typography>
                     <Typography align="right" variant="body2" className={classes.endDateText}>
-                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
                     </Typography>
                     <Typography align="right" variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
                       Nilai Maksimum: 100

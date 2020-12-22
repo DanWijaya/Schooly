@@ -280,7 +280,7 @@ console.log(all_classes_map)
           <Grid item xs={12} md={5}>
             <Hidden mdUp implementation="css">
               <Typography variant="body2" className={classes.deadlineWarningText} gutterBottom>
-                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Nilai Maksimum: 100
@@ -288,7 +288,7 @@ console.log(all_classes_map)
             </Hidden>
             <Hidden smDown implementation="css" style={{display: "flex"}}>
               <Typography variant="body2" align="right" className={classes.deadlineWarningText} gutterBottom>
-                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
               </Typography>
               <Typography variant="body2" align="right" color="textSecondary">
                 Nilai Maksimum: 100
@@ -311,32 +311,35 @@ console.log(all_classes_map)
               })}
             </Typography>
           </Grid>
-
-          <Grid item xs={12} style={{marginTop: "30px"}}>
-            <Typography color="primary" gutterBottom>
-              Deskripsi Tugas:
-            </Typography>
-            <Typography>
-              {tasksCollection.description}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} style={{marginTop: "30px"}}>
-            <Typography color="primary" gutterBottom>
-              Lampiran Berkas:
-            </Typography>
-            <Grid container spacing={1}>
-            {!tasksCollection.lampiran ? null :
-              tasksCollection.lampiran.map((lampiran) => (
-                <LampiranFile
-                  file_id={lampiran.id}
-                  onPreviewFile ={onPreviewFile}
-                  onDownloadFile ={onDownloadFile}
-                  filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}
-                />
-              ))}
+          {!tasksCollection.description ? null :
+            <Grid item xs={12} style={{marginTop: "30px"}}>
+              <Typography color="primary" gutterBottom>
+                Deskripsi Tugas:
+              </Typography>
+              <Typography>
+                {tasksCollection.description}
+              </Typography>
             </Grid>
-          </Grid>
+          }
+          {(!tasksCollection.lampiran || tasksCollection.lampiran.length === 0) ? null :
+            <Grid item xs={12} style={{marginTop: "30px"}}>
+              <Typography color="primary" gutterBottom>
+                Lampiran Berkas:
+              </Typography>
+              <Grid container spacing={1}>
+              {
+                tasksCollection.lampiran.map((lampiran) => (
+                  <LampiranFile
+                    file_id={lampiran.id}
+                    onPreviewFile ={onPreviewFile}
+                    onDownloadFile ={onDownloadFile}
+                    filename={lampiran.filename}
+                    filetype={fileType(lampiran.filename)}
+                  />
+                ))}
+              </Grid>
+            </Grid>
+          }
         </Grid>
       </Paper>
       <Grid container spacing={2} justify="flex-end" alignItems="center">

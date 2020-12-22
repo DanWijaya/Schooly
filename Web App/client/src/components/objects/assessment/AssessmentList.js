@@ -22,6 +22,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { BsClipboardData } from "react-icons/bs";
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -106,15 +107,21 @@ function AssessmentListToolbar(props) {
           {searchBarFocus ?
             null 
             :
-            <Typography variant="h4">
-              Daftar Kuis
-            </Typography>
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <BsClipboardData className={classes.titleIcon} fontSize="large"/>
+              <Typography variant="h4">
+                Daftar Kuis
+              </Typography>
+            </div>  
           }
         </Hidden>
         <Hidden xsDown implementation="css">
-          <Typography variant="h4">
-            Daftar Kuis
-          </Typography>
+          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <BsClipboardData className={classes.titleIcon} fontSize="large"/>
+            <Typography variant="h4">
+              Daftar Kuis
+            </Typography>
+          </div>  
         </Hidden>
         <Hidden smUp implementation="css">
           {searchBarFocus ? 
@@ -427,6 +434,12 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.button.main,
     },
+  },
+  titleIcon: {
+    fontSize: "28px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    marginRight: "10px"
   }
 }));
 
@@ -585,11 +598,11 @@ function AssessmentList(props) {
        >
          <div style={{padding: "20px"}}>
             <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
-            <Typography variant="h5" align="center" color="primary" style={{marginTop: "10px"}}>
+            <Typography variant="h5" align="center" color="primary">
               {currentDialogInfo.subject}
             </Typography>
-            <Typography variant="subtitle1" align="center">Waktu Mulai : {currentDialogInfo.start_date}</Typography>
-            <Typography variant="subtitle1" align="center">Waktu Selesai : {currentDialogInfo.end_date}</Typography>
+            <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
+            <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
             <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
               Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
             </Typography>
@@ -727,7 +740,7 @@ function AssessmentList(props) {
                   button component="a"
                   variant="outlined"
                   className={classes.assessmentPaper}
-                  onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD/MMM/YYYY - HH:mm"), moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm"))}
+                  onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH:mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH:mm"))}
                 >
                   <div>
                     <Typography variant="h6" id={labelId}>

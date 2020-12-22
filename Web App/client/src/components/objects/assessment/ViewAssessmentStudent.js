@@ -13,9 +13,11 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import moment from "moment";
 import "moment/locale/id";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,6 +104,15 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.dark,
       color: "white",
     },
+  },
+  submittedButton: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "5px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
   },
 }));
 
@@ -418,9 +429,12 @@ function ViewAssessmentStudent(props) {
     if(submissions){
       if(submissions[user.id]){
         return(
-          <Typography variant="h6" align="center">
-            TELAH DIKUMPULKAN
-          </Typography>
+          <Paper className={classes.submittedButton}>
+            <CheckCircleOutlineIcon/>
+            <Typography variant="button" style={{marginLeft: "5px"}}>
+              TELAH DIKUMPULKAN
+            </Typography>
+          </Paper>
         )
       }
     }
@@ -640,7 +654,7 @@ function ViewAssessmentStudent(props) {
             <Paper>
               <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
                 <Grid item>
-                  <Typography variant="h6" align="center">
+                  <Typography variant="h6" align="center" color="primary">
                     {all_subjects_map.get(selectedAssessments.subject)}
                   </Typography>
                   <Typography variant="h4" align="center" gutterBottom>

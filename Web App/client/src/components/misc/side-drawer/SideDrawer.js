@@ -11,6 +11,7 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import EventIcon from "@material-ui/icons/Event";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { HiClipboardList } from "react-icons/hi";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboardTeacher, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
 
@@ -116,7 +117,8 @@ function DrawerContent(props) {
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
+      ["/daftar-kuis", <HiClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
+      ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
     ]
     if (user.role === "Teacher") {
       ListItemContents.push(

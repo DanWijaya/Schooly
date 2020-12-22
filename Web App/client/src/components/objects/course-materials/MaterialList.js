@@ -96,9 +96,7 @@ function MaterialListToolbar(props) {
   return (
     <div className={classes.toolbar}>
       <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-        <Fab className={classes.titleIcon} size="small" disabled>
-          <MenuBookIcon/>
-        </Fab>
+        <MenuBookIcon className={classes.titleIcon} fontSize="large"/>
         <Typography variant="h4">
           Daftar Materi
         </Typography>
@@ -314,10 +312,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   titleIcon: {
-    '&$disabled': {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    }
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    boxShadow: theme.shadows[0],
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+      cursor: "default"
+    },
+    marginRight: "10px"
   }
 }));
 

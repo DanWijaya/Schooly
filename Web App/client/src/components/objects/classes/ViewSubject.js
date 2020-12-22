@@ -30,8 +30,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
   },
   subjectCardPaper: {
-    padding: "15px",
     paddingBottom: "40px",
+    padding:"20px",
+    background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)",
+    paddingLeft: "30px"
   },
   expansionPanelList: {
     marginLeft: "20px",
@@ -52,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     minHeight: "70px"
+  },
+  subtitleColor: {
+    color: "rgba(255, 255, 255, 0.7)"
   }
 }));
 
@@ -206,11 +211,11 @@ function ViewSubject(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.subjectCardPaper}>
-        <Typography variant="subtitle1" color="primary">
+        <Typography variant="subtitle1" style={{color: "white"}}>
           <h3><b>{all_subjects_map.get(id)}</b></h3>
         </Typography>
-        <Typography variant="body2">
-          <h5>Kelas: {kelas.name}</h5>
+        <Typography>
+          <h5 className={classes.subtitleColor}>Kelas: {kelas.name}</h5>
         </Typography>
       </Paper>
       <Grid container direction="column" style={{marginTop: "20px"}}>
