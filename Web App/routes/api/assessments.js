@@ -129,17 +129,25 @@ router.post("/update/:id", (req,res) => {
           return currQstIdList.indexOf(qstId);
         })
         
+        // FIXME
+        let weights = req.body.question_weight;
         if(update_answer){
           if(assessmentData.submissions){
             for (const [key, value] of assessmentData.submissions.entries()) {
+              
               // key berisi id murid, sedangkan value berisi semua jawaban murid tersebut untuk assessment ini.
-              console.log(key, value);
-              let correct_count = 0;
+              // console.log(key, value);
+              // let correct_count = 0;
+              let point_accumulator = 0;
+              let weight_accumulator = 0;
               let number_of_gradeable_questions = 0;
+              let longtextGrade = {};
+              let isLongtextQuestionAdded = false;
               for (let i = 0; i < questions.length; i++){
 
-                // penambahan soal baru tidak berpengaruh terhadap nilai yang sudah ada.
-                // penghapusan soal akan mengubah nilai.
+                // 1. jika soal dihapus, semua jawaban murid akan diabaikan dan soal ini tidak masuk dalam penilaian
+
+                // 2. jika soal ini sudah ada sebelum perubahan assessment dilakukan, (baik mengalami perubahan maupun tidak), 
                 if (transformIdx[i] !== -1) {
 
                   // value.length sudah dipastikan sama dengan questions.length sebelum assessment diubah (ViewAssessmentStudent.js)
@@ -150,9 +158,11 @@ router.post("/update/:id", (req,res) => {
                   if (questions[i].type === "radio") {
                     // if (questions[i].answer[0] === value[i][0]) {
                     if (questions[i].answer[0] === value[transformIdx[i]][0]) {
-                      correct_count = correct_count + 1;
+                      // correct_count = correct_count + 1;
+                      point_accumulator += 1 * weights.radio;
                     }
-                    number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                    // number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                    weight_accumulator += 1 * weights.radio;
                   }
                   else if (questions[i].type === "checkbox") {
                     let temp_correct = 0;
@@ -165,11 +175,14 @@ router.post("/update/:id", (req,res) => {
                         temp_correct = temp_correct - 2;
                       }
                     })
-                    number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                    // number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                    weight_accumulator += 1 * weights.checkbox;
+
                     if (temp_correct > 0) {
                       // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
                       // karena itu, questions[i].answer.length pasti tidak 0
-                      correct_count = correct_count + temp_correct / questions[i].answer.length;
+                      // correct_count = correct_count + temp_correct / questions[i].answer.length;
+                      point_accumulator += weights.checkbox *  temp_correct / questions[i].answer.length;
                     }
                   }
                   else if (questions[i].type === "shorttext") {
@@ -182,16 +195,46 @@ router.post("/update/:id", (req,res) => {
                     }
                     // saat pembuatan / sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
                     // karena itu, questions[i].answer.length pasti tidak 0
-                    number_of_gradeable_questions = number_of_gradeable_questions + 1;
-                    correct_count = correct_count + temp_correct / questions[i].answer.length;
+                    // number_of_gradeable_questions = number_of_gradeable_questions + 1;
+                    // correct_count = correct_count + temp_correct / questions[i].answer.length;
+                    weight_accumulator += 1 * weights.shorttext;
+                    point_accumulator += weights.shorttext * temp_correct / questions[i].answer.length;
+                  }
+                  else {
+                    // (tidak perlu dicek lengkap atau tidak karena di edit/create assessment, bobot setiap soal uraian sudah dipastikan ada)
+                    let oldLongtextGrade = assessmentData.grades.get(key).longtext_grades[i];
+                    let oldLongtextWeight = assessmentData.question_weight.longtext;
+                    let newLongtextWeight = req.body.question_weight.longtext;
+
+                    // longtext_grade baru = longtext_grade lama * bobot baru / bobot lama
+                    let newLongtextGrade = oldLongtextGrade * newLongtextWeight / oldLongtextWeight;
+                    longtextGrade[i] = parseFloat(newLongtextGrade.toFixed(1));
+                  }
+                } else { 
+                  // 3. jika soal ini baru ditambahkan
+
+                  // jika soal ini bertipe radio, checkbox, atau isian (dapat dicek secara otomatis),
+                  // semua murid dianggap tidak menjawab soal ini 
+                  if (questions[i].type !== "longtext") {
+                    weight_accumulator += 1 * weights[questions[i].type];
+                  } else { 
+                    // jika soal ini bertipe uraian, batalkan penilaian. 
+                    // penilaian nilai total akan dilakukan setelah guru sudah memberikan nilai kepada semua soal uraian secara manual
+                    isLongtextQuestionAdded = true;
+                    break;
                   }
                 }
               }
-              let score = 0;
-              if (number_of_gradeable_questions > 0) {
-                score = 100 * correct_count / number_of_gradeable_questions;
-              } // number_of_gradeable_questions === 0 ketika semua soal pada assessment ini bertipe uraian
-              assessmentData.grades.set(key, parseFloat(score.toFixed(1)));
+
+              if (!isLongtextQuestionAdded) {
+                let score = 0;
+                if (number_of_gradeable_questions > 0) {
+                  // score = 100 * correct_count / number_of_gradeable_questions;
+                  score = 100 * point_accumulator / weight_accumulator;
+
+                } // number_of_gradeable_questions === 0 ketika semua soal pada assessment ini bertipe uraian
+                assessmentData.grades.set(key, { total_score: parseFloat(score.toFixed(1)), longtext_grades: longtextGrade});
+              }
               assessmentData.submissions.set(key, transformIdx.map((idx) => {
                 if (idx === -1) {
                   return [];
@@ -202,13 +245,12 @@ router.post("/update/:id", (req,res) => {
             }
           }
         }
-
+      }
         assessmentData.questions = qns_list;
         assessmentData
                     .save()
                     .then(ass => res.json(update_answer))
                     .catch(err => res.status(400).send("Unable to update task database"));
-    }
   })
 })
 
@@ -239,10 +281,10 @@ router.post("/submit/:id", (req,res) => {
       }
 
       let correct_count = 0;
-      // REVIEW scoring
+      // FIXME scoring
       if(grades){
         if(!grades.has(userId)){
-          let number_of_gradeable_questions = 0 // Karena Isian dan Esai tidak bisa autograde, maka yang dihitung hanya radio dan checkbox saja.
+          let number_of_gradeable_questions = 0 // Karena Esai tidak bisa autograde, maka yang dihitung hanya radio dan checkbox saja.
           for(let i = 0; i < questions.length; i++){
             // answers.length sudah dipastikan sama dengan questions.length di ViewAssessmentStudent.js
             // answers[i] adalah jawaban murid untuk pertanyaan ke-(i + 1), misal answer[0] adalah jawaban murid untuk pertanyaan pertama.

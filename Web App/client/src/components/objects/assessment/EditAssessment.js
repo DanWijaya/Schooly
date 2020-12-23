@@ -26,6 +26,7 @@ import SendIcon from '@material-ui/icons/Send';
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
 import { RadioButtonChecked, CheckBox, TextFormat, Subject } from '@material-ui/icons';
+import InfoIcon from '@material-ui/icons/Info';
 
 const styles = (theme) => ({
   root: {
@@ -213,9 +214,17 @@ class EditAssessment extends Component {
       anchorEl: null,
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
-      copySnackbarOpen: false
+      copySnackbarOpen: false,
+      weights: {
+        radio: null,
+        checkbox: null,
+        shorttext: null,
+      },
+      longtextWeight: [null],
+      ready: false
     }
   }
+  // ANCHOR state 
 
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
@@ -229,6 +238,14 @@ class EditAssessment extends Component {
     getAllSubjects()
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // if (!this.props.errors && this.props.errors !== prevProps.errors) {
+    //   this.handleOpenUploadDialog()
+    // }
+    console.log(this.props.weights)
+    console.log(prevProps.weights);
+  }
+
   componentWillUnmount(){
     this.props.clearErrors()
     this.props.handleSideDrawerExist(true)
@@ -240,9 +257,22 @@ class EditAssessment extends Component {
     if (!nextProps.errors) {
       this.handleOpenUploadDialog()
     }
-    console.log(selectedAssessments.questions)
     if (Boolean(selectedAssessments) && nextProps.errors) {
-      this.setState({
+      if (Object.keys(selectedAssessments).length !== 0) {
+        
+        let weights = {
+          radio: selectedAssessments.question_weight.radio,
+          checkbox: selectedAssessments.question_weight.checkbox,
+          shorttext: selectedAssessments.question_weight.shorttext
+        };
+        let longtextWeight = [];
+        for (let [key, value] of Object.entries(selectedAssessments.question_weight.longtext)) {
+          longtextWeight[key] = value;
+        }
+
+        longtextWeight = longtextWeight.map((val) => ((val) ? val : null));
+
+        this.setState({
           name: selectedAssessments.name,
           subject: selectedAssessments.subject,
           deadline: selectedAssessments.deadline,
@@ -252,10 +282,14 @@ class EditAssessment extends Component {
           description: selectedAssessments.description,
           class_assigned: Boolean(selectedAssessments.class_assigned) ? selectedAssessments.class_assigned : [],
           posted: selectedAssessments.posted,
-          type: selectedAssessments.type
-          // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
-          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      })
+          type: selectedAssessments.type,
+          weights: weights,
+          longtextWeight: longtextWeight,
+          ready: true
+            // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
+            // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+        })
+      }
     }
   }
 
@@ -298,11 +332,24 @@ class EditAssessment extends Component {
     e.preventDefault();
     let formData = new FormData();
     let invalidQuestionIndex = [];
+    let completeWeight = true;
 
     const { questions, lampiranToDelete } = this.state;
     const { updateAssessment , history} = this.props;
 
+    let typeCount = {
+      radio: 0,
+      checkbox: 0,
+      shorttext: 0,
+      longtext: 0
+    };
+
+    for (let question of this.state.questions) {
+      typeCount[question.type]++;
+    }
+
     if (this.state.posted) {
+      // pengecekan isi soal
       for (var i = 0; i < questions.length; i++) {
         let qns = questions[i];
         if (!qns.name) {
@@ -323,9 +370,53 @@ class EditAssessment extends Component {
           }
         }
       }
+
+      //pengecekan bobot
+      let filteredtypeCount = Object.entries(typeCount).filter((pair) => (pair[1] > 0));
+      if (filteredtypeCount.length !== 0) {
+
+        for (let pair of filteredtypeCount) {
+          let type = pair[0];
+
+          if (type === 'longtext') {
+            for (let weight of this.state.longtextWeight.filter((value) => (value !== null))) {
+              if (isNaN(Number(weight)) || Number(weight) <= 0) {
+                completeWeight = false;
+                break;
+              }
+            }
+          } else {
+            if (isNaN(Number(this.state.weights[type])) || Number(this.state.weights[type]) <= 0) {
+              completeWeight = false;
+              break;
+            }
+          }
+        }
+      } else {
+        completeWeight = false;
+      }
     }
 
-    if (invalidQuestionIndex.length === 0) {
+    // jika soal dan bobot sudah lengkap dan benar, submit
+    if (invalidQuestionIndex.length === 0 && completeWeight) {
+      let longtext;
+      if (typeCount.longtext === 0) {
+        longtext = null;
+      } else {
+        longtext = {};
+        this.state.longtextWeight.forEach((val, idx) => {
+          if (val !== null) {
+            longtext[idx] = Number(val);
+          }
+        })
+      }
+      let question_weight = {
+        radio: (typeCount.radio === 0) ? null : this.state.weights.radio,
+        checkbox: (typeCount.checkbox === 0) ? null : this.state.weights.checkbox,
+        shorttext: (typeCount.shorttext === 0) ? null : this.state.weights.shorttext,
+        longtext: longtext
+      }
+
       questions.forEach((qns) => {
         let lampiran = qns.lampiran.filter(x => typeof x !== "string");
         lampiran.forEach((img, i) => formData.append(`lampiran_assessment`, img))
@@ -340,7 +431,8 @@ class EditAssessment extends Component {
         description: this.state.description,
         questions: this.state.questions,
         posted: this.state.posted,
-        type: this.state.type
+        type: this.state.type,
+        question_weight: question_weight
       }
       const assessmentId = this.props.match.params.id;
       console.log(assessmentData)
@@ -437,9 +529,14 @@ class EditAssessment extends Component {
         type: option
       })
     }
+    // TODO[epic=paste from create assessment] add question
+    this.setState((state) => {
+      let value = [...state.longtextWeight];
+      value.push((option === "longtext") ? 0 : null);
+      return ({ longtextWeight: value })
+    })
     this.setState({ questions: questions})
     this.setState({ currentQuestionOption: null })
-
   }
 
   handleChangeQuestion = (e, i, name=null, otherfield=null, type=null) => {
@@ -628,13 +725,25 @@ class EditAssessment extends Component {
       })
     }
     this.setState({ questions: questions})
+    this.setState((state) => {
+      let value = [...state.longtextWeight];
+      value.splice(i + 1, 0, state.longtextWeight[i]);
+      return ({ longtextWeight: value });
+    });
   }
 
+  // TODO[epic=paste from create assessment] deletequestion
   deleteQuestion = (index) => {
     console.log(index)
     let questions = this.state.questions
     questions.splice(index, 1)
     this.setState({ questions: questions})
+    this.setState((state) => {
+      let value = [...state.longtextWeight];
+      value.splice(index, 1);
+      return ({ longtextWeight: value });
+    });
+
   }
 
 
@@ -740,6 +849,8 @@ class EditAssessment extends Component {
           parseAnswer={this.parseAnswer}
           type={question.type}
           check_data={booleanArray}
+          handleLongtextWeight={this.handleLongtextWeight}
+          longtextWeight={this.state.longtextWeight[i + page * rowsPerPage]}
           />
       )
     }
@@ -763,6 +874,133 @@ class EditAssessment extends Component {
   handleChangeRowsPerPage = (event) => {
     this.setState({ page: 0, rowsPerPage: +event.target.value })
   };
+
+  // ANCHOR weightInput
+  handleLongtextWeight = (e, questionIdx) => {
+    let value = e.target.value;
+    this.setState((state) => {
+      let newValue = state.longtextWeight;
+      newValue[questionIdx] = value;
+      return { longtextWeight: newValue };
+    });
+  }
+
+  handleWeight = (e, type) => {
+    // e.target entah kenapa jadi undefined pas di dalam setState
+    let value = e.target.value;
+    this.setState((state) => {
+      return { weights: { ...state.weights, [type]: value } }
+    });
+  }
+
+  weightInput = () => {
+    const columnTemplate = {
+      radio: {
+        // root: classes.RadioQst, 
+        text: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>), icon: (<RadioButtonChecked />)
+      },
+      checkbox: {
+        // root: classes.CheckboxQst, 
+        text: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>), icon: (<CheckBox />)
+      },
+      shorttext: {
+        // root: classes.ShorttextQst,
+        text: (<b>Isian Pendek</b>), icon: (<TextFormat />)
+      },
+      longtext: {
+        // root: classes.LongtextQst,
+        text: (<b>Uraian</b>), icon: (<Subject />)
+      }
+    }
+
+    let typeCount = {
+      radio: 0,
+      checkbox: 0,
+      shorttext: 0,
+      longtext: 0
+    };
+
+    for (let question of this.state.questions) {
+      typeCount[question.type]++;
+    }
+
+    let columns = [];
+    let c = 0;
+    let filteredtypeCount = Object.entries(typeCount).filter((pair) => (pair[1] > 0));
+
+    if (filteredtypeCount.length !== 0) {
+      for (let pair of filteredtypeCount) {
+        let type = pair[0];
+
+        columns.push(
+          // ANCHOR column push
+          //  item xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
+          <Grid container item xs={12 / filteredtypeCount.length} spacing='1' direction='column' justify='space-between' alignItems='center'>
+            <Grid item>
+              {/* <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}> */}
+              {/* <IconButton disabled> */}
+              {columnTemplate[type].icon}
+              {/* </IconButton> */}
+            </Grid>
+            <Grid item>
+              <Typography align='center'>
+                {columnTemplate[type].text}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography component="label" for="weight" color="primary">
+                Bobot Per Soal:
+              </Typography>
+            </Grid>
+            {(type !== 'longtext') ? (
+              <Grid item>
+                {/* ANCHOR textfield */}
+                <TextField
+                  defaultValue={this.state.weights[type]}
+                  variant="outlined"
+                  id="weight"
+                  fullWidth
+                  onChange={(e) => { this.handleWeight(e, type) }}
+                  // error={errors.name}
+                  // helperText={errors.name}
+                  InputProps={{
+                    style: {
+                      width: "150px"
+                    },
+                    endAdornment: ` Poin`
+                  }}
+                />
+              </Grid>
+            ) : (
+                <Grid item>
+                  <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
+                    <IconButton>
+                      <InfoIcon />
+                    </IconButton>
+                  </LightTooltip>
+                </Grid>
+              )}
+          </Grid>
+        );
+        // jika elemen ini bukan elemen terakhir, tambahkan divider
+        if (c + 1 < filteredtypeCount.length) {
+          columns.push(
+            <Divider orientation="vertical" flexItem />
+          );
+        }
+        c++;
+      }
+      return (
+        <Paper>
+          <Grid container style={{ padding: "20px" }} justify='center'>
+            {columns}
+          </Grid>
+        </Paper>
+      );
+    } else {
+      return null;
+    }
+  }
 
   render() {
     const { class_assigned } = this.state;
@@ -1013,6 +1251,12 @@ class EditAssessment extends Component {
                 </Grid>
               </Paper>
             </Grid>
+
+            {/* ANCHOR  paper bobot*/}
+            <Grid item>
+              {(this.state.ready) ? this.weightInput() : null}
+            </Grid>
+
             {this.listQuestion()}
             <Grid item container justify="center">
               <Grid item>

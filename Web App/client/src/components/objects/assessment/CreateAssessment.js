@@ -243,7 +243,7 @@ class CreateAssessment extends Component {
     let invalidQuestionIndex = [];
     let completeWeight = true;
 
-    const { questions, weights, longtextWeight } = this.state;
+    const { questions } = this.state;
     const { createAssessment , history} = this.props
 
     let typeCount = {
@@ -437,6 +437,7 @@ class CreateAssessment extends Component {
         type: option
       })
     }
+    // TODO[epic=copy to editassessment] add question
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.push((option === "longtext") ? 0 : null);
@@ -618,6 +619,7 @@ class CreateAssessment extends Component {
     });
   }
 
+  // TODO[epic=copy to editassessment] delete question
   deleteQuestion = (index) => {
     console.log(index)
     let questions = this.state.questions
@@ -804,7 +806,8 @@ class CreateAssessment extends Component {
         let type = pair[0];
   
         columns.push(
-          <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
+          // xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
+          <Grid container item xs={12 / filteredtypeCount.length} spacing='1' direction='column' justify='space-between' alignItems='center'>
             <Grid item>
               {/* <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}> */}
               {/* <IconButton disabled> */}

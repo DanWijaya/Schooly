@@ -334,7 +334,7 @@ function QuestionItem(props){
           </Grid>
         </Grid>
 
-        {/* ANCHOR bobot */}
+        {/* ANCHOR bobot uraian */}
         {(props.type === "longtext") ? (
           <div>
           <Divider />

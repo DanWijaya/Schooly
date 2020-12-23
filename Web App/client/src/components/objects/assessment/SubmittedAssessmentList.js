@@ -527,6 +527,7 @@ function SubmittedAssessmentList(props) {
             
             // ANCHOR hitung nilai per murid
             let scores = null;
+            let isAllEssayGraded = false;
             // jika murid mengerjakan assessment ini
             if (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) {
               // harus deep cloning
@@ -536,6 +537,7 @@ function SubmittedAssessmentList(props) {
                 // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
                 // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
                 if (Object.keys(selectedAssessments.grades[student._id].longtext_grades).length === Object.keys(selectedAssessments.question_weight.longtext).length) {
+                  isAllEssayGraded = true;
                   scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext_grades).reduce((sum, currentVal) => (sum + currentVal));
                 } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
               }
@@ -566,7 +568,7 @@ function SubmittedAssessmentList(props) {
                     });
 
                     if (temp_correct > 0) {
-                      scores.checkbox.totalpoint += temp_correct / questionAnswer.length
+                      scores.checkbox.totalpoint += weights.checkbox * temp_correct / questionAnswer.length;
                     }
 
                     scores.checkbox.totalweight += 1 * weights.checkbox;
@@ -578,7 +580,7 @@ function SubmittedAssessmentList(props) {
                       }
                     }
 
-                    scores.shorttext.totalpoint += temp_correct / questionAnswer.length
+                    scores.shorttext.totalpoint += weights.shorttext * temp_correct / questionAnswer.length;
                     scores.shorttext.totalweight += 1 * weights.shorttext;
                   }
                 } else { // jika murid ga menjawab soal ini
@@ -614,10 +616,10 @@ function SubmittedAssessmentList(props) {
                     <Grid item>
                       <Typography>
                         {(type === 'longtext') ? (
-                          (scores[type].totalpoint !== null) ? (
+                          (isAllEssayGraded) ? (
                             `${scores[type].totalpoint}/${scores[type].totalweight}`
                           ) : (
-                              `Belum dinilai`
+                              "Belum dinilai"
                             )
                         ) : (
                             `${scores[type].totalpoint}/${scores[type].totalweight}`
@@ -651,14 +653,18 @@ function SubmittedAssessmentList(props) {
                       secondary={!selectedAssessments.grades ? "Belum Dinilai" : !gradeStatus.has(student._id) && selectedAssessments.grades[student._id] === undefined ? "Belum Dinilai" : "Telah Dinilai"} />
                     {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
                       <div style={{display: "flex"}}>
-                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center",}}>
-                          <Grid item>
-                            <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
-                          </Grid>
-                        </div>
+                        {(isAllEssayGraded) ? (
+                          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                            <Grid item>
+                              <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
+                            </Grid>
+                          </div>
+                        ) : (
+                          null
+                        )}
                       {/* ANCHOR elemen flag */}
                         <Grid item alignItem="center">
                           <Grid item>
