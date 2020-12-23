@@ -244,7 +244,7 @@ function ViewAnnouncement(props) {
       console.log("File Category is not specified")
   }
 
-  console.log(retrieved_users)
+  console.log(selectedAnnouncements.lampiran)
   return (
     <div className={classes.root}>
       <DeleteDialog

@@ -132,7 +132,7 @@ function AssessmentListToolbar(props) {
                   onChange={onChange}
                   autoFocus
                   onClick={(e) =>setSearchBarFocus(true)}
-                  placeholder="Search Kuis"
+                  placeholder="Cari Kuis"
                   // onBlur={() => setSearchBarFocus(false)}
                   style={{
                     maxWidth: "200px",
@@ -187,7 +187,7 @@ function AssessmentListToolbar(props) {
               onChange={onChange}
               onClick={() => setSearchBarFocus(true)}
               onBlur={() => setSearchBarFocus(false)}
-              placeholder="Search Kuis"
+              placeholder="Cari Kuis"
               // onBlur={() => setSearchBarFocus(false)}
               style={{
                 maxWidth: "250px",

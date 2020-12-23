@@ -6,6 +6,7 @@ import classnames from "classnames";
 import { getOneAnnouncement, updateAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
@@ -188,13 +189,12 @@ class EditAnnouncement extends Component {
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   // kurang tau gimana cara ubah.
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log("Tasks props is received");
     const { selectedAnnouncements } = nextProps.announcements;
-    // console.log(nextProps.tasksCollection.deadline);
 
     if (!nextProps.errors) {
       this.handleOpenUploadDialog()
@@ -212,34 +212,17 @@ class EditAnnouncement extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps, prevState){
-  //   const { selectedAnnouncements } = this.props.announcements
-  //   console.log(selectedAnnouncements)
-  //   if(!this.props.errors && !this.state.openUploadDialog){
-  //     this.setState({ openUploadDialog: true })
-  //   } else {
-  //     this.setState({
-  //       title: selectedAnnouncements.title,
-  //       description: selectedAnnouncements.description,
-  //       fileLampiran: selectedAnnouncements.lampiran ? selectedAnnouncements.lampiran : [],
-  //       class_assigned: selectedAnnouncements.class_assigned ? selectedAnnouncements.class_assigned : []
-  //     })
-  //   }
-  // }
-
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    console.log(this.state.fileLampiran)
     let temp;
     let tempToAdd;
-
-    if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
+    if (this.state.fileLampiran.length === 0){
+      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
+    }
     else {
-      console.log(files)
       if (files.length !== 0) {
-        temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-        tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
+        temp = [...this.state.fileLampiran, ...Array.from(files)];
+        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
       }
     }
@@ -248,7 +231,6 @@ class EditAnnouncement extends Component {
 
   handleLampiranDelete = (e, i, name) => {
     e.preventDefault()
-    console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
@@ -261,7 +243,6 @@ class EditAnnouncement extends Component {
     else { //Untuk yang belum di DB
       //Remove the file in fileLampiranToAdd
       for (var j = 0; j < tempToAdd.length; j++) {
-        console.log(temp[i].name, tempToAdd[j].name)
         if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)
         }
@@ -314,7 +295,6 @@ class EditAnnouncement extends Component {
 
     let formData = new FormData()
     for (var i = 0; i< fileLampiranToAdd.length; i++) {
-      console.log(fileLampiran[i])
       formData.append("lampiran_announcement", fileLampiranToAdd[i])
     }
 
@@ -365,10 +345,9 @@ class EditAnnouncement extends Component {
         default: return "File Lainnya"
       }
     }
-
     const listFileChosen = () => {
       let temp = []
-      if (fileLampiran.length > 0) {
+      // if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
           temp.push(
             <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
@@ -386,12 +365,11 @@ class EditAnnouncement extends Component {
             />
           )
         }
-      }
+      // }
       return temp;
     }
 
     if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id) {
-      console.log(kelas.ketua_kelas, user.id)
       return (
         <Redirect to="/tidak-ditemukan"/>
       )
@@ -572,6 +550,7 @@ EditAnnouncement.propTypes = {
   updateAnnouncement: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
 };
 
@@ -584,5 +563,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors }
+  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors, clearSuccess }
   )(withStyles(styles)(EditAnnouncement))

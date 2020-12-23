@@ -108,6 +108,7 @@ function TaskListToolbar(props) {
             id="searchFilter"
             value={searchFilter}
             onChange={onChange}
+            placeholder="Cari Tugas"
             style={{
               maxWidth: "250px",
               marginRight: "10px"
