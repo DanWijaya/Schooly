@@ -181,7 +181,7 @@ function ViewAssessmentTeacher(props) {
     handleOpenCopySnackBar(type)
   }
 
-  let linkToShare = `http://localhost:3000/kuis-murid/${assessment_id}`;
+  let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
 
   return (
     <div className={classes.root}>

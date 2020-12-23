@@ -785,7 +785,7 @@ class EditAssessment extends Component {
     const { selectedAssessments } = this.props.assessmentsCollection;
     const { user } = this.props.auth;
 
-    const linkToShare = `http://localhost:3000/kuis-murid/${this.props.match.params.id}`;
+    const linkToShare = `http://${window.location.host}/kuis-murid/${this.props.match.params.id}`;
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
         width: 42,
