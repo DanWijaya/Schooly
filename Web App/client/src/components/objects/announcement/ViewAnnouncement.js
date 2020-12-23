@@ -281,7 +281,7 @@ function ViewAnnouncement(props) {
                 <ListItemText
                   primary={
                     <Typography variant="body2" className={classes.deadlineWarningText}>
-                      Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                      Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   }
                 />
@@ -291,7 +291,7 @@ function ViewAnnouncement(props) {
                   align="right"
                   primary={
                     <Typography variant="body2" className={classes.deadlineWarningText}>
-                      Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                      Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   }
                 />

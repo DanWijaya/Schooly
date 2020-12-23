@@ -427,8 +427,8 @@ function AnnouncementList(props) {
             author_name={!retrieved_users.get(selectedAnnouncements[i].author_id) ? null: retrieved_users.get(selectedAnnouncements[i].author_id).name}
             notification_title={selectedAnnouncements[i].title}
             notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
-            date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD-MMMM-YYYY")}
-            time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH:mm:ss")}
+            date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD MMM YYYY")}
+            time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH.mm")}
           />
         )
       }

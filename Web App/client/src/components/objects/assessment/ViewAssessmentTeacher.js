@@ -56,8 +56,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#974994",
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#974994",
-      color: "#white"
+      backgroundColor: "white",
+      color: "#974994"
     },
   },
   dialogBox: {
@@ -195,7 +195,7 @@ function ViewAssessmentTeacher(props) {
         deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
         />
         <Grid container direction="column" spacing={3}>
-          <Grid item>
+          <Grid item style={{marginBottom: "20px"}}>
             <Paper className={classes.content}>
               <Grid container spacing={6}>
                 <Grid item xs={12} md={7} spacing={8}>
@@ -215,10 +215,10 @@ function ViewAssessmentTeacher(props) {
                 <Grid item xs={12} md={5} spacing={2}>
                   <Hidden mdUp implementation="css">
                     <Typography variant="body2" className={classes.startDateText}>
-                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
                     </Typography>
                     <Typography variant="body2" className={classes.endDateText}>
-                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
                       Nilai Maksimum: 100
@@ -226,10 +226,10 @@ function ViewAssessmentTeacher(props) {
                   </Hidden>
                   <Hidden smDown implementation="css">
                     <Typography align="right" variant="body2" className={classes.startDateText}>
-                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                     <Typography align="right" variant="body2" className={classes.endDateText}>
-                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm:ss")}
+                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                     <Typography align="right" variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
                       Nilai Maksimum: 100

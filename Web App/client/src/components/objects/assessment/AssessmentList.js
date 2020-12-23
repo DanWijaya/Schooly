@@ -414,8 +414,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#974994",
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#974994",
-      color: "#white"
+      backgroundColor: "white",
+      color: "#974994"
     },
   },
   assessmentPanelDivider: {
@@ -657,16 +657,6 @@ function AssessmentList(props) {
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
                         <Grid item>
-                          <LightTooltip title="Copy Link">
-                            <IconButton
-                              size="small"
-                              className={classes.copyToClipboardButton}
-                              onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
-                              <LinkIcon fontSize="small"/>
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
                           <LightTooltip title="Lihat Lebih Lanjut">
                             <Link to={viewpage}>
                               <IconButton
@@ -676,6 +666,16 @@ function AssessmentList(props) {
                                 <PageviewIcon fontSize="small" />
                               </IconButton>
                             </Link>
+                          </LightTooltip>
+                        </Grid>
+                        <Grid item>
+                          <LightTooltip title="Copy Link">
+                            <IconButton
+                              size="small"
+                              className={classes.copyToClipboardButton}
+                              onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
+                              <LinkIcon fontSize="small"/>
+                            </IconButton>
                           </LightTooltip>
                         </Grid>
                         <Grid item>
@@ -724,12 +724,12 @@ function AssessmentList(props) {
                       </Grid>
                       <Grid item>
                         <Typography variant="body2" className={classes.startDateText}>
-                           Waktu Mulai: {moment(row.start_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                           Waktu Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
                       <Grid item>
                         <Typography variant="body2" className={classes.endDateWarningText}>
-                           Batas Waktu: {moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                           Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -740,7 +740,7 @@ function AssessmentList(props) {
                   button component="a"
                   variant="outlined"
                   className={classes.assessmentPaper}
-                  onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH:mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH:mm"))}
+                  onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm"))}
                 >
                   <div>
                     <Typography variant="h6" id={labelId}>
@@ -756,12 +756,12 @@ function AssessmentList(props) {
                         Batas Waktu:
                       </Typography>
                       <Typography variant="caption" align="right" className={classes.endDateWarningText}>
-                        {moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                       </Typography>
                     </Hidden>
                     <Hidden xsDown implementation="css">
                       <Typography variant="body2" align="right" className={classes.endDateWarningText}>
-                        Batas Waktu: {moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                       </Typography>
                     </Hidden>
                   </div>

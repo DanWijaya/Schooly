@@ -440,18 +440,18 @@ function ViewAssessmentTeacher(props) {
                 <Grid item xs={12} md={5} spacing={2}>
                   <Hidden mdUp implementation="css">
                     <Typography variant="body2" className={classes.startDateText}>
-                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                     <Typography variant="body2" className={classes.endDateText}>
-                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   </Hidden>
                   <Hidden smDown implementation="css">
                     <Typography align="right" variant="body2" className={classes.startDateText}>
-                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                     <Typography align="right" variant="body2" className={classes.endDateText}>
-                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                      Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   </Hidden>
                 </Grid>

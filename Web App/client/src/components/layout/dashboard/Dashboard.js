@@ -221,7 +221,7 @@ class Dashboard extends Component {
                   <b>Selamat Datang, {user.name}</b>
                 </Typography>
                 <Typography variant="h5" style={{marginBottom: "20px"}}>
-                  Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
+                  Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
                 </Typography>
                 <Typography variant="h6">
                   Apa yang ingin Anda kerjakan hari ini?
@@ -233,7 +233,7 @@ class Dashboard extends Component {
                   <b>Selamat Datang, {user.name}</b>
                 </Typography>
                 <Typography variant="h5" style={{marginBottom: "20px"}}>
-                  Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
+                Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
                 </Typography>
                 <Typography variant="h6">
                   Apa yang ingin Anda kerjakan hari ini?
@@ -293,8 +293,8 @@ class Dashboard extends Component {
                         classes={classes}
                         work_title={task.name}
                         work_sender={all_subjects_map.get(task.subject)}
-                        work_deadline_mobile={moment(task.deadline).locale("id").format("DD/MM/YYYY HH:mm")}
-                        work_deadline_desktop={moment(task.deadline).locale("id").format("DD/MM/YYYY - HH:mm")}
+                        work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                        work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                         work_link={`/tugas-murid/${task._id}`}
                       />
                     )

@@ -338,7 +338,7 @@ function ViewClass(props) {
             work_category_avatar={workCategoryAvatar}
             work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
             work_status={workStatus}
-            work_deadline={moment(task.deadline).locale("id").format("DD-MM-YYYY")}
+            work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
             work_link={`/tugas-murid/${task._id}`}
           />
         )
