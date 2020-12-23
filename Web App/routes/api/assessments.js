@@ -106,6 +106,7 @@ router.post("/update/:id", (req,res) => {
         assessmentData.end_date = req.body.end_date;
         assessmentData.posted = req.body.posted;
         assessmentData.type = req.body.type;
+        assessmentData.question_weight = req.body.question_weight;
 
         let questions = req.body.questions;
         let qns_list = questions.map((qns) => {
@@ -129,7 +130,7 @@ router.post("/update/:id", (req,res) => {
           return currQstIdList.indexOf(qstId);
         })
         
-        // FIXME
+        // ANCHOR update
         let weights = req.body.question_weight;
         if(update_answer){
           if(assessmentData.submissions){
@@ -245,12 +246,12 @@ router.post("/update/:id", (req,res) => {
             }
           }
         }
-      }
         assessmentData.questions = qns_list;
         assessmentData
                     .save()
                     .then(ass => res.json(update_answer))
                     .catch(err => res.status(400).send("Unable to update task database"));
+      }
   })
 })
 
@@ -281,7 +282,7 @@ router.post("/submit/:id", (req,res) => {
       }
 
       let correct_count = 0;
-      // FIXME scoring
+      // ANCHOR submit
       if(grades){
         if(!grades.has(userId)){
           let number_of_gradeable_questions = 0 // Karena Esai tidak bisa autograde, maka yang dihitung hanya radio dan checkbox saja.

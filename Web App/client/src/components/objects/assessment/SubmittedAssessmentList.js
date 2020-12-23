@@ -288,14 +288,14 @@ function SubmittedAssessmentList(props) {
   React.useEffect(() => {
     // console.log(selectedAssessments);
     if (!Array.isArray(selectedAssessments)) {
-      selectedAssessments.grades = {
-        "5f44d55155cedc284824f5c1": {
-          total_grade: selectedAssessments.grades["5f44d55155cedc284824f5c1"],
-          longtext_grades: {
-            '3': 1
-          }
-        }
-      }
+      // selectedAssessments.grades = {
+      //   "5f44d55155cedc284824f5c1": {
+      //     total_grade: selectedAssessments.grades["5f44d55155cedc284824f5c1"],
+      //     longtext_grades: {
+      //       '3': 1
+      //     }
+      //   }
+      // }
       setSuspects(selectedAssessments.suspects);
       status.current = true;
     }

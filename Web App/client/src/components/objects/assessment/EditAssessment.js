@@ -251,6 +251,7 @@ class EditAssessment extends Component {
     this.props.handleSideDrawerExist(true)
   }
 
+  // ANCHOR UNSAFE_componentWillReceiveProps
   UNSAFE_componentWillReceiveProps(nextProps){
     const { selectedAssessments } = nextProps.assessmentsCollection
 
@@ -270,7 +271,13 @@ class EditAssessment extends Component {
           longtextWeight[key] = value;
         }
 
-        longtextWeight = longtextWeight.map((val) => ((val) ? val : null));
+        // ini tidak mengubah elemen undefined menjadi null
+        // longtextWeight = longtextWeight.map((val) => {
+        //   return (val) ? val : null;
+        // });
+
+        // ini mengubah elemen undefined menjadi null
+        longtextWeight = Array.from(longtextWeight, (val) => (val === undefined) ? null : val);
 
         this.setState({
           name: selectedAssessments.name,
