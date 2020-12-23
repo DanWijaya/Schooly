@@ -409,7 +409,6 @@ class CreateAssessment extends Component {
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
           itemType="Kuis"
           deleteItem=""
-          isLink={true}
           redirectLink="/daftar-kuis"
         />
         <UploadDialog

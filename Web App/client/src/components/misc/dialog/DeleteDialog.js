@@ -36,16 +36,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DeleteDialog(props) {
-  const classes = useStyles();
 
-  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, isLink, redirectLink } = props;
+  const classes = useStyles();
+  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, 
+    redirectLink, customMessage, customConfirm, customDecline } = props;
 
   return (
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
       <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
         <Grid item>
           <Typography variant="h5" align="center" gutterBottom>
-            Hapus {itemType} berikut?
+            {customMessage ? `${customMessage} ${itemType}` : `Hapus ${itemType} berikut`}
           </Typography>
         </Grid>
         <Grid item>
@@ -55,6 +56,7 @@ function DeleteDialog(props) {
         </Grid>
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
+          {!redirectLink ?
             <Button
               onClick={deleteItem}
               startIcon={<DeleteOutlineIcon />}
@@ -62,26 +64,37 @@ function DeleteDialog(props) {
             >
               Hapus
             </Button>
+          : 
+          <Link to={redirectLink}>
+              <Button
+              onClick={deleteItem}
+              startIcon={<DeleteOutlineIcon />}
+              className={classes.dialogDeleteButton}
+            >
+              Hapus
+            </Button>
+          </Link>
+          }
           </Grid>
           <Grid item>
-            {!isLink ?
+            {/* {!redirectLink ? */}
               <Button
                 onClick={handleCloseDeleteDialog}
                 startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
               >
-                Batal
+                {customDecline ? customDecline : "Batal"}
               </Button>
-            :
+            {/* :
               <Link to={redirectLink}>
                 <Button
                   startIcon={<CancelIcon />}
                   className={classes.dialogCancelButton}
                 >
-                  Batal
+                  {customDecline ? customDecline : "Batal"}
                 </Button>
               </Link>
-            }
+            } */}
           </Grid>
         </Grid>
       </Grid>

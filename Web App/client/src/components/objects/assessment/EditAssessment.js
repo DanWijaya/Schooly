@@ -127,7 +127,6 @@ class EditAssessment extends Component {
     }
   }
 
-  // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
   componentDidMount(){
@@ -475,7 +474,11 @@ class EditAssessment extends Component {
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
           itemType="Kuis"
-          itemName=""
+          itemName={this.state.name}
+          customMessage="Hapus perubahan"
+          redirectLink="/daftar-kuis"
+          // customConfirm="Ya"
+          customDecline="Tidak"
           deleteItem=""
         />
         <UploadDialog

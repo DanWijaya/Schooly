@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 function SubmitDialog(props) {
   const classes = useStyles();
 
-  const { openSubmitDialog, handleCloseSubmitDialog, itemType, itemName, onSubmit, isLink, redirectLink } = props;
+  const { openSubmitDialog, handleCloseSubmitDialog, itemType, itemName, onSubmit, redirectLink } = props;
 
   return (
     <Dialog open={openSubmitDialog} onClose={handleCloseSubmitDialog}>
