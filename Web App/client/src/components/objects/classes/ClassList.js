@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getTeachers } from "../../../actions/UserActions";
+import { getTeachers, getStudents } from "../../../actions/UserActions";
 import { getAllClass, deleteClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -243,22 +243,33 @@ function ClassList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
+  const [students, setStudents] = React.useState(null)
 
-  const { getAllClass, deleteClass, classesCollection, getTeachers, clearErrors } = props;
+  const { getAllClass, deleteClass, classesCollection, getTeachers, clearErrors, getStudents } = props;
 
-  const { user, all_teachers } = props.auth;
+  const { user, all_teachers, all_students } = props.auth;
+
+  console.log(classesCollection)
 
   const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
   const colorMap = new Map();
 
   const classItem = (data,i) => {
     colorMap.set(data._id, colorList[i%(colorList.length)])
+    console.log(getStudents)
+    let temp_ukuran = 0
+    for(let i=0;i<all_students.length;i++){
+      if(all_students[i].kelas === data._id){
+        temp_ukuran = temp_ukuran + 1
+      }
+    }
+    classesCollection.all_classes[i].ukuran = temp_ukuran // Update property ukuran
     rows.push(
       createData(
         data._id,
         data.name,
         !all_teachers.size || !all_teachers.get(data.walikelas) ? null : all_teachers.get(data.walikelas).name,
-        data.ukuran,
+        temp_ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
       )
     )
@@ -266,6 +277,8 @@ function ClassList(props) {
   React.useEffect(() => {
     getAllClass()
     getTeachers("map")
+    let temp_students = getStudents()
+    setStudents(temp_students)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -394,6 +407,7 @@ function ClassList(props) {
                                   vertical: "bottom",
                                   horizontal: "left",
                                 }}
+                                showZero
                               >
                                 <IconButton size="small" disabled>
                                   <SupervisorAccountIcon className={classes.classPersonIcon} />
@@ -435,6 +449,7 @@ function ClassList(props) {
                                   vertical: "bottom",
                                   horizontal: "left",
                                 }}
+                                showZero
                               >
                                 <IconButton size="small" disabled>
                                   <SupervisorAccountIcon className={classes.classPersonIcon} />
@@ -456,6 +471,7 @@ function ClassList(props) {
 };
 
 ClassList.propTypes = {
+  getStudents: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -472,5 +488,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors }
+  mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors, getStudents}
 ) (ClassList);

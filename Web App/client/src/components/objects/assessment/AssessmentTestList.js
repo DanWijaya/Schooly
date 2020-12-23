@@ -22,7 +22,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { HiClipboardList } from "react-icons/hi";
+import { BsClipboardData } from "react-icons/bs";
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -108,18 +108,18 @@ function AssessmentListToolbar(props) {
             null 
             :
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-              <HiClipboardList className={classes.titleIcon} fontSize="large"/>
+              <BsClipboardData className={classes.titleIcon} fontSize="large"/>
               <Typography variant="h4">
-                Daftar Kuis
+                Daftar Ujian
               </Typography>
             </div>  
           }
         </Hidden>
         <Hidden xsDown implementation="css">
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <HiClipboardList className={classes.titleIcon} fontSize="large"/>
+            <BsClipboardData className={classes.titleIcon} fontSize="large"/>
             <Typography variant="h4">
-              Daftar Kuis
+              Daftar Ujian
             </Typography>
           </div>  
         </Hidden>
@@ -140,7 +140,7 @@ function AssessmentListToolbar(props) {
                   onChange={onChange}
                   autoFocus
                   onClick={(e) =>setSearchBarFocus(true)}
-                  placeholder="Search Kuis"
+                  placeholder="Search Ujian"
                   // onBlur={() => setSearchBarFocus(false)}
                   style={{
                     maxWidth: "200px",
@@ -195,7 +195,7 @@ function AssessmentListToolbar(props) {
               onChange={onChange}
               onClick={() => setSearchBarFocus(true)}
               onBlur={() => setSearchBarFocus(false)}
-              placeholder="Search Kuis"
+              placeholder="Search Ujian"
               // onBlur={() => setSearchBarFocus(false)}
               style={{
                 maxWidth: "250px",
@@ -248,7 +248,7 @@ function AssessmentListToolbar(props) {
             <Link to="/kuis"> 
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
                 <AssignmentIcon className={classes.newAssessmentIconDesktop} />
-                Buat Kuis
+                Buat Ujian
               </Fab>
             </Link>
           }
@@ -479,7 +479,7 @@ function AssessmentList(props) {
   // ANCHOR rows
   var rows = [];
   const assessmentRowItem = (data) => {
-    if(data.type === "Kuis"){
+    if(data.type === "Ujian"){
         rows.push(
             createData(
                 data._id,
@@ -631,7 +631,7 @@ function AssessmentList(props) {
         .map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;
           let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
-          let linkToShare = `http://${window.location.host}/kuis-murid/${row._id}`
+          let linkToShare = `http://localhost:3000/kuis-murid/${row._id}`;
           return (
             <Grid item>
               {user.role === "Teacher" ?

@@ -56,6 +56,7 @@ import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
 import AssessmentList from "./components/objects/assessment/AssessmentList";
+import AssessmentTestList from "./components/objects/assessment/AssessmentTestList"
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
 import EditAssessment from "./components/objects/assessment/EditAssessment";
 import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";
@@ -220,6 +221,7 @@ class App extends Component {
                     {/* Route Assessment - Prototype */}
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-ujian" component={AssessmentTestList} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-kuis/:id" handleSideDrawerExist={this.handleSideDrawerExist} component={EditAssessment} />
                     <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} />
                     <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />

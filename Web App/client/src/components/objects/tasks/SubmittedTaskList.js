@@ -392,6 +392,9 @@ function SubmittedTaskList(props) {
                   onDownloadFile={onDownloadFile}/>)
               }
             }
+            if(task_list_on_panel.length === 0) {
+              task_list_on_panel.push(<Typography align="center" color="textSecondary" variant="subtitle1">Kosong</Typography>)
+            }
             students_in_class.push(
               <ExpansionPanel>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>

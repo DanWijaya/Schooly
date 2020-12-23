@@ -108,6 +108,7 @@ function MaterialListToolbar(props) {
           id="searchFilter"
           value={searchFilter}
           onChange={onChange}
+          placeholder="Search Materi"
           style={{
             maxWidth: "250px",
             marginRight: "10px"

@@ -203,24 +203,6 @@ class EditClass extends Component {
                         </FormHelperText>
                       </FormControl>
                     </Grid>
-                    <Grid item>
-                      <Typography component="label" for="ukuran" color="primary">
-                        Jumlah Murid
-                      </Typography>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        id="ukuran"
-                        onChange={this.onChange}
-                        value={this.state.ukuran}
-                        error={errors.ukuran}
-                        type="number"
-                        helperText={errors.ukuran}
-                        className={classnames("", {
-                          invalid: errors.ukuran
-                        })}
-                      />
-                    </Grid>
                   </Grid>
                 </Grid>
                 <Divider flexItem orientation="vertical" className={classes.divider} />

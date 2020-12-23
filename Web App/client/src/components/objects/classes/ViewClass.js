@@ -5,15 +5,16 @@ import { connect } from "react-redux";
 import moment from "moment";
 import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
+import { getStudents, getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
+import { getAllAssessments } from "../../../actions/AssessmentActions";
 import viewClassPicture from "./ViewClassPicture.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
-   List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography } from "@material-ui/core";
+   List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography, Dialog } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 // import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
@@ -23,6 +24,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { HiClipboardList } from "react-icons/hi";
+import { BsClipboardData } from "react-icons/bs";
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +90,11 @@ const useStyles = makeStyles((theme) => ({
   personListDivider: {
     backgroundColor: theme.palette.primary.main,
   },
+  itemIcon: {
+    color: theme.palette.primary.main,
+    marginRight: "5px",
+    fontSize: "20px"
+  }
 }));
 
 function TabPanel(props) {
@@ -190,6 +199,107 @@ function AssignmentListItem(props) {
   )
 }
 
+function AssessmentListItem(props) {
+  const classes = useStyles()
+
+  // Dialog Kuis dan Ujian
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
+
+  const handleOpenDialog = (title, subject, start_date, end_date) => {
+    setCurrentDialogInfo({title, subject, start_date, end_date})
+    setOpenDialog(true)
+    console.log(title)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
+
+  return (
+    <div>
+      <Hidden smUp implementation="css">
+        <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
+          <ListItem button className={classes.listItem}>
+            <Grid container alignItems="center">
+              <Grid item xs={7}>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      {props.work_title}
+                    </Typography>
+                  }
+                  secondary={props.work_subject}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="body2" className={classes.warningText}>
+                      Mulai: <br /> {props.work_starttime}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="caption">
+                      {props.work_status}
+                    </Typography>
+                  }
+                />
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Paper>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
+          <ListItem button className={classes.listItem}>
+            <ListItemAvatar>
+              {props.work_category_avatar}
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography variant="body1">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={props.work_subject}
+            />
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="body2" className={classes.warningText}>
+                  Mulai: {props.work_starttime}
+                </Typography>
+              }
+              secondary={props.work_status}
+            />
+          </ListItem>
+        </Paper>
+      </Hidden>
+      <Dialog
+        fullScreen={false}
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth={true}
+        maxWidth="sm"
+      >
+        <div style={{padding: "20px"}}>
+            <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
+            <Typography variant="h5" align="center" color="primary">
+              {currentDialogInfo.subject}
+            </Typography>
+            <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
+            <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
+            <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
+              Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
+            </Typography>
+        </div>
+      </Dialog>
+    </div>
+  )
+}
+
 function MaterialListitem(props) {
   const classes = useStyles()
 
@@ -280,22 +390,28 @@ function ViewClass(props) {
   const classes = useStyles();
 
   const { setCurrentClass, getStudentsByClass, getAllSubjects,
-     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, getAllTask } = props;
+     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, getAllTask, getAllAssessments, assessmentsCollection } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
   const { kelas } = props.classesCollection
-  const { students_by_class, all_teachers, user } = props.auth;
+  const { students_by_class, all_teachers, user, all_students } = props.auth;
   const classId = props.match.params.id;
 
   const [walikelas, setWalikelas] = React.useState({});
   const [firstAssign, setFirstAssign] = React.useState(true);
   const [allow, setAllow] = React.useState("empty");
 
-  // All actions to retrive datas from Database
+  const all_assessments = assessmentsCollection.all_assessments
 
-  function listTasks(category=null, subject={}){
+  console.log(user.tugas)
+
+  // All actions to retrive datas from Database
+  
+
+  function listTasks(category=null, subject={}, tab="pekerjaan_kelas"){
     let tasksList = []
+    let result = [];
     if (Boolean(tasksCollection.length)) {
       var i;
       for (i = tasksCollection.length-1; i >= 0; i--){
@@ -304,57 +420,187 @@ function ViewClass(props) {
         if(class_assigned.indexOf(classId) !== -1){
           tasksList.push(task)
         }
-        if(i === tasksCollection.length - 5){ // item terakhir harus pas index ke 4.
+        // if(i === tasksCollection.length - 5){ // item terakhir harus pas index ke 4.
+        //   break;
+        // }
+      }
+      
+      for (i = 0; i < tasksList.length; i++){
+        let task = tasksList[i]
+        let workCategoryAvatar = (
+          <Avatar className={classes.assignmentLate}>
+            <AssignmentLateIcon/>
+          </Avatar>
+        )
+
+        let workStatus = "Belum Dikumpulkan"
+        for(let i=0;i<user.tugas.length;i++){
+          if(user.tugas[i].for_task_object === task._id){
+            workStatus = "Sudah Dikumpulkan"
+            console.log("woiiii")
+            break;
+          }
+        }
+        
+        // console.log(all_user_files)
+        // for (var j = 0; j < all_user_files.length; j++){
+        //     if(all_user_files[j].for_task_object === task._id){
+        //     workStatus = "Telah Dikumpulkan"
+        //     workCategoryAvatar = (
+        //       <Avatar className={classes.assignmentTurnedIn}>
+        //         <AssignmentTurnedInIcon/>
+        //       </Avatar>
+        //     )
+        //     break;
+        //   }
+        // }
+        if(tab === "pekerjaan_kelas"){
+          if((!category || (category === "subject" && task.subject === subject._id)) && workStatus === "Belum Dikumpulkan"){
+            result.push(
+              <AssignmentListItem
+                work_title={task.name}
+                work_category_avatar={workCategoryAvatar}
+                work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
+                work_status={workStatus}
+                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_link={`/tugas-murid/${task._id}`}
+              />
+            )
+            if(!category && result.length === 5)
+              break;
+
+            if(category==="subject" && result.length === 3)
+              break;
+          }
+        }
+        else if(tab === "mata_pelajaran"){
+          if(!category || (category === "subject" && task.subject === subject._id)){
+            result.push(
+              <AssignmentListItem
+                work_title={task.name}
+                work_category_avatar={workCategoryAvatar}
+                work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
+                work_status={workStatus}
+                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_link={`/tugas-murid/${task._id}`}
+              />
+            )
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  function listAssessments(category=null, subject={}, type, tab="pekerjaan_kelas"){
+    let AssessmentsList = []
+    let result = [];
+    if (Boolean(all_assessments.length)) {
+      var i;
+      for (i = all_assessments.length-1; i >= 0; i--){
+        let assessment = all_assessments[i];
+        let class_assigned = assessment.class_assigned
+        if(class_assigned.indexOf(classId) !== -1){
+          AssessmentsList.push(assessment)
+        }
+        if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
           break;
         }
       }
 
-      let result = [];
-      for (i = 0; i < tasksList.length; i++){
-      let task = tasksList[i]
-      let workCategoryAvatar = (
-        <Avatar className={classes.assignmentLate}>
-          <AssignmentLateIcon/>
-        </Avatar>
-      )
-      let workStatus = "Belum Dikumpulkan"
-      // console.log(all_user_files)
-      // for (var j = 0; j < all_user_files.length; j++){
-      //     if(all_user_files[j].for_task_object === task._id){
-      //     workStatus = "Telah Dikumpulkan"
-      //     workCategoryAvatar = (
-      //       <Avatar className={classes.assignmentTurnedIn}>
-      //         <AssignmentTurnedInIcon/>
-      //       </Avatar>
-      //     )
-      //     break;
-      //   }
-      // }
-
-      if(!category || (category === "subject" && task.subject === subject._id))
-        result.push(
-          <AssignmentListItem
-            work_title={task.name}
-            work_category_avatar={workCategoryAvatar}
-            work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
-            work_status={workStatus}
-            work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-            work_link={`/tugas-murid/${task._id}`}
-          />
+      for (i = 0; i < AssessmentsList.length; i++){
+        let assessment = AssessmentsList[i]
+        let workCategoryAvatar = (
+          <Avatar className={classes.assignmentLate}>
+            <AssignmentLateIcon/>
+          </Avatar>
         )
-
-      if(!category && result.length === 5)
-        break;
-
-      if(category==="subject" && result.length === 3)
-        break;
+        
+        // console.log(all_user_files)
+        // for (var j = 0; j < all_user_files.length; j++){
+        //     if(all_user_files[j].for_task_object === task._id){
+        //     workStatus = "Telah Dikumpulkan"
+        //     workCategoryAvatar = (
+        //       <Avatar className={classes.assignmentTurnedIn}>
+        //         <AssignmentTurnedInIcon/>
+        //       </Avatar>
+        //     )
+        //     break;
+        //   }
+        // }
+        // console.log(Object.values(assessment.submissions)[0])
+        if(tab === "pekerjaan_kelas"){
+          let workStatus = "Belum Ditempuh"
+          if(type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis"){
+              result.push(
+                <AssessmentListItem
+                  work_title={assessment.name}
+                  work_category_avatar={workCategoryAvatar}
+                  work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
+                  work_status={workStatus}
+                  work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                />
+              )
+            }
+          }
+          if(type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian"){
+              result.push(
+                <AssessmentListItem
+                  work_title={assessment.name}
+                  work_category_avatar={workCategoryAvatar}
+                  work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
+                  work_status={workStatus}
+                  work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                />
+              )
+            }
+          }
+          if(!category && result.length === 5)
+            break;
+          if(category==="subject" && result.length === 3)
+            break;
+        }
+        else if(tab === "mata_pelajaran"){
+          let workStatus = (!assessment.submissions ? "Belum Ditempuh" : "Sudah Ditempuh")
+          if(type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Kuis"){
+              result.push(
+                <AssessmentListItem
+                  work_title={assessment.name}
+                  work_category_avatar={workCategoryAvatar}
+                  work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
+                  work_status={workStatus}
+                  work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                />
+              )
+            }
+          }
+          if(type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Ujian"){
+              result.push(
+                <AssessmentListItem
+                  work_title={assessment.name}
+                  work_category_avatar={workCategoryAvatar}
+                  work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
+                  work_status={workStatus}
+                  work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                />
+              )
+            }
+          }
+        }
+      }  
     }
-
     return result;
-    }
   }
 
-  function listMaterials(category=null, subject={}){
+  function listMaterials(category=null, subject={}, tab="pekerjaan_kelas"){
     let materialList = []
 
     if(Boolean(selectedMaterials.length)) {
@@ -375,13 +621,12 @@ function ViewClass(props) {
             />
           )
         }
-
-        if(!category && materialList.length ===  5) // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
-          break;
-
-        if(category==="subject" && materialList.length ===  3)// item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
-          break;
-
+        if(tab === "pekerjaan_kelas"){
+          if(!category && materialList.length ===  5) // item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            break;
+          if(category==="subject" && materialList.length ===  3)// item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
+            break;
+        }
       }
       return materialList;
     }
@@ -398,9 +643,11 @@ function ViewClass(props) {
     getAllSubjects() // get the all_subjects
     getStudentsByClass(props.match.params.id) // get the students_by_class
     getTeachers("map") // get the all_teachers
+    getStudents()
 
     getAllTaskFilesByUser(user.id) // get the all_user_files
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    getAllAssessments()
   }, [])
 
   React.useEffect(() => {
@@ -618,7 +865,8 @@ function ViewClass(props) {
                 <ExpansionPanel defaultExpanded>
                   <ExpansionPanelSummary>
                     <Grid container justify="space-between" alignItems="center">
-                      <Grid item>
+                      <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                        <MenuBookIcon className={classes.itemIcon}/>
                         <Typography variant="h6">
                           Materi
                         </Typography>
@@ -639,13 +887,16 @@ function ViewClass(props) {
                   </ExpansionPanelSummary>
                   <Divider />
                   <List className={classes.expansionPanelList}>
-                    {listMaterials()}
+                    {listMaterials().length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+                      <>{listMaterials()}</>
+                    }
                   </List>
                 </ExpansionPanel>
                 <ExpansionPanel defaultExpanded>
                   <ExpansionPanelSummary>
                     <Grid container justify="space-between" alignItems="center">
-                      <Grid item>
+                      <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                        <AssignmentIcon className={classes.itemIcon}/>
                         <Typography variant="h6">
                           Tugas
                         </Typography>
@@ -666,22 +917,70 @@ function ViewClass(props) {
                   </ExpansionPanelSummary>
                   <Divider />
                   <List className={classes.expansionPanelList}>
-                    {listTasks()}
+                    {listTasks().length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+                      <>{listTasks()}</>
+                    }
                   </List>
                 </ExpansionPanel>
-                <ExpansionPanel disabled>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                      Kuis (Coming Soon)
-                    </Typography>
+                <ExpansionPanel defaultExpanded>
+                  <ExpansionPanelSummary>
+                    <Grid container justify="space-between" alignItems="center">
+                      <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                        <HiClipboardList className={classes.itemIcon}/>
+                        <Typography variant="h6">
+                          Kuis
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <LightTooltip title="Lihat Semua" placement="right">
+                          <Link to="/daftar-kuis">
+                            <IconButton
+                              size="small"
+                              className={classes.viewSubjectButton}
+                            >
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
                   </ExpansionPanelSummary>
+                  <Divider />
+                  <List className={classes.expansionPanelList}>
+                    {listAssessments(null, {}, "Kuis").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+                      <>{listAssessments(null, {}, "Kuis")}</>
+                    }
+                  </List>
                 </ExpansionPanel>
-                <ExpansionPanel disabled>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                      Ujian (Coming Soon)
-                    </Typography>
+                <ExpansionPanel defaultExpanded>
+                  <ExpansionPanelSummary>
+                    <Grid container justify="space-between" alignItems="center">
+                      <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                        <BsClipboardData className={classes.itemIcon}/>
+                        <Typography variant="h6">
+                          Ujian
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <LightTooltip title="Lihat Semua" placement="right">
+                          <Link to="/daftar-ujian">
+                            <IconButton
+                              size="small"
+                              className={classes.viewSubjectButton}
+                            >
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
+                        </LightTooltip>
+                      </Grid>
+                    </Grid>
                   </ExpansionPanelSummary>
+                  <Divider />
+                  <List className={classes.expansionPanelList}>
+                    {listAssessments(null, {}, "Ujian").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+                      <>{listAssessments(null, {}, "Ujian")}</>
+                    }
+                  </List>
                 </ExpansionPanel>
               </TabPanel>
               <TabPanel value={value} index={1}>
@@ -711,9 +1010,11 @@ function ViewClass(props) {
                         </ExpansionPanelSummary>
                         <Divider className={classes.subjectDivider} />
                         <List className={classes.expansionPanelList}>
-                          {listMaterials("subject", subject)}
-                          {listTasks("subject", subject)}
-                          {(listMaterials("subject", subject).length === 0 && listTasks("subject", subject).length === 0) ? <Typography color="textSecondary" align="center" variant="subtitle1">Kosong</Typography> : null}
+                          {listMaterials("subject", subject, "mata_pelajaran")}
+                          {listTasks("subject", subject, "mata_pelajaran")}
+                          {listAssessments("subject", subject, "Kuis", "mata_pelajaran")}
+                          {listAssessments("subject", subject, "Ujian", "mata_pelajaran")}
+                          {(listMaterials("subject", subject, "mata_pelajaran").length === 0 && listTasks("subject", subject, "mata_pelajaran").length === 0 && listAssessments("subject", subject, "Kuis", "mata_pelajaran").length === 0 && listAssessments("subject", subject, "Ujian", "mata_pelajaran").length === 0) ? <Typography color="textSecondary" align="center" variant="subtitle1">Kosong</Typography> : null}
                         </List>
                       </ExpansionPanel>
                     )
@@ -839,12 +1140,15 @@ ViewClass.propTypes = {
   materialsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
+  getAllAssessments: PropTypes.func.isRequired,
+  getStudents: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -854,9 +1158,10 @@ const mapStateToProps = (state) => ({
   tasksCollection: state.tasksCollection,
   materialsCollection: state.materialsCollection,
   filesCollection: state.filesCollection,
+  assessmentsCollection: state.assessmentsCollection
 });
 
 export default connect(
   mapStateToProps, { setCurrentClass, getStudentsByClass,
-    getAllSubjects, getAllTask, getTeachers, getMaterial, getAllTaskFilesByUser }
+    getAllSubjects, getAllTask, getTeachers, getMaterial, getAllTaskFilesByUser, getAllAssessments, getStudents }
 ) (ViewClass);

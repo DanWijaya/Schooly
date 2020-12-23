@@ -316,7 +316,7 @@ function ViewAssessmentTeacher(props) {
             </Grid>
             <Grid item>
             <Link to={`/sunting-kuis/${assessment_id}`}>
-              <LightTooltip title="Sunting Kuis" placement="bottom">
+              <LightTooltip title="Sunting" placement="bottom">
                 <Fab className={classes.editAssessmentButton}>
                   <EditIcon />
                 </Fab>
@@ -324,7 +324,7 @@ function ViewAssessmentTeacher(props) {
             </Link>
             </Grid>
             <Grid item>
-              <LightTooltip title="Buang Kuis" placement="bottom">
+              <LightTooltip title="Hapus" placement="bottom">
                 <Fab className={classes.deleteAssessmentButton} onClick={(e) => {handleOpenDeleteDialog(e, assessment_id)}}>
                   <DeleteIcon />
                 </Fab>

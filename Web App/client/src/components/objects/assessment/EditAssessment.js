@@ -69,6 +69,9 @@ const styles = (theme) => ({
   content: {
     padding: "20px 20px 30px 20px",
   },
+  pageNavigatorContent: {
+    padding: "20px 20px 30px 5px",
+  },
   divider: {
     [theme.breakpoints.down("md")]: {
       width: "100%",
@@ -1061,7 +1064,7 @@ class EditAssessment extends Component {
     // }))(Switch);
 
     console.log("QUESTIONS : ", this.state.questions)
-    document.title = "Schooly | Sunting Kuis";
+    document.title = "Schooly | Sunting Kuis/Ujian";
 
 
     return (
@@ -1069,7 +1072,7 @@ class EditAssessment extends Component {
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType="Perubahan Kuis"
+          itemType="Perubahan Kuis/Ujian"
           itemName={this.state.name}
           deleteItem=""
           isLink={true}
@@ -1078,8 +1081,8 @@ class EditAssessment extends Component {
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          messageUploading="Kuis sedang disunting"
-          messageSuccess="Kuis telah disunting"
+          messageUploading="Kuis/Ujian sedang disunting"
+          messageSuccess="Kuis/Ujian telah disunting"
           redirectLink="/daftar-kuis"
         />
         <form onSubmit={(e) => this.onSubmit(e)}>
@@ -1088,10 +1091,10 @@ class EditAssessment extends Component {
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Sunting Kuis</b>
+                    <b>Sunting Kuis/Ujian</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan kuis untuk menyunting kuis.
+                    Tambahkan keterangan untuk menyunting Kuis/Ujian.
                   </Typography>
                 </div>
                 <Divider />
@@ -1294,7 +1297,7 @@ class EditAssessment extends Component {
             <Hidden smDown implementation="css">
               <Grid item>
                 <Paper>
-                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.pageNavigatorContent}>
                     <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
                       <Grid item>
                         <TablePagination
@@ -1340,7 +1343,7 @@ class EditAssessment extends Component {
                       </Grid>
                       <Grid item>
                         <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                          Sunting Kuis
+                          Sunting
                         </Button>
                       </Grid>
                     </Grid>
@@ -1351,7 +1354,7 @@ class EditAssessment extends Component {
             <Hidden mdUp implementation="css">
               <Grid item>
                 <Paper>
-                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.pageNavigatorContent}>
                     <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
                       <Grid item>
                         <TablePagination
@@ -1404,7 +1407,7 @@ class EditAssessment extends Component {
                       <ListItemIcon>
                         <LinkIcon/>
                       </ListItemIcon>
-                      <ListItemText primary="Copy Link Kuis" />
+                      <ListItemText primary="Copy Link Kuis/Ujian" />
                     </MenuItem>
                     <MenuItem button component="a" className={classes.menuCancel} onClick={this.handleOpenDeleteDialog}>
                       <ListItemIcon>
@@ -1416,7 +1419,7 @@ class EditAssessment extends Component {
                       <ListItemIcon>
                         <SendIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Sunting Kuis" />
+                      <ListItemText primary="Sunting Kuis/Ujian" />
                     </MenuItem>
                   </Menu>
                 </Grid>        

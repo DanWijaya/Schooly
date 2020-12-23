@@ -361,7 +361,7 @@ console.log(all_classes_map)
           </Link>
         </Grid>
         <Grid item>
-          <LightTooltip title="Buang Tugas" placement="bottom">
+          <LightTooltip title="Hapus" placement="bottom">
             <Fab className={classes.deleteTaskButton} onClick={(e) => handleOpenDeleteDialog(e,task_id)}>
               <DeleteIcon />
             </Fab>

@@ -39,6 +39,9 @@ const styles = (theme) => ({
   content: {
     padding: "20px 20px 30px 20px",
   },
+  pageNavigatorContent: {
+    padding: "20px 20px 30px 5px",
+  },
   divider: {
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -928,7 +931,7 @@ class CreateAssessment extends Component {
     //   checked: {},
     // }))(Switch);
 
-    document.title = "Schooly | Buat Kuis";
+    document.title = "Schooly | Buat Kuis/Ujian";
 
     console.log(this.state.questions)
 
@@ -957,8 +960,8 @@ class CreateAssessment extends Component {
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}
           success={success}
-          messageUploading="Kuis sedang dibuat"
-          messageSuccess="Kuis telah dibuat"
+          messageUploading="Kuis/Ujian sedang dibuat"
+          messageSuccess="Kuis/Ujian telah dibuat"
           redirectLink="/daftar-kuis"
         />
         <form onSubmit={(e) => this.onSubmit(e, user.id)} id="submitForm">
@@ -967,10 +970,10 @@ class CreateAssessment extends Component {
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Buat Kuis</b>
+                    <b>Buat Kuis/Ujian</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan kuis untuk membuat kuis.
+                    Tambahkan keterangan untuk membuat kuis/ujian.
                   </Typography>
                 </div>
                 <Divider />
@@ -1171,7 +1174,7 @@ class CreateAssessment extends Component {
             <Hidden smDown implementation="css">
               <Grid item>
                 <Paper>
-                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                  <Grid container justify="space-between" alignItems="center" className={classes.pageNavigatorContent}>
                     <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
                       <Grid item>
                         <TablePagination
@@ -1210,7 +1213,7 @@ class CreateAssessment extends Component {
                       </Grid>
                       <Grid item>
                         <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                          Buat Kuis
+                          Buat
                         </Button>
                       </Grid>
                     </Grid>
@@ -1221,7 +1224,7 @@ class CreateAssessment extends Component {
             <Hidden mdUp implementation="css">
               <Grid item>
                 <Paper>
-                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.content}>
+                  <Grid container spacing={2} justify="space-between" alignItems="center" className={classes.pageNavigatorContent}>
                     <Grid item container md={9} alignItems="center" className={classes.pageNavigator}>
                       <Grid item>
                         <TablePagination
@@ -1280,7 +1283,7 @@ class CreateAssessment extends Component {
                       <ListItemIcon>
                         <SendIcon  />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Kuis" />
+                      <ListItemText primary="Buat" />
                     </MenuItem>
                   </Menu>
                 </Grid>        

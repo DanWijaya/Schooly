@@ -110,6 +110,7 @@ function TaskListToolbar(props) {
             variant="outlined"
             id="searchFilter"
             value={searchFilter}
+            placeholder="Search Tugas"
             onChange={onChange}
             style={{
               maxWidth: "250px",

@@ -683,7 +683,7 @@ class CreateAssessment extends Component {
       { icon: <VisibilityIcon />, name: 'Tampilkan Ke Murid' },
       { icon: <LinkIcon />, name: 'Copy Ke Clipboard' },
       { icon: <CancelIcon />, name: 'Batal' },
-      { icon: <SendIcon />, name: 'Buat Kuis' },
+      { icon: <SendIcon />, name: 'Buat Kuis/Ujian' },
     ];
 
     const ToggleViewQuiz = withStyles((theme) => ({
@@ -734,7 +734,7 @@ class CreateAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    document.title = "Schooly | Buat Kuis";
+    document.title = "Schooly | Buat Kuis/Ujian";
 
     console.log(this.state.questions)
 
@@ -773,10 +773,10 @@ class CreateAssessment extends Component {
               <Paper>
                 <div className={classes.content}>
                   <Typography variant="h5" gutterBottom>
-                    <b>Buat Kuis</b>
+                    <b>Buat Kuis/Ujian</b>
                   </Typography>
                   <Typography color="textSecondary">
-                    Tambahkan keterangan kuis untuk membuat kuis.
+                    Tambahkan keterangan kuis untuk membuat kuis/ujian.
                   </Typography>
                 </div>
                 <Divider />
@@ -1010,7 +1010,7 @@ class CreateAssessment extends Component {
                       </Grid>
                       <Grid item>
                         <Button variant="contained" type="submit" className={classes.createAssessmentButton}>
-                          Buat Kuis
+                          Buat Kuis/Ujian
                         </Button>
                       </Grid>
                     </Grid>
@@ -1086,7 +1086,7 @@ class CreateAssessment extends Component {
                       <ListItemIcon>
                         <SendIcon  />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Kuis" />
+                      <ListItemText primary="Buat Kuis/Ujian" />
                     </MenuItem>
                   </Menu>
                 </Grid>        
