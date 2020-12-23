@@ -548,7 +548,9 @@ function SubmittedAssessmentList(props) {
                 let questionAnswer = selectedAssessments.questions[questionIdx].answer;
                 let studentAnswer = selectedAssessments.submissions[student._id][questionIdx];
 
-                if (studentAnswer) { // jika murid menjawab soal ini
+                if (studentAnswer.length !== 0) { 
+                  // jika murid menjawab soal ini
+                  
                   if (questionType === "radio") {
                     if (questionAnswer[0] === studentAnswer[0]) {
                       scores.radio.totalpoint += 1 * weights.radio;
@@ -583,7 +585,9 @@ function SubmittedAssessmentList(props) {
                     scores.shorttext.totalpoint += weights.shorttext * temp_correct / questionAnswer.length;
                     scores.shorttext.totalweight += 1 * weights.shorttext;
                   }
-                } else { // jika murid ga menjawab soal ini
+                } else { 
+                  // jika murid ga menjawab soal ini
+                  
                   if (questionType === "radio") {
                     scores.radio.totalweight += 1 * weights.radio;
                   } else if (questionType === "checkbox") {
@@ -785,7 +789,7 @@ function SubmittedAssessmentList(props) {
               </Typography>
 
               <Grid container item justify='flex-end' style={{ marginTop: "20px" }}>
-                <Link to="/lihat-jawaban-kuis">
+                <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
                   <Fab size="medium" variant="extended" className={classes.editFab}>
                     <EditIcon className={classes.editIconDesktop} />
                     Periksa

@@ -188,7 +188,7 @@ class App extends Component {
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                     <Route exact path="/timer" component={Timer} /> {/*prototype*/}
                     <Route exact path="/graph" component={Graph} /> {/*prototype*/}
-                    <Route exact path="/lihat-jawaban-kuis" component={ViewAssessmentAnswer} /> {/*prototype*/}
+                    <Route exact path="/lihat-jawaban-kuis/:id" component={ViewAssessmentAnswer} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />

@@ -251,7 +251,6 @@ class EditAssessment extends Component {
     this.props.handleSideDrawerExist(true)
   }
 
-  // ANCHOR UNSAFE_componentWillReceiveProps
   UNSAFE_componentWillReceiveProps(nextProps){
     const { selectedAssessments } = nextProps.assessmentsCollection
 
@@ -266,18 +265,17 @@ class EditAssessment extends Component {
           checkbox: selectedAssessments.question_weight.checkbox,
           shorttext: selectedAssessments.question_weight.shorttext
         };
+
         let longtextWeight = [];
-        for (let [key, value] of Object.entries(selectedAssessments.question_weight.longtext)) {
-          longtextWeight[key] = value;
+        for (let i = 0; i <= selectedAssessments.questions.length - 1; i++) {
+          longtextWeight.push(null);
         }
 
-        // ini tidak mengubah elemen undefined menjadi null
-        // longtextWeight = longtextWeight.map((val) => {
-        //   return (val) ? val : null;
-        // });
-
-        // ini mengubah elemen undefined menjadi null
-        longtextWeight = Array.from(longtextWeight, (val) => (val === undefined) ? null : val);
+        if (selectedAssessments.question_weight.longtext) { 
+          for (let [key, value] of Object.entries(selectedAssessments.question_weight.longtext)) {
+            longtextWeight[key] = value;
+          }
+        }
 
         this.setState({
           name: selectedAssessments.name,
@@ -536,7 +534,6 @@ class EditAssessment extends Component {
         type: option
       })
     }
-    // TODO[epic=paste from create assessment] add question
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.push((option === "longtext") ? 0 : null);
@@ -739,7 +736,6 @@ class EditAssessment extends Component {
     });
   }
 
-  // TODO[epic=paste from create assessment] deletequestion
   deleteQuestion = (index) => {
     console.log(index)
     let questions = this.state.questions

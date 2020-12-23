@@ -69,10 +69,11 @@ const AssessmentSchema = new Schema({
     //   },
     // }
 
-    // TODO 
+    // NOTE
     // -jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades.
     // jika belum dinilai, pasangan tidak ditambahkan.
-    // -jika longtext_grades sudah lengkap, total_grade baru ada
+    // -(assessments.js, endpoint update grade uraian) jika longtext_grades sudah lengkap, total_grade baru ada. 
+    // jika longtext_grades tidak lengkap, total_grade bernilai null
 
     submissions:{
       type: Map,
@@ -101,7 +102,7 @@ const AssessmentSchema = new Schema({
     //   }
     // }
 
-    // TODO
+    // NOTE
     // (di CreateAssessment.js, di fungsi onSubmit) jika assessment tidak punya suatu tipe soal, value untuk key tipe soal tersebut = null
     // (di CreateAssessment.js, di fungsi onSubmit) bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai 0 
 

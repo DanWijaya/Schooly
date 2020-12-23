@@ -437,7 +437,6 @@ class CreateAssessment extends Component {
         type: option
       })
     }
-    // TODO[epic=copy to editassessment] add question
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.push((option === "longtext") ? 0 : null);
@@ -619,7 +618,6 @@ class CreateAssessment extends Component {
     });
   }
 
-  // TODO[epic=copy to editassessment] delete question
   deleteQuestion = (index) => {
     console.log(index)
     let questions = this.state.questions

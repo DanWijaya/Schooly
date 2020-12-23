@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentActions"
+import { getOneAssessment, deleteAssessment, updateAssessmentGrades } from "../../../actions/AssessmentActions"
 import { getAllClass } from "../../../actions/ClassActions";
+import { getStudents } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar, Divider, 
@@ -25,6 +26,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import ExploreIcon from '@material-ui/icons/Explore';
 import MuiAlert from "@material-ui/lab/Alert";
+// ANCHOR import
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -163,8 +165,21 @@ const useStyles = makeStyles((theme) => ({
   },
   mobileNavButton: {
       color: theme.palette.text.secondary
-  }
+  },
+  questionPage: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "35px",
+    height: "35px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      cursor: "pointer",
+    },
+  },
 }));
+// ANCHOR class
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
@@ -172,27 +187,63 @@ function ViewAssessmentTeacher(props) {
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
 
-  const { getOneAssessment, getAllClass, getAllSubjects, deleteAssessment } = props;
-  // const { all_classes_map } = props.classesCollection;
+  const { getOneAssessment, getAllClass, getAllSubjects, deleteAssessment, getStudents } = props;
+  const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const { questions, type } = selectedAssessments;
-  const [copySnackbarOpen, setOpenCopySnackBar] = React.useState(null);
+  const { all_students } = props.auth;
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+  const [all_student_object, setAllStudentObj] = React.useState(null);
+
+  const [qnsIndex, setQnsIndex] = React.useState(0);
+  const [longtextGrades, setLongtextGrades] = React.useState(null);
+  // ANCHOR states
 
   // Tabs
   const [value, setValue] = React.useState(0);
 
-  console.log(selectedAssessmentName)
   React.useEffect(() => {
     getOneAssessment(assessment_id)
     getAllClass("map")
     getAllSubjects("map")
+    getStudents()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // ANCHOR useEffect
+  React.useEffect(() => {    
+    if (isAssessmentLoaded() && isAllStudentsLoaded()) {
+      let students = {};
+
+      for (var j = 0; j < all_students.length; j++) {
+        if (selectedAssessments.class_assigned.includes(all_students[j].kelas)) {
+          students[all_students[j]._id] = all_students[j];
+        }
+      }
+      setAllStudentObj(students);
+    }
+  }, [all_students, selectedAssessments])
+  
+  React.useEffect(() => {
+    if (isAssessmentLoaded() && all_student_object) {
+      
+      console.log(all_student_object);
+      let ltGrade = {};
+      Object.keys(all_student_object).forEach((studentId) => {
+        if (selectedAssessments.grades[studentId]) {
+          ltGrade[studentId] = selectedAssessments.grades[studentId].longtext_grades;
+        } else {
+          // jika semua jawaban uraian murid ini belum dinilai
+          ltGrade[studentId] = {};
+        }
+      })
+      setLongtextGrades(ltGrade);
+    }
+  }, [selectedAssessments, all_student_object])
 
   const onDeleteAssessment = (id) => {
     deleteAssessment(id)
@@ -279,15 +330,24 @@ function ViewAssessmentTeacher(props) {
     ); 
   }
 
-  const handleOpenCopySnackBar = (type) => {
-    setOpenCopySnackBar(true);
+  const [snackbarContent, setSnackbarContent] = React.useState('');
+  const [severity, setSeverity] = React.useState('info');
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+  function handleOpenSnackbar(severity, content) {
+    setOpenSnackbar(true);
+    setSeverity(severity);
+    setSnackbarContent(content);
   }
 
-  const handleCloseCopySnackBar = () => {
-    setOpenCopySnackBar(false);
+  function handleCloseSnackbar(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   }
 
-  // Generate Soal
+  // ANCHOR fungsi generate Soal
   const generateQuestion = (number, question, weight) => {
     return (
         <Paper className={classes.contentItem}>
@@ -298,39 +358,125 @@ function ViewAssessmentTeacher(props) {
     )
   }
 
-  const generateQuestionPerQuestion = (studentName, studentClass, studentAnswer, studentMark, answerChecked) => {
-    return (
-      <Badge 
-        badgeContent={(answerChecked) ? <CheckCircleIcon className={classes.checkBadge} fontSize="large"/> :
-            <ErrorIcon className={classes.warningBadge} fontSize="large"/>} variant="standard" style={{marginLeft: "4px"}}>
-          <Paper className={classes.contentItem}>
-              <Typography variant="h6"><b>{`${studentName}`}</b></Typography>
-              <Typography variant="subtitle-1" color="textSecondary">{`${studentClass}`}</Typography>
-              <Divider style={{marginBottom: "10px", marginTop: "10px"}}/>
-              <Typography align="justify">{`${studentAnswer}`}</Typography>
-              <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px"}}>
-                <Typography style={{marginTop: "5px", marginRight: "10px"}} color="textSecondary">Poin :</Typography>
-                <TextField
-                    defaultValue={studentMark}
-                    inputProps={{
-                    style: {
-                        borderBottom: "none",
-                        boxShadow: "none",
-                        margin: "0px",
-                        width: "30px"
-                    }
-                    }}
-                    InputProps={{
-                        endAdornment: "/ 100",
-                    }}
-                />
-                <div>
-                    <Button className={classes.saveButton} size="small">SIMPAN</Button>
-                </div>
-              </div>
-          </Paper>
-      </Badge>
-    )
+  // ANCHOR func handleGradeChange
+  const handleGradeChange = (e, studentId) => {
+    let temp = { ...longtextGrades};
+    let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
+    temp[studentId] = { ...temp[studentId], [qnsIndex]: grade };
+    console.log(temp);
+    setLongtextGrades(temp);
+  }
+
+  // ANCHOR 
+  const handleSaveGrade = (studentId) => {
+    let temp = { ...longtextGrades };
+    let grade = temp[studentId][qnsIndex];
+
+    let numberGrade = Number(grade);
+
+    if (isNaN(numberGrade) || numberGrade <= 0) {
+      handleOpenSnackbar("error", "Nilai harus berupa angka dan tidak boleh kurang dari sama dengan 0")
+    } else {
+      temp[studentId] = { ...temp[studentId], [qnsIndex]: numberGrade };
+      setLongtextGrades(temp);
+      updateAssessmentGrades(assessment_id, studentId, qnsIndex, numberGrade).then(() => {
+        handleOpenSnackbar("success", "Nilai berhasil diperbarui")
+      }).catch((err) => {
+        console.log(err);
+        handleOpenSnackbar("error", "Nilai gagal diperbarui")
+      });
+    }
+  }
+
+  // ANCHOR fungsi jawaban murid
+  const generateAllStudentAnswer = () => {
+    let submissions = selectedAssessments.submissions;
+    let question = selectedAssessments.questions[qnsIndex];
+    let weights = selectedAssessments.question_weight;
+
+    // traverse submission semua murid, (murid yang belum mengerjakan assessment ini tidak akan ditampilkan)
+    return Object.entries(submissions).map((student) => {
+    //  Object.entries(submissions).map((student) => {
+      let studentId = student[0];
+      let studentAnswer = student[1][qnsIndex];
+      let studentInfo = all_student_object[studentId]; 
+      // console.log(all_student_object);
+
+      let studentClassName = all_classes_map.get(studentInfo.kelas).name;
+      let questionWeight;
+
+      let mark = 0;
+      if (question.type === "longtext") {
+        questionWeight = weights[question.type][qnsIndex];
+      
+        let longtextGrade = longtextGrades[studentId][qnsIndex]; // object
+        if (longtextGrade) {
+          // jika sudah pernah dinilai
+          mark = longtextGrade;
+        } else {
+          // jika belum pernah dinilai
+          mark = null;
+        }
+
+      } else {
+        questionWeight = weights[question.type];
+
+        if (studentAnswer.length !== 0) {
+          // jika murid menjawab soal ini
+
+          let questionAnswer = question.answer;
+
+          if (question.type === "radio") {
+            if (question[0] === studentAnswer[0]) {
+              mark = 1 * weights.radio;
+            }
+          } else if (question.type === "checkbox") {
+            let temp_correct = 0;
+
+            studentAnswer.forEach((answer) => {
+              if (questionAnswer.includes(answer)) {
+                temp_correct += 1;
+              }
+              else {
+                temp_correct -= 2;
+              }
+            });
+
+            if (temp_correct > 0) {
+              mark = weights.checkbox * temp_correct / questionAnswer.length;
+            }
+          } else { // type === "shorttext"
+            let temp_correct = 0;
+            for (let answerIdx = 0; answerIdx < questionAnswer.length; answerIdx++) {
+              if (questionAnswer[answerIdx] === studentAnswer[answerIdx]) {
+                temp_correct++;
+              }
+            }
+
+            mark = weights.shorttext * temp_correct / questionAnswer.length;
+          }
+
+        } // jika murid tidak menjawab soal ini, mark tetap 0
+      
+      }
+      
+      return (
+        <GenerateQuestionPerQuestion
+          questionNumber={qnsIndex}
+          classes={classes}
+          studentId={studentId}
+          studentName={studentInfo.name}
+          studentClass={studentClassName}
+          studentAnswer={studentAnswer}
+          studentMark={mark}
+          questionType={question.type}
+          questionWeight={questionWeight}
+          handleGradeChange={handleGradeChange}
+          handleSaveGrade={handleSaveGrade}
+        />                    
+      )
+      // return generateQuestionPerQuestion(studentId, studentInfo.name, studentClassName, studentAnswer, mark, question.type, questionWeight);
+    });
   }
 
   const generateQuestionandAnswerPerStudent = (number, question, weight, studentName, studentClass, studentAnswer, studentMark, answerChecked) => {
@@ -408,6 +554,55 @@ function ViewAssessmentTeacher(props) {
 
   let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
 
+  function isAssessmentLoaded() {
+    return (Object.keys(selectedAssessments).length !== 0);
+  }
+  function isAllStudentsLoaded() {
+    return (all_students.length !== 0);
+  }
+
+  const handleChangeQuestion = (i) => {
+    setQnsIndex(i)
+  }
+
+  // ANCHOR fungsi question page
+  function QuestionPage(props) {
+    const { classes, handleChangeQuestion, question_number, answer } = props;
+
+    return (
+      <Grid item>
+        {/* TODO badge */}
+        <Badge
+          badgeContent={
+            // (answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => { return elm !== "" })) ?
+            <Avatar style={{ backgroundColor: "green", color: "white", width: "20px", height: "20px" }}>
+              <CheckCircleIcon style={{ width: "15px", height: "15px" }} />
+            </Avatar>
+            // :
+            // <Avatar style={{ backgroundColor: "red", color: "white", width: "20px", height: "20px" }}>
+            //   <ErrorIcon style={{ width: "15px", height: "15px" }} />
+            // </Avatar>
+          }
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+        >
+          <Paper
+            buttons
+            variant="outlined"
+            className={classes.questionPage}
+            onClick={() => handleChangeQuestion(question_number - 1)}
+          >
+            <Typography>
+              {question_number}
+            </Typography>
+          </Paper>
+        </Badge>
+      </Grid>
+    )
+  }
+
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
@@ -471,6 +666,18 @@ function ViewAssessmentTeacher(props) {
                             <Typography style={{display: "none"}}>:</Typography>                      
                         </Badge>
                     </LightTooltip>
+                </Grid>
+                  {/* ANCHOR elemen navigasi soal */}
+                  <Grid container item md={12} spacing={2} alignItems="center">
+                  {
+                    (isAssessmentLoaded()) ? (
+                      selectedAssessments.questions.map((qns, i) => { 
+                        return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion} />) 
+                      })
+                    ) : (
+                      null
+                    )
+                  }
                 </Grid>
                 </Hidden>
                 <Hidden smUp>
@@ -543,11 +750,37 @@ function ViewAssessmentTeacher(props) {
                 </Grid>
               </Grid>
             </Paper>
-            <TabPanel value={value} index={0}>
-                {generateQuestion(1,"Jelaskan keuntungan dan kerugian dari keputusan membangun sistem dan membeli sistem! Sertakan 2 contoh yang relevan dengan kebutuhan organisasi yang Anda bahas pada dokumen tugas besar! Jelaskan keuntungan dan kerugian dari keputusan membangun sistem dan membeli sistem! Sertakan 2 contoh yang relevan dengan kebutuhan organisasi yang Anda bahas pada dokumen tugas besar!",10)}
-                {generateQuestionPerQuestion("Elon Musk","Kelas VIII-B","Revolusi Amerika Terjadi Pada 1776, di mana Pasukan Kolonial Amerika berhasil menumpas penjajahan Bangsa Inggris melalui perjuangan selama bertahun-tahun.Revolusi Amerika Terjadi Pada 1776, di mana Pasukan Kolonial Amerika berhasil menumpas penjajahan Bangsa Inggris melalui perjuangan selama bertahun-tahun.Revolusi Amerika Terjadi Pada 1776, di mana Pasukan Kolonial Amerika berhasil menumpas penjajahan Bangsa Inggris melalui perjuangan selama bertahun-tahun.",10,true)}
-            </TabPanel>
-            <TabPanel value={value} index={1}>
+          <div hidden={value === 1} style={{padding: "24px"}}>
+            {/* ANCHOR elemen soal */}
+            {
+              (isAssessmentLoaded()) ? (
+                (selectedAssessments.questions[qnsIndex].type === "longtext") ? (
+                  generateQuestion(
+                    qnsIndex + 1,
+                    selectedAssessments.questions[qnsIndex].name,
+                    selectedAssessments.question_weight.longtext[qnsIndex]
+                  )
+                ) : (
+                  generateQuestion(
+                    qnsIndex + 1,
+                    selectedAssessments.questions[qnsIndex].name,
+                    selectedAssessments.question_weight[selectedAssessments.questions[qnsIndex].type]
+                  )
+                )
+              ) : (
+                null
+              )
+            }
+
+            {
+              (longtextGrades) ? (
+                generateAllStudentAnswer()
+              ) : (
+                null
+              )
+            }
+            </div>
+          <div hidden={value === 0} style={{ padding: "24px" }}>
                 <Paper className={classes.perStudentSelect}>
                     <div className={classes.selectDiv}>
                         <Grid container>
@@ -590,10 +823,9 @@ function ViewAssessmentTeacher(props) {
                         </Grid>
                     </div>
                 </Paper>
-                {generateQuestionandAnswerPerStudent(1,"Jelaskan keuntungan dan kerugian dari keputusan membangun sistem dan membeli sistem! Sertakan 2 contoh yang relevan dengan kebutuhan organisasi yang Anda bahas pada dokumen tugas besar! Jelaskan keuntungan dan kerugian dari keputusan membangun sistem dan membeli sistem! Sertakan 2 contoh yang relevan dengan kebutuhan organisasi yang Anda bahas pada dokumen tugas besar!",10,"Elon Musk","Kelas VIII-B","Revolusi Amerika Terjadi Pada 1776, di mana Pasukan Kolonial Amerika berhasil menumpas penjajahan Bangsa Inggris melalui perjuangan selama bertahun-tahun.Revolusi Amerika Terjadi Pada 1776, di mana Pasukan Kolonial Amerika berhasil menumpas penjajahan Bangsa Inggris melalui perjuangan selama bertahun-tahun.Revolusi Amerika Terjadi Pada 1776, di mana Pasukan Kolonial Amerika berhasil menumpas penjajahan Bangsa Inggris melalui perjuangan selama bertahun-tahun.",10,true)}
-            </TabPanel>
+            </div>
           </Grid>
-          {!Array.isArray(questions) ? null :
+          {/* {!Array.isArray(questions) ? null :
           questions.map((question, i) => (
             <Grid item>
               <Paper>
@@ -650,16 +882,90 @@ function ViewAssessmentTeacher(props) {
                 </Grid>
               </Paper>
             </Grid>
-          ))}
+          ))} */}
         </Grid>
-        <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
-          <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-            Link {type} berhasil disalin ke Clipboard Anda!
+        <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+          <MuiAlert severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+          {snackbarContent}
           </MuiAlert>
         </Snackbar>
     </div>
   )
 };
+
+// ANCHOR
+function GenerateQuestionPerQuestion(props) {
+  const { classes, studentId, studentName, studentClass, studentAnswer, studentMark, questionType, questionWeight, questionNumber } = props;
+  const { handleGradeChange, handleSaveGrade } = props;
+
+    return (
+      // <Paper className={classes.contentItem}>
+      <Paper style={{ width: "100%", marginBottom: "30px" }}>
+        <Badge
+          variant="standard"
+          style={{ marginLeft: "4px", width: "100%" }}
+          badgeContent={
+            (studentMark === null) ? (
+              <ErrorIcon className={classes.warningBadge} fontSize="large" />
+            ) : (
+              <CheckCircleIcon className={classes.checkBadge} fontSize="large" />
+            )
+          }
+        >
+          <Grid container item xs={12} style={{ padding: "20px" }}>
+            <Grid item xs={12}>
+              <Typography variant="h6"><b>{`${studentName}`}</b></Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle-1" color="textSecondary">{`${studentClass}`}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider style={{ marginBottom: "10px", marginTop: "10px" }} />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography align="justify">{(studentAnswer[0]) ? `${studentAnswer[0]}` : "Tidak menjawab"}</Typography>
+            </Grid>
+
+            <Grid container item justify="flex-end" alignItems="center" style={{ marginTop: "25px" }}>
+              {/* <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px" }}> */}
+              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+              <TextField
+                defaultValue={studentMark}
+                inputProps={{
+                  style: {
+                    borderBottom: "none",
+                    boxShadow: "none",
+                    margin: "0px",
+                    width: "30px"
+                  }
+                }}
+                InputProps={{
+                  endAdornment: `/ ${questionWeight}`,
+                }}
+                onChange={(e) => { handleGradeChange(e, studentId) }}
+              />
+              <div>
+                <Button
+                  className={classes.saveButton}
+                  size="small"
+                  onClick={() => { handleSaveGrade(studentId) }}
+                >
+                  SIMPAN
+                  </Button>
+              </div>
+              {/* </div> */}
+            </Grid>
+          </Grid>
+        </Badge>
+      </Paper>
+      // </Badge>
+    )
+
+  // } else {
+    // TODO tipe soal selain uraian
+    return null;
+  // }
+}
 
 ViewAssessmentTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
@@ -668,7 +974,8 @@ ViewAssessmentTeacher.propTypes = {
   getOneAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  deleteAssessment: PropTypes.func.isRequired
+  deleteAssessment: PropTypes.func.isRequired,
+  getStudents: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -679,5 +986,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { getOneAssessment, deleteAssessment, getAllClass, getAllSubjects }
+  mapStateToProps, { getOneAssessment, deleteAssessment, getAllClass, getAllSubjects, getStudents }
 )(ViewAssessmentTeacher);

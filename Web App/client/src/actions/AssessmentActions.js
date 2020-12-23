@@ -134,13 +134,13 @@ export const updateAssessment = (formData, assessmentData, assessmentId, lampira
   )
 }
 
-export const updateAssessmentGrades = (assessmentId, ans_list) => dispatch => {
-  return (
-    axios.post(`/api/assessments/updategrades/${assessmentId}`, ans_list)
-        .then(res => { return res;})
-        .catch(err => { throw new Error("Assessment grades are not updated successfully")})
-  )
-}
+// export const updateAssessmentGrades = (assessmentId, ans_list) => dispatch => {
+//   return (
+//     axios.post(`/api/assessments/updategrades/${assessmentId}`, ans_list)
+//         .then(res => { return res;})
+//         .catch(err => { throw new Error("Assessment grades are not updated successfully")})
+//   )
+// }
 
 // View All Assessment
 export const getAllAssessments = () => dispatch => {
@@ -268,5 +268,14 @@ export const updateAssessmentSuspects = (assessmentId, suspects) => {
     .post(`/api/assessments/updateSuspects/${assessmentId}`, suspects)
     .catch(() => {
       throw new Error("updateAssessmentSuspects error has occured");
+    });
+}
+
+export const updateAssessmentGrades = (assessmentId, studentId, questionIdx, longtextGrade) => {
+  return axios
+    .post(`/api/assessments/updateGrades`, { assessmentId, studentId, questionIdx, longtextGrade})
+    .catch((err) => {
+      // throw new Error("updateGrades error has occured");
+      throw new Error(err.response.data);
     });
 }
