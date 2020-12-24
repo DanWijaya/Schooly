@@ -59,8 +59,8 @@ function stableSort(array, comparator) {
 }
 
 function AssessmentListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, 
-    role, searchFilter, updateSearchFilter, 
+  const { classes, order, orderBy, onRequestSort,
+    role, searchFilter, updateSearchFilter,
     setSearchBarFocus, searchBarFocus} = props;
 
   const createSortHandler = (property) => (event) => {
@@ -89,7 +89,7 @@ function AssessmentListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER. 
+  // FOR SEARCH FILTER.
   const onChange = (e) => {
     updateSearchFilter(e.target.value)
   }
@@ -105,14 +105,14 @@ function AssessmentListToolbar(props) {
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {searchBarFocus ?
-            null 
+            null
             :
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
               <BsClipboardData className={classes.titleIcon} fontSize="large"/>
               <Typography variant="h4">
                 Daftar Ujian
               </Typography>
-            </div>  
+            </div>
           }
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -121,17 +121,17 @@ function AssessmentListToolbar(props) {
             <Typography variant="h4">
               Daftar Ujian
             </Typography>
-          </div>  
+          </div>
         </Hidden>
         <Hidden smUp implementation="css">
-          {searchBarFocus ? 
+          {searchBarFocus ?
           <div style={{display: "flex"}}>
-            <IconButton 
+            <IconButton
             onClick={() => {
             setSearchBarFocus(false)
             updateSearchFilter("")}}>
               <ArrowBackIcon/>
-            </IconButton> 
+            </IconButton>
             <TextField
                   fullWidth
                   variant="outlined"
@@ -155,22 +155,26 @@ function AssessmentListToolbar(props) {
                           </IconButton>
                         </InputAdornment>)
                       ,
-                      endAdornment:( 
+                      endAdornment:(
                       <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                        <IconButton 
-                          size="small" 
+                        <IconButton
+                          size="small"
                           id="searchFilterMobile"
                           onClick={(e) => {
-                            e.stopPropagation() 
+                            e.stopPropagation()
                             onClear(e, "searchFilterMobile")}
-                          } 
-                          style={{ 
-                            opacity: 0.5, 
+                          }
+                          style={{
+                            opacity: 0.5,
                             visibility: !searchFilter ? "hidden" : "visible"
                           }}>
                           <ClearIcon/>
                         </IconButton>
-                      </InputAdornment>)
+                      </InputAdornment>
+                    ),
+                    style:{
+                      borderRadius: "20px"
+                    }
                   }}
                 />
               </div>
@@ -209,21 +213,25 @@ function AssessmentListToolbar(props) {
                       </IconButton>
                     </InputAdornment>)
                   ,
-                  endAdornment:( 
+                  endAdornment:(
                   <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                    <IconButton 
-                      size="small" 
+                    <IconButton
+                      size="small"
                       onClick={(e) => {
-                        e.stopPropagation() 
+                        e.stopPropagation()
                         onClear(e, "searchFilterDesktop")}
-                      } 
-                      style={{ 
-                        opacity: 0.5, 
+                      }
+                      style={{
+                        opacity: 0.5,
                         visibility: !searchFilter ? "hidden" : "visible"
                       }}>
                       <ClearIcon/>
                     </IconButton>
-                  </InputAdornment>)
+                  </InputAdornment>
+                ),
+                style:{
+                  borderRadius: "20px"
+                }
               }}
             />
         </Hidden>
@@ -245,7 +253,7 @@ function AssessmentListToolbar(props) {
             null
           :
           // ANCHOR contoh tombol round edge
-            <Link to="/kuis"> 
+            <Link to="/kuis">
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
                 <AssignmentIcon className={classes.newAssessmentIconDesktop} />
                 Buat Ujian
@@ -253,7 +261,7 @@ function AssessmentListToolbar(props) {
             </Link>
           }
         </Hidden>
-          <LightTooltip title="Urutkan Kuis">
+          <LightTooltip title="Urutkan Ujian">
             <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
               <SortIcon />
             </IconButton>

@@ -18,57 +18,6 @@ import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: "auto",
-    maxWidth: "1000px",
-    padding: "10px",
-  },
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  titleDivider: {
-    backgroundColor: theme.palette.primary.main,
-    marginTop: "15px",
-    marginBottom: "15px",
-  },
-  newAnnouncementButton: {
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
-      color: "white",
-    },
-  },
-  newAnnouncementIconDesktop: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    marginRight: "7.5px",
-  },
-  newAnnouncementIconMobile: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
-    },
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
-  }
-}));
-
 function createData(sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased) {
   return { sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased };
 }
@@ -162,6 +111,7 @@ function AnnouncementListToolbar(props) {
         </Hidden>
         <Hidden xsDown implementation="css">
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <AnnouncementIcon className={classes.titleIcon} fontSize="large"/>
             <Typography variant="h4">
               Daftar Pengumuman
             </Typography>
@@ -196,9 +146,9 @@ function AnnouncementListToolbar(props) {
                       <IconButton size="small">
                         <GoSearch/>
                       </IconButton>
-                    </InputAdornment>)
-                  ,
-                  endAdornment:(
+                    </InputAdornment>
+                  ),
+                endAdornment:(
                   <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
                     <IconButton
                       size="small"
@@ -213,7 +163,11 @@ function AnnouncementListToolbar(props) {
                       }}>
                       <ClearIcon/>
                     </IconButton>
-                  </InputAdornment>)
+                  </InputAdornment>
+                ),
+                style:{
+                  borderRadius: "20px"
+                }
               }}
             />
               </div>
@@ -266,7 +220,11 @@ function AnnouncementListToolbar(props) {
                       }}>
                       <ClearIcon/>
                     </IconButton>
-                  </InputAdornment>)
+                  </InputAdornment>
+                ),
+                style: {
+                  borderRadius: "20px"
+                }
               }}
             />
         </Hidden>
@@ -292,12 +250,12 @@ function AnnouncementListToolbar(props) {
             </div>
           :
             null
-          }
-          <LightTooltip title="Urutkan Kuis">
-            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-              <SortIcon />
-            </IconButton>
-          </LightTooltip>
+        }
+        <LightTooltip title="Urutkan Pengumuman">
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </IconButton>
+        </LightTooltip>
         <Menu
           keepMounted
           anchorEl={anchorEl}
@@ -347,41 +305,78 @@ AnnouncementListToolbar.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-function AnnouncementItemList(props) {
-  const classes = useStyles();
-
-  return (
-    <Grid item>
-      <Paper variant="outlined">
-        <Link to={props.notification_link}>
-        <ListItem button component="a" className={classes.listItem}>
-          <ListItemText
-            primary={
-              <Typography>
-                {props.notification_title}
-              </Typography>
-            }
-            secondary={props.author_name}
-          />
-          <ListItemText
-            align="right"
-            primary={
-              <Typography variant="subtitle" color="textSecondary">
-                {props.date}
-              </Typography>
-            }
-            secondary={`Pukul ${props.time}`}
-          />
-        </ListItem>
-        </Link>
-      </Paper>
-    </Grid>
-  )
-}
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: "auto",
+    maxWidth: "1000px",
+    padding: "10px",
+  },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  titleDivider: {
+    backgroundColor: theme.palette.primary.main,
+    marginTop: "15px",
+    marginBottom: "15px",
+  },
+  newAnnouncementButton: {
+    marginRight: "10px",
+    backgroundColor: theme.palette.create.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.create.main,
+      color: "white",
+    },
+  },
+  newAnnouncementIconDesktop: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    marginRight: "7.5px",
+  },
+  newAnnouncementIconMobile: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+  sortButton: {
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.divider,
+      color: "black",
+    },
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  },
+  announcementListItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.button.main,
+    },
+  },
+  titleIcon: {
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    boxShadow: theme.shadows[0],
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+      cursor: "default"
+    },
+    marginRight: "10px"
+  }
+}));
 
 function AnnouncementList(props) {
-  document.title = "Schooly | Daftar Pengumuman"
-
   const classes = useStyles();
   const { selectedAnnouncements } = props.announcements;
   const { getAnnouncement, getUsers, setCurrentClass } = props;
@@ -462,26 +457,7 @@ function AnnouncementList(props) {
 
   console.log(selectedAnnouncements)
 
-  // const listAnnouncements = () => {
-  //   let annList = [];
-  //   console.log(selectedAnnouncements, retrieved_users)
-  //   if(selectedAnnouncements.length && retrieved_users.size) {
-  //     for (var i = selectedAnnouncements.length-1; i >= 0; i--) {
-  //       // retrieved users ini bulk request, dapat data user"nya satu"
-  //       annList.push(
-  //         createData(
-  //           (<AccountCircleIcon />),
-  //           (!retrieved_users.get(selectedAnnouncements[i].author_id) ? null: retrieved_users.get(selectedAnnouncements[i].author_id).name),
-  //           (selectedAnnouncements[i].title),
-  //           (`/pengumuman/${selectedAnnouncements[i]._id}`),
-  //           (moment(selectedAnnouncements[i].date_announced).locale("id").format("DD MMM YYYY")),
-  //           (moment(selectedAnnouncements[i].date_announced).locale("id").format("HH.mm")),
-  //         )
-  //       )
-  //     }
-  //   }
-  //   return annList;
-  // }
+  document.title = "Schooly | Daftar Pengumuman"
 
   return (
     <div className={classes.root}>
@@ -503,14 +479,51 @@ function AnnouncementList(props) {
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
             return (
-              <AnnouncementItemList
-                sender_icon={row.sender_icon}
-                author_name={row.author_name}
-                notification_title={row.notification_title}
-                notification_link={row.notification_link}
-                date={row.date}
-                time={row.time}
-              />
+              <Grid item>
+                <Paper variant="outlined">
+                  <Link to={row.notification_link}>
+                  <ListItem button component="a" className={classes.announcementListItem}>
+                  <Hidden smUp implementation="css">
+                    <ListItemText
+                      primary={
+                        <Typography variant="subtitle1" color="textPrimary">
+                          {row.notification_title}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography variant="caption" color="textSecondary">
+                          {row.author_name}
+                        </Typography>
+                      }
+                    />
+                  </Hidden>
+                  <Hidden xsDown implementation="css">
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" color="textPrimary">
+                          {row.notification_title}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography variant="body2" color="textSecondary">
+                          {row.author_name}
+                        </Typography>
+                      }
+                    />
+                  </Hidden>
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Typography variant="subtitle" color="textSecondary">
+                          {row.date}
+                        </Typography>
+                      }
+                      secondary={row.time}
+                    />
+                  </ListItem>
+                  </Link>
+                </Paper>
+              </Grid>
             )
         })}
       </Grid>

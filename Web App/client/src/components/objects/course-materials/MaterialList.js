@@ -119,20 +119,24 @@ function MaterialListToolbar(props) {
                 <IconButton size="small">
                   <GoSearch/>
                 </IconButton>
-              </InputAdornment>)
-             ,
-              endAdornment:( 
+              </InputAdornment>
+            ),
+            endAdornment:(
               <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                <IconButton 
-                  size="small" 
-                  onClick={onClear} 
-                  style={{ 
-                    opacity: 0.5, 
+                <IconButton
+                  size="small"
+                  onClick={onClear}
+                  style={{
+                    opacity: 0.5,
                     visibility: !searchFilter ? "hidden" : "visible"
                   }}>
                   <ClearIcon/>
                 </IconButton>
-              </InputAdornment>)
+              </InputAdornment>
+            ),
+            style:{
+              borderRadius: "20px"
+            }
           }}
         />
         </Hidden>
@@ -372,7 +376,7 @@ function MaterialList(props) {
   const retrieveMaterials = () => {
     // If all_materials is not undefined or an empty array
     rows = []
-    
+
     if (user.role === "Admin") {
       all_materials.filter(item => item.name.toLowerCase()
                   .includes(searchFilter.toLowerCase()))
@@ -434,7 +438,7 @@ function MaterialList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-        //Two props added for search filter. 
+        //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
