@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -198,6 +198,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
+  const location = useLocation();
 
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
@@ -254,6 +255,14 @@ function ViewAssessmentTeacher(props) {
     getAllClass("map")
     getAllSubjects("map")
     getStudents() 
+
+    if (location.state) {
+      setSelectedStudent(location.state.studentId);
+      setSelectedClass(location.state.classId);
+
+      //set ke tab "per murid"
+      setValue(1);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -1239,7 +1248,11 @@ function ViewAssessmentTeacher(props) {
                       id="kelas"
                       className={classes.select}
                       variant="outlined"
-                      value={(selectedStudent) ? all_student_object[selectedStudent].kelas : selectedClass}
+                      value={
+                        (selectedStudent) ? (
+                          (all_student_object) ? (all_student_object[selectedStudent].kelas) : (selectedClass)
+                        ) : (selectedClass)
+                      }
                       onChange={(e) => { setSelectedClass(e.target.value); setSelectedStudent(null); }}
                     >
                       {

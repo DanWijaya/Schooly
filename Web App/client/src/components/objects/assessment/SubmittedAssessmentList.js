@@ -231,14 +231,14 @@ function TabIndex(index) {
 
 function GradeButton(props) {
   const classes = useStyles()
-  const {onGradeAssessment, student_id, kelas} = props
+  const { onGradeAssessment, studentId, classId, assessmentId } = props;
 
   return (
     <Link to={{
-      pathname: "/lihat-jawaban-kuis",
+      pathname: `/lihat-jawaban-kuis/${assessmentId}`,
       state: {
-        kelas: kelas,
-        id: student_id
+        classId,
+        studentId
       }
     }}>
       <Button
@@ -709,7 +709,7 @@ function SubmittedAssessmentList(props) {
                                 }}
                               />
                             </div> */}
-                          <GradeButton student_id={student._id} kelas={selectedAssessments.class_assigned[i]} />
+                        <GradeButton assessmentId={selectedAssessments._id} studentId={student._id} classId={selectedAssessments.class_assigned[i]} />
                       </Grid>
                     </div>
                     :
