@@ -112,7 +112,7 @@ function DrawerContent(props) {
   else {
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
-      ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
+      // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],

@@ -80,7 +80,7 @@ function TaskListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER. 
+  // FOR SEARCH FILTER.
   const onChange = (e) => {
     switch(e.target.id){
       case "searchFilter":
@@ -95,7 +95,7 @@ function TaskListToolbar(props) {
   const onClear = (e) => {
     updateSearchFilter("");
   }
-  
+
   return (
     <div className={classes.toolbar}>
       <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
@@ -114,7 +114,7 @@ function TaskListToolbar(props) {
             onChange={onChange}
             style={{
               maxWidth: "250px",
-              marginRight: "10px"
+              marginRight: "10px",
             }}
             InputProps={{
               startAdornment:(
@@ -122,20 +122,24 @@ function TaskListToolbar(props) {
                   <IconButton size="small" >
                     <GoSearch/>
                   </IconButton>
-                </InputAdornment>)
-                ,
-                endAdornment:( 
+                </InputAdornment>
+              ),
+              endAdornment:(
                 <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                  <IconButton 
-                    size="small" 
-                    onClick={onClear} 
-                    style={{ 
-                      opacity: 0.5, 
+                  <IconButton
+                    size="small"
+                    onClick={onClear}
+                    style={{
+                      opacity: 0.5,
                       visibility: !searchFilter ? "hidden" : "visible"
                     }}>
                     <ClearIcon/>
                   </IconButton>
-                </InputAdornment>)
+                </InputAdornment>
+              ),
+              style:{
+                borderRadius: "20px"
+              }
             }}
           />
         </Hidden>
@@ -440,7 +444,7 @@ function TaskList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-        //Two props added for search filter. 
+        //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />

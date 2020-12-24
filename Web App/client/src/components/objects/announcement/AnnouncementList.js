@@ -85,8 +85,8 @@ function stableSort(array, comparator) {
 }
 
 function AnnouncementListToolbar(props) {
-  const { kelas, user, classes, order, orderBy, onRequestSort, 
-    role, searchFilter, updateSearchFilter, 
+  const { kelas, user, classes, order, orderBy, onRequestSort,
+    role, searchFilter, updateSearchFilter,
     setSearchBarFocus, searchBarFocus} = props;
 
   const createSortHandler = (property) => (event) => {
@@ -113,7 +113,7 @@ function AnnouncementListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER. 
+  // FOR SEARCH FILTER.
   const onChange = (e) => {
     updateSearchFilter(e.target.value)
   }
@@ -137,13 +137,13 @@ function AnnouncementListToolbar(props) {
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {searchBarFocus ?
-            null 
+            null
             :
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
               <Typography variant="h4">
                 Daftar Pengumuman
               </Typography>
-            </div>  
+            </div>
           }
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -151,58 +151,57 @@ function AnnouncementListToolbar(props) {
             <Typography variant="h4">
               Daftar Pengumuman
             </Typography>
-          </div>  
+          </div>
         </Hidden>
         <Hidden smUp implementation="css">
-          {searchBarFocus ? 
+          {searchBarFocus ?
           <div style={{display: "flex"}}>
-            <IconButton 
-            onClick={() => {
-            setSearchBarFocus(false)
-            updateSearchFilter("")}}>
+            <IconButton
+              onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
+            >
               <ArrowBackIcon/>
-            </IconButton> 
+            </IconButton>
             <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="searchFilterMobile"
-                  value={searchFilter}
-                  onChange={onChange}
-                  autoFocus
-                  onClick={(e) =>setSearchBarFocus(true)}
-                  placeholder="Search Kuis"
-                  // onBlur={() => setSearchBarFocus(false)}
-                  style={{
-                    maxWidth: "200px",
-                    marginLeft: "10px"
-                  }}
-                  InputProps={{
-                    startAdornment:(
-                      searchBarFocus ? null :
-                        <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                          <IconButton size="small">
-                            <GoSearch/>
-                          </IconButton>
-                        </InputAdornment>)
-                      ,
-                      endAdornment:( 
-                      <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                        <IconButton 
-                          size="small" 
-                          id="searchFilterMobile"
-                          onClick={(e) => {
-                            e.stopPropagation() 
-                            onClear(e, "searchFilterMobile")}
-                          } 
-                          style={{ 
-                            opacity: 0.5, 
-                            visibility: !searchFilter ? "hidden" : "visible"
-                          }}>
-                          <ClearIcon/>
-                        </IconButton>
-                      </InputAdornment>)
-                  }}
-                />
+              fullWidth
+              variant="outlined"
+              id="searchFilterMobile"
+              value={searchFilter}
+              onChange={onChange}
+              autoFocus
+              onClick={(e) =>setSearchBarFocus(true)}
+              placeholder="Search Kuis"
+              // onBlur={() => setSearchBarFocus(false)}
+              style={{
+                maxWidth: "200px",
+                marginLeft: "10px"
+              }}
+              InputProps={{
+                startAdornment:(
+                  searchBarFocus ? null :
+                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                      <IconButton size="small">
+                        <GoSearch/>
+                      </IconButton>
+                    </InputAdornment>)
+                  ,
+                  endAdornment:(
+                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                    <IconButton
+                      size="small"
+                      id="searchFilterMobile"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onClear(e, "searchFilterMobile")}
+                      }
+                      style={{
+                        opacity: 0.5,
+                        visibility: !searchFilter ? "hidden" : "visible"
+                      }}>
+                      <ClearIcon/>
+                    </IconButton>
+                  </InputAdornment>)
+              }}
+            />
               </div>
               :
             // <div style={{display: "flex"}}>
@@ -239,16 +238,16 @@ function AnnouncementListToolbar(props) {
                       </IconButton>
                     </InputAdornment>)
                   ,
-                  endAdornment:( 
+                  endAdornment:(
                   <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                    <IconButton 
-                      size="small" 
+                    <IconButton
+                      size="small"
                       onClick={(e) => {
-                        e.stopPropagation() 
+                        e.stopPropagation()
                         onClear(e, "searchFilterDesktop")}
-                      } 
-                      style={{ 
-                        opacity: 0.5, 
+                      }
+                      style={{
+                        opacity: 0.5,
                         visibility: !searchFilter ? "hidden" : "visible"
                       }}>
                       <ClearIcon/>
@@ -467,11 +466,7 @@ function AnnouncementList(props) {
              {row}
             </>
           )
-              
-          })};
-      <Grid container direction="column" spacing={2}>
-        {listAnnouncements()}
-      </Grid>
+        })}
       </div>
   )
 }

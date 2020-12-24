@@ -25,7 +25,6 @@ import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
-import ScheduleCalendar from "./components/layout/schedule-calendar/ScheduleCalendar";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";
@@ -148,7 +147,7 @@ class App extends Component {
                   handleDrawerMobile={this.handleDrawerMobile}
                   sideDrawerExist={this.state.sideDrawerExist}
                   assessmentState={localStorage.getItem(`status`)}
-                /> 
+                />
                 {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ?
                   <SideDrawer
                     mobileOpen={this.state.mobileOpen}
@@ -192,7 +191,6 @@ class App extends Component {
                     <Route exact path="/lihat-jawaban-kuis/:id" component={ViewAssessmentAnswer} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
-                    <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
                     <PrivateRoute exact path="/lihat-rapor" component={ReportView} />
                     {/* Route Class */}
