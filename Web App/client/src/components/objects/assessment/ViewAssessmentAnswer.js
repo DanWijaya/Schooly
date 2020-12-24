@@ -490,13 +490,124 @@ function ViewAssessmentTeacher(props) {
   }
 
   // ANCHOR fungsi generate Soal
-  const generateQuestion = (number, question, weight) => {
+  const generateQuestion = (questionNumber, questionWeight, questionInfo) => {
+    let questionType = questionInfo.type;
+    let questionName = questionInfo.name;
+    let questionAnswer = questionInfo.answer;
+    let questionOptions = questionInfo.options;
+
+    let content;
+    if (questionType === "longtext") {
+      content = (
+        <div>
+          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography align="justify">{`${questionName}`}</Typography>
+          <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+        </div>
+      );
+    } else if (questionType === "shorttext") {
+      let splitResult = questionName.split("`");
+      let iterator = 0;
+
+      for (let i = 1; i <= splitResult.length - 2; i += 2) {
+        splitResult[i] = (
+          <Input
+            type="text"
+            key={`${questionNumber}-${iterator}`}
+            disabled={true}
+            value={questionAnswer[iterator]}
+          />);
+        iterator++;
+      }
+
+      content = (
+        <Grid item>
+          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography align="justify">
+            <form>
+              {splitResult}
+            </form>
+          </Typography>
+          <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+        </Grid>
+      );
+    } else {
+      let answer;
+      if (questionType === "radio") {
+        answer = (
+          <Grid item>
+            <Typography align="justify">{`${questionName}`}</Typography>
+            <RadioGroup value={questionAnswer[0]}>
+              {questionOptions.map((option, i) =>
+                <div style={{ display: "flex" }}>
+                  <FormControlLabel
+                    disabled
+                    style={{ width: "100%" }}
+                    value={String.fromCharCode(97 + i).toUpperCase()}
+                    control={<Radio color="primary" />}
+                    label={option}
+                  />
+                </div>
+              )}
+            </RadioGroup>
+          </Grid>
+        );
+      } else { // type = checkbox
+        answer = (
+          <Grid item>
+            {/* <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography> */}
+            <Typography align="justify">{`${questionName}`}</Typography>
+            <FormGroup>
+              {questionOptions.map((option, i) =>
+                <div style={{ display: "flex" }}>
+                  <FormControlLabel
+                    disabled
+                    style={{ width: "100%" }}
+                    value={String.fromCharCode(97 + i).toUpperCase()}
+                    label={option}
+                    control={
+                      <Checkbox
+                        checked={questionAnswer.includes(String.fromCharCode(97 + i).toUpperCase())}
+                        color="primary"
+                      />
+                    }
+                  />
+                </div>
+              )}
+            </FormGroup>
+          </Grid>
+        );
+      }
+
+      content = (
+        <Grid container>
+          <Grid item xs={12}>
+            <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          </Grid>
+          <Grid item xs={9}>
+            {answer}
+          </Grid>
+
+          <Grid item>
+            <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
+          </Grid>
+
+          <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+            <Grid item>
+              <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+            </Grid>
+            <Grid container item justify="center" alignItems="center">
+              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      );
+    }
+
     return (
-        <Paper className={classes.contentItem}>
-            <Typography align="center" variant="h6" style={{marginBottom: "10px"}}><b>{`Soal ${number}`}</b></Typography>
-            <Typography align="justify">{`${question}`}</Typography>
-            <Typography align="center" style={{marginTop: "15px"}} color="primary">{`Bobot : ${weight}`}</Typography>
-        </Paper>
+      <Paper className={classes.contentItem}>
+        {content}
+      </Paper>
     )
   }
 
@@ -606,18 +717,18 @@ function ViewAssessmentTeacher(props) {
       
       return (
         <QuestionPerQuestion
-          questionNumber={qnsIndex}
           classes={classes}
           studentId={studentId}
           studentName={studentInfo.name}
           studentClass={studentClassName}
           studentAnswer={studentAnswer}
           studentMark={mark}
-          questionType={question.type}
+          questionNumber={qnsIndex}
           questionWeight={questionWeight}
+          questionInfo={question}
           handleGradeChange={handleGradeChange}
           handleSaveGrade={handleSaveGrade}
-        />                    
+        />
       );
     });
   }
@@ -899,11 +1010,13 @@ function ViewAssessmentTeacher(props) {
                 </Typography>
                 </Grid>
               </Grid>
+
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Divider/>
                 </Grid>
               </Grid>
+
               <Grid container spacing={2}>
                 <Hidden xsDown>
                 <Grid item xs={12} md={2} style={{display: "flex", flexDirection: "row", marginTop: "10px"}}>
@@ -960,11 +1073,13 @@ function ViewAssessmentTeacher(props) {
                     </Grid>
                 </Hidden>
               </Grid>
+
               <Grid container spacing={2}>
                 <Grid item xs={12} style={{ marginTop: "18px" }}>
                   <Divider />
                 </Grid>
               </Grid>
+              
               <Grid container spacing={2}>
                 <Grid item xs={1} md={2}>
                     {null}
@@ -1034,14 +1149,14 @@ function ViewAssessmentTeacher(props) {
                 (selectedAssessments.questions[qnsIndex].type === "longtext") ? (
                   generateQuestion(
                     qnsIndex + 1,
-                    selectedAssessments.questions[qnsIndex].name,
-                    selectedAssessments.question_weight.longtext[qnsIndex]
+                    selectedAssessments.question_weight.longtext[qnsIndex],
+                    selectedAssessments.questions[qnsIndex]
                   )
                 ) : (
                   generateQuestion(
                     qnsIndex + 1,
-                    selectedAssessments.questions[qnsIndex].name,
-                    selectedAssessments.question_weight[selectedAssessments.questions[qnsIndex].type]
+                    selectedAssessments.question_weight[selectedAssessments.questions[qnsIndex].type],
+                    selectedAssessments.questions[qnsIndex]
                   )
                 )
               ) : (
@@ -1244,12 +1359,18 @@ function QuestionPerQuestion(props) {
     studentClass,
     studentAnswer, 
     studentMark, 
-    questionWeight, 
+    questionNumber,
+    questionWeight,
+    questionInfo
   } = props;
   const { handleGradeChange, handleSaveGrade } = props;
+  let questionType = questionInfo.type;
+  let questionName = questionInfo.name;
+  let questionOptions = questionInfo.options;
 
+  if (questionType === "longtext") {
+    // yang ngebuat semuanya harus dicopy adalah badgenya
     return (
-      // <Paper className={classes.contentItem}>
       <Paper style={{ width: "100%", marginBottom: "30px" }}>
         <Badge
           variant="standard"
@@ -1269,9 +1390,11 @@ function QuestionPerQuestion(props) {
             <Grid item xs={12}>
               <Typography variant="subtitle-1" color="textSecondary">{`${studentClass}`}</Typography>
             </Grid>
+
             <Grid item xs={12}>
               <Divider style={{ marginBottom: "10px", marginTop: "10px" }} />
             </Grid>
+
             <Grid item xs={12}>
               <Typography align="justify">{(studentAnswer[0]) ? `${studentAnswer[0]}` : "Tidak menjawab"}</Typography>
             </Grid>
@@ -1281,6 +1404,7 @@ function QuestionPerQuestion(props) {
               <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
               <TextField
                 defaultValue={studentMark}
+                key={`${studentId}-${questionNumber}`}
                 inputProps={{
                   style: {
                     borderBottom: "none",
@@ -1308,13 +1432,125 @@ function QuestionPerQuestion(props) {
           </Grid>
         </Badge>
       </Paper>
-      // </Badge>
-    )
+    );
+  } else {
+    let answer;
+    if (questionType === "radio") {
+      answer = (
+        <Grid item>
+          <RadioGroup value={studentAnswer[0]}>
+            {questionOptions.map((option, i) =>
+              <div style={{ display: "flex" }}>
+                <FormControlLabel
+                  disabled
+                  style={{ width: "100%" }}
+                  value={String.fromCharCode(97 + i).toUpperCase()}
+                  control={<Radio color="primary" />}
+                  label={option}
+                />
+              </div>
+            )}
+          </RadioGroup>
+        </Grid>
+      );
+    } else if (questionType === "checkbox") {
+      answer = (
+        <Grid item>
+          <FormGroup>
+            {questionOptions.map((option, i) =>
+              <div style={{ display: "flex" }}>
+                <FormControlLabel
+                  disabled
+                  style={{ width: "100%" }}
+                  value={String.fromCharCode(97 + i).toUpperCase()}
+                  label={option}
+                  control={
+                    <Checkbox
+                      checked={studentAnswer.includes(String.fromCharCode(97 + i).toUpperCase())}
+                      color="primary"
+                    />
+                  }
+                />
+              </div>
+            )}
+          </FormGroup>
+        </Grid>
+      );
+    } else {
+      let splitResult = questionName.split("`");
+      let iterator = 0;
 
-  // } else {
-    // TODO tipe soal selain uraian
-    return null;
-  // }
+      for (let i = 1; i <= splitResult.length - 2; i += 2) {
+        splitResult[i] = (
+          <Input
+            type="text"
+            key={`${studentId}-${iterator}`}
+            disabled={true}
+            value={studentAnswer[iterator]}
+          />);
+        iterator++;
+      }
+
+      answer = (
+        <Grid item>
+          <Typography align="justify">
+            <form>
+              {splitResult}
+            </form>
+          </Typography>
+        </Grid>
+      );
+    }
+
+    return (
+      <Paper style={{ width: "100%", marginBottom: "30px" }}>
+        <Grid container item xs={12} style={{ padding: "20px" }}>
+          <Grid item xs={12}>
+            <Typography variant="h6"><b>{`${studentName}`}</b></Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle-1" color="textSecondary">{`${studentClass}`}</Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider style={{ marginBottom: "10px", marginTop: "10px" }} />
+          </Grid>
+
+          <Grid container>
+            <Grid item xs={9}>
+              {answer}
+            </Grid>
+
+            <Grid item>
+              <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
+            </Grid>
+
+            <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+              <Grid container item justify="center" alignItems="center">
+                <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+                <TextField
+                  disabled
+                  key={`${studentId}-${questionNumber}`}
+                  defaultValue={studentMark}
+                  inputProps={{
+                    style: {
+                      borderBottom: "none",
+                      boxShadow: "none",
+                      margin: "0px",
+                      width: "30px"
+                    }
+                  }}
+                  InputProps={{
+                    endAdornment: `/ ${questionWeight}`,
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Paper>
+    );
+  }
 }
 
 function QuestionAnswerPerStudent(props) {
@@ -1334,7 +1570,6 @@ function QuestionAnswerPerStudent(props) {
 
   const { handleGradeChange, handleSaveGrade } = props;
 
-  // ANCHOR konten per murid
   let content;
   if (questionType === "longtext") {
     content = (
@@ -1375,6 +1610,7 @@ function QuestionAnswerPerStudent(props) {
             <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
             <TextField
               defaultValue={studentMark}
+              key={questionNumber}
               inputProps={{
                 style: {
                   borderBottom: "none",
@@ -1404,10 +1640,11 @@ function QuestionAnswerPerStudent(props) {
   } else {
     let answer;
 
+  // ANCHOR konten per murid
     if (questionType === "radio") {
       answer = (
         <Grid item>
-          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
           <RadioGroup value={studentAnswer[0]}>
             {questionOptions.map((option, i) =>
@@ -1427,7 +1664,7 @@ function QuestionAnswerPerStudent(props) {
     } else if (questionType === "checkbox") {
       answer = (
         <Grid item>
-          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
           <FormGroup>
             {questionOptions.map((option, i) =>
@@ -1449,7 +1686,7 @@ function QuestionAnswerPerStudent(props) {
           </FormGroup>
         </Grid>
       );
-    } else {
+    } else { //type = shorttext
       let splitResult = questionName.split("`");
       let iterator = 0;
 
@@ -1466,8 +1703,8 @@ function QuestionAnswerPerStudent(props) {
 
       answer = (
         <Grid item>
-          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
-          <Typography>
+          <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography align="justify">
             <form>
               {splitResult}
             </form>
@@ -1478,12 +1715,14 @@ function QuestionAnswerPerStudent(props) {
 
     content = (
       <Grid container style={{ padding: "20px" }}>
-        <Grid item xs={8}>
+        <Grid item xs={9}>
           {answer}
         </Grid>
+
         <Grid item>
           <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
         </Grid>
+
         <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
           <Grid item>
             <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
@@ -1493,6 +1732,7 @@ function QuestionAnswerPerStudent(props) {
             <TextField
               disabled
               defaultValue={studentMark}
+              key={questionNumber}
               inputProps={{
                 style: {
                   borderBottom: "none",
