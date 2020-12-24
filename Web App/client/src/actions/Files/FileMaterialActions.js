@@ -51,14 +51,14 @@ export const downloadFileMaterial = (id) => dispatch => {
 }
 
 export const viewFileMaterial = (id) => dispatch => {
-    console.log("view material is runned")
     axios.get(`/api/files/material/${id}`)
     .then((res) => {window.open(res.data) 
     return res.data})
-    .catch((err) => new Error(err))
+    .catch((err) => new Error(err)
+    )
+    // window.open(`http://${window.location.hostname}:5000/api/files/material/${id}`)
 }
 
 export const deleteFileMaterial = (id, file_to_delete, current_file) => {
-    console.log(file_to_delete)
     return axios.delete(`/api/files/material/${id}`, {data: {file_to_delete: file_to_delete, current_file: current_file} })
 }

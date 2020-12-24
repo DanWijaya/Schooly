@@ -17,7 +17,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
-
 const styles = (theme) => ({
   root: {
     margin: "auto",

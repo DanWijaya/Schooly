@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -16,7 +17,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
-
 const styles = (theme) => ({
   root: {
     margin: "auto",
@@ -246,6 +246,7 @@ class CreateMaterial extends Component {
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   handleLampiranDelete = (e, i) => {
@@ -515,6 +516,7 @@ CreateMaterial.propTypes = {
   getAllSubjects: PropTypes.func.isRequired,
   createMaterial: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -526,5 +528,6 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createMaterial, clearErrors }
+  mapStateToProps, { getAllClass, getAllSubjects, 
+    createMaterial, clearErrors, clearSuccess }
 ) (withStyles(styles)(CreateMaterial))

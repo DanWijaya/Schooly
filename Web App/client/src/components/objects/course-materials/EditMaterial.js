@@ -3,11 +3,13 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import "date-fns";
+import { getFileMaterials, downloadFileMaterial, viewFileMaterial, getAllS3} from "../../../actions/Files/FileMaterialActions"
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneMaterial } from "../../../actions/MaterialActions";
 import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
+import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,
@@ -18,7 +20,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
 
 const path = require("path");
-
 const styles = (theme) => ({
   root: {
     margin: "auto",
@@ -180,21 +181,24 @@ class EditMaterial extends Component {
   lampiranUploader = React.createRef(null)
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects, getOneMaterial } = this.props;
+    const { getAllClass, getAllSubjects, getOneMaterial, getFileMaterials } = this.props;
+    const { id } = this.props.match.params
 
     getAllClass()
-    getOneMaterial(this.props.match.params.id)
+    getOneMaterial(id)
     getAllSubjects()
+    getFileMaterials(id)
   }
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { selectedMaterials } = nextProps.materialsCollection;
-
+    const { material_files } = nextProps.materialsFiles;
     // console.log(selectedMaterials.deadline);
     if (!nextProps.errors) {
       this.handleOpenUploadDialog()
@@ -205,7 +209,7 @@ class EditMaterial extends Component {
           subject: selectedMaterials.subject,
           deadline: selectedMaterials.deadline,
           class_assigned: Boolean(selectedMaterials.class_assigned) ? selectedMaterials.class_assigned : [],
-          fileLampiran: Boolean(selectedMaterials.lampiran) ? selectedMaterials.lampiran : [],
+          fileLampiran: material_files,
           description: selectedMaterials.description,
           // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
           // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
@@ -218,9 +222,6 @@ class EditMaterial extends Component {
 
     const { id } = this.props.match.params;
     const { class_assigned, fileLampiranToAdd, fileLampiranToDelete } = this.state;
-
-    console.log(class_assigned)
-    console.log(Array.from(this.state.fileLampiran))
     const materialObject = {
       name: this.state.name,
       deadline: this.state.deadline,
@@ -243,21 +244,19 @@ class EditMaterial extends Component {
     }
 
     const {selectedMaterials} = this.props.materialsCollection;
-    console.log(materialObject)
+    console.log(fileLampiranToDelete);
     this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
     this.setState({ fileLampiranToDelete: []})
     }
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    console.log(this.state.fileLampiran)
     let temp;
     let tempToAdd;
 
     if (this.state.fileLampiran.length === 0)
       this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
     else {
-      console.log(files)
       if (files.length !== 0) {
         temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
         tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
@@ -282,14 +281,12 @@ class EditMaterial extends Component {
     else { // For the one that"s not yet in DB
       // Remove the file in fileLampiranToAdd
       for (var j = 0; j < tempToAdd.length; j++) {
-        console.log(temp[i].name, tempToAdd[j].name)
         if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j,1)
         }
       }
     }
     temp.splice(i, 1);
-    console.log(tempToDelete)
     if (temp.length === 0)
       this.handleCloseMenu()
     this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd, fileLampiranToDelete: tempToDelete})
@@ -334,10 +331,11 @@ class EditMaterial extends Component {
     const { selectedMaterials} = this.props.materialsCollection;
     const { class_assigned, fileLampiran}  = this.state;
     const { user } = this.props.auth
+    const { material_files } = this.props.materialsFiles
 
-    console.log("FileLampiran:", this.state.fileLampiran)
-    console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
-    console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
+    // console.log("FileLampiran:", this.state.fileLampiran)
+    // console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
+    // console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
 
     console.log(all_classes)
     console.log(selectedMaterials);
@@ -411,6 +409,7 @@ class EditMaterial extends Component {
         <div className={classes.root}>
           <UploadDialog
             openUploadDialog={this.state.openUploadDialog}
+            handleCloseUploadDialog={this.handleCloseUploadDialog}
             success={success}
             messageUploading="Materi sedang disunting"
             messageSuccess="Materi telah disunting"
@@ -590,19 +589,22 @@ class EditMaterial extends Component {
     }
   }
 }
-
 EditMaterial.propTypes = {
+  auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
+  materialsFiles: PropTypes.object.isRequired,
+
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
   updateMaterial: PropTypes.func.isRequired,
   getOneMaterial: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
+  getFileMaterials: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -612,8 +614,9 @@ const mapStateToProps = (state) => ({
   materialsCollection: state.materialsCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
+  materialsFiles: state.materialsFiles
 })
 
 export default connect(
-    mapStateToProps, { getAllClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial }
+    mapStateToProps, { getAllClass, getAllSubjects, clearErrors, clearSuccess, getOneMaterial, updateMaterial,getFileMaterials }
 ) (withStyles(styles)(EditMaterial))

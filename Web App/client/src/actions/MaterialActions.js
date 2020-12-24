@@ -168,7 +168,6 @@ console.log("Update material is runned")
         if (formData.has('lampiran_materi')) {
             console.log("Lampiran material going to be uploaded")
             return axios.post(`/api/files/material/upload/${materialId}`, formData) // kalau pakai uploadFileMaterials(materialId, formData), dialognya gak keupdate
-            // return axios.post(`/api/upload/att_material/lampiran/${materialId}`, formData);
         }
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"

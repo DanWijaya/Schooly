@@ -20,7 +20,7 @@ AWS.config.update({
 })
 
 // Get all Documents Routes
-router.route("/").get((req, res, next) => {
+router.get("/", (req, res, next) => {
   FileMaterial.find(
     {},
     null,
@@ -80,13 +80,11 @@ router.post("/upload/:id", upload.array("lampiran_materi"), (req, res) =>  {
       }).on("httpUploadProgress", function(data){
         if(data.loaded == data.total){
           numsFileUploaded++;
-          if(numsFileUploaded == req.files.length){
+          if(numsFileUploaded == files.length){
             return res.json({success: "Successfully uploaded the lampiran file"})
-          }
         }
-      })
-      
-  
+      }
+    })  
 })
 });
 
@@ -171,12 +169,12 @@ router.delete("/:id", (req, res) => {
 
 router.get("/by_material/:id", (req, res) => {
   FileMaterial.find({ material_id: req.params.id })
-  .then((materials, err) => {
-    if(!materials)
+  .then((results, err) => {
+    if(!results)
       return res.status(400).json(err);
     else{
-      materials.sort((a,b) => (a.filename > b.filename) ? 1 : -1)
-      return res.status(200).json(materials)
+      results.sort((a,b) => (a.filename > b.filename) ? 1 : -1)
+      return res.status(200).json(results)
     }
   })
 })
@@ -195,7 +193,19 @@ router.get("/:id", (req,res) => {
     }
     const url = s3bucket.getSignedUrl('getObject', params)
     return res.status(200).json(url);
+    s3bucket.getObject({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: result.s3_key
+    }, (err, data) => {
+      res.setHeader(
+        'Content-Disposition',
+        `inline;filename=${result.filename}`
+      );
+      res.setHeader('Content-length', data.ContentLength)
+      res.end(data.Body)
+    // return res.status(200).json(url);
     // return res.status(200).json(url.split(/[?#]/)[0]);
+  }); // end of getObject
   })
 })
 
