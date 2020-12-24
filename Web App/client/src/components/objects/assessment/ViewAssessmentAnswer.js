@@ -9,7 +9,8 @@ import { getStudents } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar, Divider, 
-    IconButton, Tabs, Tab, Menu, MenuItem, Badge, Box, FormControl, Select, InputLabel, TextField, Button, Avatar} from "@material-ui/core";
+  IconButton, Tabs, Tab, Menu, MenuItem, Badge, Box, FormControl, Select, InputLabel, TextField, Button, Avatar, 
+  RadioGroup, Radio, Checkbox, FormGroup, FormControlLabel, InputAdornment} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -181,6 +182,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 // ANCHOR class
 
+// TODO tambain pesan "belum ada murid yang mengumpulkan jawaban assessment" 
+
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
 
@@ -197,53 +200,121 @@ function ViewAssessmentTeacher(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
+
+   // object yang berisi semua murid yang menerima assessment ini, baik yang sudah mengerjakan maupun belum
   const [all_student_object, setAllStudentObj] = React.useState(null);
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
-  const [longtextGrades, setLongtextGrades] = React.useState(null);
-  // ANCHOR states
+
+  // object yang berisi pasangan: id murid - object grade
+  // object grade berisi pasangan: index soal uraian - nilai , soal uraian yang belum dinilai tidak disimpan di object ini
+  // kalau assessment ini tidak punya soal uraian, state ini akan diset menjadi null
+  const [longtextGrades, setLongtextGrades] = React.useState(undefined);
+
+  // berisi object yang memiliki 2 pasangan: 
+  // 1. "studentOptions" dengan value object. 
+  // Ada 1 pasangan pada object ini dengan key "combined" dan value berupa array yang berisi 
+  // semua murid dari semua kelas yang menerima assessment ini. 
+  // Object value ini juga berisi pasangan: id kelas (kelas-kelas yang menerima assessment ini) - array.
+  // Array ini berisi semua murid yang berada pada kelas tersebut.
+  // Bentuk elemen array ini adalah object yang memiliki atribut id dan nama.
+  // 2. "classOptions" dengan value berupa array yang berisi semua kelas yang menerima assessment ini.
+  // Bentuk elemen array ini adalah object yang memiliki atribut id dan nama.
+  const [menuOption, setMenuOption ] = React.useState(null);
+  
+  // berisi id kelas yang sedang dipilih pada menu kelas 
+  const [selectedClass, setSelectedClass] = React.useState(null);
+  // const [selectedClass, setSelectedClass] = React.useState("5f4760f98dccb3468ccc0ffc"); //dev
+
+  // berisi id murid yang sedang dipilih pada menu murid
+  const [selectedStudent, setSelectedStudent] = React.useState(null);
+  // const [selectedStudent, setSelectedStudent] = React.useState("5f44d55155cedc284824f5c1"); //dev
+
+  const hasLongtextQst = React.useRef(null);
 
   // Tabs
   const [value, setValue] = React.useState(0);
+  // const [value, setValue] = React.useState(1); //dev
 
   React.useEffect(() => {
     getOneAssessment(assessment_id)
     getAllClass("map")
     getAllSubjects("map")
-    getStudents()
+    getStudents() 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  React.useEffect(() => {
+    hasLongtextQst.current = false;
+    for (let question of selectedAssessments.questions) {
+      if (question.type === "longtext") {
+        hasLongtextQst.current = true;
+        break;
+      }
+    }
+  }, [selectedAssessments])
+
   // ANCHOR useEffect
   React.useEffect(() => {    
-    if (isAssessmentLoaded() && isAllStudentsLoaded()) {
+    if (isAssessmentLoaded() && isAllStudentsLoaded() && all_classes_map.size !== 0) {
       let students = {};
-
+      let classOptions = [];
+      let studentOptions = {combined : []};
+      
+      for (let classId of selectedAssessments.class_assigned) {
+        classOptions.push({ id: classId, name: all_classes_map.get(classId).name});
+        studentOptions[classId] = [];
+      }
+      
+      let submittedStudentList = Object.keys(selectedAssessments.submissions);
       for (var j = 0; j < all_students.length; j++) {
-        if (selectedAssessments.class_assigned.includes(all_students[j].kelas)) {
-          students[all_students[j]._id] = all_students[j];
+        // jika kelas murid diberikan assessment ini 
+        let std = all_students[j];
+        if (selectedAssessments.class_assigned.includes(std.kelas)) {
+          students[std._id] = std;
+
+          // jika murid sudah mengerjakan assessment ini, masukan ke pilihan menu
+          if (submittedStudentList.includes(std._id)) {
+            studentOptions[std.kelas].push({ id: std._id, name: std.name});
+            studentOptions.combined.push({ id: std._id, name: std.name });
+          }
         }
       }
+
+      let options = { classOptions, studentOptions };
+      setMenuOption(options);
       setAllStudentObj(students);
     }
-  }, [all_students, selectedAssessments])
+  }, [all_students, selectedAssessments, all_classes_map])
   
   React.useEffect(() => {
     if (isAssessmentLoaded() && all_student_object) {
-      
-      console.log(all_student_object);
-      let ltGrade = {};
-      Object.keys(all_student_object).forEach((studentId) => {
-        if (selectedAssessments.grades[studentId]) {
-          ltGrade[studentId] = selectedAssessments.grades[studentId].longtext_grades;
-        } else {
-          // jika semua jawaban uraian murid ini belum dinilai
-          ltGrade[studentId] = {};
-        }
-      })
-      setLongtextGrades(ltGrade);
-    }
-  }, [selectedAssessments, all_student_object])
+      if (hasLongtextQst.current === true) {
+
+        let ltGrade = {};
+        
+        // jika minimal ada 1 murid yang jawaban uraiannya sudah dinilai,
+        if (selectedAssessments.grades) {
+
+          Object.keys(all_student_object).forEach((studentId) => {
+
+            // jika jawaban uraian murid ini sudah pernah dinilai
+            if (selectedAssessments.grades[studentId]) {
+              ltGrade[studentId] = selectedAssessments.grades[studentId].longtext_grades;
+            } else {
+              // jika semua jawaban uraian murid ini belum dinilai atau murid belum mengerjakan assessment ini,
+              ltGrade[studentId] = {};
+            }
+          });
+        } // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, longtextGrades akan diisi object kosong {}
+        
+        setLongtextGrades(ltGrade);
+      } else {
+        // jika tidak ada soal uraian, set null
+        setLongtextGrades(null);
+      }
+    } 
+  }, [selectedAssessments, all_student_object, hasLongtextQst.current])
 
   const onDeleteAssessment = (id) => {
     deleteAssessment(id)
@@ -358,7 +429,7 @@ function ViewAssessmentTeacher(props) {
     )
   }
 
-  // ANCHOR func handleGradeChange
+  // ANCHOR fungsi handleGradeChange
   const handleGradeChange = (e, studentId) => {
     let temp = { ...longtextGrades};
     let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
@@ -388,7 +459,7 @@ function ViewAssessmentTeacher(props) {
     }
   }
 
-  // ANCHOR fungsi jawaban murid
+  // ANCHOR fungsi per soal
   const generateAllStudentAnswer = () => {
     let submissions = selectedAssessments.submissions;
     let question = selectedAssessments.questions[qnsIndex];
@@ -396,11 +467,9 @@ function ViewAssessmentTeacher(props) {
 
     // traverse submission semua murid, (murid yang belum mengerjakan assessment ini tidak akan ditampilkan)
     return Object.entries(submissions).map((student) => {
-    //  Object.entries(submissions).map((student) => {
       let studentId = student[0];
       let studentAnswer = student[1][qnsIndex];
       let studentInfo = all_student_object[studentId]; 
-      // console.log(all_student_object);
 
       let studentClassName = all_classes_map.get(studentInfo.kelas).name;
       let questionWeight;
@@ -427,7 +496,7 @@ function ViewAssessmentTeacher(props) {
           let questionAnswer = question.answer;
 
           if (question.type === "radio") {
-            if (question[0] === studentAnswer[0]) {
+            if (questionAnswer[0] === studentAnswer[0]) {
               mark = 1 * weights.radio;
             }
           } else if (question.type === "checkbox") {
@@ -461,7 +530,7 @@ function ViewAssessmentTeacher(props) {
       }
       
       return (
-        <GenerateQuestionPerQuestion
+        <QuestionPerQuestion
           questionNumber={qnsIndex}
           classes={classes}
           studentId={studentId}
@@ -474,83 +543,165 @@ function ViewAssessmentTeacher(props) {
           handleGradeChange={handleGradeChange}
           handleSaveGrade={handleSaveGrade}
         />                    
-      )
-      // return generateQuestionPerQuestion(studentId, studentInfo.name, studentClassName, studentAnswer, mark, question.type, questionWeight);
+      );
     });
   }
 
-  const generateQuestionandAnswerPerStudent = (number, question, weight, studentName, studentClass, studentAnswer, studentMark, answerChecked) => {
+  // ANCHOR fungsi per murid
+  const generateQstStdAnswer = () => {
+    let studentId = selectedStudent;
+    let studentAnswers = selectedAssessments.submissions[studentId];
+    let questions = selectedAssessments.questions;
+    let weights = selectedAssessments.question_weight;
+
+    // traverse submission semua murid, (murid yang belum mengerjakan assessment ini tidak akan ditampilkan)
+    return questions.map((question, questionIndex ) => {
+      let studentAnswer = studentAnswers[questionIndex];
+      let questionWeight;
+
+      let mark = 0;
+      if (question.type === "longtext") {
+        questionWeight = weights[question.type][questionIndex];
+
+        let longtextGrade = longtextGrades[studentId][questionIndex];
+        if (longtextGrade) {
+          // jika sudah pernah dinilai
+          mark = longtextGrade;
+        } else {
+          // jika belum pernah dinilai
+          mark = null;
+        }
+
+      } else {
+        questionWeight = weights[question.type];
+
+        if (studentAnswer.length !== 0) {
+          // jika murid menjawab soal ini
+
+          let questionAnswer = question.answer;
+
+          if (question.type === "radio") {
+            if (questionAnswer[0] === studentAnswer[0]) {
+              mark = 1 * weights.radio;
+            }
+          } else if (question.type === "checkbox") {
+            let temp_correct = 0;
+
+            studentAnswer.forEach((answer) => {
+              if (questionAnswer.includes(answer)) {
+                temp_correct += 1;
+              }
+              else {
+                temp_correct -= 2;
+              }
+            });
+
+            if (temp_correct > 0) {
+              mark = weights.checkbox * temp_correct / questionAnswer.length;
+            }
+          } else { // type === "shorttext"
+            let temp_correct = 0;
+            for (let answerIdx = 0; answerIdx < questionAnswer.length; answerIdx++) {
+              if (questionAnswer[answerIdx] === studentAnswer[answerIdx]) {
+                temp_correct++;
+              }
+            }
+
+            mark = weights.shorttext * temp_correct / questionAnswer.length;
+          }
+
+        } // jika murid tidak menjawab soal ini, mark tetap 0
+
+      }
+
       return (
-        <Badge 
-            badgeContent={(answerChecked) ? <CheckCircleIcon className={classes.checkBadge} fontSize="large"/> :
-                <ErrorIcon className={classes.warningBadge} fontSize="large"/>} variant="standard" style={{marginLeft: "4px"}}>
-            <Paper className={classes.contentItem}>
-                <Typography align="center" variant="h6" style={{marginBottom: "10px"}}><b>{`Soal ${number}`}</b></Typography>
-                <Typography align="justify">{`${question}`}</Typography>
-                <Typography align="center" style={{marginTop: "15px"}} color="primary">{`Bobot : ${weight}`}</Typography>
-                <Divider style={{marginBottom: "15px", marginTop: "15px"}}/>
-                <Typography variant="h6" style={{textDecoration: "underline", marginBottom: "10px"}}><b>Jawaban</b></Typography>
-                <Typography align="justify">{`${studentAnswer}`}</Typography>
-                <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px"}}>
-                    <Typography style={{marginTop: "5px", marginRight: "10px"}} color="textSecondary">Poin :</Typography>
-                    <TextField
-                        defaultValue={studentMark}
-                        inputProps={{
-                        style: {
-                            borderBottom: "none",
-                            boxShadow: "none",
-                            margin: "0px",
-                            width: "30px"
-                        }
-                        }}
-                        InputProps={{
-                            endAdornment: "/ 100",
-                        }}
-                    />
-                    <div>
-                        <Button className={classes.saveButton} size="small">SIMPAN</Button>
-                    </div>
-                </div>
-            </Paper>   
-        </Badge>
-      )
+        <QuestionAnswerPerStudent
+          classes={classes}
+          studentId={studentId}
+          studentAnswer={studentAnswer}
+          studentMark={mark}
+          questionWeight={questionWeight}
+          questionNumber={questionIndex + 1}
+          questionInfo={question}
+          handleGradeChange={handleGradeChange}
+          handleSaveGrade={handleSaveGrade}
+        />
+      );
+    });
   }
 
-  // Ganti halaman Soal
-  function QuestionPage(props) {
-    const { classes, handleChangeQuestion, question_number, answer } = props;
-    console.log(answer)
-    return (
-      <Grid item>
-        <Badge
-          badgeContent={(answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => {return elm !== ""})) ?
-              <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-                <CheckCircleIcon style={{width: "15px", height: "15px"}} />
-              </Avatar>
-            :
-              <Avatar style={{backgroundColor: "red", color: "white", width: "20px", height: "20px"}}>
-                <ErrorIcon style={{width: "15px", height: "15px"}} />
-              </Avatar>
-          }
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
-          <Paper
-            buttons
-            variant="outlined"
-            className={classes.questionPage}
-            onClick={() => handleChangeQuestion(question_number-1)}
-          >
-            <Typography>
-              {question_number}
-            </Typography>
-          </Paper>
-        </Badge>
-      </Grid>
-    )
-  }
+  // // Ganti halaman Soal
+  // function QuestionPage(props) {
+  //   const { classes, handleChangeQuestion, question_number, answer } = props;
+  //   console.log(answer)
+  //   return (
+  //     <Grid item>
+  //       <Badge
+  //         badgeContent={(answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => {return elm !== ""})) ?
+  //             <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
+  //               <CheckCircleIcon style={{width: "15px", height: "15px"}} />
+  //             </Avatar>
+  //           :
+  //             <Avatar style={{backgroundColor: "red", color: "white", width: "20px", height: "20px"}}>
+  //               <ErrorIcon style={{width: "15px", height: "15px"}} />
+  //             </Avatar>
+  //         }
+  //         anchorOrigin={{
+  //           vertical: "bottom",
+  //           horizontal: "right",
+  //         }}
+  //       >
+  //         <Paper
+  //           buttons
+  //           variant="outlined"
+  //           className={classes.questionPage}
+  //           onClick={() => handleChangeQuestion(question_number-1)}
+  //         >
+  //           <Typography>
+  //             {question_number}
+  //           </Typography>
+  //         </Paper>
+  //       </Badge>
+  //     </Grid>
+  //   )
+  // }
+
+  // const GenerateQuestionandAnswerPerStudent = (number, question, weight, studentName, studentClass, studentAnswer, studentMark, answerChecked) => {
+  //   return (
+  //     <Badge
+  //       badgeContent={(answerChecked) ? <CheckCircleIcon className={classes.checkBadge} fontSize="large" /> :
+  //         <ErrorIcon className={classes.warningBadge} fontSize="large" />} variant="standard" style={{ marginLeft: "4px" }}>
+  //       <Paper className={classes.contentItem}>
+  //         <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${number}`}</b></Typography>
+  //         <Typography align="justify">{`${question}`}</Typography>
+  //         <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${weight}`}</Typography>
+  //         <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
+  //         <Typography variant="h6" style={{ textDecoration: "underline", marginBottom: "10px" }}><b>Jawaban</b></Typography>
+  //         <Typography align="justify">{`${studentAnswer}`}</Typography>
+  //         <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px" }}>
+  //           <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+  //           <TextField
+  //             defaultValue={studentMark}
+  //             inputProps={{
+  //               style: {
+  //                 borderBottom: "none",
+  //                 boxShadow: "none",
+  //                 margin: "0px",
+  //                 width: "30px"
+  //               }
+  //             }}
+  //             InputProps={{
+  //               endAdornment: "/ 100",
+  //             }}
+  //           />
+  //           <div>
+  //             <Button className={classes.saveButton} size="small">SIMPAN</Button>
+  //           </div>
+  //         </div>
+  //       </Paper>
+  //     </Badge>
+  //   )
+  // }
 
   let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
 
@@ -567,21 +718,32 @@ function ViewAssessmentTeacher(props) {
 
   // ANCHOR fungsi question page
   function QuestionPage(props) {
-    const { classes, handleChangeQuestion, question_number, answer } = props;
+    const { classes, handleChangeQuestion, question_number, answer, question_type } = props;
+
+    let fullyGraded = true;
+    if (question_type === "longtext") {
+      for (let studentId of Object.keys(selectedAssessments.submissions)) {
+        if (!longtextGrades[studentId][question_number - 1]) {
+          fullyGraded = false;
+          break;
+        }
+      }
+    }
 
     return (
       <Grid item>
-        {/* TODO badge */}
+        {/* ANCHOR badge */}
         <Badge
           badgeContent={
-            // (answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => { return elm !== "" })) ?
-            <Avatar style={{ backgroundColor: "green", color: "white", width: "20px", height: "20px" }}>
-              <CheckCircleIcon style={{ width: "15px", height: "15px" }} />
-            </Avatar>
-            // :
-            // <Avatar style={{ backgroundColor: "red", color: "white", width: "20px", height: "20px" }}>
-            //   <ErrorIcon style={{ width: "15px", height: "15px" }} />
-            // </Avatar>
+            (fullyGraded) ? (
+              <Avatar style={{ backgroundColor: "green", color: "white", width: "20px", height: "20px" }}>
+                <CheckCircleIcon style={{ width: "15px", height: "15px" }} />
+              </Avatar>
+            ) : (
+              <Avatar style={{ backgroundColor: "red", color: "white", width: "20px", height: "20px" }}>
+                <ErrorIcon style={{ width: "15px", height: "15px" }} />
+              </Avatar>
+            )
           }
           anchorOrigin={{
             vertical: "bottom",
@@ -667,12 +829,21 @@ function ViewAssessmentTeacher(props) {
                         </Badge>
                     </LightTooltip>
                 </Grid>
-                  {/* ANCHOR elemen navigasi soal */}
+                {/* ANCHOR navigasi soal */}
                   <Grid container item md={12} spacing={2} alignItems="center">
                   {
-                    (isAssessmentLoaded()) ? (
+                    (isAssessmentLoaded() && longtextGrades) ? (
                       selectedAssessments.questions.map((qns, i) => { 
-                        return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion} />) 
+                        return (
+                          // <a href={`#${i}`} >
+                            <QuestionPage
+                              classes={classes}
+                              question_number={i + 1}
+                              handleChangeQuestion={handleChangeQuestion}
+                              question_type={qns.type}
+                            />
+                          // </a>
+                        ) 
                       })
                     ) : (
                       null
@@ -750,8 +921,10 @@ function ViewAssessmentTeacher(props) {
                 </Grid>
               </Grid>
             </Paper>
+
+            {/* Tab Panel Per Soal */}
           <div hidden={value === 1} style={{padding: "24px"}}>
-            {/* ANCHOR elemen soal */}
+            {/* ANCHOR soal */}
             {
               (isAssessmentLoaded()) ? (
                 (selectedAssessments.questions[qnsIndex].type === "longtext") ? (
@@ -773,57 +946,122 @@ function ViewAssessmentTeacher(props) {
             }
 
             {
-              (longtextGrades) ? (
-                generateAllStudentAnswer()
+              (hasLongtextQst.current === true) ? (
+                (longtextGrades && all_classes_map) ? (
+                  generateAllStudentAnswer()
+                ) : (
+                  null
+                )
               ) : (
-                null
+                (hasLongtextQst.current === false) ? (
+                  (all_classes_map) ? (
+                    generateAllStudentAnswer()
+                  ) : (
+                    null
+                  )
+                ) : (
+                  // hasLongtextQst.current === null
+                  null
+                )
               )
             }
             </div>
+          
+          {/* Tab Panel Per Murid */}
           <div hidden={value === 0} style={{ padding: "24px" }}>
-                <Paper className={classes.perStudentSelect}>
-                    <div className={classes.selectDiv}>
-                        <Grid container>
-                            <Grid item xs={1} sm={3}></Grid>
-                            <Grid item xs={3} sm={2} className={classes.selectDescription}>
-                                <Typography>Nama Murid :</Typography>
-                            </Grid>
-                            <Grid item xs={6} sm={2}>
-                                {/*<InputLabel id="kelas-label">Kelas</InputLabel>*/}
-                                <Select
-                                    labelId="kelas-label"
-                                    id="kelas"
-                                    className={classes.select}
-                                    variant="outlined"
-                                >
-                                    <option value={10}>Ten</option>
-                                </Select>
-                            </Grid>
-                            <Grid item xs={2} sm={5}></Grid>
-                        </Grid>
-                    </div>
-                    <div className={classes.selectDiv} style={{marginTop: "10px"}}>
-                        <Grid container>
-                            <Grid item xs={1} sm={3}></Grid>
-                            <Grid item xs={3} sm={2} className={classes.selectDescription}>
-                                <Typography>Kelas :</Typography>
-                            </Grid>
-                            <Grid item xs={6} sm={2}>
-                                {/*<InputLabel id="kelas-label">Kelas</InputLabel>*/}
-                                <Select
-                                    labelId="kelas-label"
-                                    id="kelas"
-                                    className={classes.select}
-                                    variant="outlined"
-                                >
-                                    <option value={10}>Ten</option>
-                                </Select>
-                            </Grid>
-                            <Grid item xs={2} sm={5}></Grid>
-                        </Grid>
-                    </div>
-                </Paper>
-            </div>
+            <Paper className={classes.perStudentSelect}>
+              <div className={classes.selectDiv}>
+                <Grid container>
+                  <Grid item xs={1} sm={3}></Grid>
+                  <Grid item xs={3} sm={2} className={classes.selectDescription}>
+                    <Typography>Nama Murid :</Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={2}>
+                    <Select
+                      // disabled
+                      labelId="kelas-label"
+                      id="kelas"
+                      className={classes.select}
+                      variant="outlined"
+                      value={selectedStudent}
+                      onChange={(e) => { setSelectedStudent(e.target.value) }}
+                    >
+                      {
+                        (menuOption) ? (
+                          (selectedClass) ? (
+                            menuOption.studentOptions[selectedClass].map((student) => {
+                              return <MenuItem key={student.id} value={student.id}>{student.name}</MenuItem>
+                            })
+                          ) : (
+                              menuOption.studentOptions.combined.map((student) => {
+                                return <MenuItem key={student.id} value={student.id}>{student.name}</MenuItem>
+                              })
+                            )
+                        ) : (
+                          null
+                        )
+                      }
+                    </Select>
+                  </Grid>
+                  <Grid item xs={2} sm={5}></Grid>
+                </Grid>
+              </div>
+              <div className={classes.selectDiv} style={{ marginTop: "10px" }}>
+                <Grid container>
+                  <Grid item xs={1} sm={3}></Grid>
+                  <Grid item xs={3} sm={2} className={classes.selectDescription}>
+                    <Typography>Kelas :</Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={2}>
+                    <Select
+                      // disabled
+                      labelId="kelas-label"
+                      id="kelas"
+                      className={classes.select}
+                      variant="outlined"
+                      value={(selectedStudent) ? all_student_object[selectedStudent].kelas : selectedClass}
+                      onChange={(e) => { setSelectedClass(e.target.value); setSelectedStudent(null); }}
+                    >
+                      {
+                        (menuOption) ? (
+                          menuOption.classOptions.map((kelas) => {
+                            return <MenuItem key={kelas.id} value={kelas.id}>{kelas.name}</MenuItem>
+                          })
+                        ) : (
+                          null
+                        )
+
+                      }
+                    </Select>
+                  </Grid>
+                  <Grid item xs={2} sm={5}></Grid>
+                </Grid>
+              </div>
+            </Paper>
+
+            {/* ANCHOR elemen per murid */}
+            {
+              (hasLongtextQst.current === true) ? (
+                (longtextGrades && all_classes_map && selectedStudent) ? (
+                  generateQstStdAnswer()
+                ) : (
+                  null
+                )
+              ) : (
+                (hasLongtextQst.current === false) ? (
+                  (all_classes_map && selectedStudent) ? (
+                    generateQstStdAnswer()
+                  ) : (
+                    null
+                  )
+                ) : (
+                  // hasLongtextQst.current === null
+                  null
+                )
+              )
+            }
+          </div>
+          
           </Grid>
           {/* {!Array.isArray(questions) ? null :
           questions.map((question, i) => (
@@ -893,9 +1131,16 @@ function ViewAssessmentTeacher(props) {
   )
 };
 
-// ANCHOR
-function GenerateQuestionPerQuestion(props) {
-  const { classes, studentId, studentName, studentClass, studentAnswer, studentMark, questionType, questionWeight, questionNumber } = props;
+function QuestionPerQuestion(props) {
+  const { 
+    classes, 
+    studentId, 
+    studentName,
+    studentClass,
+    studentAnswer, 
+    studentMark, 
+    questionWeight, 
+  } = props;
   const { handleGradeChange, handleSaveGrade } = props;
 
     return (
@@ -966,6 +1211,210 @@ function GenerateQuestionPerQuestion(props) {
     return null;
   // }
 }
+
+function QuestionAnswerPerStudent(props) {
+  const {
+    classes,
+    studentId,
+    studentAnswer,
+    studentMark,
+    questionWeight,
+    questionNumber,
+    questionInfo
+  } = props;
+  let questionType = questionInfo.type;
+  let questionName = questionInfo.name;
+  let questionAnswer = questionInfo.answer;
+  let questionOptions = questionInfo.options;
+
+  const { handleGradeChange, handleSaveGrade } = props;
+
+  // ANCHOR konten per murid
+  let content;
+  if (questionType === "longtext") {
+    content = (
+      <Badge
+        variant="standard"
+        style={{ marginLeft: "4px", width: "100%" }}
+        badgeContent={
+          (studentMark === null) ? (
+            <ErrorIcon className={classes.warningBadge} fontSize="large" />
+          ) : (
+              <CheckCircleIcon className={classes.checkBadge} fontSize="large" />
+            )
+        }
+      >
+        <Grid container item xs={12} style={{ padding: "20px" }}>
+          <Grid item xs={12}>
+            <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography align="justify">{`${questionName}`}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Typography variant="h6" style={{ textDecoration: "underline", marginBottom: "10px" }}><b>Jawaban</b></Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography align="justify">{(studentAnswer[0]) ? `${studentAnswer[0]}` : "Tidak menjawab"}</Typography>
+          </Grid>
+
+          <Grid container item justify="flex-end" alignItems="center" style={{ marginTop: "25px" }}>
+            <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+            <TextField
+              defaultValue={studentMark}
+              inputProps={{
+                style: {
+                  borderBottom: "none",
+                  boxShadow: "none",
+                  margin: "0px",
+                  width: "30px"
+                }
+              }}
+              InputProps={{
+                endAdornment: `/ ${questionWeight}`,
+              }}
+              onChange={(e) => { handleGradeChange(e, studentId) }}
+            />
+            <div>
+              <Button
+                className={classes.saveButton}
+                size="small"
+                onClick={() => { handleSaveGrade(studentId) }}
+              >
+                SIMPAN
+                  </Button>
+            </div>
+          </Grid>
+        </Grid>
+      </Badge>
+    );
+  } else {
+    let answer;
+
+    if (questionType === "radio") {
+      answer = (
+        <Grid item>
+          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography align="justify">{`${questionName}`}</Typography>
+          <RadioGroup value={studentAnswer[0]}>
+            {questionOptions.map((option, i) =>
+              <div style={{ display: "flex" }}>
+                <FormControlLabel
+                  disabled
+                  style={{ width: "100%" }}
+                  value={String.fromCharCode(97 + i).toUpperCase()}
+                  control={<Radio color="primary" />}
+                  label={option}
+                />
+              </div>
+            )}
+          </RadioGroup>
+        </Grid>
+      );
+    } else if (questionType === "checkbox") {
+      answer = (
+        <Grid item>
+          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography align="justify">{`${questionName}`}</Typography>
+          <FormGroup>
+            {questionOptions.map((option, i) =>
+              <div style={{ display: "flex" }}>
+                <FormControlLabel
+                  disabled
+                  style={{ width: "100%" }}
+                  value={String.fromCharCode(97 + i).toUpperCase()}
+                  label={option}
+                  control={
+                    <Checkbox
+                      checked={studentAnswer.includes(String.fromCharCode(97 + i).toUpperCase())}
+                      color="primary"
+                    />
+                  }
+                />
+              </div>
+            )}
+          </FormGroup>
+        </Grid>
+      );
+    } else {
+      let splitResult = questionName.split("`");
+      let iterator = 0;
+
+      for (let i = 1; i <= splitResult.length - 2; i += 2) {
+        splitResult[i] = (
+          <Input
+            type="text"
+            key={`${questionNumber}-${iterator}`}
+            disabled={true}
+            value={studentAnswer[iterator]}
+          />);
+        iterator++;
+      }
+
+      answer = (
+        <Grid item>
+          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography>
+            <form>
+              {splitResult}
+            </form>
+          </Typography>
+        </Grid>
+      );
+    }
+
+    content = (
+      <Grid container style={{ padding: "20px" }}>
+        <Grid item xs={8}>
+          {answer}
+        </Grid>
+        <Grid item>
+          <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
+        </Grid>
+        <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+          <Grid item>
+            <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+          </Grid>
+          <Grid container item justify="center" alignItems="center">
+            <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">Poin :</Typography>
+            <TextField
+              disabled
+              defaultValue={studentMark}
+              inputProps={{
+                style: {
+                  borderBottom: "none",
+                  boxShadow: "none",
+                  margin: "0px",
+                  width: "30px"
+                }
+              }}
+              InputProps={{
+                endAdornment: `/ ${questionWeight}`,
+              }}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  return (
+    // <a id={questionNumber-1}>
+    <Paper style={{ width: "100%", marginBottom: "30px" }}>
+      {content}
+    </Paper>
+    // </a>
+  )
+}
+
 
 ViewAssessmentTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
