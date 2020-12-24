@@ -326,7 +326,6 @@ function SubmittedAssessmentList(props) {
     
     rows.current = newRows;
   }
-
   const handleOpenSortMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -359,7 +358,6 @@ function SubmittedAssessmentList(props) {
     }
     return 0;
   }
-
   function getComparator(order, orderBy) {
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
@@ -526,12 +524,15 @@ function SubmittedAssessmentList(props) {
               scores = JSON.parse(JSON.stringify(scoresTemplate));
 
               if (types.has('longtext')) {                
-                // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
-                // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
-                if (Object.keys(selectedAssessments.grades[student._id].longtext_grades).length === Object.keys(selectedAssessments.question_weight.longtext).length) {
-                  isAllEssayGraded = true;
-                  scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext_grades).reduce((sum, currentVal) => (sum + currentVal));
-                } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
+                if (selectedAssessments.grades && selectedAssessments.grades[student._id]) {
+                  
+                  // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
+                  // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
+                  if (Object.keys(selectedAssessments.grades[student._id].longtext_grades).length === Object.keys(selectedAssessments.question_weight.longtext).length) {
+                    isAllEssayGraded = true;
+                    scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext_grades).reduce((sum, currentVal) => (sum + currentVal));
+                  } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
+                }
               }
               
               let weights = selectedAssessments.question_weight;
@@ -759,9 +760,9 @@ function SubmittedAssessmentList(props) {
             <Typography color="primary" gutterBottom style={{marginTop: "20px"}}>
               Deskripsi Tugas:
             </Typography>
-            <Typography align="justify">
+            {/* <Typography align="justify">
               {selectedAssessments.description}
-            </Typography>
+            </Typography> */}
           </Grid>
           <Grid item xs={12} md={5} spacing={2}>
             <Hidden mdUp implementation="css">
@@ -831,6 +832,13 @@ function SubmittedAssessmentList(props) {
               </Grid>
 
             </Hidden>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography align="justify">
+                {selectedAssessments.description}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
         {listClassTab()}

@@ -10,7 +10,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar, Divider, 
   IconButton, Tabs, Tab, Menu, MenuItem, Badge, Box, FormControl, Select, InputLabel, TextField, Button, Avatar, 
-  RadioGroup, Radio, Checkbox, FormGroup, FormControlLabel, InputAdornment} from "@material-ui/core";
+  RadioGroup, Radio, Checkbox, FormGroup, FormControlLabel, InputAdornment, TableSortLabel} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -179,10 +179,22 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
+  visuallyHidden: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  },
 }));
 // ANCHOR class
 
 // TODO tambain pesan "belum ada murid yang mengumpulkan jawaban assessment" 
+// TODO mobile view
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
@@ -201,7 +213,8 @@ function ViewAssessmentTeacher(props) {
   const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
 
-   // object yang berisi semua murid yang menerima assessment ini, baik yang sudah mengerjakan maupun belum
+  // object yang berisi semua murid yang menerima assessment ini, baik yang sudah mengerjakan maupun belum.
+  // karena assessment pasti diberikan ke minimal 1 kelas, isi all_student_object tidak mungkin kosong.
   const [all_student_object, setAllStudentObj] = React.useState(null);
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
@@ -245,18 +258,20 @@ function ViewAssessmentTeacher(props) {
   }, [])
 
   React.useEffect(() => {
-    hasLongtextQst.current = false;
-    for (let question of selectedAssessments.questions) {
-      if (question.type === "longtext") {
-        hasLongtextQst.current = true;
-        break;
+    if (isAssessmentLoaded()) {
+      hasLongtextQst.current = false;
+      for (let question of selectedAssessments.questions) {
+        if (question.type === "longtext") {
+          hasLongtextQst.current = true;
+          break;
+        }
       }
     }
   }, [selectedAssessments])
 
   // ANCHOR useEffect
   React.useEffect(() => {    
-    if (isAssessmentLoaded() && isAllStudentsLoaded() && all_classes_map.size !== 0) {
+    if (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) {
       let students = {};
       let classOptions = [];
       let studentOptions = {combined : []};
@@ -316,6 +331,73 @@ function ViewAssessmentTeacher(props) {
     } 
   }, [selectedAssessments, all_student_object, hasLongtextQst.current])
 
+  // ANCHOR Sort Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("name");
+  const rows = React.useRef([]);
+
+  React.useEffect(() => {
+    if (isAssessmentLoaded() && all_student_object) {
+      rows.current = Object.keys(selectedAssessments.submissions).map((studentId) => {
+        return { id: studentId, name: all_student_object[studentId].name, classname: all_student_object[studentId].kelas }
+      });
+    }
+  }, [selectedAssessments, all_student_object])
+
+  // function createData(_id, name) {
+  //   return { _id, name };
+  // }
+  // const assessmentRowItem = (data) => {
+  //   let newRows = rows.current;
+  //   newRows.push(
+  //     createData(
+  //       data._id,
+  //       data.name,
+  //     )
+  //   )
+
+  //   rows.current = newRows;
+  // }
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+  const headCells = [
+    { id: "name", numeric: false, disablePadding: true, label: "Nama Murid" },
+    { id: "classname", numeric: false, disablePadding: true, label: "Nama Kelas" }
+  ];
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
   const onDeleteAssessment = (id) => {
     deleteAssessment(id)
   }
@@ -330,17 +412,6 @@ function ViewAssessmentTeacher(props) {
 
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
-  };
-
-  // Sort Menu
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleOpenSortMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseSortMenu = () => {
-    setAnchorEl(null);
   };
 
   // Tabs
@@ -458,17 +529,21 @@ function ViewAssessmentTeacher(props) {
       });
     }
   }
-
   // ANCHOR fungsi per soal
   const generateAllStudentAnswer = () => {
     let submissions = selectedAssessments.submissions;
     let question = selectedAssessments.questions[qnsIndex];
     let weights = selectedAssessments.question_weight;
 
-    // traverse submission semua murid, (murid yang belum mengerjakan assessment ini tidak akan ditampilkan)
-    return Object.entries(submissions).map((student) => {
-      let studentId = student[0];
-      let studentAnswer = student[1][qnsIndex];
+    let sortedRows = stableSort(rows.current, getComparator(order, orderBy));
+    // traverse semua murid yang sudah mengerjakan assessment ini
+    // return Object.entries(submissions).map((student) => {
+    return sortedRows.map((student) => {
+      // let studentId = student[0];
+      // let studentAnswer = student[1][qnsIndex];
+      let studentId = student.id;
+      let studentAnswer = submissions[studentId][qnsIndex];
+
       let studentInfo = all_student_object[studentId]; 
 
       let studentClassName = all_classes_map.get(studentInfo.kelas).name;
@@ -705,11 +780,15 @@ function ViewAssessmentTeacher(props) {
 
   let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
 
+  //ANCHOR
   function isAssessmentLoaded() {
     return (Object.keys(selectedAssessments).length !== 0);
   }
   function isAllStudentsLoaded() {
     return (all_students.length !== 0);
+  }
+  function isAllClassMapEmpty() {
+    return (all_classes_map.size !== 0);
   }
 
   const handleChangeQuestion = (i) => {
@@ -790,9 +869,9 @@ function ViewAssessmentTeacher(props) {
                   <Typography color="primary" gutterBottom style={{marginTop: "20px"}}>
                     Deskripsi Ujian/Kuis:
                   </Typography>
-                  <Typography>
+                  {/* <Typography>
                     {selectedAssessments.description}
-                  </Typography>
+                  </Typography> */}
                 </Grid>
                 <Grid item xs={12} md={5} spacing={2}>
                   <Hidden mdUp implementation="css">
@@ -814,7 +893,14 @@ function ViewAssessmentTeacher(props) {
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={12}>
+                <Grid item xs={12}>
+                <Typography align="justify">
+                  {selectedAssessments.description}
+                </Typography>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
                     <Divider/>
                 </Grid>
               </Grid>
@@ -875,8 +961,8 @@ function ViewAssessmentTeacher(props) {
                 </Hidden>
               </Grid>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={12}>
-                    <Divider/>
+                <Grid item xs={12} style={{ marginTop: "18px" }}>
+                  <Divider />
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
@@ -915,8 +1001,26 @@ function ViewAssessmentTeacher(props) {
                             horizontal: "left",
                         }}
                     >
-                        <MenuItem>Nama Kelas</MenuItem>
-                        <MenuItem>Nama Murid</MenuItem>
+                      {headCells.map((headCell, i) => (
+                        <MenuItem
+                          key={headCell.id}
+                          sortDirection={orderBy === headCell.id ? order : false}
+                        >
+                          <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : "asc"}
+                            onClick={() => { handleRequestSort(headCell.id) }}
+                          >
+                            {headCell.label}
+                            {orderBy === headCell.id ?
+                              <span className={classes.visuallyHidden}>
+                                {order === "desc" ? "sorted descending" : "sorted ascending"}
+                              </span>
+                              : null
+                            }
+                          </TableSortLabel>
+                        </MenuItem>
+                      ))}
                     </Menu>
                 </Grid>
               </Grid>
@@ -945,16 +1049,17 @@ function ViewAssessmentTeacher(props) {
               )
             }
 
+            {/* ANCHOR */}
             {
               (hasLongtextQst.current === true) ? (
-                (longtextGrades && all_classes_map) ? (
+                (longtextGrades && isAllClassMapEmpty()) ? (
                   generateAllStudentAnswer()
                 ) : (
                   null
                 )
               ) : (
                 (hasLongtextQst.current === false) ? (
-                  (all_classes_map) ? (
+                  (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) ? (
                     generateAllStudentAnswer()
                   ) : (
                     null
@@ -1042,14 +1147,14 @@ function ViewAssessmentTeacher(props) {
             {/* ANCHOR elemen per murid */}
             {
               (hasLongtextQst.current === true) ? (
-                (longtextGrades && all_classes_map && selectedStudent) ? (
+                ((longtextGrades !== undefined) && isAllClassMapEmpty() && selectedStudent) ? (
                   generateQstStdAnswer()
                 ) : (
                   null
                 )
               ) : (
                 (hasLongtextQst.current === false) ? (
-                  (all_classes_map && selectedStudent) ? (
+                    (isAllClassMapEmpty() && selectedStudent) ? (
                     generateQstStdAnswer()
                   ) : (
                     null
