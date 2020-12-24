@@ -273,8 +273,10 @@ function SubmittedAssessmentList(props) {
   const [gradedStudentId, setGradedStudentId] = React.useState(null);
   const [gradedStudentName, setGradedStudentName] = React.useState("");
   const [value, setValue] = React.useState(0);
-  const status = React.useRef(false);
-  const [suspects, setSuspects] = React.useState([]);
+  // const status = React.useRef(false);
+
+  // jika tidak ada suspects, state ini akan bernilai array kosong
+  const [suspects, setSuspects] = React.useState(null);
  
   React.useEffect(() => {
     getOneAssessment(assessment_id)
@@ -284,20 +286,10 @@ function SubmittedAssessmentList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // TODO stub grade
   React.useEffect(() => {
-    // console.log(selectedAssessments);
-    if (!Array.isArray(selectedAssessments)) {
-      // selectedAssessments.grades = {
-      //   "5f44d55155cedc284824f5c1": {
-      //     total_grade: selectedAssessments.grades["5f44d55155cedc284824f5c1"],
-      //     longtext_grades: {
-      //       '3': 1
-      //     }
-      //   }
-      // }
+    if (Object.keys(selectedAssessments).length !== 0) {
       setSuspects(selectedAssessments.suspects);
-      status.current = true;
+      // status.current = true;
     }
   }, [selectedAssessments])
 
@@ -843,8 +835,8 @@ function SubmittedAssessmentList(props) {
         </Grid>
         {listClassTab()}
       </Paper>
-      {/* TODO stub  */}
-      {(status.current) ? listClassTabPanel() : null}
+      {/* jika selectedAssessment belum selesai diload, suspects akan bernilai null. Array kosong bernilai true*/}
+      {(suspects) ? listClassTabPanel() : null}
     </div>
   )
 };

@@ -69,11 +69,19 @@ const AssessmentSchema = new Schema({
     //   },
     // }
 
-    // NOTE
-    // -jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades.
-    // jika belum dinilai, pasangan tidak ditambahkan.
-    // -(assessments.js, endpoint update grade uraian) jika longtext_grades sudah lengkap, total_grade baru ada. 
-    // jika longtext_grades tidak lengkap, total_grade bernilai null
+    
+   /* NOTE
+    - jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades.
+      jika belum dinilai, pasangan tidak ditambahkan.
+    - ketika assessment pertama kali dibuat, atribut grades tidak ada. 
+      atribut grades hanya ada jika:
+      - guru sudah menilai minimal 1 jawaban uraian dari 1 murid; atau 
+      - ada minimal 1 murid yang sudah mengumpulkan jawaban assessment yang tidak memiliki soal uraian; 
+    - jika murid mengumpulkan assessment yang tidak memiliki soal uraian, total_grades akan dihitung dengan longtext_grades diset menjadi null
+    - (assessments.js, endpoint update grade uraian) 
+      ketika guru selesai menentukan nilai jawaban uraian terakhir dan menyimpannya (longtext_grades sudah lengkap), total_grade akan dihitung.
+      jika longtext_grades belum lengkap, total_grade bernilai null.
+    */
 
     submissions:{
       type: Map,
