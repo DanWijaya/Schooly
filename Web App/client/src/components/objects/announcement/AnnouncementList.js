@@ -56,8 +56,22 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
+  visuallyHidden: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  }
 }));
 
+function createData(sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased) {
+  return { sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased };
+}
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -94,9 +108,9 @@ function AnnouncementListToolbar(props) {
   };
 
   const headCells = [
-    { id: "author_id", numeric: false, disablePadding: true, label: "Pemberi Tugas" },
-    { id: "title", numeric: false, disablePadding: false, label: "Nama Tugas" },
-    { id: "date", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
+    { id: "author_name", numeric: false, disablePadding: true, label: "Pemberi Tugas" },
+    { id: "notification_title", numeric: false, disablePadding: false, label: "Nama Tugas" },
+    { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
   ];
 
   if (role === "Student") {
@@ -385,11 +399,45 @@ function AnnouncementList(props) {
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
+ 
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  var rows = []
+  const announcementRowItem = (data) => {
+    rows.push(
+      createData(
+        (<AccountCircleIcon />),
+        (!retrieved_users.get(data.author_id) ? null: retrieved_users.get(data.author_id).name),
+        (data.title),
+        (`/pengumuman/${data._id}`),
+        (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
+        (moment(data.date_announced).locale("id").format("HH.mm")),
+        (moment(data.date_announced).locale("id")),
+        (!retrieved_users.get(data.author_id) ? null: retrieved_users.get(data.author_id).name.toLowerCase())
+      )
+    )
+  }
+
+  const retrieveAnnouncements = () => {
+    // If all_assessments is not undefined or an empty array
+    if (selectedAnnouncements.length) {
+      rows = []
+      selectedAnnouncements.filter(item => item.title.toLowerCase().includes(searchFilter.toLowerCase()))
+      .forEach((data) => {
+        if(data){
+          console.log(data)
+        }
+        announcementRowItem(data)
+      })
+    }
+  }
+
+ retrieveAnnouncements()
 
   // retrieved users ini bulk request, dapat data user"nya satu"
   React.useEffect(() => {
@@ -415,34 +463,26 @@ function AnnouncementList(props) {
 
   console.log(selectedAnnouncements)
 
-  const listAnnouncements = () => {
-    let annList = [];
-    console.log(selectedAnnouncements, retrieved_users)
-    if(selectedAnnouncements.length && retrieved_users.size) {
-      for (var i = selectedAnnouncements.length-1; i >= 0; i--) {
-        // retrieved users ini bulk request, dapat data user"nya satu"
-        annList.push(
-          <AnnouncementItemList
-            sender_icon={<AccountCircleIcon />}
-            author_name={!retrieved_users.get(selectedAnnouncements[i].author_id) ? null: retrieved_users.get(selectedAnnouncements[i].author_id).name}
-            notification_title={selectedAnnouncements[i].title}
-            notification_link={`/pengumuman/${selectedAnnouncements[i]._id}`}
-            date={moment(selectedAnnouncements[i].date_announced).locale("id").format("DD MMM YYYY")}
-            time={moment(selectedAnnouncements[i].date_announced).locale("id").format("HH.mm")}
-          />
-        )
-      }
-    }
-    return annList;
-  }
-
-  const canAnnounce = () => {
-    console.log(user.role)
-    if (Object.keys(kelas).length > 0) {
-      return user.id === kelas.ketua_kelas
-    }
-    return user.role === "Teacher"
-  }
+  // const listAnnouncements = () => {
+  //   let annList = [];
+  //   console.log(selectedAnnouncements, retrieved_users)
+  //   if(selectedAnnouncements.length && retrieved_users.size) {
+  //     for (var i = selectedAnnouncements.length-1; i >= 0; i--) {
+  //       // retrieved users ini bulk request, dapat data user"nya satu"
+  //       annList.push(
+  //         createData(
+  //           (<AccountCircleIcon />),
+  //           (!retrieved_users.get(selectedAnnouncements[i].author_id) ? null: retrieved_users.get(selectedAnnouncements[i].author_id).name),
+  //           (selectedAnnouncements[i].title),
+  //           (`/pengumuman/${selectedAnnouncements[i]._id}`),
+  //           (moment(selectedAnnouncements[i].date_announced).locale("id").format("DD MMM YYYY")),
+  //           (moment(selectedAnnouncements[i].date_announced).locale("id").format("HH.mm")),
+  //         )
+  //       )
+  //     }
+  //   }
+  //   return annList;
+  // }
 
   return (
     <div className={classes.root}>
@@ -453,24 +493,27 @@ function AnnouncementList(props) {
         order={order}
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
-        rowCount={listAnnouncements() ? listAnnouncements().length : 0}
+        rowCount={rows ? rows.length : 0}
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
       />
       <Divider variant="inset" className={classes.titleDivider} />
-      {stableSort(listAnnouncements(), getComparator(order, orderBy))
-        .map((row, index) => {
-          return (
-            <>
-             {row}
-            </>
-          )
-              
-          })};
       <Grid container direction="column" spacing={2}>
-        {listAnnouncements()}
+        {stableSort(rows, getComparator(order, orderBy))
+          .map((row, index) => {
+            return (
+              <AnnouncementItemList
+                sender_icon={row.sender_icon}
+                author_name={row.author_name}
+                notification_title={row.notification_title}
+                notification_link={row.notification_link}
+                date={row.date}
+                time={row.time}
+              />
+            )
+        })}
       </Grid>
       </div>
   )
