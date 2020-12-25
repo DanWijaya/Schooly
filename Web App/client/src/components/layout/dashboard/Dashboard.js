@@ -336,7 +336,7 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {all_assessments.map((assessment) => {
+                        {/* {all_assessments.map((assessment) => {
                           for (var i = 0; i < all_user_files.length; i++) {
                             if (all_user_files[i].for_task_object === task._id) {
                               return null;
@@ -355,7 +355,7 @@ class Dashboard extends Component {
                               work_link={`/tugas-murid/${task._id}`}
                             />
                           )
-                        })}
+                        })} */}
                       </Grid>
                     </Paper>
                   </Grid>
