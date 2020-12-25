@@ -38,6 +38,7 @@ function QuestionItem(props){
   const [val, setValue] = React.useState("");
   const textRef = React.useRef(null);
   const [longtextValue, setLongtextValue] = React.useState("");
+  const [longtextAnswer, setLongtextAnswer] = React.useState("");
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
   // dipakai untuk edit assessment
@@ -108,6 +109,9 @@ function QuestionItem(props){
   React.useEffect(() => {
     setValue(name);
   }, [name])
+  React.useEffect(() => {
+    setLongtextAnswer(answer[0])
+  }, [answer])
   React.useEffect(() => {
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
@@ -220,8 +224,8 @@ function QuestionItem(props){
               }
             </Grid>
             <Grid item>
-              <FormControl component="fieldset" id="answer" fullWidth>
                 {(props.type === "radio") ? (
+                <FormControl component="fieldset" id="answer" fullWidth>
                   <RadioGroup value={answer[0].toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, null,"answer", "radio")}>
                     {list_options.map((option, i) =>
                       <div style={{display: "flex"}}>
@@ -252,7 +256,9 @@ function QuestionItem(props){
                       </Button>
                     </div>
                   </RadioGroup>
+                </FormControl>
                 ) : (props.type === "checkbox") ? (
+                <FormControl component="fieldset" id="answer" fullWidth>
                   <FormGroup>
                   {list_options.map((option, i) =>
                     <div style={{display: "flex"}}>
@@ -283,11 +289,24 @@ function QuestionItem(props){
                       </Button>
                     </div>
                   </FormGroup>
-                ) : (
-                  null
+                </FormControl>
+                ) : ( // tipe soal = uraian ANCHOR
+                  <div style={{marginTop: "16px"}}>
+                    <Typography style={{ marginBottom: "16px" }}><b>Jawaban:</b></Typography>
+                    <TextField
+                      helperText={longtextAnswer.length === 0 ? "Belum diisi" : null}
+                      error={longtextAnswer.length === 0}
+                      multiline
+                      rowsMax={10}
+                      fullWidth
+                      variant="outlined"
+                      defaultValue={answer[0]}
+                      onBlur={() => { handleChangeQuestion(longtextAnswer, index, null, "answer", "longtext") }}
+                      onChange={(e) => { setLongtextAnswer(e.target.value)} }
+                    />
+                  </div>
                 )
               }
-              </FormControl>
             </Grid>
           </Grid>
           <Divider flexItem orientation="vertical" />
@@ -345,7 +364,8 @@ function QuestionItem(props){
             <Grid item>
               <TextField
                 value={longtextValue}
-                onChange={(e) => { setLongtextValue(e.target.value); handleLongtextWeight(e, index); }}
+                // onChange={(e) => { setLongtextValue(e.target.value); handleLongtextWeight(e, index); }}
+                onChange={(e) => { handleLongtextWeight(e, index); }}
                 inputProps={{
                   style: {
                     borderBottom: "none",

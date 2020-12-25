@@ -435,7 +435,7 @@ class CreateAssessment extends Component {
       questions.push({
         name: "",
         options: null,
-        answer: null,
+        answer: [],
         lampiran: [],
         type: option
       })
@@ -453,7 +453,7 @@ class CreateAssessment extends Component {
     var questions = this.state.questions;
 
     if(otherfield === "answer"){
-      if(type === "radio"){
+      if (type === "radio") {
         questions[i]["answer"] = [e.target.value]
       }
       else if(type === "checkbox"){
@@ -473,6 +473,8 @@ class CreateAssessment extends Component {
         else if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
           questions[i]["answer"].push(e.target.value)
         }
+      } else if (type === "longtext") {
+        questions[i]["answer"] = [e]
       }
     }else {
       questions[i][e.target.id] = (name ? name : e.target.value);
@@ -588,7 +590,7 @@ class CreateAssessment extends Component {
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
     // questions.splice(i+1, 0, question)
 
-    if (questions[i].type === "shorttext") {
+    if (questions[i].type === "shorttext" || questions[i].type === "longtext") {
       questions.splice(i+1, 0, {
         name: questions[i].name,
         options: null,
@@ -596,15 +598,17 @@ class CreateAssessment extends Component {
         lampiran: [...questions[i].lampiran],
         type: questions[i].type
       })
-    } else if (questions[i].type === "longtext") {
-      questions.splice(i+1, 0, {
-        name: questions[i].name,
-        options: null,
-        answer: null,
-        lampiran: [...questions[i].lampiran],
-        type: questions[i].type
-      })
-    } else {
+    } 
+    // else if (questions[i].type === "longtext") {
+    //   questions.splice(i+1, 0, {
+    //     name: questions[i].name,
+    //     options: null,
+    //     answer: [...questions[i].answer],
+    //     lampiran: [...questions[i].lampiran],
+    //     type: questions[i].type
+    //   })
+    // }
+    else {
       questions.splice(i+1, 0, {
         name: questions[i].name,
         options: [...questions[i].options],

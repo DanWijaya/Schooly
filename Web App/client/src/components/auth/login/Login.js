@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
@@ -81,8 +81,15 @@ class Login extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if(this.state.isAuthenticated){
-      // untuk redirect ke page lain.
-      window.location.href = "./beranda"
+
+      // jika murid yang belum login membuka link assessment (/kuis-murid/:id), 
+      // setelah login, murid akan diarahkan ke halaman assessment tersebut
+      if (this.props.location.state) {
+        window.location.href = `.${this.props.location.state.url}`
+      } else {
+        // untuk redirect ke page lain.
+        window.location.href = "./beranda"
+      }
     }
   }
 
