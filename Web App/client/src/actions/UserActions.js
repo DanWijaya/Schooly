@@ -125,7 +125,7 @@ export const logoutUser = () => dispatch => {
   setDropboxToken(false)
   // if (history !== undefined)
   //   history.push("/masuk")
-  window.location.href ="./masuk"
+  window.location.href ="/masuk"
 };
 
 // Set logged in user

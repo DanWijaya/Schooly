@@ -110,8 +110,12 @@ function QuestionItem(props){
     setValue(name);
   }, [name])
   React.useEffect(() => {
-    setLongtextAnswer(answer[0])
-  }, [answer])
+    if (type === "longtext") {
+      if (answer && answer.length !== 0) {
+        setLongtextAnswer(answer[0])
+      }
+    }
+  }, [answer, type])
   React.useEffect(() => {
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
@@ -224,7 +228,7 @@ function QuestionItem(props){
               }
             </Grid>
             <Grid item>
-                {(props.type === "radio") ? (
+                {(type === "radio") ? (
                 <FormControl component="fieldset" id="answer" fullWidth>
                   <RadioGroup value={answer[0].toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, null,"answer", "radio")}>
                     {list_options.map((option, i) =>
@@ -257,7 +261,7 @@ function QuestionItem(props){
                     </div>
                   </RadioGroup>
                 </FormControl>
-                ) : (props.type === "checkbox") ? (
+                ) : (type === "checkbox") ? (
                 <FormControl component="fieldset" id="answer" fullWidth>
                   <FormGroup>
                   {list_options.map((option, i) =>
@@ -290,7 +294,7 @@ function QuestionItem(props){
                     </div>
                   </FormGroup>
                 </FormControl>
-                ) : ( // tipe soal = uraian ANCHOR
+                ) : (type === "longtext") ? (
                   <div style={{marginTop: "16px"}}>
                     <Typography style={{ marginBottom: "16px" }}><b>Jawaban:</b></Typography>
                     <TextField
@@ -300,12 +304,13 @@ function QuestionItem(props){
                       rowsMax={10}
                       fullWidth
                       variant="outlined"
+                      // defaultValue={longtextAnswer}
                       defaultValue={answer[0]}
                       onBlur={() => { handleChangeQuestion(longtextAnswer, index, null, "answer", "longtext") }}
                       onChange={(e) => { setLongtextAnswer(e.target.value)} }
                     />
                   </div>
-                )
+                ) : null
               }
             </Grid>
           </Grid>

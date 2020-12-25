@@ -254,10 +254,13 @@ function ViewAssessmentTeacher(props) {
   // jika belum diload, bernilai null. jika sudah diproses, nilainya pasti false atau true
   const hasLongtextQst = React.useRef(null);
 
+  const questionCount = React.useRef(null);
+
   // Tabs
   const [value, setValue] = React.useState(0);
   // const [value, setValue] = React.useState(1); //dev
 
+  // ANCHOR useffect
   React.useEffect(() => {
     getOneAssessment(assessment_id)
     getAllClass("map")
@@ -277,11 +280,12 @@ function ViewAssessmentTeacher(props) {
   React.useEffect(() => {
     if (isAssessmentLoaded()) {
       hasLongtextQst.current = false;
+      questionCount.current = 0;
       for (let question of selectedAssessments.questions) {
         if (question.type === "longtext") {
           hasLongtextQst.current = true;
-          break;
         }
+        questionCount.current++;
       }
     }
   }, [selectedAssessments])
@@ -660,11 +664,12 @@ function ViewAssessmentTeacher(props) {
   }
 
   // ANCHOR fungsi ubah nilai
-  const handleGradeChange = (e, studentId) => {
+  const handleGradeChange = (e, studentId, questionIndex) => {
     let temp = { ...longtextGrades};
     let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
-    temp[studentId] = { ...temp[studentId], [qnsIndex]: grade };
-    console.log(temp);
+    // temp[studentId] = { ...temp[studentId], [qnsIndex]: grade };
+    temp[studentId] = { ...temp[studentId], [questionIndex]: grade };
+    // console.log(temp);
     setLongtextGrades(temp);
   }
 
@@ -711,10 +716,10 @@ function ViewAssessmentTeacher(props) {
       if (question.type === "longtext") {
         questionWeight = weights[question.type][qnsIndex];
       
-        let longtextGrade = longtextGrades[studentId][qnsIndex]; // object
-        if (longtextGrade) {
+        // let longtextGrade = longtextGrades[studentId][qnsIndex]; // object
+        if (longtextGrades[studentId] && longtextGrades[studentId][qnsIndex]) {
           // jika sudah pernah dinilai
-          mark = longtextGrade;
+          mark = longtextGrades[studentId][qnsIndex];
         } else {
           // jika belum pernah dinilai
           mark = null;
@@ -770,7 +775,7 @@ function ViewAssessmentTeacher(props) {
           studentClass={studentClassName}
           studentAnswer={studentAnswer}
           studentMark={mark}
-          questionNumber={qnsIndex}
+          questionNumber={qnsIndex + 1}
           questionWeight={questionWeight}
           questionInfo={question}
           handleGradeChange={handleGradeChange}
@@ -803,10 +808,11 @@ function ViewAssessmentTeacher(props) {
       if (question.type === "longtext") {
         questionWeight = weights[question.type][questionIndex];
 
-        let longtextGrade = longtextGrades[studentId][questionIndex];
-        if (longtextGrade) {
+        // let longtextGrade = longtextGrades[studentId][questionIndex];
+        if (longtextGrades[studentId] && longtextGrades[studentId][questionIndex]) {
           // jika sudah pernah dinilai
-          mark = longtextGrade;
+          console.log("here: " + longtextGrades[studentId][questionIndex])
+          mark = longtextGrades[studentId][questionIndex];
         } else {
           // jika belum pernah dinilai
           mark = null;
@@ -957,11 +963,13 @@ function ViewAssessmentTeacher(props) {
   }
 
   function handleChangeQuestion(i) {
-    setQnsIndex(i)
+    if (i >= 0 && i <= questionCount.current - 1) {
+      setQnsIndex(i)
+    }
   }
 
   // ANCHOR fungsi dialog navigasi
-  const [openDialog, setOpenDialog] = React.useState(true);
+  const [openDialog, setOpenDialog] = React.useState(false);
   function handleOpenNavDialog() {
     setOpenDialog(true);
   }
@@ -981,7 +989,7 @@ function ViewAssessmentTeacher(props) {
     if (selectedAssessments.submissions) {
       if (question_type === "longtext") {
         for (let studentId of Object.keys(selectedAssessments.submissions)) {
-          if (!longtextGrades[studentId][question_number - 1]) {
+          if (!longtextGrades[studentId] || !longtextGrades[studentId][question_number - 1]) {
             fullyGraded = false;
             break;
           }
@@ -1533,6 +1541,7 @@ function QuestionPerQuestion(props) {
   let questionType = questionInfo.type;
   let questionName = questionInfo.name;
   let questionOptions = questionInfo.options;
+  console.log(`from left -> number ${questionNumber}: ${studentMark}`)
 
   if (questionType === "longtext") {
     // yang ngebuat semuanya harus dicopy adalah badgenya
@@ -1582,7 +1591,7 @@ function QuestionPerQuestion(props) {
                 InputProps={{
                   endAdornment: `/ ${questionWeight}`,
                 }}
-                onChange={(e) => { handleGradeChange(e, studentId) }}
+                onChange={(e) => { handleGradeChange(e, studentId, questionNumber - 1) }}
               />
               <div>
                 <Button
@@ -1768,7 +1777,7 @@ function QuestionAnswerPerStudent(props) {
   let questionOptions = questionInfo.options;
 
   const { handleGradeChange, handleSaveGrade } = props;
-
+  console.log(`from right -> number ${questionNumber}: ${studentMark}`)
   let content;
   if (questionType === "longtext") {
     content = (
@@ -1809,7 +1818,8 @@ function QuestionAnswerPerStudent(props) {
             <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
             <TextField
               defaultValue={studentMark}
-              key={questionNumber}
+              // TODO kalau ga dibuat random, studentmark tidak akan ditampilkan
+              key={`${Math.random()}`}
               inputProps={{
                 style: {
                   borderBottom: "none",
@@ -1821,7 +1831,7 @@ function QuestionAnswerPerStudent(props) {
               InputProps={{
                 endAdornment: `/ ${questionWeight}`,
               }}
-              onChange={(e) => { handleGradeChange(e, studentId) }}
+              onChange={(e) => { handleGradeChange(e, studentId, questionNumber - 1) }}
             />
             <div>
               <Button
@@ -1844,9 +1854,9 @@ function QuestionAnswerPerStudent(props) {
         <Grid item>
           <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
-          <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer[0]}</Typography>
 
           <Hidden mdUp>
+            <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer[0]}</Typography>
             <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
           </Hidden>
 
