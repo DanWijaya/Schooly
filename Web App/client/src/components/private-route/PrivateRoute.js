@@ -3,7 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-const PrivateRoute = ({ component: Component, handleSideDrawerExist, auth, access, ...rest }) => {
+const PrivateRoute = ({ component: Component, handleSideDrawerExist, auth, access, loginRedirect, ...rest }) => {
   return (
 <Route
   {...rest}
@@ -14,7 +14,17 @@ const PrivateRoute = ({ component: Component, handleSideDrawerExist, auth, acces
       handleSideDrawerExist={handleSideDrawerExist}/>
     ) 
     : <Redirect to="/tidak-ditemukan"/>
-    : (<Redirect to="/masuk" />)
+    : (loginRedirect) ? (
+      <Redirect
+      to={{
+        pathname: "/masuk",
+        state: {
+              // untuk mengarahkan murid ke halaman assessment setelah login 
+              url: props.match.url
+            }
+          }}
+        />
+    ) : (<Redirect to="/masuk"/>)
   }
 />
 );

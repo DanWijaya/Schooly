@@ -678,7 +678,25 @@ function SubmittedAssessmentList(props) {
                         </Grid>
                       </div>
                     ) : (
-                      null
+                      (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ? (
+                        <div style={{ display: "flex" }}>
+                          <Grid item alignItem="center">
+                            <Grid item>
+                              <IconButton
+                                onClick={(e) => { handleFlag(e, student._id) }}
+                              >
+                                {(suspects.includes(student._id)) ? (
+                                  <BsFlagFill className={classes.redFlagIcon} />
+                                ) : (
+                                    <BsFlag className={classes.flagIcon} />
+                                  )}
+                              </IconButton>
+                            </Grid>
+                          </Grid>
+                        </div>
+                      ) : (
+                        null
+                      )
                     )}
                   </ListItem>
                 </ExpansionPanelSummary>
@@ -687,8 +705,10 @@ function SubmittedAssessmentList(props) {
                 <Grid container style={{ padding: "20px" }} justify="center">
                   {columns}
                 </Grid>
-                {(selectedAssessments && selectedAssessments.grades) ?
-                  selectedAssessments.grades[student._id] !== undefined ?
+                {
+                  (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ?
+                // (selectedAssessments && selectedAssessments.grades && 
+                //   (selectedAssessments.grades[student._id] !== undefined) && (selectedAssessments.grades[student._id].total_grade !== null)) ?
                     <div>
                       <Divider />
 
@@ -714,8 +734,6 @@ function SubmittedAssessmentList(props) {
                     </div>
                     :
                     null
-                  :
-                  null
                 }
               </ExpansionPanel>
           )
