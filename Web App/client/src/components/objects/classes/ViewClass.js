@@ -221,33 +221,28 @@ function AssessmentListItem(props) {
       <Hidden smUp implementation="css">
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
           <ListItem button className={classes.listItem}>
-            <Grid container alignItems="center">
-              <Grid item xs={7}>
-                <ListItemText
-                  primary={
-                    <Typography variant="body1">
-                      {props.work_title}
-                    </Typography>
-                  }
-                  secondary={props.work_subject}
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Typography variant="body2" className={classes.warningText}>
-                      Mulai: <br /> {props.work_starttime}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="caption">
-                      {props.work_status}
-                    </Typography>
-                  }
-                />
-              </Grid>
-            </Grid>
+            <ListItemText
+              primary={
+                <Typography variant="body1">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={props.work_subject}
+            />
+
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="body2" className={classes.warningText}>
+                  Mulai: <br /> {props.work_starttime}
+                </Typography>
+              }
+              secondary={
+                <Typography variant="caption">
+                  {props.work_status}
+                </Typography>
+              }
+            />
           </ListItem>
         </Paper>
       </Hidden>
