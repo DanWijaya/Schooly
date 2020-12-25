@@ -22,7 +22,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { HiClipboardList } from "react-icons/hi";
+import { BsClipboardData } from "react-icons/bs";
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -108,7 +108,7 @@ function AssessmentListToolbar(props) {
             null
             :
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-              <HiClipboardList className={classes.titleIcon} fontSize="large"/>
+              <BsClipboardData className={classes.titleIcon} fontSize="large"/>
               <Typography variant="h4">
                 Daftar Kuis
               </Typography>
@@ -117,7 +117,7 @@ function AssessmentListToolbar(props) {
         </Hidden>
         <Hidden xsDown implementation="css">
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <HiClipboardList className={classes.titleIcon} fontSize="large"/>
+            <BsClipboardData className={classes.titleIcon} fontSize="large"/>
             <Typography variant="h4">
               Daftar Kuis
             </Typography>
@@ -434,7 +434,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "15px",
     "&:focus, &:hover": {
-      cursor: "pointer",
       backgroundColor: theme.palette.button.main,
     },
   },

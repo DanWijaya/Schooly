@@ -133,7 +133,7 @@ function AnnouncementListToolbar(props) {
               onChange={onChange}
               autoFocus
               onClick={(e) =>setSearchBarFocus(true)}
-              placeholder="Search Kuis"
+              placeholder="Search Pengumuman"
               // onBlur={() => setSearchBarFocus(false)}
               style={{
                 maxWidth: "200px",

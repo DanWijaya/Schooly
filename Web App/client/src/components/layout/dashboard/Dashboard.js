@@ -7,6 +7,7 @@ import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getAllAssessments } from "../../../actions/AssessmentActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
@@ -108,6 +109,9 @@ const styles = (theme) => ({
     height: theme.spacing(2.5),
     marginRight: "7.5px",
   },
+  marginButtomItem: {
+    marginTop: "20px"
+  }
 });
 
 function WorkListItem(props) {
@@ -151,12 +155,13 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const { getAllTask, getAllTaskFilesByUser, getAllSubjects } = this.props;
+    const { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments } = this.props;
     const { user } = this.props.auth;
 
     getAllTask() // actions yang membuat GET request ke Database.
     getAllSubjects("map") // untuk dapatin subject"nya gitu
     if (user.role === "Student")
+      getAllAssessments()
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
     this.intervalID = setInterval(
       () => this.tick(),
@@ -189,6 +194,7 @@ class Dashboard extends Component {
     const { user } = this.props.auth;
     const { all_user_files } = this.props.filesCollection
     const { all_subjects_map } = this.props.subjectsCollection
+    const { all_assessments } = this.props.assessmentsCollection
 
     let tasksByClass = []
     if (Boolean(tasksCollection.length)) {
@@ -253,54 +259,302 @@ class Dashboard extends Component {
               </Paper>
             }
           </Grid>
-          <Grid item>
+          <Grid item container xs={12}>
             {user.role === "Student" ?
-              <Paper style={{padding: "20px"}}>
-                <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                  <Grid item>
-                    <Grid container alignItems="center">
-                      <AssignmentIndIcon
-                        color="action"
-                        style={{marginRight: "10px"}}
-                      />
-                      <Typography variant="h5" color="primary">
-                        Pekerjaan Anda
-                      </Typography>
-                    </Grid>
+              <Grid item container spacing={3}>
+                <Grid item md={6} container>
+                  <Grid item xs={12}>
+                    <Paper style={{padding: "20px"}}>
+                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIndIcon
+                              color="action"
+                              style={{marginRight: "10px"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Tugas Anda
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {tasksByClass.map((task) => {
+                          for (var i = 0; i < all_user_files.length; i++) {
+                            if (all_user_files[i].for_task_object === task._id) {
+                              return null;
+                            }
+                          }
+                          if(!all_subjects_map.get(task.subject)){
+                            return null;
+                          }
+                          return (
+                            <WorkListItem
+                              classes={classes}
+                              work_title={task.name}
+                              work_sender={all_subjects_map.get(task.subject)}
+                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_link={`/tugas-murid/${task._id}`}
+                            />
+                          )
+                        })}
+                      </Grid>
+                    </Paper>
                   </Grid>
-                  <Grid item>
-                    <Link to="/daftar-tugas">
-                      <LightTooltip title="Lihat Semua" placement="top">
-                        <IconButton>
-                          <ChevronRightIcon />
-                        </IconButton>
-                      </LightTooltip>
-                    </Link>
+                  <Grid item xs={12} className={classes.marginButtomItem}>
+                    <Paper style={{padding: "20px"}}>
+                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIndIcon
+                              color="action"
+                              style={{marginRight: "10px"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Kuis Yang Akan Datang
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {all_assessments.map((assessment) => {
+                          for (var i = 0; i < all_user_files.length; i++) {
+                            if (all_user_files[i].for_task_object === task._id) {
+                              return null;
+                            }
+                          }
+                          if(!all_subjects_map.get(task.subject)){
+                            return null;
+                          }
+                          return (
+                            <WorkListItem
+                              classes={classes}
+                              work_title={task.name}
+                              work_sender={all_subjects_map.get(task.subject)}
+                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_link={`/tugas-murid/${task._id}`}
+                            />
+                          )
+                        })}
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} className={classes.marginButtomItem}>
+                    <Paper style={{padding: "20px"}}>
+                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIndIcon
+                              color="action"
+                              style={{marginRight: "10px"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Ujian Yang Akan Datang
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {tasksByClass.map((task) => {
+                          for (var i = 0; i < all_user_files.length; i++) {
+                            if (all_user_files[i].for_task_object === task._id) {
+                              return null;
+                            }
+                          }
+                          if(!all_subjects_map.get(task.subject)){
+                            return null;
+                          }
+                          return (
+                            <WorkListItem
+                              classes={classes}
+                              work_title={task.name}
+                              work_sender={all_subjects_map.get(task.subject)}
+                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_link={`/tugas-murid/${task._id}`}
+                            />
+                          )
+                        })}
+                      </Grid>
+                    </Paper>
                   </Grid>
                 </Grid>
-                <Grid container direction="column" spacing={1}>
-                  {tasksByClass.map((task) => {
-                    for (var i = 0; i < all_user_files.length; i++) {
-                      if (all_user_files[i].for_task_object === task._id) {
-                        return null;
-                      }
-                    }
-                    if(!all_subjects_map.get(task.subject)){
-                      return null;
-                    }
-                    return (
-                      <WorkListItem
-                        classes={classes}
-                        work_title={task.name}
-                        work_sender={all_subjects_map.get(task.subject)}
-                        work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                        work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                        work_link={`/tugas-murid/${task._id}`}
-                      />
-                    )
-                  })}
+                <Grid item md={6} container >
+                  <Grid item xs={12}>
+                    <Paper style={{padding: "20px"}}>
+                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIndIcon
+                              color="action"
+                              style={{marginRight: "10px"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Bar Chart Tugas
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {tasksByClass.map((task) => {
+                          for (var i = 0; i < all_user_files.length; i++) {
+                            if (all_user_files[i].for_task_object === task._id) {
+                              return null;
+                            }
+                          }
+                          if(!all_subjects_map.get(task.subject)){
+                            return null;
+                          }
+                          return (
+                            <WorkListItem
+                              classes={classes}
+                              work_title={task.name}
+                              work_sender={all_subjects_map.get(task.subject)}
+                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_link={`/tugas-murid/${task._id}`}
+                            />
+                          )
+                        })}
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} className={classes.marginButtomItem}>
+                    <Paper style={{padding: "20px"}}>
+                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIndIcon
+                              color="action"
+                              style={{marginRight: "10px"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Bar Chart Kuis
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {tasksByClass.map((task) => {
+                          for (var i = 0; i < all_user_files.length; i++) {
+                            if (all_user_files[i].for_task_object === task._id) {
+                              return null;
+                            }
+                          }
+                          if(!all_subjects_map.get(task.subject)){
+                            return null;
+                          }
+                          return (
+                            <WorkListItem
+                              classes={classes}
+                              work_title={task.name}
+                              work_sender={all_subjects_map.get(task.subject)}
+                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_link={`/tugas-murid/${task._id}`}
+                            />
+                          )
+                        })}
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} className={classes.marginButtomItem}>
+                    <Paper style={{padding: "20px"}}>
+                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIndIcon
+                              color="action"
+                              style={{marginRight: "10px"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Bar Chart Ujian
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {tasksByClass.map((task) => {
+                          for (var i = 0; i < all_user_files.length; i++) {
+                            if (all_user_files[i].for_task_object === task._id) {
+                              return null;
+                            }
+                          }
+                          if(!all_subjects_map.get(task.subject)){
+                            return null;
+                          }
+                          return (
+                            <WorkListItem
+                              classes={classes}
+                              work_title={task.name}
+                              work_sender={all_subjects_map.get(task.subject)}
+                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                              work_link={`/tugas-murid/${task._id}`}
+                            />
+                          )
+                        })}
+                      </Grid>
+                    </Paper>
+                  </Grid>
                 </Grid>
-              </Paper>
+              </Grid>
             : user.role === "Teacher" ?
               <Grid item container direction="row" spacing={2} justify="flex-end" alignItems="center">
                 <Grid item>
@@ -376,9 +630,11 @@ Dashboard.propTypes = {
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
+  getAllAssessments: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -387,9 +643,10 @@ const mapStateToProps = state => ({
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
   filesCollection: state.filesCollection,
+  assessmentsCollection: state.assessmentsCollection
 });
 
 export default withRouter(
-  connect(mapStateToProps, {getAllTask, getAllTaskFilesByUser, getAllSubjects})
+  connect(mapStateToProps, { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments })
   (withStyles(styles)(Dashboard))
 )
