@@ -11,6 +11,12 @@ import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar, Divider, 
   IconButton, Tabs, Tab, Menu, MenuItem, Badge, Box, FormControl, Select, InputLabel, TextField, Button, Avatar, 
   RadioGroup, Radio, Checkbox, FormGroup, FormControlLabel, InputAdornment, TableSortLabel} from "@material-ui/core";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -133,7 +139,11 @@ const useStyles = makeStyles((theme) => ({
   select: {
       marginLeft: "10px",
       minWidth:"180px",
-      maxWidth:"180px"
+      maxWidth:"180px",
+      [theme.breakpoints.down("xs")]: {
+        minWidth: "100px",
+        maxWidth: "100px",
+      }
   },
   selectDescription: {
       display: "flex",
@@ -193,9 +203,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 // ANCHOR class
 
-// TODO tambain pesan "belum ada murid yang mengumpulkan jawaban assessment" 
-// TODO mobile view
-
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
   const location = useLocation();
@@ -215,7 +222,7 @@ function ViewAssessmentTeacher(props) {
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
 
   // object yang berisi semua murid yang menerima assessment ini, baik yang sudah mengerjakan maupun belum.
-  // karena assessment pasti diberikan ke minimal 1 kelas, isi all_student_object tidak mungkin kosong.
+  // (pengaruhnya ke bagian mana?) karena assessment pasti diberikan ke minimal 1 kelas, isi all_student_object tidak mungkin kosong.
   const [all_student_object, setAllStudentObj] = React.useState(null);
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
@@ -244,6 +251,7 @@ function ViewAssessmentTeacher(props) {
   const [selectedStudent, setSelectedStudent] = React.useState(null);
   // const [selectedStudent, setSelectedStudent] = React.useState("5f44d55155cedc284824f5c1"); //dev
 
+  // jika belum diload, bernilai null. jika sudah diproses, nilainya pasti false atau true
   const hasLongtextQst = React.useRef(null);
 
   // Tabs
@@ -278,7 +286,6 @@ function ViewAssessmentTeacher(props) {
     }
   }, [selectedAssessments])
 
-  // ANCHOR useEffect
   React.useEffect(() => {    
     if (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) {
       let students = {};
@@ -290,17 +297,19 @@ function ViewAssessmentTeacher(props) {
         studentOptions[classId] = [];
       }
       
-      let submittedStudentList = Object.keys(selectedAssessments.submissions);
-      for (var j = 0; j < all_students.length; j++) {
-        // jika kelas murid diberikan assessment ini 
-        let std = all_students[j];
-        if (selectedAssessments.class_assigned.includes(std.kelas)) {
-          students[std._id] = std;
+      if (selectedAssessments.submissions) {
+        let submittedStudentList = Object.keys(selectedAssessments.submissions);
+        for (var j = 0; j < all_students.length; j++) {
+          // jika kelas murid diberikan assessment ini 
+          let std = all_students[j];
+          if (selectedAssessments.class_assigned.includes(std.kelas)) {
+            students[std._id] = std;
 
-          // jika murid sudah mengerjakan assessment ini, masukan ke pilihan menu
-          if (submittedStudentList.includes(std._id)) {
-            studentOptions[std.kelas].push({ id: std._id, name: std.name});
-            studentOptions.combined.push({ id: std._id, name: std.name });
+            // jika murid sudah mengerjakan assessment ini, masukan ke pilihan menu
+            if (submittedStudentList.includes(std._id)) {
+              studentOptions[std.kelas].push({ id: std._id, name: std.name });
+              studentOptions.combined.push({ id: std._id, name: std.name });
+            }
           }
         }
       }
@@ -348,9 +357,13 @@ function ViewAssessmentTeacher(props) {
 
   React.useEffect(() => {
     if (isAssessmentLoaded() && all_student_object) {
-      rows.current = Object.keys(selectedAssessments.submissions).map((studentId) => {
-        return { id: studentId, name: all_student_object[studentId].name, classname: all_student_object[studentId].kelas }
-      });
+      if (selectedAssessments.submissions) {
+        rows.current = Object.keys(selectedAssessments.submissions).map((studentId) => {
+          return { id: studentId, name: all_student_object[studentId].name, classname: all_student_object[studentId].kelas }
+        });
+      } else {
+        rows.current = [];
+      }
     }
   }, [selectedAssessments, all_student_object])
 
@@ -588,39 +601,65 @@ function ViewAssessmentTeacher(props) {
         );
       }
 
-      content = (
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
-          </Grid>
-          <Grid item xs={9}>
-            {answer}
-          </Grid>
+      content = [
+        <Hidden smDown>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+            </Grid>
+            <Grid item xs={9}>
+              {answer}
+            </Grid>
 
-          <Grid item>
-            <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
-          </Grid>
-
-          <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
             <Grid item>
-              <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+              <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
             </Grid>
-            <Grid container item justify="center" alignItems="center">
-              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+
+            <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+              <Grid item>
+                <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+              </Grid>
+              <Grid container item justify="center" alignItems="center">
+                <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      );
+        </Hidden>,
+        <Hidden mdUp>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {answer}
+            </Grid>
+
+            <Grid item xs={12} wrap="nowrap" direction="column" justify="center" alignItems="center">
+              <Grid item>
+                <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+              </Grid>
+              <Grid container item justify="center" alignItems="center">
+                <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Hidden>
+      ];
     }
 
     return (
       <Paper className={classes.contentItem}>
-        {content}
+        {/* <Hidden xsDown> */}
+        {/* {content1} */}
+        {/* </Hidden> */}
+        {/* <Hidden smUp> */}
+          {content}
+        {/* </Hidden> */}
       </Paper>
     )
   }
 
-  // ANCHOR fungsi handleGradeChange
+  // ANCHOR fungsi ubah nilai
   const handleGradeChange = (e, studentId) => {
     let temp = { ...longtextGrades};
     let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
@@ -629,7 +668,6 @@ function ViewAssessmentTeacher(props) {
     setLongtextGrades(temp);
   }
 
-  // ANCHOR 
   const handleSaveGrade = (studentId) => {
     let temp = { ...longtextGrades };
     let grade = temp[studentId][qnsIndex];
@@ -745,7 +783,14 @@ function ViewAssessmentTeacher(props) {
   // ANCHOR fungsi per murid
   const generateQstStdAnswer = () => {
     let studentId = selectedStudent;
-    let studentAnswers = selectedAssessments.submissions[studentId];
+    let studentAnswers;
+
+    if (selectedAssessments.submissions) {
+      studentAnswers = selectedAssessments.submissions[studentId];
+    } else {
+      return null;
+    }
+
     let questions = selectedAssessments.questions;
     let weights = selectedAssessments.question_weight;
 
@@ -900,7 +945,7 @@ function ViewAssessmentTeacher(props) {
 
   let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
 
-  //ANCHOR
+  //ANCHOR cek kosong
   function isAssessmentLoaded() {
     return (Object.keys(selectedAssessments).length !== 0);
   }
@@ -911,27 +956,43 @@ function ViewAssessmentTeacher(props) {
     return (all_classes_map.size !== 0);
   }
 
-  const handleChangeQuestion = (i) => {
+  function handleChangeQuestion(i) {
     setQnsIndex(i)
   }
 
-  // ANCHOR fungsi question page
+  // ANCHOR fungsi dialog navigasi
+  const [openDialog, setOpenDialog] = React.useState(true);
+  function handleOpenNavDialog() {
+    setOpenDialog(true);
+  }
+  function handleCloseNavDialog() {
+    setOpenDialog(false);
+  }
+  function handleChangeQstNavDialog(i) {
+    setQnsIndex(i);
+    setOpenDialog(false);
+  }
+
+  // ANCHOR fungsi navigasi soal
   function QuestionPage(props) {
     const { classes, handleChangeQuestion, question_number, answer, question_type } = props;
 
     let fullyGraded = true;
-    if (question_type === "longtext") {
-      for (let studentId of Object.keys(selectedAssessments.submissions)) {
-        if (!longtextGrades[studentId][question_number - 1]) {
-          fullyGraded = false;
-          break;
+    if (selectedAssessments.submissions) {
+      if (question_type === "longtext") {
+        for (let studentId of Object.keys(selectedAssessments.submissions)) {
+          if (!longtextGrades[studentId][question_number - 1]) {
+            fullyGraded = false;
+            break;
+          }
         }
       }
+    } else {
+      fullyGraded = false;
     }
 
     return (
       <Grid item>
-        {/* ANCHOR badge */}
         <Badge
           badgeContent={
             (fullyGraded) ? (
@@ -980,18 +1041,17 @@ function ViewAssessmentTeacher(props) {
             <Paper className={classes.content}>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={7}>
-                  <Typography variant="h5" gutterBottom>
-                    <b>{selectedAssessments.name}</b>
+                  <Typography variant="h4" gutterBottom>
+                    {selectedAssessments.name}
                   </Typography>
                   <Typography variant="caption" color="textSecondary">
                     <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
                   </Typography>
-                  <Typography color="primary" gutterBottom style={{marginTop: "20px"}}>
-                    Deskripsi Ujian/Kuis:
-                  </Typography>
-                  {/* <Typography>
-                    {selectedAssessments.description}
-                  </Typography> */}
+                  <Hidden smDown implementation="css">
+                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                      Deskripsi Kuis/Ujian:
+                    </Typography>
+                  </Hidden>
                 </Grid>
                 <Grid item xs={12} md={5} spacing={2}>
                   <Hidden mdUp implementation="css">
@@ -1000,6 +1060,12 @@ function ViewAssessmentTeacher(props) {
                     </Typography>
                     <Typography variant="body2" className={classes.endDateText}>
                       Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                    </Typography>
+                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                      Deskripsi Kuis/Ujian:
+                    </Typography>
+                    <Typography align="justify">
+                      {selectedAssessments.description}
                     </Typography>
                   </Hidden>
                   <Hidden smDown implementation="css">
@@ -1012,17 +1078,19 @@ function ViewAssessmentTeacher(props) {
                   </Hidden>
                 </Grid>
               </Grid>
+            <Hidden smDown>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                <Typography align="justify">
-                  {selectedAssessments.description}
-                </Typography>
+                  <Typography align="justify">
+                    {selectedAssessments.description}
+                  </Typography>
                 </Grid>
               </Grid>
+            </Hidden>
 
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Divider/>
+                  <Divider/>
                 </Grid>
               </Grid>
 
@@ -1038,42 +1106,66 @@ function ViewAssessmentTeacher(props) {
                     </LightTooltip>
                 </Grid>
                 {/* ANCHOR navigasi soal */}
-                  <Grid container item md={12} spacing={2} alignItems="center">
+                  <Grid container item spacing={2} alignItems="center">
                   {
-                    (isAssessmentLoaded() && longtextGrades) ? (
-                      selectedAssessments.questions.map((qns, i) => { 
-                        return (
-                          // <a href={`#${i}`} >
+                    (hasLongtextQst.current === true) ? (
+                      (isAssessmentLoaded() && longtextGrades) ? (
+                        selectedAssessments.questions.map((qns, i) => {
+                          return (
+                            // <a href={`#${i}`} >
                             <QuestionPage
                               classes={classes}
                               question_number={i + 1}
                               handleChangeQuestion={handleChangeQuestion}
                               question_type={qns.type}
                             />
-                          // </a>
-                        ) 
-                      })
+                            // </a>
+                          )
+                        })
+                      ) : (
+                        null
+                      )
+                    ) : (
+                      (hasLongtextQst.current === false) ? (
+                        (isAssessmentLoaded()) ? (
+                          selectedAssessments.questions.map((qns, i) => {
+                            return (
+                              // <a href={`#${i}`} >
+                              <QuestionPage
+                                classes={classes}
+                                question_number={i + 1}
+                                handleChangeQuestion={handleChangeQuestion}
+                                question_type={qns.type}
+                              />
+                              // </a>
+                            )
+                          })
+                        ) : (
+                          null
+                        )
                     ) : (
                       null
+                    )
                     )
                   }
                 </Grid>
                 </Hidden>
                 <Hidden smUp>
                     <Grid item xs={12} md={2} style={{display: "flex", flexDirection: "row", marginTop: "10px", justifyContent: "space-between"}}>
-                        <Button>
+                        <Button onClick={() => { handleChangeQuestion(qnsIndex-1)}}>
                             <div className={classes.mobileNav}>
                                 <NavigateBeforeIcon className={classes.mobileNavButton}/>
                                 <Typography variant="subtitle-2">Sebelum</Typography>
                             </div>
                         </Button>
-                        <Button>
+                        {/* ANCHOR elemen dialog navigasi */}
+                        <Button onClick={handleOpenNavDialog}>
                             <div className={classes.mobileNav}>
                                 <ExploreIcon className={classes.mobileNavButton}/>
                                 <Typography variant="subtitle-2">Navigasi Soal</Typography>
                             </div>
                         </Button>
-                        <Button>
+                        <Button onClick={() => { handleChangeQuestion(qnsIndex + 1) }}>
                             <div className={classes.mobileNav}>
                                 <NavigateNextIcon className={classes.mobileNavButton}/>
                                 <Typography variant="subtitle-2">Sesudah</Typography>
@@ -1152,7 +1244,7 @@ function ViewAssessmentTeacher(props) {
 
             {/* Tab Panel Per Soal */}
           <div hidden={value === 1} style={{padding: "24px"}}>
-            {/* ANCHOR soal */}
+            {/* ANCHOR elemen soal */}
             {
               (isAssessmentLoaded()) ? (
                 (selectedAssessments.questions[qnsIndex].type === "longtext") ? (
@@ -1173,25 +1265,29 @@ function ViewAssessmentTeacher(props) {
               )
             }
 
-            {/* ANCHOR */}
+            {/* ANCHOR jawaban semua murid*/}
             {
-              (hasLongtextQst.current === true) ? (
-                (longtextGrades && isAllClassMapEmpty()) ? (
-                  generateAllStudentAnswer()
-                ) : (
-                  null
-                )
-              ) : (
-                (hasLongtextQst.current === false) ? (
-                  (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) ? (
+              (isAssessmentLoaded() && selectedAssessments.submissions) ? (
+                (hasLongtextQst.current === true) ? (
+                  (longtextGrades && isAllClassMapEmpty()) ? (
                     generateAllStudentAnswer()
                   ) : (
                     null
                   )
                 ) : (
-                  // hasLongtextQst.current === null
-                  null
+                  (hasLongtextQst.current === false) ? (
+                    (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) ? (
+                      generateAllStudentAnswer()
+                    ) : (
+                      null
+                    )
+                  ) : (
+                      // hasLongtextQst.current === null
+                    null
+                  )
                 )
+              ) : (
+                null
               )
             }
             </div>
@@ -1202,12 +1298,12 @@ function ViewAssessmentTeacher(props) {
               <div className={classes.selectDiv}>
                 <Grid container>
                   <Grid item xs={1} sm={3}></Grid>
-                  <Grid item xs={3} sm={2} className={classes.selectDescription}>
+                  <Grid item xs={5} sm={2} className={classes.selectDescription}>
                     <Typography>Nama Murid :</Typography>
                   </Grid>
-                  <Grid item xs={6} sm={2}>
+                  <Grid item xs={5} sm={2}>
                     <Select
-                      // disabled
+                      disabled={!menuOption || menuOption.studentOptions.combined.length === 0}
                       labelId="kelas-label"
                       id="kelas"
                       className={classes.select}
@@ -1215,8 +1311,9 @@ function ViewAssessmentTeacher(props) {
                       value={selectedStudent}
                       onChange={(e) => { setSelectedStudent(e.target.value) }}
                     >
+                      {/* ANCHOR elemen opsi murid*/}
                       {
-                        (menuOption) ? (
+                        (menuOption && menuOption.studentOptions.combined.length !== 0) ? (
                           (selectedClass) ? (
                             menuOption.studentOptions[selectedClass].map((student) => {
                               return <MenuItem key={student.id} value={student.id}>{student.name}</MenuItem>
@@ -1232,65 +1329,68 @@ function ViewAssessmentTeacher(props) {
                       }
                     </Select>
                   </Grid>
-                  <Grid item xs={2} sm={5}></Grid>
+                  <Grid item xs={1} sm={5}></Grid>
                 </Grid>
               </div>
               <div className={classes.selectDiv} style={{ marginTop: "10px" }}>
                 <Grid container>
                   <Grid item xs={1} sm={3}></Grid>
-                  <Grid item xs={3} sm={2} className={classes.selectDescription}>
+                  <Grid item xs={5} sm={2} className={classes.selectDescription}>
                     <Typography>Kelas :</Typography>
                   </Grid>
-                  <Grid item xs={6} sm={2}>
+                  <Grid item xs={5} sm={2}>
                     <Select
-                      // disabled
+                      disabled={!menuOption || menuOption.studentOptions.combined.length === 0}
                       labelId="kelas-label"
                       id="kelas"
                       className={classes.select}
                       variant="outlined"
                       value={
                         (selectedStudent) ? (
-                          (all_student_object) ? (all_student_object[selectedStudent].kelas) : (selectedClass)
+                          (all_student_object && Object.keys(all_student_object).length !== 0) ? (all_student_object[selectedStudent].kelas) : (selectedClass)
                         ) : (selectedClass)
                       }
                       onChange={(e) => { setSelectedClass(e.target.value); setSelectedStudent(null); }}
                     >
                       {
-                        (menuOption) ? (
+                        (menuOption && menuOption.studentOptions.combined.length !== 0) ? (
                           menuOption.classOptions.map((kelas) => {
                             return <MenuItem key={kelas.id} value={kelas.id}>{kelas.name}</MenuItem>
                           })
                         ) : (
                           null
                         )
-
                       }
                     </Select>
                   </Grid>
-                  <Grid item xs={2} sm={5}></Grid>
+                  <Grid item xs={1} sm={5}></Grid>
                 </Grid>
               </div>
             </Paper>
 
-            {/* ANCHOR elemen per murid */}
+            {/* ANCHOR soal-jawaban 1 murid */}
             {
-              (hasLongtextQst.current === true) ? (
-                ((longtextGrades !== undefined) && isAllClassMapEmpty() && selectedStudent) ? (
-                  generateQstStdAnswer()
-                ) : (
-                  null
-                )
-              ) : (
-                (hasLongtextQst.current === false) ? (
-                    (isAllClassMapEmpty() && selectedStudent) ? (
+              (isAssessmentLoaded() && selectedAssessments.submissions) ? (
+                (hasLongtextQst.current === true) ? (
+                  ((longtextGrades !== undefined) && isAllClassMapEmpty() && selectedStudent) ? (
                     generateQstStdAnswer()
                   ) : (
-                    null
-                  )
+                      null
+                    )
                 ) : (
-                  // hasLongtextQst.current === null
-                  null
+                  (hasLongtextQst.current === false) ? (
+                    (isAllClassMapEmpty() && selectedStudent) ? (
+                      generateQstStdAnswer()
+                    ) : (
+                        null
+                      )
+                  ) : (
+                      // hasLongtextQst.current === null
+                      null
+                    )
                 )
+              ) : (
+                null
               )
             }
           </div>
@@ -1360,10 +1460,63 @@ function ViewAssessmentTeacher(props) {
           {snackbarContent}
           </MuiAlert>
         </Snackbar>
+      {/* ANCHOR elemen dialog  */}
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseNavDialog}
+        >
+        <DialogTitle style={{textAlign: "center"}}>Navigasi Soal</DialogTitle>
+          <DialogContent>
+          <Grid container spacing={2} style={{ margin: "20px", width: "unset" }}>
+            {
+              (hasLongtextQst.current === true) ? (
+                (isAssessmentLoaded() && longtextGrades) ? (
+                  selectedAssessments.questions.map((qns, i) => {
+                    return (
+                      // <a href={`#${i}`} >
+                      <QuestionPage
+                        classes={classes}
+                        question_number={i + 1}
+                        handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
+                        question_type={qns.type}
+                      />
+                      // </a>
+                    )
+                  })
+                ) : (
+                  null
+                )
+              ) : (
+                (hasLongtextQst.current === false) ? (
+                  (isAssessmentLoaded()) ? (
+                    selectedAssessments.questions.map((qns, i) => {
+                      return (
+                        // <a href={`#${i}`} >
+                        <QuestionPage
+                          classes={classes}
+                          question_number={i + 1}
+                          handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
+                          question_type={qns.type}
+                        />
+                        // </a>
+                      )
+                    })
+                  ) : (
+                    null
+                  )
+                ) : (
+                  null
+                )
+              )
+            }
+          </Grid>         
+          </DialogContent>
+        </Dialog>
     </div>
   )
 };
 
+// ANCHOR paper jawaban murid untuk mode per soal
 function QuestionPerQuestion(props) {
   const { 
     classes, 
@@ -1529,43 +1682,76 @@ function QuestionPerQuestion(props) {
             <Divider style={{ marginBottom: "10px", marginTop: "10px" }} />
           </Grid>
 
-          <Grid container>
-            <Grid item xs={9}>
-              {answer}
-            </Grid>
+          <Hidden xsDown>
+            <Grid container>
+              <Grid item xs={9}>
+                {answer}
+              </Grid>
 
-            <Grid item>
-              <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
-            </Grid>
+              <Grid item>
+                <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
+              </Grid>
 
-            <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
-              <Grid container item justify="center" alignItems="center">
-                <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
-                <TextField
-                  disabled
-                  key={`${studentId}-${questionNumber}`}
-                  defaultValue={studentMark}
-                  inputProps={{
-                    style: {
-                      borderBottom: "none",
-                      boxShadow: "none",
-                      margin: "0px",
-                      width: "30px"
-                    }
-                  }}
-                  InputProps={{
-                    endAdornment: `/ ${questionWeight}`,
-                  }}
-                />
+              <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+                <Grid container item justify="center" alignItems="center">
+                  <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+                  <TextField
+                    disabled
+                    key={`${studentId}-${questionNumber}`}
+                    defaultValue={studentMark}
+                    inputProps={{
+                      style: {
+                        borderBottom: "none",
+                        boxShadow: "none",
+                        margin: "0px",
+                        width: "30px"
+                      }
+                    }}
+                    InputProps={{
+                      endAdornment: `/ ${questionWeight}`,
+                    }}
+                  />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Hidden>
+
+          <Hidden smUp>
+            <Grid container>
+              <Grid item xs={12}>
+                {answer}
+              </Grid>
+              <Grid item xs={12} wrap="nowrap" direction="column" justify="center" alignItems="center">
+                <Grid container item justify="center" alignItems="center">
+                  <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+                  <TextField
+                    disabled
+                    key={`${studentId}-${questionNumber}`}
+                    defaultValue={studentMark}
+                    inputProps={{
+                      style: {
+                        borderBottom: "none",
+                        boxShadow: "none",
+                        margin: "0px",
+                        width: "30px"
+                      }
+                    }}
+                    InputProps={{
+                      endAdornment: `/ ${questionWeight}`,
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Hidden>
+
         </Grid>
       </Paper>
     );
   }
 }
 
+// ANCHOR paper soal-jawaban untuk mode per murid
 function QuestionAnswerPerStudent(props) {
   const {
     classes,
@@ -1644,7 +1830,7 @@ function QuestionAnswerPerStudent(props) {
                 onClick={() => { handleSaveGrade(studentId) }}
               >
                 SIMPAN
-                  </Button>
+              </Button>
             </div>
           </Grid>
         </Grid>
@@ -1653,12 +1839,17 @@ function QuestionAnswerPerStudent(props) {
   } else {
     let answer;
 
-  // ANCHOR konten per murid
     if (questionType === "radio") {
       answer = (
         <Grid item>
           <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
+          <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer[0]}</Typography>
+
+          <Hidden mdUp>
+            <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
+          </Hidden>
+
           <RadioGroup value={studentAnswer[0]}>
             {questionOptions.map((option, i) =>
               <div style={{ display: "flex" }}>
@@ -1679,6 +1870,12 @@ function QuestionAnswerPerStudent(props) {
         <Grid item>
           <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
+          <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+
+          <Hidden mdUp>
+            <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
+          </Hidden>
+
           <FormGroup>
             {questionOptions.map((option, i) =>
               <div style={{ display: "flex" }}>
@@ -1726,42 +1923,81 @@ function QuestionAnswerPerStudent(props) {
       );
     }
 
-    content = (
-      <Grid container style={{ padding: "20px" }}>
-        <Grid item xs={9}>
-          {answer}
-        </Grid>
+    content = [
+      <Hidden smDown>
+        <Grid container style={{ padding: "20px" }}>
+          <Grid item xs={9}>
+            {answer}
+          </Grid>
 
-        <Grid item>
-          <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
-        </Grid>
-
-        <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
           <Grid item>
-            <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+            <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
           </Grid>
-          <Grid container item justify="center" alignItems="center">
-            <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">Poin :</Typography>
-            <TextField
-              disabled
-              defaultValue={studentMark}
-              key={questionNumber}
-              inputProps={{
-                style: {
-                  borderBottom: "none",
-                  boxShadow: "none",
-                  margin: "0px",
-                  width: "30px"
-                }
-              }}
-              InputProps={{
-                endAdornment: `/ ${questionWeight}`,
-              }}
-            />
+
+          <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+            <Grid item>
+              <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+            </Grid>
+            <Grid container item justify="center" alignItems="center">
+              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+              <TextField
+                disabled
+                defaultValue={studentMark}
+                key={questionNumber}
+                inputProps={{
+                  style: {
+                    borderBottom: "none",
+                    boxShadow: "none",
+                    margin: "0px",
+                    width: "30px"
+                  }
+                }}
+                InputProps={{
+                  endAdornment: `/ ${questionWeight}`,
+                }}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    );
+      </Hidden>,
+      <Hidden mdUp>
+        <Grid container style={{ padding: "20px" }}>
+          <Grid item xs={12}>
+            {answer}
+          </Grid>
+
+          <Grid item xs={12} wrap="nowrap" direction="column" justify="center" alignItems="center">
+            {(questionType === "shorttext") ? (
+              <Grid item>
+                <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+              </Grid>
+            ) : (
+              null
+            )}
+            
+            <Grid container item justify="center" alignItems="center">
+              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+              <TextField
+                disabled
+                defaultValue={studentMark}
+                key={questionNumber}
+                inputProps={{
+                  style: {
+                    borderBottom: "none",
+                    boxShadow: "none",
+                    margin: "0px",
+                    width: "30px"
+                  }
+                }}
+                InputProps={{
+                  endAdornment: `/ ${questionWeight}`,
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Hidden>
+    ];
   }
 
   return (

@@ -179,6 +179,9 @@ const useStyles = makeStyles((theme) => ({
   redFlagIcon: {
     color: theme.palette.error.main,
     fontSize: "1.6em",
+    [theme.breakpoints.down('xs')]: {
+      fontSize: "1em",
+    },
     stroke: theme.palette.text.secondary,
     strokeWidth: '0.6px',
     strokeLinejoin: "round"
@@ -186,10 +189,25 @@ const useStyles = makeStyles((theme) => ({
   flagIcon: {
     color: theme.palette.text.secondary,
     fontSize: "1.6em",
-    // stroke: theme.palette.text.secondary,
-    // strokeWidth: '0.6px',
-    // strokeLinejoin: "round"
-  }
+    [theme.breakpoints.down('xs')]: {
+      fontSize: "1em",
+    },
+  },
+  hide400Down: {
+    [theme.breakpoints.down(400)]: {
+      display: "none!important",
+    }
+  },
+  hide401Up: {
+    [theme.breakpoints.up(401)]: {
+      display: "none!important",
+    }
+  },
+  mobileCustomFontSize400Down: {
+    [theme.breakpoints.down(400)]: {
+      fontSize: "0.6rem"
+    }
+  },
 }));
 
 // ANCHOR classes
@@ -241,16 +259,29 @@ function GradeButton(props) {
         studentId
       }
     }}>
-      <Button
-        variant="contained"
-        startIcon={
-          <EditIcon />
-        }
-        className={classes.editIcon}
-        // onClick={() => onGradeAssessment(student_id, student_name, grade)} 
-      >
-        Periksa
-      </Button>
+      <Hidden xsDown>
+        <Button
+          variant="contained"
+          startIcon={
+            <EditIcon />
+          }
+          className={classes.editIcon}
+        >
+          Periksa
+        </Button>
+      </Hidden>
+      <Hidden smUp>
+        <Button
+          size="small"
+          variant="contained"
+          startIcon={
+            <EditIcon />
+          }
+          className={classes.editIcon}
+        >
+          Periksa
+        </Button>
+      </Hidden>
     </Link>
   )
 }
@@ -478,18 +509,30 @@ function SubmittedAssessmentList(props) {
       };
       
         const columnTemplate = {
-        radio: {
-          root: classes.RadioQst, text: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>), icon: (<RadioButtonChecked/>)
-        },
-        checkbox: {
-          root: classes.CheckboxQst, text: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>), icon: (<CheckBox/>)
-        },
-        shorttext: {
-          root: classes.ShorttextQst, text: (<b>Isian Pendek</b>), icon: (<TextFormat />)
-        },
-        longtext: {
-          root: classes.LongtextQst, text: (<b>Uraian</b>), icon: (<Subject />)
-        }
+          radio: {
+            root: classes.RadioQst, 
+            text1: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>), 
+            text2: (<b>Pilihan Ganda (Satu Jawaban)</b>),
+            icon: (<RadioButtonChecked/>)
+          },
+          checkbox: {
+            root: classes.CheckboxQst, 
+            text1: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>), 
+            text2: (<b>Pilihan Ganda (Banyak Jawaban)</b>), 
+            icon: (<CheckBox/>)
+          },
+          shorttext: {
+            root: classes.ShorttextQst,
+            text1: (<b>Isian Pendek</b>),
+            text2: (<b>Isian Pendek</b>),
+            icon: (<TextFormat />)
+          },
+          longtext: {
+            root: classes.LongtextQst,
+            text1: (<b>Uraian</b>),
+            text2: (<b>Uraian</b>),
+            icon: (<Subject />)
+          }
       }
 
       for (var i = 0; i < selectedAssessments.class_assigned.length; i++) {
@@ -592,66 +635,102 @@ function SubmittedAssessmentList(props) {
               }
             } // jika murid tidak mengerjakan assessment ini, scores tetap = null
 
-            
-            let columns = [];
-            if (scores) {
-              let c = 0;
-              for (let typeArray of types.entries()) {
-                let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
-                columns.push(
-                  <Grid container xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
-                    <Grid item>
-                      <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
-                        {columnTemplate[type].icon}
-                      </IconButton>
-                    </Grid>
-                    <Grid item>
-                      <Typography align='center'>
-                        {columnTemplate[type].text}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography>
-                        {(type === 'longtext') ? (
-                          (isAllEssayGraded) ? (
-                            `${scores[type].totalpoint}/${scores[type].totalweight}`
-                          ) : (
-                              "Belum dinilai"
-                            )
-                        ) : (
-                            `${scores[type].totalpoint}/${scores[type].totalweight}`
-                        )}
-                      </Typography>
-                    </Grid>
+          let columns1 = [];
+          let columns2 = [];
+          if (scores) {
+            let c = 0;
+            for (let typeArray of types.entries()) {
+              let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
+              columns1.push(
+                <Grid container item xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
+                  <Grid item>
+                    <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
+                      {columnTemplate[type].icon}
+                    </IconButton>
                   </Grid>
+                  <Grid item>
+                    <Typography align='center'>
+                      {columnTemplate[type].text1}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      {(type === 'longtext') ? (
+                        (isAllEssayGraded) ? (
+                          `${scores[type].totalpoint}/${scores[type].totalweight}`
+                        ) : (
+                            "Belum dinilai"
+                          )
+                      ) : (
+                          `${scores[type].totalpoint}/${scores[type].totalweight}`
+                        )}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              );
+              columns2.push(
+                <Grid container style={{ padding: "0 20px" }}>
+                  <Grid item style={{ margin: "8px 20px 8px 0" }}>
+                    <IconButton size="small" disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
+                      {columnTemplate[type].icon}
+                    </IconButton>
+                  </Grid>
+                  <Grid item style={{ display: "flex", flexDirection: "column", flexGrow: "1" }} justify="center">
+                    <Typography align='left' className={classes.mobileCustomFontSize400Down}>
+                      {columnTemplate[type].text2}
+                    </Typography>
+                  </Grid>
+                  <Grid item style={{ display: "flex", flexDirection: "column" }} justify="center">
+                    <Typography>
+                      {(type === 'longtext') ? (
+                        (isAllEssayGraded) ? (
+                          `${scores[type].totalpoint}/${scores[type].totalweight}`
+                        ) : (
+                            "Belum dinilai"
+                          )
+                      ) : (
+                          `${scores[type].totalpoint}/${scores[type].totalweight}`
+                        )}
+                    </Typography>
+                  </Grid>
+                </Grid>
                 );
                 // jika elemen ini bukan elemen terakhir pada set type, tambahkan divider
                 if (c + 1 < types.size) {
-                  columns.push(
+                  columns1.push(
                     <Divider orientation="vertical" flexItem />
                   );
+                  columns2.push(
+                    <Divider />
+                  )
                 }
                 c++;
               }
             } else {
-              columns.push(<Typography variant="h5" color="textSecondary">Belum mengerjakan</Typography>)
-            }
+            columns1.push(<Typography variant="h5" color="textSecondary">Belum mengerjakan</Typography>)
+          }
 
-            // console.log(student_task)
-            students_in_class.push(
-              <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <ListItem className={classes.personListContainer}>
-                    <ListItemAvatar>
-                      {!student.avatar ? <Avatar style={{ marginRight: "10px" }} /> :
-                        <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{ marginRight: "10px" }} />}
-                    </ListItemAvatar>
-                    <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
-                      secondary={!selectedAssessments.grades ? "Belum Dinilai" : !gradeStatus.has(student._id) && selectedAssessments.grades[student._id] === undefined ? "Belum Dinilai" : "Telah Dinilai"} />
-                    {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
-                      <div style={{display: "flex"}}>
+          students_in_class.push(
+            <ExpansionPanel>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <ListItem className={classes.personListContainer}>
+                  <ListItemAvatar>
+                    {!student.avatar ? <Avatar style={{ marginRight: "10px" }} /> :
+                      <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{ marginRight: "10px" }} />}
+                  </ListItemAvatar>
+                  <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
+                    secondary={
+                      (!selectedAssessments.grades) ? (
+                        "Belum Dinilai"
+                      ) : (!gradeStatus.has(student._id) && selectedAssessments.grades[student._id] === undefined) ? (
+                        "Belum Dinilai"
+                      ) : (
+                        "Telah Dinilai"
+                      )} />
+                  {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
+                    <div style={{ display: "flex" }}>
                         {(isAllEssayGraded) ? (
-                          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
                             <Grid item>
                               <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
                             </Grid>
@@ -660,24 +739,25 @@ function SubmittedAssessmentList(props) {
                             </Grid>
                           </div>
                         ) : (
-                          null
-                        )}
+                            null
+                          )}
                       {/* ANCHOR elemen flag */}
                         <Grid item alignItem="center">
                           <Grid item>
-                            <IconButton 
-                              onClick={(e) => {handleFlag(e, student._id)}}
+                            <IconButton
+                              onClick={(e) => { handleFlag(e, student._id) }}
                             >
                               {(suspects.includes(student._id)) ? (
                                 <BsFlagFill className={classes.redFlagIcon} />
                               ) : (
-                                <BsFlag className={classes.flagIcon} />
-                              )}
+                                  <BsFlag className={classes.flagIcon} />
+                                )}
                             </IconButton>
                           </Grid>
                         </Grid>
                       </div>
                     ) : (
+                      // jika murid belum dinilai tapi sudah mengumpulkan jawaban assessment, tampilkan flag  
                       (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ? (
                         <div style={{ display: "flex" }}>
                           <Grid item alignItem="center">
@@ -701,34 +781,35 @@ function SubmittedAssessmentList(props) {
                   </ListItem>
                 </ExpansionPanelSummary>
                 <Divider />
-                {/* ANCHOR elemen icon soal */}
-                <Grid container style={{ padding: "20px" }} justify="center">
-                  {columns}
-                </Grid>
+
+                <Hidden xsDown>
+                  <Grid container style={{ padding: "20px" }} justify="center">
+                    {columns1}
+                  </Grid>
+                </Hidden>
+                <Hidden smUp>
+                  {columns2}
+                </Hidden>
+                
+                <Divider />
                 {
                   (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ?
-                // (selectedAssessments && selectedAssessments.grades && 
-                //   (selectedAssessments.grades[student._id] !== undefined) && (selectedAssessments.grades[student._id].total_grade !== null)) ?
                     <div>
-                      <Divider />
-
                       <Grid container style={{ padding: "20px" }} justify="flex-end" alignItems="center" >
-                          {/* <TextField
-                                defaultValue={grade.has(student._id) || selectedAssessments.grades === null ? grade.get(student._id) : selectedAssessments.grades[student._id]}
-                                onChange={(e) => {handleChangeGrade(e, student._id)}}
-                                inputProps={{
-                                  style: {
-                                    borderBottom: "none",
-                                    boxShadow: "none",
-                                    margin: "0px",
-                                    width: "35px"
-                                  }
-                                }}
-                                InputProps={{
-                                  endAdornment: "/ 100"
-                                }}
-                              />
-                            </div> */}
+                        {
+                          (isAllEssayGraded) ? (
+                            <div style={{ display: "flex" }} class={classes.hide401Up}>
+                              <Grid item style={{ display: "flex" }} alignItems="center">
+                                <Typography noWrap style={{ marginRight: "8px" }} ><b>Total Nilai</b></Typography>
+                              </Grid>
+                              <Grid item item style={{ display: "flex" }} alignItems="center">
+                                <Typography align="right" style={{ marginRight: "16px" }}>{selectedAssessments.grades[student._id].total_grade}</Typography>
+                              </Grid>
+                            </div>
+                          ) : (
+                              null
+                            )
+                        }
                         <GradeButton assessmentId={selectedAssessments._id} studentId={student._id} classId={selectedAssessments.class_assigned[i]} />
                       </Grid>
                     </div>
@@ -736,7 +817,7 @@ function SubmittedAssessmentList(props) {
                     null
                 }
               </ExpansionPanel>
-          )
+            )
         }
 
         TabPanelList.push(
@@ -769,18 +850,17 @@ function SubmittedAssessmentList(props) {
         
         <Grid container spacing={2} className={classes.content}>
           <Grid item xs={12} md={7}>
-            <Typography variant="h5" gutterBottom>
-              <b>{selectedAssessments.name}</b>
+            <Typography variant="h4" gutterBottom>
+              {selectedAssessments.name}
             </Typography>
             <Typography variant="caption" color="textSecondary">
               <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
             </Typography>
-            <Typography color="primary" gutterBottom style={{marginTop: "20px"}}>
-              Deskripsi Tugas:
+            <Hidden smDown implementation="css">
+              <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                Deskripsi Kuis/Ujian:
             </Typography>
-            {/* <Typography align="justify">
-              {selectedAssessments.description}
-            </Typography> */}
+            </Hidden>
           </Grid>
           <Grid item xs={12} md={5} spacing={2}>
             <Hidden mdUp implementation="css">
@@ -790,6 +870,62 @@ function SubmittedAssessmentList(props) {
               <Typography variant="body2" className={classes.endDateText}>
                 Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
               </Typography>
+              <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                Deskripsi Kuis/Ujian:
+              </Typography>
+              <Typography align="justify">
+                {selectedAssessments.description}
+              </Typography>
+
+              <Grid container item justify='flex-end' style={{ marginTop: "20px" }}>
+                <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
+                  <Fab size="medium" variant="extended" className={classes.editFab}>
+                    <EditIcon className={classes.editIconDesktop} />
+                    Periksa
+                  </Fab>
+                </Link>
+
+                <LightTooltip title="Urutkan Kuis">
+                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                    <SortIcon />
+                  </IconButton>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                    >
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                        onClick={() => { handleRequestSort(headCell.id) }}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ?
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc" ? "sorted descending" : "sorted ascending"}
+                          </span>
+                          : null
+                        }
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Grid>
             </Hidden>
             <Hidden smDown implementation="css">
               <Typography align="right" variant="body2" className={classes.startDateText}>
@@ -848,16 +984,16 @@ function SubmittedAssessmentList(props) {
                   ))}
                 </Menu>
               </Grid>
-
             </Hidden>
           </Grid>
-          <Grid container spacing={2}>
+          <Hidden smDown>
             <Grid item xs={12}>
               <Typography align="justify">
                 {selectedAssessments.description}
               </Typography>
             </Grid>
-          </Grid>
+          </Hidden>
+
         </Grid>
         {listClassTab()}
       </Paper>
