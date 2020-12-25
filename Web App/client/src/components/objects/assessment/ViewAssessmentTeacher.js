@@ -196,8 +196,9 @@ function ViewAssessmentTeacher(props) {
         />
         <Grid container direction="column" spacing={3}>
           <Grid item style={{marginBottom: "20px"}}>
-            <Paper className={classes.content}>
-              <Grid container spacing={6}>
+            <Paper>
+              {/* <Grid container spacing={6} className={classes.content}> */}
+              <Grid container spacing={2} className={classes.content}>
                 <Grid item xs={12} md={7} spacing={8}>
                   <Typography variant="h4" gutterBottom>
                     {selectedAssessments.name}
@@ -205,12 +206,11 @@ function ViewAssessmentTeacher(props) {
                   <Typography variant="caption" color="textSecondary">
                     <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
                   </Typography>
-                  <Typography color="primary" gutterBottom style={{marginTop: "30px"}}>
-                    Deskripsi Kuis/Ujian:
-                  </Typography>
-                  <Typography>
-                    {selectedAssessments.description}
-                  </Typography>
+                  <Hidden smDown implementation="css">
+                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                      Deskripsi Kuis/Ujian:
+                    </Typography>
+                  </Hidden>
                 </Grid>
                 <Grid item xs={12} md={5} spacing={2}>
                   <Hidden mdUp implementation="css">
@@ -220,8 +220,14 @@ function ViewAssessmentTeacher(props) {
                     <Typography variant="body2" className={classes.endDateText}>
                       Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
+                    <Typography variant="body2" color="textSecondary" style={{ marginTop: "20px" }}>
                       Nilai Maksimum: 100
+                    </Typography>
+                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                      Deskripsi Kuis/Ujian:
+                    </Typography>
+                    <Typography align="justify">
+                      {selectedAssessments.description}
                     </Typography>
                   </Hidden>
                   <Hidden smDown implementation="css">
@@ -234,8 +240,16 @@ function ViewAssessmentTeacher(props) {
                     <Typography align="right" variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
                       Nilai Maksimum: 100
                     </Typography>
-                  </Hidden>
+                  </Hidden>  
                 </Grid>
+                <Hidden smDown>
+                  <Grid item xs={12}>
+                    <Typography align="justify">
+                      {selectedAssessments.description}
+                    </Typography>
+                  </Grid>
+                </Hidden>
+
               </Grid>
             </Paper>
           </Grid>
@@ -264,12 +278,12 @@ function ViewAssessmentTeacher(props) {
                         (question.type === "shorttext") ? (
                           generateSoalShortTextTeacher(question, i)
                         ) : (question.type === "longtext") ? (
-                          <Typography variant="body1" gutterButtom>
+                          <Typography gutterButtom>
                             {question.name}
                           </Typography>
                         ) : (
-                          <Typography variant="h5" gutterButtom>
-                            <b>{question.name}</b>
+                          <Typography gutterButtom>
+                            {question.name}
                           </Typography>
                         )
                       }
