@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, Link, useLocation } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";

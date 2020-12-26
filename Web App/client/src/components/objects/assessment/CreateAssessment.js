@@ -12,21 +12,26 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import QuestionItem from "./QuestionItem";
-import { Button, Chip, Divider,
-  FormControl, FormControlLabel, FormHelperText, Grid, Menu,
+import { 
+  Button, 
+  Chip, 
+  Divider,
+  FormControl, 
+  FormControlLabel, 
+  FormHelperText, Grid, Menu,
   MenuItem, Paper, Select, Snackbar, Switch, TextField, 
-  TablePagination, Typography, IconButton, Hidden, Fab, ListItemIcon, ListItemText, Icon } from "@material-ui/core";
+  TablePagination, Typography, IconButton, Hidden, Fab, ListItemIcon, ListItemText } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
-import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsIcon from "@material-ui/icons/Settings";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import CancelIcon from '@material-ui/icons/Cancel';
-import SendIcon from '@material-ui/icons/Send';
-import { RadioButtonChecked, CheckBox, TextFormat, Subject } from '@material-ui/icons';
-import InfoIcon from '@material-ui/icons/Info';
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import CancelIcon from "@material-ui/icons/Cancel";
+import SendIcon from "@material-ui/icons/Send";
+import { RadioButtonChecked, CheckBox, TextFormat, Subject } from "@material-ui/icons";
+import InfoIcon from "@material-ui/icons/Info";
 
 // ANCHOR import
 
@@ -290,7 +295,7 @@ class CreateAssessment extends Component {
         for (let pair of filteredtypeCount) {
           let type = pair[0];
 
-          if (type === 'longtext') {
+          if (type === "longtext") {
             for (let weight of this.state.longtextWeight.filter((value) => (value !== null))) {
               if (isNaN(Number(weight)) || Number(weight) <= 0) {
                 completeWeight = false;
@@ -395,8 +400,6 @@ class CreateAssessment extends Component {
   handleCloseMenuTambah = (option) => {
     this.setState({ anchorEl: null });
     this.setState({ currentQuestionOption: option })
-    // console.log(option)
-    // console.log(this.state.currentQuestionOption)
     this.handleAddQuestion(option);
   };
 
@@ -501,29 +504,14 @@ class CreateAssessment extends Component {
   }
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
-    // console.log(optionIndex)
-    // console.log(qnsIndex)
     let questions = this.state.questions
     if(action === "Delete"){
       if (questions[qnsIndex].type === "checkbox") {
-        // if(questions[qnsIndex].answer.length === 1){
-        //   let i = 0
-        //   let found = false
-        //   while(i<questions[qnsIndex].answer.length && !found){
-        //     if(questions[qnsIndex].answer[i].charCodeAt(0)-65 === optionIndex){
-        //       found = true
-        //     }
-        //     i = i + 1
-        //   }
-        //   if(found){
-        //     questions[qnsIndex].answer[0] = "A"
-        //   }
-        // }        
-        // mencegah adanya soal radio yang tidak memiliki opsi 
         if (questions[qnsIndex].options.length === 1) {
           questions[qnsIndex].options[0] = ""
           this.handleOpenCheckboxErrorSnackBar()
         } else {
+          // mencegah adanya soal pg yang tidak memiliki opsi 
           if (questions[qnsIndex].answer.length === 1) { // jika hanya ada satu kunci jawaban (misal ["E"])
             if (questions[qnsIndex].answer[0].charCodeAt(0) - 65 === optionIndex) {
               // jika opsi yang dihapus adalah opsi kunci jawaban, set kunci jawaban ke opsi pertama 
@@ -579,7 +567,6 @@ class CreateAssessment extends Component {
     }else{
       console.log("No action is specified")
     }
-    // console.log(questions)
     this.setState({ questions: questions})
   }
 
@@ -812,15 +799,14 @@ class CreateAssessment extends Component {
   
         columns.push(
           // xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
-          <Grid container item xs={12 / filteredtypeCount.length} spacing='1' direction='column' justify='space-between' alignItems='center'>
+          <Grid container item xs={12 / filteredtypeCount.length} spacing="1" direction="column" justify="space-between" alignItems="center">
             <Grid item>
               {/* <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}> */}
-              {/* <IconButton disabled> */}
                 {columnTemplate[type].icon}
               {/* </IconButton> */}
             </Grid>
             <Grid item>
-              <Typography align='center'>
+              <Typography align="center">
                 {columnTemplate[type].text}
               </Typography>
             </Grid>
@@ -829,7 +815,7 @@ class CreateAssessment extends Component {
                 Bobot Per Soal:
               </Typography>
             </Grid>
-              {(type !== 'longtext') ? (
+              {(type !== "longtext") ? (
               <Grid item>
                 {/* ANCHOR textfield */}
                 <TextField
@@ -869,7 +855,7 @@ class CreateAssessment extends Component {
       }
       return (
         <Paper>
-          <Grid container style={{ padding: "20px" }} justify='center'>
+          <Grid container style={{ padding: "20px" }} justify="center">
             {columns}
           </Grid>
         </Paper>

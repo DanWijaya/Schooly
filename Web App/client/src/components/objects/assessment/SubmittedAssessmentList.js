@@ -3,27 +3,41 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { getOneAssessment, gradeAssessment, updateAssessmentSuspects } from "../../../actions/AssessmentActions";
+import { getOneAssessment, updateAssessmentSuspects } from "../../../actions/AssessmentActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, 
-  List, ListItem, ListItemAvatar, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography, Grid, Hidden, Menu, 
-  MenuItem, TableSortLabel, IconButton, ListItemSecondaryAction, Fab } from "@material-ui/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Tabs,
+  Tab,
+  Typography,
+  Grid,
+  Hidden,
+  Menu,
+  MenuItem,
+  TableSortLabel,
+  IconButton,
+  Fab
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import { RadioButtonChecked, CheckBox, TextFormat, Subject } from '@material-ui/icons';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { RadioButtonChecked, CheckBox, TextFormat, Subject } from "@material-ui/icons";
 import SortIcon from "@material-ui/icons/Sort";
 import EditIcon from "@material-ui/icons/Edit";
-import MuiAlert from "@material-ui/lab/Alert";
-
-import { BsFlagFill, BsFlag } from 'react-icons/bs';
+import { BsFlagFill, BsFlag } from "react-icons/bs";
 // ANCHOR import
 // const path = require("path");
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,44 +79,44 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main
     },
   },
-  downloadAllButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main
-    }
-  },
-  downloadIconButton: {
-    marginLeft: "5px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  wordFileTypeIcon: {
-    backgroundColor: "#16B0DD",
-  },
-  excelFileTypeIcon: {
-    backgroundColor: "#68C74F",
-  },
-  imageFileTypeIcon: {
-    backgroundColor: "#974994",
-  },
-  pdfFileTypeIcon: {
-    backgroundColor: "#E43B37",
-  },
-  textFileTypeIcon: {
-    backgroundColor: "#F7BC24",
-  },
-  presentationFileTypeIcon: {
-    backgroundColor: "#FD931D",
-  },
-  otherFileTypeIcon: {
-    backgroundColor: "#808080",
-  },
+  // downloadAllButton: {
+  //   backgroundColor: theme.palette.primary.main,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "white",
+  //     color: theme.palette.primary.main
+  //   }
+  // },
+  // downloadIconButton: {
+  //   marginLeft: "5px",
+  //   backgroundColor: theme.palette.primary.main,
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "white",
+  //     color: theme.palette.primary.main,
+  //   },
+  // },
+  // wordFileTypeIcon: {
+  //   backgroundColor: "#16B0DD",
+  // },
+  // excelFileTypeIcon: {
+  //   backgroundColor: "#68C74F",
+  // },
+  // imageFileTypeIcon: {
+  //   backgroundColor: "#974994",
+  // },
+  // pdfFileTypeIcon: {
+  //   backgroundColor: "#E43B37",
+  // },
+  // textFileTypeIcon: {
+  //   backgroundColor: "#F7BC24",
+  // },
+  // presentationFileTypeIcon: {
+  //   backgroundColor: "#FD931D",
+  // },
+  // otherFileTypeIcon: {
+  //   backgroundColor: "#808080",
+  // },
   startDateText: {
     color: theme.palette.primary.main
   },
@@ -132,31 +146,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   RadioQst: {
-    '&$disabled': {
+    "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: '#02AFF8'
+      backgroundColor: "#02AFF8"
     }
   },
   CheckboxQst: {
-    '&$disabled': {
+    "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: '#049F90'
+      backgroundColor: "#049F90"
     }
   },
   ShorttextQst: {
-    '&$disabled': {
+    "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: '#FD7D2E'
+      backgroundColor: "#FD7D2E"
     }
   },
   LongtextQst: {
-    '&$disabled': {
+    "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: '#B2417C'
+      backgroundColor: "#B2417C"
     }
   },
   disabled: {
@@ -179,17 +193,17 @@ const useStyles = makeStyles((theme) => ({
   redFlagIcon: {
     color: theme.palette.error.main,
     fontSize: "1.6em",
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
     },
     stroke: theme.palette.text.secondary,
-    strokeWidth: '0.6px',
+    strokeWidth: "0.6px",
     strokeLinejoin: "round"
   },
   flagIcon: {
     color: theme.palette.text.secondary,
     fontSize: "1.6em",
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
     },
   },
@@ -211,11 +225,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // ANCHOR classes
-
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -249,7 +258,7 @@ function TabIndex(index) {
 
 function GradeButton(props) {
   const classes = useStyles()
-  const { onGradeAssessment, studentId, classId, assessmentId } = props;
+  const { studentId, classId, assessmentId } = props;
 
   return (
     <Link to={{
@@ -289,22 +298,14 @@ function GradeButton(props) {
 function SubmittedAssessmentList(props) {
   const classes = useStyles();
 
-  const { getOneAssessment, getAllClass, getStudents, gradeAssessment, getAllSubjects } = props;
+  const { getOneAssessment, getAllClass, getStudents, getAllSubjects } = props;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const { all_classes } = props.classesCollection;
   const { all_students } = props.auth;
   const assessment_id = props.match.params.id;
 
-  // console.log(all_students)
-
-  const [grade, setGrade] = React.useState(new Map());
-  const [gradeStatus, setGradeStatus] = React.useState(new Map());
-  const [openAlert, setOpenAlert] = React.useState(null);
-  const [gradedStudentId, setGradedStudentId] = React.useState(null);
-  const [gradedStudentName, setGradedStudentName] = React.useState("");
   const [value, setValue] = React.useState(0);
-  // const status = React.useRef(false);
 
   // jika tidak ada suspects, state ini akan bernilai array kosong
   const [suspects, setSuspects] = React.useState(null);
@@ -323,19 +324,6 @@ function SubmittedAssessmentList(props) {
       // status.current = true;
     }
   }, [selectedAssessments])
-
-  const handleOpenAlert = (id, name) => {
-    setOpenAlert(true);
-    setGradedStudentId(id) 
-    setGradedStudentName(name)
-  }
-
-  const handleCloseAlert = (e, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenAlert(false);
-  }
 
   // ANCHOR Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -399,33 +387,9 @@ function SubmittedAssessmentList(props) {
     setValue(newValue);
   };
 
-  const handleChangeGrade = (e, id) => {
-    let gradeMap = grade
-    gradeMap.set(id, e.target.value);
-    setGrade(gradeMap)
-  };
-
   let temp = new Map()
   if (all_classes.length) {
     all_classes.map((kelas) => temp.set(kelas._id, kelas))
-  }
-
-  const onGradeAssessment = (studentId, studentName, grade) => {
-    let gradingData = {
-      grade: parseFloat(grade.get(studentId)),
-      studentId: studentId
-    }
-    let gradeStatusMap = gradeStatus
-
-    if (grade.has(studentId)) {
-      gradeStatusMap.set(studentId, "Graded")
-      setGradeStatus(gradeStatusMap)
-      return( new Promise((resolve, reject) => {
-        gradeAssessment(assessment_id, gradingData, resolve);
-      })
-      ).then(() => handleOpenAlert(studentId, studentName))
-      
-    }
   }
 
   const listClassTab = () => {
@@ -477,7 +441,7 @@ function SubmittedAssessmentList(props) {
       // selectedAssessments pasti sudah ada sehingga selectedAssessments.questions dan selectedAssessments.question_weight juga pasti ada
       let types = new Set();
       for (let questionIdx = 0; questionIdx < selectedAssessments.questions.length; questionIdx++) {
-        // tipe soal yg ada: ['radio', 'checkbox', 'shorttext', 'longtext'];
+        // tipe soal yg ada: ["radio", "checkbox", "shorttext", "longtext"];
         types.add(selectedAssessments.questions[questionIdx].type);
         if (types.size === 4) {
           break;
@@ -500,7 +464,7 @@ function SubmittedAssessmentList(props) {
         longtext: {
           totalpoint: null,
           totalweight: 
-            (types.has('longtext')) ? (
+            (types.has("longtext")) ? (
               Object.values(selectedAssessments.question_weight.longtext).reduce((sum, currentVal) => { return (sum + currentVal) })
             ) : (
               null
@@ -566,7 +530,7 @@ function SubmittedAssessmentList(props) {
               // harus deep cloning
               scores = JSON.parse(JSON.stringify(scoresTemplate));
 
-              if (types.has('longtext')) {                
+              if (types.has("longtext")) {                
                 if (selectedAssessments.grades && selectedAssessments.grades[student._id]) {
                   
                   // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
@@ -642,20 +606,20 @@ function SubmittedAssessmentList(props) {
             for (let typeArray of types.entries()) {
               let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
               columns1.push(
-                <Grid container item xs={3} spacing='1' wrap="nowrap" direction='column' justify='space-between' alignItems='center' >
+                <Grid container item xs={3} spacing="1" wrap="nowrap" direction="column" justify="space-between" alignItems="center" >
                   <Grid item>
                     <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
                       {columnTemplate[type].icon}
                     </IconButton>
                   </Grid>
                   <Grid item>
-                    <Typography align='center'>
+                    <Typography align="center">
                       {columnTemplate[type].text1}
                     </Typography>
                   </Grid>
                   <Grid item>
                     <Typography>
-                      {(type === 'longtext') ? (
+                      {(type === "longtext") ? (
                         (isAllEssayGraded) ? (
                           `${scores[type].totalpoint}/${scores[type].totalweight}`
                         ) : (
@@ -676,13 +640,13 @@ function SubmittedAssessmentList(props) {
                     </IconButton>
                   </Grid>
                   <Grid item style={{ display: "flex", flexDirection: "column", flexGrow: "1" }} justify="center">
-                    <Typography align='left' className={classes.mobileCustomFontSize400Down}>
+                    <Typography align="left" className={classes.mobileCustomFontSize400Down}>
                       {columnTemplate[type].text2}
                     </Typography>
                   </Grid>
                   <Grid item style={{ display: "flex", flexDirection: "column" }} justify="center">
                     <Typography>
-                      {(type === 'longtext') ? (
+                      {(type === "longtext") ? (
                         (isAllEssayGraded) ? (
                           `${scores[type].totalpoint}/${scores[type].totalweight}`
                         ) : (
@@ -722,7 +686,7 @@ function SubmittedAssessmentList(props) {
                     secondary={
                       (!selectedAssessments.grades) ? (
                         "Belum Dinilai"
-                      ) : (!gradeStatus.has(student._id) && selectedAssessments.grades[student._id] === undefined) ? (
+                      ) : (selectedAssessments.grades[student._id] === undefined) ? (
                         "Belum Dinilai"
                       ) : (
                         "Telah Dinilai"
@@ -802,7 +766,7 @@ function SubmittedAssessmentList(props) {
                               <Grid item style={{ display: "flex" }} alignItems="center">
                                 <Typography noWrap style={{ marginRight: "8px" }} ><b>Total Nilai</b></Typography>
                               </Grid>
-                              <Grid item item style={{ display: "flex" }} alignItems="center">
+                              <Grid item style={{ display: "flex" }} alignItems="center">
                                 <Typography align="right" style={{ marginRight: "16px" }}>{selectedAssessments.grades[student._id].total_grade}</Typography>
                               </Grid>
                             </div>
@@ -833,21 +797,7 @@ function SubmittedAssessmentList(props) {
   document.title = "Schooly | Daftar Tugas Terkumpul"
   return (
     <div className={classes.root}>
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{vertical : "center", horizontal: "center"}}
-      >
-        <Alert onClose={handleCloseAlert} severity="success" >
-          Nilai {gradedStudentName.length <= 15 ? gradedStudentName : `${gradedStudentName.slice(0,15)}...`} berhasil diganti menjadi {grade.get(gradedStudentId)}
-        </Alert>
-      </Snackbar>
-      <Paper >
-        {/* <Typography variant="h4" style={{textAlign: "center"}} gutterBottom>
-          <b>{selectedAssessments.name}</b>
-        </Typography> */}
-        
+      <Paper>        
         <Grid container spacing={2} className={classes.content}>
           <Grid item xs={12} md={7}>
             <Typography variant="h4" gutterBottom>
@@ -877,7 +827,7 @@ function SubmittedAssessmentList(props) {
                 {selectedAssessments.description}
               </Typography>
 
-              <Grid container item justify='flex-end' style={{ marginTop: "20px" }}>
+              <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
                 <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
                   <Fab size="medium" variant="extended" className={classes.editFab}>
                     <EditIcon className={classes.editIconDesktop} />
@@ -935,7 +885,7 @@ function SubmittedAssessmentList(props) {
                 Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
               </Typography>
 
-              <Grid container item justify='flex-end' style={{ marginTop: "20px" }}>
+              <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
                 <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
                   <Fab size="medium" variant="extended" className={classes.editFab}>
                     <EditIcon className={classes.editIconDesktop} />
@@ -1008,11 +958,9 @@ SubmittedAssessmentList.propTypes = {
   assessmentsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   getOneAssessment: PropTypes.func.isRequired,
-  gradeAssessment: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
-  deleteAssessment: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -1023,5 +971,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { getOneAssessment, getAllClass, getStudents, gradeAssessment, getAllSubjects }
+  mapStateToProps, { getOneAssessment, getAllClass, getStudents, getAllSubjects }
 )(SubmittedAssessmentList);

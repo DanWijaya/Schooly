@@ -1,37 +1,52 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getOneAssessment, deleteAssessment, updateAssessmentGrades } from "../../../actions/AssessmentActions"
+import { getOneAssessment, updateAssessmentGrades } from "../../../actions/AssessmentActions"
 import { getAllClass } from "../../../actions/ClassActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar, Divider, 
-  IconButton, Tabs, Tab, Menu, MenuItem, Badge, Box, FormControl, Select, InputLabel, TextField, Button, Avatar, 
-  RadioGroup, Radio, Checkbox, FormGroup, FormControlLabel, InputAdornment, TableSortLabel} from "@material-ui/core";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+  Grid,
+  Hidden,
+  Paper,
+  Typography,
+  Input,
+  Snackbar,
+  Divider,
+  IconButton,
+  Tabs,
+  Tab,
+  Menu,
+  MenuItem,
+  Badge,
+  Select,
+  TextField,
+  Button,
+  Avatar,
+  RadioGroup,
+  Radio,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  TableSortLabel,
+  Dialog,
+  DialogContent,
+  DialogTitle
+} from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteDialog from "../../misc/dialog/DeleteDialog";
-import LinkIcon from '@material-ui/icons/Link';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import SortIcon from '@material-ui/icons/Sort';
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import SortIcon from "@material-ui/icons/Sort";
 import BallotIcon from "@material-ui/icons/Ballot";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import ExploreIcon from '@material-ui/icons/Explore';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ErrorIcon from "@material-ui/icons/Error";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import ExploreIcon from "@material-ui/icons/Explore";
 import MuiAlert from "@material-ui/lab/Alert";
 // ANCHOR import
 
@@ -43,60 +58,6 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     padding: "20px",
-  },
-  seeAllAssessmentButton: {
-    backgroundColor: theme.palette.create.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.create.main,
-    },
-  },
-  editAssessmentButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-    },
-  },
-  deleteAssessmentButton: {
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.error.dark,
-    },
-  },
-  copyToClipboardButton: {
-    backgroundColor: "#974994",
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "#974994",
-      color: "#white"
-    },
-  },
-  dialogBox: {
-    maxWidth: "350px",
-    padding: "15px",
-  },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
-    },
-  },
-  dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
   },
   startDateText: {
     color: theme.palette.primary.main
@@ -210,16 +171,11 @@ function ViewAssessmentTeacher(props) {
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
 
-  const { getOneAssessment, getAllClass, getAllSubjects, deleteAssessment, getStudents } = props;
+  const { getOneAssessment, getAllClass, getAllSubjects, getStudents } = props;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
-  const { questions, type } = selectedAssessments;
   const { all_students } = props.auth;
-
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedAssessmentId, setSelectedAssessmentId] = React.useState(null);
-  const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(null);
 
   // object yang berisi semua murid yang menerima assessment ini, baik yang sudah mengerjakan maupun belum.
   // (pengaruhnya ke bagian mana?) karena assessment pasti diberikan ke minimal 1 kelas, isi all_student_object tidak mungkin kosong.
@@ -288,6 +244,7 @@ function ViewAssessmentTeacher(props) {
         questionCount.current++;
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAssessments])
 
   React.useEffect(() => {    
@@ -322,6 +279,7 @@ function ViewAssessmentTeacher(props) {
       setMenuOption(options);
       setAllStudentObj(students);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_students, selectedAssessments, all_classes_map])
   
   React.useEffect(() => {
@@ -351,6 +309,7 @@ function ViewAssessmentTeacher(props) {
         setLongtextGrades(null);
       }
     } 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAssessments, all_student_object, hasLongtextQst.current])
 
   // ANCHOR Sort Menu
@@ -369,29 +328,16 @@ function ViewAssessmentTeacher(props) {
         rows.current = [];
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAssessments, all_student_object])
 
-  // function createData(_id, name) {
-  //   return { _id, name };
-  // }
-  // const assessmentRowItem = (data) => {
-  //   let newRows = rows.current;
-  //   newRows.push(
-  //     createData(
-  //       data._id,
-  //       data.name,
-  //     )
-  //   )
-
-  //   rows.current = newRows;
-  // }
-  const handleOpenSortMenu = (event) => {
+  function handleOpenSortMenu(event) {
     setAnchorEl(event.currentTarget);
   };
-  const handleCloseSortMenu = () => {
+  function handleCloseSortMenu() {
     setAnchorEl(null);
   };
-  const handleRequestSort = (property) => {
+  function handleRequestSort(property) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -424,48 +370,9 @@ function ViewAssessmentTeacher(props) {
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
 
-  const onDeleteAssessment = (id) => {
-    deleteAssessment(id)
-  }
-
-  // Delete Dialog
-  const handleOpenDeleteDialog = (e, id, name) => {
-    e.stopPropagation();
-    setOpenDeleteDialog(true);
-    setSelectedAssessmentId(id)
-    setSelectedAssessmentName(name)
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-  };
-
   // Tabs
-  const handleChange = (event, newValue) => {
+  function handleChange (event, newValue) {
     setValue(newValue);
-  };
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <div
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box p={3}>
-            {children}
-          </Box>
-        )}
-      </div>
-    );
-  }
-  
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
   };
   
   function TabIndex(index) {
@@ -474,32 +381,8 @@ function ViewAssessmentTeacher(props) {
     };
   };
 
-  const generateSoalShortTextTeacher = (qst, qstIndex) => {
-    let splitResult = qst.name.split("`");
-    let iterator = 0;
-
-    for (let i = 1; i <= splitResult.length - 2; i += 2) {
-      splitResult[i] = (
-        <Input
-          type="text"
-          key={`${qstIndex}-${iterator}`}
-          disabled={true}
-          value={qst.answer[iterator]}
-        />);
-      iterator++;
-    }
-    
-    return (
-      <Typography variant="body1" gutterButtom>
-        <form>
-          {splitResult}
-        </form>
-      </Typography>
-    ); 
-  }
-
-  const [snackbarContent, setSnackbarContent] = React.useState('');
-  const [severity, setSeverity] = React.useState('info');
+  const [snackbarContent, setSnackbarContent] = React.useState("");
+  const [severity, setSeverity] = React.useState("info");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
   function handleOpenSnackbar(severity, content) {
@@ -509,14 +392,14 @@ function ViewAssessmentTeacher(props) {
   }
 
   function handleCloseSnackbar(event, reason) {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpenSnackbar(false);
   }
 
   // ANCHOR fungsi generate Soal
-  const generateQuestion = (questionNumber, questionWeight, questionInfo) => {
+  function generateQuestion(questionNumber, questionWeight, questionInfo) {
     let questionType = questionInfo.type;
     let questionName = questionInfo.name;
     let questionAnswer = questionInfo.answer;
@@ -664,7 +547,7 @@ function ViewAssessmentTeacher(props) {
   }
 
   // ANCHOR fungsi ubah nilai
-  const handleGradeChange = (e, studentId, questionIndex) => {
+  function handleGradeChange(e, studentId, questionIndex) {
     let temp = { ...longtextGrades};
     let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
     // temp[studentId] = { ...temp[studentId], [qnsIndex]: grade };
@@ -673,7 +556,7 @@ function ViewAssessmentTeacher(props) {
     setLongtextGrades(temp);
   }
 
-  const handleSaveGrade = (studentId) => {
+  function handleSaveGrade(studentId) {
     let temp = { ...longtextGrades };
     let grade = temp[studentId][qnsIndex];
 
@@ -693,7 +576,7 @@ function ViewAssessmentTeacher(props) {
     }
   }
   // ANCHOR fungsi per soal
-  const generateAllStudentAnswer = () => {
+  function generateAllStudentAnswer() {
     let submissions = selectedAssessments.submissions;
     let question = selectedAssessments.questions[qnsIndex];
     let weights = selectedAssessments.question_weight;
@@ -786,7 +669,7 @@ function ViewAssessmentTeacher(props) {
   }
 
   // ANCHOR fungsi per murid
-  const generateQstStdAnswer = () => {
+  function generateQstStdAnswer () {
     let studentId = selectedStudent;
     let studentAnswers;
 
@@ -876,81 +759,6 @@ function ViewAssessmentTeacher(props) {
     });
   }
 
-  // // Ganti halaman Soal
-  // function QuestionPage(props) {
-  //   const { classes, handleChangeQuestion, question_number, answer } = props;
-  //   console.log(answer)
-  //   return (
-  //     <Grid item>
-  //       <Badge
-  //         badgeContent={(answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => {return elm !== ""})) ?
-  //             <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-  //               <CheckCircleIcon style={{width: "15px", height: "15px"}} />
-  //             </Avatar>
-  //           :
-  //             <Avatar style={{backgroundColor: "red", color: "white", width: "20px", height: "20px"}}>
-  //               <ErrorIcon style={{width: "15px", height: "15px"}} />
-  //             </Avatar>
-  //         }
-  //         anchorOrigin={{
-  //           vertical: "bottom",
-  //           horizontal: "right",
-  //         }}
-  //       >
-  //         <Paper
-  //           buttons
-  //           variant="outlined"
-  //           className={classes.questionPage}
-  //           onClick={() => handleChangeQuestion(question_number-1)}
-  //         >
-  //           <Typography>
-  //             {question_number}
-  //           </Typography>
-  //         </Paper>
-  //       </Badge>
-  //     </Grid>
-  //   )
-  // }
-
-  // const GenerateQuestionandAnswerPerStudent = (number, question, weight, studentName, studentClass, studentAnswer, studentMark, answerChecked) => {
-  //   return (
-  //     <Badge
-  //       badgeContent={(answerChecked) ? <CheckCircleIcon className={classes.checkBadge} fontSize="large" /> :
-  //         <ErrorIcon className={classes.warningBadge} fontSize="large" />} variant="standard" style={{ marginLeft: "4px" }}>
-  //       <Paper className={classes.contentItem}>
-  //         <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${number}`}</b></Typography>
-  //         <Typography align="justify">{`${question}`}</Typography>
-  //         <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${weight}`}</Typography>
-  //         <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
-  //         <Typography variant="h6" style={{ textDecoration: "underline", marginBottom: "10px" }}><b>Jawaban</b></Typography>
-  //         <Typography align="justify">{`${studentAnswer}`}</Typography>
-  //         <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px" }}>
-  //           <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
-  //           <TextField
-  //             defaultValue={studentMark}
-  //             inputProps={{
-  //               style: {
-  //                 borderBottom: "none",
-  //                 boxShadow: "none",
-  //                 margin: "0px",
-  //                 width: "30px"
-  //               }
-  //             }}
-  //             InputProps={{
-  //               endAdornment: "/ 100",
-  //             }}
-  //           />
-  //           <div>
-  //             <Button className={classes.saveButton} size="small">SIMPAN</Button>
-  //           </div>
-  //         </div>
-  //       </Paper>
-  //     </Badge>
-  //   )
-  // }
-
-  let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
-
   //ANCHOR cek kosong
   function isAssessmentLoaded() {
     return (Object.keys(selectedAssessments).length !== 0);
@@ -983,7 +791,7 @@ function ViewAssessmentTeacher(props) {
 
   // ANCHOR fungsi navigasi soal
   function QuestionPage(props) {
-    const { classes, handleChangeQuestion, question_number, answer, question_type } = props;
+    const { classes, handleChangeQuestion, question_number, question_type } = props;
 
     let fullyGraded = true;
     if (selectedAssessments.submissions) {
@@ -1036,14 +844,6 @@ function ViewAssessmentTeacher(props) {
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Kuis"
-        // deleteItem=""
-        itemName={selectedAssessments.name}
-        deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
-        />
         <Grid container direction="column" spacing={3}>
           <Grid item>
             <Paper className={classes.content}>
@@ -2027,7 +1827,6 @@ ViewAssessmentTeacher.propTypes = {
   getOneAssessment: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  deleteAssessment: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
 }
 
@@ -2039,5 +1838,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { getOneAssessment, deleteAssessment, getAllClass, getAllSubjects, getStudents }
+  mapStateToProps, { getOneAssessment, getAllClass, getAllSubjects, getStudents }
 )(ViewAssessmentTeacher);

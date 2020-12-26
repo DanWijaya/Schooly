@@ -17,16 +17,16 @@ import { Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText,
   Fab, ListItemIcon, ListItemText, Menu } from "@material-ui/core";
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
-import SettingsIcon from '@material-ui/icons/Settings';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import LinkIcon from '@material-ui/icons/Link';
-import CancelIcon from '@material-ui/icons/Cancel';
-import SendIcon from '@material-ui/icons/Send';
+import SettingsIcon from "@material-ui/icons/Settings";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import LinkIcon from "@material-ui/icons/Link";
+import CancelIcon from "@material-ui/icons/Cancel";
+import SendIcon from "@material-ui/icons/Send";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MuiAlert from "@material-ui/lab/Alert";
-import { RadioButtonChecked, CheckBox, TextFormat, Subject } from '@material-ui/icons';
-import InfoIcon from '@material-ui/icons/Info';
+import { RadioButtonChecked, CheckBox, TextFormat, Subject } from "@material-ui/icons";
+import InfoIcon from "@material-ui/icons/Info";
 
 const styles = (theme) => ({
   root: {
@@ -241,14 +241,6 @@ class EditAssessment extends Component {
     getAllSubjects()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // if (!this.props.errors && this.props.errors !== prevProps.errors) {
-    //   this.handleOpenUploadDialog()
-    // }
-    console.log(this.props.weights)
-    console.log(prevProps.weights);
-  }
-
   componentWillUnmount(){
     this.props.clearErrors()
     this.props.handleSideDrawerExist(true)
@@ -386,7 +378,7 @@ class EditAssessment extends Component {
         for (let pair of filteredtypeCount) {
           let type = pair[0];
 
-          if (type === 'longtext') {
+          if (type === "longtext") {
             for (let weight of this.state.longtextWeight.filter((value) => (value !== null))) {
               if (isNaN(Number(weight)) || Number(weight) <= 0) {
                 completeWeight = false;
@@ -599,48 +591,34 @@ class EditAssessment extends Component {
     let textArea = document.createElement("textarea");
     
     textArea.value = linkToShare;
-    textArea.style.position = 'fixed';
+    textArea.style.position = "fixed";
     textArea.style.top = 0;
     textArea.style.left = 0;
-    textArea.style.width = '2em';
-    textArea.style.height = '2em';
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
     textArea.style.padding = 0;
-    textArea.style.border = 'none';
-    textArea.style.outline = 'none';
-    textArea.style.boxShadow = 'none';
-    textArea.style.background = 'transparent';
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
 
     document.body.appendChild(textArea);
     textArea.select();
-    document.execCommand('copy');
+    document.execCommand("copy");
     e.target.focus();
     document.body.removeChild(textArea);
     this.handleOpenCopySnackBar();
   }; 
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
-    // console.log("AAAA")
     let questions = this.state.questions
     if(action === "Delete"){
       if(questions[qnsIndex].type === "checkbox"){
-        // if(questions[qnsIndex].answer.length === 1){
-        //   let i = 0
-        //   let found = false
-        //   while(i<questions[qnsIndex].answer.length && !found){
-        //     if(questions[qnsIndex].answer[i].charCodeAt(0)-65 === optionIndex){
-        //       found = true
-        //     }
-        //     i = i + 1
-        //   }
-        //   if(found){
-        //     questions[qnsIndex].answer[0] = "A"
-        //   }
-        // }        
-        // mencegah adanya soal radio yang tidak memiliki opsi 
         if (questions[qnsIndex].options.length === 1) { 
           questions[qnsIndex].options[0] = ""
           this.handleOpenCheckboxErrorSnackBar()
         } else {
+          // mencegah adanya soal pg yang tidak memiliki opsi 
           if (questions[qnsIndex].answer.length === 1) { // jika hanya ada satu kunci jawaban (misal ["E"])
             if (questions[qnsIndex].answer[0].charCodeAt(0) - 65 === optionIndex) {
               // jika opsi yang dihapus adalah opsi kunci jawaban, set kunci jawaban ke opsi pertama 
@@ -696,13 +674,10 @@ class EditAssessment extends Component {
     }else{
       console.log("No action is specified")
     }
-    // console.log(questions)
-    console.log(questions)
     this.setState({ questions: questions})
   }
 
   handleDuplicateQuestion = (i) => {
-    console.log(i)
     let questions = this.state.questions
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
@@ -836,9 +811,7 @@ class EditAssessment extends Component {
             booleanArray[j] = false;
           }
         }
-        // console.log(booleanArray)
       }
-      // console.log(booleanArray)
 
       return(
         <QuestionItem
@@ -945,15 +918,14 @@ class EditAssessment extends Component {
         columns.push(
           // ANCHOR column push
           //  item xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
-          <Grid container item xs={12 / filteredtypeCount.length} spacing='1' direction='column' justify='space-between' alignItems='center'>
+          <Grid container item xs={12 / filteredtypeCount.length} spacing="1" direction="column" justify="space-between" alignItems="center">
             <Grid item>
               {/* <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}> */}
-              {/* <IconButton disabled> */}
               {columnTemplate[type].icon}
               {/* </IconButton> */}
             </Grid>
             <Grid item>
-              <Typography align='center'>
+              <Typography align="center">
                 {columnTemplate[type].text}
               </Typography>
             </Grid>
@@ -962,7 +934,7 @@ class EditAssessment extends Component {
                 Bobot Per Soal:
               </Typography>
             </Grid>
-            {(type !== 'longtext') ? (
+            {(type !== "longtext") ? (
               <Grid item>
                 {/* ANCHOR textfield */}
                 <TextField
@@ -1002,7 +974,7 @@ class EditAssessment extends Component {
       }
       return (
         <Paper>
-          <Grid container style={{ padding: "20px" }} justify='center'>
+          <Grid container style={{ padding: "20px" }} justify="center">
             {columns}
           </Grid>
         </Paper>
