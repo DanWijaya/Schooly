@@ -556,18 +556,18 @@ function ViewAssessmentTeacher(props) {
     setLongtextGrades(temp);
   }
 
-  function handleSaveGrade(studentId) {
+  function handleSaveGrade(studentId, questionIndex) {
     let temp = { ...longtextGrades };
-    let grade = temp[studentId][qnsIndex];
+    let grade = temp[studentId][questionIndex];
 
     let numberGrade = Number(grade);
 
     if (isNaN(numberGrade) || numberGrade <= 0) {
       handleOpenSnackbar("error", "Nilai harus berupa angka dan tidak boleh kurang dari sama dengan 0")
     } else {
-      temp[studentId] = { ...temp[studentId], [qnsIndex]: numberGrade };
+      temp[studentId] = { ...temp[studentId], [questionIndex]: numberGrade };
       setLongtextGrades(temp);
-      updateAssessmentGrades(assessment_id, studentId, qnsIndex, numberGrade).then(() => {
+      updateAssessmentGrades(assessment_id, studentId, questionIndex, numberGrade).then(() => {
         handleOpenSnackbar("success", "Nilai berhasil diperbarui")
       }).catch((err) => {
         console.log(err);
@@ -694,7 +694,6 @@ function ViewAssessmentTeacher(props) {
         // let longtextGrade = longtextGrades[studentId][questionIndex];
         if (longtextGrades[studentId] && longtextGrades[studentId][questionIndex]) {
           // jika sudah pernah dinilai
-          console.log("here: " + longtextGrades[studentId][questionIndex])
           mark = longtextGrades[studentId][questionIndex];
         } else {
           // jika belum pernah dinilai
@@ -745,6 +744,7 @@ function ViewAssessmentTeacher(props) {
 
       return (
         <QuestionAnswerPerStudent
+          // key={`permurid-${questionIndex + 1}`}
           classes={classes}
           studentId={studentId}
           studentAnswer={studentAnswer}
@@ -1341,7 +1341,6 @@ function QuestionPerQuestion(props) {
   let questionType = questionInfo.type;
   let questionName = questionInfo.name;
   let questionOptions = questionInfo.options;
-  console.log(`from left -> number ${questionNumber}: ${studentMark}`)
 
   if (questionType === "longtext") {
     // yang ngebuat semuanya harus dicopy adalah badgenya
@@ -1397,7 +1396,7 @@ function QuestionPerQuestion(props) {
                 <Button
                   className={classes.saveButton}
                   size="small"
-                  onClick={() => { handleSaveGrade(studentId) }}
+                  onClick={() => { handleSaveGrade(studentId, questionNumber - 1) }}
                 >
                   SIMPAN
                   </Button>
@@ -1577,7 +1576,6 @@ function QuestionAnswerPerStudent(props) {
   let questionOptions = questionInfo.options;
 
   const { handleGradeChange, handleSaveGrade } = props;
-  console.log(`from right -> number ${questionNumber}: ${studentMark}`)
   let content;
   if (questionType === "longtext") {
     content = (
@@ -1637,7 +1635,7 @@ function QuestionAnswerPerStudent(props) {
               <Button
                 className={classes.saveButton}
                 size="small"
-                onClick={() => { handleSaveGrade(studentId) }}
+                onClick={() => { handleSaveGrade(studentId, questionNumber - 1) }}
               >
                 SIMPAN
               </Button>

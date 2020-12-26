@@ -88,7 +88,6 @@ router.post("/grade/:id", (req,res) => {
 //ANCHOR update
 router.post("/update/:id", (req,res) => {
   const { errors, isValid } = validateAssessmentInput(req.body)
-
   if(!isValid){
     return res.status(400).json(errors)
   }
@@ -108,7 +107,7 @@ router.post("/update/:id", (req,res) => {
         assessmentData.end_date = req.body.end_date;
         assessmentData.posted = req.body.posted;
         assessmentData.type = req.body.type;
-        assessmentData.question_weight = req.body.question_weight;
+        
 
         let questions = req.body.questions;
         let qns_list = questions.map((qns) => {
@@ -119,10 +118,17 @@ router.post("/update/:id", (req,res) => {
 
         let curr_ans_list = assessmentData.questions.map((qns) => { return qns.answer; })
         let new_ans_list = req.body.questions.map((qns) => {return qns.answer; })
-
+      
         let update_answer = false;
         if(JSON.stringify(curr_ans_list) != JSON.stringify(new_ans_list)){
           update_answer = true;
+        }
+
+        let update_weights = false;
+        if (JSON.stringify(assessmentData.question_weight) !== JSON.stringify(req.body.question_weight)){
+          assessmentData.question_weight = req.body.question_weight;
+          console.log("update_wieghts")
+          update_weights = true;
         }
 
         let currQstIdList = assessmentData.questions.map((qns) => { return qns._id; })
@@ -132,9 +138,9 @@ router.post("/update/:id", (req,res) => {
           return currQstIdList.indexOf(qstId);
         })
         
-        let weights = req.body.question_weight;
-        if(update_answer){
+        if (update_answer || update_weights){
           if(assessmentData.submissions){
+            let weights = req.body.question_weight;
             for (const [key, value] of assessmentData.submissions.entries()) {
               
               // key berisi id murid, sedangkan value berisi semua jawaban murid tersebut untuk assessment ini.
@@ -205,12 +211,15 @@ router.post("/update/:id", (req,res) => {
                   else {
                     // (tidak perlu dicek lengkap atau tidak karena di edit/create assessment, bobot setiap soal uraian sudah dipastikan ada)
                     let oldLongtextGrade = assessmentData.grades.get(key).longtext_grades[i];
-                    let oldLongtextWeight = assessmentData.question_weight.longtext;
-                    let newLongtextWeight = req.body.question_weight.longtext;
+                    let oldLongtextWeight = assessmentData.question_weight.longtext[i];
+                    let newLongtextWeight = req.body.question_weight.longtext[i];
 
                     // longtext_grade baru = longtext_grade lama * bobot baru / bobot lama
                     let newLongtextGrade = oldLongtextGrade * newLongtextWeight / oldLongtextWeight;
                     longtextGrade[i] = parseFloat(newLongtextGrade.toFixed(1));
+
+                    weight_accumulator += newLongtextWeight;
+                    point_accumulator += newLongtextGrade; 
                   }
                 } else { 
                   // 3. jika soal ini baru ditambahkan

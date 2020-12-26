@@ -684,12 +684,10 @@ function SubmittedAssessmentList(props) {
                   </ListItemAvatar>
                   <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
                     secondary={
-                      (!selectedAssessments.grades) ? (
-                        "Belum Dinilai"
-                      ) : (selectedAssessments.grades[student._id] === undefined) ? (
-                        "Belum Dinilai"
-                      ) : (
+                      (selectedAssessments.grades && (selectedAssessments.grades[student._id]) && (selectedAssessments.grades[student._id].total_grade)) ? (
                         "Telah Dinilai"
+                        ) : (
+                        "Belum Dinilai"
                       )} />
                   {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
                     <div style={{ display: "flex" }}>
