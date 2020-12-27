@@ -80,7 +80,8 @@ const AssessmentSchema = new Schema({
     - jika murid mengumpulkan assessment yang tidak memiliki soal uraian, total_grades akan dihitung dengan longtext_grades diset menjadi null
     - (assessments.js, endpoint update grade uraian) 
       ketika guru selesai menentukan nilai jawaban uraian terakhir dan menyimpannya (longtext_grades sudah lengkap), total_grade akan dihitung.
-      jika longtext_grades belum lengkap, total_grade bernilai null.
+      jika longtext_grades belum lengkap, total_grade bernilai null. jika soal uraian belum dinilai sama sekali, key id murid tidak akan ada 
+      di atribut grades.
     */
 
     submissions:{

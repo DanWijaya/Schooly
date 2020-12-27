@@ -177,17 +177,20 @@ function ViewAssessmentTeacher(props) {
   const { selectedAssessments } = props.assessmentsCollection;
   const { all_students } = props.auth;
 
-  // object yang berisi semua murid yang menerima assessment ini, baik yang sudah mengerjakan maupun belum.
-  // (pengaruhnya ke bagian mana?) karena assessment pasti diberikan ke minimal 1 kelas, isi all_student_object tidak mungkin kosong.
+  // cek note di model assessment (Assessment.js) untuk melihat aturan-aturan tambahan yang digunakan
+
+  // state ini menyimpan object yang berisi semua murid yang sudah mengumpulkan jawaban assessment ini.
+  // jika belum ada murid yang mengerjakan assessment, state ini akan berisi object kosong.
   const [all_student_object, setAllStudentObj] = React.useState(null);
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
 
-  // object yang berisi pasangan: id murid - object grade
-  // object grade berisi pasangan: index soal uraian - nilai , soal uraian yang belum dinilai tidak disimpan di object ini
-  // kalau assessment ini tidak punya soal uraian, state ini akan diset menjadi null
+  // object yang berisi pasangan: id murid - object grade.
+  // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, longtextGrades akan diisi object kosong {}.
+  // object grade berisi pasangan: index soal uraian - nilai , soal uraian yang belum dinilai tidak disimpan di object ini.
+  // kalau assessment ini tidak punya soal uraian, state ini akan diset menjadi null.
   const [longtextGrades, setLongtextGrades] = React.useState(undefined);
-
+  
   // berisi object yang memiliki 2 pasangan: 
   // 1. "studentOptions" dengan value object. 
   // Ada 1 pasangan pada object ini dengan key "combined" dan value berupa array yang berisi 
@@ -258,19 +261,16 @@ function ViewAssessmentTeacher(props) {
         studentOptions[classId] = [];
       }
       
+      // jika atribut submissions ada, brarti ada minimal 1 murid yang sudah mengumpulkan jawaban assessment
       if (selectedAssessments.submissions) {
         let submittedStudentList = Object.keys(selectedAssessments.submissions);
         for (var j = 0; j < all_students.length; j++) {
-          // jika kelas murid diberikan assessment ini 
           let std = all_students[j];
-          if (selectedAssessments.class_assigned.includes(std.kelas)) {
+          if (submittedStudentList.includes(std._id)) {
             students[std._id] = std;
 
-            // jika murid sudah mengerjakan assessment ini, masukan ke pilihan menu
-            if (submittedStudentList.includes(std._id)) {
-              studentOptions[std.kelas].push({ id: std._id, name: std.name });
-              studentOptions.combined.push({ id: std._id, name: std.name });
-            }
+            studentOptions[std.kelas].push({ id: std._id, name: std.name });
+            studentOptions.combined.push({ id: std._id, name: std.name });
           }
         }
       }
@@ -287,17 +287,17 @@ function ViewAssessmentTeacher(props) {
       if (hasLongtextQst.current === true) {
 
         let ltGrade = {};
-        
         // jika minimal ada 1 murid yang jawaban uraiannya sudah dinilai,
         if (selectedAssessments.grades) {
 
+          // traverse semua murid yang sudah mengumpulkan jawaban assessment
           Object.keys(all_student_object).forEach((studentId) => {
 
             // jika jawaban uraian murid ini sudah pernah dinilai
             if (selectedAssessments.grades[studentId]) {
               ltGrade[studentId] = selectedAssessments.grades[studentId].longtext_grades;
             } else {
-              // jika semua jawaban uraian murid ini belum dinilai atau murid belum mengerjakan assessment ini,
+              // jika semua jawaban uraian murid ini belum dinilai,
               ltGrade[studentId] = {};
             }
           });
@@ -652,6 +652,11 @@ function ViewAssessmentTeacher(props) {
       
       return (
         <QuestionPerQuestion
+          longtextGrades={
+            (question.type === "longtext" && longtextGrades[studentId]) ? ( // jika minimal ada 1 murid yang soal uraiannya sudah dinilai 
+              longtextGrades[studentId][qnsIndex]
+            ) : (null)
+          }
           classes={classes}
           studentId={studentId}
           studentName={studentInfo.name}
@@ -745,6 +750,11 @@ function ViewAssessmentTeacher(props) {
       return (
         <QuestionAnswerPerStudent
           // key={`permurid-${questionIndex + 1}`}
+          longtextGrades={
+            (question.type === "longtext" && longtextGrades[studentId]) ? (
+              longtextGrades[studentId][questionIndex]
+            ) : (null)
+          }
           classes={classes}
           studentId={studentId}
           studentAnswer={studentAnswer}
@@ -1073,7 +1083,9 @@ function ViewAssessmentTeacher(props) {
               )
             }
 
-            {/* ANCHOR jawaban semua murid*/}
+            {/* FIXME -------- call per soal jawaban semua murid*/}
+            {/* <TextField value={tf} onChange={(e) => {settf(e.target.value)}}/> */}
+            {/* <CustomTf tf={tf} settf={settf}/> */}
             {
               (isAssessmentLoaded() && selectedAssessments.submissions) ? (
                 (hasLongtextQst.current === true) ? (
@@ -1112,8 +1124,7 @@ function ViewAssessmentTeacher(props) {
                   <Grid item xs={5} sm={2}>
                     <Select
                       disabled={!menuOption || menuOption.studentOptions.combined.length === 0}
-                      labelId="kelas-label"
-                      id="kelas"
+                      id="murid"
                       className={classes.select}
                       variant="outlined"
                       value={selectedStudent}
@@ -1149,7 +1160,6 @@ function ViewAssessmentTeacher(props) {
                   <Grid item xs={5} sm={2}>
                     <Select
                       disabled={!menuOption || menuOption.studentOptions.combined.length === 0}
-                      labelId="kelas-label"
                       id="kelas"
                       className={classes.select}
                       variant="outlined"
@@ -1335,7 +1345,8 @@ function QuestionPerQuestion(props) {
     studentMark, 
     questionNumber,
     questionWeight,
-    questionInfo
+    questionInfo,
+    longtextGrades
   } = props;
   const { handleGradeChange, handleSaveGrade } = props;
   let questionType = questionInfo.type;
@@ -1377,7 +1388,9 @@ function QuestionPerQuestion(props) {
               {/* <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px" }}> */}
               <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
               <TextField
-                defaultValue={studentMark}
+                // FIXME per soal
+                value={longtextGrades}
+                // defaultValue={studentMark}
                 key={`${studentId}-${questionNumber}`}
                 inputProps={{
                   style: {
@@ -1568,7 +1581,8 @@ function QuestionAnswerPerStudent(props) {
     studentMark,
     questionWeight,
     questionNumber,
-    questionInfo
+    questionInfo,
+    longtextGrades
   } = props;
   let questionType = questionInfo.type;
   let questionName = questionInfo.name;
@@ -1615,9 +1629,10 @@ function QuestionAnswerPerStudent(props) {
           <Grid container item justify="flex-end" alignItems="center" style={{ marginTop: "25px" }}>
             <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
             <TextField
-              defaultValue={studentMark}
-              // TODO kalau ga dibuat random, studentmark tidak akan ditampilkan
-              key={`${Math.random()}`}
+              // defaultValue={studentMark}
+              // key={`${Math.random()}`}
+              key={`${studentId}-${questionNumber}`}
+              value={longtextGrades}
               inputProps={{
                 style: {
                   borderBottom: "none",
