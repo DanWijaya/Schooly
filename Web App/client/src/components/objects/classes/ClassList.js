@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getTeachers, getStudents } from "../../../actions/UserActions";
+import { getTeachers } from "../../../actions/UserActions";
 import { getAllClass, deleteClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
@@ -243,9 +243,8 @@ function ClassList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
-  const [students, setStudents] = React.useState(null)
 
-  const { getAllClass, deleteClass, classesCollection, getTeachers, clearErrors, getStudents } = props;
+  const { getAllClass, deleteClass, classesCollection, getTeachers, clearErrors } = props;
 
   const { user, all_teachers, all_students } = props.auth;
 
@@ -256,7 +255,6 @@ function ClassList(props) {
 
   const classItem = (data,i) => {
     colorMap.set(data._id, colorList[i%(colorList.length)])
-    console.log(getStudents)
     let temp_ukuran = 0
     for(let i=0;i<all_students.length;i++){
       if(all_students[i].kelas === data._id){
@@ -277,8 +275,6 @@ function ClassList(props) {
   React.useEffect(() => {
     getAllClass()
     getTeachers("map")
-    let temp_students = getStudents()
-    setStudents(temp_students)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
@@ -471,7 +467,6 @@ function ClassList(props) {
 };
 
 ClassList.propTypes = {
-  getStudents: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -488,5 +483,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors, getStudents}
+  mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors}
 ) (ClassList);

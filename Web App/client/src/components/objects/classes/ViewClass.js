@@ -20,7 +20,6 @@ import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 // import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import BallotIcon from "@material-ui/icons/Ballot";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -390,7 +389,7 @@ function ViewClass(props) {
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
   const { kelas } = props.classesCollection
-  const { students_by_class, all_teachers, user, all_students } = props.auth;
+  const { students_by_class, all_teachers, user } = props.auth;
   const classId = props.match.params.id;
 
   const [walikelas, setWalikelas] = React.useState({});
@@ -641,8 +640,8 @@ function ViewClass(props) {
     getStudents()
 
     getAllTaskFilesByUser(user.id) // get the all_user_files
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     getAllAssessments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   React.useEffect(() => {

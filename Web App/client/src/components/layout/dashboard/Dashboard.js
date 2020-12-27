@@ -119,9 +119,6 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.button.main,
     },
   },
-  warningText: {
-    color: theme.palette.warning.main,
-  },
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
   },

@@ -12,7 +12,7 @@ import { getOneUser } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText,
+import { Avatar, Button, Divider, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText,
    Paper, Typography, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";

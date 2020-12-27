@@ -144,11 +144,10 @@ router.post("/update/:id", (req,res) => {
             for (const [key, value] of assessmentData.submissions.entries()) {
               
               // key berisi id murid, sedangkan value berisi semua jawaban murid tersebut untuk assessment ini.
-              // console.log(key, value);
               // let correct_count = 0;
+              // let number_of_gradeable_questions = 0;
               let point_accumulator = 0;
               let weight_accumulator = 0;
-              let number_of_gradeable_questions = 0;
               let longtextGrade = {};
               let isLongtextQuestionAdded = false;
               for (let i = 0; i < questions.length; i++){
@@ -164,7 +163,6 @@ router.post("/update/:id", (req,res) => {
                   // questions[i].answer adalah kunci jawaban untuk pertanyaan ke-(i + 1).
                   // value dan questions[i].answer adalah array of array
                   if (questions[i].type === "radio") {
-                    // if (questions[i].answer[0] === value[i][0]) {
                     if (questions[i].answer[0] === value[transformIdx[i]][0]) {
                       // correct_count = correct_count + 1;
                       point_accumulator += 1 * weights.radio;
@@ -174,7 +172,6 @@ router.post("/update/:id", (req,res) => {
                   }
                   else if (questions[i].type === "checkbox") {
                     let temp_correct = 0;
-                    // value[i].forEach((student_answer) => {
                     value[transformIdx[i]].forEach((student_answer) => {
                       if (questions[i].answer.includes(student_answer)) {
                         temp_correct = temp_correct + 1;

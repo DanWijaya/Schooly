@@ -7,8 +7,8 @@ import { getPendingStudents, getPendingTeachers, deleteUser, setUserActive } fro
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography, FormLabel, 
-   FormControl, FormGroup, FormControlLabel, FormHelperText, Checkbox } from "@material-ui/core/";
+  Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography, 
+  FormGroup, FormControlLabel, Checkbox } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -51,7 +51,7 @@ function stableSort(array, comparator) {
 function ManageUsersToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role, heading, 
     activateCheckboxMode, deactivateCheckboxMode, currentCheckboxMode, OpenDialogCheckboxDelete, OpenDialogCheckboxApprove,
-    CloseDialogCheckboxDelete, CloseDialogCheckboxApprove, CheckboxDialog } = props;
+    CheckboxDialog } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property, role);
