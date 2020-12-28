@@ -35,6 +35,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {GoSearch} from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
 
@@ -78,7 +79,9 @@ function MaterialListToolbar(props) {
     onRequestSort,
     role,
     searchFilter,
-    updateSearchFilter
+    updateSearchFilter,
+    searchBarFocus, 
+    setSearchBarFocus
   } = props;
 
   const createSortHandler = property => event => {
@@ -126,14 +129,7 @@ function MaterialListToolbar(props) {
   };
 
   const onChange = e => {
-    switch (e.target.id) {
-      case "searchFilter":
-        updateSearchFilter(e.target.value);
-        break;
-
-      default:
-        break;
-    }
+    updateSearchFilter(e.target.value);
   };
 
   const onClear = e => {
@@ -142,132 +138,201 @@ function MaterialListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <div
-        style={{display: "flex", flexDirection: "row", alignItems: "center"}}
-      >
-        <MenuBookIcon className={classes.titleIcon} fontSize="large" />
-        <Typography variant="h4">Daftar Materi</Typography>
-      </div>
-      <div style={{display: "flex"}}>
-        <Hidden xsDown implementation="css">
+    <div style={{display: "flex", alignItems: "center"}}>
+      <Hidden smUp implementation="css">
+        {searchBarFocus ?
+          null
+          :
+          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <MenuBookIcon className={classes.titleIcon} fontSize="large"/>
+            <Typography variant="h4">
+              Daftar Materi
+            </Typography>
+          </div>
+        }
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+          <MenuBookIcon className={classes.titleIcon} fontSize="large"/>
+          <Typography variant="h4">
+            Daftar Materi
+          </Typography>
+        </div>
+      </Hidden>
+      <Hidden smUp implementation="css">
+        {searchBarFocus ?
+          <div style={{display: "flex"}}>
+            <IconButton
+              onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
+            >
+              <ArrowBackIcon/>
+            </IconButton>
+            <TextField
+              fullWidth
+              variant="outlined"
+              id="searchFilterMobile"
+              value={searchFilter}
+              onChange={onChange}
+              autoFocus
+              onClick={(e) =>setSearchBarFocus(true)}
+              placeholder="Search Materi"
+              style={{
+                maxWidth: "200px",
+                marginLeft: "10px"
+              }}
+              InputProps={{
+                startAdornment:(
+                  searchBarFocus ? null :
+                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                      <IconButton size="small">
+                        <GoSearch/>
+                      </IconButton>
+                    </InputAdornment>
+                ),
+                endAdornment:(
+                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                    <IconButton
+                      size="small"
+                      id="searchFilterMobile"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onClear(e, "searchFilterMobile")}
+                      }
+                      style={{
+                        opacity: 0.5,
+                        visibility: !searchFilter ? "hidden" : "visible"
+                      }}>
+                      <ClearIcon/>
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                style:{
+                  borderRadius: "20px"
+                }
+              }}
+            />
+          </div>
+        :
+          <LightTooltip title="Search" style={{marginLeft: "10px"}}>
+            <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
+              <GoSearch className={classes.goSearchIconMobile} />
+            </IconButton>
+          </LightTooltip>
+        }
+      </Hidden>
+    </div>
+    <div style={{display: "flex"}}>
+    <Hidden xsDown implementation="css">
           <TextField
             variant="outlined"
-            id="searchFilter"
+            id="searchFilterDesktop"
             value={searchFilter}
             onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
             placeholder="Search Materi"
             style={{
               maxWidth: "250px",
               marginRight: "10px"
             }}
             InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  style={{marginLeft: "-5px", marginRight: "-5px"}}
-                >
-                  <IconButton size="small">
-                    <GoSearch />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{marginLeft: "-10px", marginRight: "-10px"}}
-                >
+              startAdornment:(
+                  <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                    <IconButton size="small">
+                      <GoSearch/>
+                    </IconButton>
+                  </InputAdornment>)
+                ,
+                endAdornment:(
+                <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
                   <IconButton
                     size="small"
-                    onClick={onClear}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onClear(e, "searchFilterDesktop")}
+                    }
                     style={{
                       opacity: 0.5,
                       visibility: !searchFilter ? "hidden" : "visible"
-                    }}
-                  >
-                    <ClearIcon />
+                    }}>
+                    <ClearIcon/>
                   </IconButton>
                 </InputAdornment>
               ),
-              style: {
+              style:{
                 borderRadius: "20px"
               }
             }}
           />
-        </Hidden>
-        <div style={{display: "flex", alignItems: "center"}}>
-          <Hidden smUp implementation="css">
-            {role === "Student" ? null : (
-              <LightTooltip title="Buat Materi">
-                <Link to="/buat-materi">
-                  <Fab size="small" className={classes.newMaterialButton}>
-                    <MenuBookIcon className={classes.newMaterialIconMobile} />
-                  </Fab>
-                </Link>
-              </LightTooltip>
-            )}
-          </Hidden>
-          <Hidden xsDown implementation="css">
-            {role === "Student" ? null : (
-              <Link to="/buat-materi">
-                <Fab
-                  size="medium"
-                  variant="extended"
-                  className={classes.newMaterialButton}
-                >
-                  <MenuBookIcon className={classes.newMaterialIconDesktop} />
-                  Buat Materi
-                </Fab>
-              </Link>
-            )}
-          </Hidden>
-          <LightTooltip title="Urutkan Materi">
-            <IconButton
-              onClick={handleOpenSortMenu}
-              className={classes.sortButton}
-            >
-              <SortIcon />
-            </IconButton>
+      </Hidden>
+      <Hidden smUp implementation="css">
+        {role === "Student"?
+          null
+        :
+          <LightTooltip title="Buat Materi">
+            <Link to="/buat-materi">
+              <Fab size="small" className={classes.newMaterialButton}>
+                <MenuBookIcon className={classes.newMaterialIconMobile} />
+              </Fab>
+            </Link>
           </LightTooltip>
-          <Menu
-            keepMounted
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleCloseSortMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right"
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left"
-            }}
+        }
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        {role === "Student"?
+          null
+        :
+        // ANCHOR contoh tombol round edge
+          <Link to="/buat-materi">
+            <Fab size="medium" variant="extended" className={classes.newMaterialButton}>
+              <MenuBookIcon className={classes.newMaterialIconDesktop} />
+              Buat Materi
+            </Fab>
+          </Link>
+        }
+      </Hidden>
+        <LightTooltip title="Urutkan Materi">
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </IconButton>
+        </LightTooltip>
+      <Menu
+        keepMounted
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseSortMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        {headCells.map((headCell, i) => (
+          <MenuItem
+            key={headCell.id}
+            sortDirection={orderBy === headCell.id ? order : false}
           >
-            {headCells.map((headCell, i) => (
-              <MenuItem
-                key={headCell.id}
-                sortDirection={orderBy === headCell.id ? order : false}
-                onClick={props.handleClosePanel}
-              >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {orderBy === headCell.id ? (
-                    <span className={classes.visuallyHidden}>
-                      {order === "desc"
-                        ? "sorted descending"
-                        : "sorted ascending"}
-                    </span>
-                  ) : null}
-                </TableSortLabel>
-              </MenuItem>
-            ))}
-          </Menu>
-        </div>
-      </div>
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ?
+                <span className={classes.visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </span>
+                : null
+              }
+            </TableSortLabel>
+          </MenuItem>
+        ))}
+      </Menu>
     </div>
+  </div>
   );
 }
 
@@ -394,9 +459,10 @@ function MaterialList(props) {
   const [orderBy, setOrderBy] = React.useState("subject");
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedTaskId, setSelectedTaskId] = React.useState(null);
+  const [selectedMaterialId, setSelectedMaterialId] = React.useState(null);
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   const {
     getAllSubjects,
@@ -468,7 +534,7 @@ function MaterialList(props) {
     setOrderBy(property);
   };
 
-  // Call the function to view the tasks on tablerows.
+  // Call the function to view the Materials on tablerows.
   // This function is defined above.
   retrieveMaterials();
 
@@ -480,7 +546,7 @@ function MaterialList(props) {
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedTaskId(id);
+    setSelectedMaterialId(id);
     setSelectedMaterialName(name);
   };
 
@@ -498,7 +564,7 @@ function MaterialList(props) {
         itemType="Materi"
         itemName={selectedMaterialName}
         deleteItem={() => {
-          onDeleteMaterial(selectedTaskId);
+          onDeleteMaterial(selectedMaterialId);
         }}
       />
       <MaterialListToolbar
@@ -509,6 +575,8 @@ function MaterialList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
         //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}

@@ -17,6 +17,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 
@@ -53,7 +54,9 @@ function stableSort(array, comparator) {
 }
 
 function TaskListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role, searchFilter, updateSearchFilter } = props;
+  const { classes, order, orderBy, onRequestSort, 
+    role, searchFilter, updateSearchFilter, searchBar, 
+    searchBarFocus, setSearchBarFocus } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -82,14 +85,7 @@ function TaskListToolbar(props) {
 
   // FOR SEARCH FILTER.
   const onChange = (e) => {
-    switch(e.target.id){
-      case "searchFilter":
-        updateSearchFilter(e.target.value)
-        break;
-
-      default:
-        break;
-    }
+    updateSearchFilter(e.target.value)
   }
 
   const onClear = (e) => {
@@ -98,37 +94,119 @@ function TaskListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-        <AssignmentIcon className={classes.titleIcon} fontSize="large"/>
-        <Typography variant="h4">
-          Daftar Tugas
-        </Typography>
-      </div>
-      <div style={{display: "flex"}}>
-        <Hidden xsDown implementation="css">
+    <div style={{display: "flex", alignItems: "center"}}>
+      <Hidden smUp implementation="css">
+        {searchBarFocus ?
+          null
+          :
+          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <AssignmentIcon className={classes.titleIcon} fontSize="large"/>
+            <Typography variant="h4">
+              Daftar Tugas
+            </Typography>
+          </div>
+        }
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+          <AssignmentIcon className={classes.titleIcon} fontSize="large"/>
+          <Typography variant="h4">
+            Daftar Tugas
+          </Typography>
+        </div>
+      </Hidden>
+      <Hidden smUp implementation="css">
+        {searchBarFocus ?
+          <div style={{display: "flex"}}>
+            <IconButton
+              onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
+            >
+              <ArrowBackIcon/>
+            </IconButton>
+            <TextField
+              fullWidth
+              variant="outlined"
+              id="searchFilterMobile"
+              value={searchFilter}
+              onChange={onChange}
+              autoFocus
+              onClick={(e) =>setSearchBarFocus(true)}
+              placeholder="Search Tugas"
+              style={{
+                maxWidth: "200px",
+                marginLeft: "10px"
+              }}
+              InputProps={{
+                startAdornment:(
+                  searchBarFocus ? null :
+                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                      <IconButton size="small">
+                        <GoSearch/>
+                      </IconButton>
+                    </InputAdornment>
+                ),
+                endAdornment:(
+                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                    <IconButton
+                      size="small"
+                      id="searchFilterMobile"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onClear(e, "searchFilterMobile")}
+                      }
+                      style={{
+                        opacity: 0.5,
+                        visibility: !searchFilter ? "hidden" : "visible"
+                      }}>
+                      <ClearIcon/>
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                style:{
+                  borderRadius: "20px"
+                }
+              }}
+            />
+          </div>
+        :
+          <LightTooltip title="Search" style={{marginLeft: "10px"}}>
+            <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
+              <GoSearch className={classes.goSearchIconMobile} />
+            </IconButton>
+          </LightTooltip>
+        }
+      </Hidden>
+    </div>
+    <div style={{display: "flex"}}>
+    <Hidden xsDown implementation="css">
           <TextField
             variant="outlined"
-            id="searchFilter"
+            id="searchFilterDesktop"
             value={searchFilter}
-            placeholder="Search Tugas"
             onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder="Search Tugas"
             style={{
               maxWidth: "250px",
-              marginRight: "10px",
+              marginRight: "10px"
             }}
             InputProps={{
               startAdornment:(
-                <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                  <IconButton size="small" >
-                    <GoSearch/>
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment:(
+                  <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                    <IconButton size="small">
+                      <GoSearch/>
+                    </IconButton>
+                  </InputAdornment>)
+                ,
+                endAdornment:(
                 <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
                   <IconButton
                     size="small"
-                    onClick={onClear}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onClear(e, "searchFilterDesktop")}
+                    }
                     style={{
                       opacity: 0.5,
                       visibility: !searchFilter ? "hidden" : "visible"
@@ -142,76 +220,75 @@ function TaskListToolbar(props) {
               }
             }}
           />
-        </Hidden>
-        <div style={{display: "flex", alignItems: "center"}}>
-          <Hidden smUp implementation="css">
-            {role === "Student" ?
-              null
-            :
-              <LightTooltip title="Buat Tugas">
-                <Link to="/buat-tugas">
-                  <Fab size="small" className={classes.newTaskButton}>
-                    <AssignmentIcon className={classes.newTaskIconMobile} />
-                  </Fab>
-                </Link>
-              </LightTooltip>
-            }
-          </Hidden>
-          <Hidden xsDown implementation="css">
-            {role === "Student" ?
-              null
-            :
-              <Link to="/buat-tugas">
-                <Fab size="medium" variant="extended" className={classes.newTaskButton}>
-                  <AssignmentIcon className={classes.newTaskIconDesktop} />
-                  Buat Tugas
-                </Fab>
-              </Link>
-            }
-          </Hidden>
-          <LightTooltip title="Urutkan Tugas">
-            <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-              <SortIcon />
-            </IconButton>
+      </Hidden>
+      <Hidden smUp implementation="css">
+        {role === "Student"?
+          null
+        :
+          <LightTooltip title="Buat Tugas">
+            <Link to="/buat-tugas">
+              <Fab size="small" className={classes.newTaskButton}>
+                <AssignmentIcon className={classes.newTaskIconMobile} />
+              </Fab>
+            </Link>
           </LightTooltip>
-          <Menu
-            keepMounted
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleCloseSortMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
+        }
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        {role === "Student"?
+          null
+        :
+        // ANCHOR contoh tombol round edge
+          <Link to="/buat-tugas">
+            <Fab size="medium" variant="extended" className={classes.newTaskButton}>
+              <AssignmentIcon className={classes.newTaskIconDesktop} />
+              Buat Tugas
+            </Fab>
+          </Link>
+        }
+      </Hidden>
+        <LightTooltip title="Urutkan Tugas">
+          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+            <SortIcon />
+          </IconButton>
+        </LightTooltip>
+      <Menu
+        keepMounted
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseSortMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        {headCells.map((headCell, i) => (
+          <MenuItem
+            key={headCell.id}
+            sortDirection={orderBy === headCell.id ? order : false}
           >
-            {headCells.map((headCell, i) => (
-              <MenuItem
-                key={headCell.id}
-                sortDirection={orderBy === headCell.id ? order : false}
-              >
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {orderBy === headCell.id ?
-                    <span className={classes.visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
-                    </span>
-                    : null
-                  }
-                </TableSortLabel>
-              </MenuItem>
-            ))}
-          </Menu>
-        </div>
-      </div>
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ?
+                <span className={classes.visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </span>
+                : null
+              }
+            </TableSortLabel>
+          </MenuItem>
+        ))}
+      </Menu>
     </div>
+  </div>
   );
 };
 
@@ -343,6 +420,7 @@ function TaskList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   const { tasksCollection, getAllTask, deleteTask, getAllClass, getAllSubjects } = props;
   const { all_classes_map } = props.classesCollection;
@@ -444,6 +522,8 @@ function TaskList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
         //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}

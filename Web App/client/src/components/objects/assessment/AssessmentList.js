@@ -100,7 +100,6 @@ function AssessmentListToolbar(props) {
   }
 
   return (
-    // <div className={classes.toolbar}>
     <div className={classes.toolbar}>
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
