@@ -109,7 +109,7 @@ router.get("/download/:id", (req,res) => {
 // Router to delete a DOCUMENT file
 router.delete("/:id", (req, res) => {
   const {file_to_delete} = req.body;
-
+  // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted. 
   if(!file_to_delete){
   FileMaterial.find({ material_id: req.params.id}).then((materials) => {
     let id_list = materials.map((m) => Object(m._id))

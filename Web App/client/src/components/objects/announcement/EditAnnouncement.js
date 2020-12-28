@@ -3,9 +3,11 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { getFileAnnouncements} from "../../../actions/Files/FileAnnouncementActions"
 import { getOneAnnouncement, updateAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
@@ -178,22 +180,27 @@ class EditAnnouncement extends Component {
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { setCurrentClass, getOneAnnouncement, getAllClass } = this.props;
+    const { setCurrentClass, getOneAnnouncement, getAllClass, getFileAnnouncements } = this.props;
+    const { id } = this.props.match.params
 
-    getOneAnnouncement(this.props.match.params.id)
+    getOneAnnouncement(id)
     getAllClass()
+    getFileAnnouncements(id)
     if (user.role ==="Student")
       setCurrentClass(user.kelas)
   }
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   // kurang tau gimana cara ubah.
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { selectedAnnouncements } = nextProps.announcements;
+    const { announcement_files } = nextProps.announcementFiles;
+
     // console.log(nextProps.tasksCollection.deadline);
 
     if (!nextProps.errors) {
@@ -204,7 +211,8 @@ class EditAnnouncement extends Component {
       this.setState({
           title: selectedAnnouncements.title,
           description: selectedAnnouncements.description,
-          fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
+          fileLampiran: announcement_files,
+          // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
           class_assigned: Boolean(selectedAnnouncements.class_assigned) ? selectedAnnouncements.class_assigned : []
           // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
           // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
@@ -234,12 +242,12 @@ class EditAnnouncement extends Component {
     let tempToAdd;
 
     if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
+      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
     else {
       console.log(files)
       if (files.length !== 0) {
-        temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-        tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
+        temp = [...this.state.fileLampiran, ...Array.from(files)];
+        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
         this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
       }
     }
@@ -573,6 +581,9 @@ EditAnnouncement.propTypes = {
   setCurrentClass: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
+
+  getFileAnnouncements: PropTypes.func.isRequired 
 };
 
 const mapStateToProps = state => ({
@@ -581,8 +592,9 @@ const mapStateToProps = state => ({
   success: state.success,
   announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
+  announcementFiles: state.announcementFiles
 })
 
 export default connect(
-  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors }
+  mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors, clearSuccess, getFileAnnouncements}
   )(withStyles(styles)(EditAnnouncement))

@@ -20,6 +20,7 @@ const avatar = require("./routes/api/upload/avatar");
 
 // untuk files punya
 const file_materials = require("./routes/api/files/file_materials");
+const file_announcements = require("./routes/api/files/file_announcements");
 
 // untuk objects punya
 const tasks = require("./routes/api/tasks");
@@ -90,6 +91,7 @@ app.use("/api/upload/avatar", avatar.router)
 
 //Handle files routing
 app.use("/api/files/material", file_materials)
+app.use("/api/files/announcement", file_announcements)
 
 //Handle object routing
 app.use("/api/subjects", subjects);

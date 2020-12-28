@@ -6,6 +6,7 @@ import classnames from "classnames";
 import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
@@ -484,6 +485,7 @@ CreateAnnouncement.propTypes = {
   createAnnouncement: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -495,5 +497,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createAnnouncement, getAllClass , setCurrentClass, clearErrors }
+  mapStateToProps, { createAnnouncement, getAllClass , setCurrentClass, clearErrors,clearSuccess }
  ) (withStyles(styles)(CreateAnnouncement))

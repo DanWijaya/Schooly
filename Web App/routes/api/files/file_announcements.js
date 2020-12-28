@@ -35,7 +35,7 @@ router.get("/", (req,res, next) => {
 router.post("/upload/:id", upload.array("lampiran_announcement"), (req,res) => {
     const { files } = req
     let s3bucket = new AWS.S3();
-
+    console.log("Ann files: ", files)
     var numsFileUploaded = 0;
     files.map((file) => {
         var params = {
@@ -53,7 +53,7 @@ router.post("/upload/:id", upload.array("lampiran_announcement"), (req,res) => {
                     filename: file.originalname,
                     s3_key: params.Key,
                     s3_directory: "announcements/",
-                    material_id: req.params.id
+                    announcement_id: req.params.id
                 }
 
                 var document = new FileAnnouncement(newFileUploaded);
@@ -99,9 +99,9 @@ router.delete("/:id", (req, res) => {
     const {file_to_delete} = req.body;
   
     if(!file_to_delete){
-        FileAnnouncement.find({ material_id: req.params.id}).then((materials) => {
-        let id_list = materials.map((m) => Object(m._id))
-        let file_to_delete = materials
+        FileAnnouncement.find({ announcement_id: req.params.id}).then((items) => {
+        let id_list = items.map((m) => Object(m._id))
+        let file_to_delete = items
     
             FileAnnouncement.deleteMany({
                 _id: {
@@ -155,7 +155,7 @@ router.delete("/:id", (req, res) => {
   });
 
   router.get("/by_announcement/:id", (req, res) => {
-    FileAnnouncement.find({ material_id: req.params.id })
+    FileAnnouncement.find({ announcement_id: req.params.id })
     .then((results, err) => {
       if(!results)
         return res.status(400).json(err);

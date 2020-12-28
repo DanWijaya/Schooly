@@ -34,7 +34,7 @@ export const downloadFileAnnouncements = (id) => dispatch => {
     .catch((err) => new Error(err))
 }
 
-export const viewFileAnnouncement = (id) => {
+export const viewFileAnnouncement = (id) => dispatch=> {
     axios.get(`/api/files/announcement/${id}`)
         .then((res) => {
             window.open(res.data)

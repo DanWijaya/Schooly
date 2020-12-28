@@ -15,7 +15,7 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
           if (formData.has('lampiran_announcement')) {
               console.log("Post lampiran announcement is running")
             //   return axios.post(`/api/upload/att_announcement/lampiran/${res.data._id}`, formData);
-            return axios.post(`/api/files/announcement/${res.data._id}`, formData);
+            return axios.post(`/api/files/announcement/upload/${res.data._id}`, formData);
           }
           else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created announcement with no lampiran"
@@ -107,11 +107,11 @@ export const deleteAnnouncement = (announcementId, lampiran_to_delete=null) => d
         .then((res) => {
             console.log("Deleted: ", res.data)
             let lampiran_to_delete = Array.from(res.data.lampiran)
-            if (lampiran_to_delete.length > 0){
+            return axios.delete(`/api/files/announcement/${announcementId}`)
+            // if (lampiran_to_delete.length > 0){
             //   return axios.delete(`/api/upload/att_announcement/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
-                return axios.delete(`/api/files/announcement/${announcementId}`, {data: {lampiran_to_delete: lampiran_to_delete }})
-            }
-            return "Announcement deleted has no lampiran"
+            // }
+            // return "Announcement deleted has no lampiran"
         })
         .then((res) => {
             console.log(res)
@@ -139,7 +139,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
         })
         console.log("From actions: ", lampiran_to_delete)
         if (lampiran_to_delete.length > 0) {// axios.delete put the data is quite different..
-            return axios.delete(`/api/files/announcement/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete }})
+            return axios.delete(`/api/files/announcement/${annId}`, {data: {file_to_delete: lampiran_to_delete }})
         //   return axios.delete(`/api/upload/att_announcement/lampiran/${annId}`, {data: {lampiran_to_delete: lampiran_to_delete, current_lampiran: current_lampiran} })
         }
         else
@@ -151,7 +151,7 @@ export const updateAnnouncement = (formData, lampiran_to_delete, current_lampira
         console.log(formData.has("lampiran_announcement"), formData.getAll("lampiran_announcement"))
         if (formData.has('lampiran_announcement')) {
             console.log("Lampiran announcement going to be uploaded")
-            return axios.post(`/api/files/announcement/${annId}`, formData);
+            return axios.post(`/api/files/announcement/upload/${annId}`, formData);
         }
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"
