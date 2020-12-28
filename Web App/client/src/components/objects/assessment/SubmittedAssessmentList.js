@@ -70,15 +70,6 @@ const useStyles = makeStyles((theme) => ({
   //     color: theme.palette.primary.main
   //   },
   // },
-  editIcon: {
-    marginRight: "10px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main
-    },
-  },
   // downloadAllButton: {
   //   backgroundColor: theme.palette.primary.main,
   //   color: "white",
@@ -185,10 +176,19 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  editIconDesktop: {
+  editIconFab: {
     width: theme.spacing(3),
     height: theme.spacing(3),
     marginRight: "7.5px",
+  },
+  editIconButton: {
+    // marginRight: "10px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main
+    },
   },
   redFlagIcon: {
     color: theme.palette.error.main,
@@ -219,9 +219,15 @@ const useStyles = makeStyles((theme) => ({
   },
   mobileCustomFontSize400Down: {
     [theme.breakpoints.down(400)]: {
-      fontSize: "0.6rem"
+      fontSize: "0.8rem"
     }
   },
+  questionIconMargin: {
+    margin: "8px 20px 8px 0",
+    [theme.breakpoints.down(400)]: {
+      margin: "8px 8px 8px 0",
+    }
+  }
 }));
 
 // ANCHOR classes
@@ -274,7 +280,7 @@ function GradeButton(props) {
           startIcon={
             <EditIcon />
           }
-          className={classes.editIcon}
+          className={classes.editIconButton}
         >
           Periksa
         </Button>
@@ -286,7 +292,7 @@ function GradeButton(props) {
           startIcon={
             <EditIcon />
           }
-          className={classes.editIcon}
+          className={classes.editIconButton}
         >
           Periksa
         </Button>
@@ -447,6 +453,7 @@ function SubmittedAssessmentList(props) {
           break;
         }
       }
+      let hasLongtextQuestion = types.has("longtext");
 
       const scoresTemplate = {
         radio: {
@@ -464,7 +471,7 @@ function SubmittedAssessmentList(props) {
         longtext: {
           totalpoint: null,
           totalweight: 
-            (types.has("longtext")) ? (
+            (hasLongtextQuestion) ? (
               Object.values(selectedAssessments.question_weight.longtext).reduce((sum, currentVal) => { return (sum + currentVal) })
             ) : (
               null
@@ -530,7 +537,7 @@ function SubmittedAssessmentList(props) {
               // harus deep cloning
               scores = JSON.parse(JSON.stringify(scoresTemplate));
 
-              if (types.has("longtext")) {                
+              if (hasLongtextQuestion) {                
                 if (selectedAssessments.grades && selectedAssessments.grades[student._id]) {
                   
                   // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
@@ -599,12 +606,15 @@ function SubmittedAssessmentList(props) {
               }
             } // jika murid tidak mengerjakan assessment ini, scores tetap = null
 
+          // layar desktop
           let columns1 = [];
+          // layar mobile
           let columns2 = [];
           if (scores) {
             let c = 0;
             for (let typeArray of types.entries()) {
               let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
+              // layar desktop
               columns1.push(
                 <Grid container item xs={3} spacing="1" wrap="nowrap" direction="column" justify="space-between" alignItems="center" >
                   <Grid item>
@@ -626,15 +636,18 @@ function SubmittedAssessmentList(props) {
                             "Belum dinilai"
                           )
                       ) : (
-                          `${scores[type].totalpoint}/${scores[type].totalweight}`
+                          `${Number(scores[type].totalpoint.toFixed(1))}/${scores[type].totalweight}`
                         )}
                     </Typography>
                   </Grid>
                 </Grid>
               );
+
+              // layar mobile
               columns2.push(
                 <Grid container style={{ padding: "0 20px" }}>
-                  <Grid item style={{ margin: "8px 20px 8px 0" }}>
+                  {/* <Grid item style={{ margin: "8px 20px 8px 0" }}> */}
+                  <Grid item className={classes.questionIconMargin}>
                     <IconButton size="small" disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
                       {columnTemplate[type].icon}
                     </IconButton>
@@ -653,7 +666,7 @@ function SubmittedAssessmentList(props) {
                             "Belum dinilai"
                           )
                       ) : (
-                          `${scores[type].totalpoint}/${scores[type].totalweight}`
+                          `${Number(scores[type].totalpoint.toFixed(1))}/${scores[type].totalweight}`
                         )}
                     </Typography>
                   </Grid>
@@ -691,18 +704,31 @@ function SubmittedAssessmentList(props) {
                       )} />
                   {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
                     <div style={{ display: "flex" }}>
-                        {(isAllEssayGraded) ? (
-                          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
-                            <Grid item>
-                              <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
-                            </Grid>
-                            <Grid item>
-                              <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
-                            </Grid>
-                          </div>
-                        ) : (
-                            null
-                          )}
+                      {/* FIXME */}
+                        {
+                        (hasLongtextQuestion) ? (
+                          (isAllEssayGraded) ? (
+                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
+                              <Grid item>
+                                <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
+                              </Grid>
+                            </div>
+                          ) : (
+                              null
+                            )
+                        ) : ( // jika tidak ada soal uraian, total nilai pasti sudah ada
+                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
+                              <Grid item>
+                                <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
+                              </Grid>
+                            </div>
+                        )}
                       {/* ANCHOR elemen flag */}
                         <Grid item alignItem="center">
                           <Grid item>
@@ -759,6 +785,7 @@ function SubmittedAssessmentList(props) {
                     <div>
                       <Grid container style={{ padding: "20px" }} justify="flex-end" alignItems="center" >
                         {
+                        (hasLongtextQuestion) ? (
                           (isAllEssayGraded) ? (
                             <div style={{ display: "flex" }} class={classes.hide401Up}>
                               <Grid item style={{ display: "flex" }} alignItems="center">
@@ -771,6 +798,16 @@ function SubmittedAssessmentList(props) {
                           ) : (
                               null
                             )
+                        ) : (
+                            <div style={{ display: "flex" }} class={classes.hide401Up}>
+                              <Grid item style={{ display: "flex" }} alignItems="center">
+                                <Typography noWrap style={{ marginRight: "8px" }} ><b>Total Nilai</b></Typography>
+                              </Grid>
+                              <Grid item style={{ display: "flex" }} alignItems="center">
+                                <Typography align="right" style={{ marginRight: "16px" }}>{selectedAssessments.grades[student._id].total_grade}</Typography>
+                              </Grid>
+                            </div>
+                        )                          
                         }
                         <GradeButton assessmentId={selectedAssessments._id} studentId={student._id} classId={selectedAssessments.class_assigned[i]} />
                       </Grid>
@@ -828,7 +865,7 @@ function SubmittedAssessmentList(props) {
               <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
                 <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
                   <Fab size="medium" variant="extended" className={classes.editFab}>
-                    <EditIcon className={classes.editIconDesktop} />
+                    <EditIcon className={classes.editIconFab} />
                     Periksa
                   </Fab>
                 </Link>
@@ -886,7 +923,7 @@ function SubmittedAssessmentList(props) {
               <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
                 <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
                   <Fab size="medium" variant="extended" className={classes.editFab}>
-                    <EditIcon className={classes.editIconDesktop} />
+                    <EditIcon className={classes.editIconFab} />
                     Periksa
                   </Fab>
                 </Link>

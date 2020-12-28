@@ -17,6 +17,8 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import moment from "moment";
 import "moment/locale/id";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -114,6 +116,43 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.success.main,
     color: "white",
   },
+  toggleGroupRoot: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    "&:after": {
+      content: "''",
+      flexGrow: "1"
+    }
+  },
+  toggleGroupChildren: {
+    padding: "0px",
+    width: "35px",
+    height: "35px",
+    '&:not(:first-child)': {
+      margin: theme.spacing(1),
+      borderRadius: theme.shape.borderRadius,
+      borderLeft: "1px solid rgba(0,0,0,0.12)"
+    },
+    '&:first-child': {
+      margin: theme.spacing(1),
+      borderRadius: theme.shape.borderRadius,
+    },
+  },  toggleButtonRoot: {
+    color: "unset",
+    "&$toggleButtonSelected": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main
+      }
+    }
+  },
+  toggleButtonSelected: {
+    //harus ada meskipun kosong
+  }
 }));
 
 function TimeoutDialog(props){
@@ -206,12 +245,21 @@ function Timer(props) {
   )
 }
 
-function QuestionPage(props) {
-  const { classes, handleChangeQuestion, question_number, answer } = props;
+function questionPage(classes, handleChangeQuestion, qnsIndex, question_number, answer) {
+
+// function QuestionPage(props) {
+  // const { classes, handleChangeQuestion, question_number, answer } = props;
   console.log(answer)
   return (
-    <Grid item>
+    <ToggleButton
+        value={question_number - 1}
+        aria-label={question_number - 1}
+        classes={{ root: classes.toggleButtonRoot, selected: classes.toggleButtonSelected}}
+        selected={qnsIndex === question_number - 1}
+      >
+    {/* <Grid item> */}
       <Badge
+        style={{ width: "35px", height: "35px", display: "flex", alignItems: "center", justifyContent: "center" }}
         badgeContent={(answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => {return elm !== ""})) ?
             <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
               <CheckCircleIcon style={{width: "15px", height: "15px"}} />
@@ -226,18 +274,19 @@ function QuestionPage(props) {
           horizontal: "right",
         }}
       >
-        <Paper
+        {/* <Paper
           buttons
           variant="outlined"
           className={classes.questionPage}
           onClick={() => handleChangeQuestion(question_number-1)}
-        >
+        > */}
           <Typography>
             {question_number}
           </Typography>
-        </Paper>
+        {/* </Paper> */}
       </Badge>
-    </Grid>
+    {/* </Grid> */}
+    </ToggleButton >
   )
 }
 
@@ -298,6 +347,11 @@ function ViewAssessmentStudent(props) {
 
   const handleChangeQuestion = (i) => {
     setQnsIndex(i)
+  }
+  function handleQuestionIndex(event, newIndex) {
+    if (newIndex !== null) {
+      handleChangeQuestion(newIndex);
+    }
   }
 
   const handleChangeAnswer = (e, type) => {
@@ -483,12 +537,33 @@ function ViewAssessmentStudent(props) {
             <Typography color="primary" paragraph>
               Pindah ke Soal:
             </Typography>
-            <Grid container spacing={2} alignItems="center">
+            {/* <Grid container spacing={2} alignItems="center"> */}
+            <Grid container item>
+              <ToggleButtonGroup
+                value={qnsIndex}
+                exclusive
+                onChange={(e, newIndex) => { handleQuestionIndex(e, newIndex) }}
+                aria-label="question index"
+                classes={{ root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren }}
+              >
+
               {!questions ?
                   null
                :
-                  questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion} answer={answer}/>)})
+                  questions.map((qns, i) => {
+                    return (
+                      questionPage(classes, handleChangeQuestion, qnsIndex, i + 1, answer)
+                    )
+                    // return (
+                    // <QuestionPage 
+                    //   classes={classes} 
+                    //   question_number={i + 1} 
+                    //   handleChangeQuestion={handleChangeQuestion} 
+                    //   answer={answer}/>
+                    // )
+                  })
               }
+              </ToggleButtonGroup>
             </Grid>
           </div>
         </Paper>
@@ -568,6 +643,8 @@ function ViewAssessmentStudent(props) {
                         <TextField
                           key={`${user.id}-${qnsIndex}`}
                           id="answer"
+                          multiline
+                          rowsMax={10}
                           value={answer[qnsIndex][0]}
                           label="Jawaban Anda"
                           variant="outlined"

@@ -196,19 +196,24 @@ router.post("/update/:id", (req,res) => {
                     point_accumulator += weights.shorttext * temp_correct / questions[i].answer.length;
                   }
                   else {
-                    // (tidak perlu dicek lengkap atau tidak karena di edit/create assessment, bobot setiap soal uraian sudah dipastikan ada)
-                    let oldLongtextGrade = assessmentData.grades.get(key).longtext_grades[transformIdx[i]];
-                    let oldLongtextWeight = assessmentData.question_weight.longtext[transformIdx[i]];
-                    let newLongtextWeight = req.body.question_weight.longtext[i];
 
-                    // longtext_grade baru = longtext_grade lama * bobot baru / bobot lama
-                    let newLongtextGrade = oldLongtextGrade * newLongtextWeight / oldLongtextWeight;
-                    longtextGrade[i] = parseFloat(newLongtextGrade.toFixed(1));
+                    if (assessmentData.grades && assessmentData.grades.get(key) && assessmentData.grades.get(key).longtext_grades[transformIdx[i]] !== undefined) {
+                      let oldLongtextGrade = assessmentData.grades.get(key).longtext_grades[transformIdx[i]];
+                      let oldLongtextWeight = assessmentData.question_weight.longtext[transformIdx[i]];
+                      let newLongtextWeight = req.body.question_weight.longtext[i];
 
-                    weight_accumulator += newLongtextWeight;
-                    point_accumulator += newLongtextGrade;
+                      // longtext_grade baru = longtext_grade lama * bobot baru / bobot lama
+                      let newLongtextGrade = oldLongtextGrade * newLongtextWeight / oldLongtextWeight;
+                      longtextGrade[i] = parseFloat(newLongtextGrade.toFixed(1));
+
+                      weight_accumulator += newLongtextWeight;
+                      point_accumulator += newLongtextGrade;
+                    } else {
+                      // jika perubahan assessment dilakukan sebelum guru selesai memberikan nilai untuk semua jawaban uraian murid ini,
+                      break;
+                    }
                   }
-                } else { 
+                } else {
                   // 3. jika soal ini baru ditambahkan
 
                   // jika soal ini bertipe radio, checkbox, atau isian (dapat dicek secara otomatis),
@@ -324,7 +329,7 @@ router.post("/submit/:id", (req,res) => {
                   temp_correct = temp_correct - 2;
                 }
               })
-              weight_accumulator += 1 * weights.radio;
+              weight_accumulator += 1 * weights.checkbox;
 
               if (temp_correct > 0) {
                 // saat pembuatan/sunting assessment, kunci jawaban soal sudah dipastikan tidak kosong.
