@@ -158,6 +158,140 @@ function WorkListItem(props) {
   )
 }
 
+function ListAssessments(props){
+  const { category, subject, type, tab, all_assessments, classId, classes, all_subjects_map } = props;
+
+  function AssessmentListItem(props) {
+    
+    // Dialog Kuis dan Ujian
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
+  
+    const handleOpenDialog = (title, subject, start_date, end_date) => {
+      setCurrentDialogInfo({title, subject, start_date, end_date})
+      setOpenDialog(true)
+      console.log(title)
+    }
+  
+    const handleCloseDialog = () => {
+      setOpenDialog(false)
+    }
+  
+    return (
+      <div>
+        <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
+          <ListItem button className={classes.listItem}>
+            <Hidden xsDown>
+            <ListItemAvatar>
+              {props.work_category_avatar}
+            </ListItemAvatar>
+            </Hidden>
+            <ListItemText
+              primary={
+                <Typography variant="body1">
+                  {props.work_title}
+                </Typography>
+              }
+              secondary={props.work_subject}
+            />
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="body2" className={classes.warningText}>
+                  Mulai: {props.work_starttime}
+                </Typography>
+              }
+              secondary={props.work_status}
+            />
+          </ListItem>
+        </Paper>
+        <Dialog
+          fullScreen={false}
+          open={openDialog}
+          onClose={handleCloseDialog}
+          fullWidth={true}
+          maxWidth="sm"
+        >
+          <div style={{padding: "20px"}}>
+              <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
+              <Typography variant="h5" align="center" color="primary">
+                {currentDialogInfo.subject}
+              </Typography>
+              <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
+              <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
+              <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
+                Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
+              </Typography>
+          </div>
+        </Dialog>
+      </div>
+    )
+  }
+
+  let AssessmentsList = []
+  let result = [];
+  if (Boolean(all_assessments.length)) {
+    var i;
+    for (i = all_assessments.length-1; i >= 0; i--){
+      let assessment = all_assessments[i];
+      let class_assigned = assessment.class_assigned
+      if(class_assigned.indexOf(classId) !== -1){
+        AssessmentsList.push(assessment)
+      }
+      if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
+        break;
+      }
+    }
+
+    for (i = 0; i < AssessmentsList.length; i++){
+      let assessment = AssessmentsList[i]
+      let workCategoryAvatar = (
+        <Avatar className={classes.assignmentLate}>
+          <AssignmentLateIcon/>
+        </Avatar>
+      )
+      let workStatus = "Belum Ditempuh"
+      if(type === "Kuis"){
+        if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis"){
+          result.push(
+            <AssessmentListItem
+              work_title={assessment.name}
+              work_category_avatar={workCategoryAvatar}
+              work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
+              work_status={workStatus}
+              work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+            />
+          )
+        }
+      }
+      if(type === "Ujian"){
+        if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian"){
+          result.push(
+            <AssessmentListItem
+              work_title={assessment.name}
+              work_category_avatar={workCategoryAvatar}
+              work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
+              work_status={workStatus}
+              work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+            />
+          )
+        }
+      }
+      if(!category && result.length === 5)
+        break;
+      if(category==="subject" && result.length === 3)
+        break;
+    }  
+  }
+  if(result.length === 0){
+    result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
+  }
+  return result;
+}
+
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -213,73 +347,6 @@ class Dashboard extends Component {
     const classId = user.kelas
 
     console.log(all_students)
-    
-    function AssessmentListItem(props) {
-    
-      // Dialog Kuis dan Ujian
-      const [openDialog, setOpenDialog] = React.useState(false);
-      const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
-    
-      const handleOpenDialog = (title, subject, start_date, end_date) => {
-        setCurrentDialogInfo({title, subject, start_date, end_date})
-        setOpenDialog(true)
-        console.log(title)
-      }
-    
-      const handleCloseDialog = () => {
-        setOpenDialog(false)
-      }
-    
-      return (
-        <div>
-          <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-            <ListItem button className={classes.listItem}>
-              <Hidden xsDown>
-              <ListItemAvatar>
-                {props.work_category_avatar}
-              </ListItemAvatar>
-              </Hidden>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">
-                    {props.work_title}
-                  </Typography>
-                }
-                secondary={props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" className={classes.warningText}>
-                    Mulai: {props.work_starttime}
-                  </Typography>
-                }
-                secondary={props.work_status}
-              />
-            </ListItem>
-          </Paper>
-          <Dialog
-            fullScreen={false}
-            open={openDialog}
-            onClose={handleCloseDialog}
-            fullWidth={true}
-            maxWidth="sm"
-          >
-            <div style={{padding: "20px"}}>
-                <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
-                <Typography variant="h5" align="center" color="primary">
-                  {currentDialogInfo.subject}
-                </Typography>
-                <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
-                <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
-                <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
-                  Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
-                </Typography>
-            </div>
-          </Dialog>
-        </div>
-      )
-    }
 
     function listTasks(){
       let result = []
@@ -343,70 +410,6 @@ class Dashboard extends Component {
         result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
       }
       return result
-    }
-
-    function listAssessments(category=null, subject={}, type, tab="pekerjaan_kelas"){
-      let AssessmentsList = []
-      let result = [];
-      if (Boolean(all_assessments.length)) {
-        var i;
-        for (i = all_assessments.length-1; i >= 0; i--){
-          let assessment = all_assessments[i];
-          let class_assigned = assessment.class_assigned
-          if(class_assigned.indexOf(classId) !== -1){
-            AssessmentsList.push(assessment)
-          }
-          if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
-            break;
-          }
-        }
-  
-        for (i = 0; i < AssessmentsList.length; i++){
-          let assessment = AssessmentsList[i]
-          let workCategoryAvatar = (
-            <Avatar className={classes.assignmentLate}>
-              <AssignmentLateIcon/>
-            </Avatar>
-          )
-          let workStatus = "Belum Ditempuh"
-          if(type === "Kuis"){
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis"){
-              result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
-                  work_status={workStatus}
-                  work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                />
-              )
-            }
-          }
-          if(type === "Ujian"){
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian"){
-              result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
-                  work_status={workStatus}
-                  work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                />
-              )
-            }
-          }
-          if(!category && result.length === 5)
-            break;
-          if(category==="subject" && result.length === 3)
-            break;
-        }  
-      }
-      if(result.length === 0){
-        result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
-      }
-      return result;
     }
 
     let tasksByClass = []
@@ -530,7 +533,15 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {listAssessments(null, {}, "Kuis")}
+                        <ListAssessments category={null}
+                          subject={{}} 
+                          type="Kuis" 
+                          tab="pekerjaan-kelas" 
+                          all_assessments={all_assessments}
+                          classId={classId}
+                          classes={classes}
+                          all_subjects_map={all_subjects_map}
+                        />
                       </Grid>
                     </Paper>
                   </Grid>
@@ -559,7 +570,15 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {listAssessments(null, {}, "Ujian")}
+                        <ListAssessments category={null}
+                          subject={{}} 
+                          type="Ujian" 
+                          tab="pekerjaan-kelas" 
+                          all_assessments={all_assessments}
+                          classId={classId}
+                          classes={classes}
+                          all_subjects_map={all_subjects_map}
+                        />
                       </Grid>
                     </Paper>
                   </Grid>
@@ -764,33 +783,35 @@ class Dashboard extends Component {
                   </Menu>
                 </Grid>
               </Grid>
-              <Paper style={{padding: "20px"}}>
-                <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                  <Grid item>
-                    <Grid container alignItems="center">
-                      <AssignmentIcon
-                        color="action"
-                        style={{marginRight: "10px", fontSize: "20px"}}
-                      />
-                      <Typography variant="h5" color="primary">
-                        Tugas Yang Belum Diperiksa
-                      </Typography>
+              <Grid item direction="row" spacing={2} xs={12} style={{marginTop: "10px"}}>
+                <Paper style={{padding: "20px"}}>
+                  <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                    <Grid item>
+                      <Grid container alignItems="center">
+                        <AssignmentIcon
+                          color="action"
+                          style={{marginRight: "10px", fontSize: "20px"}}
+                        />
+                        <Typography variant="h5" color="primary">
+                          Tugas Yang Belum Diperiksa
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Link to="/daftar-tugas">
+                        <LightTooltip title="Lihat Semua" placement="top">
+                          <IconButton>
+                            <ChevronRightIcon />
+                          </IconButton>
+                        </LightTooltip>
+                      </Link>
                     </Grid>
                   </Grid>
-                  <Grid item>
-                    <Link to="/daftar-tugas">
-                      <LightTooltip title="Lihat Semua" placement="top">
-                        <IconButton>
-                          <ChevronRightIcon />
-                        </IconButton>
-                      </LightTooltip>
-                    </Link>
+                  <Grid container direction="column" spacing={1}>
+                    {listTasksTeacher()}
                   </Grid>
-                </Grid>
-                <Grid container direction="column" spacing={1}>
-                  {listTasksTeacher()}
-                </Grid>
-              </Paper>
+                </Paper>
+              </Grid>
               </>
             :
               <Grid item container direction="row" justify="flex-end">
