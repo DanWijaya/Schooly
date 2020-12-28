@@ -363,24 +363,30 @@ function QuestionItem(props){
           <div>
           <Divider />
           <Grid container style={{ padding: "20px" }} justify="flex-end" alignItems="center" >
+            {/* <Grid item style={{ marginRight: "20px", height: "3rem", display: "flex", alignItems: "center"}}> */}
             <Grid item style={{ marginRight: "20px" }}>
               <Typography color="primary">Bobot: </Typography>
             </Grid>
-            <Grid item>
+              <Grid item style={{ height: "3rem" }}>
               <TextField
                 value={longtextValue}
-                // onChange={(e) => { setLongtextValue(e.target.value); handleLongtextWeight(e, index); }}
                 onChange={(e) => { handleLongtextWeight(e, index); }}
-                inputProps={{
+                variant="outlined"
+                // lihat catatan inisialisasi state longtextWeight di edit/create assessment untuk info terkait nilai longtextValue
+                error={(isNaN(Number(longtextValue)) || Number(longtextValue) <= 0) && (longtextValue !== undefined)} 
+                helperText={(isNaN(Number(longtextValue)) || Number(longtextValue) <= 0) && (longtextValue !== undefined) ? "Periksa Kembali!" : null}
+                FormHelperTextProps={{
                   style: {
-                    borderBottom: "none",
-                    boxShadow: "none",
-                    margin: "0px",
-                    width: "35px"
+                    margin: "0px"
                   }
                 }}
                 InputProps={{
-                  endAdornment: " Poin"
+                  style: {
+                    borderBottom: "none",
+                    boxShadow: "none",
+                    width: "110px"
+                  },
+                  endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
                 }}
               />
             </Grid>

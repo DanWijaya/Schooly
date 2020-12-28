@@ -48,6 +48,8 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MuiAlert from "@material-ui/lab/Alert";
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 // ANCHOR import
 
 const useStyles = makeStyles((theme) => ({
@@ -138,18 +140,6 @@ const useStyles = makeStyles((theme) => ({
   mobileNavButton: {
       color: theme.palette.text.secondary
   },
-  questionPage: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "35px",
-    height: "35px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-      cursor: "pointer",
-    },
-  },
   visuallyHidden: {
     border: 0,
     clip: "rect(0 0 0 0)",
@@ -161,6 +151,56 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+  // questionPage: {
+  //   display: "flex",
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   width: "35px",
+  //   height: "35px",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: theme.palette.primary.main,
+  //     color: "white",
+  //     cursor: "pointer",
+  //   },
+  // },
+  toggleGroupRoot: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    "&:after": {
+      content: "''",
+      flexGrow: "1"
+    }
+  },
+  toggleGroupChildren: {
+    padding: "0px",
+    width: "35px",
+    height: "35px",
+    '&:not(:first-child)': {
+      margin: theme.spacing(1),
+      borderRadius: theme.shape.borderRadius,
+      borderLeft: "1px solid rgba(0,0,0,0.12)"
+    },
+    '&:first-child': {
+      margin: theme.spacing(1),
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+  toggleButtonRoot: {
+    color: "unset",
+    "&$toggleButtonSelected": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main
+      }
+    }
+  },
+  toggleButtonSelected: {
+    //harus ada meskipun kosong
+  }
 }));
 // ANCHOR class
 
@@ -652,11 +692,11 @@ function ViewAssessmentTeacher(props) {
       
       return (
         <QuestionPerQuestion
-          longtextGrades={
-            (question.type === "longtext" && longtextGrades[studentId]) ? ( // jika minimal ada 1 murid yang soal uraiannya sudah dinilai 
-              longtextGrades[studentId][qnsIndex]
-            ) : (null)
-          }
+          // longtextGrades={
+          //   (question.type === "longtext" && longtextGrades[studentId]) ? ( // jika minimal ada 1 murid yang soal uraiannya sudah dinilai 
+          //     longtextGrades[studentId][qnsIndex]
+          //   ) : (null)
+          // }
           classes={classes}
           studentId={studentId}
           studentName={studentInfo.name}
@@ -799,9 +839,14 @@ function ViewAssessmentTeacher(props) {
     setOpenDialog(false);
   }
 
-  // ANCHOR fungsi navigasi soal
-  function QuestionPage(props) {
-    const { classes, handleChangeQuestion, question_number, question_type } = props;
+  function handleQuestionIndex(event, newIndex) {
+    if (newIndex !== null) {
+      handleChangeQuestion(newIndex);
+    }
+  }
+  function questionPage(classes, question_number, question_type) {
+  // function QuestionPage(props) {
+    // const { classes, handleChangeQuestion, question_number, question_type } = props;
 
     let fullyGraded = true;
     if (selectedAssessments.submissions) {
@@ -816,10 +861,17 @@ function ViewAssessmentTeacher(props) {
     } else {
       fullyGraded = false;
     }
-
+  // ANCHOR fungsi navigasi soal
     return (
-      <Grid item>
+      <ToggleButton
+        value={question_number - 1}
+        aria-label={question_number - 1}
+        // className={classes.questionPage}
+        classes={{ root: classes.toggleButtonRoot, selected: classes.toggleButtonSelected}}
+        selected={qnsIndex === question_number - 1}
+      >
         <Badge
+          style={{ width: "35px", height: "35px", display: "flex", alignItems: "center", justifyContent: "center" }}
           badgeContent={
             (fullyGraded) ? (
               <Avatar style={{ backgroundColor: "green", color: "white", width: "20px", height: "20px" }}>
@@ -836,18 +888,18 @@ function ViewAssessmentTeacher(props) {
             horizontal: "right",
           }}
         >
-          <Paper
-            buttons
-            variant="outlined"
-            className={classes.questionPage}
-            onClick={() => handleChangeQuestion(question_number - 1)}
-          >
-            <Typography>
-              {question_number}
-            </Typography>
-          </Paper>
+            {/* <Paper
+              buttons
+              variant="outlined"
+              className={classes.questionPage}
+              onClick={() => handleChangeQuestion(question_number - 1)}
+            > */}
+              <Typography>
+                {question_number}
+              </Typography>
+            {/* </Paper> */}
         </Badge>
-      </Grid>
+    </ToggleButton>
     )
   }
 
@@ -924,21 +976,30 @@ function ViewAssessmentTeacher(props) {
                     </LightTooltip>
                 </Grid>
                 {/* ANCHOR navigasi soal */}
-                  <Grid container item spacing={2} alignItems="center">
+                  <Grid container item>
+                  <ToggleButtonGroup
+                    value={qnsIndex}
+                    exclusive
+                    onChange={(e, newIndex) => {handleQuestionIndex(e, newIndex)}}
+                    aria-label="question index"
+                    classes={{root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren}}
+                  >
+                    {/* <Grid container item spacing={2} alignItems="center"> */}
                   {
                     (hasLongtextQst.current === true) ? (
                       (isAssessmentLoaded() && longtextGrades) ? (
                         selectedAssessments.questions.map((qns, i) => {
-                          return (
+                          // return (
                             // <a href={`#${i}`} >
-                            <QuestionPage
-                              classes={classes}
-                              question_number={i + 1}
-                              handleChangeQuestion={handleChangeQuestion}
-                              question_type={qns.type}
-                            />
+                            // <QuestionPage
+                            //   classes={classes}
+                            //   question_number={i + 1}
+                            //   handleChangeQuestion={handleChangeQuestion}
+                            //   question_type={qns.type}
+                            // />
                             // </a>
-                          )
+                          // )
+                          return questionPage(classes, i + 1, qns.type)
                         })
                       ) : (
                         null
@@ -947,14 +1008,14 @@ function ViewAssessmentTeacher(props) {
                       (hasLongtextQst.current === false) ? (
                         (isAssessmentLoaded()) ? (
                           selectedAssessments.questions.map((qns, i) => {
-                            return (
+                            return (questionPage(classes, i + 1, qns.type)
                               // <a href={`#${i}`} >
-                              <QuestionPage
-                                classes={classes}
-                                question_number={i + 1}
-                                handleChangeQuestion={handleChangeQuestion}
-                                question_type={qns.type}
-                              />
+                              // <QuestionPage
+                              //   classes={classes}
+                              //   question_number={i + 1}
+                              //   handleChangeQuestion={handleChangeQuestion}
+                              //   question_type={qns.type}
+                              // />
                               // </a>
                             )
                           })
@@ -966,6 +1027,8 @@ function ViewAssessmentTeacher(props) {
                     )
                     )
                   }
+                    {/* </Grid> */}
+                  </ToggleButtonGroup>
                 </Grid>
                 </Hidden>
                 <Hidden smUp>
@@ -1083,9 +1146,7 @@ function ViewAssessmentTeacher(props) {
               )
             }
 
-            {/* FIXME -------- call per soal jawaban semua murid*/}
-            {/* <TextField value={tf} onChange={(e) => {settf(e.target.value)}}/> */}
-            {/* <CustomTf tf={tf} settf={settf}/> */}
+            {/* ANCHOR call per soal jawaban semua murid*/}
             {
               (isAssessmentLoaded() && selectedAssessments.submissions) ? (
                 (hasLongtextQst.current === true) ? (
@@ -1214,64 +1275,6 @@ function ViewAssessmentTeacher(props) {
           </div>
           
           </Grid>
-          {/* {!Array.isArray(questions) ? null :
-          questions.map((question, i) => (
-            <Grid item>
-              <Paper>
-                <Grid container direction="column" spacing={2} className={classes.content}>
-                  <Grid item>
-                    <Typography variant="h6" gutterBottom color="primary">
-                      Soal {i+1}
-                    </Typography>
-                    <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
-                      {question.lampiran.map((image, i) =>
-                        <GridListTile key={image} cols={1} >
-                        <img alt="current img" src={`/api/upload/att_assessment/${image}`}/>
-                        <GridListTileBar
-                            title={`Gambar ${i+1}`}
-                            titlePosition="top"
-                            actionPosition="right"/>
-                      </GridListTile>
-                      )}
-                    </GridList>
-                    <Typography variant="h6">
-                      {
-                        (question.type === "shorttext") ? (
-                          generateSoalShortTextTeacher(question, i)
-                        ) : (question.type === "longtext") ? (
-                          <Typography variant="body1" gutterButtom>
-                            {question.name}
-                          </Typography>
-                        ) : (
-                          <Typography variant="h5" gutterButtom>
-                            <b>{question.name}</b>
-                          </Typography>
-                        )
-                      }
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    {(question.type === "radio") ? (
-                      question.options.map((option, i) => (
-                        <Typography className={question.answer[0] === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
-                          {option}
-                        </Typography>
-                      ))
-                    ) : (question.type === "checkbox") ? (
-                      question.options.map((option, i) => (
-                        <Typography className={question.answer.includes(String.fromCharCode(97 + i).toUpperCase()) ? classes.answerText : classes.optionText}>
-                          {option}
-                        </Typography>
-                      ))
-                    ) : ( // question.type === "shorttext" || question.type === "shorttext" 
-                      null
-                    )
-                    }
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-          ))} */}
         </Grid>
         <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
           <MuiAlert severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
@@ -1282,23 +1285,33 @@ function ViewAssessmentTeacher(props) {
         <Dialog
           open={openDialog}
           onClose={handleCloseNavDialog}
+          fullWidth
         >
-        <DialogTitle style={{textAlign: "center"}}>Navigasi Soal</DialogTitle>
-          <DialogContent>
-          <Grid container spacing={2} style={{ margin: "20px", width: "unset" }}>
+        <DialogTitle style={{ textAlign: "center", padding: "16px 24px 8px"}}>Navigasi Soal</DialogTitle>
+        <DialogContent style={{ padding: "8px 24px 16px" }}>
+          {/* <Grid container spacing={2} style={{ margin: "20px", width: "unset" }}> */}
+          <Grid container item>
+            <ToggleButtonGroup
+              value={qnsIndex}
+              exclusive
+              onChange={(e, newIndex) => { handleQuestionIndex(e, newIndex) }}
+              aria-label="question index"
+              classes={{ root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren }}
+            >
             {
               (hasLongtextQst.current === true) ? (
                 (isAssessmentLoaded() && longtextGrades) ? (
                   selectedAssessments.questions.map((qns, i) => {
                     return (
                       // <a href={`#${i}`} >
-                      <QuestionPage
-                        classes={classes}
-                        question_number={i + 1}
-                        handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
-                        question_type={qns.type}
-                      />
+                      // <QuestionPage
+                      //   classes={classes}
+                      //   question_number={i + 1}
+                      //   handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
+                      //   question_type={qns.type}
+                      // />
                       // </a>
+                      questionPage(classes, i + 1, qns.type)
                     )
                   })
                 ) : (
@@ -1310,13 +1323,14 @@ function ViewAssessmentTeacher(props) {
                     selectedAssessments.questions.map((qns, i) => {
                       return (
                         // <a href={`#${i}`} >
-                        <QuestionPage
-                          classes={classes}
-                          question_number={i + 1}
-                          handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
-                          question_type={qns.type}
-                        />
+                        // <QuestionPage
+                        //   classes={classes}
+                        //   question_number={i + 1}
+                        //   handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
+                        //   question_type={qns.type}
+                        // />
                         // </a>
+                        questionPage(classes, i + 1, qns.type)
                       )
                     })
                   ) : (
@@ -1327,6 +1341,7 @@ function ViewAssessmentTeacher(props) {
                 )
               )
             }
+            </ToggleButtonGroup>
           </Grid>         
           </DialogContent>
         </Dialog>
@@ -1388,8 +1403,9 @@ function QuestionPerQuestion(props) {
               {/* <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px" }}> */}
               <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
               <TextField
-                // FIXME per soal
-                value={longtextGrades}
+                // ANCHOR per soal
+                // value={longtextGrades}
+                value={studentMark}
                 // defaultValue={studentMark}
                 key={`${studentId}-${questionNumber}`}
                 inputProps={{
@@ -1632,7 +1648,8 @@ function QuestionAnswerPerStudent(props) {
               // defaultValue={studentMark}
               // key={`${Math.random()}`}
               key={`${studentId}-${questionNumber}`}
-              value={longtextGrades}
+              // value={longtextGrades}
+              value={studentMark}
               inputProps={{
                 style: {
                   borderBottom: "none",

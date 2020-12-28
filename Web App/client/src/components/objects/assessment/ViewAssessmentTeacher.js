@@ -313,20 +313,20 @@ function ViewAssessmentTeacher(props) {
           ))}
           <Grid item container spacing={2} justify="flex-end" alignItems="center">
             <Grid item>
+              <Link to={`/daftar-kuis-terkumpul/${assessment_id}`}>
+                <Fab variant="extended" className={classes.seeAllAssessmentButton}>
+                  <AssignmentIcon style={{ marginRight: "10px" }} />
+                    Lihat Hasil
+                  </Fab>
+              </Link>
+            </Grid>
+            <Grid item>
               <LightTooltip title="Copy Link">
                 <Fab className={classes.copyToClipboardButton}
                   onClick={(e) => copyToClipboardButton(e, linkToShare, type)}>
                   <LinkIcon/>
                   </Fab>
               </LightTooltip>
-            </Grid>
-            <Grid item>
-              <Link to={`/daftar-kuis-terkumpul/${assessment_id}`}>
-                <Fab variant="extended" className={classes.seeAllAssessmentButton}>
-                  <AssignmentIcon style={{marginRight: "10px"}} />
-                  Lihat Hasil
-                </Fab>
-              </Link>
             </Grid>
             <Grid item>
             <Link to={`/sunting-kuis/${assessment_id}`}>

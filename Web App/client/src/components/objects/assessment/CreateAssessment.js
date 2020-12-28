@@ -202,6 +202,11 @@ class CreateAssessment extends Component {
         checkbox: null,
         shorttext: null,
       },
+      // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
+      // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
+      // longtextWeight[1] = null -> berarti pertanyaan nomor 2 adalah soal non uraian
+      // longtextWeight[2] = undefined -> berarti pertanyaan nomor 3 adalah soal uraian yang bobotnya belum diubah 
+      // sejak pertama kali soal tersebut ditambahkan
       longtextWeight: [null]
     }
   }
@@ -445,7 +450,7 @@ class CreateAssessment extends Component {
     }
     this.setState((state) => {
       let value = [...state.longtextWeight];
-      value.push((option === "longtext") ? 0 : null);
+      value.push((option === "longtext") ? undefined : null);
       return ({ longtextWeight: value})
     })
     this.setState({ questions: questions })
@@ -789,21 +794,131 @@ class CreateAssessment extends Component {
       typeCount[question.type]++;
     }
 
-    let columns = [];
+    let columnsDesktopView = [];
+    let gridMobileView;
+    let gridItemMobileView = [];
     let c = 0;
     let filteredtypeCount = Object.entries(typeCount).filter((pair) => (pair[1] > 0));
 
     if (filteredtypeCount.length !== 0) {
+      // mobile view
+      for (let type of Object.keys(typeCount)) {
+        let weight = this.state.weights[type];
+        let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
+
+        gridItemMobileView.push(
+          <Grid container item xs={6} spacing="1" direction="column" justify="space-between" alignItems="center">
+            <Grid item>
+              {columnTemplate[type].icon}
+            </Grid>
+            <Grid item>
+              <Hidden xsDown>
+                <Typography align="center">
+                  {columnTemplate[type].text}
+                </Typography>
+              </Hidden>
+              <Hidden smUp>
+                <Typography align="center" style={{ fontSize: "0.8rem" }}>
+                  {columnTemplate[type].text}
+                </Typography>
+              </Hidden>
+            </Grid>
+            <Grid item>
+              <Hidden xsDown>
+                <Typography component="label" for="weight" color="primary">
+                  Bobot Per Soal:
+                </Typography>
+              </Hidden>
+              <Hidden smUp>
+                <Typography component="label" for="weight" color="primary" style={{ fontSize: "0.8rem" }}>
+                  Bobot Per Soal:
+                </Typography>
+              </Hidden>
+            </Grid>
+            {(type !== "longtext") ? (
+              <Grid item style={{ height: "65px" }}>
+                {/* ANCHOR textfield */}
+                <Hidden xsDown>
+                  <TextField
+                    defaultValue={this.state.weights[type]}
+                    variant="outlined"
+                    id="weight"
+                    fullWidth
+                    onChange={(e) => { this.handleWeight(e, type) }}
+                    error={showError}
+                    helperText={showError ? "Periksa Kembali!" : null}
+                    InputProps={{
+                      style: {
+                        width: "150px"
+                      },
+                      endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
+                    }}
+                  />
+                </Hidden>
+                <Hidden smUp>
+                  <TextField
+                    defaultValue={this.state.weights[type]}
+                    variant="outlined"
+                    id="weight"
+                    fullWidth
+                    onChange={(e) => { this.handleWeight(e, type) }}
+                    error={showError}
+                    helperText={showError ? "Periksa Kembali!" : null}
+                    FormHelperTextProps={{
+                      style: {
+                        margin: "0px"
+                      }
+                    }}
+                    InputProps={{
+                      style: {
+                        width: "110px"
+                      },
+                      endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
+                    }}
+                  />
+                </Hidden>
+
+              </Grid>
+            ) : (
+                <Grid item style={{ height: "65px" }}>
+                  <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
+                    <IconButton>
+                      <InfoIcon />
+                    </IconButton>
+                  </LightTooltip>
+                </Grid>
+              )}
+          </Grid>
+        );
+      }
+      gridMobileView = (
+        <Grid container style={{ padding: "20px 10px" }} justify="center">
+          <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
+            {gridItemMobileView[0]}
+            <Divider orientation="vertical" flexItem />
+            {gridItemMobileView[1]}
+          </Grid>
+          <Grid item xs={12} style={{ margin: "10px 0px" }}>
+            <Divider />
+          </Grid>
+          <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
+            {gridItemMobileView[2]}
+            <Divider orientation="vertical" flexItem />
+            {gridItemMobileView[3]}
+          </Grid>
+        </Grid>
+      );
+
+      // desktop view
       for (let pair of filteredtypeCount) {
         let type = pair[0];
-  
-        columns.push(
+        let weight = this.state.weights[type];
+        let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
+        columnsDesktopView.push(
           // xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
           <Grid container item xs={12 / filteredtypeCount.length} spacing="1" direction="column" justify="space-between" alignItems="center">
             <Grid item>
-              {/* <IconButton disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}> */}
                 {columnTemplate[type].icon}
-              {/* </IconButton> */}
             </Grid>
             <Grid item>
               <Typography align="center">
@@ -816,7 +931,7 @@ class CreateAssessment extends Component {
               </Typography>
             </Grid>
               {(type !== "longtext") ? (
-              <Grid item>
+              <Grid item style={{ height: "65px" }}>
                 {/* ANCHOR textfield */}
                 <TextField
                   defaultValue={this.state.weights[type]}
@@ -824,18 +939,18 @@ class CreateAssessment extends Component {
                   id="weight"
                   fullWidth
                   onChange={(e) => {this.handleWeight(e, type)}}
-                  // error={errors.name}
-                  // helperText={errors.name}
+                  error={showError}
+                  helperText={showError ? "Periksa Kembali!" : null}
                   InputProps={{
                     style: {
                       width: "150px"
                     },
-                    endAdornment: ` Poin`
+                    endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
                   }}
                 />
               </Grid>
               ) : (
-                <Grid item>
+                <Grid item style={{ height: "65px" }}>
                   <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
                     <IconButton>
                       <InfoIcon/>
@@ -847,7 +962,7 @@ class CreateAssessment extends Component {
         );
         // jika elemen ini bukan elemen terakhir, tambahkan divider
         if (c + 1 < filteredtypeCount.length) {
-          columns.push(
+          columnsDesktopView.push(
             <Divider orientation="vertical" flexItem />
           );
         }
@@ -855,9 +970,14 @@ class CreateAssessment extends Component {
       }
       return (
         <Paper>
-          <Grid container style={{ padding: "20px" }} justify="center">
-            {columns}
-          </Grid>
+          <Hidden smDown>
+            <Grid container style={{ padding: "20px", height: "240px" }} justify="center">
+              {columnsDesktopView}
+            </Grid>
+          </Hidden>
+          <Hidden mdUp>
+            {gridMobileView}
+          </Hidden>
         </Paper>
       );
     } else {
@@ -1288,7 +1408,7 @@ class CreateAssessment extends Component {
           anchorOrigin={{vertical : "bottom", horizontal: "center"}}
         >
           <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-            Masih ada bagian yang belum diisi, silahkan diperiksa kembali!
+            Masih ada bagian yang belum diisi atau salah, silahkan diperiksa kembali!
           </MuiAlert>
         </Snackbar>
       </div>
