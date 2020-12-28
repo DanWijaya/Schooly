@@ -42,7 +42,7 @@ function Footer(props) {
       <Hidden mdUp implementation="css">
         {/* Mobile = Column View */}
         {(props.assessmentState !== "ujian") ?
-          <>
+          <div>
             <Divider style={{marginBottom: "10px"}} />
             <Grid container justify="space-between">
               <Grid item>
@@ -87,49 +87,51 @@ function Footer(props) {
                 </div>
               </Grid>
             </Grid>
-          </>
+          </div>
         :
           null
         }
       </Hidden>
       <Hidden smDown implementation="css">
         {/* Desktop = Row View */}
-        {(props.assessmentState !== "ujian") ? 
-        <div className={classes.footerDesktopContainer}>
+        {(props.assessmentState !== "ujian") ?
+        <div>
           <Divider style={{marginBottom: "10px"}} />
-          <Grid item container spacing={2} justify="flex-start">
-            <Grid item style={{color: "grey"}}>
-              Schooly System
+          <div className={classes.footerDesktopContainer}>
+            <Grid item container spacing={2} justify="flex-start">
+              <Grid item style={{color: "grey"}}>
+                Schooly System
+              </Grid>
+              <Grid item>
+                <Link to="/bantuan">
+                  Bantuan
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="/kebijakan-penggunaan">
+                  Kebijakan Pengunaan
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to="/bantuan">
-                Bantuan
-              </Link>
+            <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolDesktop} />
+            <Grid container spacing={2} justify="flex-end">
+              <Grid item>
+                <Link to="/tentang-schooly">
+                  Tentang Schooly
+                </Link>
+              </Grid>
+              <Grid item>
+                <a href="mailto:schoolysystem@gmail.com">
+                  Hubungi Kami
+                </a>
+              </Grid>
+              <Grid item>
+                <a href="http://www.instagram.com">
+                  Instagram
+                </a>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to="/kebijakan-penggunaan">
-                Kebijakan Pengunaan
-              </Link>
-            </Grid>
-          </Grid>
-          <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolDesktop} />
-          <Grid container spacing={2} justify="flex-end">
-            <Grid item>
-              <Link to="/tentang-schooly">
-                Tentang Schooly
-              </Link>
-            </Grid>
-            <Grid item>
-              <a href="mailto:schoolysystem@gmail.com">
-                Hubungi Kami
-              </a>
-            </Grid>
-            <Grid item>
-              <a href="http://www.instagram.com">
-                Instagram
-              </a>
-            </Grid>
-          </Grid>
+          </div>
         </div>
         :
         null
