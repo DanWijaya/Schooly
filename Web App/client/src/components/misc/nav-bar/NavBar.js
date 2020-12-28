@@ -131,14 +131,18 @@ function NavBar(props) {
       {(props.assessmentState !== "ujian") ?
         <Toolbar>
           {leftNavBarContents}
-          {middleNavBarContents}   
-          {rightNavBarContents}  
+          {middleNavBarContents}
+          {rightNavBarContents}
         </Toolbar>
       :
         <Toolbar>
-          {middleNavBarContents}   
+          <img
+            alt="SchoolyLogoNavBar"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
         </Toolbar>
-      }    
+      }
     </AppBar>
   )
 }

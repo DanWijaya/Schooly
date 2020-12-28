@@ -70,8 +70,8 @@ function AssessmentListToolbar(props) {
   const headCells = [
     { id: "assessmenttitle", numeric: false, disablePadding: true, label: "Nama Ujian/Kuis" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "start_date", numeric: false, disablePadding: false, label: "Mulai Waktu" },
-    { id: "end_date", numeric: false, disablePadding: false, label: "Batas Waktu" },
+    { id: "start_date", numeric: false, disablePadding: false, label: "Mulai" },
+    { id: "end_date", numeric: false, disablePadding: false, label: "Selesai" },
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
@@ -609,7 +609,7 @@ function AssessmentList(props) {
        >
          <div style={{padding: "20px"}}>
             <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
-            <Typography variant="h5" align="center" color="primary">
+            <Typography variant="h6" align="center" color="primary">
               {currentDialogInfo.subject}
             </Typography>
             <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>

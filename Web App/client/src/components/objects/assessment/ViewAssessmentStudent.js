@@ -6,7 +6,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, submitAssessment } from "../../../actions/AssessmentActions";
 import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormGroup,
-  Grid, GridListTile, GridListTileBar, GridList, Paper, Radio, Checkbox, 
+  Grid, GridListTile, GridListTileBar, GridList, Paper, Radio, Checkbox,
   RadioGroup, TextField, Typography, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  submittedButton: {
+  submittedPaper: {
     display: "flex",
     justifyContent: "center",
     padding: "5px",
@@ -123,21 +123,19 @@ function TimeoutDialog(props){
 
   return (
     <Dialog open={openTimeoutDialog}>
-      <Grid container direction="column" justify="space-between" alignItems="center" className={classes.timeoutDialog}>
+      <Grid container direction="column" justify="space-between" alignItems="center" spacing={2} className={classes.timeoutDialog}>
         <Grid>
           <Typography variant="h6" align="center" gutterBottom>
-            <b>Waktu pengerjaan sudah selesai, jawaban anda telah terkumpulkan</b>
+            Waktu pengerjaan sudah selesai, jawaban anda telah terkumpulkan
           </Typography>
         </Grid>
-        <Grid container spacing={2} justify="center" alignItems="center">
-          <Grid item>
-            <Button
-              onClick={handleCloseTimeoutDialog}
-              className={classes.timeoutDialogButton}
-              >
-              Selesai
-            </Button>
-          </Grid>
+        <Grid item>
+          <Button
+            onClick={handleCloseTimeoutDialog}
+            className={classes.timeoutDialogButton}
+          >
+            Selesai
+          </Button>
         </Grid>
       </Grid>
     </Dialog>
@@ -340,23 +338,23 @@ function ViewAssessmentStudent(props) {
 
     for (let i=1; i<=splitResult.length-2; i+=2) {
       splitResult[i] = (
-      <Input 
-        type="text" 
-        key={`${qnsIndex}-${idIterator}`} 
+      <Input
+        type="text"
+        key={`${qnsIndex}-${idIterator}`}
         id={idIterator}
-        value={answer[qnsIndex][idIterator]} 
-        onChange={(e) => { handleChangeAnswer(e)}} 
+        value={answer[qnsIndex][idIterator]}
+        onChange={(e) => { handleChangeAnswer(e)}}
       />);
       idIterator++;
     }
-    
+
     return (
       <Typography variant="body1" gutterButtom>
         <form>
           {splitResult}
         </form>
       </Typography>
-    ); 
+    );
   }
 
   const handleStart = () => {
@@ -419,9 +417,9 @@ function ViewAssessmentStudent(props) {
           <Button variant="contained" className={classes.submitAssessmentButton} onClick={handleOpenSubmitDialog}>
             Kumpulkan
           </Button>
-        </Grid> 
+        </Grid>
       )
-    } 
+    }
     return null
   }
 
@@ -429,7 +427,7 @@ function ViewAssessmentStudent(props) {
     if(submissions){
       if(submissions[user.id]){
         return(
-          <Paper className={classes.submittedButton}>
+          <Paper className={classes.submittedPaper}>
             <CheckCircleOutlineIcon/>
             <Typography variant="button" style={{marginLeft: "5px"}}>
               TELAH DIKUMPULKAN
@@ -465,7 +463,7 @@ function ViewAssessmentStudent(props) {
           finish={finish}
           onSubmit={onSubmit}
           setOpenTimeoutDialog={() => setOpenTimeoutDialog(true)}
-          />
+        />
       )
     }
   }
@@ -516,14 +514,14 @@ function ViewAssessmentStudent(props) {
                       </GridListTile>
                     )}
                   </GridList>
-                    {(!questions) ? ( 
+                    {(!questions) ? (
                       null
                     ) : (
                       (questions[qnsIndex].type === "shorttext") ? (
                         generateSoalShortTextStudent()
                       ) : (
-                        <Typography variant="h5" gutterButtom>
-                          <b>{questions[qnsIndex].name}</b>
+                        <Typography variant="h6" gutterButtom>
+                          {questions[qnsIndex].name}
                         </Typography>
                       )
                     )}
@@ -533,7 +531,7 @@ function ViewAssessmentStudent(props) {
                     {(!questions) ? (
                       null
                     ) : ((questions[qnsIndex].type === "radio") ? (
-                        <RadioGroup value={answer[qnsIndex][0] ? answer[qnsIndex][0] : ""} id="answer" onChange={(e) => handleChangeAnswer(e, "radio")}>                          
+                        <RadioGroup value={answer[qnsIndex][0] ? answer[qnsIndex][0] : ""} id="answer" onChange={(e) => handleChangeAnswer(e, "radio")}>
                           {questions[qnsIndex].options.map((option, i) =>
                           <div style={{display: "flex"}}>
                             <FormControlLabel
@@ -586,39 +584,37 @@ function ViewAssessmentStudent(props) {
         </Paper>
       </Grid>,
       <Grid item>
-        <Paper>
-          <Grid container alignItems="center" className={classes.content}>
-            {qnsIndex === 0 ? null :
-              <Grid item xs container justify="flex-start">
-                <Button
-                  variant="outlined"
-                  startIcon={<ChevronLeftIcon />}
-                  className={classes.previousPageButton}
-                  onClick={() => handleChangeQuestion(qnsIndex - 1)}
-                >
-                  Soal Sebelumnya
-                </Button>
-              </Grid>
-            }
-            {qnsIndex === questions_length - 1 ?
-              null
-              :
-              <Grid item xs container justify="flex-end">
-                <Button
-                  variant="outlined"
-                  endIcon={<ChevronRightIcon />}
-                  className={classes.nextPageButton}
-                  onClick={() => handleChangeQuestion(qnsIndex + 1)}
-                >
-                  Soal Selanjutnya
-                </Button>
-              </Grid>
-            }
-          </Grid>
-        </Paper>
+        <Grid container alignItems="center" className={classes.content}>
+          {qnsIndex === 0 ? null :
+            <Grid item xs container justify="flex-start">
+              <Button
+                variant="contained"
+                startIcon={<ChevronLeftIcon />}
+                className={classes.previousPageButton}
+                onClick={() => handleChangeQuestion(qnsIndex - 1)}
+              >
+                Soal Sebelumnya
+              </Button>
+            </Grid>
+          }
+          {qnsIndex === questions_length - 1 ?
+            null
+            :
+            <Grid item xs container justify="flex-end">
+              <Button
+                variant="contained"
+                endIcon={<ChevronRightIcon />}
+                className={classes.nextPageButton}
+                onClick={() => handleChangeQuestion(qnsIndex + 1)}
+              >
+                Soal Selanjutnya
+              </Button>
+            </Grid>
+          }
+        </Grid>
       </Grid>
       ]
-    } 
+    }
     return null
   }
 
@@ -631,9 +627,9 @@ function ViewAssessmentStudent(props) {
 
   if (selectedAssessments) {
     if (!selectedAssessments.class_assigned.includes(user.kelas)) {
-      return <Redirect to="/tidak-ditemukan" /> 
+      return <Redirect to="/tidak-ditemukan" />
     }
-  } 
+  }
 
   return (
     <div className={classes.root}>
@@ -654,22 +650,30 @@ function ViewAssessmentStudent(props) {
             <Paper>
               <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
                 <Grid item>
-                  <Typography variant="h6" align="center" color="primary">
-                    {all_subjects_map.get(selectedAssessments.subject)}
+                  <Typography variant="subtitle1" align="center" color="textSecondary">
+                    {selectedAssessments.type}
                   </Typography>
                   <Typography variant="h4" align="center" gutterBottom>
                     {selectedAssessments.name}
                   </Typography>
-                  <Typography variant="h6" align="center">
+                  <Typography variant="h6" align="center" color="primary">
+                    {all_subjects_map.get(selectedAssessments.subject)}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1" align="center" color="textSecondary">
+                    Mulai: {`${moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH.mm")}`}
+                  </Typography>
+                  <Typography variant="subtitle1" align="center" color="textSecondary">
+                    Selesai: {`${moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH.mm")}`}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle2" align="center">
                     {selectedAssessments.description}
                   </Typography>
                 </Grid>
                 {showTestStatus()}
-                <Grid item>
-                  <Typography variant="h6" align="center" color="textSecondary">
-                    Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
-                  </Typography>
-                </Grid>
                 {showSubmitButton()}
               </Grid>
             </Paper>
