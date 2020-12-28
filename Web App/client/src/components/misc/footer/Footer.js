@@ -39,53 +39,55 @@ function Footer(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <Divider style={{marginBottom: "10px"}} />
       <Hidden mdUp implementation="css">
         {/* Mobile = Column View */}
         {(props.assessmentState !== "ujian") ?
-          <Grid container justify="space-between">
-            <Grid item>
-              <div className={classes.footerMobileContainer}>
-                <Typography variant="caption" color="textSecondary">
-                  Schooly System
-                </Typography>
-                <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolMobile} />
-              </div>
+          <>
+            <Divider style={{marginBottom: "10px"}} />
+            <Grid container justify="space-between">
+              <Grid item>
+                <div className={classes.footerMobileContainer}>
+                  <Typography variant="caption" color="textSecondary">
+                    Schooly System
+                  </Typography>
+                  <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolMobile} />
+                </div>
+              </Grid>
+              <Grid item>
+                <div className={classes.footerMobileContainer}>
+                  <Typography variant="caption">
+                    <Link to="/bantuan">
+                      Bantuan
+                    </Link>
+                  </Typography>
+                  <Typography variant="caption">
+                    <Link to="/tentang-schooly">
+                      Tentang Schooly
+                    </Link>
+                  </Typography>
+                  <Typography variant="caption">
+                    <Link to="/kebijakan-penggunaan">
+                      Kebijakan Pengunaan
+                    </Link>
+                  </Typography>
+                </div>
+              </Grid>
+              <Grid item>
+                <div className={classes.footerMobileContainer}>
+                  <Typography variant="caption">
+                    <Link to="mailto:schoolysystem@gmail.com">
+                      Hubungi Kami
+                    </Link>
+                  </Typography>
+                  <Typography variant="caption">
+                    <Link to="http://www.instagram.com">
+                      Instagram
+                    </Link>
+                  </Typography>
+                </div>
+              </Grid>
             </Grid>
-            <Grid item>
-              <div className={classes.footerMobileContainer}>
-                <Typography variant="caption">
-                  <Link to="/bantuan">
-                    Bantuan
-                  </Link>
-                </Typography>
-                <Typography variant="caption">
-                  <Link to="/tentang-schooly">
-                    Tentang Schooly
-                  </Link>
-                </Typography>
-                <Typography variant="caption">
-                  <Link to="/kebijakan-penggunaan">
-                    Kebijakan Pengunaan
-                  </Link>
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item>
-              <div className={classes.footerMobileContainer}>
-                <Typography variant="caption">
-                  <Link to="mailto:schoolysystem@gmail.com">
-                    Hubungi Kami
-                  </Link>
-                </Typography>
-                <Typography variant="caption">
-                  <Link to="http://www.instagram.com">
-                    Instagram
-                  </Link>
-                </Typography>
-              </div>
-            </Grid>
-          </Grid>
+          </>
         :
           null
         }
@@ -94,6 +96,7 @@ function Footer(props) {
         {/* Desktop = Row View */}
         {(props.assessmentState !== "ujian") ? 
         <div className={classes.footerDesktopContainer}>
+          <Divider style={{marginBottom: "10px"}} />
           <Grid item container spacing={2} justify="flex-start">
             <Grid item style={{color: "grey"}}>
               Schooly System

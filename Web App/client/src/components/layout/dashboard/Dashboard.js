@@ -8,7 +8,7 @@ import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
-import { getStudentsByClass } from "../../../actions/UserActions";
+import { getStudents, getStudentsByClass } from "../../../actions/UserActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
@@ -168,7 +168,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments, getStudentsByClass } = this.props;
+    const { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments, getStudentsByClass, getStudents } = this.props;
     const { user } = this.props.auth;
 
     getAllTask() // actions yang membuat GET request ke Database.
@@ -177,6 +177,7 @@ class Dashboard extends Component {
       getAllAssessments()
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
       getStudentsByClass(user.kelas)
+      getStudents()
     this.intervalID = setInterval(
       () => this.tick(),
       1000
@@ -205,11 +206,13 @@ class Dashboard extends Component {
 
     const { classes, tasksCollection } = this.props;
 
-    const { user } = this.props.auth;
+    const { user, all_students } = this.props.auth;
     const { all_user_files } = this.props.filesCollection
     const { all_subjects_map } = this.props.subjectsCollection
     const { all_assessments } = this.props.assessmentsCollection
     const classId = user.kelas
+
+    console.log(all_students)
     
     function AssessmentListItem(props) {
     
@@ -278,6 +281,70 @@ class Dashboard extends Component {
       )
     }
 
+    function listTasks(){
+      let result = []
+      tasksByClass.map((task) => {
+        let flag = true
+        for (var i = 0; i < all_user_files.length; i++) {
+          if (all_user_files[i].for_task_object === task._id) {
+            flag = false
+            break;
+          }
+        }
+        if(!all_subjects_map.get(task.subject)){
+          flag = false
+        }
+        if(flag){
+          result.push(
+            <WorkListItem
+              classes={classes}
+              work_title={task.name}
+              work_sender={all_subjects_map.get(task.subject)}
+              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+              work_link={`/tugas-murid/${task._id}`}
+            />
+          )
+        }
+      })
+      if(result.length === 0){
+        result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
+      }
+      return result
+    }
+
+    function listTasksTeacher(){
+      let result = []
+      console.log(user)
+      for(let i=0;i<tasksCollection.length;i++){
+        if(tasksCollection[i].person_in_charge_id === user.id){
+          let number_students_assigned = 0
+          for(let j=0;j<all_students.length;j++){
+            if(tasksCollection[i].class_assigned.includes(all_students[j].kelas)){
+              number_students_assigned = number_students_assigned + 1
+            }
+          }
+          if(Object.values(tasksCollection[i].grades).length !== number_students_assigned){
+            let task = tasksCollection[i]
+            result.push(
+              <WorkListItem
+                classes={classes}
+                work_title={task.name}
+                work_sender={all_subjects_map.get(task.subject)}
+                work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_link={`/tugas-guru/${task._id}`}
+              />
+            )
+          }
+        }
+      }
+      if(result.length === 0){
+        result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
+      }
+      return result
+    }
+
     function listAssessments(category=null, subject={}, type, tab="pekerjaan_kelas"){
       let AssessmentsList = []
       let result = [];
@@ -335,6 +402,9 @@ class Dashboard extends Component {
           if(category==="subject" && result.length === 3)
             break;
         }  
+      }
+      if(result.length === 0){
+        result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
       }
       return result;
     }
@@ -431,26 +501,7 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {tasksByClass.map((task) => {
-                          for (var i = 0; i < all_user_files.length; i++) {
-                            if (all_user_files[i].for_task_object === task._id) {
-                              return null;
-                            }
-                          }
-                          if(!all_subjects_map.get(task.subject)){
-                            return null;
-                          }
-                          return (
-                            <WorkListItem
-                              classes={classes}
-                              work_title={task.name}
-                              work_sender={all_subjects_map.get(task.subject)}
-                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_link={`/tugas-murid/${task._id}`}
-                            />
-                          )
-                        })}
+                        {listTasks()}
                       </Grid>
                     </Paper>
                   </Grid>
@@ -539,7 +590,8 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {tasksByClass.map((task) => {
+                        {
+                        tasksByClass.map((task) => {
                           for (var i = 0; i < all_user_files.length; i++) {
                             if (all_user_files[i].for_task_object === task._id) {
                               return null;
@@ -661,6 +713,7 @@ class Dashboard extends Component {
                 </Grid>
               </Grid>
             : user.role === "Teacher" ?
+              <>
               <Grid item container direction="row" spacing={2} justify="flex-end" alignItems="center">
                 <Grid item>
                   <Link to ="/daftar-tugas">
@@ -711,6 +764,34 @@ class Dashboard extends Component {
                   </Menu>
                 </Grid>
               </Grid>
+              <Paper style={{padding: "20px"}}>
+                <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                  <Grid item>
+                    <Grid container alignItems="center">
+                      <AssignmentIcon
+                        color="action"
+                        style={{marginRight: "10px", fontSize: "20px"}}
+                      />
+                      <Typography variant="h5" color="primary">
+                        Tugas Yang Belum Diperiksa
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Link to="/daftar-tugas">
+                      <LightTooltip title="Lihat Semua" placement="top">
+                        <IconButton>
+                          <ChevronRightIcon />
+                        </IconButton>
+                      </LightTooltip>
+                    </Link>
+                  </Grid>
+                </Grid>
+                <Grid container direction="column" spacing={1}>
+                  {listTasksTeacher()}
+                </Grid>
+              </Paper>
+              </>
             :
               <Grid item container direction="row" justify="flex-end">
                 <Grid item>
@@ -722,8 +803,11 @@ class Dashboard extends Component {
                   </Link>
                 </Grid>
               </Grid>
+              
             }
+            
           </Grid>
+          
         </Grid>
       </div>
     )
@@ -740,7 +824,8 @@ Dashboard.propTypes = {
   getAllTask: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
-  getStudentsByClass: PropTypes.func.isRequired
+  getStudentsByClass: PropTypes.func.isRequired,
+  getStudents: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -753,6 +838,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments, getStudentsByClass })
+  connect(mapStateToProps, { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments, getStudentsByClass, getStudents })
   (withStyles(styles)(Dashboard))
 )

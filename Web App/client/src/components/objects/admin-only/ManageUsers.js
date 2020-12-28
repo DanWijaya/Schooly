@@ -253,7 +253,7 @@ function ManageUsers(props) {
   const { setUserDisabled, deleteUser, getTeachers, getStudents } = props;
   const { all_students, all_teachers, pending_users } = props.auth;
 
-
+  console.log(all_students)
 
   let student_rows = []
   let teacher_rows = []
