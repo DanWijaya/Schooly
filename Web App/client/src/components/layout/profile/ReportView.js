@@ -344,22 +344,29 @@ function ReportView(props) {
         }
       }
 
+      // ANCHOR handleIndividualReport
       for (let assessment of all_assessments) {
-        // id adalah id mahasiswa
+        // id adalah id murid
+        // (assessment.grades.constructor === Object) && (Object.keys(assessment.grades).length !== 0) sebenarnya tidak diperlukan karena 
+        // grades sudah dipastikan tidak kosong. cek notes di model assessment buat info lebih lanjut
         if ((Object.keys(scores).includes(assessment.subject)) && (assessment.grades) && (assessment.grades.constructor === Object) && 
-        (Object.keys(assessment.grades).length !== 0) && (assessment.grades[id] !== undefined)) {
+          (Object.keys(assessment.grades).length !== 0) && (assessment.grades[id] !== undefined) && assessment.grades[id].total_grade !== null) {
           if (assessment.type === "Kuis") {
             if (!scores[assessment.subject].totalKuisScore) {
-              scores[assessment.subject].totalKuisScore = assessment.grades[id];
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalKuisScore = assessment.grades[id].total_grade;
             } else {
-              scores[assessment.subject].totalKuisScore += assessment.grades[id];
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalKuisScore += assessment.grades[id].total_grade;
             }
             scores[assessment.subject].countKuis++;
           } else {
             if (!scores[assessment.subject].totalUjianScore) {
-              scores[assessment.subject].totalUjianScore = assessment.grades[id];
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalUjianScore = assessment.grades[id].total_grade;
             } else {
-              scores[assessment.subject].totalUjianScore += assessment.grades[id];
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalUjianScore += assessment.grades[id].total_grade;
             }
             scores[assessment.subject].countUjian++;
           }
@@ -431,7 +438,6 @@ function ReportView(props) {
       setHeaders(["Mata Pelajaran", "Rata-Rata Nilai Tugas", "Rata-Rata Nilai Kuis", "Rata-Rata Nilai Ujian"]);
       setRows(handleIndividualReport());
     }
-    console.log("run from inside " + countIRDependencyUpdate.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTaskArray, all_subjects_map, kelasWali, all_assessments]); 
   
@@ -464,35 +470,49 @@ function ReportView(props) {
         condition.push("noStudent");
       }
       
-      const addScore = (items) => {
+      //ANCHOR rapot side drawer
+      const addScore = (items, isAssessment) => {
         if (items.length !== 0) {
           items.forEach((item) => {
             headerNames.push(item.name);
           });
           hasGrade = true;
 
-          students_by_class.forEach((stdInfo) => {
-            items.forEach((item) => {
-              if ((item.grades) && (item.grades[stdInfo._id] !== undefined)) {
-                let grade = Math.round(item.grades[stdInfo._id] * 10) / 10;
-                newRowsObj[stdInfo._id].set(item._id, grade); 
-              } else {
-                newRowsObj[stdInfo._id].set(item._id, undefined); 
-              }
+          if (isAssessment) {
+            students_by_class.forEach((stdInfo) => {
+              items.forEach((item) => {
+                if ((item.grades) && (item.grades[stdInfo._id] !== undefined) && (item.grades[stdInfo._id].total_grade !== null)) {
+                  let grade = Math.round(item.grades[stdInfo._id].total_grade * 10) / 10;
+                  newRowsObj[stdInfo._id].set(item._id, grade);
+                } else {
+                  newRowsObj[stdInfo._id].set(item._id, undefined);
+                }
+              });
             });
-          });
+          } else {
+            students_by_class.forEach((stdInfo) => {
+              items.forEach((item) => {
+                if ((item.grades) && (item.grades[stdInfo._id] !== undefined)) {
+                  let grade = Math.round(item.grades[stdInfo._id] * 10) / 10;
+                  newRowsObj[stdInfo._id].set(item._id, grade);
+                } else {
+                  newRowsObj[stdInfo._id].set(item._id, undefined);
+                }
+              });
+            });
+          }
         } // jika items kosong, hasGrade akan tetap bernilai false
       };
 
       getTasksBySC(valueMatpel, valueKelas).then((taskArray) => {
-        addScore(taskArray);
+        addScore(taskArray, false);
       }).then(() => {
         return getKuisBySC(valueMatpel, valueKelas).then((kuisArray) => {
-          addScore(kuisArray);
+          addScore(kuisArray, true);
         });
       }).then(() => {
         return getUjianBySC(valueMatpel, valueKelas).then((ujianArray) => {
-          addScore(ujianArray);
+          addScore(ujianArray, true);
         });
       }).then(() => {
         students_by_class.forEach((stdInfo) => {
