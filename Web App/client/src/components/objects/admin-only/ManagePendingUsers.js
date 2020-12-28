@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -16,6 +16,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SortIcon from "@material-ui/icons/Sort";
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckIcon from '@material-ui/icons/Check';
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -48,10 +49,17 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function ManageUsersToolbar(props) {
+const ManageUsersToolbar = (props) => {
   const { classes, order, orderBy, onRequestSort, role, heading, 
     activateCheckboxMode, deactivateCheckboxMode, currentCheckboxMode, OpenDialogCheckboxDelete, OpenDialogCheckboxApprove,
-    CheckboxDialog } = props;
+    CloseDialogCheckboxDelete, CloseDialogCheckboxApprove, CheckboxDialog, listCheckbox, lengthListCheckbox, reloader } = props;
+
+  console.log(listCheckbox)
+  console.log(currentCheckboxMode)
+
+  if(props.lengthListCheckbox !== lengthListCheckbox){
+    console.log("Berubah")
+  }
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property, role);
@@ -75,112 +83,181 @@ function ManageUsersToolbar(props) {
     setAnchorEl(null);
   };
 
+  React.useEffect(() => {
+    console.log(lengthListCheckbox)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },)
+
+  const [coba, setCoba] = React.useState(null)
+
   return (
     <Toolbar className={classes.toolbar}>
       <Typography variant="h5">
         {heading}
       </Typography>
       <div>
-      <LightTooltip title="Urutkan Akun">
-        <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-          <SortIcon />
-        </IconButton>
-      </LightTooltip>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseSortMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        {headCells.map((headCell, i) => (
-          <MenuItem
-            key={headCell.id}
-            sortDirection={orderBy === headCell.id ? order : false}
-            onClick={props.handleClosePanel}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ?
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-                : null
-              }
-            </TableSortLabel>
-          </MenuItem>
-        ))}
-      </Menu>
-      {(role === "Student") ?
-        <>
-          <LightTooltip title="Mode Checkbox">
-            <IconButton className={classes.checkboxModeButton}
-            onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Student") : () => deactivateCheckboxMode("Student")}>
-              <CheckBoxIcon />
-            </IconButton>
-          </LightTooltip>
-          {(!currentCheckboxMode) ? null :
-            <>
-              {CheckboxDialog("Approve", "Student")}
-              <LightTooltip title="Aktifkan User Tercentang">
-                <IconButton className={classes.checkboxModeButton}
-                onClick={(e) => OpenDialogCheckboxApprove(e, "Student")}>
-                  <CheckBoxIcon />
-                </IconButton>
-              </LightTooltip>
-              {CheckboxDialog("Delete", "Student")}
-              <LightTooltip title="Hapus User Tercentang">
-                <IconButton className={classes.checkboxModeButton}
-                onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}>
-                  <CheckBoxIcon />
-                </IconButton>
-              </LightTooltip>
-            </>
-          }
-        </>    
-      : 
-        <>
-          <LightTooltip title="Mode Checkbox">
-            <IconButton className={classes.checkboxModeButton} 
-            onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Teacher") : () => deactivateCheckboxMode("Teacher")}>
-              <CheckBoxIcon />
-            </IconButton>
-          </LightTooltip>
-          {(!currentCheckboxMode) ? null :
-            <>
-              {CheckboxDialog("Approve", "Teacher")}
-              <LightTooltip title="Aktifkan User Tercentang">
-                <IconButton className={classes.checkboxModeButton}
-                onClick={(e) => OpenDialogCheckboxApprove(e, "Teacher")}>
-                  <CheckBoxIcon />
-                </IconButton>
-              </LightTooltip>
-              {CheckboxDialog("Delete", "Teacher")}
-              <LightTooltip title="Hapus User Tercentang">
-                <IconButton className={classes.checkboxModeButton}
-                onClick={(e) => OpenDialogCheckboxDelete(e, "Teacher")}>
-                  <CheckBoxIcon />
-                </IconButton>
-              </LightTooltip>
-            </>
-          }
-        </>
-      }
+        {(role === "Student") ?
+          <>
+            {(lengthListCheckbox === 0) ?
+              <>  
+                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Checkbox" : "Matikan Mode Checkbox"}>
+                  <IconButton className={classes.checkboxModeButton}
+                  onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Student") : () => deactivateCheckboxMode("Student")}>
+                    <CheckBoxIcon />
+                  </IconButton>
+                </LightTooltip>
+                <LightTooltip title="Urutkan Akun">
+                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                    <SortIcon />
+                  </IconButton>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                      onClick={props.handleClosePanel}
+                    >
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                        onClick={createSortHandler(headCell.id)}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ?
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc" ? "sorted descending" : "sorted ascending"}
+                          </span>
+                          : null
+                        }
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            :
+              <>
+                {CheckboxDialog("Approve", "Student")}
+                <LightTooltip title="Aktifkan User Tercentang">
+                  <IconButton
+                    style={{marginRight: "3px"}}
+                    className={classes.profileApproveButton}
+                    onClick={(e) => OpenDialogCheckboxApprove(e, "Student")}
+                  >
+                    <CheckCircleIcon fontSize="default" />
+                  </IconButton>
+                </LightTooltip>
+                {CheckboxDialog("Delete", "Student")}
+                <LightTooltip title="Hapus User Tercentang">
+                  <IconButton
+                    className={classes.profileDeleteButton}
+                    onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
+                  >
+                    <DeleteIcon fontSize="default" />
+                  </IconButton>
+                </LightTooltip>
+              </>
+            }
+          </>    
+        : 
+          <>
+            {(lengthListCheckbox === 0) ? 
+              <>
+                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Checkbox" : "Matikan Mode Checkbox"}>
+                  <IconButton className={classes.checkboxModeButton} 
+                  onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Teacher") : () => deactivateCheckboxMode("Teacher")}>
+                    <CheckBoxIcon />
+                  </IconButton>
+                </LightTooltip>
+                <LightTooltip title="Urutkan Akun">
+                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                    <SortIcon />
+                  </IconButton>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                      onClick={props.handleClosePanel}
+                    >
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                        onClick={createSortHandler(headCell.id)}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ?
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc" ? "sorted descending" : "sorted ascending"}
+                          </span>
+                          : null
+                        }
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            :
+              <>
+                {CheckboxDialog("Approve", "Teacher")}
+                <LightTooltip title="Aktifkan User Tercentang">
+                  <IconButton
+                    className={classes.profileApproveButton}
+                    onClick={(e) => OpenDialogCheckboxApprove(e, "Teacher")}
+                    style={{marginRight: "3px"}}
+                  >
+                    <CheckCircleIcon/>
+                  </IconButton>
+                </LightTooltip>
+                {CheckboxDialog("Delete", "Teacher")}
+                <LightTooltip title="Hapus User Tercentang">
+                  <IconButton
+                    className={classes.profileDeleteButton}
+                    onClick={(e) => OpenDialogCheckboxDelete(e, "Teacher")}
+                  >
+                    <DeleteIcon/>
+                  </IconButton>
+                </LightTooltip>
+              </>
+            }
+          </>
+        }
       </div>
     </Toolbar>
   );
 };
+
+ManageUsersToolbar.propTypes = {
+  listCheckbox: PropTypes.object.isRequired,
+  lengthListCheckbox: PropTypes.number.isRequired,
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -270,7 +347,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.divider,
       color: "black",
     },
-    marginLeft: "3px"
+    marginRight: "3px"
   }
 }));
 
@@ -310,8 +387,13 @@ function ManageUsers(props) {
   const [listCheckboxStudent, setListCheckboxStudent] = React.useState([])
   const [listCheckboxTeacher, setListCheckboxTeacher] = React.useState([])
 
-  console.log(listCheckboxStudent)
-  console.log(listCheckboxTeacher)
+  const [test, setTest] = React.useState(false)
+
+  React.useEffect(() => {
+    console.log(listCheckboxStudent.length)
+    console.log(listCheckboxTeacher.length)
+    autoReloader()
+  },[listCheckboxTeacher,listCheckboxStudent])
 
   const handleActivateCheckboxMode = (type) => {
     if(type === "Student"){
@@ -374,24 +456,28 @@ function ManageUsers(props) {
     for(let i=0;i<listCheckboxStudent.length;i++){
       onApproveUser(listCheckboxStudent[i].row._id)
     }
+    setListCheckboxStudent([])
   }
 
   const handleApproveListTeacher = () => {
     for(let i=0;i<listCheckboxTeacher.length;i++){
       onApproveUser(listCheckboxTeacher[i].row._id)
     }
+    setListCheckboxTeacher([])
   }
 
   const handleDeleteListStudent = () => {
     for(let i=0;i<listCheckboxStudent.length;i++){
       onDeleteUser(listCheckboxStudent[i].row._id)
     }
+    setListCheckboxStudent([])
   }
 
   const handleDeleteListTeacher = () => {
     for(let i=0;i<listCheckboxTeacher.length;i++){
       onDeleteUser(listCheckboxTeacher[i].row._id)
     }
+    setListCheckboxTeacher([])
   }
 
   // Checkbox Dialog Box
@@ -468,6 +554,10 @@ function ManageUsers(props) {
     getPendingTeachers()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const autoReloader = () => {
+    setTest(!test)
+  }
 
   const handleRequestSort = (event, property, role) => {
     if (role === "Student") {
@@ -848,6 +938,9 @@ function ManageUsers(props) {
         CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
         CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
+        lengthListCheckbox={listCheckboxStudent.length}
+        listCheckbox={listCheckboxStudent}
+        reloader={() => autoReloader}
       />
       <Divider variant="inset" />
       <Grid container direction="column" spacing={2} style={{marginTop: "10px", marginBottom: "75px"}}>
@@ -922,7 +1015,9 @@ function ManageUsers(props) {
                             <LightTooltip title="Aktifkan">
                             <FormGroup>
                               <FormControlLabel
-                                control={<Checkbox name="gilad" onChange={(e) => handleChangeListStudent(e, index, row)}/>}
+                                control={<Checkbox onChange={(e) => {
+                                  handleChangeListStudent(e, index, row)
+                                  autoReloader()}} color="primary"/>}
                               />
                             </FormGroup>
                             </LightTooltip>
@@ -978,6 +1073,9 @@ function ManageUsers(props) {
         CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
         CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
+        lengthListCheckbox={listCheckboxTeacher.length}
+        listCheckbox={listCheckboxTeacher}
+        reloader={() => autoReloader}
       />
       <Divider variant="inset" />
       <Grid container direction="column" spacing={2} style={{marginTop: "10px"}}>
@@ -1052,7 +1150,10 @@ function ManageUsers(props) {
                             <LightTooltip title="Aktifkan">
                             <FormGroup>
                               <FormControlLabel
-                                control={<Checkbox name="gilad" onChange={(e) => handleChangeListTeacher(e, index, row)}/>}
+                                control={<Checkbox onChange={(e) => {
+                                  handleChangeListTeacher(e, index, row)
+                                  autoReloader()
+                                }} color="primary"/>}
                               />
                             </FormGroup>
                             </LightTooltip>
