@@ -291,6 +291,78 @@ function ListAssessments(props){
   return result;
 }
 
+class TimeClock extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: new Date(),
+      anchorEl: null,
+    };
+  }
+
+  componentDidMount() {
+
+    this.intervalID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+  }
+
+  tick() {
+    this.setState({
+      time: new Date()
+    });
+  }
+  render() {
+    const { user, classes } = this.props
+    return (
+    <Grid item>
+      {user.role === "Student" ?
+        <Paper elevation={0} className={classes.timePaperStudent}>
+          <Typography variant="h4">
+            <b>Selamat Datang, {user.name}</b>
+          </Typography>
+          <Typography variant="h5" style={{marginBottom: "20px"}}>
+            Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
+          </Typography>
+          <Typography variant="h6">
+            Apa yang ingin Anda kerjakan hari ini?
+          </Typography>
+        </Paper>
+      : user.role === "Teacher" ?
+        <Paper elevation={0} className={classes.timePaperTeacher}>
+          <Typography variant="h4">
+            <b>Selamat Datang, {user.name}</b>
+          </Typography>
+          <Typography variant="h5" style={{marginBottom: "20px"}}>
+          Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
+          </Typography>
+          <Typography variant="h6">
+            Apa yang ingin Anda kerjakan hari ini?
+          </Typography>
+        </Paper>
+      :
+        <Paper elevation={0} className={classes.timePaperAdmin}>
+          <Typography variant="h4">
+            <b>Selamat Datang, {user.name}</b>
+          </Typography>
+          <Typography variant="h5" style={{marginBottom: "20px"}}>
+            Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
+          </Typography>
+          <Typography variant="h6">
+            Apa yang ingin Anda kerjakan hari ini?
+          </Typography>
+        </Paper>
+      }
+    </Grid>
+    )
+  }
+}
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -312,10 +384,6 @@ class Dashboard extends Component {
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
       getStudentsByClass(user.kelas)
       getStudents()
-    this.intervalID = setInterval(
-      () => this.tick(),
-      1000
-    );
   }
 
   componentWillUnmount() {
@@ -436,45 +504,7 @@ class Dashboard extends Component {
     return (
       <div className={classes.root}>
         <Grid container direction="column" spacing={3}>
-          <Grid item>
-            {user.role === "Student" ?
-              <Paper elevation={0} className={classes.timePaperStudent}>
-                <Typography variant="h4">
-                  <b>Selamat Datang, {user.name}</b>
-                </Typography>
-                <Typography variant="h5" style={{marginBottom: "20px"}}>
-                  Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
-                </Typography>
-                <Typography variant="h6">
-                  Apa yang ingin Anda kerjakan hari ini?
-                </Typography>
-              </Paper>
-            : user.role === "Teacher" ?
-              <Paper elevation={0} className={classes.timePaperTeacher}>
-                <Typography variant="h4">
-                  <b>Selamat Datang, {user.name}</b>
-                </Typography>
-                <Typography variant="h5" style={{marginBottom: "20px"}}>
-                Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
-                </Typography>
-                <Typography variant="h6">
-                  Apa yang ingin Anda kerjakan hari ini?
-                </Typography>
-              </Paper>
-            :
-              <Paper elevation={0} className={classes.timePaperAdmin}>
-                <Typography variant="h4">
-                  <b>Selamat Datang, {user.name}</b>
-                </Typography>
-                <Typography variant="h5" style={{marginBottom: "20px"}}>
-                  Sekarang pukul {this.state.time.toLocaleTimeString("id-ID")}, tanggal {this.state.time.toLocaleDateString("id-ID")}.
-                </Typography>
-                <Typography variant="h6">
-                  Apa yang ingin Anda kerjakan hari ini?
-                </Typography>
-              </Paper>
-            }
-          </Grid>
+          <TimeClock user={user} classes={classes}/>
           <Grid item container xs={12}>
             {user.role === "Student" ?
               <Grid item container spacing={3}>
