@@ -36,7 +36,6 @@ import { RadioButtonChecked, CheckBox, TextFormat, Subject } from "@material-ui/
 import SortIcon from "@material-ui/icons/Sort";
 import EditIcon from "@material-ui/icons/Edit";
 import { BsFlagFill, BsFlag } from "react-icons/bs";
-// ANCHOR import
 // const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -230,7 +229,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// ANCHOR classes
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -331,7 +329,6 @@ function SubmittedAssessmentList(props) {
     }
   }, [selectedAssessments])
 
-  // ANCHOR Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -422,7 +419,6 @@ function SubmittedAssessmentList(props) {
     }
   }
 
-  // ANCHOR fungsi handleflag
   const handleFlag = (e, studentId) => {
     e.stopPropagation();
     let newSuspects = [...suspects];
@@ -529,7 +525,6 @@ function SubmittedAssessmentList(props) {
 
             // let student_task = all_students[j].tugas
             
-            // ANCHOR hitung nilai per murid
             let scores = null;
             let isAllEssayGraded = false;
             // jika murid mengerjakan assessment ini
@@ -704,7 +699,6 @@ function SubmittedAssessmentList(props) {
                       )} />
                   {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
                     <div style={{ display: "flex" }}>
-                      {/* FIXME */}
                         {
                         (hasLongtextQuestion) ? (
                           (isAllEssayGraded) ? (
@@ -729,7 +723,6 @@ function SubmittedAssessmentList(props) {
                               </Grid>
                             </div>
                         )}
-                      {/* ANCHOR elemen flag */}
                         <Grid item alignItem="center">
                           <Grid item>
                             <IconButton

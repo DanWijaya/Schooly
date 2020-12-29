@@ -235,7 +235,6 @@ class EditAssessment extends Component {
       ready: false
     }
   }
-  // ANCHOR state 
 
   // ref itu untuk ngerefer html yang ada di render.
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
@@ -866,7 +865,6 @@ class EditAssessment extends Component {
     this.setState({ page: 0, rowsPerPage: +event.target.value })
   };
 
-  // ANCHOR weightInput
   handleLongtextWeight = (e, questionIdx) => {
     let value = e.target.value;
     this.setState((state) => {
@@ -958,7 +956,6 @@ class EditAssessment extends Component {
             </Grid>
             {(type !== "longtext") ? (
               <Grid item style={{ height: "65px" }}>
-                {/* ANCHOR textfield */}
                 <Hidden xsDown>
                   <TextField
                     defaultValue={this.state.weights[type]}
@@ -1036,7 +1033,6 @@ class EditAssessment extends Component {
         let weight = this.state.weights[type];
         let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
         columnsDesktopView.push(
-          // ANCHOR column push
           //  item xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
           <Grid container item xs={12 / filteredtypeCount.length} spacing="1" direction="column" justify="space-between" alignItems="center">
             <Grid item>
@@ -1054,7 +1050,6 @@ class EditAssessment extends Component {
             </Grid>
             {(type !== "longtext") ? (
               <Grid item style={{ height: "65px"}}>
-                {/* ANCHOR textfield */}
                 <TextField
                   defaultValue={this.state.weights[type]}
                   variant="outlined"
@@ -1359,7 +1354,6 @@ class EditAssessment extends Component {
               </Paper>
             </Grid>
 
-            {/* ANCHOR  paper bobot*/}
             <Grid item>
               {(this.state.ready) ? this.weightInput() : null}
             </Grid>

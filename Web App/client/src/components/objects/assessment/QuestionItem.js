@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItem(props){
-  //ANCHOR props
   const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, 
     handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, type,
     check_data, parseAnswer, handleLongtextWeight, longtextWeight } = props
@@ -358,7 +357,6 @@ function QuestionItem(props){
           </Grid>
         </Grid>
 
-        {/* ANCHOR bobot uraian */}
         {(props.type === "longtext") ? (
           <div>
           <Divider />

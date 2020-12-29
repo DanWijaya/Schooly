@@ -33,7 +33,6 @@ import SendIcon from "@material-ui/icons/Send";
 import { RadioButtonChecked, CheckBox, TextFormat, Subject } from "@material-ui/icons";
 import InfoIcon from "@material-ui/icons/Info";
 
-// ANCHOR import
 
 const styles = (theme) => ({
   root: {
@@ -210,7 +209,6 @@ class CreateAssessment extends Component {
       longtextWeight: [null]
     }
   }
-  //ANCHOR state
 
 
   // ref itu untuk ngerefer html yang ada di render.
@@ -357,7 +355,6 @@ class CreateAssessment extends Component {
         type: this.state.type,
         question_weight: question_weight,
       }
-      // REVIEW submit
       createAssessment(formData, assessmentData, history)
         .then(res => {
           console.log("Assessment is created successfully")
@@ -745,7 +742,6 @@ class CreateAssessment extends Component {
     document.getElementById("submitForm").submit();
   }
 
-  // ANCHOR weightInput
   handleLongtextWeight = (e, questionIdx) => {
     let value = e.target.value;
     this.setState((state) => {
@@ -837,7 +833,6 @@ class CreateAssessment extends Component {
             </Grid>
             {(type !== "longtext") ? (
               <Grid item style={{ height: "65px" }}>
-                {/* ANCHOR textfield */}
                 <Hidden xsDown>
                   <TextField
                     defaultValue={this.state.weights[type]}
@@ -932,7 +927,6 @@ class CreateAssessment extends Component {
             </Grid>
               {(type !== "longtext") ? (
               <Grid item style={{ height: "65px" }}>
-                {/* ANCHOR textfield */}
                 <TextField
                   defaultValue={this.state.weights[type]}
                   variant="outlined"
@@ -1245,7 +1239,6 @@ class CreateAssessment extends Component {
               </Paper>
             </Grid>
             
-            {/* REVIEW  paper bobot*/}
             <Grid item>
               {this.weightInput()}
             </Grid>

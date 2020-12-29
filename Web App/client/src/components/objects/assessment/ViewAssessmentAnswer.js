@@ -50,7 +50,6 @@ import ExploreIcon from "@material-ui/icons/Explore";
 import MuiAlert from "@material-ui/lab/Alert";
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-// ANCHOR import
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -202,7 +201,6 @@ const useStyles = makeStyles((theme) => ({
     //harus ada meskipun kosong
   }
 }));
-// ANCHOR class
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
@@ -259,7 +257,6 @@ function ViewAssessmentTeacher(props) {
   const [value, setValue] = React.useState(0);
   // const [value, setValue] = React.useState(1); //dev
 
-  // ANCHOR useffect
   React.useEffect(() => {
     getOneAssessment(assessment_id)
     getAllClass("map")
@@ -352,7 +349,6 @@ function ViewAssessmentTeacher(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAssessments, all_student_object, hasLongtextQst.current])
 
-  // ANCHOR Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -438,7 +434,6 @@ function ViewAssessmentTeacher(props) {
     setOpenSnackbar(false);
   }
 
-  // ANCHOR fungsi generate Soal
   function generateQuestion(questionNumber, questionWeight, questionInfo) {
     let questionType = questionInfo.type;
     let questionName = questionInfo.name;
@@ -586,7 +581,6 @@ function ViewAssessmentTeacher(props) {
     )
   }
 
-  // ANCHOR fungsi ubah nilai
   function handleGradeChange(e, studentId, questionIndex) {
     let temp = { ...longtextGrades};
     let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
@@ -615,7 +609,6 @@ function ViewAssessmentTeacher(props) {
       });
     }
   }
-  // ANCHOR fungsi per soal
   function generateAllStudentAnswer() {
     let submissions = selectedAssessments.submissions;
     let question = selectedAssessments.questions[qnsIndex];
@@ -713,7 +706,6 @@ function ViewAssessmentTeacher(props) {
     });
   }
 
-  // ANCHOR fungsi per murid
   function generateQstStdAnswer () {
     let studentId = selectedStudent;
     let studentAnswers;
@@ -809,7 +801,6 @@ function ViewAssessmentTeacher(props) {
     });
   }
 
-  //ANCHOR cek kosong
   function isAssessmentLoaded() {
     return (Object.keys(selectedAssessments).length !== 0);
   }
@@ -826,7 +817,6 @@ function ViewAssessmentTeacher(props) {
     }
   }
 
-  // ANCHOR fungsi dialog navigasi
   const [openDialog, setOpenDialog] = React.useState(false);
   function handleOpenNavDialog() {
     setOpenDialog(true);
@@ -861,7 +851,6 @@ function ViewAssessmentTeacher(props) {
     } else {
       fullyGraded = false;
     }
-  // ANCHOR fungsi navigasi soal
     return (
       <ToggleButton
         value={question_number - 1}
@@ -975,7 +964,6 @@ function ViewAssessmentTeacher(props) {
                         </Badge>
                     </LightTooltip>
                 </Grid>
-                {/* ANCHOR navigasi soal */}
                   <Grid container item>
                   <ToggleButtonGroup
                     value={qnsIndex}
@@ -1039,7 +1027,6 @@ function ViewAssessmentTeacher(props) {
                                 <Typography variant="subtitle-2">Sebelum</Typography>
                             </div>
                         </Button>
-                        {/* ANCHOR elemen dialog navigasi */}
                         <Button onClick={handleOpenNavDialog}>
                             <div className={classes.mobileNav}>
                                 <ExploreIcon className={classes.mobileNavButton}/>
@@ -1125,7 +1112,6 @@ function ViewAssessmentTeacher(props) {
 
             {/* Tab Panel Per Soal */}
           <div hidden={value === 1} style={{padding: "24px"}}>
-            {/* ANCHOR elemen soal */}
             {
               (isAssessmentLoaded()) ? (
                 (selectedAssessments.questions[qnsIndex].type === "longtext") ? (
@@ -1146,7 +1132,6 @@ function ViewAssessmentTeacher(props) {
               )
             }
 
-            {/* ANCHOR call per soal jawaban semua murid*/}
             {
               (isAssessmentLoaded() && selectedAssessments.submissions) ? (
                 (hasLongtextQst.current === true) ? (
@@ -1191,7 +1176,6 @@ function ViewAssessmentTeacher(props) {
                       value={selectedStudent}
                       onChange={(e) => { setSelectedStudent(e.target.value) }}
                     >
-                      {/* ANCHOR elemen opsi murid*/}
                       {
                         (menuOption && menuOption.studentOptions.combined.length !== 0) ? (
                           (selectedClass) ? (
@@ -1247,7 +1231,6 @@ function ViewAssessmentTeacher(props) {
               </div>
             </Paper>
 
-            {/* ANCHOR soal-jawaban 1 murid */}
             {
               (isAssessmentLoaded() && selectedAssessments.submissions) ? (
                 (hasLongtextQst.current === true) ? (
@@ -1281,7 +1264,6 @@ function ViewAssessmentTeacher(props) {
           {snackbarContent}
           </MuiAlert>
         </Snackbar>
-      {/* ANCHOR elemen dialog  */}
         <Dialog
           open={openDialog}
           onClose={handleCloseNavDialog}
@@ -1349,7 +1331,6 @@ function ViewAssessmentTeacher(props) {
   )
 };
 
-// ANCHOR paper jawaban murid untuk mode per soal
 function QuestionPerQuestion(props) {
   const { 
     classes, 
@@ -1403,7 +1384,6 @@ function QuestionPerQuestion(props) {
               {/* <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px" }}> */}
               <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
               <TextField
-                // ANCHOR per soal
                 // value={longtextGrades}
                 value={studentMark}
                 // defaultValue={studentMark}
@@ -1588,7 +1568,6 @@ function QuestionPerQuestion(props) {
   }
 }
 
-// ANCHOR paper soal-jawaban untuk mode per murid
 function QuestionAnswerPerStudent(props) {
   const {
     classes,
