@@ -33,6 +33,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "flex-start",
   },
+  mobileFont: {
+    fontSize: "11px",
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "13.5px",
+    },
+  }
 }));
 
 function Footer(props) {
@@ -47,7 +53,7 @@ function Footer(props) {
             <Grid container justify="space-between">
               <Grid item>
                 <div className={classes.footerMobileContainer}>
-                  <Typography variant="caption" color="textSecondary">
+                  <Typography color="textSecondary" className={classes.mobileFont}>
                     Schooly System
                   </Typography>
                   <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolMobile} />
@@ -55,17 +61,17 @@ function Footer(props) {
               </Grid>
               <Grid item>
                 <div className={classes.footerMobileContainer}>
-                  <Typography variant="caption">
+                  <Typography gutterBottom className={classes.mobileFont}>
                     <Link to="/bantuan">
                       Bantuan
                     </Link>
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography gutterBottom className={classes.mobileFont}>
                     <Link to="/tentang-schooly">
                       Tentang Schooly
                     </Link>
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography gutterBottom className={classes.mobileFont}>
                     <Link to="/kebijakan-penggunaan">
                       Kebijakan Pengunaan
                     </Link>
@@ -74,14 +80,14 @@ function Footer(props) {
               </Grid>
               <Grid item>
                 <div className={classes.footerMobileContainer}>
-                  <Typography variant="caption">
+                  <Typography gutterBottom className={classes.mobileFont}>
                     <Link to="mailto:schoolysystem@gmail.com">
                       Hubungi Kami
                     </Link>
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography gutterBottom className={classes.mobileFont}>
                     <Link to="http://www.instagram.com">
-                      Instagram
+                      Media Sosial
                     </Link>
                   </Typography>
                 </div>
@@ -127,7 +133,7 @@ function Footer(props) {
               </Grid>
               <Grid item>
                 <a href="http://www.instagram.com">
-                  Instagram
+                  Media Sosial
                 </a>
               </Grid>
             </Grid>
