@@ -22,7 +22,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { FaClipboardList } from "react-icons/fa";
+import { BsClipboardData } from "react-icons/bs";
+import { FaTasks } from "react-icons/fa";
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -100,6 +101,7 @@ function AssessmentListToolbar(props) {
   }
 
   return (
+    // <div className={classes.toolbar}>
     <div className={classes.toolbar}>
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
@@ -107,93 +109,99 @@ function AssessmentListToolbar(props) {
             null
             :
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-              <FaClipboardList className={classes.titleIcon} fontSize="large"/>
+              <BsClipboardData className={classes.titleIcon} fontSize="large"/>
               <Typography variant="h4">
-                Daftar Kuis
+                Daftar Ujian
               </Typography>
             </div>
           }
         </Hidden>
         <Hidden xsDown implementation="css">
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <FaClipboardList className={classes.titleIcon} fontSize="large"/>
+            <BsClipboardData className={classes.titleIcon} fontSize="large"/>
             <Typography variant="h4">
-              Daftar Kuis
+              Daftar Ujian
             </Typography>
           </div>
         </Hidden>
         <Hidden smUp implementation="css">
           {searchBarFocus ?
-            <div style={{display: "flex"}}>
-              <IconButton
-                onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
-              >
-                <ArrowBackIcon/>
-              </IconButton>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="searchFilterMobile"
-                value={searchFilter}
-                onChange={onChange}
-                autoFocus
-                onClick={(e) =>setSearchBarFocus(true)}
-                placeholder="Search Kuis"
-                style={{
-                  maxWidth: "200px",
-                  marginLeft: "10px"
-                }}
-                InputProps={{
-                  startAdornment:(
-                    searchBarFocus ? null :
-                      <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                        <IconButton size="small">
-                          <GoSearch/>
+          <div style={{display: "flex"}}>
+            <IconButton
+            onClick={() => {
+            setSearchBarFocus(false)
+            updateSearchFilter("")}}>
+              <ArrowBackIcon/>
+            </IconButton>
+            <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="searchFilterMobile"
+                  value={searchFilter}
+                  onChange={onChange}
+                  autoFocus
+                  onClick={(e) =>setSearchBarFocus(true)}
+                  placeholder="Search Ujian"
+                  // onBlur={() => setSearchBarFocus(false)}
+                  style={{
+                    maxWidth: "200px",
+                    marginLeft: "10px"
+                  }}
+                  InputProps={{
+                    startAdornment:(
+                      searchBarFocus ? null :
+                        <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                          <IconButton size="small">
+                            <GoSearch/>
+                          </IconButton>
+                        </InputAdornment>)
+                      ,
+                      endAdornment:(
+                      <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                        <IconButton
+                          size="small"
+                          id="searchFilterMobile"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onClear(e, "searchFilterMobile")}
+                          }
+                          style={{
+                            opacity: 0.5,
+                            visibility: !searchFilter ? "hidden" : "visible"
+                          }}>
+                          <ClearIcon/>
                         </IconButton>
                       </InputAdornment>
-                  ),
-                  endAdornment:(
-                    <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                      <IconButton
-                        size="small"
-                        id="searchFilterMobile"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onClear(e, "searchFilterMobile")}
-                        }
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible"
-                        }}>
-                        <ClearIcon/>
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  style:{
-                    borderRadius: "20px"
-                  }
-                }}
-              />
-            </div>
-          :
+                    ),
+                    style:{
+                      borderRadius: "20px"
+                    }
+                  }}
+                />
+              </div>
+              :
+            // <div style={{display: "flex"}}>
             <LightTooltip title="Search" style={{marginLeft: "10px"}}>
               <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
                 <GoSearch className={classes.goSearchIconMobile} />
               </IconButton>
             </LightTooltip>
+          // </div>
           }
         </Hidden>
       </div>
       <div style={{display: "flex"}}>
-      <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation="css">
             <TextField
+              // fullWidth
               variant="outlined"
               id="searchFilterDesktop"
               value={searchFilter}
               onChange={onChange}
               onClick={() => setSearchBarFocus(true)}
               onBlur={() => setSearchBarFocus(false)}
-              placeholder="Search Kuis"
+              placeholder="Search Ujian"
+              // onBlur={() => setSearchBarFocus(false)}
               style={{
                 maxWidth: "250px",
                 marginRight: "10px"
@@ -232,10 +240,10 @@ function AssessmentListToolbar(props) {
           {role === "Student"?
             null
           :
-            <LightTooltip title="Buat Kuis">
+            <LightTooltip title="Buat Kuis/Ujian">
               <Link to="/kuis">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <AssignmentIcon className={classes.newAssessmentIconMobile} />
+                  <FaTasks className={classes.newAssessmentIconMobile} />
                 </Fab>
               </Link>
             </LightTooltip>
@@ -248,13 +256,13 @@ function AssessmentListToolbar(props) {
           // ANCHOR contoh tombol round edge
             <Link to="/kuis">
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
-                <AssignmentIcon className={classes.newAssessmentIconDesktop} />
-                Buat Kuis
+                <FaTasks className={classes.newAssessmentIconDesktop} />
+                Buat Kuis/Ujian
               </Fab>
             </Link>
           }
         </Hidden>
-          <LightTooltip title="Urutkan Kuis">
+          <LightTooltip title="Urutkan Ujian">
             <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
               <SortIcon />
             </IconButton>
@@ -433,6 +441,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "15px",
     "&:focus, &:hover": {
+      cursor: "pointer",
       backgroundColor: theme.palette.button.main,
     },
   },
@@ -479,18 +488,18 @@ function AssessmentList(props) {
   // ANCHOR rows
   var rows = [];
   const assessmentRowItem = (data) => {
-    if(data.type === "Kuis"){
+    if(data.type === "Ujian"){
         rows.push(
             createData(
-              data._id,
-              data.name,
-              data.subject,
-              data.start_date,
-              data.end_date,
-              data.class_assigned,
-              data.type
+                data._id,
+                data.name,
+                data.subject,
+                data.start_date,
+                data.end_date,
+                data.class_assigned,
+                data.type
+            )
         )
-      )
     }
   }
 
@@ -581,7 +590,7 @@ function AssessmentList(props) {
     handleOpenCopySnackBar(type)
   }
 
-  document.title = "Schooly | Daftar Kuis";
+  document.title = "Schooly | Daftar Ujian";
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
@@ -631,7 +640,7 @@ function AssessmentList(props) {
         .map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;
           let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
-          let linkToShare = `http://${window.location.host}/kuis-murid/${row._id}`
+          let linkToShare = `http://localhost:3000/kuis-murid/${row._id}`;
           return (
             <Grid item>
               {user.role === "Teacher" ?
