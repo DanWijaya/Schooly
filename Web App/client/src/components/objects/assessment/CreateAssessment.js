@@ -331,7 +331,7 @@ class CreateAssessment extends Component {
         })
       }
       let question_weight = {
-        radio: (typeCount.radio === 0) ? null :  this.state.weights.radio,
+        radio: (typeCount.radio === 0) ? null : this.state.weights.radio,
         checkbox: (typeCount.checkbox === 0) ? null : this.state.weights.checkbox,
         shorttext: (typeCount.shorttext === 0) ? null : this.state.weights.shorttext,
         longtext: longtext
@@ -353,7 +353,7 @@ class CreateAssessment extends Component {
         author_id: id,
         posted: this.state.posted,
         type: this.state.type,
-        question_weight: question_weight,
+        question_weight: question_weight
       }
       createAssessment(formData, assessmentData, history)
         .then(res => {
@@ -367,7 +367,7 @@ class CreateAssessment extends Component {
   }
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true})
+    this.setState({ openUploadDialog: true })
   }
 
   handleOpenDeleteDialog = () => {
@@ -378,16 +378,16 @@ class CreateAssessment extends Component {
     this.setState({ openDeleteDialog: false })
   }
 
-  onChange = (e, otherfield=null) => {
-    if(otherfield){
-      if(otherfield === "end_date" || otherfield === "start_date"){
+  onChange = (e, otherfield = null) => {
+    if (otherfield) {
+      if (otherfield === "end_date" || otherfield === "start_date") {
         this.setState({ [otherfield]: e })
-      }else{
-        this.setState({ [otherfield]: e.target.value})
+      } else {
+        this.setState({ [otherfield]: e.target.value })
       }
     }
-    else{
-      this.setState({ [e.target.id]: e.target.value})
+    else {
+      this.setState({ [e.target.id]: e.target.value })
     }
   }
 
@@ -396,7 +396,7 @@ class CreateAssessment extends Component {
   }
 
   handleClickMenuTambah = (event) => {
-    this.setState({anchorEl: event.currentTarget}); 
+    this.setState({ anchorEl: event.currentTarget });
   };
 
   handleCloseMenuTambah = (option) => {
@@ -409,7 +409,7 @@ class CreateAssessment extends Component {
     console.log("Add questionnnn")
 
     let questions = this.state.questions;
-    if(option === "radio"){
+    if (option === "radio") {
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
@@ -418,7 +418,7 @@ class CreateAssessment extends Component {
         type: option
       })
     }
-    else if(option === "checkbox"){
+    else if (option === "checkbox") {
       questions.push({
         name: "",
         options: ["Opsi 1", ""],
@@ -427,7 +427,7 @@ class CreateAssessment extends Component {
         type: option
       })
     }
-    else if(option === "shorttext"){
+    else if (option === "shorttext") {
       questions.push({
         name: "",
         options: null,
@@ -436,7 +436,7 @@ class CreateAssessment extends Component {
         type: option
       })
     }
-    else if(option === "longtext"){
+    else if (option === "longtext") {
       questions.push({
         name: "",
         options: null,
@@ -448,46 +448,46 @@ class CreateAssessment extends Component {
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.push((option === "longtext") ? undefined : null);
-      return ({ longtextWeight: value})
+      return ({ longtextWeight: value })
     })
     this.setState({ questions: questions })
     this.setState({ currentQuestionOption: null })
   }
 
-  handleChangeQuestion = (e, i, name=null, otherfield=null, type=null) => {
+  handleChangeQuestion = (e, i, name = null, otherfield = null, type = null) => {
     var questions = this.state.questions;
 
-    if(otherfield === "answer"){
+    if (otherfield === "answer") {
       if (type === "radio") {
         questions[i]["answer"] = [e.target.value]
       }
-      else if(type === "checkbox"){
-        if(typeof questions[i]["answer"] === "string"){
+      else if (type === "checkbox") {
+        if (typeof questions[i]["answer"] === "string") {
           questions[i]["answer"] = []
         }
-        if(!e.target.checked || questions[i]["answer"].includes(e.target.value)){
-          if(questions[i]["answer"].length === 1){
+        if (!e.target.checked || questions[i]["answer"].includes(e.target.value)) {
+          if (questions[i]["answer"].length === 1) {
             this.handleOpenCheckboxErrorSnackBar()
           }
-          else{
-            questions[i]["answer"] = questions[i]["answer"].filter(function(value,index){
+          else {
+            questions[i]["answer"] = questions[i]["answer"].filter(function (value, index) {
               return value !== e.target.value
             })
           }
         }
-        else if(e.target.checked && !questions[i]["answer"].includes(e.target.value)){
+        else if (e.target.checked && !questions[i]["answer"].includes(e.target.value)) {
           questions[i]["answer"].push(e.target.value)
         }
       } else if (type === "longtext") {
         questions[i]["answer"] = [e]
       }
-    }else {
+    } else {
       questions[i][e.target.id] = (name ? name : e.target.value);
     }
-    this.setState({ questions: questions})
+    this.setState({ questions: questions })
   }
 
-  // -untuk tipe soal shorttext, agar string soal tidak ditraversal secara menyeluruh (untuk mencari 
+  // untuk tipe soal shorttext, agar string soal tidak ditraversal secara menyeluruh (untuk mencari 
   // kunci jawaban) setiap kali guru mengetik huruf, string soal akan disimpan sebagai ref di komponen soal tersebut.
   // string ini baru akan diproses hanya ketika guru mengklik elemen lain selain textfield tersebut.
   parseAnswer = (txtFieldVal, qstIndex) => {
@@ -495,19 +495,19 @@ class CreateAssessment extends Component {
     let splitResult = txtFieldVal.split("`");
     if ((splitResult.length !== 1) && (splitResult.length % 2 !== 0)) {
       let answerArray = [];
-      for (let i=1; i<=splitResult.length-2; i+=2) {
+      for (let i = 1; i <= splitResult.length - 2; i += 2) {
         answerArray.push(splitResult[i]);
       }
       qst[qstIndex]["answer"] = answerArray;
     } else {
       qst[qstIndex]["answer"] = [];
     }
-    this.setState({questions: qst})
+    this.setState({ questions: qst })
   }
 
   handleQuestionOptions = (e, optionIndex, qnsIndex, action) => {
     let questions = this.state.questions
-    if(action === "Delete"){
+    if (action === "Delete") {
       if (questions[qnsIndex].type === "checkbox") {
         if (questions[qnsIndex].options.length === 1) {
           questions[qnsIndex].options[0] = ""
@@ -529,7 +529,7 @@ class CreateAssessment extends Component {
           } else { // jika ada lebih dari satu kunci jawaban (misal ["E", "B", "Z"])
             // hapus kunci jawaban
             questions[qnsIndex].answer = questions[qnsIndex].answer.filter((value) => {
-                return (value.charCodeAt(0) - 65 !== optionIndex);
+              return (value.charCodeAt(0) - 65 !== optionIndex);
             })
             // semua nilai kunci jawaban lain akan dikurangi 1.
             // misal: jika opsi "C" dihapus, kunci jawaban "E" akan diubah jadi "D", kunci jawaban "Z" akan diubah jadi "Y",
@@ -562,14 +562,14 @@ class CreateAssessment extends Component {
           questions[qnsIndex].options.splice(optionIndex, 1)
         }
       }
-    }else if(action === "Add"){
+    } else if (action === "Add") {
       questions[qnsIndex].options.push("")
-    }else if(action === "Edit"){
+    } else if (action === "Edit") {
       questions[qnsIndex].options[optionIndex] = e.target.value
-    }else{
+    } else {
       console.log("No action is specified")
     }
-    this.setState({ questions: questions})
+    this.setState({ questions: questions })
   }
 
   handleDuplicateQuestion = (i) => {
@@ -580,25 +580,16 @@ class CreateAssessment extends Component {
     // questions.splice(i+1, 0, question)
 
     if (questions[i].type === "shorttext" || questions[i].type === "longtext") {
-      questions.splice(i+1, 0, {
+      questions.splice(i + 1, 0, {
         name: questions[i].name,
         options: null,
         answer: [...questions[i].answer],
         lampiran: [...questions[i].lampiran],
         type: questions[i].type
       })
-    } 
-    // else if (questions[i].type === "longtext") {
-    //   questions.splice(i+1, 0, {
-    //     name: questions[i].name,
-    //     options: null,
-    //     answer: [...questions[i].answer],
-    //     lampiran: [...questions[i].lampiran],
-    //     type: questions[i].type
-    //   })
-    // }
+    }
     else {
-      questions.splice(i+1, 0, {
+      questions.splice(i + 1, 0, {
         name: questions[i].name,
         options: [...questions[i].options],
         answer: [...questions[i].answer],
@@ -606,7 +597,7 @@ class CreateAssessment extends Component {
         type: questions[i].type
       })
     }
-    this.setState({ questions: questions})
+    this.setState({ questions: questions })
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.splice(i + 1, 0, state.longtextWeight[i]);
@@ -618,7 +609,7 @@ class CreateAssessment extends Component {
     console.log(index)
     let questions = this.state.questions
     questions.splice(index, 1)
-    this.setState({ questions: questions})
+    this.setState({ questions: questions })
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.splice(index, 1);
@@ -627,44 +618,44 @@ class CreateAssessment extends Component {
   }
 
 
-  handleQuestionImage = (e, qnsIndex, indexToDelete=null) => {
+  handleQuestionImage = (e, qnsIndex, indexToDelete = null) => {
     let questions = this.state.questions
-    if(Number.isInteger(indexToDelete)){
+    if (Number.isInteger(indexToDelete)) {
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
       console.log(questions)
-      this.setState({ questions: questions})
+      this.setState({ questions: questions })
     }
-    else{
-      if(e.target.files){
-          const files = Array.from(e.target.files);
-          let temp = questions[qnsIndex].lampiran.concat(files)
-          questions[qnsIndex].lampiran = temp;
-          this.setState({ questions: questions})
+    else {
+      if (e.target.files) {
+        const files = Array.from(e.target.files);
+        let temp = questions[qnsIndex].lampiran.concat(files)
+        questions[qnsIndex].lampiran = temp;
+        this.setState({ questions: questions })
       }
     }
   }
 
   listQuestion = () => {
     let questions = this.state.questions;
-    const { page, rowsPerPage} = this.state;
-    
+    const { page, rowsPerPage } = this.state;
+
     let questionList = questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((question, i) => {
-      
+
       // Fitur 2 -- Untuk Memastikan Bahwa Checkbox yang tercentang (ditampilkan ke layar) sinkron dengan value "answer" yang tersimpan
       let booleanArray = [];
       if (question.type === "checkbox") {
         let tempArray = [];
-        if(typeof question.answer === "object"){
-          question.answer.forEach(function(value,index){
-            tempArray.push(Number(value.charCodeAt(0))-65)           
+        if (typeof question.answer === "object") {
+          question.answer.forEach(function (value, index) {
+            tempArray.push(Number(value.charCodeAt(0)) - 65)
           })
         }
         // console.log(tempArray)
-        for(let j=0;j<this.state.questions[i].options.length;j++){
-          if(tempArray.includes(j)){
+        for (let j = 0; j < this.state.questions[i].options.length; j++) {
+          if (tempArray.includes(j)) {
             booleanArray[j] = true;
           }
-          else{
+          else {
             booleanArray[j] = false;
           }
         }
@@ -672,7 +663,7 @@ class CreateAssessment extends Component {
       }
       // console.log(booleanArray)
 
-      return(
+      return (
         <QuestionItem
           isEdit={false}
           index={i + page * rowsPerPage}
@@ -695,19 +686,18 @@ class CreateAssessment extends Component {
           longtextWeight={this.state.longtextWeight[i + page * rowsPerPage]}
         />
       )
-    }
-  )
+    })
 
     return questionList
   }
 
-  componentDidUpdate(prevProps, prevState){
-    if(!this.props.errors && this.props.errors !== prevProps.errors){
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.props.errors && this.props.errors !== prevProps.errors) {
       this.handleOpenUploadDialog()
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props
     handleSideDrawerExist(false)
     getAllClass()
@@ -717,7 +707,7 @@ class CreateAssessment extends Component {
 
   handleChangePage = (event, newPage) => {
     // setPage(newPage);
-    this.setState({ page: newPage})
+    this.setState({ page: newPage })
   };
 
   handleChangeRowsPerPage = (event) => {
@@ -755,11 +745,11 @@ class CreateAssessment extends Component {
     // e.target entah kenapa jadi undefined pas di dalam setState
     let value = e.target.value;
     this.setState((state) => {
-      return { weights: { ...state.weights, [type]: value }}
+      return { weights: { ...state.weights, [type]: value } }
     });
   }
 
-  weightInput = ()  => {
+  weightInput = () => {
     const columnTemplate = {
       radio: {
         // root: classes.RadioQst, 
@@ -780,7 +770,7 @@ class CreateAssessment extends Component {
     }
 
     let typeCount = {
-      radio: 0, 
+      radio: 0,
       checkbox: 0,
       shorttext: 0,
       longtext: 0
@@ -875,14 +865,14 @@ class CreateAssessment extends Component {
 
               </Grid>
             ) : (
-                <Grid item style={{ height: "65px" }}>
-                  <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-                    <IconButton>
-                      <InfoIcon />
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-              )}
+              <Grid item style={{ height: "65px" }}>
+                <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
+                  <IconButton>
+                    <InfoIcon />
+                  </IconButton>
+                </LightTooltip>
+              </Grid>
+            )}
           </Grid>
         );
       }
@@ -910,10 +900,9 @@ class CreateAssessment extends Component {
         let weight = this.state.weights[type];
         let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
         columnsDesktopView.push(
-          // xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
           <Grid container item xs={12 / filteredtypeCount.length} spacing="1" direction="column" justify="space-between" alignItems="center">
             <Grid item>
-                {columnTemplate[type].icon}
+              {columnTemplate[type].icon}
             </Grid>
             <Grid item>
               <Typography align="center">
@@ -925,14 +914,14 @@ class CreateAssessment extends Component {
                 Bobot Per Soal:
               </Typography>
             </Grid>
-              {(type !== "longtext") ? (
+            {(type !== "longtext") ? (
               <Grid item style={{ height: "65px" }}>
                 <TextField
                   defaultValue={this.state.weights[type]}
                   variant="outlined"
                   id="weight"
                   fullWidth
-                  onChange={(e) => {this.handleWeight(e, type)}}
+                  onChange={(e) => { this.handleWeight(e, type) }}
                   error={showError}
                   helperText={showError ? "Periksa Kembali!" : null}
                   InputProps={{
@@ -943,15 +932,15 @@ class CreateAssessment extends Component {
                   }}
                 />
               </Grid>
-              ) : (
-                <Grid item style={{ height: "65px" }}>
-                  <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-                    <IconButton>
-                      <InfoIcon/>
-                    </IconButton>
-                  </LightTooltip>
-                </Grid>
-              )}
+            ) : (
+              <Grid item style={{ height: "65px" }}>
+                <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
+                  <IconButton>
+                    <InfoIcon />
+                  </IconButton>
+                </LightTooltip>
+              </Grid>
+            )}
           </Grid>
         );
         // jika elemen ini bukan elemen terakhir, tambahkan divider
@@ -1119,8 +1108,8 @@ class CreateAssessment extends Component {
                         <FormControl id="role" variant="outlined" color="primary" fullWidth error={Boolean(errors.type)}>
                           <Select
                             value={this.state.type}
-                            onChange={(event) => {this.onChange(event, "type")}}
-                            >
+                            onChange={(event) => { this.onChange(event, "type") }}
+                          >
                             <MenuItem value="Kuis">Kuis</MenuItem>
                             <MenuItem value="Ujian">Ujian</MenuItem>
                           </Select>
@@ -1186,7 +1175,7 @@ class CreateAssessment extends Component {
                         <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
                           <Select
                             value={this.state.subject}
-                            onChange={(event) => {this.onChange(event, "subject")}}
+                            onChange={(event) => { this.onChange(event, "subject") }}
                           >
                             {all_subjects.map((subject) => (
                               <MenuItem value={subject._id}>{subject.name}</MenuItem>
@@ -1202,32 +1191,32 @@ class CreateAssessment extends Component {
                           Kelas yang Ditugaskan
                         </Typography>
                         <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
-                        <Select
-                          multiple
-                          fullWidth
-                          variant="outlined"
-                          color="primary"
-                          id="class_assigned"
-                          value={class_assigned}
-                          onChange={(event) => this.onChange(event, "class_assigned")}
-                          renderValue={(selected) => (
-                            <div className={classes.chips}>
-                              {selected.map((id) => {
-                                let name
-                                for (let i in all_classes) {
-                                  if(all_classes[i]._id === id) {
-                                    name = all_classes[i].name
-                                    break;
+                          <Select
+                            multiple
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            id="class_assigned"
+                            value={class_assigned}
+                            onChange={(event) => this.onChange(event, "class_assigned")}
+                            renderValue={(selected) => (
+                              <div className={classes.chips}>
+                                {selected.map((id) => {
+                                  let name
+                                  for (let i in all_classes) {
+                                    if (all_classes[i]._id === id) {
+                                      name = all_classes[i].name
+                                      break;
+                                    }
                                   }
-                                }
-                                return (
-                                  <Chip key={id} label={name} className={classes.chip}/>
-                                )
-                              })}
-                            </div>
-                          )}>
-                          {all_classes.map((kelas) => (<MenuItem value={kelas._id}>{kelas.name}</MenuItem>))}
-                        </Select>
+                                  return (
+                                    <Chip key={id} label={name} className={classes.chip} />
+                                  )
+                                })}
+                              </div>
+                            )}>
+                            {all_classes.map((kelas) => (<MenuItem value={kelas._id}>{kelas.name}</MenuItem>))}
+                          </Select>
                           <FormHelperText>
                             {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
                           </FormHelperText>
@@ -1238,7 +1227,7 @@ class CreateAssessment extends Component {
                 </Grid>
               </Paper>
             </Grid>
-            
+
             <Grid item>
               {this.weightInput()}
             </Grid>
@@ -1345,33 +1334,33 @@ class CreateAssessment extends Component {
                   </Grid>
                 </Paper>
               </Grid>
-              <Grid container justify="flex-end" style={{marginTop: "20px"}} spacing={5}>
+              <Grid container justify="flex-end" style={{ marginTop: "20px" }} spacing={5}>
                 <Grid item>
                   <Fab className={classes.settingsButton} onClick={(event) => this.handleMenuOpen(event)}>
-                    <SettingsIcon/>
+                    <SettingsIcon />
                   </Fab>
                   <Menu
-                      keepMounted
-                      anchorEl={this.state.anchorEl}
-                      open={Boolean(this.state.anchorEl)}
-                      onClose={this.handleMenuClose}
-                      getContentAnchorEl={null}
-                      style={{marginTop: "10px"}}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "center",
-                      }}
-                      transformOrigin={{
-                        vertical: "bottom",
-                        horizontal: "center",
-                      }}
+                    keepMounted
+                    anchorEl={this.state.anchorEl}
+                    open={Boolean(this.state.anchorEl)}
+                    onClose={this.handleMenuClose}
+                    getContentAnchorEl={null}
+                    style={{ marginTop: "10px" }}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "bottom",
+                      horizontal: "center",
+                    }}
                   >
                     <MenuItem button component="a" className={classes.menuVisible} onClick={this.handlePostToggle}>
                       <ListItemIcon >
                         {!this.state.posted ?
-                          <VisibilityIcon  />
-                        :
-                          <VisibilityOffIcon  />
+                          <VisibilityIcon />
+                          :
+                          <VisibilityOffIcon />
                         }
                       </ListItemIcon>
                       <ListItemText primary={!this.state.posted ? "Tampilkan ke Murid" : "Sembunyikan dari Murid"} />
@@ -1381,15 +1370,15 @@ class CreateAssessment extends Component {
                         <CancelIcon />
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
-                      </MenuItem>
+                    </MenuItem>
                     <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e, user.id)}>
                       <ListItemIcon>
-                        <SendIcon  />
+                        <SendIcon />
                       </ListItemIcon>
                       <ListItemText primary="Buat" />
                     </MenuItem>
                   </Menu>
-                </Grid>        
+                </Grid>
               </Grid>
             </Hidden>
           </Grid>
@@ -1398,7 +1387,7 @@ class CreateAssessment extends Component {
           open={this.state.snackbarOpen}
           autoHideDuration={4000}
           onClose={this.handleCloseErrorSnackbar}
-          anchorOrigin={{vertical : "bottom", horizontal: "center"}}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
             Masih ada bagian yang belum diisi atau salah, silahkan diperiksa kembali!
@@ -1421,7 +1410,7 @@ CreateAssessment.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  errors:state.errors,
+  errors: state.errors,
   auth: state.auth,
   success: state.success,
   classesCollection: state.classesCollection,

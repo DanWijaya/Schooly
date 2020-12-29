@@ -325,7 +325,6 @@ function SubmittedAssessmentList(props) {
   React.useEffect(() => {
     if (Object.keys(selectedAssessments).length !== 0) {
       setSuspects(selectedAssessments.suspects);
-      // status.current = true;
     }
   }, [selectedAssessments])
 
@@ -453,20 +452,20 @@ function SubmittedAssessmentList(props) {
 
       const scoresTemplate = {
         radio: {
-          totalpoint: 0, 
+          totalpoint: 0,
           totalweight: 0,
-        }, 
+        },
         checkbox: {
           totalpoint: 0,
           totalweight: 0,
-        }, 
+        },
         shorttext: {
           totalpoint: 0,
           totalweight: 0,
-        }, 
+        },
         longtext: {
           totalpoint: null,
-          totalweight: 
+          totalweight:
             (hasLongtextQuestion) ? (
               Object.values(selectedAssessments.question_weight.longtext).reduce((sum, currentVal) => { return (sum + currentVal) })
             ) : (
@@ -474,32 +473,32 @@ function SubmittedAssessmentList(props) {
             )
         }
       };
-      
-        const columnTemplate = {
-          radio: {
-            root: classes.RadioQst, 
-            text1: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>), 
-            text2: (<b>Pilihan Ganda (Satu Jawaban)</b>),
-            icon: (<RadioButtonChecked/>)
-          },
-          checkbox: {
-            root: classes.CheckboxQst, 
-            text1: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>), 
-            text2: (<b>Pilihan Ganda (Banyak Jawaban)</b>), 
-            icon: (<CheckBox/>)
-          },
-          shorttext: {
-            root: classes.ShorttextQst,
-            text1: (<b>Isian Pendek</b>),
-            text2: (<b>Isian Pendek</b>),
-            icon: (<TextFormat />)
-          },
-          longtext: {
-            root: classes.LongtextQst,
-            text1: (<b>Uraian</b>),
-            text2: (<b>Uraian</b>),
-            icon: (<Subject />)
-          }
+
+      const columnTemplate = {
+        radio: {
+          root: classes.RadioQst,
+          text1: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>),
+          text2: (<b>Pilihan Ganda (Satu Jawaban)</b>),
+          icon: (<RadioButtonChecked />)
+        },
+        checkbox: {
+          root: classes.CheckboxQst,
+          text1: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>),
+          text2: (<b>Pilihan Ganda (Banyak Jawaban)</b>),
+          icon: (<CheckBox />)
+        },
+        shorttext: {
+          root: classes.ShorttextQst,
+          text1: (<b>Isian Pendek</b>),
+          text2: (<b>Isian Pendek</b>),
+          icon: (<TextFormat />)
+        },
+        longtext: {
+          root: classes.LongtextQst,
+          text1: (<b>Uraian</b>),
+          text2: (<b>Uraian</b>),
+          icon: (<Subject />)
+        }
       }
 
       for (var i = 0; i < selectedAssessments.class_assigned.length; i++) {
@@ -516,90 +515,84 @@ function SubmittedAssessmentList(props) {
         }
 
         let sortedRows = stableSort(rows.current, getComparator(order, orderBy));
-        // for (var j = 0; j < all_students.length; j++) {
         for (let row of sortedRows) {
           // check if the id of the class is the same or not (means student is inside)
-          // if (all_students[j].kelas === selectedAssessments.class_assigned[i]) {
-            // let student = all_students[j]
           let student = all_student_object[row._id];
+          let scores = null;
+          let isAllEssayGraded = false;
+          // jika murid mengerjakan assessment ini
+          if (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) {
+            // harus deep cloning
+            scores = JSON.parse(JSON.stringify(scoresTemplate));
 
-            // let student_task = all_students[j].tugas
-            
-            let scores = null;
-            let isAllEssayGraded = false;
-            // jika murid mengerjakan assessment ini
-            if (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) {
-              // harus deep cloning
-              scores = JSON.parse(JSON.stringify(scoresTemplate));
+            if (hasLongtextQuestion) {
+              if (selectedAssessments.grades && selectedAssessments.grades[student._id]) {
 
-              if (hasLongtextQuestion) {                
-                if (selectedAssessments.grades && selectedAssessments.grades[student._id]) {
-                  
-                  // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
-                  // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
-                  if (Object.keys(selectedAssessments.grades[student._id].longtext_grades).length === Object.keys(selectedAssessments.question_weight.longtext).length) {
-                    isAllEssayGraded = true;
-                    scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext_grades).reduce((sum, currentVal) => (sum + currentVal));
-                  } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
+                // jika semua jawaban soal uraian sudah dinilai, tampilkan nilainya.
+                // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
+                if (Object.keys(selectedAssessments.grades[student._id].longtext_grades).length === Object.keys(selectedAssessments.question_weight.longtext).length) {
+                  isAllEssayGraded = true;
+                  scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext_grades).reduce((sum, currentVal) => (sum + currentVal));
+                } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
+              }
+            }
+
+            let weights = selectedAssessments.question_weight;
+            for (let questionIdx = 0; questionIdx < selectedAssessments.questions.length; questionIdx++) {
+              let questionType = selectedAssessments.questions[questionIdx].type;
+              let questionAnswer = selectedAssessments.questions[questionIdx].answer;
+              let studentAnswer = selectedAssessments.submissions[student._id][questionIdx];
+
+              if (studentAnswer.length !== 0) {
+                // jika murid menjawab soal ini
+
+                if (questionType === "radio") {
+                  if (questionAnswer[0] === studentAnswer[0]) {
+                    scores.radio.totalpoint += 1 * weights.radio;
+                  }
+
+                  scores.radio.totalweight += 1 * weights.radio;
+                } else if (questionType === "checkbox") {
+                  let temp_correct = 0;
+
+                  studentAnswer.forEach((answer) => {
+                    if (questionAnswer.includes(answer)) {
+                      temp_correct += 1;
+                    }
+                    else {
+                      temp_correct -= 2;
+                    }
+                  });
+
+                  if (temp_correct > 0) {
+                    scores.checkbox.totalpoint += weights.checkbox * temp_correct / questionAnswer.length;
+                  }
+
+                  scores.checkbox.totalweight += 1 * weights.checkbox;
+                } else if (questionType === "shorttext") {
+                  let temp_correct = 0;
+                  for (let answerIdx = 0; answerIdx < questionAnswer.length; answerIdx++) {
+                    if (questionAnswer[answerIdx] === studentAnswer[answerIdx]) {
+                      temp_correct++;
+                    }
+                  }
+
+                  scores.shorttext.totalpoint += weights.shorttext * temp_correct / questionAnswer.length;
+                  scores.shorttext.totalweight += 1 * weights.shorttext;
+                }
+              } else {
+                // jika murid ga menjawab soal ini
+
+                if (questionType === "radio") {
+                  scores.radio.totalweight += 1 * weights.radio;
+                } else if (questionType === "checkbox") {
+                  scores.checkbox.totalweight += 1 * weights.checkbox;
+                } else if (questionType === "shorttext") {
+                  scores.shorttext.totalweight += 1 * weights.shorttext;
                 }
               }
-              
-              let weights = selectedAssessments.question_weight;
-              for (let questionIdx = 0; questionIdx < selectedAssessments.questions.length; questionIdx++) {
-                let questionType = selectedAssessments.questions[questionIdx].type;
-                let questionAnswer = selectedAssessments.questions[questionIdx].answer;
-                let studentAnswer = selectedAssessments.submissions[student._id][questionIdx];
-
-                if (studentAnswer.length !== 0) { 
-                  // jika murid menjawab soal ini
-                  
-                  if (questionType === "radio") {
-                    if (questionAnswer[0] === studentAnswer[0]) {
-                      scores.radio.totalpoint += 1 * weights.radio;
-                    }
-
-                    scores.radio.totalweight += 1 * weights.radio;
-                  } else if (questionType === "checkbox") {
-                    let temp_correct = 0;
-
-                    studentAnswer.forEach((answer) => {
-                      if (questionAnswer.includes(answer)) {
-                        temp_correct += 1;
-                      }
-                      else {
-                        temp_correct -= 2;
-                      }
-                    });
-
-                    if (temp_correct > 0) {
-                      scores.checkbox.totalpoint += weights.checkbox * temp_correct / questionAnswer.length;
-                    }
-
-                    scores.checkbox.totalweight += 1 * weights.checkbox;
-                  } else if (questionType === "shorttext") {
-                    let temp_correct = 0;
-                    for (let answerIdx = 0; answerIdx < questionAnswer.length; answerIdx++) {
-                      if (questionAnswer[answerIdx] === studentAnswer[answerIdx]) {
-                        temp_correct++;
-                      }
-                    }
-
-                    scores.shorttext.totalpoint += weights.shorttext * temp_correct / questionAnswer.length;
-                    scores.shorttext.totalweight += 1 * weights.shorttext;
-                  }
-                } else { 
-                  // jika murid ga menjawab soal ini
-                  
-                  if (questionType === "radio") {
-                    scores.radio.totalweight += 1 * weights.radio;
-                  } else if (questionType === "checkbox") {
-                    scores.checkbox.totalweight += 1 * weights.checkbox;
-                  } else if (questionType === "shorttext") {
-                    scores.shorttext.totalweight += 1 * weights.shorttext;
-                  }
-                }
-              }
-            } // jika murid tidak mengerjakan assessment ini, scores tetap = null
+            }
+          } // jika murid tidak mengerjakan assessment ini, scores tetap = null
 
           // layar desktop
           let columns1 = [];
@@ -641,7 +634,6 @@ function SubmittedAssessmentList(props) {
               // layar mobile
               columns2.push(
                 <Grid container style={{ padding: "0 20px" }}>
-                  {/* <Grid item style={{ margin: "8px 20px 8px 0" }}> */}
                   <Grid item className={classes.questionIconMargin}>
                     <IconButton size="small" disabled classes={{ root: columnTemplate[type].root, disabled: classes.disabled }}>
                       {columnTemplate[type].icon}
@@ -694,35 +686,52 @@ function SubmittedAssessmentList(props) {
                     secondary={
                       (selectedAssessments.grades && (selectedAssessments.grades[student._id]) && (selectedAssessments.grades[student._id].total_grade)) ? (
                         "Telah Dinilai"
-                        ) : (
+                      ) : (
                         "Belum Dinilai"
                       )} />
                   {(selectedAssessments.grades && selectedAssessments.grades[student._id]) ? (
                     <div style={{ display: "flex" }}>
-                        {
-                        (hasLongtextQuestion) ? (
-                          (isAllEssayGraded) ? (
-                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
-                              <Grid item>
-                                <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
-                              </Grid>
-                              <Grid item>
-                                <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
-                              </Grid>
-                            </div>
-                          ) : (
-                              null
-                            )
-                        ) : ( // jika tidak ada soal uraian, total nilai pasti sudah ada
-                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
-                              <Grid item>
-                                <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
-                              </Grid>
-                              <Grid item>
-                                <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
-                              </Grid>
-                            </div>
+                      {(hasLongtextQuestion) ? (
+                        (isAllEssayGraded) ? (
+                          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
+                            <Grid item>
+                              <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
+                            </Grid>
+                          </div>
+                        ) : (
+                          null
+                        )
+                      ) : ( // jika tidak ada soal uraian, total nilai pasti sudah ada
+                          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} class={classes.hide400Down}>
+                            <Grid item>
+                              <Typography noWrap style={{ fontSize: "0.8em" }}><b>Total Nilai</b></Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography variant="h5" align="right">{selectedAssessments.grades[student._id].total_grade}</Typography>
+                            </Grid>
+                          </div>
                         )}
+                      <Grid item alignItem="center">
+                        <Grid item>
+                          <IconButton
+                            onClick={(e) => { handleFlag(e, student._id) }}
+                          >
+                            {(suspects.includes(student._id)) ? (
+                              <BsFlagFill className={classes.redFlagIcon} />
+                            ) : (
+                              <BsFlag className={classes.flagIcon} />
+                            )}
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    </div>
+                  ) : (
+                      // jika murid belum dinilai tapi sudah mengumpulkan jawaban assessment, tampilkan flag  
+                    (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ? (
+                      <div style={{ display: "flex" }}>
                         <Grid item alignItem="center">
                           <Grid item>
                             <IconButton
@@ -731,50 +740,32 @@ function SubmittedAssessmentList(props) {
                               {(suspects.includes(student._id)) ? (
                                 <BsFlagFill className={classes.redFlagIcon} />
                               ) : (
-                                  <BsFlag className={classes.flagIcon} />
-                                )}
+                                <BsFlag className={classes.flagIcon} />
+                              )}
                             </IconButton>
                           </Grid>
                         </Grid>
                       </div>
                     ) : (
-                      // jika murid belum dinilai tapi sudah mengumpulkan jawaban assessment, tampilkan flag  
-                      (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ? (
-                        <div style={{ display: "flex" }}>
-                          <Grid item alignItem="center">
-                            <Grid item>
-                              <IconButton
-                                onClick={(e) => { handleFlag(e, student._id) }}
-                              >
-                                {(suspects.includes(student._id)) ? (
-                                  <BsFlagFill className={classes.redFlagIcon} />
-                                ) : (
-                                    <BsFlag className={classes.flagIcon} />
-                                  )}
-                              </IconButton>
-                            </Grid>
-                          </Grid>
-                        </div>
-                      ) : (
-                        null
-                      )
+                      null
+                    )
                     )}
-                  </ListItem>
-                </ExpansionPanelSummary>
-                <Divider />
+                </ListItem>
+              </ExpansionPanelSummary>
+              <Divider />
 
-                <Hidden xsDown>
-                  <Grid container style={{ padding: "20px" }} justify="center">
-                    {columns1}
-                  </Grid>
-                </Hidden>
-                <Hidden smUp>
-                  {columns2}
-                </Hidden>
-                
-                <Divider />
+              <Hidden xsDown>
+                <Grid container style={{ padding: "20px" }} justify="center">
+                  {columns1}
+                </Grid>
+              </Hidden>
+              <Hidden smUp>
+                {columns2}
+              </Hidden>
+
+              <Divider />
                 {
-                  (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ?
+                  (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) ? (
                     <div>
                       <Grid container style={{ padding: "20px" }} justify="flex-end" alignItems="center" >
                         {
@@ -802,23 +793,24 @@ function SubmittedAssessmentList(props) {
                             </div>
                         )                          
                         }
-                        <GradeButton assessmentId={selectedAssessments._id} studentId={student._id} classId={selectedAssessments.class_assigned[i]} />
-                      </Grid>
-                    </div>
-                    :
-                    null
+                      <GradeButton assessmentId={selectedAssessments._id} studentId={student._id} classId={selectedAssessments.class_assigned[i]} />
+                    </Grid>
+                  </div>
+                  ) : (
+                  null
+                  )
                 }
-              </ExpansionPanel>
-            )
+            </ExpansionPanel>
+          )
         }
 
         TabPanelList.push(
-        <TabPanel value={value} index={i}>
-          {students_in_class}
-        </TabPanel>
-      )
+          <TabPanel value={value} index={i}>
+            {students_in_class}
+          </TabPanel>
+        )
+      }
     }
-  }
     return selectedAssessments.class_assigned.length > 0 ? TabPanelList : null;
   }
 
