@@ -16,63 +16,22 @@ import Login from "./components/auth/login/Login";
 import LoginForgot from "./components/auth/login/LoginForgot";
 import ResetPassword from "./components/auth/reset-password/ResetPassword";
 //Layout
-import About from "./components/layout/about/About";
-import Dashboard from "./components/layout/dashboard/Dashboard";
-import Landing from "./components/layout/landing/Landing";
-import ProfileView from "./components/layout/profile/ProfileView";
-import Profile from "./components/layout/profile/Profile";
-import ReportView from "./components/layout/profile/ReportView";
-import Help from "./components/layout/help/Help";
-import Policy from "./components/layout/policy/Policy";
-import NotFound from "./components/layout/not-found/NotFound";
+
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer";
-import Footer from "./components/misc/footer/Footer";
+
 //Class
-import CreateClass from "./components/objects/classes/CreateClass";
-import EditClass from "./components/objects/classes/EditClass";
-import ViewClass from "./components/objects/classes/ViewClass";
-import ViewSubject from "./components/objects/classes/ViewSubject";
-import ClassList from "./components/objects/classes/ClassList";
+import Store from "./components/objects/store/Store";
 //Material
-import CreateMaterial from "./components/objects/course-materials/CreateMaterial";
-import EditMaterial from "./components/objects/course-materials/EditMaterial";
-import ViewMaterial from "./components/objects/course-materials/ViewMaterial";
-import MaterialList from "./components/objects/course-materials/MaterialList";
-//Announcement
-import CreateAnnouncement from "./components/objects/announcement/CreateAnnouncement";
-import EditAnnouncement from "./components/objects/announcement/EditAnnouncement";
-import ViewAnnouncement from "./components/objects/announcement/ViewAnnouncement";
-import AnnouncementList from "./components/objects/announcement/AnnouncementList";
-//Task
-import CreateTask from "./components/objects/tasks/CreateTask";
-import EditTask from "./components/objects/tasks/EditTask";
-import ViewTaskStudent from "./components/objects/tasks/ViewTaskStudent";
-import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
-import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
-import TaskList from "./components/objects/tasks/TaskList";
-//Assessment
-import AssessmentList from "./components/objects/assessment/AssessmentList";
-import AssessmentTestList from "./components/objects/assessment/AssessmentTestList"
-import CreateAssessment from "./components/objects/assessment/CreateAssessment";
-import EditAssessment from "./components/objects/assessment/EditAssessment";
-import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";
-import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
-import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
-import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
-//Admin Only
-import ManageUsers from "./components/objects/admin-only/ManageUsers";
-import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
-import SubjectList from "./components/objects/admin-only/SubjectList";
-//Prototypes
-import Tester from "./prototypes/Tester";
-import Graph from "./prototypes/Graph";
-import Timer from "./prototypes/Timer";
-//Dropbox
-import DropboxConnect from "./components/dropbox/DropboxConnect";
-import DropboxAuth from "./components/dropbox/DropboxAuth";
+import CreateFileSharing from "./components/objects/file-sharing/CreateFileSharing";
+import EditFileSharing from "./components/objects/file-sharing/EditFileSharing";
+import ViewMaterial from "./components/objects/file-sharing/ViewFileSharing";
+import FileSharing from "./components/objects/file-sharing/FileSharingList";
+
+//Landing
+import Landing from "./components/layout/landing/Landing";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -164,80 +123,20 @@ class App extends Component {
                         <Landing {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
                       )}
                     />
-                    <Route exact path="/bantuan"
-                      render={(props) => (
-                        <Help {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
-                      )}
-                     />
-                     <Route exact path="/tentang-schooly"
-                       render={(props) => (
-                         <About {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
-                       )}
-                     />
-                    <Route exact path="/kebijakan-penggunaan"
-                      render={(props) => (
-                        <Policy {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
-                      )}
-                    />
-                    <Route exact path="/dropbox-auth" component={DropboxAuth}/>
-                    <Route exact path="/dropbox-connect" component={DropboxConnect}/>
                     <Route exact path="/daftar" component={Register} />
                     <Route exact path="/masuk" component={Login} />
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
-                    <Route exact path="/tester" component={Tester} /> {/*prototype*/}
-                    <Route exact path="/timer" component={Timer} /> {/*prototype*/}
-                    <Route exact path="/graph" component={Graph} /> {/*prototype*/}
-                    <Route exact path="/lihat-jawaban-kuis/:id" component={ViewAssessmentAnswer} /> {/*prototype*/}
-                    <PrivateRoute exact path="/beranda" component={Dashboard} />
-                    <PrivateRoute exact path="/profil" component={Profile} />
-                    <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
-                    <PrivateRoute exact path="/lihat-rapor" component={ReportView} />
-                    {/* Route Class */}
-                    <PrivateRoute exact access={["Admin"]} path="/buat-kelas" component={CreateClass} />
-                    <PrivateRoute exact access={["Admin"]} path="/sunting-kelas/:id" component={EditClass} />
-                    <PrivateRoute exact access={["Student", "Teacher", "Admin"]} path="/kelas/:id" component={ViewClass} />
-                    <PrivateRoute exact access={["Student"]} path="/mata-pelajaran/:id" component={ViewSubject} />
-                    <PrivateRoute exact access={["Teacher", "Admin"]} path="/daftar-kelas" component={ClassList} />
+                    <PrivateRoute exact access={["Teacher", "Admin"]} path="/store" component={Store} />
+
                     {/* Route Course Materials */}
-                    <PrivateRoute exact access={["Teacher"]} path="/buat-materi" component={CreateMaterial} />
-                    <PrivateRoute exact access={["Teacher"]} path="/sunting-materi/:id" component={EditMaterial} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/materi/:id" component={ViewMaterial} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-materi" component={MaterialList} />
-                    {/* Route Announcement */}
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/buat-pengumuman" component={CreateAnnouncement} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/sunting-pengumuman/:id" component={EditAnnouncement} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/pengumuman/:id" component={ViewAnnouncement} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-pengumuman" component={AnnouncementList} />
-                    {/* Route Task */}
-                    <PrivateRoute exact access={["Teacher"]} path="/buat-tugas" component={CreateTask} />
-                    <PrivateRoute exact access={["Teacher"]} path="/sunting-tugas/:id" component={EditTask} />
-                    <PrivateRoute exact access={["Student"]} path="/tugas-murid/:id" component={ViewTaskStudent} />
-                    <PrivateRoute exact access={["Teacher"]} path="/tugas-guru/:id" component={ViewTaskTeacher} />
-                    <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
-                    {/* Route Assessment - Prototype */}
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-ujian" component={AssessmentTestList} />
-                    <PrivateRoute exact access={["Teacher"]} path="/sunting-kuis/:id" handleSideDrawerExist={this.handleSideDrawerExist} component={EditAssessment} />
-                    <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} loginRedirect={true}/>
-                    <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />
-                    <PrivateRoute exact access={["Teacher"]} path="/daftar-kuis-terkumpul/:id" component={SubmittedAssessmentList} />
-                    {/* Route Admin-Only */}
-                    <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
-                    <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />
-                    <PrivateRoute exact access={["Admin"]} path="/daftar-mata-pelajaran" component={SubjectList} />
+                    <PrivateRoute exact access={["Teacher"]} path="/buat-FileSharing" component={CreateFileSharing} />
+                    <PrivateRoute exact access={["Teacher"]} path="/sunting-FileSharing/:id" component={EditFileSharing} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/File Sharing/:id" component={ViewMaterial} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-FileSharing" component={FileSharing} />
                     {/* Not Found */}
-                    <Route
-                      exact path="/tidak-ditemukan"
-                      render={(props) => (
-                        <NotFound {...props} handleMarginTopValue={(data) => this.handleMarginTopValue(data)} />
-                      )}
-                    />
-                    <Redirect to="/tidak-ditemukan"/>
                   </Switch>
-                  <Footer assessmentState={localStorage.getItem(`status`)}/>
+                  {/* <Footer assessmentState={localStorage.getItem(`status`)}/> */}
                 </div>
               </div>
             </Router>

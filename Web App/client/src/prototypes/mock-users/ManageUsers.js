@@ -287,7 +287,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ManageUsers(props) {
-  document.title = "Schooly | Daftar Pengguna"
+  document.title = " Daftar Pengguna"
 
   const classes = useStyles();
 

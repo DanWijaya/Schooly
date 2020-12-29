@@ -59,7 +59,7 @@ class Login extends Component {
     // If logged in and user navigates to Login page, should redirect them to dashboard
     // this.props.auth.isAuthenticated = true, berarti udah logged in dan masuk ke beranda langsung
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/beranda");
+      this.props.history.push("/store");
     }
   }
 
@@ -88,7 +88,7 @@ class Login extends Component {
         window.location.href = `.${this.props.location.state.url}`
       } else {
         // untuk redirect ke page lain.
-        window.location.href = "./beranda"
+        window.location.href = "./store"
       }
     }
   }

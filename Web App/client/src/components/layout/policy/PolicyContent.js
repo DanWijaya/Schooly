@@ -58,7 +58,7 @@ function PolicyContent() {
           "Schooly" akan berarti Schooly System.
           Ketentuan ini mengatur akses Anda ke dan penggunaan produk, dan / atau
           layanan Schooly (secara individu atau bersama, "Produk") dan segala
-          informasi, konten, teks, grafik, foto atau materi lain yang
+          informasi, konten, teks, grafik, foto atau File Sharing lain yang
           diunggah, diunduh, dibeli, atau muncul pada atau melalui Produk
           (secara kolektif disebut sebagai "Konten").
           Persyaratan tambahan atau persyaratan produk dapat berlaku untuk
@@ -186,7 +186,7 @@ function PolicyContent() {
             adalah tanggung jawab orang yang membuat Konten tersebut.
             Kami mungkin tidak memantau atau mengontrol Konten yang diposting
             melalui Produk, dan kami tidak bertanggung jawab atas Konten tersebut.
-            Setiap penggunaan atau kepercayaan pada Konten atau materi yang
+            Setiap penggunaan atau kepercayaan pada Konten atau File Sharing yang
             diposting melalui Produk atau diperoleh oleh Anda melalui Produk
             adalah risiko Anda sendiri.
           </Typography>
@@ -221,13 +221,13 @@ function PolicyContent() {
             berikut kepada kami: (i) tanda tangan fisik atau elektronik dari
             pemilik hak cipta atau orang yang diberi wewenang untuk bertindak
             atas nama mereka; (ii) identifikasi karya berhak cipta yang diklaim
-            telah dilanggar; (iii) identifikasi materi yang diklaim sebagai
+            telah dilanggar; (iii) identifikasi File Sharing yang diklaim sebagai
             pelanggaran atau menjadi subjek aktivitas pelanggaran dan yang akan
             dihapus atau akses yang akan dinonaktifkan, dan informasi yang
-            cukup memadai untuk memungkinkan kami menemukan materi;
+            cukup memadai untuk memungkinkan kami menemukan File Sharing;
             (iv) informasi kontak Anda, termasuk alamat, nomor telepon, dan
             alamat email Anda; (v) pernyataan oleh Anda bahwa Anda memiliki
-            itikad baik dengan niat bahwa penggunaan materi dengan cara yang
+            itikad baik dengan niat bahwa penggunaan File Sharing dengan cara yang
             dikeluhkan tidak diizinkan oleh pemilik hak cipta, agennya,
             atau hukum; dan (vi) pernyataan bahwa informasi dalam pemberitahuan
             itu akurat, dan, di bawah penalti sumpah palsu, bahwa Anda berwenang
@@ -277,7 +277,7 @@ function PolicyContent() {
             mengganggu, mencegat, mengganggu atau meretas Produk apa pun atau
             mengumpulkan data apa pun dari Produk selain sesuai dengan
             Ketentuan Penggunaan ini; (ix) menyalahgunakan Produk dengan sengaja
-            memperkenalkan virus, Trojan, worm, bom logika atau materi lain yang
+            memperkenalkan virus, Trojan, worm, bom logika atau File Sharing lain yang
             akan membahayakan Produk atau Pengguna apa pun dari peralatan Produk;
             (x) menyerahkan atau menyumbang Konten apa pun yang mengandung
             ketelanjangan atau kekerasan atau kasar, mengancam, cabul, menyesatkan,

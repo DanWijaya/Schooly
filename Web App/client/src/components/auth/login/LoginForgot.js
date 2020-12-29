@@ -82,7 +82,7 @@ class LoginForgot extends Component {
     const { email } = this.state;
     const { isPasswordReset } = this.props.passwordMatters;
 
-    document.title = "Schooly | Lupa Akun";
+    document.title = " Lupa Akun";
     document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return (

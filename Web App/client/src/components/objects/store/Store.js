@@ -14,9 +14,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/Sort";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import PhotoIcon from '@material-ui/icons/Photo';
 
-function createData(_id, name, homeroomTeacher, size, absent) {
-  return { _id, name, homeroomTeacher, size, absent };
+function createData(_id, name) {
+  return { _id, name };
 }
 
 var rows=[];
@@ -47,7 +48,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function ClassListToolbar(props) {
+function StoreToolbar(props) {
   const { classes, user, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -72,37 +73,20 @@ function ClassListToolbar(props) {
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">
-        Daftar Kelas
+        Store
       </Typography>
       <div style={{display: "flex", alignItems: "center"}}>
         {user.role === "Admin" ?
           <div>
-            <Hidden smUp implementation="css">
-              <LightTooltip title="Buat Kelas">
-                <Link to="/buat-kelas">
-                  <Fab size="small" className={classes.newClassButton}>
-                    <FaChalkboardTeacher className={classes.newClassIconMobile} />
-                  </Fab>
-                </Link>
-              </LightTooltip>
-            </Hidden>
-            <Hidden xsDown implementation="css">
-              <Link to="/buat-kelas">
-                <Fab size="medium" variant="extended" className={classes.newClassButton}>
-                  <FaChalkboardTeacher className={classes.newClassIconDesktop} />
-                  Buat Kelas
-                </Fab>
-              </Link>
-            </Hidden>
           </div>
         :
           null
         }
-        <LightTooltip title="Urutkan Kelas">
+        {/* <LightTooltip title="Urutkan Kelas">
           <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
           </IconButton>
-        </LightTooltip>
+        </LightTooltip> */}
         <Menu
           keepMounted
           anchorEl={anchorEl}
@@ -143,7 +127,7 @@ function ClassListToolbar(props) {
   );
 };
 
-ClassListToolbar.propTypes = {
+StoreToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -235,7 +219,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ClassList(props) {
+function Store(props) {
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
@@ -255,20 +239,17 @@ function ClassList(props) {
 
   const classItem = (data,i) => {
     colorMap.set(data._id, colorList[i%(colorList.length)])
-    let temp_ukuran = 0
-    for(let i=0;i<all_students.length;i++){
-      if(all_students[i].kelas === data._id){
-        temp_ukuran = temp_ukuran + 1
-      }
-    }
-    classesCollection.all_classes[i].ukuran = temp_ukuran // Update property ukuran
+    // let temp_ukuran = 0
+    // for(let i=0;i<all_students.length;i++){
+    //   if(all_students[i].kelas === data._id){
+    //     temp_ukuran = temp_ukuran + 1
+    //   }
+    // }
+    // classesCollection.all_classes[i].ukuran = temp_ukuran // Update property ukuran
     rows.push(
       createData(
         data._id,
         data.name,
-        !all_teachers.size || !all_teachers.get(data.walikelas) ? null : all_teachers.get(data.walikelas).name,
-        temp_ukuran,
-        !data.nihil ? "Nihil" : "Tidak Nihil",
       )
     )
   }
@@ -288,11 +269,36 @@ function ClassList(props) {
   console.log(classesCollection)
 
   console.log(all_teachers)
+
   const retrieveClasses = () => {
-    if (classesCollection.all_classes.length > 0) {
-      rows = []
-      classesCollection.all_classes.map((data,i) => classItem(data,i))
-    }
+    let items = [
+      {
+        _id: 1,
+        name: "Test 1"
+      },
+      {
+        _id: 2,
+        name: "Test 2"
+      },
+      {
+        _id: 3,
+        name: "Test 3"
+      },
+      {
+        _id: 4,
+        name: "Test 4"
+      },
+      {
+        _id: 5,
+        name: "Test 5"
+      },
+      {
+        _id: 6,
+        name: "Test 6"
+      },
+  ]
+  rows = []
+  items.forEach((data,i) => classItem(data,i))
   }
 
   const handleRequestSort = (event, property) => {
@@ -332,7 +338,7 @@ function ClassList(props) {
     )
   }
 
-  document.title = "Schooly | Daftar Kelas"
+  document.title = "Store"
 
   return (
     <div className={classes.root}>
@@ -343,7 +349,7 @@ function ClassList(props) {
         itemName={selectedClassName}
         deleteItem={() => { onDeleteClass(selectedClassId) }}
       />
-      <ClassListToolbar
+      <StoreToolbar
         classes={classes}
         deleteClass={deleteClass}
         order={order}
@@ -361,7 +367,7 @@ function ClassList(props) {
             let viewpage = `/kelas/${row._id}`;
             return (
               <Grid item xs={12} sm={6} md={4}>
-                <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
+                {/* <Link to={viewpage} onClick={(e) => e.stopPropagation()}> */}
                   <Paper button square
                     variant="outlined"
                     className={classes.classPaper}
@@ -374,7 +380,7 @@ function ClassList(props) {
                         height: "120px",
                       }}
                     >
-                      <FaChalkboardTeacher
+                      <PhotoIcon
                         style={{
                           width: "50px",
                           height: "50px",
@@ -386,13 +392,10 @@ function ClassList(props) {
                       <Typography id={labelId} variant="h5" align="center">
                         {row.name}
                       </Typography>
-                      <Typography variant="body1" color="textSecondary" align="center">
-                        Wali Kelas: <b>{row.homeroomTeacher}</b>
-                      </Typography>
                     </div>
                     <Divider />
-                    <Grid container direction="row" justify="space-between" alignItems="center" className={classes.classActionContainer}>
-                      {user.role === "Admin" ?
+                    {/* <Grid container direction="row" justify="space-between" alignItems="center" className={classes.classActionContainer}> */}
+                      {/* {user.role === "Admin" ?
                         <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
                           <Grid item>
                             <LightTooltip title="Jumlah Peserta">
@@ -454,10 +457,10 @@ function ClassList(props) {
                             </LightTooltip>
                           </Grid>
                         </Grid>
-                      }
-                    </Grid>
+                      } */}
+                    {/* </Grid> */}
                   </Paper>
-              </Link>
+              {/* </Link> */}
             </Grid>
             );
           })}
@@ -466,7 +469,7 @@ function ClassList(props) {
   )
 };
 
-ClassList.propTypes = {
+Store.propTypes = {
   getAllClass: PropTypes.func.isRequired,
   getTeachers: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -484,4 +487,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors}
-) (ClassList);
+) (Store);

@@ -79,7 +79,7 @@ const styles = (theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  editMaterialButton: {
+  EditFileSharingButton: {
     width: "100%",
     marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
@@ -159,7 +159,7 @@ function LampiranFile(props) {
   )
 }
 
-class EditMaterial extends Component {
+class EditFileSharing extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -404,7 +404,7 @@ class EditMaterial extends Component {
       }
     )
 
-    document.title = "Schooly | Sunting Materi";
+    document.title = " Sunting File Sharing";
 
     if (user.role === "Teacher" || user.role === "Admin") {
       return (
@@ -412,14 +412,14 @@ class EditMaterial extends Component {
           <UploadDialog
             openUploadDialog={this.state.openUploadDialog}
             success={success}
-            messageUploading="Materi sedang disunting"
-            messageSuccess="Materi telah disunting"
-            redirectLink="/daftar-materi"
+            messageUploading="File Sharing sedang disunting"
+            messageSuccess="File Sharing telah disunting"
+            redirectLink="/daftar-FileSharing"
           />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
-                <b>Suntung Materi</b>
+                <b>Suntung File Sharing</b>
               </Typography>
             </div>
             <Divider />
@@ -471,8 +471,8 @@ class EditMaterial extends Component {
                 <Divider flexItem orientation="vertical" className={classes.divider} />
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
-                    <Grid item>
-                      <Typography component="label" for="subject" color="primary">
+                    {/* <Grid item> */}
+                      {/* <Typography component="label" for="subject" color="primary">
                         Mata Pelajaran
                       </Typography>
                       <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
@@ -488,8 +488,8 @@ class EditMaterial extends Component {
                           {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
                         </FormHelperText>
                       </FormControl>
-                    </Grid>
-                    <Grid item>
+                    </Grid> */}
+                    {/* <Grid item>
                       <Typography component="label" for="class_assigned" color="primary">
                         Kelas yang Diberikan
                       </Typography>
@@ -532,7 +532,7 @@ class EditMaterial extends Component {
                           {Boolean(errors.class_assigned) ? errors.class_assigned : null}
                         </FormHelperText>
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
                     <Grid item>
                       <input
                         type="file"
@@ -568,9 +568,9 @@ class EditMaterial extends Component {
                   <Button
                     variant="contained"
                     type="submit"
-                    className={classes.editMaterialButton}
+                    className={classes.EditFileSharingButton}
                   >
-                    Sunting Materi
+                    Sunting File Sharing
                   </Button>
                 </div>
               </div>
@@ -591,7 +591,7 @@ class EditMaterial extends Component {
   }
 }
 
-EditMaterial.propTypes = {
+EditFileSharing.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
@@ -616,4 +616,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(
     mapStateToProps, { getAllClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial }
-) (withStyles(styles)(EditMaterial))
+) (withStyles(styles)(EditFileSharing))

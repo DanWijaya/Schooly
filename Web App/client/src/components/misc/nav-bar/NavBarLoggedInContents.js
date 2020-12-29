@@ -115,7 +115,7 @@ function NavBarLoggedInContents(props) {
   // Mobile menu (will rendered when in mobile mode / width < 600px)
   const renderMobileMenu = (
     <Grid container className={classes.navbarContents}>
-      <IconButton
+      {/* <IconButton
         edge="end"
         color="inherit"
         onClick={handleMobileMenuOpen}
@@ -152,7 +152,7 @@ function NavBarLoggedInContents(props) {
           </ListItemIcon>
           <ListItemText primary="Keluar" />
         </MenuItem>
-      </Menu>
+      </Menu> */}
     </Grid>
   )
 

@@ -9,7 +9,7 @@ export const createClass = (classData, history) => dispatch => {
     .then(res => {
         console.log(res.data)
         alert("Kelas telah dibuat")
-        history.push("/daftar-kelas")
+        history.push("/store")
     })
     .catch(err =>
         dispatch({
@@ -79,7 +79,7 @@ export const updateClass = (classData, classId, history) => dispatch => {
     .then(res => {
         console.log("Class updated to be : ", res.data);
         alert("Kelas telah berhasil disunting")
-        history.push("/daftar-kelas")
+        history.push("/store")
     })
     .catch(err => {
         dispatch({

@@ -734,7 +734,7 @@ class CreateAssessment extends Component {
       checked: {},
     }))(Switch);
 
-    document.title = "Schooly | Buat Kuis/Ujian";
+    document.title = " Buat Kuis/Ujian";
 
     console.log(this.state.questions)
 

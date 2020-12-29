@@ -114,7 +114,7 @@ class Register extends Component {
     this.props.getAllClass()
     this.props.getAllSubjects()
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/beranda");
+      this.props.history.push("/store");
     }
   }
 

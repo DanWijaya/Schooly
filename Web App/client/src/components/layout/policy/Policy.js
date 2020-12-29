@@ -12,7 +12,7 @@ function Policy(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  document.title = "Schooly | Kebijakan Penggunaan";
+  document.title = " Kebijakan Penggunaan";
 
   return (
     <PolicyContent />

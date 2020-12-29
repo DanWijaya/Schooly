@@ -1,24 +1,20 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import DateFnsUtils from "@date-io/date-fns";
-import "date-fns";
-import lokal from "date-fns/locale/id";
 import classnames from "classnames";
-import { createTask } from "../../../actions/TaskActions";
 import { getAllClass } from "../../../actions/ClassActions";
-import { getAllSubjects } from "../../../actions/SubjectActions"
-import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { createMaterial } from "../../../actions/MaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
    ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import { ObjectId } from "mongodb";
 
 const path = require("path");
 
@@ -82,7 +78,7 @@ const styles = (theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
-  createTaskButton: {
+  createMaterialButton: {
     backgroundColor: theme.palette.create.main,
     color: "white",
     "&:focus, &:hover": {
@@ -92,7 +88,6 @@ const styles = (theme) => ({
   },
 });
 
-// name = fileLampiran[i].name
 function LampiranFile(props) {
   const { classes, name, filetype, i, handleLampiranDelete } = props;
 
@@ -161,13 +156,12 @@ function LampiranFile(props) {
   )
 }
 
-class CreateTask extends Component {
+class CreateFileSharing extends Component {
   constructor() {
     super();
     this.state = {
       name: "",
       subject: "",
-      deadline: new Date(),
       focused: false,
       class_assigned: [],
       description: "",
@@ -175,96 +169,85 @@ class CreateTask extends Component {
       fileLampiran: [],
       openUploadDialog: null,
       anchorEl: null
+      // sortFlag: false
     }
   }
 
-  // ref itu untuk ngerefer html yang ada di render.
-  lampiranUploader = React.createRef(null) // untuk ngerefer html object yang lain
+  lampiranUploader = React.createRef(null)
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
     if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
-      this.setState({ anchorEl: event.currentTarget})
+      this.setState({ anchorEl: event.currentTarget })
   }
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null})
+    this.setState({ anchorEl: null })
   }
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true})
+    this.setState({ openUploadDialog: true })
   };
 
-  onChange = (e, otherfield=null) => {
-    console.log(this.state.class_assigned, e.target.value)
-    // if (Object.keys(this.props.errors).length !== 0)
-    if(otherfield){
-      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-      this.setState({ [otherfield] : e.target.value})
-    }
-    else{
-      this.setState({ [e.target.id]: e.target.value});
-    }
-  }
+  handleCloseUploadDialog = () => {
+    this.setState({ openUploadDialog: false });
+  };
 
-  onDateChange = (date) => {
-    console.log(date)
-    this.setState({ deadline: date})
+  onChange = (e, otherfield) => {
+    console.log("On change:", e.target.value)
+    console.log(Array.from(this.state.fileLampiran))
+    if(otherfield){
+      if(otherfield === "deadline")
+        this.setState({ [otherfield] : e}) // e is the date value itself for KeyboardDatePicker
+
+      else
+        this.setState({ [otherfield] : e.target.value})
+    }
+
+    else
+      this.setState({ [e.target.id]: e.target.value });
   }
 
   onSubmit = (e, id) => {
     e.preventDefault();
     let formData = new FormData()
-    const taskData = {
-      name: this.state.name,
-      deadline: this.state.deadline,
-      subject: this.state.subject,
-      class_assigned: this.state.class_assigned,
-      person_in_charge_id: id,
-      description: this.state.description,
-      errors: {},
-    };
 
-    //Check if there is any lampiran_tugas uploaded or not.
+    //Check if there is any lampiran uploaded or not.
     if (this.state.fileLampiran)
       for (var i = 0; i < this.state.fileLampiran.length; i++) {
         console.log(this.state.fileLampiran[i])
-        formData.append("lampiran_tugas", this.state.fileLampiran[i])
+        formData.append("lampiran_materi", this.state.fileLampiran[i])
       }
-      console.log(formData.getAll("lampiran_tugas"), this.state.fileLampiran)
-      console.log(taskData)
-      this.props.createTask(formData, taskData, this.props.history);
+      console.log(formData.getAll("lampiran_materi"), this.state.fileLampiran)
+
+      const materialData = {
+        name: this.state.name,
+        subject: "5ee343ee10dea50651f0433a",
+        class_assigned: ["5ed4c68704baf0d66cf7e3a9", "5e94268d499e2d182bf278e7"],
+        description: this.state.description,
+        lampiran: Array.from(this.state.fileLampiran),
+        author_id: id,
+        errors: {},
+      };
+      
+      console.log(this.state.fileLampiran)
+      this.props.createMaterial(formData, materialData, this.props.history);
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(!this.props.errors && this.props.errors !== prevProps.errors){
+      this.handleOpenUploadDialog()
+    }
   }
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects} = this.props;
-    getAllClass()
-    getAllSubjects()
+    this.props.getAllClass()
+    this.props.getAllSubjects()
   }
 
   componentWillUnmount(){
     this.props.clearErrors()
   }
-
-  // akan selalu dirun kalau ada terima state atau props yang berubah.
-  componentDidUpdate(prevProps, prevState){
-    console.log(this.props.errors)
-    // this.props.errors = false, ini berarti kan !this.props.erros itu true
-
-    if(!this.props.errors && this.props.errors !== prevProps.errors){
-      // pertama kali run yang didalam ini, itu this.props.errors = false dan prevProps.errors = { "description": dedwde}, this.state.dialogopen = false, prevState.dialog = false
-      // setelah ngerun this.handleOpenUploadDialog(), komponennya dirender lagi. Karena itu jd tuh prevProps.errors = false, this.props.errors = false. maka this.props.errors = false dan prevProps.errors = false. this.state.dialog = true, prevState.dialog = false
-      this.handleOpenUploadDialog()
-    }
-  }
-
-  handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
-    this.setState({ fileLampiran: temp})
-    document.getElementById("file_control").value = null
-  }
-
 
   handleLampiranDelete = (e, i) => {
     e.preventDefault()
@@ -276,12 +259,21 @@ class CreateTask extends Component {
     this.setState({ fileLampiran: temp})
   }
 
+  handleLampiranUpload = (e) => {
+    const files = e.target.files;
+    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
+    this.setState({ fileLampiran: temp})
+    document.getElementById("file_control").value = null
+  }
+
   render() {
-    const { classes, errors, success}  = this.props;
-    const { class_assigned, fileLampiran}  = this.state;
+    const { classes, success, errors }  = this.props;
     const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
+    // const { all_subjects } = this.props.subjectsCollection;
+    const { class_assigned, fileLampiran }  = this.state;
     const { user } = this.props.auth
+
+    console.log(class_assigned)
     console.log(errors)
 
     const fileType = (filename) => {
@@ -337,25 +329,27 @@ class CreateTask extends Component {
       },
     };
 
-    document.title = "Schooly | Buat Tugas";
-
+    document.title = " Buat File Sharing";
+    
     if (user.role === "Teacher") {
+      // all_subjects.sort((a, b) => (a.name > b.name) ? 1 : -1)
+      // all_classes.sort((a, b) => (a.name > b.name) ? 1 : -1)
       return (
         <div className={classes.root}>
           <UploadDialog
             openUploadDialog={this.state.openUploadDialog}
             success={success}
-            messageUploading="Tugas sedang dibuat"
-            messageSuccess="Tugas telah dibuat"
-            redirectLink="/daftar-tugas"
+            messageUploading="File Sharing sedang dibuat"
+            messageSuccess="File Sharing telah dibuat"
+            redirectLink="/daftar-FileSharing"
           />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
-                <b>Buat Tugas</b>
+                <b>Buat File Sharing</b>
               </Typography>
               <Typography color="textSecondary">
-                Tambahkan keterangan tugas untuk membuat tugas.
+                Tambahkan keterangan File Sharing untuk membuat File Sharing.
               </Typography>
             </div>
             <Divider />
@@ -372,7 +366,6 @@ class CreateTask extends Component {
                         variant="outlined"
                         id="name"
                         onChange={this.onChange}
-                        // onChange={(event) => this.onChange(event)}
                         value={this.state.name}
                         error={errors.name}
                         type="text"
@@ -408,50 +401,27 @@ class CreateTask extends Component {
                 <Divider flexItem orientation="vertical" className={classes.divider} />
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
-                    <Grid item container spacing={2}>
-                      <Grid item xs={12} md={6}>
-                        <Typography component="label" for="subject" color="primary">
-                          Mata Pelajaran
-                        </Typography>
-                        <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject)}>
-                          <Select
-                            value={this.state.subject}
-                            onChange={(event) => {this.onChange(event, "subject")}}
-                          >
-                            {all_subjects.map((subject) => (
-                              <MenuItem value={subject._id}>{subject.name}</MenuItem>
-                            ))}
-                          </Select>
-                          <FormHelperText>
-                            {Boolean(errors.subject) ? errors.subject : null}
-                          </FormHelperText>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Typography component="label" for="deadline" color="primary">
-                          Batas Waktu
-                        </Typography>
-                        <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
-                          <KeyboardDateTimePicker
-                            fullWidth
-                            disablePast
-                            inputVariant="outlined"
-                            format="dd/MM/yyyy - HH:mm"
-                            ampm={false}
-                            okLabel="Simpan"
-                            cancelLabel="Batal"
-                            minDateMessage="Batas waktu harus waktu yang akan datang"
-                            invalidDateMessage="Format tanggal tidak benar"
-                            id="deadline"
-                            value={this.state.deadline}
-                            onChange={(date) => this.onDateChange(date)}
-                          />
-                        </MuiPickersUtilsProvider>
-                      </Grid>
+                    {/* <Grid item>
+                      <Typography component="label" for="subject" color="primary">
+                        Mata Pelajaran
+                      </Typography>
+                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                        <Select
+                          value={this.state.subject}
+                          onChange={(event) => {this.onChange(event, "subject")}}
+                        >
+                          {all_subjects.map((subject) => (
+                            <MenuItem value={subject._id}>{subject.name}</MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>
+                          {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
+                        </FormHelperText>
+                      </FormControl>
                     </Grid>
                     <Grid item>
                       <Typography component="label" for="class_assigned" color="primary">
-                        Kelas yang Ditugaskan
+                        Kelas yang Diberikan
                       </Typography>
                       <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
                         <Select
@@ -462,37 +432,32 @@ class CreateTask extends Component {
                           onChange={(event) => {this.onChange(event, "class_assigned")}}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
-                              {selected.map((id) => {
-                                let name
-                                for (var i in all_classes) { // i is the index
-                                  if (all_classes[i]._id === id) {
-                                    name = all_classes[i].name
-                                    break;
-                                  }
-                                }
+                              {selected.map((kelas) => {
+                                console.log(selected)
+                                console.log(kelas, class_assigned)
                                 return (
-                                  <Chip key={id} label={name} className={classes.chip} />
+                                  <Chip key={kelas} label={kelas.name} className={classes.chip} />
                                 )
                               })}
                             </div>
                           )}
                         >
-                          {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                          {all_classes.map((kelas) => {
                             return (
-                              <MenuItem value={kelas._id} key={kelas._id} selected>{kelas.name}</MenuItem>
+                              <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
                           )})}
                         </Select>
                         <FormHelperText>
                           {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
                         </FormHelperText>
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
                     <Grid item>
                       <input
-                        id="file_control"
                         type="file"
                         multiple={true}
                         name="lampiran"
+                        id="file_control"
                         onChange={this.handleLampiranUpload}
                         ref={this.lampiranUploader}
                         accept="file/*"
@@ -501,11 +466,14 @@ class CreateTask extends Component {
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}
-                        onClick={() => {this.lampiranUploader.current.click()}}
+                        onClick={() => this.lampiranUploader.current.click()}
                         className={classes.addFileButton}
                       >
                         Tambah Lampiran Berkas
                        </Button>
+                       <FormHelperText error>
+                       {errors.lampiran_materi}
+                       </FormHelperText>
                        <Grid container spacing={1} style={{marginTop: "10px"}}>
                          {listFileChosen()}
                        </Grid>
@@ -518,9 +486,9 @@ class CreateTask extends Component {
                 <Button
                   variant="contained"
                   type="submit"
-                  className={classes.createTaskButton}
+                  className={classes.createMaterialButton}
                 >
-                  Buat Tugas
+                  Buat File Sharing
                 </Button>
               </div>
             </form>
@@ -540,14 +508,13 @@ class CreateTask extends Component {
   }
 }
 
-CreateTask.propTypes = {
+CreateFileSharing.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  createTask: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
-  getOneUser: PropTypes.func.isRequired,
+  createMaterial: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
 };
 
@@ -560,5 +527,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createTask, getAllClass, getAllSubjects, getOneUser, clearErrors }
-) (withStyles(styles)(CreateTask))
+  mapStateToProps, { getAllClass, getAllSubjects, createMaterial, clearErrors }
+) (withStyles(styles)(CreateFileSharing))

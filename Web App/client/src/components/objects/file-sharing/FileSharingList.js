@@ -71,7 +71,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map(el => el[0]);
 }
 
-function MaterialListToolbar(props) {
+function FileSharingListToolbar(props) {
   const {
     classes,
     order,
@@ -93,7 +93,7 @@ function MaterialListToolbar(props) {
       id: "materialtitle",
       numeric: false,
       disablePadding: true,
-      label: "Nama Materi"
+      label: "Nama File Sharing"
     },
     {
       id: "subject",
@@ -105,7 +105,7 @@ function MaterialListToolbar(props) {
       id: "author",
       numeric: false,
       disablePadding: false,
-      label: "Pemberi Materi"
+      label: "Pemberi File Sharing"
     },
     {
       id: "class_assigned",
@@ -146,7 +146,7 @@ function MaterialListToolbar(props) {
           <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
             <MenuBookIcon className={classes.titleIcon} fontSize="large"/>
             <Typography variant="h4">
-              Daftar Materi
+              Daftar File Sharing
             </Typography>
           </div>
         }
@@ -155,7 +155,7 @@ function MaterialListToolbar(props) {
         <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
           <MenuBookIcon className={classes.titleIcon} fontSize="large"/>
           <Typography variant="h4">
-            Daftar Materi
+            Daftar File Sharing
           </Typography>
         </div>
       </Hidden>
@@ -175,7 +175,7 @@ function MaterialListToolbar(props) {
               onChange={onChange}
               autoFocus
               onClick={(e) =>setSearchBarFocus(true)}
-              placeholder="Search Materi"
+              placeholder="Search File Sharing"
               style={{
                 maxWidth: "200px",
                 marginLeft: "10px"
@@ -230,7 +230,7 @@ function MaterialListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Materi"
+            placeholder="Search File Sharing"
             style={{
               maxWidth: "250px",
               marginRight: "10px"
@@ -269,8 +269,8 @@ function MaterialListToolbar(props) {
         {role === "Student"?
           null
         :
-          <LightTooltip title="Buat Materi">
-            <Link to="/buat-materi">
+          <LightTooltip title="Buat File Sharing">
+            <Link to="/buat-FileSharing">
               <Fab size="small" className={classes.newMaterialButton}>
                 <MenuBookIcon className={classes.newMaterialIconMobile} />
               </Fab>
@@ -283,19 +283,19 @@ function MaterialListToolbar(props) {
           null
         :
         // ANCHOR contoh tombol round edge
-          <Link to="/buat-materi">
+          <Link to="/buat-FileSharing">
             <Fab size="medium" variant="extended" className={classes.newMaterialButton}>
               <MenuBookIcon className={classes.newMaterialIconDesktop} />
-              Buat Materi
+              Buat File Sharing
             </Fab>
           </Link>
         }
       </Hidden>
-        <LightTooltip title="Urutkan Materi">
+        {/* <LightTooltip title="Urutkan File Sharing">
           <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
           </IconButton>
-        </LightTooltip>
+        </LightTooltip> */}
       <Menu
         keepMounted
         anchorEl={anchorEl}
@@ -336,7 +336,7 @@ function MaterialListToolbar(props) {
   );
 }
 
-MaterialListToolbar.propTypes = {
+FileSharingListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -406,7 +406,7 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.warning.main
     }
   },
-  editMaterialButton: {
+  EditFileSharingButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -452,7 +452,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MaterialList(props) {
+function FileSharingList(props) {
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
@@ -554,20 +554,20 @@ function MaterialList(props) {
     setOpenDeleteDialog(false);
   };
 
-  document.title = "Schooly | Daftar Materi";
+  document.title = " Daftar File Sharing";
 
   return (
     <div className={classes.root}>
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Materi"
+        itemType="File Sharing"
         itemName={selectedMaterialName}
         deleteItem={() => {
           onDeleteMaterial(selectedMaterialId);
         }}
       />
-      <MaterialListToolbar
+      <FileSharingListToolbar
         role={user.role}
         deleteMaterial={deleteMaterial}
         classes={classes}
@@ -585,7 +585,7 @@ function MaterialList(props) {
       <Grid container direction="column" spacing={2}>
         {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;
-          let viewpage = `/materi/${row._id}`;
+          let viewpage = `/File Sharing/${row._id}`;
           return (
             <Grid item>
               {user.role === "Teacher" ? (
@@ -604,17 +604,17 @@ function MaterialList(props) {
                           <Typography variant="subtitle1" id={labelId}>
                             {row.materialtitle}
                           </Typography>
-                          <Typography variant="caption" color="textSecondary">
+                          {/* <Typography variant="caption" color="textSecondary">
                             {all_subjects_map.get(row.subject)}
-                          </Typography>
+                          </Typography> */}
                         </Hidden>
                         <Hidden xsDown implementation="css">
                           <Typography variant="h6" id={labelId}>
                             {row.materialtitle}
                           </Typography>
-                          <Typography variant="body2" color="textSecondary">
+                          {/* <Typography variant="body2" color="textSecondary">
                             {all_subjects_map.get(row.subject)}
-                          </Typography>
+                          </Typography> */}
                         </Hidden>
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
@@ -632,10 +632,10 @@ function MaterialList(props) {
                         </Grid>
                         <Grid item>
                           <LightTooltip title="Sunting">
-                            <Link to={`/sunting-materi/${row._id}`}>
+                            <Link to={`/sunting-FileSharing/${row._id}`}>
                               <IconButton
                                 size="small"
-                                className={classes.editMaterialButton}
+                                className={classes.EditFileSharingButton}
                               >
                                 <EditIcon fontSize="small" />
                               </IconButton>
@@ -682,7 +682,7 @@ function MaterialList(props) {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="body1" color="textSecondary">
-                          Pemberi Materi: {!row.author ? null : row.author.name}
+                          Pemberi File Sharing: {!row.author ? null : row.author.name}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -700,9 +700,9 @@ function MaterialList(props) {
                       <Typography variant="h6" id={labelId}>
                         {row.materialtitle}
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
+                      {/* <Typography variant="body2" color="textSecondary">
                         {all_subjects_map.get(row.subject)}
-                      </Typography>
+                      </Typography> */}
                     </div>
                     <div>
                       <Hidden smUp implementation="css">
@@ -711,7 +711,7 @@ function MaterialList(props) {
                           color="textSecondary"
                           align="right"
                         >
-                          Pemberi Materi:
+                          Pemberi File Sharing:
                         </Typography>
                         <Typography
                           variant="caption"
@@ -727,7 +727,7 @@ function MaterialList(props) {
                           color="textSecondary"
                           align="right"
                         >
-                          Pemberi Materi: {!row.author ? null : row.author.name}
+                          Pemberi File Sharing: {!row.author ? null : row.author.name}
                         </Typography>
                       </Hidden>
                     </div>
@@ -742,7 +742,7 @@ function MaterialList(props) {
   );
 }
 
-MaterialList.propTypes = {
+FileSharingList.propTypes = {
   deleteMaterial: PropTypes.func.isRequired,
   getAllMaterials: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
@@ -775,4 +775,4 @@ export default connect(mapStateToProps, {
   getTeachers,
   getAllClass,
   getSelectedClasses
-})(MaterialList);
+})(FileSharingList);

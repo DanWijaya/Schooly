@@ -110,7 +110,7 @@ function Help(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  document.title = "Schooly | Bantuan";
+  document.title = " Bantuan";
 
   return (
     <div className={classes.root}>

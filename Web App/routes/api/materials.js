@@ -22,7 +22,7 @@ router.post("/create", (req,res) => {
 
     if (class_assigned.length > 0) {
         class_assigned.map((kelas) =>
-         class_assigned_ids.push(kelas._id))
+         class_assigned_ids.push(kelas))
     }
 
     console.log("author id : ", req.body.author_id)

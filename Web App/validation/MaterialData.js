@@ -12,7 +12,7 @@ module.exports = function validateMaterialInput(data) {
 
     console.log(data.class_assigned)
     if (Validator.isEmpty(data.name)) {
-        errors.name = "Nama materi belum diisi"
+        errors.name = "Nama File Sharing belum diisi"
     }
 
     if (Validator.isEmpty(data.subject)) {
@@ -25,7 +25,7 @@ module.exports = function validateMaterialInput(data) {
         errors.class_assigned = "Kelas yang ditujukan belum diisi"
     }
     if (!data.lampiran.length) {
-        errors.lampiran_materi = "Lampiran belum ditambahkan ke Materi"
+        errors.lampiran_materi = "Lampiran belum ditambahkan ke File Sharing"
     }
 
     return{

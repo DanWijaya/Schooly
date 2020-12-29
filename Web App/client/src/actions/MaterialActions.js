@@ -28,8 +28,8 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
                 type: GET_SUCCESS_RESPONSE,
                 payload: true
             })
-            //   window.location.href="/daftar-materi"
-            //   history.push("/daftar-materi")
+            //   window.location.href="/daftar-FileSharing"
+            //   history.push("/daftar-FileSharing")
           })
       .catch(err =>{
           console.log("error happened")
@@ -127,7 +127,7 @@ export const deleteMaterial = (materialId, history) => dispatch => {
         })
         .then((res) => {
             console.log(res)
-            window.location.href="/daftar-materi"
+            window.location.href="/daftar-FileSharing"
         })
         .catch(err => {
             console.log(err);

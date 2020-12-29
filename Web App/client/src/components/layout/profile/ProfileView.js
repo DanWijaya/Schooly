@@ -191,7 +191,7 @@ function ProfileView(props) {
   const { avatar, nama, role, viewable_section, jenis_kelamin,
     email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
     kelas, admin, id, tanggal_lahir } = location.state;
-  document.title = `Schooly | ${nama}`
+  document.title = ` ${nama}`
 
   return (
     <div className={classes.root}>

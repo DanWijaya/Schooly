@@ -835,7 +835,7 @@ class EditAssessment extends Component {
     }))(Switch);
 
     console.log("QUESTIONS : ", this.state.questions)
-    document.title = "Schooly | Sunting Kuis";
+    document.title = " Sunting Kuis";
 
 
     return (

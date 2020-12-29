@@ -127,7 +127,7 @@ router.delete("/lampiran/:id", (req,res) => {
     //     })
     //   }
   }
-  return res.json({success: "Succesfully deleted all lampiran materi"})
+  return res.json({success: "Succesfully deleted all lampiran File Sharing"})
 })
 
 

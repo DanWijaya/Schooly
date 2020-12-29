@@ -65,7 +65,7 @@ function About(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  document.title = "Schooly | Tentang Schooly";
+  document.title = " Tentang Schooly";
 
   return (
     <div className={classes.root}>
@@ -102,7 +102,7 @@ function About(props) {
                Semua kegiatan persekolahanmu ada di tanganmu
               </Typography>
               <Typography variant="h6">
-               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti materi pembelajaran, tugas, hingga pengumuman.
+               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti File Sharing pembelajaran, tugas, hingga pengumuman.
               </Typography>
             </Grid>
           </Grid>

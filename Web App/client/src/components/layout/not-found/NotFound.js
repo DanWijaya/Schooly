@@ -55,7 +55,7 @@ function NotFound(props) {
     setFirstTime(true);
   }
 
-  document.title="Schooly | Error 404";
+  document.title=" Error 404";
 
   return (
     <div className={classes.root}>
@@ -70,7 +70,7 @@ function NotFound(props) {
         </div>
       </div>
       <div className={classes.buttonContainer}>
-        <Link to="/beranda">
+        <Link to="/store">
         <Button
           variant="contained"
           size="large"

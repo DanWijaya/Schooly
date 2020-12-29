@@ -455,7 +455,7 @@ class Dashboard extends Component {
       }
     }
 
-    document.title = "Schooly | Dashboard";
+    document.title = " Dashboard";
     document.body.style = "background: #FFFFFF";
 
     return (
@@ -755,11 +755,11 @@ class Dashboard extends Component {
                       </ListItemIcon>
                       <ListItemText primary="Buat Pengumuman" />
                     </MenuItem>
-                    <MenuItem button component="a" href="/buat-materi" className={classes.menuItem}>
+                    <MenuItem button component="a" href="/buat-FileSharing" className={classes.menuItem}>
                       <ListItemIcon>
                         <MenuBookIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Buat Materi" />
+                      <ListItemText primary="Buat File Sharing" />
                     </MenuItem>
                     <MenuItem button component="a" href="/buat-tugas" className={classes.menuItem}>
                       <ListItemIcon>
@@ -803,7 +803,7 @@ class Dashboard extends Component {
             :
               <Grid item container direction="row" justify="flex-end">
                 <Grid item>
-                  <Link to ="/daftar-kelas">
+                  <Link to ="/store">
                     <Fab variant="extended" className={classes.manageClassButton}>
                       <FaChalkboardTeacher className={classes.manageClassIcon} />
                       Atur Kelas

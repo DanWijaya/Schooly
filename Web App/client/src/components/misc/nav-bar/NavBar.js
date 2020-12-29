@@ -80,7 +80,7 @@ function NavBar(props) {
       </div>
     )
     middleNavBarContents = (
-      <Link to="/beranda">
+      <Link to="/store">
         {/* <img
           alt="SchoolyLogoNavBar"
           src={schoolyLogo}
@@ -127,7 +127,7 @@ function NavBar(props) {
   }
 
   return (
-    <AppBar position="fixed" className={classes.appBar}>
+    <AppBar color="secondary" position="fixed" className={classes.appBar}>
       {(props.assessmentState !== "ujian") ?
         <Toolbar>
           {leftNavBarContents}

@@ -96,13 +96,13 @@ function DrawerContent(props) {
     if (user.role === "Student")
       directedTo = `/kelas/${user.kelas}`
     else
-      directedTo = "/daftar-kelas"
+      directedTo = "/store"
   }
 
   let ListItemContents;
   if (user.role === "Admin")
     ListItemContents = [
-      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      ["/store", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
       ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemIcon}/>, "Pengguna Aktif"],
       ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Tertunda"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
@@ -110,11 +110,11 @@ function DrawerContent(props) {
     ]
   else {
     ListItemContents = [
-      // ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      // ["/store", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
       // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
       [directedTo, <AssignmentIcon className={classes.drawerListItemIcon} />, "Store"],
       // ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
-      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Paper Sharing"],
+      ["/daftar-FileSharing", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Paper Sharing"],
       // ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       // ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
       // ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],

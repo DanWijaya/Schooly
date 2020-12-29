@@ -82,7 +82,7 @@ function SimpleDialog(props) {
           <Paper className={stylesheet.paper}>Nama Guru      : Heru Pambudi, S.Pd.</Paper>
           <Paper className={stylesheet.paper}>Semester       : I (Ganjil)</Paper>
           <Paper className={stylesheet.paper}>
-            <div>Materi Pokok   :</div>
+            <div>File Sharing Pokok   :</div>
             <List style={{padding:'2%'}}>
               <ListItem className={{fontSize:12}}>Besaran dan Dimensi</ListItem>
               <ListItem className={{fontSize:12}}>Kinematika Gerak</ListItem>
@@ -101,7 +101,7 @@ function SimpleDialog(props) {
           <Paper className={stylesheet.paper}>Nama Guru      : Ag. Eko Hendarto, S.Pd.</Paper>
           <Paper className={stylesheet.paper}>Semester       : I (Ganjil)</Paper>
           <Paper className={stylesheet.paper}>
-            <div>Materi Pokok   :</div>
+            <div>File Sharing Pokok   :</div>
             <List style={{padding:'2%'}}>
               <ListItem className={{fontSize:12}}>Aritmatika Aljabar</ListItem>
               <ListItem className={{fontSize:12}}>Polinom (Suku Banyak)</ListItem>
@@ -120,7 +120,7 @@ function SimpleDialog(props) {
           <Paper className={stylesheet.paper}>Nama Guru      : Henrikus Supriyanto, S.Pd.</Paper>
           <Paper className={stylesheet.paper}>Semester       : I (Ganjil)</Paper>
           <Paper className={stylesheet.paper}>
-            <div>Materi Pokok   :</div>
+            <div>File Sharing Pokok   :</div>
             <List style={{padding:'2%'}}>
               <ListItem className={{fontSize:12}}>Teori Atom</ListItem>
               <ListItem className={{fontSize:12}}>Unsur, Senyawa, dan Campuran</ListItem>

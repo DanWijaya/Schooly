@@ -20,7 +20,7 @@ conn.once("open", () => {
   gfsLampiranMateri.collection("lampiran_materi")
 })
 
-// Router for handling the upload lampiran Materi...
+// Router for handling the upload lampiran File Sharing...
 router.post("/lampiran/:id", uploadLampiranMateri.array("lampiran_materi", 10), (req,res) => {
   let material_id = req.params.id;
   console.log("Upload lampiran is runned")
@@ -102,7 +102,7 @@ router.delete("/lampiran/:id", (req,res) => {
       })
     }
   }
-  return res.json({success: "Succesfully deleted all lampiran materi"})
+  return res.json({success: "Succesfully deleted all lampiran File Sharing"})
 })
 
 router.get("/lampiran_materi/:id", (req,res) => {

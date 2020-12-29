@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 function NotificationItemList(props) {
   const classes = useStyles();
 
-  document.title="Schooly | Notifikasi";
+  document.title=" Notifikasi";
 
   return (
     <Paper variant="outlined" className={classes.listItemPaper}>
