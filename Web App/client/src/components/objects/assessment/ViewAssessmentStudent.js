@@ -494,14 +494,14 @@ function ViewAssessmentStudent(props) {
       }
     }
     if(!start){
-      if(finish){
-        return(
-          <Typography variant="h6" align="center">
-            TELAH SELESAI
-          </Typography>
-        )
-      }
-      else{
+      // if(finish){
+      //   return(
+      //     <Typography variant="h6" align="center">
+      //       TELAH SELESAI
+      //     </Typography>
+      //   )
+      // }
+      // else{
         return(
           <Grid item>
             <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
@@ -509,7 +509,7 @@ function ViewAssessmentStudent(props) {
             </Button>
           </Grid>
         )
-      }
+      // }
     }
     else{
       return(
