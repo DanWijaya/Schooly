@@ -228,7 +228,7 @@ class CreateMaterial extends Component {
         author_id: id,
         errors: {},
       };
-      
+
       console.log(this.state.fileLampiran)
       this.props.createMaterial(formData, materialData, this.props.history);
   }
@@ -329,7 +329,7 @@ class CreateMaterial extends Component {
     };
 
     document.title = "Schooly | Buat Materi";
-    
+
     if (user.role === "Teacher") {
       // all_subjects.sort((a, b) => (a.name > b.name) ? 1 : -1)
       // all_classes.sort((a, b) => (a.name > b.name) ? 1 : -1)
@@ -404,7 +404,7 @@ class CreateMaterial extends Component {
                       <Typography component="label" for="subject" color="primary">
                         Mata Pelajaran
                       </Typography>
-                      {/* <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
                         <Select
                           value={this.state.subject}
                           onChange={(event) => {this.onChange(event, "subject")}}
@@ -416,7 +416,7 @@ class CreateMaterial extends Component {
                         <FormHelperText>
                           {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
                         </FormHelperText>
-                      </FormControl> */}
+                      </FormControl>
                     </Grid>
                     <Grid item>
                       <Typography component="label" for="class_assigned" color="primary">
