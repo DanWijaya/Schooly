@@ -23,7 +23,7 @@ import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { HiClipboardList } from "react-icons/hi";
+import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 
@@ -401,7 +401,7 @@ function ViewClass(props) {
   console.log(user.tugas)
 
   // All actions to retrive datas from Database
-  
+
 
   function listTasks(category=null, subject={}, tab="pekerjaan_kelas"){
     let tasksList = []
@@ -418,7 +418,7 @@ function ViewClass(props) {
         //   break;
         // }
       }
-      
+
       for (i = 0; i < tasksList.length; i++){
         let task = tasksList[i]
         let workCategoryAvatar = (
@@ -435,7 +435,7 @@ function ViewClass(props) {
             break;
           }
         }
-        
+
         // console.log(all_user_files)
         // for (var j = 0; j < all_user_files.length; j++){
         //     if(all_user_files[j].for_task_object === task._id){
@@ -509,7 +509,7 @@ function ViewClass(props) {
             <AssignmentLateIcon/>
           </Avatar>
         )
-        
+
         // console.log(all_user_files)
         // for (var j = 0; j < all_user_files.length; j++){
         //     if(all_user_files[j].for_task_object === task._id){
@@ -589,7 +589,7 @@ function ViewClass(props) {
             }
           }
         }
-      }  
+      }
     }
     return result;
   }
@@ -654,7 +654,7 @@ function ViewClass(props) {
 
   React.useEffect(() => {
     // nilai students_by_class yang diperlukan adalah nilai yang diassign ketika fungsi getStudentsByClass telah selesai,
-    // bukan ketika komponen ini dimount 
+    // bukan ketika komponen ini dimount
     if (firstAssign) {
       setFirstAssign(false);
     } else {
@@ -714,7 +714,7 @@ function ViewClass(props) {
                   {kelas.name}
                 </Typography>
                 <Typography variant="h6">
-                  { (isObjEmpty(walikelas)) ? 
+                  { (isObjEmpty(walikelas)) ?
                     null
                   :
                     walikelas.name
@@ -734,8 +734,8 @@ function ViewClass(props) {
                             person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
                             person_name={walikelas.name }
                             person_role={(all_subjects_map) ? all_subjects_map.get(walikelas.subject_teached) : null}
-                          />                
-                        </Grid>].concat( (user.email === walikelas.email) ? ( // menghilangkan tombol lihat profil di diri sendiri 
+                          />
+                        </Grid>].concat( (user.email === walikelas.email) ? ( // menghilangkan tombol lihat profil di diri sendiri
                           null
                         ) : (
                           <Grid item xs container justify="flex-end">
@@ -770,7 +770,7 @@ function ViewClass(props) {
                         )
                       }
                     </Grid>
-                  ) : 
+                  ) :
                     null}
                 </List>
               </div>
@@ -920,7 +920,7 @@ function ViewClass(props) {
                   <ExpansionPanelSummary>
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                        <HiClipboardList className={classes.itemIcon}/>
+                        <FaClipboardList className={classes.itemIcon}/>
                         <Typography variant="h6">
                           Kuis
                         </Typography>
@@ -979,7 +979,7 @@ function ViewClass(props) {
               </TabPanel>
               <TabPanel value={value} index={1}>
                 {all_subjects.length === 0 ?
-                  null 
+                  null
                 :
                   all_subjects.map((subject) => {
                     // let isEmpty = true
@@ -1022,7 +1022,7 @@ function ViewClass(props) {
                     </Typography>
                     <Divider className={classes.personListDivider} />
                     <List className={classes.listContainer}>
-                      {isObjEmpty(walikelas) ? 
+                      {isObjEmpty(walikelas) ?
                         null
                       : (
                         <Grid container justify="space-between" alignItems="center">

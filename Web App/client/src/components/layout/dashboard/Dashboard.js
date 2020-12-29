@@ -13,7 +13,7 @@ import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Fab, Grid, IconButton, Hidden, ListItemIcon, ListItemText, Menu, MenuItem, 
+import { Fab, Grid, IconButton, Hidden, ListItemIcon, ListItemText, Menu, MenuItem,
   Paper, Typography, ListItem, ListItemAvatar, Dialog, Avatar } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -24,7 +24,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
-import { HiClipboardList } from "react-icons/hi";
+import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 
 const styles = (theme) => ({
@@ -124,7 +124,7 @@ const styles = (theme) => ({
   },
 });
 
-function WorkListItem(props) {
+function TaskListItem(props) {
   const { classes } = props;
 
   return (
@@ -162,21 +162,21 @@ function ListAssessments(props){
   const { category, subject, type, tab, all_assessments, classId, classes, all_subjects_map } = props;
 
   function AssessmentListItem(props) {
-    
+
     // Dialog Kuis dan Ujian
     const [openDialog, setOpenDialog] = React.useState(false);
     const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
-  
+
     const handleOpenDialog = (title, subject, start_date, end_date) => {
       setCurrentDialogInfo({title, subject, start_date, end_date})
       setOpenDialog(true)
       console.log(title)
     }
-  
+
     const handleCloseDialog = () => {
       setOpenDialog(false)
     }
-  
+
     return (
       <div>
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
@@ -283,7 +283,7 @@ function ListAssessments(props){
         break;
       if(category==="subject" && result.length === 3)
         break;
-    }  
+    }
   }
   if(result.length === 0){
     result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
@@ -291,84 +291,47 @@ function ListAssessments(props){
   return result;
 }
 
-class TimeClock extends Component{
-  constructor(props) {
-    super(props);
-    this.state = {
-      time: new Date(),
-      anchorEl: null,
-    };
-  }
+function WelcomePanel(props){
+  const { user, classes } = props;
 
-  componentDidMount() {
-
-    this.intervalID = setInterval(
-      () => this.tick(),
-      1000
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.intervalID);
-  }
-
-  tick() {
-    this.setState({
-      time: new Date()
-    });
-  }
-  render() {
-    const { user, classes } = this.props
-    return (
-    <Grid item>
-      {user.role === "Student" ?
-        <Paper elevation={0} className={classes.timePaperStudent}>
-          <Typography variant="h4">
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h5" style={{marginBottom: "20px"}}>
-            Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      : user.role === "Teacher" ?
-        <Paper elevation={0} className={classes.timePaperTeacher}>
-          <Typography variant="h4">
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h5" style={{marginBottom: "20px"}}>
-          Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      :
-        <Paper elevation={0} className={classes.timePaperAdmin}>
-          <Typography variant="h4">
-            <b>Selamat Datang, {user.name}</b>
-          </Typography>
-          <Typography variant="h5" style={{marginBottom: "20px"}}>
-            Sekarang tanggal {this.state.time.toLocaleDateString("id-ID")}, pukul {this.state.time.toLocaleTimeString("id-ID")}.
-          </Typography>
-          <Typography variant="h6">
-            Apa yang ingin Anda kerjakan hari ini?
-          </Typography>
-        </Paper>
-      }
-    </Grid>
-    )
-  }
+  return (
+  <Grid item>
+    {user.role === "Student" ?
+      <Paper elevation={0} className={classes.timePaperStudent}>
+        <Typography variant="h4" gutterBottom>
+          <b>Selamat Datang, {user.name}</b>
+        </Typography>
+        <Typography variant="h6">
+          Apa yang ingin Anda kerjakan hari ini?
+        </Typography>
+      </Paper>
+    : user.role === "Teacher" ?
+      <Paper elevation={0} className={classes.timePaperTeacher}>
+        <Typography variant="h4" gutterBottom>
+          <b>Selamat Datang, {user.name}</b>
+        </Typography>
+        <Typography variant="h6">
+          Apa yang ingin Anda kerjakan hari ini?
+        </Typography>
+      </Paper>
+    :
+      <Paper elevation={0} className={classes.timePaperAdmin}>
+        <Typography variant="h4" gutterBottom>
+          <b>Selamat Datang, {user.name}</b>
+        </Typography>
+        <Typography variant="h6">
+          Apa yang ingin Anda kerjakan hari ini?
+        </Typography>
+      </Paper>
+    }
+  </Grid>
+  )
 }
-
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: new Date(),
       anchorEl: null,
     };
   }
@@ -388,12 +351,6 @@ class Dashboard extends Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-  }
-
-  tick() {
-    this.setState({
-      time: new Date()
-    });
   }
 
   // Create Button Menu
@@ -431,7 +388,7 @@ class Dashboard extends Component {
         }
         if(flag){
           result.push(
-            <WorkListItem
+            <TaskListItem
               classes={classes}
               work_title={task.name}
               work_sender={all_subjects_map.get(task.subject)}
@@ -462,7 +419,7 @@ class Dashboard extends Component {
           if(Object.values(tasksCollection[i].grades).length !== number_students_assigned){
             let task = tasksCollection[i]
             result.push(
-              <WorkListItem
+              <TaskListItem
                 classes={classes}
                 work_title={task.name}
                 work_sender={all_subjects_map.get(task.subject)}
@@ -504,7 +461,7 @@ class Dashboard extends Component {
     return (
       <div className={classes.root}>
         <Grid container direction="column" spacing={3}>
-          <TimeClock user={user} classes={classes}/>
+          <WelcomePanel user={user} classes={classes}/>
           <Grid item container xs={12}>
             {user.role === "Student" ?
               <Grid item container spacing={3}>
@@ -543,7 +500,7 @@ class Dashboard extends Component {
                       <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                         <Grid item>
                           <Grid container alignItems="center">
-                            <HiClipboardList
+                            <FaClipboardList
                               color="action"
                               style={{marginRight: "10px", fontSize: "22px"}}
                             />
@@ -564,9 +521,9 @@ class Dashboard extends Component {
                       </Grid>
                       <Grid container direction="column" spacing={1}>
                         <ListAssessments category={null}
-                          subject={{}} 
-                          type="Kuis" 
-                          tab="pekerjaan-kelas" 
+                          subject={{}}
+                          type="Kuis"
+                          tab="pekerjaan-kelas"
                           all_assessments={all_assessments}
                           classId={classId}
                           classes={classes}
@@ -601,9 +558,9 @@ class Dashboard extends Component {
                       </Grid>
                       <Grid container direction="column" spacing={1}>
                         <ListAssessments category={null}
-                          subject={{}} 
-                          type="Ujian" 
-                          tab="pekerjaan-kelas" 
+                          subject={{}}
+                          type="Ujian"
+                          tab="pekerjaan-kelas"
                           all_assessments={all_assessments}
                           classId={classId}
                           classes={classes}
@@ -650,7 +607,7 @@ class Dashboard extends Component {
                             return null;
                           }
                           return (
-                            <WorkListItem
+                            <TaskListItem
                               classes={classes}
                               work_title={task.name}
                               work_sender={all_subjects_map.get(task.subject)}
@@ -698,7 +655,7 @@ class Dashboard extends Component {
                             return null;
                           }
                           return (
-                            <WorkListItem
+                            <TaskListItem
                               classes={classes}
                               work_title={task.name}
                               work_sender={all_subjects_map.get(task.subject)}
@@ -746,7 +703,7 @@ class Dashboard extends Component {
                             return null;
                           }
                           return (
-                            <WorkListItem
+                            <TaskListItem
                               classes={classes}
                               work_title={task.name}
                               work_sender={all_subjects_map.get(task.subject)}
@@ -854,11 +811,11 @@ class Dashboard extends Component {
                   </Link>
                 </Grid>
               </Grid>
-              
+
             }
-            
+
           </Grid>
-          
+
         </Grid>
       </div>
     )

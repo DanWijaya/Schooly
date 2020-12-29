@@ -180,6 +180,7 @@ function TimeoutDialog(props){
     </Dialog>
   )
 }
+
 function Timer(props) {
   const classes = useStyles();
   let {start_date, end_date, id, onSubmit, setOpenTimeoutDialog } = props;
@@ -553,10 +554,10 @@ function ViewAssessmentStudent(props) {
                       questionPage(classes, handleChangeQuestion, qnsIndex, i + 1, answer)
                     )
                     // return (
-                    // <QuestionPage 
-                    //   classes={classes} 
-                    //   question_number={i + 1} 
-                    //   handleChangeQuestion={handleChangeQuestion} 
+                    // <QuestionPage
+                    //   classes={classes}
+                    //   question_number={i + 1}
+                    //   handleChangeQuestion={handleChangeQuestion}
                     //   answer={answer}/>
                     // )
                   })
