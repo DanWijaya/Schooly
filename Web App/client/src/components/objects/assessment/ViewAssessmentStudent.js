@@ -139,7 +139,8 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       borderRadius: theme.shape.borderRadius,
     },
-  },  toggleButtonRoot: {
+  },
+  toggleButtonRoot: {
     color: "unset",
     "&$toggleButtonSelected": {
       backgroundColor: theme.palette.primary.main,
@@ -170,6 +171,7 @@ function TimeoutDialog(props){
         </Grid>
         <Grid item>
           <Button
+            startIcon={<CheckCircleOutlineIcon/>}
             onClick={handleCloseTimeoutDialog}
             className={classes.timeoutDialogButton}
           >
