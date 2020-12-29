@@ -81,11 +81,11 @@ function NavBar(props) {
     )
     middleNavBarContents = (
       <Link to="/beranda">
-        <img
+        {/* <img
           alt="SchoolyLogoNavBar"
           src={schoolyLogo}
           className={classes.schoolyLogo}
-        />
+        /> */}
       </Link>
     )
     rightNavBarContents = (

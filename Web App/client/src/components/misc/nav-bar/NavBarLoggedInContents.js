@@ -67,11 +67,11 @@ function NavBarLoggedInContents(props) {
   // Desktop Menu (will rendered when in desktop mode / width >= 600px)
   const renderDesktopMenu = (
     <Grid container className={classes.navbarContents}>
-      <LightTooltip title={user.name}>
+      {/* <LightTooltip title={user.name}>
         <IconButton onClick={handleProfileMenu}>
           <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
         </IconButton>
-      </LightTooltip>
+      </LightTooltip> */}
       <Menu
         keepMounted
         anchorEl={profileAnchorEl}
@@ -88,12 +88,12 @@ function NavBarLoggedInContents(props) {
         }}
       >
         <Link to="/profil" onClick={handleProfileMenuClose}>
-          <MenuItem className={classes.menuItem}>
+          {/* <MenuItem className={classes.menuItem}>
             <ListItemIcon>
               <Avatar src={`/api/upload/avatar/${user.avatar}`} className={classes.navbarProfilePicture} />
             </ListItemIcon>
             <ListItemText primary="Profil Saya" />
-          </MenuItem>
+          </MenuItem> */}
         </Link>
         <MenuItem onClick={onLogoutClick} className={classes.menuItem}>
           <ListItemIcon>
@@ -104,9 +104,9 @@ function NavBarLoggedInContents(props) {
       </Menu>
       <LightTooltip title="Bantuan">
         <Link to="/bantuan">
-          <IconButton color="white" style={{color: "white"}}>
+          {/* <IconButton color="white" style={{color: "white"}}>
             <HelpIcon />
-          </IconButton>
+          </IconButton> */}
         </Link>
       </LightTooltip>
     </Grid>

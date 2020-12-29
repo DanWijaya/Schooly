@@ -110,20 +110,20 @@ function DrawerContent(props) {
     ]
   else {
     ListItemContents = [
-      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      // ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
       // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
-      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
-      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
-      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
-      ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
+      [directedTo, <AssignmentIcon className={classes.drawerListItemIcon} />, "Store"],
+      // ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
+      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Paper Sharing"],
+      // ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
+      // ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
+      // ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
     ]
-    if (user.role === "Teacher") {
-      ListItemContents.push(
-        [{pathname:"/lihat-rapor", state: {role: "Other"}}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"]
-      )
-    }
+    // if (user.role === "Teacher") {
+    //   ListItemContents.push(
+    //     [{pathname:"/lihat-rapor", state: {role: "Other"}}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"]
+    //   )
+    // }
   }
 
   return (
@@ -133,10 +133,10 @@ function DrawerContent(props) {
           generateList(item[0],item[1],item[2],item[3]))
         )}
       </List>
-      <Divider />
-      <List>
+      {/* <Divider /> */}
+      {/* <List>
         {generateList("/dropbox-connect", <FaDropbox className={classes.dropboxIcon}/>, "Dropbox")}
-      </List>
+      </List> */}
     </div>
   )
 };
