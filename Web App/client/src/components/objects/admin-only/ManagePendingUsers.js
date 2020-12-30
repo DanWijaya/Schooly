@@ -16,7 +16,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SortIcon from "@material-ui/icons/Sort";
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import CheckIcon from '@material-ui/icons/Check';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
+import { set } from "date-fns/esm";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
@@ -52,7 +54,9 @@ function stableSort(array, comparator) {
 const ManageUsersToolbar = (props) => {
   const { classes, order, orderBy, onRequestSort, role, heading, 
     activateCheckboxMode, deactivateCheckboxMode, currentCheckboxMode, OpenDialogCheckboxDelete, OpenDialogCheckboxApprove,
-    CloseDialogCheckboxDelete, CloseDialogCheckboxApprove, CheckboxDialog, listCheckbox, lengthListCheckbox, reloader } = props;
+    CloseDialogCheckboxDelete, CloseDialogCheckboxApprove, CheckboxDialog, listCheckbox, 
+    lengthListCheckbox, reloader, rowCount, listBooleanCheckbox, listBooleanCheckboxState, 
+    setListBooleanCheckboxState, selectAllData, deSelectAllData} = props;
 
   console.log(listCheckbox)
   console.log(currentCheckboxMode)
@@ -88,13 +92,31 @@ const ManageUsersToolbar = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },)
 
+  console.log(rowCount)
+
   const [coba, setCoba] = React.useState(null)
 
   return (
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h5">
-        {heading}
-      </Typography>
+      <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+        <Typography variant="h5">
+          {heading}
+        </Typography>
+        {(currentCheckboxMode && rowCount !== 0) ?
+          (listCheckbox.length === 0) ?
+            <IconButton onClick={() => selectAllData(role)}>
+              <CheckBoxOutlineBlankIcon className={classes.checkboxIconPrimary}/>
+            </IconButton>
+          : (listCheckbox.length === rowCount) ?
+            <IconButton onClick={() => deSelectAllData(role)}>
+              <CheckBoxIcon className={classes.checkboxIconPrimary}/>
+            </IconButton>
+          :
+            <IconButton onClick={() => deSelectAllData(role)}>
+              <IndeterminateCheckBoxIcon className={classes.checkboxIconPrimary}/>
+            </IconButton>
+        : null}
+      </div>
       <div>
         {(role === "Student") ?
           <>
@@ -348,6 +370,9 @@ const useStyles = makeStyles((theme) => ({
       color: "black",
     },
     marginRight: "3px"
+  },
+  checkboxIconPrimary: {
+    color: theme.palette.primary.main
   }
 }));
 
@@ -387,7 +412,18 @@ function ManageUsers(props) {
   const [listCheckboxStudent, setListCheckboxStudent] = React.useState([])
   const [listCheckboxTeacher, setListCheckboxTeacher] = React.useState([])
 
+  const [booleanCheckboxStudent, setBooleanCheckboxStudent] = React.useState([])
+  const [booleanCheckboxTeacher, setBooleanCheckboxTeacher] = React.useState([])
+
   const [test, setTest] = React.useState(false)
+
+  let currentListBooleanStudent
+  let currentListBooleanTeacher
+
+  console.log(listCheckboxTeacher)
+  console.log(booleanCheckboxTeacher)
+  console.log(student_rows)
+  console.log(teacher_rows)
 
   React.useEffect(() => {
     console.log(listCheckboxStudent.length)
@@ -398,9 +434,15 @@ function ManageUsers(props) {
   const handleActivateCheckboxMode = (type) => {
     if(type === "Student"){
       setCheckboxModeStudent(true)
+      if(currentListBooleanStudent.length === student_rows.length){
+        setBooleanCheckboxStudent(currentListBooleanStudent)
+      }
     }
     else if(type === "Teacher"){
       setCheckboxModeTeacher(true)
+      if(currentListBooleanTeacher.length === teacher_rows.length){
+        setBooleanCheckboxTeacher(currentListBooleanTeacher)
+      }
     }
   }
 
@@ -414,6 +456,9 @@ function ManageUsers(props) {
   }
 
   const handleChangeListStudent = (e, index, row) => {
+    let currentBooleanList = booleanCheckboxStudent
+    currentBooleanList[index] = !currentBooleanList[index]
+    setBooleanCheckboxStudent(currentBooleanList)
     let status = true
     let result = [];
     let temp = {checkboxEvent: e, index: index, row: row};
@@ -430,10 +475,12 @@ function ManageUsers(props) {
       result.push(temp)
     }
     setListCheckboxStudent(result)
-    console.log(result)
   }
 
   const handleChangeListTeacher = (e, index, row) => {
+    let currentBooleanList = booleanCheckboxTeacher
+    currentBooleanList[index] = !currentBooleanList[index]
+    setBooleanCheckboxTeacher(currentBooleanList)
     let status = true
     let result = [];
     let temp = {checkboxEvent: e, index: index, row: row};
@@ -478,6 +525,50 @@ function ManageUsers(props) {
       onDeleteUser(listCheckboxTeacher[i].row._id)
     }
     setListCheckboxTeacher([])
+  }
+
+  const selectAllData = (type) => {
+    if(type === "Student"){
+      let allDataStudent = []
+      let booleanAllDataStudent = []
+      for(let i=0;i<student_rows.length;i++){
+        let temp = {e: null, index: i, row: student_rows[i]}
+        allDataStudent.push(temp)
+        booleanAllDataStudent.push(true)
+      }
+      setListCheckboxStudent(allDataStudent)
+      setBooleanCheckboxStudent(booleanAllDataStudent)
+    }
+    else{
+      let allDataTeacher = []
+      let booleanAllDataTeacher = []
+      for(let i=0;i<teacher_rows.length;i++){
+        let temp = {e: null, index: i, row: teacher_rows[i]}
+        allDataTeacher.push(temp)
+        booleanAllDataTeacher.push(true)
+      }
+      setListCheckboxTeacher(allDataTeacher)
+      setBooleanCheckboxTeacher(booleanAllDataTeacher)
+    }
+  }
+
+  const deSelectAllData = (type) => {
+    if(type === "Student"){
+      let booleanAllDataStudent = []
+      for(let i=0;i<student_rows.length;i++){
+        booleanAllDataStudent.push(false)
+      }
+      setListCheckboxStudent([])
+      setBooleanCheckboxStudent(booleanAllDataStudent)
+    }
+    else{
+      let booleanAllDataTeacher = []
+      for(let i=0;i<teacher_rows.length;i++){
+        booleanAllDataTeacher.push(false)
+      }
+      setListCheckboxTeacher([])
+      setBooleanCheckboxTeacher(booleanAllDataTeacher)
+    }
   }
 
   // Checkbox Dialog Box
@@ -537,15 +628,24 @@ function ManageUsers(props) {
       teacher_rows.push(temp)
     }
   }
+
   const retrieveUsers = () => {
     student_rows = []
     teacher_rows = []
+    currentListBooleanStudent = []
+    currentListBooleanTeacher = []
     console.log("retrieve users")
     if(Array.isArray(pending_students)){
-    pending_students.map((data) => userRowItem(data, "Student"))
+      pending_students.map((data) => {
+        userRowItem(data, "Student")
+        currentListBooleanStudent.push(false)
+      })
     }
     if(Array.isArray(pending_teachers)){
-    pending_teachers.map((data) => userRowItem(data, "Teacher"))
+      pending_teachers.map((data) => {
+        userRowItem(data, "Teacher")
+        currentListBooleanTeacher.push(false)
+      })
     }
   }
 
@@ -941,6 +1041,11 @@ function ManageUsers(props) {
         lengthListCheckbox={listCheckboxStudent.length}
         listCheckbox={listCheckboxStudent}
         reloader={() => autoReloader}
+        listBooleanCheckbox={currentListBooleanStudent}
+        listBooleanCheckboxState={booleanCheckboxStudent}
+        setListBooleanCheckboxState={setBooleanCheckboxStudent}
+        selectAllData={selectAllData}
+        deSelectAllData={deSelectAllData}
       />
       <Divider variant="inset" />
       <Grid container direction="column" spacing={2} style={{marginTop: "10px", marginBottom: "75px"}}>
@@ -1017,7 +1122,7 @@ function ManageUsers(props) {
                               <FormControlLabel
                                 control={<Checkbox onChange={(e) => {
                                   handleChangeListStudent(e, index, row)
-                                  autoReloader()}} color="primary"/>}
+                                  autoReloader()}} color="primary" checked={booleanCheckboxStudent[index]}/>}
                               />
                             </FormGroup>
                             </LightTooltip>
@@ -1064,7 +1169,7 @@ function ManageUsers(props) {
         order={order_teacher}
         orderBy={orderBy_teacher}
         onRequestSort={handleRequestSort}
-        rowCount={student_rows ? student_rows.length : 0}
+        rowCount={teacher_rows ? teacher_rows.length : 0}
         activateCheckboxMode={handleActivateCheckboxMode}
         deactivateCheckboxMode={handleDeactivateCheckboxMode}
         currentCheckboxMode={checkboxModeTeacher}
@@ -1076,6 +1181,11 @@ function ManageUsers(props) {
         lengthListCheckbox={listCheckboxTeacher.length}
         listCheckbox={listCheckboxTeacher}
         reloader={() => autoReloader}
+        listBooleanCheckbox={currentListBooleanTeacher}
+        listBooleanCheckboxState={booleanCheckboxTeacher}
+        setListBooleanCheckboxState={setBooleanCheckboxTeacher}
+        selectAllData={selectAllData}
+        deSelectAllData={deSelectAllData}
       />
       <Divider variant="inset" />
       <Grid container direction="column" spacing={2} style={{marginTop: "10px"}}>
@@ -1153,7 +1263,7 @@ function ManageUsers(props) {
                                 control={<Checkbox onChange={(e) => {
                                   handleChangeListTeacher(e, index, row)
                                   autoReloader()
-                                }} color="primary"/>}
+                                }} color="primary" checked={booleanCheckboxTeacher[index]}/>}
                               />
                             </FormGroup>
                             </LightTooltip>
