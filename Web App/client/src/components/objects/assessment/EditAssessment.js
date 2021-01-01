@@ -1166,11 +1166,12 @@ class EditAssessment extends Component {
         <DeleteDialog
           openDeleteDialog={this.state.openDeleteDialog}
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
-          itemType="Perubahan Kuis/Ujian"
+          itemType={(this.state.type) ? `Perubahan ${this.state.type}` : "Perubahan Penilaian"}
           itemName={this.state.name}
           deleteItem=""
           isLink={true}
           redirectLink="/daftar-kuis"
+          isWarning={false}
         />
         <UploadDialog
           openUploadDialog={this.state.openUploadDialog}

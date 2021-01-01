@@ -597,9 +597,10 @@ function AssessmentList(props) {
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Kuis"
+        itemType="Ujian"
         itemName={selectedAssessmentName}
         deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+        isWarning={true}
       />
       <Dialog
         fullScreen={false}

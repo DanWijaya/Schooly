@@ -593,6 +593,7 @@ function AssessmentList(props) {
           itemType="Kuis"
           itemName={selectedAssessmentName}
           deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+          isWarning={true}
         />
         <Dialog
           fullScreen={false}
