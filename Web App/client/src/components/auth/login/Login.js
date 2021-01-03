@@ -32,10 +32,10 @@ const styles = (theme) => ({
   },
   loginButton: {
     width: "100%",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -70,10 +70,10 @@ class Login extends Component {
   static getDerivedStateFromProps(nextProps, prevState){
     // Function static ini belongs to the class secara keseluruhan, bukan instance of the class.
     //  Makanya gak ada this keyword.
-    if(nextProps.auth.isAuthenticated) // nextProps.auth.isAuthenticated = kalau true, 
+    if(nextProps.auth.isAuthenticated) // nextProps.auth.isAuthenticated = kalau true,
       return { isAuthenticated: nextProps.auth.isAuthenticated }
       // ini sama dengan this.setState({ isAuthenticated : nextProps.auth.isAuthenticated })
-    else if(nextProps.errors) // kalau errorsnya ngak false. 
+    else if(nextProps.errors) // kalau errorsnya ngak false.
       return { errors: nextProps.errors }
     else
       return null // gak ngapa ngapain
@@ -82,7 +82,7 @@ class Login extends Component {
   componentDidUpdate(prevProps, prevState) {
     if(this.state.isAuthenticated){
 
-      // jika murid yang belum login membuka link assessment (/kuis-murid/:id), 
+      // jika murid yang belum login membuka link assessment (/kuis-murid/:id),
       // setelah login, murid akan diarahkan ke halaman assessment tersebut
       if (this.props.location.state) {
         window.location.href = `.${this.props.location.state.url}`
@@ -124,7 +124,7 @@ class Login extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.mainPaper}>
+        <Paper elevation={11} className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h6" align="center">
@@ -180,6 +180,7 @@ class Login extends Component {
                   <Grid item>
                     <Button
                       type="submit"
+                      variant="contained"
                       className={classes.loginButton}
                     >
                       Masuk
@@ -193,7 +194,7 @@ class Login extends Component {
               <Link to="/akun/lupa-katasandi">
                 Lupa Kata Sandi?
               </Link>
-              |
+              ·
               <Link to="/daftar">
                 Belum ada Akun?
               </Link>

@@ -41,11 +41,11 @@ const useStyles = makeStyles((theme) => ({
   },
   checkCircleIcon: {
     marginRight: "10px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main
+      color: theme.palette.success.main
     },
   },
   downloadAllButton: {

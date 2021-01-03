@@ -19,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
   uploadFinishButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.dark,
+      backgroundColor: theme.palette.success.dark,
       color: "white",
     },
   },

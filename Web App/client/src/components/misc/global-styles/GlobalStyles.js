@@ -13,10 +13,6 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
       light: "#4791DB",
       dark: "#115293",
     },
-    create: {
-      main: "#61BD4F",
-      dark:"#009900"
-    },
     button: {
       main: fade("#2196F3", 0.15),
     },

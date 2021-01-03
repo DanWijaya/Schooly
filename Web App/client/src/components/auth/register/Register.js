@@ -67,11 +67,11 @@ const styles = (theme) => ({
     },
   },
   registerButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     width: "90px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -282,7 +282,7 @@ class Register extends Component {
               {this.state.role === "Student" ?
                 <Grid item>
                   <Autocomplete/>
-                  {/* <Autocomplete 
+                  {/* <Autocomplete
                       id="combo-box-demo"
                       options={all_classes.map((kelas) => kelas.name)}
                       getOptionLabel={(option) => option.title}
@@ -473,7 +473,7 @@ class Register extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.mainPaper}>
+        <Paper elevation={11} className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h6" align="center">
@@ -496,6 +496,7 @@ class Register extends Component {
                       null
                       :
                         <Button
+                          variant="contained"
                           onClick={handleBack}
                           className={classes.backButton}
                         >
@@ -507,12 +508,14 @@ class Register extends Component {
                     {this.state.activeStep === steps.length - 1 ?
                         <Button
                           type="submit"
+                          variant="contained"
                           className={classes.registerButton}
                         >
                           Daftar
                         </Button>
                       :
                         <Button
+                          variant="contained"
                           onClick={handleNext}
                           className={classes.continueButton}
                         >

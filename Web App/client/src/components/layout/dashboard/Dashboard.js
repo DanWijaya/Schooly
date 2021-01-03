@@ -67,16 +67,16 @@ const styles = (theme) => ({
     color: theme.palette.warning.main,
   },
   createButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   menuItem: {
     "&:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },

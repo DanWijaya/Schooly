@@ -41,10 +41,10 @@ const styles = (theme) => ({
   resendEmailButton: {
     marginTop: "30px",
     width: "100%",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -87,7 +87,7 @@ class LoginForgot extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.mainPaper}>
+        <Paper elevation={11} className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
             {!isPasswordReset ?
               <Grid item>
@@ -127,6 +127,7 @@ class LoginForgot extends Component {
                   />
                   <Button
                     type="submit"
+                    variant="contained"
                     className={classes.changePasswordButton}
                   >
                     Ubah Kata Sandi

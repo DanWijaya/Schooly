@@ -99,11 +99,11 @@ const styles = (theme) => ({
     },
   },
   createAssessmentButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   cancelButton: {
@@ -154,10 +154,10 @@ const styles = (theme) => ({
   },
   menuSubmit: {
     "& .MuiListItemIcon-root" : {
-      color: theme.palette.create.main
+      color: theme.palette.success.main
     },
     "&:hover, &:focus": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "white",
       },

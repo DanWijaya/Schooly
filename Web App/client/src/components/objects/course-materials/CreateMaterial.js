@@ -78,10 +78,10 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   createMaterialButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },

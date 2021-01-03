@@ -12,13 +12,13 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogSubmitButton: {
     width: "150px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
-    border: `1px solid ${theme.palette.create.main}`,
+    border: `1px solid ${theme.palette.success.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.dark,
+      backgroundColor: theme.palette.success.dark,
       color: "white",
-      border: `1px solid ${theme.palette.create.dark}`,
+      border: `1px solid ${theme.palette.success.dark}`,
     },
   },
   dialogCancelButton: {

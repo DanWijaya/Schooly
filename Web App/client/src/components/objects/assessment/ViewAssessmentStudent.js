@@ -31,19 +31,19 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   startAssessmentButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   submitAssessmentButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   questionPage: {

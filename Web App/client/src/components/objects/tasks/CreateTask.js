@@ -83,10 +83,10 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   createTaskButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },

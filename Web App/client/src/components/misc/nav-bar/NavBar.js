@@ -33,10 +33,10 @@ const useStyles = makeStyles((theme) => ({
     width: "75px",
     height: "30px",
     marginRight: "15px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },

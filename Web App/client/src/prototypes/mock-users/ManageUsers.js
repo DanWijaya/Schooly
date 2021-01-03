@@ -176,11 +176,11 @@ const useStyles = makeStyles((theme) => ({
   },
   confirmButton: {
     width: "150px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   cancelButton: {

@@ -80,10 +80,10 @@ const styles = (theme) => ({
   createAnnouncementButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },

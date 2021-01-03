@@ -35,11 +35,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.warning.main,
   },
   seeAllTaskButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   editButton: {
