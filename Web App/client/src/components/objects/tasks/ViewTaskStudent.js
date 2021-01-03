@@ -5,6 +5,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
+import { deleteFileSubmitTasks, uploadFileSubmitTasks, getFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks} from "../../../actions/Files/FileSubmitTaskActions";
 import { getOneTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
@@ -204,7 +205,7 @@ function WorkFile(props) {
         button
         disableRipple
         className={classes.listItem}
-        onClick={() => {onPreviewFile(file_id, "tugas")}}
+        onClick={() => {onPreviewFile(file_id)}}
       >
         <ListItemAvatar>
           {file_type === "Word" ?
@@ -257,7 +258,7 @@ function WorkFile(props) {
         <IconButton
           size="small"
           className={classes.downloadIconButton}
-          onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "tugas") }}
+          onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id) }}
          >
           <CloudDownloadIcon fontSize="small" />
         </IconButton>
@@ -278,7 +279,7 @@ function ViewTaskStudent(props) {
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
-  const { uploadTugas, deleteTugas, success, getTaskFilesByUser, tasksCollection,
+  const { uploadTugas, uploadFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks , getFileSubmitTasks, deleteFileSubmitTasks, deleteTugas, success, getTaskFilesByUser, tasksCollection,
     filesCollection, downloadTugas, previewTugas, clearSuccess,
     getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
   const { all_subjects_map} = props.subjectsCollection;
@@ -306,7 +307,8 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
-    getTaskFilesByUser(user.id, tugasId)
+    // getTaskFilesByUser(user.id, tugasId)
+    getFileSubmitTasks(tugasId, user.id).then((items) => setTaskContents(items))
     getOneTask(tugasId)
     getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
@@ -338,29 +340,29 @@ function ViewTaskStudent(props) {
       default: return "File Lainnya"
     }
   }
-
-  const listWorkFile = () => {
-    let temp = []
-    for (let i = 0; i < filesCollection.files.length; i++) {
-      console.log(filesCollection.files[i], i)
-      temp.push(
-        <WorkFile
-          handleOpenDeleteDialog = {handleOpenDeleteDialog}
-          onDownloadFile={onDownloadFile}
-          onPreviewFile={onPreviewFile}
-          file_name={filesCollection.files[i].filename}
-          file_id={filesCollection.files[i].id}
-          file_type={fileType(filesCollection.files[i].filename)}
-        />
-      )
-    }
-    if (temp.length !== tasksContents.length) {
-      console.log("tasks added")
-      setTaskContents(temp);
-    }
-    console.log(tasksContents)
-    return tasksContents
-  }
+  
+  // const listWorkFile = () => {
+  //   let temp = []
+  //   for (let i = 0; i < items.length; i++) {
+  //     console.log(filesCollection.files[i], i)
+  //     temp.push(
+  //       <WorkFile
+  //         handleOpenDeleteDialog = {handleOpenDeleteDialog}
+  //         onDownloadFile={onDownloadFile}
+  //         onPreviewFile={onPreviewFile}
+  //         file_name={filesCollection.files[i].filename}
+  //         file_id={filesCollection.files[i].id}
+  //         file_type={fileType(filesCollection.files[i].filename)}
+  //       />
+  //     )
+  //   }
+  //   if (temp.length !== tasksContents.length) {
+  //     console.log("tasks added")
+  //     setTaskContents(temp);
+  //   }
+  //   console.log(tasksContents)
+  //   return tasksContents
+  // }
 
   // For upload, showing file names before submitting
   const listFileChosen = () => {
@@ -399,10 +401,9 @@ function ViewTaskStudent(props) {
       formData.append("tugas", fileTugas[i])
     }
     console.log(formData.get("tugas"), fileTugas)
-
-
     handleOpenUploadDialog()
-    uploadTugas(formData, user, tugasId, new Date() < new Date(tasksCollection.deadline))
+    // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
+    uploadFileSubmitTasks(formData, tugasId, user.id)
     setFileTugas(null)
   }
 
@@ -435,6 +436,7 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
     setSelectedFileId(fileid)
     setSelectedFileName(filename)
+    // getFileSubmitTasks(tugasId, user.id).then((items) => setTaskContents(items))
   };
 
   const handleCloseDeleteDialog = () => {
@@ -454,7 +456,6 @@ function ViewTaskStudent(props) {
   document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
 
   console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
-
   console.log(success, filesCollection.files)
 
   return (
@@ -464,7 +465,7 @@ function ViewTaskStudent(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Berkas"
         itemName={selectedFileName}
-        deleteItem={() => { onDeleteTugas(selectedFileId)}}
+        deleteItem={() => { deleteFileSubmitTasks(selectedFileId)}}
       />
       <UploadDialog
         openUploadDialog={openUploadDialog}
@@ -550,7 +551,19 @@ function ViewTaskStudent(props) {
             <Divider />
             <Grid item style={{padding: "10px"}}>
               <List>
-                {listWorkFile()}
+                {tasksContents.map((item) => {
+                  return (
+                    <WorkFile
+                      handleOpenDeleteDialog = {handleOpenDeleteDialog}
+                      onDownloadFile={downloadFileSubmitTasks}
+                      onPreviewFile={viewFileSubmitTasks}
+                      file_name={item.filename}
+                      file_id={item._id}
+                      file_type={fileType(item.filename)}
+                    />
+                  )
+                })
+              }
               </List>
             </Grid>
             <Divider />
@@ -637,6 +650,13 @@ ViewTaskStudent.propTypes = {
   previewLampiran: PropTypes.func.isRequired,
   downloadLampiran: PropTypes.func.isRequired,
   clearSuccess: PropTypes.func.isRequired,
+
+  //S3 punya
+  uploadFileSubmitTasks: PropTypes.func.isRequired,
+  getFileSubmitTasks: PropTypes.func.isRequired,
+  viewFileSubmitTasks: PropTypes.func.isRequired,
+  downloadFileSubmitTasks: PropTypes.func.isRequired,
+  deleteFileSubmitTasks: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -650,5 +670,6 @@ const mapStateToProps = (state) => ({
 export default connect(
    mapStateToProps, { uploadTugas, clearSuccess, deleteTugas, downloadTugas,
      previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
-     previewLampiran, getOneTask, getAllSubjects }
+     previewLampiran, getOneTask, getAllSubjects, 
+     uploadFileSubmitTasks, getFileSubmitTasks,viewFileSubmitTasks, downloadFileSubmitTasks, deleteFileSubmitTasks }
  ) (ViewTaskStudent);

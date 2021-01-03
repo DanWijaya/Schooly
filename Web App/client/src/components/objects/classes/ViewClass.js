@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getAllTask } from "../../../actions/TaskActions";
+import { getAllTask, getTaskAtmpt } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import viewClassPicture from "./ViewClassPicture.png";
@@ -279,7 +279,7 @@ function PersonListItem(props) {
 function ViewClass(props) {
   const classes = useStyles();
 
-  const { setCurrentClass, getStudentsByClass, getAllSubjects,
+  const { setCurrentClass, getStudentsByClass, getAllSubjects, getTaskAtmpt,
      tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, getAllTask } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
@@ -291,6 +291,7 @@ function ViewClass(props) {
   const [walikelas, setWalikelas] = React.useState({});
   const [firstAssign, setFirstAssign] = React.useState(true);
   const [allow, setAllow] = React.useState("empty");
+  const [taskAtmpt, setTaskAtmpt] = React.useState([]);
 
   // All actions to retrive datas from Database
 
@@ -427,6 +428,12 @@ function ViewClass(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [students_by_class, user]);
 
+  React.useEffect(() => {
+    getTaskAtmpt(user.id).then((data) => {
+      setTaskAtmpt(data)
+    })
+  }, [user.id])
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -459,7 +466,6 @@ function ViewClass(props) {
       return true;
     }
   }
-
   return (
     <div className={classes.root}>
       {
@@ -840,6 +846,7 @@ ViewClass.propTypes = {
   getTeachers: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
+  getTaskAtmpt: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -853,5 +860,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { setCurrentClass, getStudentsByClass,
-    getAllSubjects, getAllTask, getTeachers, getMaterial, getAllTaskFilesByUser }
+    getAllSubjects, getAllTask, getTeachers, getMaterial, getAllTaskFilesByUser, getTaskAtmpt }
 ) (ViewClass);

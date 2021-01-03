@@ -38,7 +38,7 @@ export const deleteTugas = (tugas_id, userData) => dispatch => {
             })
             .catch(err => {
                 console.log("Error in deleting")
-                    console.log(err)
+                console.log(err)
             })
     }
 }

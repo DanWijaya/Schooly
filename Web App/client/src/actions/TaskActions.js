@@ -164,3 +164,17 @@ export const getTaskGrade = (subjectId, classId) => () => {
             throw new Error("getTaskGrade error has occured");
         })
 }
+
+export const getTaskAtmpt = (user_id) => dispatch => {
+   return( 
+       axios.get(`/api/files/submit_tasks/noatmpt/${user_id}`)
+        .then((res) => {
+            console.log("getTaskAtmpt completed");
+            console.log(res.data)
+            return res.data;
+        })
+        .catch(() => {
+            throw new Error("getTaskAtmpt error has occured");
+        })
+   )
+}

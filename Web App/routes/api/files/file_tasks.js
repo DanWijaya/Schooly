@@ -1,7 +1,7 @@
 // 'use strict'
 const express = require("express");
 const router = express.Router();
-const FileMaterial = require("../../../models/lampiran/File_Material");
+const FileTask = require("../../../models/lampiran/File_Task");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
@@ -21,7 +21,7 @@ AWS.config.update({
 
 // Get all Documents Routes
 router.get("/", (req, res, next) => {
-  FileMaterial.find(
+  FileTask.find(
     {},
     null,
     {
@@ -93,7 +93,7 @@ router.post("/upload/:task_id&:author_id", upload.array("tugas"), (req, res) => 
 router.get("/download/:id", (req,res) => {
   let s3bucket = new AWS.S3()
 
-  FileMaterial.findById(req.params.id).then((result, err) => {
+  FileTask.findById(req.params.id).then((result, err) => {
     if(!result)
       return res.status(400).json(err);
 
@@ -113,11 +113,11 @@ router.delete("/:id", (req, res) => {
   const {file_to_delete} = req.body;
   // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted. 
   if(!file_to_delete){
-  FileMaterial.find({ material_id: req.params.id}).then((materials) => {
+  FileTask.find({ material_id: req.params.id}).then((materials) => {
     let id_list = materials.map((m) => Object(m._id))
     let file_to_delete = materials
 
-    FileMaterial.deleteMany({
+    FileTask.deleteMany({
       _id: {
           $in: id_list
           }
@@ -144,7 +144,7 @@ router.delete("/:id", (req, res) => {
   })
 } else{
     let id_list = file_to_delete.map((m) => Object(m._id))
-    FileMaterial.deleteMany({
+    FileTask.deleteMany({
       _id: {
         $in: id_list
           }
@@ -170,7 +170,7 @@ router.delete("/:id", (req, res) => {
 });
 
 router.get("/by_material/:id", (req, res) => {
-  FileMaterial.find({ material_id: req.params.id })
+  FileTask.find({ material_id: req.params.id })
   .then((results, err) => {
     if(!results)
       return res.status(400).json(err);
@@ -184,7 +184,7 @@ router.get("/by_material/:id", (req, res) => {
 router.get("/:id", (req,res) => {
   let s3bucket = new AWS.S3()
 
-  FileMaterial.findById(req.params.id).then((result, err) => {
+  FileTask.findById(req.params.id).then((result, err) => {
     if(!result)
       return res.status(400).json(err);
     let params = {
