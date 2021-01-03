@@ -10,6 +10,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import HelpIcon from "@material-ui/icons/Help";
+import { RadioButtonChecked, CheckBox, TextFormat, Subject } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -24,10 +25,35 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  addQuestionButton: {
+    color: "white",
+    padding: "2px",
+    borderRadius: "100%",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+    },
+  },
+  RadioQst: {
+    backgroundColor: "#02AFF8",
+  },
+  CheckboxQst: {
+    padding: "3px",
+    backgroundColor: "#049F90",
+  },
+  ShorttextQst: {
+    backgroundColor: "#FD7D2E",
+  },
+  LongtextQst: {
+    backgroundColor: "#B2417C",
+  },
+  questionNameDiv: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  }
 }));
 
 function QuestionItem(props){
-  //ANCHOR props
   const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, 
     handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, type,
     check_data, parseAnswer, handleLongtextWeight, longtextWeight } = props
@@ -41,6 +67,7 @@ function QuestionItem(props){
   const [longtextAnswer, setLongtextAnswer] = React.useState("");
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([])
+
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
@@ -146,9 +173,22 @@ function QuestionItem(props){
         <Grid container>
           <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
             <Grid item>
-              <Typography variant="h6" gutterBottom>
-                Soal {index + 1}
-              </Typography>
+              <div className={classes.questionNameDiv}>
+                {(type === "radio") ?
+                  <RadioButtonChecked className={`${classes.addQuestionButton} ${classes.RadioQst}`}/>
+                :
+                (type === "checkbox") ? 
+                  <CheckBox className={`${classes.addQuestionButton} ${classes.CheckboxQst}`}/>
+                : 
+                (type === "shorttext") ?
+                  <TextFormat className={`${classes.addQuestionButton} ${classes.ShorttextQst}`}/>
+                :
+                  <Subject className={`${classes.addQuestionButton} ${classes.LongtextQst}`}/>
+                }
+                <Typography variant="h6" style={{marginLeft: "5px"}}>
+                  Soal {index + 1}
+                </Typography>
+              </div>
               <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
                 {isEdit ?
                   currentLampiran.map((image, i) =>
@@ -358,7 +398,6 @@ function QuestionItem(props){
           </Grid>
         </Grid>
 
-        {/* ANCHOR bobot uraian */}
         {(props.type === "longtext") ? (
           <div>
           <Divider />

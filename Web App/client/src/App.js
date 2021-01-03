@@ -54,8 +54,8 @@ import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
-import AssessmentList from "./components/objects/assessment/AssessmentList";
-import AssessmentTestList from "./components/objects/assessment/AssessmentTestList"
+import AssessmentList from "./components/objects/assessment/AssessmentQuizList";
+import AssessmentTestList from "./components/objects/assessment/AssessmentExamList"
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
 import EditAssessment from "./components/objects/assessment/EditAssessment";
 import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";

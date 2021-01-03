@@ -85,7 +85,6 @@ router.post("/grade/:id", (req,res) => {
   })
 })
 
-//ANCHOR update
 router.post("/update/:id", (req,res) => {
   const { errors, isValid } = validateAssessmentInput(req.body)
   if(!isValid){
@@ -258,7 +257,6 @@ router.post("/update/:id", (req,res) => {
 })
 
 
-// ANCHOR submit
 router.post("/submit/:id", (req,res) => {
   let id = req.params.id;
   let { answers, classId, userId } = req.body;
@@ -435,7 +433,6 @@ router.post("/updateSuspects/:id", (req, res) => {
 })
 
 
-// ANCHOR updateGrades
 router.post("/updateGrades", (req, res) => {
   Assessment.findById(req.body.assessmentId, (err, assessmentData) => {
     if (!assessmentData) {

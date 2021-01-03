@@ -23,6 +23,7 @@ import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { FaClipboardList } from "react-icons/fa";
+import { FaTasks } from "react-icons/fa";
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -185,7 +186,7 @@ function AssessmentListToolbar(props) {
         </Hidden>
       </div>
       <div style={{display: "flex"}}>
-      <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation="css">
             <TextField
               variant="outlined"
               id="searchFilterDesktop"
@@ -232,10 +233,10 @@ function AssessmentListToolbar(props) {
           {role === "Student"?
             null
           :
-            <LightTooltip title="Buat Kuis">
+            <LightTooltip title="Buat Kuis/Ujian">
               <Link to="/kuis">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <AssignmentIcon className={classes.newAssessmentIconMobile} />
+                  <FaTasks className={classes.newAssessmentIconMobile} />
                 </Fab>
               </Link>
             </LightTooltip>
@@ -248,8 +249,8 @@ function AssessmentListToolbar(props) {
           // ANCHOR contoh tombol round edge
             <Link to="/kuis">
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
-                <AssignmentIcon className={classes.newAssessmentIconDesktop} />
-                Buat Kuis
+                <FaTasks className={classes.newAssessmentIconDesktop} />
+                Buat Kuis/Ujian
               </Fab>
             </Link>
           }
@@ -583,204 +584,207 @@ function AssessmentList(props) {
 
   document.title = "Schooly | Daftar Kuis";
   return (
-    <div className={classes.root}>
-      {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Kuis"
-        itemName={selectedAssessmentName}
-        deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
-      />
-      <Dialog
-        fullScreen={false}
-        open={openDialog}
-        onClose={handleCloseDialog}
-        fullWidth={true}
-        maxWidth="sm"
-       >
-         <div style={{padding: "20px"}}>
-            <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
-            <Typography variant="h6" align="center" color="primary">
-              {currentDialogInfo.subject}
-            </Typography>
-            <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
-            <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
-            <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
-              Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
-            </Typography>
-        </div>
-      </Dialog>
-      <AssessmentListToolbar
-        role={user.role}
-        deleteAssessment={deleteAssessment}
-        classes={classes}
-        order={order}
-        orderBy={orderBy}
-        onRequestSort={handleRequestSort}
-        rowCount={rows ? rows.length : 0}
-        searchFilter={searchFilter}
-        updateSearchFilter={updateSearchFilter}
-        setSearchBarFocus={setSearchBarFocus}
-        searchBarFocus={searchBarFocus}
+    <>
+      <div className={classes.root}>
+        {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
+        <DeleteDialog
+          openDeleteDialog={openDeleteDialog}
+          handleCloseDeleteDialog={handleCloseDeleteDialog}
+          itemType="Kuis"
+          itemName={selectedAssessmentName}
+          deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+          isWarning={true}
         />
-      <Divider variant="inset" className={classes.titleDivider} />
-      <Grid container direction="column" spacing={2}>
-      {/* REVIEW stablesort element*/}
-      {stableSort(rows, getComparator(order, orderBy))
-        .map((row, index) => {
-          const labelId = `enhanced-table-checkbox-${index}`;
-          let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
-          let linkToShare = `http://${window.location.host}/kuis-murid/${row._id}`
-          return (
-            <Grid item>
-              {user.role === "Teacher" ?
-                <ExpansionPanel
-                  button
-                  variant="outlined">
-                  <ExpansionPanelSummary className={classes.assessmentPanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
-                      <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.assessmenttitle}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.assessmenttitle}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
+        <Dialog
+          fullScreen={false}
+          open={openDialog}
+          onClose={handleCloseDialog}
+          fullWidth={true}
+          maxWidth="sm"
+        >
+          <div style={{padding: "20px"}}>
+              <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
+              <Typography variant="h6" align="center" color="primary">
+                {currentDialogInfo.subject}
+              </Typography>
+              <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
+              <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
+              <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
+                Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
+              </Typography>
+          </div>
+        </Dialog>
+        <AssessmentListToolbar
+          role={user.role}
+          deleteAssessment={deleteAssessment}
+          classes={classes}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+          rowCount={rows ? rows.length : 0}
+          searchFilter={searchFilter}
+          updateSearchFilter={updateSearchFilter}
+          setSearchBarFocus={setSearchBarFocus}
+          searchBarFocus={searchBarFocus}
+          />
+        <Divider variant="inset" className={classes.titleDivider} />
+        <Grid container direction="column" spacing={2}>
+        {/* REVIEW stablesort element*/}
+        {stableSort(rows, getComparator(order, orderBy))
+          .map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
+            let linkToShare = `http://${window.location.host}/kuis-murid/${row._id}`
+            return (
+              <Grid item>
+                {user.role === "Teacher" ?
+                  <ExpansionPanel
+                    button
+                    variant="outlined">
+                    <ExpansionPanelSummary className={classes.assessmentPanelSummary}>
+                      <Grid container spacing={1} justify="space-between" alignItems="center">
                         <Grid item>
-                          <LightTooltip title="Lihat Lebih Lanjut">
-                            <Link to={viewpage}>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.assessmenttitle}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <Typography variant="h6" id={labelId}>
+                              {row.assessmenttitle}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <Link to={viewpage}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewAssessmentButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Copy Link">
                               <IconButton
                                 size="small"
-                                className={classes.viewAssessmentButton}
-                              >
-                                <PageviewIcon fontSize="small" />
+                                className={classes.copyToClipboardButton}
+                                onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
+                                <LinkIcon fontSize="small"/>
                               </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Copy Link">
-                            <IconButton
-                              size="small"
-                              className={classes.copyToClipboardButton}
-                              onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
-                              <LinkIcon fontSize="small"/>
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Sunting">
-                            <Link to={`/sunting-kuis/${row._id}`}>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <Link to={`/sunting-kuis/${row._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.editAssessmentButton}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
-                                className={classes.editAssessmentButton}
+                                className={classes.deleteAssessmentButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.assessmenttitle)}}
                               >
-                                <EditIcon fontSize="small" />
+                                <DeleteIcon fontSize="small" />
                               </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.deleteAssessmentButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.assessmenttitle)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.assessmentPanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
-                           row.class_assigned.map((id,i) => {
+                    </ExpansionPanelSummary>
+                    <Divider className={classes.assessmentPanelDivider} />
+                    <ExpansionPanelDetails>
+                      <Grid conntainer direction="column">
+                        <Grid item>
+                          <Typography variant="body1" gutterBottom>
+                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
+                            row.class_assigned.map((id,i) => {
 
-                            if(all_classes_map.get(id)){
-                              if (i === row.class_assigned.length - 1)
-                                return (`${all_classes_map.get(id).name}`)
-                              return (`${all_classes_map.get(id).name}, `)
+                              if(all_classes_map.get(id)){
+                                if (i === row.class_assigned.length - 1)
+                                  return (`${all_classes_map.get(id).name}`)
+                                return (`${all_classes_map.get(id).name}, `)
+                              }
+                              return null
+                            })
                             }
-                            return null
-                           })
-                          }
-                        </Typography>
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body2" className={classes.startDateText}>
+                            Waktu Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body2" className={classes.endDateWarningText}>
+                            Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Typography variant="body2" className={classes.startDateText}>
-                           Waktu Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                :
+                  <Paper
+                    button component="a"
+                    variant="outlined"
+                    className={classes.assessmentPaper}
+                    onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm"))}
+                  >
+                    <div>
+                      <Typography variant="h6" id={labelId}>
+                        {row.assessmenttitle}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {all_subjects_map.get(row.subject)}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="body2" align="right" className={classes.endDateWarningText}>
+                          Batas Waktu:
                         </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" className={classes.endDateWarningText}>
-                           Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                        <Typography variant="caption" align="right" className={classes.endDateWarningText}>
+                          {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              :
-                <Paper
-                  button component="a"
-                  variant="outlined"
-                  className={classes.assessmentPaper}
-                  onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm"))}
-                >
-                  <div>
-                    <Typography variant="h6" id={labelId}>
-                      {row.assessmenttitle}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {all_subjects_map.get(row.subject)}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Hidden smUp implementation="css">
-                      <Typography variant="body2" align="right" className={classes.endDateWarningText}>
-                        Batas Waktu:
-                      </Typography>
-                      <Typography variant="caption" align="right" className={classes.endDateWarningText}>
-                        {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                      </Typography>
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <Typography variant="body2" align="right" className={classes.endDateWarningText}>
-                        Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                      </Typography>
-                    </Hidden>
-                  </div>
-                </Paper>
-              }
-            </Grid>
-          );
-        })}
-      </Grid>
-      {/* </div> */}
-      <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
-        <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-          Link {type} berhasil disalin ke Clipboard Anda!
-        </MuiAlert>
-      </Snackbar>
-    </div>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="body2" align="right" className={classes.endDateWarningText}>
+                          Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                        </Typography>
+                      </Hidden>
+                    </div>
+                  </Paper>
+                }
+              </Grid>
+            );
+          })}
+        </Grid>
+        {/* </div> */}
+        <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
+          <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
+            Link {type} berhasil disalin ke Clipboard Anda!
+          </MuiAlert>
+        </Snackbar>
+      </div>
+    </>
   );
 }
 

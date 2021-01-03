@@ -50,7 +50,6 @@ import ExploreIcon from "@material-ui/icons/Explore";
 import MuiAlert from "@material-ui/lab/Alert";
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-// ANCHOR import
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -151,18 +150,6 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  // questionPage: {
-  //   display: "flex",
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   width: "35px",
-  //   height: "35px",
-  //   "&:focus, &:hover": {
-  //     backgroundColor: theme.palette.primary.main,
-  //     color: "white",
-  //     cursor: "pointer",
-  //   },
-  // },
   toggleGroupRoot: {
     display: "flex",
     justifyContent: "space-between",
@@ -202,7 +189,6 @@ const useStyles = makeStyles((theme) => ({
     //harus ada meskipun kosong
   }
 }));
-// ANCHOR class
 
 function ViewAssessmentTeacher(props) {
   const classes = useStyles();
@@ -259,7 +245,6 @@ function ViewAssessmentTeacher(props) {
   const [value, setValue] = React.useState(0);
   // const [value, setValue] = React.useState(1); //dev
 
-  // ANCHOR useffect
   React.useEffect(() => {
     getOneAssessment(assessment_id)
     getAllClass("map")
@@ -352,7 +337,6 @@ function ViewAssessmentTeacher(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAssessments, all_student_object, hasLongtextQst.current])
 
-  // ANCHOR Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -438,7 +422,6 @@ function ViewAssessmentTeacher(props) {
     setOpenSnackbar(false);
   }
 
-  // ANCHOR fungsi generate Soal
   function generateQuestion(questionNumber, questionWeight, questionInfo) {
     let questionType = questionInfo.type;
     let questionName = questionInfo.name;
@@ -576,23 +559,15 @@ function ViewAssessmentTeacher(props) {
 
     return (
       <Paper className={classes.contentItem}>
-        {/* <Hidden xsDown> */}
-        {/* {content1} */}
-        {/* </Hidden> */}
-        {/* <Hidden smUp> */}
           {content}
-        {/* </Hidden> */}
       </Paper>
     )
   }
 
-  // ANCHOR fungsi ubah nilai
   function handleGradeChange(e, studentId, questionIndex) {
     let temp = { ...longtextGrades};
     let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
-    // temp[studentId] = { ...temp[studentId], [qnsIndex]: grade };
     temp[studentId] = { ...temp[studentId], [questionIndex]: grade };
-    // console.log(temp);
     setLongtextGrades(temp);
   }
 
@@ -615,7 +590,6 @@ function ViewAssessmentTeacher(props) {
       });
     }
   }
-  // ANCHOR fungsi per soal
   function generateAllStudentAnswer() {
     let submissions = selectedAssessments.submissions;
     let question = selectedAssessments.questions[qnsIndex];
@@ -647,7 +621,6 @@ function ViewAssessmentTeacher(props) {
           // jika belum pernah dinilai
           mark = null;
         }
-
       } else {
         questionWeight = weights[question.type];
 
@@ -682,21 +655,13 @@ function ViewAssessmentTeacher(props) {
                 temp_correct++;
               }
             }
-
             mark = weights.shorttext * temp_correct / questionAnswer.length;
           }
-
         } // jika murid tidak menjawab soal ini, mark tetap 0
-      
       }
       
       return (
         <QuestionPerQuestion
-          // longtextGrades={
-          //   (question.type === "longtext" && longtextGrades[studentId]) ? ( // jika minimal ada 1 murid yang soal uraiannya sudah dinilai 
-          //     longtextGrades[studentId][qnsIndex]
-          //   ) : (null)
-          // }
           classes={classes}
           studentId={studentId}
           studentName={studentInfo.name}
@@ -713,7 +678,6 @@ function ViewAssessmentTeacher(props) {
     });
   }
 
-  // ANCHOR fungsi per murid
   function generateQstStdAnswer () {
     let studentId = selectedStudent;
     let studentAnswers;
@@ -744,7 +708,6 @@ function ViewAssessmentTeacher(props) {
           // jika belum pernah dinilai
           mark = null;
         }
-
       } else {
         questionWeight = weights[question.type];
 
@@ -782,9 +745,7 @@ function ViewAssessmentTeacher(props) {
 
             mark = weights.shorttext * temp_correct / questionAnswer.length;
           }
-
         } // jika murid tidak menjawab soal ini, mark tetap 0
-
       }
 
       return (
@@ -809,7 +770,6 @@ function ViewAssessmentTeacher(props) {
     });
   }
 
-  //ANCHOR cek kosong
   function isAssessmentLoaded() {
     return (Object.keys(selectedAssessments).length !== 0);
   }
@@ -826,7 +786,6 @@ function ViewAssessmentTeacher(props) {
     }
   }
 
-  // ANCHOR fungsi dialog navigasi
   const [openDialog, setOpenDialog] = React.useState(false);
   function handleOpenNavDialog() {
     setOpenDialog(true);
@@ -834,20 +793,12 @@ function ViewAssessmentTeacher(props) {
   function handleCloseNavDialog() {
     setOpenDialog(false);
   }
-  function handleChangeQstNavDialog(i) {
-    setQnsIndex(i);
-    setOpenDialog(false);
-  }
-
-  function handleQuestionIndex(event, newIndex) {
+  function handleChangeToggleButton(event, newIndex) {
     if (newIndex !== null) {
       handleChangeQuestion(newIndex);
     }
   }
   function questionPage(classes, question_number, question_type) {
-  // function QuestionPage(props) {
-    // const { classes, handleChangeQuestion, question_number, question_type } = props;
-
     let fullyGraded = true;
     if (selectedAssessments.submissions) {
       if (question_type === "longtext") {
@@ -861,12 +812,10 @@ function ViewAssessmentTeacher(props) {
     } else {
       fullyGraded = false;
     }
-  // ANCHOR fungsi navigasi soal
     return (
       <ToggleButton
         value={question_number - 1}
         aria-label={question_number - 1}
-        // className={classes.questionPage}
         classes={{ root: classes.toggleButtonRoot, selected: classes.toggleButtonSelected}}
         selected={qnsIndex === question_number - 1}
       >
@@ -888,16 +837,9 @@ function ViewAssessmentTeacher(props) {
             horizontal: "right",
           }}
         >
-            {/* <Paper
-              buttons
-              variant="outlined"
-              className={classes.questionPage}
-              onClick={() => handleChangeQuestion(question_number - 1)}
-            > */}
-              <Typography>
-                {question_number}
-              </Typography>
-            {/* </Paper> */}
+          <Typography>
+            {question_number}
+          </Typography>
         </Badge>
     </ToggleButton>
     )
@@ -958,47 +900,35 @@ function ViewAssessmentTeacher(props) {
               </Grid>
             </Hidden>
 
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Divider/>
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Divider />
               </Grid>
+            </Grid>
 
-              <Grid container spacing={2}>
-                <Hidden xsDown>
-                <Grid item xs={12} md={2} style={{display: "flex", flexDirection: "row", marginTop: "10px"}}>
-                    <Typography>Navigasi Soal :</Typography>
-                    <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
-                        <Badge badgeContent={<HelpOutlineIcon className={classes.navigationHelpIcon}/>} variant="standard" style={{marginLeft: "4px"}}>
-                            {/* Hanya Sebagai Anchor */}
-                            <Typography style={{display: "none"}}>:</Typography>                      
-                        </Badge>
-                    </LightTooltip>
+            <Grid container spacing={2}>
+              <Hidden xsDown>
+                <Grid item xs={12} md={2} style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
+                  <Typography>Navigasi Soal :</Typography>
+                  <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
+                    <Badge badgeContent={<HelpOutlineIcon className={classes.navigationHelpIcon} />} variant="standard" style={{ marginLeft: "4px" }}>
+                      {/* Hanya Sebagai Anchor */}
+                      <Typography style={{ display: "none" }}>:</Typography>
+                    </Badge>
+                  </LightTooltip>
                 </Grid>
-                {/* ANCHOR navigasi soal */}
-                  <Grid container item>
+                <Grid container item>
                   <ToggleButtonGroup
                     value={qnsIndex}
                     exclusive
-                    onChange={(e, newIndex) => {handleQuestionIndex(e, newIndex)}}
+                    onChange={(e, newIndex) => { handleChangeToggleButton(e, newIndex) }}
                     aria-label="question index"
-                    classes={{root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren}}
+                    classes={{ root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren }}
                   >
-                    {/* <Grid container item spacing={2} alignItems="center"> */}
                   {
                     (hasLongtextQst.current === true) ? (
                       (isAssessmentLoaded() && longtextGrades) ? (
                         selectedAssessments.questions.map((qns, i) => {
-                          // return (
-                            // <a href={`#${i}`} >
-                            // <QuestionPage
-                            //   classes={classes}
-                            //   question_number={i + 1}
-                            //   handleChangeQuestion={handleChangeQuestion}
-                            //   question_type={qns.type}
-                            // />
-                            // </a>
-                          // )
                           return questionPage(classes, i + 1, qns.type)
                         })
                       ) : (
@@ -1009,14 +939,6 @@ function ViewAssessmentTeacher(props) {
                         (isAssessmentLoaded()) ? (
                           selectedAssessments.questions.map((qns, i) => {
                             return (questionPage(classes, i + 1, qns.type)
-                              // <a href={`#${i}`} >
-                              // <QuestionPage
-                              //   classes={classes}
-                              //   question_number={i + 1}
-                              //   handleChangeQuestion={handleChangeQuestion}
-                              //   question_type={qns.type}
-                              // />
-                              // </a>
                             )
                           })
                         ) : (
@@ -1027,105 +949,102 @@ function ViewAssessmentTeacher(props) {
                     )
                     )
                   }
-                    {/* </Grid> */}
                   </ToggleButtonGroup>
                 </Grid>
-                </Hidden>
-                <Hidden smUp>
-                    <Grid item xs={12} md={2} style={{display: "flex", flexDirection: "row", marginTop: "10px", justifyContent: "space-between"}}>
-                        <Button onClick={() => { handleChangeQuestion(qnsIndex-1)}}>
-                            <div className={classes.mobileNav}>
-                                <NavigateBeforeIcon className={classes.mobileNavButton}/>
-                                <Typography variant="subtitle-2">Sebelum</Typography>
-                            </div>
-                        </Button>
-                        {/* ANCHOR elemen dialog navigasi */}
-                        <Button onClick={handleOpenNavDialog}>
-                            <div className={classes.mobileNav}>
-                                <ExploreIcon className={classes.mobileNavButton}/>
-                                <Typography variant="subtitle-2">Navigasi Soal</Typography>
-                            </div>
-                        </Button>
-                        <Button onClick={() => { handleChangeQuestion(qnsIndex + 1) }}>
-                            <div className={classes.mobileNav}>
-                                <NavigateNextIcon className={classes.mobileNavButton}/>
-                                <Typography variant="subtitle-2">Sesudah</Typography>
-                            </div>
-                        </Button>
-                    </Grid>
-                </Hidden>
-              </Grid>
+              </Hidden>
+              <Hidden smUp>
+                <Grid item xs={12} md={2} style={{ display: "flex", flexDirection: "row", marginTop: "10px", justifyContent: "space-between" }}>
+                  <Button onClick={() => { handleChangeQuestion(qnsIndex - 1) }}>
+                    <div className={classes.mobileNav}>
+                      <NavigateBeforeIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">Sebelum</Typography>
+                    </div>
+                  </Button>
+                  <Button onClick={handleOpenNavDialog}>
+                    <div className={classes.mobileNav}>
+                      <ExploreIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">Navigasi Soal</Typography>
+                    </div>
+                  </Button>
+                  <Button onClick={() => { handleChangeQuestion(qnsIndex + 1) }}>
+                    <div className={classes.mobileNav}>
+                      <NavigateNextIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">Sesudah</Typography>
+                    </div>
+                  </Button>
+                </Grid>
+              </Hidden>
+            </Grid>
 
-              <Grid container spacing={2}>
-                <Grid item xs={12} style={{ marginTop: "18px" }}>
-                  <Divider />
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} style={{ marginTop: "18px" }}>
+                <Divider />
               </Grid>
-              
-              <Grid container spacing={2}>
-                <Grid item xs={1} md={2}>
-                    {null}
-                </Grid>
-                <Grid item xs={9} md={8}>
-                    <Tabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    value={value}
-                    onChange={handleChange}
-                    >
-                        <Tab icon={<BallotIcon />} label="Per Soal" {...TabIndex(0)}/>
-                        <Tab icon={<SupervisorAccountIcon />} label="Per Murid" {...TabIndex(1)}/>
-                    </Tabs>
-                </Grid>
-                <Grid item xs={2} md={2} style={{display: "flex", justifyContent: "flex-end", alignItems: "flex-end", position: "relative"}}>
-                    <LightTooltip title="Urutkan Tugas">
-                        <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-                            <SortIcon />
-                        </IconButton>
-                    </LightTooltip>
-                    <Menu
-                        keepMounted
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleCloseSortMenu}
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right",
-                        }}
-                        transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left",
-                        }}
-                    >
-                      {headCells.map((headCell, i) => (
-                        <MenuItem
-                          key={headCell.id}
-                          sortDirection={orderBy === headCell.id ? order : false}
-                        >
-                          <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : "asc"}
-                            onClick={() => { handleRequestSort(headCell.id) }}
-                          >
-                            {headCell.label}
-                            {orderBy === headCell.id ?
-                              <span className={classes.visuallyHidden}>
-                                {order === "desc" ? "sorted descending" : "sorted ascending"}
-                              </span>
-                              : null
-                            }
-                          </TableSortLabel>
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                </Grid>
-              </Grid>
-            </Paper>
+            </Grid>
 
-            {/* Tab Panel Per Soal */}
-          <div hidden={value === 1} style={{padding: "24px"}}>
-            {/* ANCHOR elemen soal */}
+            <Grid container spacing={2}>
+              <Grid item xs={1} md={2}>
+                {null}
+              </Grid>
+              <Grid item xs={9} md={8}>
+                <Tabs
+                  variant="fullWidth"
+                  indicatorColor="primary"
+                  textColor="primary"
+                  value={value}
+                  onChange={handleChange}
+                >
+                  <Tab icon={<BallotIcon />} label="Per Soal" {...TabIndex(0)} />
+                  <Tab icon={<SupervisorAccountIcon />} label="Per Murid" {...TabIndex(1)} />
+                </Tabs>
+              </Grid>
+              <Grid item xs={2} md={2} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", position: "relative" }}>
+                <LightTooltip title="Urutkan Tugas">
+                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                    <SortIcon />
+                  </IconButton>
+                </LightTooltip>
+                <Menu
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseSortMenu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  {headCells.map((headCell, i) => (
+                    <MenuItem
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
+                    >
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : "asc"}
+                        onClick={() => { handleRequestSort(headCell.id) }}
+                      >
+                        {headCell.label}
+                        {orderBy === headCell.id ?
+                          <span className={classes.visuallyHidden}>
+                            {order === "desc" ? "sorted descending" : "sorted ascending"}
+                          </span>
+                          : null
+                        }
+                      </TableSortLabel>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Grid>
+            </Grid>
+          </Paper>
+
+          {/* Tab Panel Per Soal */}
+          <div hidden={value === 1} style={{ padding: "24px"}}>
             {
               (isAssessmentLoaded()) ? (
                 (selectedAssessments.questions[qnsIndex].type === "longtext") ? (
@@ -1146,7 +1065,6 @@ function ViewAssessmentTeacher(props) {
               )
             }
 
-            {/* ANCHOR call per soal jawaban semua murid*/}
             {
               (isAssessmentLoaded() && selectedAssessments.submissions) ? (
                 (hasLongtextQst.current === true) ? (
@@ -1191,7 +1109,6 @@ function ViewAssessmentTeacher(props) {
                       value={selectedStudent}
                       onChange={(e) => { setSelectedStudent(e.target.value) }}
                     >
-                      {/* ANCHOR elemen opsi murid*/}
                       {
                         (menuOption && menuOption.studentOptions.combined.length !== 0) ? (
                           (selectedClass) ? (
@@ -1247,7 +1164,6 @@ function ViewAssessmentTeacher(props) {
               </div>
             </Paper>
 
-            {/* ANCHOR soal-jawaban 1 murid */}
             {
               (isAssessmentLoaded() && selectedAssessments.submissions) ? (
                 (hasLongtextQst.current === true) ? (
@@ -1273,28 +1189,25 @@ function ViewAssessmentTeacher(props) {
               )
             }
           </div>
-          
-          </Grid>
         </Grid>
-        <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
-          <MuiAlert severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+      </Grid>
+      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+        <MuiAlert severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
           {snackbarContent}
-          </MuiAlert>
-        </Snackbar>
-      {/* ANCHOR elemen dialog  */}
-        <Dialog
-          open={openDialog}
-          onClose={handleCloseNavDialog}
-          fullWidth
-        >
-        <DialogTitle style={{ textAlign: "center", padding: "16px 24px 8px"}}>Navigasi Soal</DialogTitle>
+        </MuiAlert>
+      </Snackbar>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseNavDialog}
+        fullWidth
+      >
+        <DialogTitle style={{ textAlign: "center", padding: "16px 24px 8px" }}>Navigasi Soal</DialogTitle>
         <DialogContent style={{ padding: "8px 24px 16px" }}>
-          {/* <Grid container spacing={2} style={{ margin: "20px", width: "unset" }}> */}
           <Grid container item>
             <ToggleButtonGroup
               value={qnsIndex}
               exclusive
-              onChange={(e, newIndex) => { handleQuestionIndex(e, newIndex) }}
+              onChange={(e, newIndex) => { handleChangeToggleButton(e, newIndex) }}
               aria-label="question index"
               classes={{ root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren }}
             >
@@ -1303,14 +1216,6 @@ function ViewAssessmentTeacher(props) {
                 (isAssessmentLoaded() && longtextGrades) ? (
                   selectedAssessments.questions.map((qns, i) => {
                     return (
-                      // <a href={`#${i}`} >
-                      // <QuestionPage
-                      //   classes={classes}
-                      //   question_number={i + 1}
-                      //   handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
-                      //   question_type={qns.type}
-                      // />
-                      // </a>
                       questionPage(classes, i + 1, qns.type)
                     )
                   })
@@ -1322,14 +1227,6 @@ function ViewAssessmentTeacher(props) {
                   (isAssessmentLoaded()) ? (
                     selectedAssessments.questions.map((qns, i) => {
                       return (
-                        // <a href={`#${i}`} >
-                        // <QuestionPage
-                        //   classes={classes}
-                        //   question_number={i + 1}
-                        //   handleChangeQuestion={() => { handleChangeQstNavDialog(i) }}
-                        //   question_type={qns.type}
-                        // />
-                        // </a>
                         questionPage(classes, i + 1, qns.type)
                       )
                     })
@@ -1342,14 +1239,13 @@ function ViewAssessmentTeacher(props) {
               )
             }
             </ToggleButtonGroup>
-          </Grid>         
-          </DialogContent>
-        </Dialog>
+          </Grid>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 };
 
-// ANCHOR paper jawaban murid untuk mode per soal
 function QuestionPerQuestion(props) {
   const { 
     classes, 
@@ -1360,8 +1256,7 @@ function QuestionPerQuestion(props) {
     studentMark, 
     questionNumber,
     questionWeight,
-    questionInfo,
-    longtextGrades
+    questionInfo
   } = props;
   const { handleGradeChange, handleSaveGrade } = props;
   let questionType = questionInfo.type;
@@ -1369,7 +1264,6 @@ function QuestionPerQuestion(props) {
   let questionOptions = questionInfo.options;
 
   if (questionType === "longtext") {
-    // yang ngebuat semuanya harus dicopy adalah badgenya
     return (
       <Paper style={{ width: "100%", marginBottom: "30px" }}>
         <Badge
@@ -1400,13 +1294,9 @@ function QuestionPerQuestion(props) {
             </Grid>
 
             <Grid container item justify="flex-end" alignItems="center" style={{ marginTop: "25px" }}>
-              {/* <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginTop: "25px" }}> */}
               <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
               <TextField
-                // ANCHOR per soal
-                // value={longtextGrades}
                 value={studentMark}
-                // defaultValue={studentMark}
                 key={`${studentId}-${questionNumber}`}
                 inputProps={{
                   style: {
@@ -1430,7 +1320,6 @@ function QuestionPerQuestion(props) {
                   SIMPAN
                   </Button>
               </div>
-              {/* </div> */}
             </Grid>
           </Grid>
         </Badge>
@@ -1581,14 +1470,12 @@ function QuestionPerQuestion(props) {
               </Grid>
             </Grid>
           </Hidden>
-
         </Grid>
       </Paper>
     );
   }
 }
 
-// ANCHOR paper soal-jawaban untuk mode per murid
 function QuestionAnswerPerStudent(props) {
   const {
     classes,
@@ -1597,8 +1484,7 @@ function QuestionAnswerPerStudent(props) {
     studentMark,
     questionWeight,
     questionNumber,
-    questionInfo,
-    longtextGrades
+    questionInfo
   } = props;
   let questionType = questionInfo.type;
   let questionName = questionInfo.name;
@@ -1645,10 +1531,7 @@ function QuestionAnswerPerStudent(props) {
           <Grid container item justify="flex-end" alignItems="center" style={{ marginTop: "25px" }}>
             <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
             <TextField
-              // defaultValue={studentMark}
-              // key={`${Math.random()}`}
               key={`${studentId}-${questionNumber}`}
-              // value={longtextGrades}
               value={studentMark}
               inputProps={{
                 style: {
@@ -1841,11 +1724,9 @@ function QuestionAnswerPerStudent(props) {
   }
 
   return (
-    // <a id={questionNumber-1}>
     <Paper style={{ width: "100%", marginBottom: "30px" }}>
       {content}
     </Paper>
-    // </a>
   )
 }
 

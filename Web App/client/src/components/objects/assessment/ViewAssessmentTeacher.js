@@ -189,10 +189,11 @@ function ViewAssessmentTeacher(props) {
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Kuis"
+        itemType={selectedAssessments.type}
         // deleteItem=""
         itemName={selectedAssessments.name}
         deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+        isWarning={true}
         />
         <Grid container direction="column" spacing={3}>
           <Grid item style={{marginBottom: "20px"}}>

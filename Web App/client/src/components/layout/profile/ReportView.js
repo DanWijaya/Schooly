@@ -344,7 +344,6 @@ function ReportView(props) {
         }
       }
 
-      // ANCHOR handleIndividualReport
       for (let assessment of all_assessments) {
         // id adalah id murid
         // (assessment.grades.constructor === Object) && (Object.keys(assessment.grades).length !== 0) sebenarnya tidak diperlukan karena 
@@ -470,7 +469,6 @@ function ReportView(props) {
         condition.push("noStudent");
       }
       
-      //ANCHOR rapot side drawer
       const addScore = (items, isAssessment) => {
         if (items.length !== 0) {
           items.forEach((item) => {

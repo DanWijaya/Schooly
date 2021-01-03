@@ -108,7 +108,7 @@ function DrawerContent(props) {
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
     ]
-  else {
+  else if (user.role === "Student"){
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
       // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
@@ -118,6 +118,18 @@ function DrawerContent(props) {
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
       ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
       ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
+    ]
+  }
+  else {
+    ListItemContents = [
+      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
+      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
+      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
+      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
+      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
+      ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"]
     ]
     if (user.role === "Teacher") {
       ListItemContents.push(

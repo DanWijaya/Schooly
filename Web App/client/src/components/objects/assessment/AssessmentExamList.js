@@ -23,6 +23,7 @@ import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { BsClipboardData } from "react-icons/bs";
+import { FaTasks } from "react-icons/fa";
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -190,7 +191,7 @@ function AssessmentListToolbar(props) {
         </Hidden>
       </div>
       <div style={{display: "flex"}}>
-      <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation="css">
             <TextField
               // fullWidth
               variant="outlined"
@@ -239,10 +240,10 @@ function AssessmentListToolbar(props) {
           {role === "Student"?
             null
           :
-            <LightTooltip title="Buat Kuis">
+            <LightTooltip title="Buat Kuis/Ujian">
               <Link to="/kuis">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <AssignmentIcon className={classes.newAssessmentIconMobile} />
+                  <FaTasks className={classes.newAssessmentIconMobile} />
                 </Fab>
               </Link>
             </LightTooltip>
@@ -255,8 +256,8 @@ function AssessmentListToolbar(props) {
           // ANCHOR contoh tombol round edge
             <Link to="/kuis">
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
-                <AssignmentIcon className={classes.newAssessmentIconDesktop} />
-                Buat Ujian
+                <FaTasks className={classes.newAssessmentIconDesktop} />
+                Buat Kuis/Ujian
               </Fab>
             </Link>
           }
@@ -589,16 +590,17 @@ function AssessmentList(props) {
     handleOpenCopySnackBar(type)
   }
 
-  document.title = "Schooly | Daftar Kuis";
+  document.title = "Schooly | Daftar Ujian";
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Kuis"
+        itemType="Ujian"
         itemName={selectedAssessmentName}
         deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+        isWarning={true}
       />
       <Dialog
         fullScreen={false}
