@@ -54,8 +54,8 @@ function stableSort(array, comparator) {
 }
 
 function TaskListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, 
-    role, searchFilter, updateSearchFilter, searchBar, 
+  const { classes, order, orderBy, onRequestSort,
+    role, searchFilter, updateSearchFilter, searchBar,
     searchBarFocus, setSearchBarFocus } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -199,7 +199,7 @@ function TaskListToolbar(props) {
                     </IconButton>
                   </InputAdornment>)
                 ,
-                endAdornment:(
+              endAdornment:(
                 <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
                   <IconButton
                     size="small"
@@ -386,7 +386,7 @@ const useStyles = makeStyles((theme) => ({
   },
   taskPanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   taskPaper: {
@@ -395,7 +395,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "15px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   titleIcon: {
@@ -621,7 +621,7 @@ function TaskList(props) {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="body1" className={classes.deadlineWarningText}>
-                           Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                          Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -658,7 +658,7 @@ function TaskList(props) {
                     </Hidden>
                   </div>
                 </Paper>
-                </Link>
+              </Link>
               }
             </Grid>
           );

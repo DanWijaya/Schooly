@@ -360,7 +360,7 @@ const useStyles = makeStyles((theme) => ({
   },
   announcementListItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   titleIcon: {

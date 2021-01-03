@@ -265,7 +265,7 @@ const useStyles = makeStyles((theme) => ({
   },
   subjectPanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   subjectPaper: {

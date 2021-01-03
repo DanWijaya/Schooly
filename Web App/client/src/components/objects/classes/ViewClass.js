@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     minHeight: "70px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   viewSubjectButton: {

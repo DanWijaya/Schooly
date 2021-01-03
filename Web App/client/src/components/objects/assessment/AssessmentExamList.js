@@ -432,7 +432,7 @@ const useStyles = makeStyles((theme) => ({
   },
   assessmentPanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   assessmentPaper: {
@@ -442,7 +442,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "15px",
     "&:focus, &:hover": {
       cursor: "pointer",
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   titleIcon: {

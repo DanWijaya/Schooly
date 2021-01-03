@@ -427,7 +427,7 @@ const useStyles = makeStyles(theme => ({
   },
   materialPanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.button.main
+      backgroundColor: theme.palette.primary.fade
     }
   },
   materialPaper: {
@@ -436,7 +436,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     padding: "15px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main
+      backgroundColor: theme.palette.primary.fade
     }
   },
   titleIcon: {

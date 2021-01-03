@@ -7,6 +7,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
       main: "#2196f3",
       light: "#64b5f6",
       dark: "#1976d2",
+      fade: fade("#2196f3", 0.15),
     },
     secondary: {
       main: "#f48fb1",
@@ -32,9 +33,6 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
       main: "#f44336",
       light: "#e57373",
       dark: "#d32f2f",
-    },
-    button: {
-      main: fade("#2196f3", 0.15),
     },
     dropbox: {
       main: "#0d2481",

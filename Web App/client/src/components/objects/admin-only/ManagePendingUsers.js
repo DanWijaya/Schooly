@@ -359,7 +359,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profilePanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   checkboxModeButton: {

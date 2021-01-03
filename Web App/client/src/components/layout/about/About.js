@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   supportSchoolyBackground: {
-    backgroundColor: theme.palette.button.main,
+    backgroundColor: theme.palette.primary.fade,
   },
   supportSchooly: {
     display: "flex",
