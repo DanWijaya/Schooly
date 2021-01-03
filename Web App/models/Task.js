@@ -35,6 +35,12 @@ const TaskSchema = new Schema({
     grades: {
         type: Map,
         default: new Map()  // userId -> the score.
+    },
+    submissions: {
+        type: Map,
+        default: new Map()
+        //submissions berupa user_id -> Object
+        //Objectnya berupa object dengan key-pair (file id, file name)
     }
 })
 
