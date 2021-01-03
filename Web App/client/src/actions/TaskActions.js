@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE} from "./Types";
+import { GET_ALL_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE} from "./Types";
 // import Dropbox from "dropbox";
 
 // Add Task
@@ -41,7 +41,7 @@ export const getAllTask = () => dispatch => {
     .get("/api/tasks/viewall")
     .then(res => {
         dispatch({
-            type: GET_TASKS,
+            type: GET_ALL_TASKS,
             payload: res.data
         })
         console.log("getAllTask completed");
@@ -62,7 +62,7 @@ export const getOneTask = (taskId) => dispatch => {
     .then(res => {
         console.log("Task to be received: ", res.data);
         dispatch({
-            type: GET_TASKS,
+            type: GET_ALL_TASKS,
             payload: res.data
         })
     })

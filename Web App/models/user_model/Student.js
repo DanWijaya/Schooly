@@ -18,7 +18,7 @@ const Student = User.discriminator("Student", new mongoose.Schema({
         ,
             ontime: { type: Boolean }
         },
-        ]
+    ]
     })
 );
 

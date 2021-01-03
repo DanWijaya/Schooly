@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const User= require("../../../models/user_model/User");
 const GridFsStream = require("gridfs-stream");
 const uploads = require("./uploads");
+const Task = require("../../../models/Task");
 
 const uploadTugas = uploads.uploadTugas;
 
@@ -26,14 +27,11 @@ conn.once("open", () => {
 
 router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas", 10), (req,res) => {
   // To get the file details, use req.file
-
-  let id = req.params.user_id
-  let task_id = req.params.task_id;
-  let ontime = req.params.ontime;
+  let {user_id, task_id, ontime } = req.params
   console.log("Body: ", req.body)
   console.log("Uploading the task file")
 
-  User.findById(id, (err, user) => {
+  User.findById(user_id, (err, user) => {
     if (!user) {
       console.log("User not found")
       return res.status(404).json({ usernotfound: "Pengguna tidak ditemukan"});
@@ -70,6 +68,40 @@ router.post("/uploadtugas/:user_id/:task_id/:ontime", uploadTugas.array("tugas",
     return res.json(true)
   })
 })
+  
+  /*
+  Task.findById(task_id, (err, tasks) => {
+    if(!tasks){
+      console.log("Tasks not found")
+      return res.status(404).json("Tasks not found")
+    }
+
+    else{
+      if(tasks.submissions){
+        if(!tasks.submissions.has(user_id)){
+          let temp = {}
+          for (var i = 0; i < req.files.length; i++){
+            temp[req.files[i].id.toString()] = req.files[i].filename
+          }
+          tasks.submissions.set(user_id, temp)
+        }
+        else{
+          let temp = tasks.submissions.get(user_id)
+          for (var i = 0; i < req.files.length; i++){
+            temp[req.files[i].id.toString()] = req.files[i].filename
+          }
+          tasks.submissions.set(user_id, temp)
+        }
+    }
+      tasks
+        .save()
+        .then()
+        .catch(err => console.log(err))
+    }
+  })
+  return res.json(true)
+  })
+  */
 
 router.get("/", (req,res) => {
   let chunkReader = function(length, file){
