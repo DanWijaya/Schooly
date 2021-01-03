@@ -108,7 +108,7 @@ const styles = (theme) => ({
     height: theme.spacing(2.5),
     marginRight: "7.5px",
   },
-  marginButtomItem: {
+  paperGrid: {
     marginTop: "20px"
   },
   listItemPaper: {
@@ -456,24 +456,22 @@ class Dashboard extends Component {
     }
 
     document.title = "Schooly | Dashboard";
-    document.body.style = "background: #FFFFFF";
 
     return (
       <div className={classes.root}>
-        <Grid container direction="column" spacing={3}>
-          <WelcomePanel user={user} classes={classes}/>
-          <Grid item container xs={12}>
-            {user.role === "Student" ?
-              <Grid item container spacing={3}>
-                <Grid item md={6} container>
-                  <Grid item xs={12}>
+        <WelcomePanel user={user} classes={classes}/>
+        <div style={{marginTop: "20px"}}>
+          {user.role === "Student" ?
+            <Grid item container spacing={3}>
+              <Grid item md={8}>
+                <Grid container direction="column" spacing={2}>
+                  <Grid item>
                     <Paper style={{padding: "20px"}}>
                       <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                         <Grid item>
                           <Grid container alignItems="center">
                             <AssignmentIcon
-                              color="action"
-                              style={{marginRight: "10px", fontSize: "20px"}}
+                              style={{marginRight: "10px", fontSize: "21.5px", color: "grey"}}
                             />
                             <Typography variant="h5" color="primary">
                               Tugas Anda
@@ -495,14 +493,13 @@ class Dashboard extends Component {
                       </Grid>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} className={classes.marginButtomItem}>
+                  <Grid item>
                     <Paper style={{padding: "20px"}}>
                       <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                         <Grid item>
                           <Grid container alignItems="center">
                             <FaClipboardList
-                              color="action"
-                              style={{marginRight: "10px", fontSize: "22px"}}
+                              style={{marginRight: "10px", fontSize: "22px", color: "grey"}}
                             />
                             <Typography variant="h5" color="primary">
                               Kuis Yang Akan Datang
@@ -532,14 +529,13 @@ class Dashboard extends Component {
                       </Grid>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} className={classes.marginButtomItem}>
+                  <Grid item>
                     <Paper style={{padding: "20px"}}>
                       <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                         <Grid item>
                           <Grid container alignItems="center">
                             <BsClipboardData
-                              color="action"
-                              style={{marginRight: "10px", fontSize: "20px"}}
+                              style={{marginRight: "10px", fontSize: "20px", color: "grey"}}
                             />
                             <Typography variant="h5" color="primary">
                               Ujian Yang Akan Datang
@@ -570,8 +566,10 @@ class Dashboard extends Component {
                     </Paper>
                   </Grid>
                 </Grid>
-                <Grid item md={6} container >
-                  <Grid item xs={12}>
+              </Grid>
+              <Grid item md={4}>
+                <Grid container direction="column" spacing={2}>
+                  <Grid item>
                     <Paper style={{padding: "20px"}}>
                       <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                         <Grid item>
@@ -620,7 +618,7 @@ class Dashboard extends Component {
                       </Grid>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} className={classes.marginButtomItem}>
+                  <Grid item>
                     <Paper style={{padding: "20px"}}>
                       <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                         <Grid item>
@@ -668,7 +666,7 @@ class Dashboard extends Component {
                       </Grid>
                     </Paper>
                   </Grid>
-                  <Grid item xs={12} className={classes.marginButtomItem}>
+                  <Grid item>
                     <Paper style={{padding: "20px"}}>
                       <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                         <Grid item>
@@ -718,105 +716,103 @@ class Dashboard extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-            : user.role === "Teacher" ?
-              <>
-              <Grid item container direction="row" spacing={2} justify="flex-end" alignItems="center">
-                <Grid item>
-                  <Link to ="/daftar-tugas">
-                    <Fab variant="extended" className={classes.manageTaskButton}>
-                      <AssignmentIcon className={classes.manageTaskIcon} />
+            </Grid>
+          : user.role === "Teacher" ?
+            <>
+            <Grid item container spacing={2} justify="flex-end" alignItems="center">
+              <Grid item>
+                <Link to ="/daftar-tugas">
+                  <Fab variant="extended" className={classes.manageTaskButton}>
+                    <AssignmentIcon className={classes.manageTaskIcon} />
                       Lihat Tugas
-                    </Fab>
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Fab className={classes.createButton} onClick={(event) => this.handleMenuOpen(event)}>
-                    <AddIcon />
                   </Fab>
-                  <Menu
-                    keepMounted
-                    anchorEl={this.state.anchorEl}
-                    open={Boolean(this.state.anchorEl)}
-                    onClose={this.handleMenuClose}
-                    getContentAnchorEl={null}
-                    style={{marginTop: "10px"}}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "center",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "center",
-                    }}
-                  >
-                    <MenuItem button component="a" href="/buat-pengumuman" className={classes.menuItem}>
-                      <ListItemIcon>
-                        <AnnouncementIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Buat Pengumuman" />
-                    </MenuItem>
-                    <MenuItem button component="a" href="/buat-materi" className={classes.menuItem}>
-                      <ListItemIcon>
-                        <MenuBookIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Buat Materi" />
-                    </MenuItem>
-                    <MenuItem button component="a" href="/buat-tugas" className={classes.menuItem}>
-                      <ListItemIcon>
-                        <AssignmentIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Buat Tugas" />
-                    </MenuItem>
-                  </Menu>
-                </Grid>
+                </Link>
               </Grid>
-              <Grid item direction="row" spacing={2} xs={12} style={{marginTop: "10px"}}>
-                <Paper style={{padding: "20px"}}>
-                  <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                    <Grid item>
-                      <Grid container alignItems="center">
-                        <AssignmentIcon
-                          color="action"
-                          style={{marginRight: "10px", fontSize: "20px"}}
-                        />
-                        <Typography variant="h5" color="primary">
-                          Tugas Yang Belum Diperiksa
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Link to="/daftar-tugas">
-                        <LightTooltip title="Lihat Semua" placement="top">
-                          <IconButton>
-                            <ChevronRightIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Link>
+              <Grid item>
+                <Fab className={classes.createButton} onClick={(event) => this.handleMenuOpen(event)}>
+                  <AddIcon />
+                </Fab>
+                <Menu
+                  keepMounted
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleMenuClose}
+                  getContentAnchorEl={null}
+                  style={{marginTop: "10px"}}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <MenuItem button component="a" href="/buat-pengumuman" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <AnnouncementIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Pengumuman" />
+                  </MenuItem>
+                  <MenuItem button component="a" href="/buat-materi" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <MenuBookIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Materi" />
+                  </MenuItem>
+                  <MenuItem button component="a" href="/buat-tugas" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <AssignmentIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Tugas" />
+                  </MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
+            <Grid item direction="row" spacing={2} xs={12} style={{marginTop: "10px"}}>
+              <Paper style={{padding: "20px"}}>
+                <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                  <Grid item>
+                    <Grid container alignItems="center">
+                      <AssignmentIcon
+                        color="action"
+                        style={{marginRight: "10px", fontSize: "20px"}}
+                      />
+                      <Typography variant="h5" color="primary">
+                        Tugas Yang Belum Diperiksa
+                      </Typography>
                     </Grid>
                   </Grid>
-                  <Grid container direction="column" spacing={1}>
-                    {listTasksTeacher()}
+                  <Grid item>
+                    <Link to="/daftar-tugas">
+                      <LightTooltip title="Lihat Semua" placement="top">
+                        <IconButton>
+                          <ChevronRightIcon />
+                        </IconButton>
+                      </LightTooltip>
+                    </Link>
                   </Grid>
-                </Paper>
-              </Grid>
-              </>
-            :
-              <Grid item container direction="row" justify="flex-end">
-                <Grid item>
-                  <Link to ="/daftar-kelas">
-                    <Fab variant="extended" className={classes.manageClassButton}>
-                      <FaChalkboardTeacher className={classes.manageClassIcon} />
-                      Atur Kelas
-                    </Fab>
-                  </Link>
                 </Grid>
+                <Grid container direction="column" spacing={1}>
+                  {listTasksTeacher()}
+                </Grid>
+              </Paper>
+            </Grid>
+            </>
+          :
+            <Grid item container direction="row" justify="flex-end">
+              <Grid item>
+                <Link to ="/daftar-kelas">
+                  <Fab variant="extended" className={classes.manageClassButton}>
+                    <FaChalkboardTeacher className={classes.manageClassIcon} />
+                    Atur Kelas
+                  </Fab>
+                </Link>
               </Grid>
+            </Grid>
 
-            }
-
-          </Grid>
-
-        </Grid>
+          }
+        </div>
       </div>
     )
   };
