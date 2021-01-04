@@ -6,6 +6,7 @@ import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { deleteFileSubmitTasks, uploadFileSubmitTasks, getFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks} from "../../../actions/Files/FileSubmitTaskActions";
+import { downloadFileTasks, getFileTasks, viewFileTasks } from "../../../actions/Files/FileTaskActions";
 import { getOneTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
@@ -125,7 +126,7 @@ function LampiranFile(props) {
           button
           disableRipple
           className={classes.listItem}
-          onClick={() => {onPreviewFile(file_id, "lampiran")}}
+          onClick={() => {onPreviewFile(file_id)}}
         >
           <ListItemAvatar>
             {filetype === "Word" ?
@@ -178,7 +179,7 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.downloadIconButton}
-            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran") }}
+            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id) }}
           >
             <CloudDownloadIcon fontSize="small" />
           </IconButton>
@@ -279,9 +280,9 @@ function ViewTaskStudent(props) {
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
-  const { uploadTugas, uploadFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks , getFileSubmitTasks, deleteFileSubmitTasks, deleteTugas, success, getTaskFilesByUser, tasksCollection,
+  const { uploadFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks , getFileSubmitTasks, deleteFileSubmitTasks, deleteTugas, success, tasksCollection,
     filesCollection, downloadTugas, previewTugas, clearSuccess,
-    getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran } = props;
+    getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran, getFileTasks, viewFileTasks, downloadFileTasks } = props;
   const { all_subjects_map} = props.subjectsCollection;
 
   // ref itu untuk ngerefer html yang ada di render.
@@ -290,7 +291,7 @@ function ViewTaskStudent(props) {
   const uploadedTugas = React.useRef(null);
   const [fileTugas, setFileTugas] = React.useState(null);
   const [tasksContents, setTaskContents] = React.useState([]);
-
+  const [fileLampiran, setFileLampiran] = React.useState([]);
   // React HOOKS React.use bla2
 
   // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
@@ -312,9 +313,11 @@ function ViewTaskStudent(props) {
     getOneTask(tugasId)
     getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
+    getFileTasks(tugasId).then((res) => setFileLampiran(res))
     if(tasksCollection.person_in_charge_id){
       getOneUser(tasksCollection.person_in_charge_id)
     }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success, tasksCollection.person_in_charge_id])
 
@@ -340,29 +343,6 @@ function ViewTaskStudent(props) {
       default: return "File Lainnya"
     }
   }
-  
-  // const listWorkFile = () => {
-  //   let temp = []
-  //   for (let i = 0; i < items.length; i++) {
-  //     console.log(filesCollection.files[i], i)
-  //     temp.push(
-  //       <WorkFile
-  //         handleOpenDeleteDialog = {handleOpenDeleteDialog}
-  //         onDownloadFile={onDownloadFile}
-  //         onPreviewFile={onPreviewFile}
-  //         file_name={filesCollection.files[i].filename}
-  //         file_id={filesCollection.files[i].id}
-  //         file_type={fileType(filesCollection.files[i].filename)}
-  //       />
-  //     )
-  //   }
-  //   if (temp.length !== tasksContents.length) {
-  //     console.log("tasks added")
-  //     setTaskContents(temp);
-  //   }
-  //   console.log(tasksContents)
-  //   return tasksContents
-  // }
 
   // For upload, showing file names before submitting
   const listFileChosen = () => {
@@ -405,30 +385,6 @@ function ViewTaskStudent(props) {
     // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
     uploadFileSubmitTasks(formData, tugasId, user.id)
     setFileTugas(null)
-  }
-
-  const onDeleteTugas = (id) => {
-    console.log("On delete tugass")
-    deleteTugas(id, user)
-    setFileTugas(null)
-  }
-
-  const onDownloadFile = (id, fileCategory="none") => {
-    if (fileCategory === "tugas")
-      downloadTugas(id)
-    else if (fileCategory === "lampiran")
-      downloadLampiran(id)
-    else
-      console.log("File Category is not specified")
-  }
-
-  const onPreviewFile = (id, fileCategory="none") => {
-    if (fileCategory === "tugas")
-      previewTugas(id)
-    else if (fileCategory === "lampiran")
-      previewLampiran(id)
-    else
-      console.log("File Category is not specified")
   }
 
   // Delete Dialog
@@ -527,12 +483,11 @@ function ViewTaskStudent(props) {
                 Lampiran Berkas:
               </Typography>
               <Grid container spacing={1}>
-                {!tasksCollection.lampiran ? null :
-                tasksCollection.lampiran.map((lampiran) => (
-                  <LampiranFile
-                    file_id={lampiran.id}
-                    onPreviewFile ={onPreviewFile}
-                    onDownloadFile ={onDownloadFile}
+                {fileLampiran.map((lampiran) => (
+                    <LampiranFile
+                    file_id={lampiran._id}
+                    onPreviewFile ={viewFileTasks}
+                    onDownloadFile ={downloadFileTasks}
                     filename={lampiran.filename}
                     filetype={fileType(lampiran.filename)}
                   />
@@ -638,25 +593,6 @@ ViewTaskStudent.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-  uploadTugas: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  deleteTugas: PropTypes.func.isRequired,
-  downloadTugas: PropTypes.func.isRequired,
-  previewTugas: PropTypes.func.isRequired,
-  updateUserData: PropTypes.func.isRequired, // When you upload files, then update the user data.
-  getOneTask: PropTypes.func.isRequired,
-  getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
-  getOneUser: PropTypes.func.isRequired, // For the person in charge task
-  previewLampiran: PropTypes.func.isRequired,
-  downloadLampiran: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
-
-  //S3 punya
-  uploadFileSubmitTasks: PropTypes.func.isRequired,
-  getFileSubmitTasks: PropTypes.func.isRequired,
-  viewFileSubmitTasks: PropTypes.func.isRequired,
-  downloadFileSubmitTasks: PropTypes.func.isRequired,
-  deleteFileSubmitTasks: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -669,7 +605,8 @@ const mapStateToProps = (state) => ({
 
 export default connect(
    mapStateToProps, { uploadTugas, clearSuccess, deleteTugas, downloadTugas,
-     previewTugas, getTaskFilesByUser, getOneUser, downloadLampiran,
+     previewTugas, getFileTasks,downloadFileTasks, viewFileTasks, getTaskFilesByUser, getOneUser, downloadLampiran,
      previewLampiran, getOneTask, getAllSubjects, 
-     uploadFileSubmitTasks, getFileSubmitTasks,viewFileSubmitTasks, downloadFileSubmitTasks, deleteFileSubmitTasks }
+     uploadFileSubmitTasks, getFileSubmitTasks,viewFileSubmitTasks, downloadFileSubmitTasks, deleteFileSubmitTasks
+     }
  ) (ViewTaskStudent);

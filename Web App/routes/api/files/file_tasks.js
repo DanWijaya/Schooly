@@ -38,7 +38,7 @@ router.get("/", (req, res, next) => {
 
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
-router.post("/upload/:task_id&:author_id", upload.array("tugas"), (req, res) =>  {
+router.post("/upload/:task_id", upload.array("lampiran_tugas"), (req, res) =>  {
   const { files }= req;
   const { task_id, author_id } = req.params
   let s3bucket = new AWS.S3({
@@ -53,7 +53,7 @@ router.post("/upload/:task_id&:author_id", upload.array("tugas"), (req, res) => 
     files.map((file) => {
       var params = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: "materi/" + uuidv4() +"_" + file.originalname,
+        Key: "task/" + uuidv4() +"_" + file.originalname,
         Body: file.buffer,
         ContentType: file.mimetype,
         ContentDisposition: `inline;filename=${file.originalname}`
@@ -68,9 +68,8 @@ router.post("/upload/:task_id&:author_id", upload.array("tugas"), (req, res) => 
             s3_key: params.Key,
             s3_directory: "tasks/",
             task_id: task_id,
-            author_id: author_id,
           }
-          var document = new FileSubmitTask(newFileUploaded);
+          var document = new FileTask(newFileUploaded);
           document.save(function(error, newFile) {
             if (error) {
               throw error;
@@ -113,9 +112,9 @@ router.delete("/:id", (req, res) => {
   const {file_to_delete} = req.body;
   // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted. 
   if(!file_to_delete){
-  FileTask.find({ material_id: req.params.id}).then((materials) => {
-    let id_list = materials.map((m) => Object(m._id))
-    let file_to_delete = materials
+  FileTask.find({ task_id: req.params.id}).then((tasks) => {
+    let id_list = tasks.map((m) => Object(m._id))
+    let file_to_delete = tasks
 
     FileTask.deleteMany({
       _id: {
@@ -169,16 +168,18 @@ router.delete("/:id", (req, res) => {
   }
 });
 
-router.get("/by_material/:id", (req, res) => {
-  FileTask.find({ material_id: req.params.id })
-  .then((results, err) => {
-    if(!results)
-      return res.status(400).json(err);
-    else{
-      results.sort((a,b) => (a.filename > b.filename) ? 1 : -1)
-      return res.status(200).json(results)
-    }
-  })
+router.get("/by_task/:id", (req, res) => {
+  return (
+    FileTask.find({ task_id: req.params.id })
+      .then((results, err) => {
+        if(!results)
+          return res.status(400).json(err);
+        else{
+          results.sort((a,b) => (a.filename > b.filename) ? 1 : -1)
+          return res.status(200).json(results)
+        }
+      })
+  )
 })
 
 router.get("/:id", (req,res) => {

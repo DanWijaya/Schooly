@@ -512,11 +512,6 @@ CreateMaterial.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  getAllClass: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  createMaterial: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

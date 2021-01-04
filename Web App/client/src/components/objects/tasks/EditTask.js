@@ -9,6 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { deleteFileTasks, getFileTasks} from "../../../actions/Files/FileTaskActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,
@@ -186,9 +187,15 @@ class EditTask extends Component {
   tugasUploader = React.createRef(null)
 
   componentDidMount() {
-    this.props.getOneTask(this.props.match.params.id)
+    const { id } = this.props.match.params;
+    this.props.getOneTask(id)
     this.props.getAllClass()
     this.props.getAllSubjects()
+    this.props.getFileTasks(id).then((res) => {
+      this.setState({
+        fileLampiran: res
+      }) 
+    })
   }
 
   componentWillUnmount(){
@@ -212,7 +219,7 @@ class EditTask extends Component {
           deadline: tasksCollection.deadline,
           class_assigned: Boolean(tasksCollection.class_assigned) ? tasksCollection.class_assigned : [],
           description: tasksCollection.description,
-          fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
+          // fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
           // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
           // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
       })
@@ -256,6 +263,7 @@ class EditTask extends Component {
     console.log(this.state.fileLampiran[i])
     formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i])
   }
+  console.log(this.props.tasksCollection)
   this.props.updateTask(formData, fileLampiranToDelete,
     this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
 
@@ -269,7 +277,7 @@ class EditTask extends Component {
     let tempToAdd;
 
     if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
+      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
     else {
       console.log(files)
       if (files.length !== 0) {
@@ -322,20 +330,19 @@ class EditTask extends Component {
     this.setState({ openUploadDialog: true})
   };
 
-  onChange = (e, otherfield) => {
+  onChange = (e, otherfield=null) => {
     console.log(this.state.class_assigned)
     if(otherfield){
+      if(otherfield == "deadline"){
+        this.setState({ [otherfield] : e})
+      }else{
       // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
       this.setState({ [otherfield] : e.target.value})
+      }
     }
     else{
       this.setState({ [e.target.id]: e.target.value});
     }
-  }
-
-  onDateChange = (date) => {
-    console.log(date)
-    this.setState({ deadline: date})
   }
 
   render() {
@@ -621,11 +628,6 @@ EditTask.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  getOneTask : PropTypes.func.isRequired,
-  updateTask: PropTypes.func.isRequired,
-  getAllSubjects: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -638,5 +640,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors }
+    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors, getFileTasks }
 ) (withStyles(styles)(EditTask))

@@ -251,10 +251,6 @@ class EditAssessment extends Component {
     }
   }
 
-  onDateChange = (date) => {
-    this.setState({ end_date: date })
-  }
-
   handleAddQuestion = () => {
     console.log("Add questionnnn")
     // let questions = this.state.questions

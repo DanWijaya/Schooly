@@ -7,7 +7,7 @@ import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import { getStudentsByClass, getTeachers } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getAllTask, getTaskAtmpt } from "../../../actions/TaskActions";
+import { getAllTask, getTaskAtmpt, getTaskByClass } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import viewClassPicture from "./ViewClassPicture.png";
@@ -280,7 +280,7 @@ function ViewClass(props) {
   const classes = useStyles();
 
   const { setCurrentClass, getStudentsByClass, getAllSubjects, getTaskAtmpt,
-     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, getAllTask } = props;
+     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, getAllTask, getTaskByClass } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials} = props.materialsCollection
@@ -300,16 +300,14 @@ function ViewClass(props) {
     if (Boolean(tasksCollection.length)) {
       var i;
       for (i = tasksCollection.length-1; i >= 0; i--){
-        let task = tasksCollection[i];
-        let class_assigned = task.class_assigned
-        if(class_assigned.indexOf(classId) !== -1){
-          tasksList.push(task)
+        if(taskAtmpt.indexOf(tasksCollection[i]._id) === -1){
+          // get the not attempted task.
+          tasksList.push(tasksCollection[i])
         }
-        if(i === tasksCollection.length - 5){ // item terakhir harus pas index ke 4.
+        if(tasksList.length == 5){ // limit tasksList jadi 5 aja. 
           break;
         }
       }
-
       let result = [];
       for (i = 0; i < tasksList.length; i++){
       let task = tasksList[i]
@@ -319,19 +317,6 @@ function ViewClass(props) {
         </Avatar>
       )
       let workStatus = "Belum Dikumpulkan"
-      // console.log(all_user_files)
-      // for (var j = 0; j < all_user_files.length; j++){
-      //     if(all_user_files[j].for_task_object === task._id){
-      //     workStatus = "Telah Dikumpulkan"
-      //     workCategoryAvatar = (
-      //       <Avatar className={classes.assignmentTurnedIn}>
-      //         <AssignmentTurnedInIcon/>
-      //       </Avatar>
-      //     )
-      //     break;
-      //   }
-      // }
-
       if(!category || (category === "subject" && task.subject === subject._id))
         result.push(
           <AssignmentListItem
@@ -393,7 +378,8 @@ function ViewClass(props) {
 
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class")
-      getAllTask() // get the tasksCollection
+      // getAllTask() // get the tasksCollection
+      getTaskByClass(user.kelas)
     }
     getAllSubjects("map") // get the all_subjects_map in map
     getAllSubjects() // get the all_subjects
@@ -846,7 +832,8 @@ ViewClass.propTypes = {
   getTeachers: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
   getAllTaskFilesByUser: PropTypes.func.isRequired,
-  getTaskAtmpt: PropTypes.func.isRequired
+  getTaskAtmpt: PropTypes.func.isRequired,
+  getTaskByClass: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -860,5 +847,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps, { setCurrentClass, getStudentsByClass,
-    getAllSubjects, getAllTask, getTeachers, getMaterial, getAllTaskFilesByUser, getTaskAtmpt }
+    getAllSubjects, getAllTask, getTeachers, getMaterial, 
+    getAllTaskFilesByUser, getTaskAtmpt, getTaskByClass }
 ) (ViewClass);

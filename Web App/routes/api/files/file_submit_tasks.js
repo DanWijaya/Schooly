@@ -239,7 +239,9 @@ router.get("/noatmpt/:author_id", (req,res) => {
   let set_result = new Set();
     FileSubmitTask.find({author_id: author_id})
       .then((files, err) => {
-          files.forEach((item) => set_result.add(item._id))
+          files.forEach((item) => {
+            set_result.add(item.task_id.toString())
+          })
           return res.status(200).json(Array.from(set_result))
       })
       .catch((err) => { 
