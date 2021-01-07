@@ -10,19 +10,19 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
       fade: fade("#2196f3", 0.15),
     },
     secondary: {
-      main: "#f48fb1",
-      light: "#f6a5c0",
-      dark: "#aa647b",
+      main: "#dc004e",
+      light: "#e33371",
+      dark: "#9a0036",
     },
     success: {
-      main: "#61bd4f",
+      main: "#4caf50",
       light: "#81c784",
       dark: "#388e3c",
     },
     info: {
-      main: "#90caf9",
-      light: "#a6d4fa",
-      dark: "#648dae",
+      main: "#1976d2",
+      light: "#4791d",
+      dark: "#115293",
     },
     warning: {
       main: "#ff9800",
