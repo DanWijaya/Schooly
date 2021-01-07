@@ -342,10 +342,11 @@ class Dashboard extends Component {
 
     getAllTask() // actions yang membuat GET request ke Database.
     getAllSubjects("map") // untuk dapatin subject"nya gitu
-    if (user.role === "Student")
+    if (user.role === "Student"){
+      getStudentsByClass(user.kelas)
+    }
       getAllAssessments()
       getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
-      getStudentsByClass(user.kelas)
       getStudents()
   }
 
@@ -372,7 +373,7 @@ class Dashboard extends Component {
     const classId = user.kelas
 
     console.log(all_students)
-
+    console.log(user)
     function listTasks(){
       let result = []
       tasksByClass.map((task) => {
