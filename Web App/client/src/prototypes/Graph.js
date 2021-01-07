@@ -5,24 +5,16 @@ export default function Graph() {
   const data = React.useMemo(
     () => [
       {
-        label: 'Series 1',
-        data: [[0, 1], [1, 2], [2, 3]]
+        label: 'Nama Mata Pelajaran',
+        data: [[1, 2], [2, 3]]
       },
-      {
-        label: 'Series 2',
-        data: [[2, 3], [3, 2], [4, 1]]
-      },
-      {
-        label: 'Series 3',
-        data: [[0, 3], [1, 1], [2, 5], [3, 6], [4, 4]]
-      }
     ],
     []
   )
 
   const series = React.useMemo(
     () => ({
-      type: 'area'
+      type: 'bar'
     }),
     []
   )
@@ -40,7 +32,7 @@ export default function Graph() {
     // space of its parent element automatically
     <div
       style={{
-        width: '400px',
+        width: '1000px',
         height: '300px'
       }}
     >

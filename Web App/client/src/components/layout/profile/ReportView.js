@@ -106,7 +106,7 @@ function ReportView(props) {
   // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
   // id                                     (ini tidak ada kalau rolenya "Other")
 
-  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel  
+  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
 
   const { getTasksBySC, getKuisBySC, getUjianBySC, getAllAssessments, getAllClass, getAllSubjects, getStudentsByClass, getAllTask } = props;
@@ -114,7 +114,7 @@ function ReportView(props) {
 
   const { user, students_by_class } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
-  const allTaskArray = props.tasksCollection; // mengambil data dari DB 
+  const allTaskArray = props.tasksCollection; // mengambil data dari DB
   const { all_assessments } = props.assessmentsCollection;
 
   const countAllClassUpdate = React.useRef(0);
@@ -203,7 +203,7 @@ function ReportView(props) {
 
   // ini digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari profile view murid atau profile
   // tipe argumen = Object (bisa pakai Object karena urutan nama kolom dan jumlah kolomnya fix)
-  function generateRowCellFormat2(row) {  
+  function generateRowCellFormat2(row) {
     let emptyCellSymbol = "-"; // jika sel isi kosong, masukkan "-"
     return (
       <TableRow key={row.subject}> {/* nama subjek sudah dipastikan unik*/}
@@ -312,16 +312,16 @@ function ReportView(props) {
       let scores = {};
       // scores akan berisi {
       //   id_subject_1: {
-      //     subject: nama_subject, totalTaskScore: , countTask: , totalKuisScore: , countKuis: , totalUjianScore: , countUjian:   
+      //     subject: nama_subject, totalTaskScore: , countTask: , totalKuisScore: , countKuis: , totalUjianScore: , countUjian:
       //   }, id_subject_2: {
-      //     subject: nama_subject, totalTaskScore: , countTask: , totalKuisScore: , countKuis: , totalUjianScore: , countUjian:   
+      //     subject: nama_subject, totalTaskScore: , countTask: , totalKuisScore: , countKuis: , totalUjianScore: , countUjian:
       //   } ...
       // }
       subjectArray.forEach((bySubject) => {
         // bySubject.subjectId adalah id Subject
         scores[bySubject.subjectId] = {
           subject: bySubject.subjectName,
-          // totalTaskScore: undefined, 
+          // totalTaskScore: undefined,
           countTask: 0,
           // totalKuisScore: undefined,
           countKuis: 0,
@@ -333,7 +333,7 @@ function ReportView(props) {
       for (let task of allTaskArray) {
         // id adalah id mahasiswa
         // task.grades sudah dipastikan ada saat pembuatan task baru sehingga tidak perlu dicek null atau tidaknya lagi
-        if ((Object.keys(scores).includes(task.subject)) && (task.grades.constructor === Object) && 
+        if ((Object.keys(scores).includes(task.subject)) && (task.grades.constructor === Object) &&
         (Object.keys(task.grades).length !== 0) && (task.grades[id] !== undefined)) {
           if (!scores[task.subject].totalTaskScore) {
             scores[task.subject].totalTaskScore = task.grades[id];
@@ -346,9 +346,9 @@ function ReportView(props) {
 
       for (let assessment of all_assessments) {
         // id adalah id murid
-        // (assessment.grades.constructor === Object) && (Object.keys(assessment.grades).length !== 0) sebenarnya tidak diperlukan karena 
+        // (assessment.grades.constructor === Object) && (Object.keys(assessment.grades).length !== 0) sebenarnya tidak diperlukan karena
         // grades sudah dipastikan tidak kosong. cek notes di model assessment buat info lebih lanjut
-        if ((Object.keys(scores).includes(assessment.subject)) && (assessment.grades) && (assessment.grades.constructor === Object) && 
+        if ((Object.keys(scores).includes(assessment.subject)) && (assessment.grades) && (assessment.grades.constructor === Object) &&
           (Object.keys(assessment.grades).length !== 0) && (assessment.grades[id] !== undefined) && assessment.grades[id].total_grade !== null) {
           if (assessment.type === "Kuis") {
             if (!scores[assessment.subject].totalKuisScore) {
@@ -438,9 +438,9 @@ function ReportView(props) {
       setRows(handleIndividualReport());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTaskArray, all_subjects_map, kelasWali, all_assessments]); 
-  
-  // menggenerate konten tabel untuk halaman rapor yg dibuka dengan mengklik icon lihat rapor sidebar 
+  }, [allTaskArray, all_subjects_map, kelasWali, all_assessments]);
+
+  // menggenerate konten tabel untuk halaman rapor yg dibuka dengan mengklik icon lihat rapor sidebar
   // setelah data-data yang diperlukan sudah ada.
   // getStudentsByClass ada di fungsi handler Select dan dipanggil saat guru sudah memilih kelas dan subjek.
   // valueMatpel dan valueKelas sudah dipastikan ada.
@@ -452,11 +452,11 @@ function ReportView(props) {
       let hasGrade = false;
 
       // akan berisi: [ map_row_1, map_row_2, ... ]
-      let newRows = [];      
+      let newRows = [];
       // akan berisi: { id_student_1: map_row_1, id_student_2: map_row_2, ... }
-      let newRowsObj = {}; 
+      let newRowsObj = {};
       // isi map_row_n: Map { idMurid: id_student_1, namaMurid: nama_student, id_task_1: nilai, ... , id_kuis_1: nilai, ..., id_assessment_1: nilai, ... }
-      
+
       students_by_class.forEach((stdInfo) => {
         let temp = new Map();
 
@@ -468,7 +468,7 @@ function ReportView(props) {
       if (students_by_class.length === 0) {
         condition.push("noStudent");
       }
-      
+
       const addScore = (items, isAssessment) => {
         if (items.length !== 0) {
           items.forEach((item) => {
@@ -603,7 +603,7 @@ function ReportView(props) {
                   <TableBody>
                       {rows.map((row) => {
                         return generateRowCellFormat2(row);
-                      })}      
+                      })}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -633,7 +633,7 @@ function ReportView(props) {
                   <TableBody>
                     {rows.map((row) => {
                       return generateRowCellFormat2(row);
-                    })}      
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -654,34 +654,38 @@ function ReportView(props) {
                 Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih
               </Typography>
             </Grid>
-            <Grid container xs={12} md={7} style={{marginLeft: "5px"}}>
-              <Grid item xs={12} md={6}>
-                <FormControl margin="dense">
-                  <InputLabel id="kelas-label">Kelas</InputLabel>
-                  <Select
-                    labelId="kelas-label"
-                    id="kelas"
-                    value={valueKelas}
-                    onChange={(event) => {handleKelasChange(event)}}
-                    className={classes.select}
-                  >
-                    {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
-                  </Select>
-                </FormControl>
+            <Grid item container xs={12} md={8}>
+              <Grid item xs={12} sm={6} container justify="flex-end">
+                <Grid item>
+                  <FormControl margin="dense" variant="outlined">
+                    <InputLabel id="kelas-label">Kelas</InputLabel>
+                    <Select
+                      labelId="kelas-label"
+                      id="kelas"
+                      value={valueKelas}
+                      onChange={(event) => {handleKelasChange(event)}}
+                      className={classes.select}
+                    >
+                      {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl margin="dense">
-                  <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                  <Select
-                    labelId="matpel-label"
-                    id="matpel"
-                    value={valueMatpel}
-                    onChange={(event) => {handleMatPelChange(event)}}
-                    className={classes.select}
-                  >
-                    {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
-                  </Select>
-                </FormControl>
+              <Grid item xs={12} sm={6} container justify="flex-end">
+                <Grid item>
+                  <FormControl margin="dense">
+                    <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
+                    <Select
+                      labelId="matpel-label"
+                      id="matpel"
+                      value={valueMatpel}
+                      onChange={(event) => {handleMatPelChange(event)}}
+                      className={classes.select}
+                    >
+                      {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

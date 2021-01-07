@@ -281,14 +281,6 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item>
-                  <Autocomplete/>
-                  {/* <Autocomplete
-                      id="combo-box-demo"
-                      options={all_classes.map((kelas) => kelas.name)}
-                      getOptionLabel={(option) => option.title}
-                      style={{width: 300}}
-                      renderInput={(params) => <TextField {...params} label="Isi combo box" variant="outlined"/>}
-                      /> */}
                   <label id="kelas">Kelas</label>
                   <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
                     <Select
