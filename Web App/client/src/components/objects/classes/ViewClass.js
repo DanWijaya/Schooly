@@ -299,29 +299,10 @@ function MaterialListitem(props) {
 
   return (
     <div>
-    <Hidden smUp implementation="css">
-      <Link to={props.work_link}>
-        <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
-          <ListItem button className={classes.listItem}>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={!props.work_subject ? " " : props.work_subject}
-            />
-          </ListItem>
-        </Paper>
-      </Link>
-    </Hidden>
-    <Hidden xsDown implementation="css">
-      <Link to={props.work_link}>
-        <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+      <Hidden smUp implementation="css">
+        <Link to={props.work_link}>
+          <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
             <ListItem button className={classes.listItem}>
-              <ListItemAvatar>
-                {props.work_category_avatar}
-              </ListItemAvatar>
               <ListItemText
                 primary={
                   <Typography variant="body1">
@@ -332,8 +313,27 @@ function MaterialListitem(props) {
               />
             </ListItem>
           </Paper>
-      </Link>
-    </Hidden>
+        </Link>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <Link to={props.work_link}>
+          <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+              <ListItem button className={classes.listItem}>
+                <ListItemAvatar>
+                  {props.work_category_avatar}
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      {props.work_title}
+                    </Typography>
+                  }
+                  secondary={!props.work_subject ? " " : props.work_subject}
+                />
+              </ListItem>
+            </Paper>
+        </Link>
+      </Hidden>
     </div>
   )
 }
@@ -431,7 +431,6 @@ function ViewClass(props) {
         for(let i=0;i<user.tugas.length;i++){
           if(user.tugas[i].for_task_object === task._id){
             workStatus = "Sudah Dikumpulkan"
-            console.log("woiiii")
             break;
           }
         }
@@ -497,9 +496,7 @@ function ViewClass(props) {
         if(class_assigned.indexOf(classId) !== -1){
           AssessmentsList.push(assessment)
         }
-        if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
-          break;
-        }
+        
       }
 
       for (i = 0; i < AssessmentsList.length; i++){
@@ -561,6 +558,7 @@ function ViewClass(props) {
         else if(tab === "mata_pelajaran"){
           let workStatus = (!assessment.submissions ? "Belum Ditempuh" : "Sudah Ditempuh")
           if(type === "Kuis"){
+            console.log(assessment.type)
             if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Kuis"){
               result.push(
                 <AssessmentListItem
@@ -575,6 +573,7 @@ function ViewClass(props) {
             }
           }
           if(type === "Ujian"){
+            console.log(assessment.type)
             if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Ujian"){
               result.push(
                 <AssessmentListItem
@@ -621,9 +620,9 @@ function ViewClass(props) {
           if(category==="subject" && materialList.length ===  3)// item ke index tsb, brarti harus harus pas index ke selectedMaterials.length - 5.
             break;
         }
-      }
-      return materialList;
+      } 
     }
+    return materialList;
   }
 
   React.useEffect(() => {
@@ -700,6 +699,8 @@ function ViewClass(props) {
       return true;
     }
   }
+
+  console.log(all_subjects)
 
   return (
     <div className={classes.root}>

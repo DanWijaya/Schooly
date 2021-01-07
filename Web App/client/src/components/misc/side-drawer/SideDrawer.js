@@ -128,7 +128,7 @@ function DrawerContent(props) {
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
+      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
       ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"]
     ]
     if (user.role === "Teacher") {
