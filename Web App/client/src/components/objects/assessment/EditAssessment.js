@@ -185,6 +185,12 @@ const styles = (theme) => ({
       },
     },
   },
+  customMargin: {
+    margin: "24px 0",
+    [theme.breakpoints.down("xs")]: {
+      margin: "18px 0",
+    }
+  }
 });
 
 class EditAssessment extends Component {
@@ -882,15 +888,15 @@ class EditAssessment extends Component {
     });
   }
 
-  weightInput = () => {
+  weightInput = (classes) => {
     const columnTemplate = {
       radio: {
         // root: classes.RadioQst,
-        text: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>), icon: (<RadioButtonChecked />)
+        text: (<b>Pilihan Ganda</b>), icon: (<RadioButtonChecked />)
       },
       checkbox: {
         // root: classes.CheckboxQst,
-        text: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>), icon: (<CheckBox />)
+        text: (<b>Kotak Centang</b>), icon: (<CheckBox />)
       },
       shorttext: {
         // root: classes.ShorttextQst,
@@ -914,48 +920,119 @@ class EditAssessment extends Component {
     }
 
     let columnsDesktopView = [];
-    let gridMobileView;
+    // let gridMobileView;
     let gridItemMobileView = [];
     let c = 0;
     let filteredtypeCount = Object.entries(typeCount).filter((pair) => (pair[1] > 0));
 
     if (filteredtypeCount.length !== 0) {
       // mobile view
-      for (let type of Object.keys(typeCount)) {
+      // for (let type of Object.keys(typeCount)) {
+      for (let pair of filteredtypeCount) {
+        let type = pair[0];
         let weight = this.state.weights[type];
         let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
 
         gridItemMobileView.push(
-          <Grid container item xs={6} spacing="1" direction="column" justify="space-between" alignItems="center">
-            <Grid item>
+        //   <Grid container item xs={6} spacing="1" direction="column" justify="space-between" alignItems="center">
+        //     <Grid item>
+        //       {columnTemplate[type].icon}
+        //     </Grid>
+        //     <Grid item>
+        //       <Hidden xsDown>
+        //         <Typography align="center">
+        //           {columnTemplate[type].text}
+        //         </Typography>
+        //       </Hidden>
+        //       <Hidden smUp>
+        //         <Typography align="center" style={{ fontSize: "0.8rem" }}>
+        //           {columnTemplate[type].text}
+        //         </Typography>
+        //       </Hidden>
+        //     </Grid>
+        //     <Grid item>
+        //       <Hidden xsDown>
+        //         <Typography component="label" for="weight" color="primary">
+        //           Bobot Per Soal:
+        //         </Typography>
+        //       </Hidden>
+        //       <Hidden smUp>
+        //         <Typography component="label" for="weight" color="primary" style={{ fontSize: "0.8rem" }}>
+        //           Bobot Per Soal:
+        //         </Typography>
+        //       </Hidden>
+        //     </Grid>
+        //     {(type !== "longtext") ? (
+        //       <Grid item style={{ height: "65px" }}>
+        //         <Hidden xsDown>
+        //           <TextField
+        //             defaultValue={this.state.weights[type]}
+        //             variant="outlined"
+        //             id="weight"
+        //             fullWidth
+        //             onChange={(e) => { this.handleWeight(e, type) }}
+        //             error={showError}
+        //             helperText={showError ? "Periksa Kembali!" : null}
+        //             InputProps={{
+        //               style: {
+        //                 width: "150px"
+        //               },
+        //               endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
+        //             }}
+        //           />
+        //         </Hidden>
+        //         <Hidden smUp>
+        //           <TextField
+        //             defaultValue={this.state.weights[type]}
+        //             variant="outlined"
+        //             id="weight"
+        //             fullWidth
+        //             onChange={(e) => { this.handleWeight(e, type) }}
+        //             error={showError}
+        //             helperText={showError ? "Periksa Kembali!" : null}
+        //             FormHelperTextProps={{
+        //               style: {
+        //                 margin: "0px"
+        //               }
+        //             }}
+        //             InputProps={{
+        //               style: {
+        //                 width: "110px"
+        //               },
+        //               endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
+        //             }}
+        //           />
+        //         </Hidden>
+
+        //       </Grid>
+        //     ) : (
+        //       <Grid item style={{ height: "65px" }}>
+        //         <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
+        //           <IconButton>
+        //             <InfoIcon />
+        //           </IconButton>
+        //         </LightTooltip>
+        //       </Grid>
+        //     )}
+        //   </Grid>
+          <Grid container>
+            <Grid item style={{ display: "flex", flexDirection: "column", marginRight: "20px" }} justify="center">
               {columnTemplate[type].icon}
             </Grid>
-            <Grid item>
+            <Grid item style={{ display: "flex", flexDirection: "column", flexGrow: "1" }} justify="center">
               <Hidden xsDown>
-                <Typography align="center">
+                <Typography align="left">
                   {columnTemplate[type].text}
                 </Typography>
               </Hidden>
               <Hidden smUp>
-                <Typography align="center" style={{ fontSize: "0.8rem" }}>
+                <Typography align="left" style={{ fontSize: "0.8rem" }}>
                   {columnTemplate[type].text}
-                </Typography>
-              </Hidden>
-            </Grid>
-            <Grid item>
-              <Hidden xsDown>
-                <Typography component="label" for="weight" color="primary">
-                  Bobot Per Soal:
-                </Typography>
-              </Hidden>
-              <Hidden smUp>
-                <Typography component="label" for="weight" color="primary" style={{ fontSize: "0.8rem" }}>
-                  Bobot Per Soal:
                 </Typography>
               </Hidden>
             </Grid>
             {(type !== "longtext") ? (
-              <Grid item style={{ height: "65px" }}>
+              <Grid item style={{ display: "flex", flexDirection: "column", height: "34px" }}>
                 <Hidden xsDown>
                   <TextField
                     defaultValue={this.state.weights[type]}
@@ -965,11 +1042,16 @@ class EditAssessment extends Component {
                     onChange={(e) => { this.handleWeight(e, type) }}
                     error={showError}
                     helperText={showError ? "Periksa Kembali!" : null}
+                    FormHelperTextProps={{
+                      style: {
+                        margin: "0px"
+                      }
+                    }}
                     InputProps={{
                       style: {
-                        width: "150px"
+                        width: "100px",
                       },
-                      endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
+                      endAdornment: <Typography color="textSecondary" >{` Poin`}</Typography>
                     }}
                   />
                 </Hidden>
@@ -989,49 +1071,73 @@ class EditAssessment extends Component {
                     }}
                     InputProps={{
                       style: {
-                        width: "110px"
+                        height: "34px",
+                        width: "85px",
                       },
-                      endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
+                      endAdornment: <Typography color="textSecondary" style={{ fontSize: "0.8rem" }}>{` Poin`}</Typography>
+                    }}
+                    inputProps={{
+                      style: {
+                        fontSize: "0.8rem",
+
+                        // ini dapet dari dev console inline style elemen input pada Textfield
+                        // kalau ini ga disertakan, isi input akan jadi aneh 
+                        borderBottom: "none",
+                        boxShadow: "white 0px 0px 0px 1000px inset",
+                        margin: "0px 15px"
+                      },
                     }}
                   />
                 </Hidden>
-
               </Grid>
             ) : (
-              <Grid item style={{ height: "65px" }}>
-                <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
-                </LightTooltip>
+              <Grid item >
+                <Hidden xsDown>
+                  <Grid item style={{ display: "flex", width: "100px", height: "42px" }} justify="center" alignItems="center">
+                    <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
+                      <IconButton>
+                        <InfoIcon />
+                      </IconButton>
+                    </LightTooltip>
+                  </Grid>
+                </Hidden>
+                <Hidden smUp>
+                    <Grid item style={{ display: "flex", width: "85px", height: "34px" }} justify="center" alignItems="center">
+                    <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
+                      <IconButton>
+                        <InfoIcon />
+                      </IconButton>
+                    </LightTooltip>
+                  </Grid>
+                </Hidden>
               </Grid>
             )}
           </Grid>
         );
-      }
-      gridMobileView = (
-        <Grid container style={{ padding: "20px 10px" }} justify="center">
-          <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-            {gridItemMobileView[0]}
-            <Divider orientation="vertical" flexItem />
-            {gridItemMobileView[1]}
-          </Grid>
-          <Grid item xs={12} style={{ margin: "10px 0px" }}>
-            <Divider />
-          </Grid>
-          <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-            {gridItemMobileView[2]}
-            <Divider orientation="vertical" flexItem />
-            {gridItemMobileView[3]}
-          </Grid>
-        </Grid>
-      );
+      
+      // gridMobileView = (
+      //   <Grid container style={{ padding: "20px 10px" }} justify="center">
+      //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
+      //       {gridItemMobileView[0]}
+      //       <Divider orientation="vertical" flexItem />
+      //       {gridItemMobileView[1]}
+      //     </Grid>
+      //     <Grid item xs={12} style={{ margin: "10px 0px" }}>
+      //       <Divider />
+      //     </Grid>
+      //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
+      //       {gridItemMobileView[2]}
+      //       <Divider orientation="vertical" flexItem />
+      //       {gridItemMobileView[3]}
+      //     </Grid>
+      //   </Grid>
+      // );
 
       // desktop view
-      for (let pair of filteredtypeCount) {
-        let type = pair[0];
-        let weight = this.state.weights[type];
-        let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
+      // for (let pair of filteredtypeCount) {
+      //   let type = pair[0];
+      //   let weight = this.state.weights[type];
+      //   let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
         columnsDesktopView.push(
           //  item xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
           <Grid container item xs={12 / filteredtypeCount.length} spacing="1" direction="column" justify="space-between" alignItems="center">
@@ -1058,16 +1164,21 @@ class EditAssessment extends Component {
                   onChange={(e) => { this.handleWeight(e, type) }}
                   error={showError}
                   helperText={showError ? "Periksa Kembali!" : null}
+                  FormHelperTextProps={{
+                    style: {
+                      margin: "0px"
+                    }
+                  }}
                   InputProps={{
                     style: {
-                      width: "150px"
+                      width: "100px"
                     },
                     endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
                   }}
                 />
               </Grid>
             ) : (
-              <Grid item style={{ height: "65px" }}>
+                <Grid item style={{ height: "65px" }}>
                 <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
                   <IconButton>
                     <InfoIcon />
@@ -1082,6 +1193,9 @@ class EditAssessment extends Component {
           columnsDesktopView.push(
             <Divider orientation="vertical" flexItem />
           );
+          gridItemMobileView.push(
+            <Divider className={classes.customMargin}/>
+          );
         }
         c++;
       }
@@ -1093,7 +1207,10 @@ class EditAssessment extends Component {
             </Grid>
           </Hidden>
           <Hidden mdUp>
-            {gridMobileView}
+            {/* {gridMobileView} */}
+            <Grid container style={{ padding: "20px"}} wrap="nowrap" direction="column">
+              {gridItemMobileView}
+            </Grid>
           </Hidden>
         </Paper>
       );
@@ -1356,20 +1473,20 @@ class EditAssessment extends Component {
             </Grid>
 
             <Grid item>
-              {(this.state.ready) ? this.weightInput() : null}
+              {(this.state.ready) ? this.weightInput(classes) : null}
             </Grid>
 
             {this.listQuestion()}
             <Grid item container justify="center">
               <Grid item>
-                <LightTooltip title="Tambah soal pilihan ganda (dengan satu pilihan)">
+                <LightTooltip title="Tambah soal pilihan ganda">
                   <IconButton className={`${classes.addQuestionButton} ${classes.RadioQst}`} onClick={() => this.handleCloseMenuTambah("radio")}>
                     <RadioButtonChecked />
                   </IconButton>
                 </LightTooltip>
               </Grid>
               <Grid item>
-                <LightTooltip title="Tambah soal pilihan ganda (dengan banyak pilihan)">
+                <LightTooltip title="Tambah soal kotak centang">
                   <IconButton className={`${classes.addQuestionButton} ${classes.CheckboxQst}`} onClick={() => this.handleCloseMenuTambah("checkbox")}>
                     <CheckBox />
                   </IconButton>

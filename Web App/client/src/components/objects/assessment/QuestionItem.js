@@ -270,7 +270,7 @@ function QuestionItem(props){
             <Grid item>
                 {(type === "radio") ? (
                 <FormControl component="fieldset" id="answer" fullWidth>
-                  <RadioGroup value={answer[0].toUpperCase()} id="answer" onChange={(e) => handleChangeQuestion(e, index, null,"answer", "radio")}>
+                  <RadioGroup value={(answer && answer.length !== 0) ? answer[0].toUpperCase() : null} id="answer" onChange={(e) => handleChangeQuestion(e, index, null,"answer", "radio")}>
                     {list_options.map((option, i) =>
                       <div style={{display: "flex"}}>
                         <FormControlLabel
@@ -345,7 +345,7 @@ function QuestionItem(props){
                       fullWidth
                       variant="outlined"
                       // defaultValue={longtextAnswer}
-                      defaultValue={answer[0]}
+                      defaultValue={(answer && answer.length !== 0) ? answer[0] : null}
                       onBlur={() => { handleChangeQuestion(longtextAnswer, index, null, "answer", "longtext") }}
                       onChange={(e) => { setLongtextAnswer(e.target.value)} }
                     />
@@ -406,7 +406,7 @@ function QuestionItem(props){
             <Grid item style={{ marginRight: "20px" }}>
               <Typography color="primary">Bobot: </Typography>
             </Grid>
-              <Grid item style={{ height: "3rem" }}>
+            <Grid item style={{ height: "3rem" }}>
               <TextField
                 value={longtextValue}
                 onChange={(e) => { handleLongtextWeight(e, index); }}
@@ -423,7 +423,7 @@ function QuestionItem(props){
                   style: {
                     borderBottom: "none",
                     boxShadow: "none",
-                    width: "110px"
+                    width: "100px"
                   },
                   endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
                 }}

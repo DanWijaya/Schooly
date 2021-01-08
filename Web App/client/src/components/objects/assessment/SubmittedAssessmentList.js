@@ -477,26 +477,26 @@ function SubmittedAssessmentList(props) {
       const columnTemplate = {
         radio: {
           root: classes.RadioQst,
-          text1: (<b>Pilihan Ganda <br />(Satu Jawaban)</b>),
-          text2: (<b>Pilihan Ganda (Satu Jawaban)</b>),
+          text1: (<b>Pilihan Ganda</b>),
+          // text2: (<b>Pilihan Ganda</b>),
           icon: (<RadioButtonChecked />)
         },
         checkbox: {
           root: classes.CheckboxQst,
-          text1: (<b>Pilihan Ganda <br />(Banyak Jawaban)</b>),
-          text2: (<b>Pilihan Ganda (Banyak Jawaban)</b>),
+          text1: (<b>Kotak Centang</b>),
+          // text2: (<b>Kotak Centang</b>),
           icon: (<CheckBox />)
         },
         shorttext: {
           root: classes.ShorttextQst,
           text1: (<b>Isian Pendek</b>),
-          text2: (<b>Isian Pendek</b>),
+          // text2: (<b>Isian Pendek</b>),
           icon: (<TextFormat />)
         },
         longtext: {
           root: classes.LongtextQst,
           text1: (<b>Uraian</b>),
-          text2: (<b>Uraian</b>),
+          // text2: (<b>Uraian</b>),
           icon: (<Subject />)
         }
       }
@@ -641,11 +641,12 @@ function SubmittedAssessmentList(props) {
                   </Grid>
                   <Grid item style={{ display: "flex", flexDirection: "column", flexGrow: "1" }} justify="center">
                     <Typography align="left" className={classes.mobileCustomFontSize400Down}>
-                      {columnTemplate[type].text2}
+                      {/* {columnTemplate[type].text2} */}
+                      {columnTemplate[type].text1}
                     </Typography>
                   </Grid>
                   <Grid item style={{ display: "flex", flexDirection: "column" }} justify="center">
-                    <Typography>
+                    <Typography className={classes.mobileCustomFontSize400Down}>
                       {(type === "longtext") ? (
                         (isAllEssayGraded) ? (
                           `${scores[type].totalpoint}/${scores[type].totalweight}`
@@ -658,19 +659,19 @@ function SubmittedAssessmentList(props) {
                     </Typography>
                   </Grid>
                 </Grid>
+              );
+              // jika elemen ini bukan elemen terakhir pada set type, tambahkan divider
+              if (c + 1 < types.size) {
+                columns1.push(
+                  <Divider orientation="vertical" flexItem />
                 );
-                // jika elemen ini bukan elemen terakhir pada set type, tambahkan divider
-                if (c + 1 < types.size) {
-                  columns1.push(
-                    <Divider orientation="vertical" flexItem />
-                  );
-                  columns2.push(
-                    <Divider />
-                  )
-                }
-                c++;
+                columns2.push(
+                  <Divider />
+                )
               }
-            } else {
+              c++;
+            }
+          } else {
             columns1.push(<Typography variant="h5" color="textSecondary">Belum mengerjakan</Typography>)
           }
 
