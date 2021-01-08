@@ -3,32 +3,15 @@ import axios from "axios";
 
 // TESTING DENGAN S3
 
-export const getAllS3 = () => dispatch => {
-    axios.get("/api/files/material/")
-    .then(res => {
-        dispatch({
-            // Hanya coba dengan GET_ALL_MATERIALS type. 
-            type: GET_MATERIAL_FILES,
-            payload: res.data
-        })
-    })
-    .catch(err => {
-        return new Error("Error in getting S3 files")
-    })
-}
-
 export const uploadFileMaterials = (id, formData) => {
     return axios.post(`/api/files/material/upload/${id}`, formData)
 }
 
 export const getFileMaterials = (id) => dispatch => {
-    axios.get(`/api/files/material/by_material/${id}`)
+    return axios.get(`/api/files/material/by_material/${id}`)
         .then((res) => {
             console.log("Materialnya: ", res.data)
-            dispatch({
-                type: GET_MATERIAL_FILES,
-                payload: res.data
-            })
+            return res.data
         })
         .catch(err => new Error(err))
 }

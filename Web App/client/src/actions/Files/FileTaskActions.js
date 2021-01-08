@@ -1,26 +1,5 @@
 import axios from "axios";
 import { GET_ERRORS, GET_SUCCESS_RESPONSE } from "../Types";
-// TESTING DENGAN S3
-
-export const getAllS3 = () => dispatch => {
-    return (axios.get("/api/files/tasks/")
-        .then((res) => {
-            return res.data
-            // dispatch({
-            //     // Hanya coba dengan GET_ALL_Tasks type. 
-            //     type: GET_MATERIAL_FILES,
-            //     payload: res.data
-            // })
-        })
-        .catch(err => {
-            dispatch({
-                type: GET_ERRORS,
-                payload: err
-              })
-            return new Error("Error in getting S3 files")
-        })
-    )
-}
 
 export const uploadFileTasks = (formData, task_id, author_id) => dispatch => {
     axios
@@ -39,10 +18,6 @@ export const getFileTasks = (task_id) => dispatch => {
         .then((res) => {
             console.log("Tasknya: ", res.data)
             return res.data
-            // dispatch({
-            //     type: GET_MATERIAL_FILES,
-            //     payload: res.data
-            // })
         })
         .catch(err => {
             dispatch({
@@ -75,7 +50,6 @@ export const viewFileTasks = (id) => dispatch => {
             return res.data
         })
         .catch((err) => new Error(err))
-    // window.open(`http://${window.location.hostname}:5000/api/files/file_tasks/${id}`)
 }
 
 export const deleteFileTasks = (id, delete_all=false) => dispatch => {

@@ -185,7 +185,9 @@ class EditAnnouncement extends Component {
 
     getOneAnnouncement(id)
     getAllClass()
-    getFileAnnouncements(id)
+    getFileAnnouncements(id).then((result) => {
+      this.setState({ fileLampiran : result})
+    })
     if (user.role ==="Student")
       setCurrentClass(user.kelas)
   }
@@ -199,7 +201,6 @@ class EditAnnouncement extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Tasks props is received");
     const { selectedAnnouncements } = nextProps.announcements;
-    const { announcement_files } = nextProps.announcementFiles;
 
     // console.log(nextProps.tasksCollection.deadline);
 
@@ -211,33 +212,17 @@ class EditAnnouncement extends Component {
       this.setState({
           title: selectedAnnouncements.title,
           description: selectedAnnouncements.description,
-          fileLampiran: announcement_files,
           // fileLampiran: Boolean(selectedAnnouncements.lampiran) ? selectedAnnouncements.lampiran : [],
           class_assigned: Boolean(selectedAnnouncements.class_assigned) ? selectedAnnouncements.class_assigned : []
-          // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
           // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
       })
     }
   }
 
-  // componentDidUpdate(prevProps, prevState){
-  //   const { selectedAnnouncements } = this.props.announcements
-  //   console.log(selectedAnnouncements)
-  //   if(!this.props.errors && !this.state.openUploadDialog){
-  //     this.setState({ openUploadDialog: true })
-  //   } else {
-  //     this.setState({
-  //       title: selectedAnnouncements.title,
-  //       description: selectedAnnouncements.description,
-  //       fileLampiran: selectedAnnouncements.lampiran ? selectedAnnouncements.lampiran : [],
-  //       class_assigned: selectedAnnouncements.class_assigned ? selectedAnnouncements.class_assigned : []
-  //     })
-  //   }
-  // }
+
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    console.log(this.state.fileLampiran)
     let temp;
     let tempToAdd;
 
@@ -574,16 +559,6 @@ EditAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
-  getAnnouncement: PropTypes.func.isRequired,
-  getAllAnnouncements: PropTypes.func.isRequired,
-  getOneAnnouncement: PropTypes.func.isRequired,
-  updateAnnouncement: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
-
-  getFileAnnouncements: PropTypes.func.isRequired 
 };
 
 const mapStateToProps = state => ({
@@ -592,7 +567,6 @@ const mapStateToProps = state => ({
   success: state.success,
   announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
-  announcementFiles: state.announcementFiles
 })
 
 export default connect(

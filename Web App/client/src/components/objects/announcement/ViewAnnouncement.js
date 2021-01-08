@@ -178,9 +178,10 @@ function ViewAnnouncement(props) {
   const classes = useStyles();
   const { selectedAnnouncements } = props.announcements;
   const { getUsers, classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, getSelectedClasses, getFileAnnouncements,viewFileAnnouncement, downloadFileAnnouncements } = props;
-  const { announcement_files, all_announcement_files } = props.announcementFiles
   const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [fileLampiran, setFileLampiran] = React.useState([]);
+
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
@@ -189,12 +190,12 @@ function ViewAnnouncement(props) {
     if (selectedAnnouncements._id) {
       getUsers([selectedAnnouncements.author_id])
     }
-    getFileAnnouncements(announcement_id)
+    getFileAnnouncements(announcement_id).then((result) => {
+      setFileLampiran(result)
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]) // beacause only receive one announcement.
 
-  console.log(props.announcementFiles)
-  console.log(announcement_files)
   const fileType = (filename) => {
     let ext_file = path.extname(filename)
     switch(ext_file) {
@@ -248,7 +249,6 @@ function ViewAnnouncement(props) {
       console.log("File Category is not specified")
   }
 
-  console.log(retrieved_users)
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -305,7 +305,7 @@ function ViewAnnouncement(props) {
             </Typography>
             <Grid item container spacing={1}>
               {
-                announcement_files.map((lampiran) => 
+                fileLampiran.map((lampiran) => 
                 (
                   <LampiranFile
                     file_id={lampiran._id}
@@ -314,17 +314,6 @@ function ViewAnnouncement(props) {
                     filename={lampiran.filename}
                     filetype={fileType(lampiran.filename)}
                     />))}
-              {/* {!selectedAnnouncements.lampiran ? null
-              :
-              selectedAnnouncements.lampiran.map((lampiran) => (
-                <LampiranFile
-                  file_id={lampiran.id}
-                  onPreviewFile={onPreviewFile}
-                  onDownloadFile ={onDownloadFile}
-                  filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}
-                />
-              ))} */}
             </Grid>
           </Grid>
         </Grid>
@@ -354,23 +343,12 @@ ViewAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
-  getOneAnnouncement: PropTypes.func.isRequired,
-  deleteAnnouncement: PropTypes.func.isRequired,
-  downloadLampiranAnnouncement: PropTypes.func.isRequired,
-  previewLampiranAnnouncement: PropTypes.func.isRequired,
-  getSelectedClasses: PropTypes.func.isRequired,
-  getUsers: PropTypes.func.isRequired,
-
-  viewFileAnnouncement: PropTypes.func.isRequired,
-  downloadFileAnnouncements: PropTypes.func.isRequired,
-  getFileAnnouncements: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   classesCollection: state.classesCollection,
   announcements: state.announcementsCollection,
-  announcementFiles: state.announcementFiles
 });
 
 export default connect(

@@ -16,7 +16,8 @@ export const createMaterial = (formData, materialData, history) => dispatch => {
           })
           if (formData.has('lampiran_materi')) {
               console.log("Post lampiran material is running")
-              return axios.post(`/api/upload/att_material/lampiran/${res.data._id}`, formData);
+              return axios.post(`/api/files/material/upload/${res.data._id}`, formData);
+            //   return axios.post(`/api/upload/att_material/lampiran/${res.data._id}`, formData);
           }
           else { // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
               return "Successfully created material with no lampiran"
@@ -140,11 +141,10 @@ export const deleteMaterial = (materialId, history) => dispatch => {
 
 export const updateMaterial = (formData, lampiran_to_delete, current_lampiran, materialData, materialId, history) => dispatch => {
     // formData is the lampiran files
-console.log("Update material is runned")
   axios
     .post(`/api/materials/update/${materialId}`, materialData)
     .then(res => {
-        console.log("Task updated to be :", res.data);
+        console.log("Material updated to be :", res.data);
         console.log("Has lampiran? :", formData.has('lampiran_materi'))
         dispatch({
             type: GET_ERRORS,
@@ -162,7 +162,7 @@ console.log("Update material is runned")
         console.log(formData.has("lampiran_materi"), formData.getAll("lampiran_materi"))
         if (formData.has('lampiran_materi')) {
             console.log("Lampiran material going to be uploaded")
-            return axios.post(`/api/files/material/${materialId}`, formData);
+            return axios.post(`/api/files/material/upload/${materialId}`, formData);
         }
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"

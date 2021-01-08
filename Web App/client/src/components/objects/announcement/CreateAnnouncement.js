@@ -482,10 +482,6 @@ CreateAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  createAnnouncement: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  clearSuccess: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

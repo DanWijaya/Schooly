@@ -6,13 +6,14 @@ export const uploadFileAnnouncements = (id, formData) => {
 }
 
 export const getFileAnnouncements = (id) => dispatch => {
-    axios.get(`/api/files/announcement/by_announcement/${id}`)
+   return axios.get(`/api/files/announcement/by_announcement/${id}`)
         .then((res) => {
             console.log("Announcement nya: ", res.data)
-            dispatch({
-                type: GET_ANNOUNCEMENT_FILES,
-                payload: res.data
-            })
+            return res.data
+            // dispatch({
+            //     type: GET_ANNOUNCEMENT_FILES,
+            //     payload: res.data
+            // })
         })
         .catch(err => new Error(err))
 }

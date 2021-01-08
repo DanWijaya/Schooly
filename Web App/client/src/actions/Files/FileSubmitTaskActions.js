@@ -1,26 +1,5 @@
 import axios from "axios";
 import { GET_ERRORS, GET_SUCCESS_RESPONSE } from "../Types";
-// TESTING DENGAN S3
-
-export const getAllS3 = () => dispatch => {
-    return (axios.get("/api/files/submit_tasks/")
-        .then((res) => {
-            return res.data
-            // dispatch({
-            //     // Hanya coba dengan GET_ALL_SubmitTasks type. 
-            //     type: GET_MATERIAL_FILES,
-            //     payload: res.data
-            // })
-        })
-        .catch(err => {
-            dispatch({
-                type: GET_ERRORS,
-                payload: err
-              })
-            return new Error("Error in getting S3 files")
-        })
-    )
-}
 
 export const uploadFileSubmitTasks = (formData, task_id, author_id) => dispatch => {
     console.log("uploadFileSubmitTasks di run")

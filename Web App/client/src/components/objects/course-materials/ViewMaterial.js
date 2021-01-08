@@ -196,19 +196,23 @@ function ViewMaterial(props) {
   const { deleteMaterial, getOneUser, getAllSubjects, viewFileMaterial,
     downloadFileMaterial, getOneMaterial, getAllClass, getFileMaterials } = props;
   const { selectedMaterials, all_materials } = props.materialsCollection;
-  const { material_files } = props.materialsFiles
   const { all_classes_map } = props.classesCollection;
   const materi_id = props.match.params.id
   const { all_subjects_map} = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-
+  const [fileLampiran, setFileLampiran] = React.useState([])
+  
+  console.log(props.materialsFiles)
   React.useEffect(() => {
     getAllSubjects("map") // this will get the selectedMaterials.
     getOneMaterial(materi_id)
     getAllClass("map")
     getOneUser(selectedMaterials.author_id)
     // COba S3
-    getFileMaterials(materi_id) // bakal ngedapat collection of S3 files di 
+    getFileMaterials(materi_id).then((result) => {
+      setFileLampiran(result)
+    })
+     // bakal ngedapat collection of S3 files di 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMaterials.author_id])
 
@@ -237,7 +241,6 @@ function ViewMaterial(props) {
 
   const onDeleteTask = (id) => {
     deleteMaterial(id)
-    // console.log(material_files)
     // setFileMateri(null)
   }
 
@@ -251,7 +254,6 @@ function ViewMaterial(props) {
   };
 
   document.title = !selectedMaterials.name ? "Schooly | Lihat Materi" : `Schooly | ${selectedMaterials.name}`
-  console.log("Ini all materials:", all_materials)
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -310,7 +312,7 @@ function ViewMaterial(props) {
               Lampiran Materi:
             </Typography>
             <Grid container spacing={1}>
-            {material_files.map((lampiran) => 
+            {fileLampiran.map((lampiran) => 
             ( <LampiranFile
                 file_id={lampiran._id}
                 onPreviewFile ={viewFileMaterial}

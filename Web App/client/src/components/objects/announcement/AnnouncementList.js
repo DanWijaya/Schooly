@@ -190,9 +190,6 @@ AnnouncementList.propTypes = {
   auth: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
   getAnnouncement: PropTypes.func.isRequired,
-  getAllAnnouncements: PropTypes.func.isRequired,
-  setCurrentClass: PropTypes.func.isRequired,
-  getUsers: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
