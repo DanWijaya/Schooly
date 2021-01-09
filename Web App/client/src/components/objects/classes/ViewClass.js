@@ -14,7 +14,7 @@ import { getAllAssessments } from "../../../actions/AssessmentActions";
 import viewClassPicture from "./ViewClassPicture.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Box, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, Hidden, IconButton, Paper,
-   List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography, Dialog } from "@material-ui/core";
+   List, ListItem, ListItemAvatar, ListItemText, Tabs, Tab, Typography, Dialog, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 // import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
@@ -26,6 +26,9 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
+import ErrorIcon from '@material-ui/icons/Error';
+import WarningIcon from '@material-ui/icons/Warning';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,9 +59,15 @@ const useStyles = makeStyles((theme) => ({
   },
   expansionPanelList: {
     margin: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch"
   },
   listItemPaper: {
     marginBottom: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch"
   },
   listItem: {
     minHeight: "70px",
@@ -93,6 +102,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
     marginRight: "5px",
     fontSize: "20px"
+  },
+  errorIcon: {
+    color: theme.palette.error.main,
+  },
+  warningIcon: {
+    color: theme.palette.warning.main
+  },
+  checkIcon: {
+    color: theme.palette.success.main
   }
 }));
 
@@ -134,6 +152,20 @@ function AssignmentListItem(props) {
       <Hidden smUp implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
+          <Badge
+          style={{display: "flex", flexDirection: "row"}}
+          badgeContent={
+            (props.work_status === "Belum Dikumpulkan") ? (
+              <ErrorIcon className={classes.errorIcon}/>
+            ) : (
+              <CheckCircleIcon className={classes.checkIcon}/>
+            )
+          }
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+        >
             <ListItem button className={classes.listItem}>
               <Grid container alignItems="center">
                 <Grid item xs={7}>
@@ -150,25 +182,35 @@ function AssignmentListItem(props) {
                   <ListItemText
                     align="right"
                     primary={
-                      <Typography variant="body2" className={classes.warningText}>
+                      <Typography variant="body2" color="textSecondary">
                         Batas Waktu: <br /> {props.work_deadline}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography variant="caption">
-                        {props.work_status}
                       </Typography>
                     }
                   />
                 </Grid>
               </Grid>
             </ListItem>
+            </Badge>
           </Paper>
         </Link>
       </Hidden>
       <Hidden xsDown implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
+          <Badge
+          style={{display: "flex", flexDirection: "row"}}
+          badgeContent={
+            (props.work_status === "Belum Dikumpulkan") ? (
+              <ErrorIcon className={classes.errorIcon}/>
+            ) : (
+              <CheckCircleIcon className={classes.checkIcon}/>
+            )
+          }
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+        >
             <ListItem button className={classes.listItem}>
               <ListItemAvatar>
                 {props.work_category_avatar}
@@ -184,13 +226,13 @@ function AssignmentListItem(props) {
               <ListItemText
                 align="right"
                 primary={
-                  <Typography variant="body2" className={classes.warningText}>
+                  <Typography variant="body2" color="textSecondary">
                     Batas Waktu: {props.work_deadline}
                   </Typography>
                 }
-                secondary={props.work_status}
               />
             </ListItem>
+            </Badge>
           </Paper>
         </Link>
       </Hidden>
@@ -218,58 +260,85 @@ function AssessmentListItem(props) {
   return (
     <div>
       <Hidden smUp implementation="css">
-        <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-          <ListItem button className={classes.listItem}>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
+          <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
+          <Badge
+          style={{display: "flex", flexDirection: "row"}}
+          badgeContent={
+            (props.work_status === "Belum Ditempuh") ? (
+              <WarningIcon className={classes.warningIcon}/>
+            ) : (
+              null
+            )
+          }
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+        >
+            <ListItem button className={classes.listItem}>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
 
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Mulai: <br /> {props.work_starttime}
-                </Typography>
-              }
-              secondary={
-                <Typography variant="caption">
-                  {props.work_status}
-                </Typography>
-              }
-            />
-          </ListItem>
-        </Paper>
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    Mulai: <br /> {props.work_starttime}
+                  </Typography>
+                }
+              />
+            </ListItem>
+            </Badge>
+          </Paper>
       </Hidden>
       <Hidden xsDown implementation="css">
-        <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-          <ListItem button className={classes.listItem}>
-            <ListItemAvatar>
-              {props.work_category_avatar}
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Mulai: {props.work_starttime}
-                </Typography>
-              }
-              secondary={props.work_status}
-            />
-          </ListItem>
-        </Paper>
+        <>
+      
+          <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
+          <Badge
+          badgeContent={
+            (props.work_status === "Belum Ditempuh") ? (
+              <WarningIcon className={classes.warningIcon}/>
+            ) : (
+              null
+            )
+          }
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+        >
+            <ListItem button className={classes.listItem}>
+              <ListItemAvatar>
+                {props.work_category_avatar}
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    Mulai: {props.work_starttime}
+                  </Typography>
+                }
+              />
+            </ListItem>
+            </Badge>
+          </Paper>
+        
+        </>
       </Hidden>
       <Dialog
         fullScreen={false}
@@ -283,7 +352,7 @@ function AssessmentListItem(props) {
             <Typography variant="h5" align="center" color="primary">
               {currentDialogInfo.subject}
             </Typography>
-            <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
+            <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}} color="textSecondary">Mulai : {currentDialogInfo.start_date}</Typography>
             <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
             <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
               Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
@@ -604,6 +673,7 @@ function ViewClass(props) {
       )
       for (var i = selectedMaterials.length-1; i >= 0; i--){
         let material = selectedMaterials[i]
+        console.log(material)
         if(!category || (category === "subject" && material.subject === subject._id)){
           materialList.push(
             <MaterialListitem

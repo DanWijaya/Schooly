@@ -146,7 +146,7 @@ function TaskListItem(props) {
             <ListItemText
               align="right"
               primary={
-                <Typography variant="body2" className={classes.warningText}>
+                <Typography variant="body2" color="textSecondary">
                   Tenggat: {props.work_deadline_desktop}
                 </Typography>
               }
@@ -197,7 +197,7 @@ function ListAssessments(props){
             <ListItemText
               align="right"
               primary={
-                <Typography variant="body2" className={classes.warningText}>
+                <Typography variant="body2" color="textSecondary">
                   Mulai: {props.work_starttime}
                 </Typography>
               }
@@ -245,6 +245,7 @@ function ListAssessments(props){
 
     for (i = 0; i < AssessmentsList.length; i++){
       let assessment = AssessmentsList[i]
+      console.log(assessment)
       let workCategoryAvatar = (
         <Avatar className={classes.assignmentLate}>
           <AssignmentLateIcon/>
@@ -384,6 +385,7 @@ class Dashboard extends Component {
             break;
           }
         }
+        console.log(task)
         if(!all_subjects_map.get(task.subject)){
           flag = false
         }
@@ -472,7 +474,7 @@ class Dashboard extends Component {
                         <Grid item>
                           <Grid container alignItems="center">
                             <AssignmentIcon
-                              style={{marginRight: "10px", fontSize: "21.5px", color: "grey"}}
+                              style={{marginRight: "10px", fontSize: "22px", color: "grey"}}
                             />
                             <Typography variant="h5" color="primary">
                               Tugas Anda
@@ -536,7 +538,7 @@ class Dashboard extends Component {
                         <Grid item>
                           <Grid container alignItems="center">
                             <BsClipboardData
-                              style={{marginRight: "10px", fontSize: "20px", color: "grey"}}
+                              style={{marginRight: "10px", fontSize: "22px", color: "grey"}}
                             />
                             <Typography variant="h5" color="primary">
                               Ujian Yang Akan Datang

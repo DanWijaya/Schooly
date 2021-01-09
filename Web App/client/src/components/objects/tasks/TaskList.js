@@ -620,7 +620,7 @@ function TaskList(props) {
                         </Typography>
                       </Grid>
                       <Grid item xs={12}>
-                        <Typography variant="body1" className={classes.deadlineWarningText}>
+                        <Typography variant="body1" color="textSecondary">
                           Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
@@ -644,15 +644,15 @@ function TaskList(props) {
                   </div>
                   <div>
                     <Hidden smUp implementation="css">
-                      <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
+                      <Typography variant="body2" align="right" color="textSecondary">
                         Batas Waktu:
                       </Typography>
-                      <Typography variant="caption" align="right" className={classes.deadlineWarningText}>
+                      <Typography variant="caption" align="right" color="textSecondary">
                         {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                       </Typography>
                     </Hidden>
                     <Hidden xsDown implementation="css">
-                      <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
+                      <Typography variant="body2" align="right" color="textSecondary">
                         Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                       </Typography>
                     </Hidden>

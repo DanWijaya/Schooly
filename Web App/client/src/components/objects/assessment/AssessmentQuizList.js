@@ -758,15 +758,15 @@ function AssessmentList(props) {
                     </div>
                     <div>
                       <Hidden smUp implementation="css">
-                        <Typography variant="body2" align="right" className={classes.endDateWarningText}>
+                        <Typography variant="body2" align="right" color="textSecondary">
                           Batas Waktu:
                         </Typography>
-                        <Typography variant="caption" align="right" className={classes.endDateWarningText}>
+                        <Typography variant="caption" align="right" color="textSecondary">
                           {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Hidden>
                       <Hidden xsDown implementation="css">
-                        <Typography variant="body2" align="right" className={classes.endDateWarningText}>
+                        <Typography variant="body2" align="right" color="textSecondary">
                           Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Hidden>
