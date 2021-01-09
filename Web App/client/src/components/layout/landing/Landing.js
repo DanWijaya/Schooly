@@ -127,7 +127,7 @@ class Landing extends Component {
   componentWillUnmount(){
     this.props.handleMarginTopValue(20);
   }
-  
+
   copyToClipboard(text) {
     var dummy = document.createElement("textarea");
     // To avoid breaking orgain page when copying more words
@@ -144,7 +144,7 @@ class Landing extends Component {
   render() {
     const { classes } = this.props;
 
-    document.title = "Schooly | Sistem Persekolahan Terbaik di Indonesia";
+    document.title = "Schooly | Sistem Manajamen Persekolahan";
 
     return (
     <div className={classes.root}>
