@@ -14,7 +14,7 @@ import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
 import dashboardAdminBackground from "./DashboardAdminBackground.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Fab, Grid, IconButton, Hidden, ListItemIcon, ListItemText, Menu, MenuItem,
-  Paper, Typography, ListItem, ListItemAvatar, Dialog, Avatar } from "@material-ui/core";
+  Paper, Typography, ListItem, ListItemAvatar, Dialog, Avatar, Badge } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -26,6 +26,9 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
+import ErrorIcon from '@material-ui/icons/Error';
+import WarningIcon from '@material-ui/icons/Warning';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const styles = (theme) => ({
   root: {
@@ -122,6 +125,15 @@ const styles = (theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
   },
+  errorIcon: {
+    color: theme.palette.error.main,
+  },
+  warningIcon: {
+    color: theme.palette.warning.main
+  },
+  checkIcon: {
+    color: theme.palette.success.main
+  }
 });
 
 function TaskListItem(props) {
@@ -131,36 +143,38 @@ function TaskListItem(props) {
     <Grid item>
       <Link to={props.work_link}>
         <Paper variant="outlined" button className={classes.listItemPaper}>
-          <ListItem button className={classes.listItem}>
-            <Hidden xsDown>
-              <ListItemAvatar>
-                <Avatar className={classes.assignmentLate}>
-                  <AssignmentLateIcon/>
-                </Avatar>
-              </ListItemAvatar>
-            </Hidden>
-            <ListItemText
-              primary={props.work_title}
-              secondary={props.work_sender}
-            />
-            {/* <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" color="textSecondary">
-                  Tenggat: {props.work_deadline_desktop}
-                </Typography>
-              }
-            /> */}
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="subtitle" color="textSecondary">
-                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
-                </Typography>
-              }
-              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
-            />
-          </ListItem>
+          <Badge
+            style={{display: "flex", flexDirection: "row"}}
+            badgeContent={
+              <ErrorIcon className={classes.errorIcon}/>
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <Hidden xsDown>
+                <ListItemAvatar>
+                  <Avatar className={classes.assignmentLate}>
+                    <AssignmentLateIcon/>
+                  </Avatar>
+                </ListItemAvatar>
+              </Hidden>
+              <ListItemText
+                primary={props.work_title}
+                secondary={props.work_sender}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    Tenggat: {props.work_deadline_desktop}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Badge>
         </Paper>
       </Link>
     </Grid>
@@ -189,39 +203,45 @@ function ListAssessments(props){
     return (
       <div>
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-          <ListItem button className={classes.listItem}>
-            <Hidden xsDown>
-            <ListItemAvatar>
-              {props.work_category_avatar}
-            </ListItemAvatar>
-            </Hidden>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
-            {/* <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" color="textSecondary">
-                  Mulai: {props.work_starttime}
-                </Typography>
-              }
-              secondary={props.work_status}
-            /> */}
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="subtitle" color="textSecondary">
-                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
-                </Typography>
-              }
-              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
-            />
-          </ListItem>
+          <Badge
+            style={{display: "flex", flexDirection: "row"}}
+            badgeContent={
+              (props.work_status === "Belum Ditempuh") ? (
+                <WarningIcon className={classes.warningIcon}/>
+              ) : (
+                null
+              )
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <Hidden xsDown>
+              <ListItemAvatar>
+                {props.work_category_avatar}
+              </ListItemAvatar>
+              </Hidden>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+              />
+            </ListItem>
+          </Badge>
         </Paper>
         <Dialog
           fullScreen={false}
@@ -231,15 +251,15 @@ function ListAssessments(props){
           maxWidth="sm"
         >
           <div style={{padding: "20px"}}>
-              <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
-              <Typography variant="h5" align="center" color="primary">
-                {currentDialogInfo.subject}
-              </Typography>
-              <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
-              <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
-              <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
-                Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
-              </Typography>
+            <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
+            <Typography variant="h5" align="center" color="primary">
+              {currentDialogInfo.subject}
+            </Typography>
+            <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
+            <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
+            <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
+              Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
+            </Typography>
           </div>
         </Dialog>
       </div>

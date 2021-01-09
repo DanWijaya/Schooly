@@ -11,11 +11,14 @@ import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import { Avatar, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, List, 
-  ListItem, ListItemAvatar, ListItemText, Paper, Typography, Hidden, Dialog } from "@material-ui/core";
+  ListItem, ListItemAvatar, ListItemText, Paper, Typography, Hidden, Dialog, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import ErrorIcon from '@material-ui/icons/Error';
+import WarningIcon from '@material-ui/icons/Warning';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,6 +62,15 @@ const useStyles = makeStyles((theme) => ({
   },
   subtitleColor: {
     color: "rgba(255, 255, 255, 0.7)"
+  },
+  errorIcon: {
+    color: theme.palette.error.main,
+  },
+  warningIcon: {
+    color: theme.palette.warning.main
+  },
+  checkIcon: {
+    color: theme.palette.success.main
   }
 }));
 
@@ -179,88 +191,95 @@ function AssignmentListItem(props) {
       <Hidden smUp implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
-            <ListItem button className={classes.listItem}>
-              <Grid container alignItems="center">
-                <Grid item xs={7}>
-                  <ListItemText
-                    primary={
-                      <Typography variant="body1">
-                        {props.work_title}
-                      </Typography>
-                    }
-                    secondary={props.work_subject}
-                  />
+            <Badge
+              style={{display: "flex", flexDirection: "row"}}
+              badgeContent={
+                (props.work_status === "Belum Dikumpulkan") ? (
+                  <ErrorIcon className={classes.errorIcon}/>
+                ) : (
+                  <CheckCircleIcon className={classes.checkIcon}/>
+                )
+              }
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <ListItem button className={classes.listItem}>
+                <Grid container alignItems="center">
+                  <Grid item xs={7}>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1">
+                          {props.work_title}
+                        </Typography>
+                      }
+                      secondary={props.work_subject}
+                    />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Typography variant="subtitle" color="textSecondary">
+                          {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                        </Typography>
+                      }
+                      secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={5}>
-                  {/* <ListItemText
-                    align="right"
-                    primary={
-                      <Typography variant="body2" className={classes.warningText}>
-                        Batas Waktu: <br /> {props.work_deadline}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography variant="caption">
-                        {props.work_status}
-                      </Typography>
-                    }
-                  /> */}
-                  <ListItemText
-                    align="right"
-                    primary={
-                      <Typography variant="subtitle" color="textSecondary">
-                        {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
-                      </Typography>
-                    }
-                    secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
-                  />
-                </Grid>
-              </Grid>
-            </ListItem>
+              </ListItem>
+            </Badge>
           </Paper>
         </Link>
       </Hidden>
       <Hidden xsDown implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
-            <ListItem button className={classes.listItem}>
-              <ListItemAvatar>
-                {props.work_category_avatar}
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">
-                    {props.work_title}
-                  </Typography>
-                }
-                secondary={props.work_subject}
-              />
-              {/* <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" className={classes.warningText}>
-                    Batas Waktu: {props.work_deadline}
-                  </Typography>
-                }
-                secondary={props.work_status}
-              /> */}
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="subtitle" color="textSecondary">
-                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
-                  </Typography>
-                }
-                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
-              />
-            </ListItem>
+            <Badge
+              style={{display: "flex", flexDirection: "row"}}
+              badgeContent={
+                (props.work_status === "Belum Dikumpulkan") ? (
+                  <ErrorIcon className={classes.errorIcon}/>
+                ) : (
+                  <CheckCircleIcon className={classes.checkIcon}/>
+                )
+              }
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <ListItem button className={classes.listItem}>
+                <ListItemAvatar>
+                  {props.work_category_avatar}
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      {props.work_title}
+                    </Typography>
+                  }
+                  secondary={props.work_subject}
+                />
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="subtitle" color="textSecondary">
+                      {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                    </Typography>
+                  }
+                  secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                />
+              </ListItem>
+            </Badge>
           </Paper>
         </Link>
       </Hidden>
     </div>
   )
 }
-
 function AssessmentListItem(props) {
   const classes = useStyles()
 
@@ -282,74 +301,81 @@ function AssessmentListItem(props) {
     <div>
       <Hidden smUp implementation="css">
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-          <ListItem button className={classes.listItem}>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
-
-            {/* <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Mulai: <br /> {props.work_starttime}
-                </Typography>
-              }
-              secondary={
-                <Typography variant="caption">
-                  {props.work_status}
-                </Typography>
-              }
-            /> */}
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="subtitle" color="textSecondary">
-                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
-                </Typography>
-              }
-              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
-            />
-          </ListItem>
+          <Badge
+            style={{display: "flex", flexDirection: "row"}}
+            badgeContent={
+              (props.work_status === "Belum Ditempuh") ? (
+                <WarningIcon className={classes.warningIcon}/>
+              ) : (
+                null
+              )
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+              />
+            </ListItem>
+          </Badge>
         </Paper>
       </Hidden>
       <Hidden xsDown implementation="css">
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-          <ListItem button className={classes.listItem}>
-            <ListItemAvatar>
-              {props.work_category_avatar}
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
-            {/* <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Mulai: {props.work_starttime}
-                </Typography>
-              }
-              secondary={props.work_status}
-            /> */}
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="subtitle" color="textSecondary">
-                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
-                </Typography>
-              }
-              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
-            />
-          </ListItem>
+          <Badge
+            style={{display: "flex", flexDirection: "row"}}
+            badgeContent={
+              (props.work_status === "Belum Ditempuh") ? (
+                <WarningIcon className={classes.warningIcon}/>
+              ) : (
+                null
+              )
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <ListItemAvatar>
+                {props.work_category_avatar}
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+              />
+            </ListItem>
+          </Badge>
         </Paper>
       </Hidden>
       <Dialog
