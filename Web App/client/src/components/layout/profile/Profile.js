@@ -16,7 +16,6 @@ import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, L
   Paper, Snackbar, Typography, Button } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { fade } from "@material-ui/core/styles/colorManipulator";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
@@ -457,51 +456,54 @@ function Profile(props) {
               </List>
             </Paper>
           </Grid>
-          <Grid item>
-            <Paper className={classes.informationPaper}>
-              <Grid container justify="space-between">
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h4" gutterBottom>
-                    Karir
-                  </Typography>
-                  <Typography variant="subtitle1" color="textSecondary">
-                    Kami ke depannya juga berencana untuk membantu Anda menemukan
-                    jalur karir terbaik untuk Anda.
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <div className={classes.informationPictureContainer}>
-                    <img alt="Career" src={informationJob} className={classes.informationPicture} />
-                  </div>
-                </Grid>
+          {
+            (user.role==="Student") ? ( 
+              <Grid item>
+                <Paper className={classes.informationPaper}>
+                  <Grid container justify="space-between">
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="h4" gutterBottom>
+                        Karir
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        Kami ke depannya juga berencana untuk membantu Anda menemukan
+                        jalur karir terbaik untuk Anda.
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <div className={classes.informationPictureContainer}>
+                        <img alt="Career" src={informationJob} className={classes.informationPicture} />
+                      </div>
+                    </Grid>
+                  </Grid>
+                  <List>
+                    <ProfileDataItem
+                      profile_data_icon={<SportsEsportsIcon />}
+                      profile_data_category="Hobi dan Minat"
+                      profile_data_info={user.hobi_minat}
+                    />
+                    <Divider variant="inset" />
+                    <ProfileDataItem
+                      profile_data_icon={<ColorLensIcon />}
+                      profile_data_category="Keterampilan Non-Akademik"
+                      profile_data_info={user.ket_non_teknis}
+                    />
+                    <Divider variant="inset" />
+                    <ProfileDataItem
+                      profile_data_icon={<WorkIcon />}
+                      profile_data_category="Cita-Cita"
+                      profile_data_info={user.cita_cita}
+                    />
+                    <Divider variant="inset" />
+                    <ProfileDataItem
+                      profile_data_icon={<AccountBalanceIcon />}
+                      profile_data_category="Perguruan Tinggi Impian"
+                      profile_data_info={user.uni_impian}
+                    />
+                  </List>
+                </Paper>
               </Grid>
-              <List>
-                <ProfileDataItem
-                  profile_data_icon={<SportsEsportsIcon />}
-                  profile_data_category="Hobi dan Minat"
-                  profile_data_info={user.hobi_minat}
-                />
-                <Divider variant="inset" />
-                <ProfileDataItem
-                  profile_data_icon={<ColorLensIcon />}
-                  profile_data_category="Keterampilan Non-Akademik"
-                  profile_data_info={user.ket_non_teknis}
-                />
-                <Divider variant="inset" />
-                <ProfileDataItem
-                  profile_data_icon={<WorkIcon />}
-                  profile_data_category="Cita-Cita"
-                  profile_data_info={user.cita_cita}
-                />
-                <Divider variant="inset" />
-                <ProfileDataItem
-                  profile_data_icon={<AccountBalanceIcon />}
-                  profile_data_category="Perguruan Tinggi Impian"
-                  profile_data_info={user.uni_impian}
-                />
-              </List>
-            </Paper>
-          </Grid>
+          ) : null }
         </Grid>
       </Grid>
     </div>

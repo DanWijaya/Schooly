@@ -42,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.warning.main,
   },
   seeAllTaskButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   editTaskButton: {
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   downloadIconButton: {
@@ -275,7 +275,7 @@ console.log(all_classes_map)
           <Grid item xs={12} md={5}>
             <Hidden mdUp implementation="css">
               <Typography variant="body2" className={classes.deadlineWarningText} gutterBottom>
-                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Nilai Maksimum: 100
@@ -283,7 +283,7 @@ console.log(all_classes_map)
             </Hidden>
             <Hidden smDown implementation="css" style={{display: "flex"}}>
               <Typography variant="body2" align="right" className={classes.deadlineWarningText} gutterBottom>
-                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
               </Typography>
               <Typography variant="body2" align="right" color="textSecondary">
                 Nilai Maksimum: 100
@@ -306,31 +306,35 @@ console.log(all_classes_map)
               })}
             </Typography>
           </Grid>
-
-          <Grid item xs={12} style={{marginTop: "30px"}}>
-            <Typography color="primary" gutterBottom>
-              Deskripsi Tugas:
-            </Typography>
-            <Typography>
-              {tasksCollection.description}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} style={{marginTop: "30px"}}>
-            <Typography color="primary" gutterBottom>
-              Lampiran Berkas:
-            </Typography>
-            <Grid container spacing={1}>
-            {fileLampiran.map((lampiran) => (
-              <LampiranFile
-                file_id={lampiran._id}
-                onPreviewFile ={viewFileTasks}
-                onDownloadFile ={downloadFileTasks}
-                filename={lampiran.filename}
-                filetype={fileType(lampiran.filename)}
-              />
-            ))}
+          {!tasksCollection.description ? null :
+            <Grid item xs={12} style={{marginTop: "30px"}}>
+              <Typography color="primary" gutterBottom>
+                Deskripsi Tugas:
+              </Typography>
+              <Typography>
+                {tasksCollection.description}
+              </Typography>
             </Grid>
-          </Grid>
+          }
+          {(fileLampiran.length === 0) ? null :
+            <Grid item xs={12} style={{marginTop: "30px"}}>
+              <Typography color="primary" gutterBottom>
+                Lampiran Berkas:
+              </Typography>
+              <Grid container spacing={1}>
+              {
+                fileLampiran.map((lampiran) => (
+                  <LampiranFile
+                    file_id={lampiran._id}
+                    onPreviewFile ={viewFileTasks}
+                    onDownloadFile ={downloadFileTasks}
+                    filename={lampiran.filename}
+                    filetype={fileType(lampiran.filename)}
+                  />
+                ))}
+              </Grid>
+            </Grid>
+          }
         </Grid>
       </Paper>
       <Grid container spacing={2} justify="flex-end" alignItems="center">
@@ -352,7 +356,7 @@ console.log(all_classes_map)
           </Link>
         </Grid>
         <Grid item>
-          <LightTooltip title="Buang Tugas" placement="bottom">
+          <LightTooltip title="Hapus" placement="bottom">
             <Fab className={classes.deleteTaskButton} onClick={(e) => handleOpenDeleteDialog(e,task_id)}>
               <DeleteIcon />
             </Fab>

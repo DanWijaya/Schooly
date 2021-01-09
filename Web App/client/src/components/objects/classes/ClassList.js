@@ -170,10 +170,10 @@ const useStyles = makeStyles((theme) => ({
   },
   newClassButton: {
     marginRight: "10px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -244,21 +244,30 @@ function ClassList(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null)
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  const { getAllClass, deleteClass, classesCollection, getTeachers, errors, clearErrors } = props;
+  const { getAllClass, deleteClass, classesCollection, getTeachers, clearErrors } = props;
 
-  const { user, all_teachers } = props.auth;
+  const { user, all_teachers, all_students } = props.auth;
+
+  console.log(classesCollection)
 
   const colorList = ["#12c2e9", "#c471ed", "#f64f59", "#f5af19", "#6be585"]
   const colorMap = new Map();
 
   const classItem = (data,i) => {
     colorMap.set(data._id, colorList[i%(colorList.length)])
+    let temp_ukuran = 0
+    for(let i=0;i<all_students.length;i++){
+      if(all_students[i].kelas === data._id){
+        temp_ukuran = temp_ukuran + 1
+      }
+    }
+    classesCollection.all_classes[i].ukuran = temp_ukuran // Update property ukuran
     rows.push(
       createData(
         data._id,
         data.name,
         !all_teachers.size || !all_teachers.get(data.walikelas) ? null : all_teachers.get(data.walikelas).name,
-        data.ukuran,
+        temp_ukuran,
         !data.nihil ? "Nihil" : "Tidak Nihil",
       )
     )
@@ -275,6 +284,8 @@ function ClassList(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  console.log(classesCollection)
 
   console.log(all_teachers)
   const retrieveClasses = () => {
@@ -346,6 +357,7 @@ function ClassList(props) {
         {stableSort(rows, getComparator(order, orderBy))
           .map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
+            console.log(row)
             let viewpage = `/kelas/${row._id}`;
             return (
               <Grid item xs={12} sm={6} md={4}>
@@ -380,11 +392,6 @@ function ClassList(props) {
                     </div>
                     <Divider />
                     <Grid container direction="row" justify="space-between" alignItems="center" className={classes.classActionContainer}>
-                      <Grid item xs>
-                        <Typography variant="overline">
-                          {row.absent}
-                        </Typography>
-                      </Grid>
                       {user.role === "Admin" ?
                         <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
                           <Grid item>
@@ -396,6 +403,7 @@ function ClassList(props) {
                                   vertical: "bottom",
                                   horizontal: "left",
                                 }}
+                                showZero
                               >
                                 <IconButton size="small" disabled>
                                   <SupervisorAccountIcon className={classes.classPersonIcon} />
@@ -427,21 +435,24 @@ function ClassList(props) {
                           </Grid>
                         </Grid>
                       :
-                        <Grid item>
-                          <LightTooltip title="Jumlah Peserta">
-                            <Badge
-                              badgeContent={row.size}
-                              color="secondary"
-                              anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                              }}
-                            >
-                              <IconButton size="small" disabled>
-                                <SupervisorAccountIcon className={classes.classPersonIcon} />
-                              </IconButton>
-                            </Badge>
-                          </LightTooltip>
+                        <Grid container direction="row" justify="flex-end" alignItems="center">
+                          <Grid item>
+                            <LightTooltip title="Jumlah Peserta">
+                              <Badge
+                                badgeContent={row.size}
+                                color="secondary"
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "left",
+                                }}
+                                showZero
+                              >
+                                <IconButton size="small" disabled>
+                                  <SupervisorAccountIcon className={classes.classPersonIcon} />
+                                </IconButton>
+                              </Badge>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       }
                     </Grid>
@@ -472,5 +483,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors }
+  mapStateToProps, { getAllClass, deleteClass, getTeachers, clearErrors}
 ) (ClassList);

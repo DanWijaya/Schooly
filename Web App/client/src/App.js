@@ -25,7 +25,6 @@ import ReportView from "./components/layout/profile/ReportView";
 import Help from "./components/layout/help/Help";
 import Policy from "./components/layout/policy/Policy";
 import NotFound from "./components/layout/not-found/NotFound";
-import ScheduleCalendar from "./components/layout/schedule-calendar/ScheduleCalendar";
 //Misc
 import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";
@@ -55,12 +54,14 @@ import ViewTaskTeacher from "./components/objects/tasks/ViewTaskTeacher";
 import SubmittedTaskList from "./components/objects/tasks/SubmittedTaskList";
 import TaskList from "./components/objects/tasks/TaskList";
 //Assessment
-import AssessmentList from "./components/objects/assessment/AssessmentList";
+import AssessmentList from "./components/objects/assessment/AssessmentQuizList";
+import AssessmentTestList from "./components/objects/assessment/AssessmentExamList"
 import CreateAssessment from "./components/objects/assessment/CreateAssessment";
 import EditAssessment from "./components/objects/assessment/EditAssessment";
 import ViewAssessmentTeacher from "./components/objects/assessment/ViewAssessmentTeacher";
 import ViewAssessmentStudent from "./components/objects/assessment/ViewAssessmentStudent";
 import SubmittedAssessmentList from "./components/objects/assessment/SubmittedAssessmentList";
+import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessmentAnswer";
 //Admin Only
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
@@ -139,6 +140,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(localStorage.getItem(`status`))
     return (
       <div>
         <Provider store={store}>
@@ -149,14 +151,15 @@ class App extends Component {
                   handleDrawerDesktop={this.handleDrawerDesktop}
                   handleDrawerMobile={this.handleDrawerMobile}
                   sideDrawerExist={this.state.sideDrawerExist}
+                  assessmentState={localStorage.getItem(`status`)}
                 />
-                {this.state.sideDrawerExist ?
-                <SideDrawer
-                  mobileOpen={this.state.mobileOpen}
-                  desktopOpen={this.state.desktopOpen}
-                  handleDrawerMobile={this.handleDrawerMobile}
-                /> :
-                null
+                {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ?
+                  <SideDrawer
+                    mobileOpen={this.state.mobileOpen}
+                    desktopOpen={this.state.desktopOpen}
+                    handleDrawerMobile={this.handleDrawerMobile}
+                  /> :
+                  null
                 }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
                   <Toolbar />
@@ -190,13 +193,9 @@ class App extends Component {
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                     <Route exact path="/timer" component={Timer} /> {/*prototype*/}
                     <Route exact path="/graph" component={Graph} /> {/*prototype*/}
-                    <Route exact path="/s3upload" component={S3Upload} /> {/*prototype*/}
-                    <Route exact path="/s3materialview/:id" component={S3MaterialView} />
-                    <Route exact path="/s3-buat-materi" component={S3CreateMaterial}/>
-                    <Route exact path="/s3-sunting-materi/:id" component={S3EditMaterial}/>
+                    <Route exact path="/lihat-jawaban-kuis/:id" component={ViewAssessmentAnswer} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
-                    <PrivateRoute exact path="/kalender" component={ScheduleCalendar} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
                     <PrivateRoute exact path="/lihat-rapor" component={ReportView} />
                     {/* Route Class */}
@@ -225,8 +224,9 @@ class App extends Component {
                     {/* Route Assessment - Prototype */}
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-ujian" component={AssessmentTestList} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-kuis/:id" handleSideDrawerExist={this.handleSideDrawerExist} component={EditAssessment} />
-                    <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} />
+                    <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} loginRedirect={true}/>
                     <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-kuis-terkumpul/:id" component={SubmittedAssessmentList} />
                     {/* Route Admin-Only */}
@@ -242,7 +242,7 @@ class App extends Component {
                     />
                     <Redirect to="/tidak-ditemukan"/>
                   </Switch>
-                  <Footer />
+                  <Footer assessmentState={localStorage.getItem(`status`)}/>
                 </div>
               </div>
             </Router>

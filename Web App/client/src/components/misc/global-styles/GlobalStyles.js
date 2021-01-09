@@ -4,24 +4,38 @@ import { fade } from "@material-ui/core/styles/colorManipulator";
 export const globalStyles = responsiveFontSizes(createMuiTheme({
   palette: {
     primary: {
-      main: "#2196F3",
-      light: "#64B5F6",
-      dark: "#1976D2",
+      main: "#2196f3",
+      light: "#64b5f6",
+      dark: "#1976d2",
+      fade: fade("#2196f3", 0.15),
+    },
+    secondary: {
+      main: "#dc004e",
+      light: "#e33371",
+      dark: "#9a0036",
+    },
+    success: {
+      main: "#4caf50",
+      light: "#81c784",
+      dark: "#388e3c",
     },
     info: {
-      main: "#1976D2",
-      light: "#4791DB",
+      main: "#1976d2",
+      light: "#4791d",
       dark: "#115293",
     },
-    create: {
-      main: "#61BD4F",
-      dark:"#009900"
+    warning: {
+      main: "#ff9800",
+      light: "#ffb74d",
+      dark: "#f57c00",
     },
-    button: {
-      main: fade("#2196F3", 0.15),
+    error: {
+      main: "#f44336",
+      light: "#e57373",
+      dark: "#d32f2f",
     },
     dropbox: {
-      main: "#0D2481",
+      main: "#0d2481",
     },
   },
   overrides: {
@@ -35,7 +49,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
     MuiFab: {
       root: {
         "&:focus": {
-          backgroundColor: "#2196F3",
+          backgroundColor: "#2196f3",
         },
         "&:hover": {
           backgroundColor: "transparent"
@@ -45,7 +59,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
     MuiPickersDay: {
       daySelected: {
         "&:focus, &:hover": {
-          backgroundColor: "#2196F3",
+          backgroundColor: "#2196f3",
         },
       },
     },

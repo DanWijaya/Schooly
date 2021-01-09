@@ -47,10 +47,10 @@ const useStyles = makeStyles((theme) => ({
   },
   submitPhotoButton: {
     width: "160px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   }

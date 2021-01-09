@@ -35,11 +35,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.warning.main,
   },
   seeAllTaskButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   editButton: {
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   downloadIconButton: {
@@ -331,7 +331,7 @@ function ViewMaterial(props) {
                 />
               ))} */}
             </Grid>
-          </Grid>
+        </Grid>
         </Grid>
       </Paper>
       {user.role === "Teacher" ?
@@ -340,7 +340,7 @@ function ViewMaterial(props) {
         </Grid>
         <Grid item>
           <Link to={`/sunting-materi/${materi_id}`}>
-            <LightTooltip title="Sunting Materi" placement="bottom">
+            <LightTooltip title="Sunting" placement="bottom">
               <Fab className={classes.editButton}>
                 <EditIcon />
               </Fab>
@@ -348,7 +348,7 @@ function ViewMaterial(props) {
           </Link>
         </Grid>
         <Grid item>
-          <LightTooltip title="Buang Materi" placement="bottom">
+          <LightTooltip title="Hapus" placement="bottom">
             <Fab className={classes.deleteButton} onClick={(e) => handleOpenDeleteDialog(e,materi_id)}>
               <DeleteIcon />
             </Fab>

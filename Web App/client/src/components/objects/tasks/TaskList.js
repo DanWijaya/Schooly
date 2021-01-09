@@ -17,6 +17,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 
@@ -53,7 +54,9 @@ function stableSort(array, comparator) {
 }
 
 function TaskListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, role, searchFilter, updateSearchFilter } = props;
+  const { classes, order, orderBy, onRequestSort,
+    role, searchFilter, updateSearchFilter, searchBar,
+    searchBarFocus, setSearchBarFocus } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -80,130 +83,212 @@ function TaskListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER. 
+  // FOR SEARCH FILTER.
   const onChange = (e) => {
-    switch(e.target.id){
-      case "searchFilter":
-        updateSearchFilter(e.target.value)
-        break;
-
-      default:
-        break;
-    }
+    updateSearchFilter(e.target.value)
   }
 
   const onClear = (e) => {
     updateSearchFilter("");
   }
-  
+
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">
-        Daftar Tugas
-      </Typography>
-      <div style={{display: "flex"}}>
-        <Hidden xsDown implementation="css">
+    <div style={{display: "flex", alignItems: "center"}}>
+      <Hidden smUp implementation="css">
+        {searchBarFocus ?
+          null
+          :
+          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <AssignmentIcon className={classes.titleIcon} fontSize="large"/>
+            <Typography variant="h4">
+              Daftar Tugas
+            </Typography>
+          </div>
+        }
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+          <AssignmentIcon className={classes.titleIcon} fontSize="large"/>
+          <Typography variant="h4">
+            Daftar Tugas
+          </Typography>
+        </div>
+      </Hidden>
+      <Hidden smUp implementation="css">
+        {searchBarFocus ?
+          <div style={{display: "flex"}}>
+            <IconButton
+              onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
+            >
+              <ArrowBackIcon/>
+            </IconButton>
+            <TextField
+              fullWidth
+              variant="outlined"
+              id="searchFilterMobile"
+              value={searchFilter}
+              onChange={onChange}
+              autoFocus
+              onClick={(e) =>setSearchBarFocus(true)}
+              placeholder="Search Tugas"
+              style={{
+                maxWidth: "200px",
+                marginLeft: "10px"
+              }}
+              InputProps={{
+                startAdornment:(
+                  searchBarFocus ? null :
+                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                      <IconButton size="small">
+                        <GoSearch/>
+                      </IconButton>
+                    </InputAdornment>
+                ),
+                endAdornment:(
+                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                    <IconButton
+                      size="small"
+                      id="searchFilterMobile"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onClear(e, "searchFilterMobile")}
+                      }
+                      style={{
+                        opacity: 0.5,
+                        visibility: !searchFilter ? "hidden" : "visible"
+                      }}>
+                      <ClearIcon/>
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                style:{
+                  borderRadius: "20px"
+                }
+              }}
+            />
+          </div>
+        :
+          <LightTooltip title="Search" style={{marginLeft: "10px"}}>
+            <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
+              <GoSearch className={classes.goSearchIconMobile} />
+            </IconButton>
+          </LightTooltip>
+        }
+      </Hidden>
+    </div>
+    <div style={{display: "flex"}}>
+    <Hidden xsDown implementation="css">
           <TextField
             variant="outlined"
-            id="searchFilter"
+            id="searchFilterDesktop"
             value={searchFilter}
             onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder="Search Tugas"
             style={{
               maxWidth: "250px",
               marginRight: "10px"
             }}
             InputProps={{
               startAdornment:(
-                <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                  <IconButton size="small" >
-                    <GoSearch/>
-                  </IconButton>
-                </InputAdornment>)
+                  <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                    <IconButton size="small">
+                      <GoSearch/>
+                    </IconButton>
+                  </InputAdornment>)
                 ,
-                endAdornment:( 
+              endAdornment:(
                 <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                  <IconButton 
-                    size="small" 
-                    onClick={onClear} 
-                    style={{ 
-                      opacity: 0.5, 
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onClear(e, "searchFilterDesktop")}
+                    }
+                    style={{
+                      opacity: 0.5,
                       visibility: !searchFilter ? "hidden" : "visible"
                     }}>
                     <ClearIcon/>
                   </IconButton>
-                </InputAdornment>)
+                </InputAdornment>
+              ),
+              style:{
+                borderRadius: "20px"
+              }
             }}
           />
       </Hidden>
-      <div style={{display: "flex", alignItems: "center"}}>
-        <Hidden smUp implementation="css">
-          {role === "Student" ?
-            null
-          :
-            <LightTooltip title="Buat Tugas">
-              <Link to="/buat-tugas">
-                <Fab size="small" className={classes.newTaskButton}>
-                  <AssignmentIcon className={classes.newTaskIconMobile} />
-                </Fab>
-              </Link>
-            </LightTooltip>
-          }
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          {role === "Student" ?
-            null
-          :
+      <Hidden smUp implementation="css">
+        {role === "Student"?
+          null
+        :
+          <LightTooltip title="Buat Tugas">
             <Link to="/buat-tugas">
-              <Fab size="medium" variant="extended" className={classes.newTaskButton}>
-                <AssignmentIcon className={classes.newTaskIconDesktop} />
-                Buat Tugas
+              <Fab size="small" className={classes.newTaskButton}>
+                <AssignmentIcon className={classes.newTaskIconMobile} />
               </Fab>
             </Link>
-          }
-        </Hidden>
+          </LightTooltip>
+        }
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        {role === "Student"?
+          null
+        :
+        // ANCHOR contoh tombol round edge
+          <Link to="/buat-tugas">
+            <Fab size="medium" variant="extended" className={classes.newTaskButton}>
+              <AssignmentIcon className={classes.newTaskIconDesktop} />
+              Buat Tugas
+            </Fab>
+          </Link>
+        }
+      </Hidden>
         <LightTooltip title="Urutkan Tugas">
           <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
             <SortIcon />
           </IconButton>
         </LightTooltip>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSortMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {headCells.map((headCell, i) => (
-            <MenuItem
-              key={headCell.id}
-              sortDirection={orderBy === headCell.id ? order : false}
+      <Menu
+        keepMounted
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseSortMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        {headCells.map((headCell, i) => (
+          <MenuItem
+            key={headCell.id}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
             >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ?
-                  <span className={classes.visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
-                  </span>
-                  : null
-                }
-              </TableSortLabel>
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
+              {headCell.label}
+              {orderBy === headCell.id ?
+                <span className={classes.visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </span>
+                : null
+              }
+            </TableSortLabel>
+          </MenuItem>
+        ))}
+      </Menu>
     </div>
-    </div>
+  </div>
   );
 };
 
@@ -234,10 +319,10 @@ const useStyles = makeStyles((theme) => ({
   },
   newTaskButton: {
     marginRight: "10px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -301,7 +386,7 @@ const useStyles = makeStyles((theme) => ({
   },
   taskPanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   taskPaper: {
@@ -310,9 +395,20 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "15px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
+  titleIcon: {
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    boxShadow: theme.shadows[0],
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.primary.main,
+      cursor: "default"
+    },
+    marginRight: "10px"
+  }
 }));
 
 function TaskList(props) {
@@ -324,6 +420,7 @@ function TaskList(props) {
   const [selectedTaskId, setSelectedTaskId] = React.useState(null)
   const [selectedTaskName, setSelectedTaskName] = React.useState(null);
   const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   const { tasksCollection, getAllTask, deleteTask, getAllClass, getAllSubjects } = props;
   const { all_classes_map } = props.classesCollection;
@@ -425,7 +522,9 @@ function TaskList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-        //Two props added for search filter. 
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
+        //Two props added for search filter.
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
       />
@@ -522,7 +621,7 @@ function TaskList(props) {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="body1" className={classes.deadlineWarningText}>
-                           Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                          Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -549,17 +648,17 @@ function TaskList(props) {
                         Batas Waktu:
                       </Typography>
                       <Typography variant="caption" align="right" className={classes.deadlineWarningText}>
-                        {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                       </Typography>
                     </Hidden>
                     <Hidden xsDown implementation="css">
                       <Typography variant="body2" align="right" className={classes.deadlineWarningText}>
-                        Batas Waktu: {moment(row.deadline).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                       </Typography>
                     </Hidden>
                   </div>
                 </Paper>
-                </Link>
+              </Link>
               }
             </Grid>
           );

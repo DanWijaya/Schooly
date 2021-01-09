@@ -78,10 +78,10 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   createMaterialButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -167,8 +167,8 @@ class CreateMaterial extends Component {
       errors: {},
       fileLampiran: [],
       openUploadDialog: null,
-      anchorEl: null,
-      sortFlag: false
+      anchorEl: null
+      // sortFlag: false
     }
   }
 
@@ -269,8 +269,8 @@ class CreateMaterial extends Component {
   render() {
     const { classes, success, errors }  = this.props;
     const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran, sortFlag }  = this.state;
+    // const { all_subjects } = this.props.subjectsCollection;
+    const { class_assigned, fileLampiran }  = this.state;
     const { user } = this.props.auth
 
     console.log(class_assigned)

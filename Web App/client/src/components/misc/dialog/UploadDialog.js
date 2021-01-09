@@ -6,7 +6,8 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "350px",
+    width: "300px",
+    maxWidth: "100%",
     minHeight: "175px",
     padding: "15px",
   },
@@ -18,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
   uploadFinishButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.dark,
+      backgroundColor: theme.palette.success.dark,
       color: "white",
     },
   },

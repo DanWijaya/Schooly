@@ -5,17 +5,21 @@ import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneAssessment, submitAssessment } from "../../../actions/AssessmentActions";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, Grid, GridListTile, GridListTileBar, GridList, IconButton, Paper, Radio, RadioGroup, TextField, Typography } from "@material-ui/core";
+import { Avatar, Badge, Button, Box, CircularProgress, Divider, Dialog, FormControl, FormControlLabel, FormGroup,
+  Grid, GridListTile, GridListTileBar, GridList, Paper, Radio, Checkbox,
+  RadioGroup, TextField, Typography, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
-import FilterNoneIcon from "@material-ui/icons/FilterNone";
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import moment from "moment";
 import "moment/locale/id";
-import { FaWindowRestore } from "react-icons/fa";
 import SubmitDialog from "../../misc/dialog/SubmitDialog";
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,19 +31,19 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   startAssessmentButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   submitAssessmentButton: {
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main,
+      color: theme.palette.success.main,
     },
   },
   questionPage: {
@@ -103,6 +107,53 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  submittedPaper: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "5px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+  },
+  toggleGroupRoot: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    "&:after": {
+      content: "''",
+      flexGrow: "1"
+    }
+  },
+  toggleGroupChildren: {
+    padding: "0px",
+    width: "35px",
+    height: "35px",
+    '&:not(:first-child)': {
+      margin: theme.spacing(1),
+      borderRadius: theme.shape.borderRadius,
+      borderLeft: "1px solid rgba(0,0,0,0.12)"
+    },
+    '&:first-child': {
+      margin: theme.spacing(1),
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+  toggleButtonRoot: {
+    color: "unset",
+    "&$toggleButtonSelected": {
+      backgroundColor: theme.palette.primary.main,
+      color: "white",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main
+      }
+    }
+  },
+  toggleButtonSelected: {
+    //harus ada meskipun kosong
+  }
 }));
 
 function TimeoutDialog(props){
@@ -112,29 +163,29 @@ function TimeoutDialog(props){
 
   return (
     <Dialog open={openTimeoutDialog}>
-      <Grid container direction="column" justify="space-between" alignItems="center" className={classes.timeoutDialog}>
+      <Grid container direction="column" justify="space-between" alignItems="center" spacing={2} className={classes.timeoutDialog}>
         <Grid>
           <Typography variant="h6" align="center" gutterBottom>
-            <b>Waktu pengerjaan sudah selesai, jawaban anda telah terkumpulkan</b>
+            Waktu pengerjaan sudah selesai, jawaban anda telah terkumpulkan
           </Typography>
         </Grid>
-        <Grid container spacing={2} justify="center" alignItems="center">
-          <Grid item>
-            <Button
-              onClick={handleCloseTimeoutDialog}
-              className={classes.timeoutDialogButton}
-              >
-              Selesai
-            </Button>
-          </Grid>
+        <Grid item>
+          <Button
+            startIcon={<CheckCircleOutlineIcon/>}
+            onClick={handleCloseTimeoutDialog}
+            className={classes.timeoutDialogButton}
+          >
+            Selesai
+          </Button>
         </Grid>
       </Grid>
     </Dialog>
   )
 }
+
 function Timer(props) {
   const classes = useStyles();
-  let {start_date, end_date, id, finish, onSubmit, setOpenTimeoutDialog } = props;
+  let {start_date, end_date, id, onSubmit, setOpenTimeoutDialog } = props;
   console.log(start_date, end_date);
   let startTime = new Date(start_date);
   let finishTime = new Date(end_date);
@@ -166,6 +217,7 @@ function Timer(props) {
       }
       clearInterval(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time]);
 
   return (
@@ -194,34 +246,48 @@ function Timer(props) {
   )
 }
 
-function QuestionPage(props) {
-  const { classes, handleChangeQuestion, question_number } = props;
+function questionPage(classes, handleChangeQuestion, qnsIndex, question_number, answer) {
 
+// function QuestionPage(props) {
+  // const { classes, handleChangeQuestion, question_number, answer } = props;
+  console.log(answer)
   return (
-    <Grid item>
+    <ToggleButton
+        value={question_number - 1}
+        aria-label={question_number - 1}
+        classes={{ root: classes.toggleButtonRoot, selected: classes.toggleButtonSelected}}
+        selected={qnsIndex === question_number - 1}
+      >
+    {/* <Grid item> */}
       <Badge
-        badgeContent={
-          <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
-            <DoneOutlineIcon style={{width: "15px", height: "15px"}} />
-          </Avatar>
+        style={{ width: "35px", height: "35px", display: "flex", alignItems: "center", justifyContent: "center" }}
+        badgeContent={(answer[question_number - 1].length > 0 && answer[question_number - 1].some((elm) => {return elm !== ""})) ?
+            <Avatar style={{backgroundColor: "green", color: "white", width: "20px", height: "20px"}}>
+              <CheckCircleIcon style={{width: "15px", height: "15px"}} />
+            </Avatar>
+          :
+            <Avatar style={{backgroundColor: "red", color: "white", width: "20px", height: "20px"}}>
+              <ErrorIcon style={{width: "15px", height: "15px"}} />
+            </Avatar>
         }
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
         }}
       >
-        <Paper
+        {/* <Paper
           buttons
           variant="outlined"
           className={classes.questionPage}
           onClick={() => handleChangeQuestion(question_number-1)}
-        >
+        > */}
           <Typography>
             {question_number}
           </Typography>
-        </Paper>
+        {/* </Paper> */}
       </Badge>
-    </Grid>
+    {/* </Grid> */}
+    </ToggleButton >
   )
 }
 
@@ -236,7 +302,7 @@ function ViewAssessmentStudent(props) {
   let id = props.match.params.id;
 
   const [ qnsIndex, setQnsIndex ] = React.useState(0);
-  const [ answer, setAnswer] = React.useState([]);
+  const [ answer, setAnswer] = React.useState([]); // contoh isi answer: [["A"], ["sedang", "menulis"], [null, "harian"]]
   const [ posted, setPosted] = React.useState(null)
   const [ start, setStart ] = React.useState(!localStorage.getItem(`remainingTime_${id}`) ? null : true);
   const [ finish, setFinish ] = React.useState(null);
@@ -263,7 +329,10 @@ function ViewAssessmentStudent(props) {
   // console.log(submissions)
   React.useEffect(() => {
     if(questions_length){
-      let arr = Array.apply("", Array(questions_length))
+      let arr = [];
+      for (let i = 1; i <= questions_length; i++) {
+        arr.push([]);
+      }
       setAnswer(arr)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -280,15 +349,91 @@ function ViewAssessmentStudent(props) {
   const handleChangeQuestion = (i) => {
     setQnsIndex(i)
   }
+  function handleQuestionIndex(event, newIndex) {
+    if (newIndex !== null) {
+      handleChangeQuestion(newIndex);
+    }
+  }
 
-  const handleChangeAnswer = (e) => {
-    let temp = answer;
-    temp[qnsIndex] = e.target.value;
-    localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
-    setAnswer([...temp])
+  const handleChangeAnswer = (e, type) => {
+    if(type === "radio" || type === "longtext"){
+      let temp = answer;
+      temp[qnsIndex] = [e.target.value];
+      localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
+      setAnswer([...temp])
+    }
+    else if(type === "checkbox"){
+      if(!answer[qnsIndex]){
+        let temp = answer;
+        temp[qnsIndex] = [e.target.value]
+        setAnswer([...temp])
+      }
+      else if(!e.target.checked || answer[qnsIndex].includes(e.target.value)){
+        let temp = answer;
+        temp[qnsIndex] = temp[qnsIndex].filter(function(value,index){
+          return value !== e.target.value
+        })
+        setAnswer([...temp])
+      }
+      else if(e.target.checked && !answer[qnsIndex].includes(e.target.value)){
+        let temp = answer;
+        temp[qnsIndex].push(e.target.value)
+        setAnswer([...temp])
+      }
+    }
+    else{ // type === "shorttext"
+      let temp = answer;
+      temp[qnsIndex][e.target.id] = e.target.value;
+      localStorage.setItem(`answers_${id}`, JSON.stringify(temp));
+      setAnswer([...temp]);
+    }
+  }
+
+  const generateSoalShortTextStudent = () => {
+    let splitResult = questions[qnsIndex].name.split("`");
+    let idIterator = 0;
+
+    for (let i=1; i<=splitResult.length-2; i+=2) {
+      splitResult[i] = (
+      <Input
+        type="text"
+        key={`${qnsIndex}-${idIterator}`}
+        id={idIterator}
+        value={answer[qnsIndex][idIterator]}
+        onChange={(e) => { handleChangeAnswer(e)}}
+      />);
+      idIterator++;
+    }
+
+    return (
+      <Typography variant="body1" gutterButtom>
+        <form>
+          {splitResult}
+        </form>
+      </Typography>
+    );
   }
 
   const handleStart = () => {
+    /*if(localStorage.getItem(`status`) === "tidak_ujian"){
+      localStorage.setItem(`status`, "ujian")
+      console.log(localStorage.getItem(`status`))
+      window.location.reload(false);
+    }
+    if(localStorage.getItem(`status`) === "ujian"){
+      startTest()
+    }*/
+    localStorage.setItem(`status`, "ujian")
+    window.location.reload(false);
+  }
+
+  React.useEffect(() => {
+    if(localStorage.getItem(`status`) === "ujian"){
+      startTest()
+    }
+  },[])
+
+  const startTest = () => {
     setStart(true);
   }
 
@@ -300,8 +445,11 @@ function ViewAssessmentStudent(props) {
   }
 
   const onSubmit = (e) => {
+    localStorage.setItem(`status`, "tidak_ujian")
+    window.location.reload(false);
     setFinish(true)
     setStart(false);
+    // console.log(localStorage.getItem(`status`))
     let data = {
       "answers" : answer,
       "classId" : user.kelas,
@@ -326,9 +474,9 @@ function ViewAssessmentStudent(props) {
           <Button variant="contained" className={classes.submitAssessmentButton} onClick={handleOpenSubmitDialog}>
             Kumpulkan
           </Button>
-        </Grid> 
+        </Grid>
       )
-    } 
+    }
     return null
   }
 
@@ -336,21 +484,24 @@ function ViewAssessmentStudent(props) {
     if(submissions){
       if(submissions[user.id]){
         return(
-          <Typography variant="h6" align="center">
-            TELAH DIKUMPULKAN
-          </Typography>
+          <Paper className={classes.submittedPaper}>
+            <CheckCircleOutlineIcon/>
+            <Typography variant="button" style={{marginLeft: "5px"}}>
+              TELAH DIKUMPULKAN
+            </Typography>
+          </Paper>
         )
       }
     }
     if(!start){
-      if(finish){
-        return(
-          <Typography variant="h6" align="center">
-            TELAH SELESAI
-          </Typography>
-        )
-      }
-      else{
+      if(!finish){
+      //   return(
+      //     <Typography variant="h6" align="center">
+      //       TELAH SELESAI
+      //     </Typography>
+      //   )
+      // }
+      // else{
         return(
           <Grid item>
             <Button variant="contained" className={classes.startAssessmentButton} onClick={handleStart}>
@@ -369,7 +520,7 @@ function ViewAssessmentStudent(props) {
           finish={finish}
           onSubmit={onSubmit}
           setOpenTimeoutDialog={() => setOpenTimeoutDialog(true)}
-          />
+        />
       )
     }
   }
@@ -387,12 +538,33 @@ function ViewAssessmentStudent(props) {
             <Typography color="primary" paragraph>
               Pindah ke Soal:
             </Typography>
-            <Grid container spacing={2} alignItems="center">
+            {/* <Grid container spacing={2} alignItems="center"> */}
+            <Grid container item>
+              <ToggleButtonGroup
+                value={qnsIndex}
+                exclusive
+                onChange={(e, newIndex) => { handleQuestionIndex(e, newIndex) }}
+                aria-label="question index"
+                classes={{ root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren }}
+              >
+
               {!questions ?
                   null
                :
-                  questions.map((qns, i) => { return (<QuestionPage classes={classes} question_number={i + 1} handleChangeQuestion={handleChangeQuestion}/>)})
+                  questions.map((qns, i) => {
+                    return (
+                      questionPage(classes, handleChangeQuestion, qnsIndex, i + 1, answer)
+                    )
+                    // return (
+                    // <QuestionPage
+                    //   classes={classes}
+                    //   question_number={i + 1}
+                    //   handleChangeQuestion={handleChangeQuestion}
+                    //   answer={answer}/>
+                    // )
+                  })
               }
+              </ToggleButtonGroup>
             </Grid>
           </div>
         </Paper>
@@ -412,7 +584,7 @@ function ViewAssessmentStudent(props) {
                       :
                       questions[qnsIndex].lampiran.map((image, i) =>
                         <GridListTile key={image} cols={1} >
-                        <img alt="current image" src={`/api/upload/att_assessment/${image}`}/>
+                        <img alt="current img" src={`/api/upload/att_assessment/${image}`}/>
                         <GridListTileBar
                             title={`Gambar ${i+1}`}
                             titlePosition="top"
@@ -420,27 +592,69 @@ function ViewAssessmentStudent(props) {
                       </GridListTile>
                     )}
                   </GridList>
-                  <Typography variant="h5" gutterButtom>
-                    <b>{!questions ? null : questions[qnsIndex].name}</b>
-                  </Typography>
+                    {(!questions) ? (
+                      null
+                    ) : (
+                      (questions[qnsIndex].type === "shorttext") ? (
+                        generateSoalShortTextStudent()
+                      ) : (
+                        <Typography variant="h6" gutterButtom>
+                          {questions[qnsIndex].name}
+                        </Typography>
+                      )
+                    )}
                 </Grid>
                 <Grid item>
                   <FormControl component="fieldset" id="answer" fullWidth>
-                    <RadioGroup value={answer[qnsIndex] ? answer[qnsIndex] : ""} id="answer" onChange={handleChangeAnswer}>
-                      {!questions ?
+                    {(!questions) ? (
                       null
-                      :
-                      questions[qnsIndex].options.map((option, i) =>
-                      <div style={{display: "flex"}}>
-                      <FormControlLabel
-                        style={{width: "100%"}}
-                        value={String.fromCharCode(97 + i).toUpperCase()}
-                        control={<Radio color="primary" />}
-                        label={ <Typography className={classes.optionText}>{option}</Typography>}
-                      />
-                    </div>
-                      )}
-                    </RadioGroup>
+                    ) : ((questions[qnsIndex].type === "radio") ? (
+                        <RadioGroup value={answer[qnsIndex][0] ? answer[qnsIndex][0] : ""} id="answer" onChange={(e) => handleChangeAnswer(e, "radio")}>
+                          {questions[qnsIndex].options.map((option, i) =>
+                          <div style={{display: "flex"}}>
+                            <FormControlLabel
+                              style={{width: "100%"}}
+                              value={String.fromCharCode(97 + i).toUpperCase()}
+                              control={<Radio color="primary" />}
+                              label={ <Typography className={classes.optionText}>{option}</Typography>}
+                            />
+                          </div>
+                          )}
+                        </RadioGroup>
+                      ) : (questions[qnsIndex].type === "checkbox") ? (
+                        <FormGroup>
+                          {questions[qnsIndex].options.map((option, i) => {
+                            let val = String.fromCharCode(97 + i).toUpperCase()
+                              return(
+                                <div style={{display: "flex"}}>
+                                  <FormControlLabel
+                                    style={{width: "100%"}}
+                                    value={String.fromCharCode(97 + i).toUpperCase()}
+                                    control={<Checkbox checked={answer[qnsIndex].includes(val)} color="primary" onChange={(e) => handleChangeAnswer(e, "checkbox")}/>}
+                                    label={ <Typography className={classes.optionText}>{option}</Typography>}
+                                  />
+                                </div>
+                              )
+                            }
+                          )}
+                        </FormGroup>
+                      ) : (questions[qnsIndex].type === "shorttext") ? (
+                        null
+                      ) : (questions[qnsIndex].type === "longtext") ? (
+                        <TextField
+                          key={`${user.id}-${qnsIndex}`}
+                          id="answer"
+                          multiline
+                          rowsMax={10}
+                          value={answer[qnsIndex][0]}
+                          label="Jawaban Anda"
+                          variant="outlined"
+                          onChange={(e) => { handleChangeAnswer(e, "longtext") }}
+                        />
+                      ) : (
+                        null
+                      )
+                    )}
                   </FormControl>
                 </Grid>
               </Grid>
@@ -450,39 +664,37 @@ function ViewAssessmentStudent(props) {
         </Paper>
       </Grid>,
       <Grid item>
-        <Paper>
-          <Grid container alignItems="center" className={classes.content}>
-            {qnsIndex === 0 ? null :
-              <Grid item xs container justify="flex-start">
-                <Button
-                  variant="outlined"
-                  startIcon={<ChevronLeftIcon />}
-                  className={classes.previousPageButton}
-                  onClick={() => handleChangeQuestion(qnsIndex - 1)}
-                >
-                  Soal Sebelumnya
-                </Button>
-              </Grid>
-            }
-            {qnsIndex === questions_length - 1 ?
-              null
-              :
-              <Grid item xs container justify="flex-end">
-                <Button
-                  variant="outlined"
-                  endIcon={<ChevronRightIcon />}
-                  className={classes.nextPageButton}
-                  onClick={() => handleChangeQuestion(qnsIndex + 1)}
-                >
-                  Soal Selanjutnya
-                </Button>
-              </Grid>
-            }
-          </Grid>
-        </Paper>
+        <Grid container alignItems="center" className={classes.content}>
+          {qnsIndex === 0 ? null :
+            <Grid item xs container justify="flex-start">
+              <Button
+                variant="contained"
+                startIcon={<ChevronLeftIcon />}
+                className={classes.previousPageButton}
+                onClick={() => handleChangeQuestion(qnsIndex - 1)}
+              >
+                Soal Sebelumnya
+              </Button>
+            </Grid>
+          }
+          {qnsIndex === questions_length - 1 ?
+            null
+            :
+            <Grid item xs container justify="flex-end">
+              <Button
+                variant="contained"
+                endIcon={<ChevronRightIcon />}
+                className={classes.nextPageButton}
+                onClick={() => handleChangeQuestion(qnsIndex + 1)}
+              >
+                Soal Selanjutnya
+              </Button>
+            </Grid>
+          }
+        </Grid>
       </Grid>
       ]
-    } 
+    }
     return null
   }
 
@@ -491,6 +703,12 @@ function ViewAssessmentStudent(props) {
       return <Redirect to="/tidak-ditemukan"/>
     }
     return (<div>{/* None */} </div>)
+  }
+
+  if (selectedAssessments) {
+    if (!selectedAssessments.class_assigned.includes(user.kelas)) {
+      return <Redirect to="/tidak-ditemukan" />
+    }
   }
 
   return (
@@ -512,22 +730,30 @@ function ViewAssessmentStudent(props) {
             <Paper>
               <Grid container direction="column" spacing={5} alignItems="center" className={classes.content}>
                 <Grid item>
-                  <Typography variant="h6" align="center">
-                    {all_subjects_map.get(selectedAssessments.subject)}
+                  <Typography variant="subtitle1" align="center" color="textSecondary">
+                    {selectedAssessments.type}
                   </Typography>
                   <Typography variant="h4" align="center" gutterBottom>
                     {selectedAssessments.name}
                   </Typography>
-                  <Typography variant="h6" align="center">
+                  <Typography variant="h6" align="center" color="primary">
+                    {all_subjects_map.get(selectedAssessments.subject)}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1" align="center" color="textSecondary">
+                    Mulai: {`${moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH.mm")}`}
+                  </Typography>
+                  <Typography variant="subtitle1" align="center" color="textSecondary">
+                    Selesai: {`${moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH.mm")}`}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle2" align="center">
                     {selectedAssessments.description}
                   </Typography>
                 </Grid>
                 {showTestStatus()}
-                <Grid item>
-                  <Typography variant="h6" align="center" color="textSecondary">
-                    Waktu Ujian: {`${moment(selectedAssessments.start_date).locale("id").format("HH:mm")} - ${moment(selectedAssessments.end_date).locale("id").format("HH:mm")}`}
-                  </Typography>
-                </Grid>
                 {showSubmitButton()}
               </Grid>
             </Paper>

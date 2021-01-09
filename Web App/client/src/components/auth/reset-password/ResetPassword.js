@@ -83,7 +83,7 @@ class ResetPassword extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.mainPaper}>
+        <Paper elevation={11} className={classes.mainPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h6" align="center" gutterBottom>

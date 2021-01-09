@@ -43,7 +43,7 @@ const styles = (theme) => ({
     padding: "10px",
   },
   schoolyFeaturesBackground: {
-    backgroundColor: theme.palette.button.main,
+    backgroundColor: theme.palette.primary.fade,
   },
   schoolyFeatures: {
     textAlign: "center",

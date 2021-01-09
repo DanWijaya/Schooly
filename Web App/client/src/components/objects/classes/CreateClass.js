@@ -20,10 +20,10 @@ const styles = (theme) => ({
   createClassButton: {
     width: "100%",
     marginTop: "20px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -56,7 +56,7 @@ class CreateClass extends Component {
       name: this.state.name,
       nihil: this.state.nihil,
       walikelas: this.state.walikelas,
-      ukuran: this.state.ukuran,
+      ukuran: 1, // Temporary biar tidak error
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
@@ -147,7 +147,7 @@ class CreateClass extends Component {
                     </FormHelperText>
                   </FormControl>
                 </Grid>
-                <Grid item>
+                {/* <Grid item >
                   <Typography component="label" for="ukuran" color="primary">
                     Jumlah Murid
                   </Typography>
@@ -156,7 +156,7 @@ class CreateClass extends Component {
                     variant="outlined"
                     id="ukuran"
                     onChange={this.onChange}
-                    value={this.state.ukuran}
+                    value={2}
                     error={errors.ukuran}
                     type="number"
                     helperText={errors.ukuran}
@@ -164,7 +164,7 @@ class CreateClass extends Component {
                       invalid: errors.ukuran
                     })}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
               <Divider />
               <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>

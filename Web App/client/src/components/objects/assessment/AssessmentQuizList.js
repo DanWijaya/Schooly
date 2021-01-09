@@ -10,7 +10,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography} from "@material-ui/core/";
+   Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography, Dialog} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -22,6 +22,8 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { FaClipboardList } from "react-icons/fa";
+import { FaTasks } from "react-icons/fa";
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -46,6 +48,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
+// ANCHOR stablesort function
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -57,8 +60,8 @@ function stableSort(array, comparator) {
 }
 
 function AssessmentListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, 
-    role, searchFilter, updateSearchFilter, 
+  const { classes, order, orderBy, onRequestSort,
+    role, searchFilter, updateSearchFilter,
     setSearchBarFocus, searchBarFocus} = props;
 
   const createSortHandler = (property) => (event) => {
@@ -68,8 +71,8 @@ function AssessmentListToolbar(props) {
   const headCells = [
     { id: "assessmenttitle", numeric: false, disablePadding: true, label: "Nama Ujian/Kuis" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "start_date", numeric: false, disablePadding: false, label: "Mulai Waktu" },
-    { id: "end_date", numeric: false, disablePadding: false, label: "Batas Waktu" },
+    { id: "start_date", numeric: false, disablePadding: false, label: "Mulai" },
+    { id: "end_date", numeric: false, disablePadding: false, label: "Selesai" },
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
@@ -87,7 +90,7 @@ function AssessmentListToolbar(props) {
     setAnchorEl(null);
   };
 
-  // FOR SEARCH FILTER. 
+  // FOR SEARCH FILTER.
   const onChange = (e) => {
     updateSearchFilter(e.target.value)
   }
@@ -98,89 +101,93 @@ function AssessmentListToolbar(props) {
   }
 
   return (
-    // <div className={classes.toolbar}>
     <div className={classes.toolbar}>
       <div style={{display: "flex", alignItems: "center"}}>
         <Hidden smUp implementation="css">
           {searchBarFocus ?
-            null 
+            null
             :
-            <Typography variant="h4">
-              Daftar Kuis
-            </Typography>
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <FaClipboardList className={classes.titleIcon} fontSize="large"/>
+              <Typography variant="h4">
+                Daftar Kuis
+              </Typography>
+            </div>
           }
         </Hidden>
         <Hidden xsDown implementation="css">
-          <Typography variant="h4">
-            Daftar Kuis
-          </Typography>
+          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <FaClipboardList className={classes.titleIcon} fontSize="large"/>
+            <Typography variant="h4">
+              Daftar Kuis
+            </Typography>
+          </div>
         </Hidden>
         <Hidden smUp implementation="css">
-          {searchBarFocus ? 
-          <div style={{display: "flex"}}>
-            <IconButton 
-            onClick={() => {
-            setSearchBarFocus(false)
-            updateSearchFilter("")}}>
-              <ArrowBackIcon/>
-            </IconButton> 
-            <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="searchFilterMobile"
-                  value={searchFilter}
-                  onChange={onChange}
-                  autoFocus
-                  onClick={(e) =>setSearchBarFocus(true)}
-                  placeholder="Search Kuis"
-                  // onBlur={() => setSearchBarFocus(false)}
-                  style={{
-                    maxWidth: "200px",
-                    marginLeft: "10px"
-                  }}
-                  InputProps={{
-                    startAdornment:(
-                      searchBarFocus ? null :
-                        <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                          <IconButton size="small">
-                            <GoSearch/>
-                          </IconButton>
-                        </InputAdornment>)
-                      ,
-                      endAdornment:( 
-                      <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                        <IconButton 
-                          size="small" 
-                          id="searchFilterMobile"
-                          onClick={(e) => {
-                            e.stopPropagation() 
-                            onClear(e, "searchFilterMobile")}
-                          } 
-                          style={{ 
-                            opacity: 0.5, 
-                            visibility: !searchFilter ? "hidden" : "visible"
-                          }}>
-                          <ClearIcon/>
+          {searchBarFocus ?
+            <div style={{display: "flex"}}>
+              <IconButton
+                onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
+              >
+                <ArrowBackIcon/>
+              </IconButton>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) =>setSearchBarFocus(true)}
+                placeholder="Search Kuis"
+                style={{
+                  maxWidth: "200px",
+                  marginLeft: "10px"
+                }}
+                InputProps={{
+                  startAdornment:(
+                    searchBarFocus ? null :
+                      <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+                        <IconButton size="small">
+                          <GoSearch/>
                         </IconButton>
-                      </InputAdornment>)
-                  }}
-                />
-              </div>
-              :
-            // <div style={{display: "flex"}}>
+                      </InputAdornment>
+                  ),
+                  endAdornment:(
+                    <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
+                      <IconButton
+                        size="small"
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onClear(e, "searchFilterMobile")}
+                        }
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible"
+                        }}>
+                        <ClearIcon/>
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style:{
+                    borderRadius: "20px"
+                  }
+                }}
+              />
+            </div>
+          :
             <LightTooltip title="Search" style={{marginLeft: "10px"}}>
               <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
                 <GoSearch className={classes.goSearchIconMobile} />
               </IconButton>
             </LightTooltip>
-          // </div>
           }
         </Hidden>
       </div>
       <div style={{display: "flex"}}>
-      <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation="css">
             <TextField
-              // fullWidth
               variant="outlined"
               id="searchFilterDesktop"
               value={searchFilter}
@@ -188,7 +195,6 @@ function AssessmentListToolbar(props) {
               onClick={() => setSearchBarFocus(true)}
               onBlur={() => setSearchBarFocus(false)}
               placeholder="Search Kuis"
-              // onBlur={() => setSearchBarFocus(false)}
               style={{
                 maxWidth: "250px",
                 marginRight: "10px"
@@ -201,21 +207,25 @@ function AssessmentListToolbar(props) {
                       </IconButton>
                     </InputAdornment>)
                   ,
-                  endAdornment:( 
+                  endAdornment:(
                   <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                    <IconButton 
-                      size="small" 
+                    <IconButton
+                      size="small"
                       onClick={(e) => {
-                        e.stopPropagation() 
+                        e.stopPropagation()
                         onClear(e, "searchFilterDesktop")}
-                      } 
-                      style={{ 
-                        opacity: 0.5, 
+                      }
+                      style={{
+                        opacity: 0.5,
                         visibility: !searchFilter ? "hidden" : "visible"
                       }}>
                       <ClearIcon/>
                     </IconButton>
-                  </InputAdornment>)
+                  </InputAdornment>
+                ),
+                style:{
+                  borderRadius: "20px"
+                }
               }}
             />
         </Hidden>
@@ -223,10 +233,10 @@ function AssessmentListToolbar(props) {
           {role === "Student"?
             null
           :
-            <LightTooltip title="Buat Kuis">
+            <LightTooltip title="Buat Kuis/Ujian">
               <Link to="/kuis">
                 <Fab size="small" className={classes.newAssessmentButton}>
-                  <AssignmentIcon className={classes.newAssessmentIconMobile} />
+                  <FaTasks className={classes.newAssessmentIconMobile} />
                 </Fab>
               </Link>
             </LightTooltip>
@@ -236,10 +246,11 @@ function AssessmentListToolbar(props) {
           {role === "Student"?
             null
           :
+          // ANCHOR contoh tombol round edge
             <Link to="/kuis">
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
-                <AssignmentIcon className={classes.newAssessmentIconDesktop} />
-                Buat Kuis
+                <FaTasks className={classes.newAssessmentIconDesktop} />
+                Buat Kuis/Ujian
               </Fab>
             </Link>
           }
@@ -322,10 +333,10 @@ const useStyles = makeStyles((theme) => ({
   },
   newAssessmentButton: {
     marginRight: "10px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -405,8 +416,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#974994",
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: "#974994",
-      color: "#white"
+      backgroundColor: "white",
+      color: "#974994"
     },
   },
   assessmentPanelDivider: {
@@ -414,7 +425,7 @@ const useStyles = makeStyles((theme) => ({
   },
   assessmentPanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   assessmentPaper: {
@@ -423,8 +434,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "15px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
+  },
+  titleIcon: {
+    fontSize: "28px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    marginRight: "10px"
   }
 }));
 
@@ -446,20 +463,36 @@ function AssessmentList(props) {
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map} = props.subjectsCollection;
   const { user } = props.auth;
+  // Fitur 2 -- Dialog
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
 
+  const handleOpenDialog = (title, subject, start_date, end_date) => {
+    setCurrentDialogInfo({title, subject, start_date, end_date})
+    setOpenDialog(true)
+    console.log(title)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
+
+  // ANCHOR rows
   var rows = [];
   const assessmentRowItem = (data) => {
-    rows.push(
-      createData(
-        data._id,
-        data.name,
-        data.subject,
-        data.start_date,
-        data.end_date,
-        data.class_assigned,
-        data.type
+    if(data.type === "Kuis"){
+        rows.push(
+            createData(
+              data._id,
+              data.name,
+              data.subject,
+              data.start_date,
+              data.end_date,
+              data.class_assigned,
+              data.type
+        )
       )
-    )
+    }
   }
 
   React.useEffect(() => {
@@ -551,14 +584,36 @@ function AssessmentList(props) {
 
   document.title = "Schooly | Daftar Kuis";
   return (
-    <div className={classes.root}>
-      <DeleteDialog
-        openDeleteDialog={openDeleteDialog}
-        handleCloseDeleteDialog={handleCloseDeleteDialog}
-        itemType="Kuis"
-        itemName={selectedAssessmentName}
-        deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
-      />
+    <>
+      <div className={classes.root}>
+        {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
+        <DeleteDialog
+          openDeleteDialog={openDeleteDialog}
+          handleCloseDeleteDialog={handleCloseDeleteDialog}
+          itemType="Kuis"
+          itemName={selectedAssessmentName}
+          deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+          isWarning={true}
+        />
+        <Dialog
+          fullScreen={false}
+          open={openDialog}
+          onClose={handleCloseDialog}
+          fullWidth={true}
+          maxWidth="sm"
+        >
+          <div style={{padding: "20px"}}>
+              <Typography variant="h4" align="center">{currentDialogInfo.title}</Typography>
+              <Typography variant="h6" align="center" color="primary">
+                {currentDialogInfo.subject}
+              </Typography>
+              <Typography variant="subtitle1" align="center" style={{marginTop: "25px"}}>Mulai : {currentDialogInfo.start_date}</Typography>
+              <Typography variant="subtitle1" align="center">Selesai : {currentDialogInfo.end_date}</Typography>
+              <Typography variant="subtitle2" align="center" color="textSecondary" style={{marginTop: "10px", textAlign: "center"}}>
+                Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata Pelajaran Terkait
+              </Typography>
+          </div>
+        </Dialog>
         <AssessmentListToolbar
           role={user.role}
           deleteAssessment={deleteAssessment}
@@ -571,164 +626,165 @@ function AssessmentList(props) {
           updateSearchFilter={updateSearchFilter}
           setSearchBarFocus={setSearchBarFocus}
           searchBarFocus={searchBarFocus}
-        />
-      <Divider variant="inset" className={classes.titleDivider} />
-      <Grid container direction="column" spacing={2}>
-      {stableSort(rows, getComparator(order, orderBy))
-        .map((row, index) => {
-          const labelId = `enhanced-table-checkbox-${index}`;
-          let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
-          let linkToShare = `http://localhost:3000/kuis-murid/${row._id}`;
-          return (
-            <Grid item>
-              {user.role === "Teacher" ?
-                <ExpansionPanel
-                  button
-                  variant="outlined">
-                  <ExpansionPanelSummary className={classes.assessmentPanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
-                      <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.assessmenttitle}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.assessmenttitle}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
+          />
+        <Divider variant="inset" className={classes.titleDivider} />
+        <Grid container direction="column" spacing={2}>
+        {/* REVIEW stablesort element*/}
+        {stableSort(rows, getComparator(order, orderBy))
+          .map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
+            let linkToShare = `http://${window.location.host}/kuis-murid/${row._id}`
+            return (
+              <Grid item>
+                {user.role === "Teacher" ?
+                  <ExpansionPanel
+                    button
+                    variant="outlined">
+                    <ExpansionPanelSummary className={classes.assessmentPanelSummary}>
+                      <Grid container spacing={1} justify="space-between" alignItems="center">
                         <Grid item>
-                          <LightTooltip title="Copy Link">
-                            <IconButton
-                              size="small"
-                              className={classes.copyToClipboardButton}
-                              onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
-                              <LinkIcon fontSize="small"/>
-                            </IconButton>
-                          </LightTooltip>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.assessmenttitle}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <Typography variant="h6" id={labelId}>
+                              {row.assessmenttitle}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          </Hidden>
                         </Grid>
-                        <Grid item>
-                          <LightTooltip title="Lihat Lebih Lanjut">
-                            <Link to={viewpage}>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <Link to={viewpage}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewAssessmentButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Copy Link">
                               <IconButton
                                 size="small"
-                                className={classes.viewAssessmentButton}
-                              >
-                                <PageviewIcon fontSize="small" />
+                                className={classes.copyToClipboardButton}
+                                onClick={(e) => {copyToClipboardButton(e, linkToShare, row.type)}}>
+                                <LinkIcon fontSize="small"/>
                               </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Sunting">
-                            <Link to={`/sunting-kuis/${row._id}`}>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <Link to={`/sunting-kuis/${row._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.editAssessmentButton}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
-                                className={classes.editAssessmentButton}
+                                className={classes.deleteAssessmentButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.assessmenttitle)}}
                               >
-                                <EditIcon fontSize="small" />
+                                <DeleteIcon fontSize="small" />
                               </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.deleteAssessmentButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.assessmenttitle)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.assessmentPanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
-                           row.class_assigned.map((id,i) => {
+                    </ExpansionPanelSummary>
+                    <Divider className={classes.assessmentPanelDivider} />
+                    <ExpansionPanelDetails>
+                      <Grid conntainer direction="column">
+                        <Grid item>
+                          <Typography variant="body1" gutterBottom>
+                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
+                            row.class_assigned.map((id,i) => {
 
-                            if(all_classes_map.get(id)){
-                              if (i === row.class_assigned.length - 1)
-                                return (`${all_classes_map.get(id).name}`)
-                              return (`${all_classes_map.get(id).name}, `)
+                              if(all_classes_map.get(id)){
+                                if (i === row.class_assigned.length - 1)
+                                  return (`${all_classes_map.get(id).name}`)
+                                return (`${all_classes_map.get(id).name}, `)
+                              }
+                              return null
+                            })
                             }
-                            return null
-                           })
-                          }
-                        </Typography>
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body2" className={classes.startDateText}>
+                            Waktu Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body2" className={classes.endDateWarningText}>
+                            Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <Typography variant="body2" className={classes.startDateText}>
-                           Waktu Mulai: {moment(row.start_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                :
+                  <Paper
+                    button component="a"
+                    variant="outlined"
+                    className={classes.assessmentPaper}
+                    onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm"))}
+                  >
+                    <div>
+                      <Typography variant="h6" id={labelId}>
+                        {row.assessmenttitle}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {all_subjects_map.get(row.subject)}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="body2" align="right" className={classes.endDateWarningText}>
+                          Batas Waktu:
                         </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" className={classes.endDateWarningText}>
-                           Batas Waktu: {moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
+                        <Typography variant="caption" align="right" className={classes.endDateWarningText}>
+                          {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              :
-              <Link to={viewpage}>
-                <Paper
-                  button component="a"
-                  variant="outlined"
-                  className={classes.assessmentPaper}
-                >
-                  <div>
-                    <Typography variant="h6" id={labelId}>
-                      {row.assessmenttitle}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {all_subjects_map.get(row.subject)}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Hidden smUp implementation="css">
-                      <Typography variant="body2" align="right" className={classes.endDateWarningText}>
-                        Batas Waktu:
-                      </Typography>
-                      <Typography variant="caption" align="right" className={classes.endDateWarningText}>
-                        {moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
-                      </Typography>
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <Typography variant="body2" align="right" className={classes.endDateWarningText}>
-                        Batas Waktu: {moment(row.end_date).locale("id").format("DD/MMM/YYYY - HH:mm")}
-                      </Typography>
-                    </Hidden>
-                  </div>
-                </Paper>
-                </Link>
-              }
-            </Grid>
-          );
-        })}
-      </Grid>
-      {/* </div> */}
-      <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
-        <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
-          Link {type} berhasil disalin ke Clipboard Anda!
-        </MuiAlert>
-      </Snackbar>
-    </div>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="body2" align="right" className={classes.endDateWarningText}>
+                          Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                        </Typography>
+                      </Hidden>
+                    </div>
+                  </Paper>
+                }
+              </Grid>
+            );
+          })}
+        </Grid>
+        {/* </div> */}
+        <Snackbar open={copySnackbarOpen} autoHideDuration={3000} onClose={handleCloseCopySnackBar}>
+          <MuiAlert onClose={handleCloseCopySnackBar} severity="success">
+            Link {type} berhasil disalin ke Clipboard Anda!
+          </MuiAlert>
+        </Snackbar>
+      </div>
+    </>
   );
 }
 

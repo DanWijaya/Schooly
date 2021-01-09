@@ -14,8 +14,8 @@ import { getOneUser } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Divider, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, ListItemText,
-   Paper, Typography } from "@material-ui/core";
+import { Avatar, Button, Divider, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText,
+   Paper, Typography, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
@@ -60,11 +60,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listItemPaper: {
-    marginBottom: "10px"
+    marginTop: "5px",
+    marginBottom: "5px"
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   downloadIconButton: {
@@ -106,6 +107,29 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
+  submittedButton: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: "5px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    maxWidth: "100px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+  },
+  checkButton: {
+    borderRadius: "100%",
+    backgroundColor: theme.palette.success.main,
+    color: "white",
+    marginBottom: "10px",
+    marginRight: "10px"
+  },
+  listItemPaperSubmitted: {
+    backgroundColor: "#f2f2f2",
+    marginTop: "5px",
+    marginBottom: "5px"
+  }
 }));
 
 function LampiranFile(props) {
@@ -192,7 +216,7 @@ function LampiranFile(props) {
 function WorkFile(props) {
   const classes = useStyles();
 
-  const { file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog } = props;
+  const { file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog, type } = props;
 
   let displayedName = ""
   file_name.length >= 10 ?
@@ -201,78 +225,172 @@ function WorkFile(props) {
     displayedName = file_name
 
   return (
-    <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem
-        button
-        disableRipple
-        className={classes.listItem}
-        onClick={() => {onPreviewFile(file_id)}}
-      >
-        <ListItemAvatar>
-          {file_type === "Word" ?
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            :
-            file_type === "Excel" ?
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            :
-            file_type === "Gambar" ?
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            :
-            file_type === "PDF" ?
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            :
-            file_type === "Teks" ?
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            :
-            file_type === "Presentasi" ?
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            :
-            file_type === "File Lainnya" ?
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            : null
-          }
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <LightTooltip title={file_name} placement="top">
-              <Typography variant="subtitle2">
-                {displayedName}
-              </Typography>
-            </LightTooltip>
-          }
-          secondary={file_type}
-        />
-        <IconButton
-          size="small"
-          className={classes.downloadIconButton}
-          onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id) }}
-         >
-          <CloudDownloadIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          size="small"
-          className={classes.deleteIconButton}
-          onClick={(e) => { e.stopPropagation()
-            handleOpenDeleteDialog(props.file_id, props.file_name)}}
-         >
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-      </ListItem>
-    </Paper>
+    <>
+    {type === "chosen" ? 
+      <Paper variant="outlined" className={classes.listItemPaper}>
+        <ListItem
+          disableRipple
+          className={classes.listItem}
+        >
+          <ListItemAvatar>
+            {file_type === "Word" ?
+                <Avatar className={classes.wordFileTypeIcon}>
+                  <FaFileWord />
+                </Avatar>
+              :
+              file_type === "Excel" ?
+                <Avatar className={classes.excelFileTypeIcon}>
+                  <FaFileExcel />
+                </Avatar>
+              :
+              file_type === "Gambar" ?
+                <Avatar className={classes.imageFileTypeIcon}>
+                  <FaFileImage />
+                </Avatar>
+              :
+              file_type === "PDF" ?
+                <Avatar className={classes.pdfFileTypeIcon}>
+                  <FaFilePdf />
+                </Avatar>
+              :
+              file_type === "Teks" ?
+                <Avatar className={classes.textFileTypeIcon}>
+                  <FaFileAlt />
+                </Avatar>
+              :
+              file_type === "Presentasi" ?
+                <Avatar className={classes.presentationFileTypeIcon}>
+                  <FaFilePowerpoint />
+                </Avatar>
+              :
+              file_type === "File Lainnya" ?
+                <Avatar className={classes.otherFileTypeIcon}>
+                  <FaFile />
+                </Avatar>
+              : null
+            }
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <LightTooltip title={file_name} placement="top">
+                <Typography variant="subtitle2">
+                  {displayedName}
+                </Typography>
+              </LightTooltip>
+            }
+            secondary={file_type}
+          />
+        </ListItem>
+      </Paper>
+    : 
+      <Paper variant="outlined" className={classes.listItemPaperSubmitted}>
+        <ListItem
+          button
+          disableRipple
+          className={classes.listItem}
+          onClick={() => {onPreviewFile(file_id, "tugas")}}
+        >
+            <ListItemAvatar>
+              {file_type === "Word" ?
+                <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}>
+                  <Avatar className={classes.wordFileTypeIcon}>
+                    <FaFileWord />
+                  </Avatar>
+                  </Badge>
+                :
+                file_type === "Excel" ?
+                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}>
+                    <Avatar className={classes.excelFileTypeIcon}>
+                      <FaFileExcel />
+                    </Avatar>
+                  </Badge>
+                :
+                file_type === "Gambar" ?
+                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}>
+                    <Avatar className={classes.imageFileTypeIcon}>
+                      <FaFileImage />
+                    </Avatar>
+                  </Badge>
+                :
+                file_type === "PDF" ?
+                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}>
+                    <Avatar className={classes.pdfFileTypeIcon}>
+                      <FaFilePdf />
+                    </Avatar>
+                  </Badge>
+                :
+                file_type === "Teks" ?
+                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}>
+                    <Avatar className={classes.textFileTypeIcon}>
+                      <FaFileAlt />
+                    </Avatar>
+                  </Badge>
+                :
+                file_type === "Presentasi" ?
+                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}>
+                    <Avatar className={classes.presentationFileTypeIcon}>
+                      <FaFilePowerpoint />
+                    </Avatar>
+                  </Badge>
+                :
+                file_type === "File Lainnya" ?
+                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}>
+                    <Avatar className={classes.otherFileTypeIcon}>
+                      <FaFile />
+                    </Avatar>
+                  </Badge>
+                : null
+              }
+            </ListItemAvatar>
+          <ListItemText
+            primary={
+              <LightTooltip title={file_name} placement="top">
+                <Typography variant="subtitle2">
+                  {displayedName}
+                </Typography>
+              </LightTooltip>
+            }
+            secondary={file_type}
+          />
+          <IconButton
+            size="small"
+            className={classes.downloadIconButton}
+            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "tugas") }}
+          >
+            <CloudDownloadIcon fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            className={classes.deleteIconButton}
+            onClick={(e) => { e.stopPropagation()
+              handleOpenDeleteDialog(props.file_id, props.file_name)}}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </ListItem>
+      </Paper>}
+    </>
   )
 }
 
@@ -289,7 +407,8 @@ function ViewTaskStudent(props) {
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
-  const [fileTugas, setFileTugas] = React.useState(null);
+  const [fileTugas, setFileTugas] = React.useState([]);
+  const [fileToSubmit, setFileToSubmit] = React.useState([])
   const [tasksContents, setTaskContents] = React.useState([]);
   const [fileLampiran, setFileLampiran] = React.useState([]);
   // React HOOKS React.use bla2
@@ -309,11 +428,11 @@ function ViewTaskStudent(props) {
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
     // getTaskFilesByUser(user.id, tugasId)
-    getFileSubmitTasks(tugasId, user.id).then((items) => setTaskContents(items))
+    getFileSubmitTasks(tugasId, user.id).then((results) => setFileTugas(results))
     getOneTask(tugasId)
     getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
-    getFileTasks(tugasId).then((res) => setFileLampiran(res))
+    getFileTasks(tugasId).then((results) => setFileLampiran(results))
     if(tasksCollection.person_in_charge_id){
       getOneUser(tasksCollection.person_in_charge_id)
     }
@@ -344,47 +463,66 @@ function ViewTaskStudent(props) {
     }
   }
 
+  const listWorkFile = () => {
+    return fileTugas.map((item) => (
+      <WorkFile 
+        handleOpenDeleteDialog = {handleOpenDeleteDialog}
+        onDownloadFile={downloadFileSubmitTasks}
+        onPreviewFile={viewFileSubmitTasks}
+        file_name={item.filename}
+        file_id={item._id}
+        file_type={fileType(item.filename)}
+        type="work"
+      />
+    ))
+
+  }
+
   // For upload, showing file names before submitting
   const listFileChosen = () => {
-    let temp = []
-    if (!fileTugas) {
-      temp.push(
-        <Typography align="center" className={classes.workChosenFile}>
-          Kosong
-        </Typography>
+    if(fileTugas.length === 0 && fileToSubmit.length === 0){
+      return ( 
+        <Paper className={classes.submittedButton}>
+          <Typography variant="button">
+            KOSONG
+          </Typography>
+      </Paper>
       )
     }
-    else {
-      for (var i = 0; i < fileTugas.length; i++) {
+    else{
+      let temp = []
+      for (var i = 0; i < fileToSubmit.length; i++) {
         temp.push(
-          <Typography className={classes.workChosenFile}>
-            {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
-          </Typography>
+          <WorkFile
+            handleOpenDeleteDialog = {handleOpenDeleteDialog}
+            file_name={fileToSubmit[i].name}
+            file_id={fileToSubmit[i].id}
+            file_type={fileType(fileToSubmit[i].name)}
+            type="chosen"
+          />
         )
       }
+      return temp
     }
-    return temp
   }
 
   const handleTugasUpload = (e) => {
     const files = e.target.files;
-    setFileTugas(files)
-    console.log(fileTugas)
+    let temp = [...fileToSubmit, ...files]
+    setFileToSubmit(temp)
   }
 
   const onSubmitTugas = (e) => {
-    console.log("Submit tugas")
-    console.log("File Tugas: ", fileTugas)
     e.preventDefault();
     let formData = new FormData()
-    for (var i = 0; i < fileTugas.length; i++) {
-      formData.append("tugas", fileTugas[i])
+    // fileToSubmit ini bukan array biasa, itu FileList object. 
+    for (var i = 0; i < fileToSubmit.length; i++) {
+      formData.append("tugas", fileToSubmit[i])
     }
-    console.log(formData.get("tugas"), fileTugas)
     handleOpenUploadDialog()
     // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
     uploadFileSubmitTasks(formData, tugasId, user.id)
-    setFileTugas(null)
+    setFileToSubmit([])
   }
 
   // Delete Dialog
@@ -439,7 +577,7 @@ function ViewTaskStudent(props) {
       >
         <Grid item xs={12} md={8}>
           <Paper className={classes.paperBox}>
-            <Grid container spacing={2}>
+            <Grid container spacing={6}>
               <Grid item xs={12} md={7}>
                 <Typography variant="h4">
                   {tasksCollection.name}
@@ -454,7 +592,7 @@ function ViewTaskStudent(props) {
               <Grid item xs={12} md={5}>
                 <Hidden mdUp implementation="css">
                   <Typography variant="body2" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     Nilai Maksimum: 100
@@ -462,7 +600,7 @@ function ViewTaskStudent(props) {
                 </Hidden>
                 <Hidden smDown implementation="css">
                   <Typography variant="body2" align="right" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD/MMMM/YYYY - HH.mm")}
+                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                   </Typography>
                   <Typography variant="body2" align="right" color="textSecondary">
                     Nilai Maksimum: 100
@@ -503,31 +641,17 @@ function ViewTaskStudent(props) {
                 Hasil Pekerjaan
               </Typography>
             </Grid>
-            <Divider />
-            <Grid item style={{padding: "10px"}}>
-              <List>
-                {tasksContents.map((item) => {
-                  return (
-                    <WorkFile
-                      handleOpenDeleteDialog = {handleOpenDeleteDialog}
-                      onDownloadFile={downloadFileSubmitTasks}
-                      onPreviewFile={viewFileSubmitTasks}
-                      file_name={item.filename}
-                      file_id={item._id}
-                      file_type={fileType(item.filename)}
-                    />
-                  )
-                })
-              }
-              </List>
-            </Grid>
-            <Divider />
-            <Grid item container direction="column" alignItems="center" style={{padding: "10px"}}>
-              <Typography variant="h6">
-                <b><u>Berkas Terpilih</u></b>
-              </Typography>
-              {listFileChosen()}
-            </Grid>
+            <Divider/>
+            {fileTugas.length === 0 ? 
+              <Grid item style={{padding: "10px", display: "flex", flexDirection: "row", justifyContent: "center"}}>
+                {listWorkFile() }
+              </Grid>
+            :
+              <Grid item style={{padding: "10px", display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                {listWorkFile()}
+                {listFileChosen()}
+              </Grid>
+            }
             <Divider/>
             <Grid item container direction="column" alignItems="center" spacing={2} style={{padding: "20px"}}>
               <form onSubmit={onSubmitTugas}>

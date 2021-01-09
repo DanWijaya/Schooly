@@ -18,7 +18,8 @@ import TableRow from "@material-ui/core/TableRow";
 import FormControl from "@material-ui/core/FormControl";
 
 import { getStudentsByClass } from "../../../actions/UserActions";
-import { getTaskGrade, getAllTask } from "../../../actions/TaskActions";
+import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
+import { getKuisBySC, getUjianBySC, getAllAssessments} from "../../../actions/AssessmentActions"
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 
@@ -106,14 +107,15 @@ function ReportView(props) {
   // id                                     (ini tidak ada kalau rolenya "Other")
 
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
-  const [headers, setHeaders] = React.useState([]); // elemennya berupa string
+  const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
 
-  const { getTaskGrade, getAllClass, getAllSubjects, getStudentsByClass, getAllTask } = props;
+  const { getTasksBySC, getKuisBySC, getUjianBySC, getAllAssessments, getAllClass, getAllSubjects, getStudentsByClass, getAllTask } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
   const { user, students_by_class } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
   const allTaskArray = props.tasksCollection; // mengambil data dari DB
+  const { all_assessments } = props.assessmentsCollection;
 
   const countAllClassUpdate = React.useRef(0);
   const countMIDependencyUpdate = React.useRef(0);
@@ -130,7 +132,7 @@ function ReportView(props) {
   const [semuaKelas, setSemuaKelas] = React.useState(new Map());
 
   // berisi current menu item di Select.  key = idKelas, value = namaKelas
-  // info kelas wali TIDAK akan pernah dimasukkan ke sini, kelas wali disimpan di state kelasWali
+  // info kelas wali tidak akan pernah dimasukkan ke sini, kelas wali disimpan di state kelasWali
   const [kontenKelas, setKontenKelas] = React.useState(new Map());
 
   // alasan dipisahkan dengan semuaKelas: untuk menghindari pencarian info wali kelas dari banyak kelas.
@@ -178,16 +180,17 @@ function ReportView(props) {
   }
 
   // ini hanya digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari side drawer
-  // tipe argumen = Map
-  function generateRowCellMap(row) {
+  // tipe argumen = Map (pakai Map biar urutan value sel tetap terjaga sesuai dengan urutan nama kolom)
+  function generateRowCellFormat1(row) {
     let emptyCellSymbol = "-"; // jika sel kosong, masukkan "-"
     let cells = [];
     row.forEach((value, key) => {
       if (key !== "idMurid") {
         if (key === "namaMurid") {
-          cells.push(<TableCell align="left" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(value) ? value : emptyCellSymbol}</TableCell>);
+          // perlu "value !== undefined" karena 0 itu bernilai false
+          cells.push(<TableCell align="left" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(value !== undefined) ? value : emptyCellSymbol}</TableCell>);
         } else {
-          cells.push(<TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(value) ? value : emptyCellSymbol}</TableCell>);
+          cells.push(<TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(value !== undefined) ? value : emptyCellSymbol}</TableCell>);
         }
       }
     });
@@ -199,15 +202,15 @@ function ReportView(props) {
   }
 
   // ini digunakan untuk membuat tabel halaman lihat-rapor yang dibuka dari profile view murid atau profile
-  // tipe argumen = Object
-  function generateRowCellObj(row) {
+  // tipe argumen = Object (bisa pakai Object karena urutan nama kolom dan jumlah kolomnya fix)
+  function generateRowCellFormat2(row) {
     let emptyCellSymbol = "-"; // jika sel isi kosong, masukkan "-"
     return (
       <TableRow key={row.subject}> {/* nama subjek sudah dipastikan unik*/}
         <TableCell style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{row.subject}</TableCell>
-        <TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(row.taskAvg) ? row.taskAvg : emptyCellSymbol}</TableCell>
-        <TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(row.quizAvg) ? row.quizAvg : emptyCellSymbol}</TableCell>
-        <TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(row.assessmentAvg) ? row.assessmentAvg : emptyCellSymbol}</TableCell>
+        <TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(row.taskAvg !== null) ? row.taskAvg : emptyCellSymbol}</TableCell>
+        <TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(row.quizAvg  !== null) ? row.quizAvg : emptyCellSymbol}</TableCell>
+        <TableCell align="center" style={{border: "1px solid rgba(224, 224, 224, 1)"}}>{(row.assessmentAvg  !== null) ? row.assessmentAvg : emptyCellSymbol}</TableCell>
       </TableRow>
     );
   }
@@ -306,25 +309,32 @@ function ReportView(props) {
 
     // Memastikan subjectArray sudah ada isinya sebelum diproses
     if (subjectArray.length !== 0) {
-      // let emptySymbol = "-";
       let scores = {};
+      // scores akan berisi {
+      //   id_subject_1: {
+      //     subject: nama_subject, totalTaskScore: , countTask: , totalKuisScore: , countKuis: , totalUjianScore: , countUjian:
+      //   }, id_subject_2: {
+      //     subject: nama_subject, totalTaskScore: , countTask: , totalKuisScore: , countKuis: , totalUjianScore: , countUjian:
+      //   } ...
+      // }
       subjectArray.forEach((bySubject) => {
+        // bySubject.subjectId adalah id Subject
         scores[bySubject.subjectId] = {
           subject: bySubject.subjectName,
-          totalTaskScore: null,
+          // totalTaskScore: undefined,
           countTask: 0,
-          totalQuizScore: null,
-          countQuiz: 0,
-          totalAssmntScore: null,
-          countAssmnt: 0
+          // totalKuisScore: undefined,
+          countKuis: 0,
+          // totalUjianScore: undefined,
+          countUjian: 0
         };
       });
 
       for (let task of allTaskArray) {
-        // bySubject.subjectId adalah id Subject, sementara id adalah id mahasiswa
+        // id adalah id mahasiswa
         // task.grades sudah dipastikan ada saat pembuatan task baru sehingga tidak perlu dicek null atau tidaknya lagi
-        if ((Object.keys(scores).includes(task.subject)) && (Object.keys(task.grades).length !== 0) &&
-        (task.grades.constructor === Object) && (task.grades[id])) {
+        if ((Object.keys(scores).includes(task.subject)) && (task.grades.constructor === Object) &&
+        (Object.keys(task.grades).length !== 0) && (task.grades[id] !== undefined)) {
           if (!scores[task.subject].totalTaskScore) {
             scores[task.subject].totalTaskScore = task.grades[id];
           } else {
@@ -334,8 +344,33 @@ function ReportView(props) {
         }
       }
 
-      // ---menyusul menghitung jumlah quiz dan nilai total quiz
-      // ---menyusul menghitung jumlah assessment dan nilai total assessment
+      for (let assessment of all_assessments) {
+        // id adalah id murid
+        // (assessment.grades.constructor === Object) && (Object.keys(assessment.grades).length !== 0) sebenarnya tidak diperlukan karena
+        // grades sudah dipastikan tidak kosong. cek notes di model assessment buat info lebih lanjut
+        if ((Object.keys(scores).includes(assessment.subject)) && (assessment.grades) && (assessment.grades.constructor === Object) &&
+          (Object.keys(assessment.grades).length !== 0) && (assessment.grades[id] !== undefined) && assessment.grades[id].total_grade !== null) {
+          if (assessment.type === "Kuis") {
+            if (!scores[assessment.subject].totalKuisScore) {
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalKuisScore = assessment.grades[id].total_grade;
+            } else {
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalKuisScore += assessment.grades[id].total_grade;
+            }
+            scores[assessment.subject].countKuis++;
+          } else {
+            if (!scores[assessment.subject].totalUjianScore) {
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalUjianScore = assessment.grades[id].total_grade;
+            } else {
+              console.log(assessment.grades[id].total_grade)
+              scores[assessment.subject].totalUjianScore += assessment.grades[id].total_grade;
+            }
+            scores[assessment.subject].countUjian++;
+          }
+        }
+      }
 
       // mengonversi scores menjadi hanya menyimpan nama subject dan nilai rata-rata, lalu menyimpannya di subjectScoreArray
       let subjectScoreArray = [];
@@ -344,8 +379,8 @@ function ReportView(props) {
         subjectScoreArray.push({
           subject: sbjScore.subject,
           taskAvg: (sbjScore.totalTaskScore) ? (Math.round((sbjScore.totalTaskScore / sbjScore.countTask) * 10) / 10) : null,
-          quizAvg: null, // ---tambahkan ini ketika fitur kuis sudah selesai
-          assessmentAvg: null // ---tambahkan ini ketika fitur assessment sudah selesai
+          quizAvg: (sbjScore.totalKuisScore) ? (Math.round((sbjScore.totalKuisScore / sbjScore.countKuis) * 10) / 10) : null,
+          assessmentAvg: (sbjScore.totalUjianScore) ? (Math.round((sbjScore.totalUjianScore / sbjScore.countUjian) * 10) / 10) : null
         });
       });
       return (subjectScoreArray);
@@ -354,34 +389,23 @@ function ReportView(props) {
     }
   };
 
-
-  // reminder:
-  // -inisialisasi semua variabel di dalam array dependency dilakukan secara bersamaan sehingga useEffect hanya akan terpanggil 1 kali untuk ini
-  // -pada semua kasus di sini, masing-masing variabel di dalam array dependency diubah oleh 1 fungsi tersendiri
-  // dengan demikian, semua variabel di dependency array sudah siap dipakai ketika
-  // sudah terjadi perubahan sebanyak 1 + jumlah elemen dependency array
-  // React.useEffect(() => {
-  //   ...
-  // }, []) -> ini dependency array
-
-
   // ini dipanggil setelah selesai mount.
   // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman lihat-rapor untuk suatu murid
   // mengklik tombol rapor di side drawer.
   React.useEffect(() => {
-    if (role) {
-      if (role === "Teacher") {
-        getAllClass();
-        getAllTask();
-      } else if (role === "Student") {
-        getAllTask();
-        setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass()
-      } else {
-        getAllClass();
-        getAllClass("map");
-      }
-      getAllSubjects("map");
+    if (role === "Teacher") {
+      getAllClass();
+      getAllTask();
+      getAllAssessments();
+    } else if (role === "Student") {
+      setKelasWali(new Map()); // agar setRows(handleIndividualReport()) dijalankan, tapi tidak perlu panggil getAllClass()
+      getAllTask();
+      getAllAssessments();
+    } else {
+      getAllClass();
+      getAllClass("map");
     }
+    getAllSubjects("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
@@ -409,15 +433,16 @@ function ReportView(props) {
   // menggenerate konten tabel untuk halaman rapor murid perorangan setelah data-data yang diperlukan sudah ada
   React.useEffect(() => {
     countIRDependencyUpdate.current++;
-    if (countIRDependencyUpdate.current === 4) {
+    if (countIRDependencyUpdate.current === 5) {
       setHeaders(["Mata Pelajaran", "Rata-Rata Nilai Tugas", "Rata-Rata Nilai Kuis", "Rata-Rata Nilai Ujian"]);
       setRows(handleIndividualReport());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTaskArray, all_subjects_map, kelasWali]);
+  }, [allTaskArray, all_subjects_map, kelasWali, all_assessments]);
 
-  // menggenerate konten tabel untuk halaman rapor yg ada komponen Select setelah data-data yang diperlukan sudah ada.
-  // getStudentsByClass ada di fungsi handler Select dan dipanggil saat guru sudah memilih kelas DAN subjek.
+  // menggenerate konten tabel untuk halaman rapor yg dibuka dengan mengklik icon lihat rapor sidebar
+  // setelah data-data yang diperlukan sudah ada.
+  // getStudentsByClass ada di fungsi handler Select dan dipanggil saat guru sudah memilih kelas dan subjek.
   // valueMatpel dan valueKelas sudah dipastikan ada.
   React.useEffect(() => {
     countStdByClassUpdate.current++;
@@ -427,11 +452,10 @@ function ReportView(props) {
       let hasGrade = false;
 
       // akan berisi: [ map_row_1, map_row_2, ... ]
-      // isi map_row_n: Map { idMurid: id_student_1, namaMurid: nama_student, task_1: nilai, ... , kuis_1: nilai, ..., assessment_1: nilai, ... }
       let newRows = [];
-
       // akan berisi: { id_student_1: map_row_1, id_student_2: map_row_2, ... }
       let newRowsObj = {};
+      // isi map_row_n: Map { idMurid: id_student_1, namaMurid: nama_student, id_task_1: nilai, ... , id_kuis_1: nilai, ..., id_assessment_1: nilai, ... }
 
       students_by_class.forEach((stdInfo) => {
         let temp = new Map();
@@ -445,24 +469,50 @@ function ReportView(props) {
         condition.push("noStudent");
       }
 
-      getTaskGrade(valueMatpel, valueKelas).then((taskArray) => {
-        if (taskArray.length !== 0) {
-          taskArray.forEach((task) => {
-            headerNames.push(task.name);
+      const addScore = (items, isAssessment) => {
+        if (items.length !== 0) {
+          items.forEach((item) => {
+            headerNames.push(item.name);
           });
           hasGrade = true;
 
-          students_by_class.forEach((stdInfo) => {
-            taskArray.forEach((task) => {
-              newRowsObj[stdInfo._id].set(task._id, task.grades[stdInfo._id]); // task.grades sudah dipastikan ada saat pembuatan task baru
+          if (isAssessment) {
+            students_by_class.forEach((stdInfo) => {
+              items.forEach((item) => {
+                if ((item.grades) && (item.grades[stdInfo._id] !== undefined) && (item.grades[stdInfo._id].total_grade !== null)) {
+                  let grade = Math.round(item.grades[stdInfo._id].total_grade * 10) / 10;
+                  newRowsObj[stdInfo._id].set(item._id, grade);
+                } else {
+                  newRowsObj[stdInfo._id].set(item._id, undefined);
+                }
+              });
             });
-          });
-        } // jika taskArray kosong, hasGrade akan tetap bernilai false
-        return;
+          } else {
+            students_by_class.forEach((stdInfo) => {
+              items.forEach((item) => {
+                if ((item.grades) && (item.grades[stdInfo._id] !== undefined)) {
+                  let grade = Math.round(item.grades[stdInfo._id] * 10) / 10;
+                  newRowsObj[stdInfo._id].set(item._id, grade);
+                } else {
+                  newRowsObj[stdInfo._id].set(item._id, undefined);
+                }
+              });
+            });
+          }
+        } // jika items kosong, hasGrade akan tetap bernilai false
+      };
+
+      getTasksBySC(valueMatpel, valueKelas).then((taskArray) => {
+        addScore(taskArray, false);
       }).then(() => {
-        // getQuizGrade ---menyusul
-        // then getAssessmentGrade ---menyusul
-        // then
+        return getKuisBySC(valueMatpel, valueKelas).then((kuisArray) => {
+          addScore(kuisArray, true);
+        });
+      }).then(() => {
+        return getUjianBySC(valueMatpel, valueKelas).then((ujianArray) => {
+          addScore(ujianArray, true);
+        });
+      }).then(() => {
         students_by_class.forEach((stdInfo) => {
           newRows.push(newRowsObj[stdInfo._id]);
         });
@@ -552,7 +602,7 @@ function ReportView(props) {
                   </TableHead>
                   <TableBody>
                       {rows.map((row) => {
-                        return generateRowCellObj(row);
+                        return generateRowCellFormat2(row);
                       })}
                   </TableBody>
                 </Table>
@@ -582,7 +632,7 @@ function ReportView(props) {
                   </TableHead>
                   <TableBody>
                     {rows.map((row) => {
-                      return generateRowCellObj(row);
+                      return generateRowCellFormat2(row);
                     })}
                   </TableBody>
                 </Table>
@@ -604,34 +654,38 @@ function ReportView(props) {
                 Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih
               </Typography>
             </Grid>
-            <Grid container xs={12} md={7} style={{marginLeft: "5px"}}>
-              <Grid item xs={12} md={6}>
-                <FormControl margin="dense">
-                  <InputLabel id="kelas-label">Kelas</InputLabel>
-                  <Select
-                    labelId="kelas-label"
-                    id="kelas"
-                    value={valueKelas}
-                    onChange={(event) => {handleKelasChange(event)}}
-                    className={classes.select}
-                  >
-                    {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
-                  </Select>
-                </FormControl>
+            <Grid item container xs={12} md={8}>
+              <Grid item xs={12} sm={6} container justify="flex-end">
+                <Grid item>
+                  <FormControl margin="dense" variant="outlined">
+                    <InputLabel id="kelas-label">Kelas</InputLabel>
+                    <Select
+                      labelId="kelas-label"
+                      id="kelas"
+                      value={valueKelas}
+                      onChange={(event) => {handleKelasChange(event)}}
+                      className={classes.select}
+                    >
+                      {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl margin="dense">
-                  <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
-                  <Select
-                    labelId="matpel-label"
-                    id="matpel"
-                    value={valueMatpel}
-                    onChange={(event) => {handleMatPelChange(event)}}
-                    className={classes.select}
-                  >
-                    {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
-                  </Select>
-                </FormControl>
+              <Grid item xs={12} sm={6} container justify="flex-end">
+                <Grid item>
+                  <FormControl margin="dense">
+                    <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
+                    <Select
+                      labelId="matpel-label"
+                      id="matpel"
+                      value={valueMatpel}
+                      onChange={(event) => {handleMatPelChange(event)}}
+                      className={classes.select}
+                    >
+                      {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -660,7 +714,7 @@ function ReportView(props) {
                           // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
                           ((rows.length !== 0) && (rows[0].constructor === Map)) ? (
                             rows.map((row) => {
-                              return generateRowCellMap(row);
+                              return generateRowCellFormat1(row);
                             })
                           ) : (
                             null
@@ -685,16 +739,18 @@ ReportView.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-  tasksCollection: PropTypes.array.isRequired
+  tasksCollection: PropTypes.array.isRequired,
+  assessmentsCollection: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
-  tasksCollection: state.tasksCollection
+  tasksCollection: state.tasksCollection,
+  assessmentsCollection: state.assessmentsCollection
 });
 
 export default connect(
-  mapStateToProps, { getStudentsByClass, getTaskGrade, getAllClass, getAllSubjects, getAllTask }
+  mapStateToProps, { getStudentsByClass, getTasksBySC, getKuisBySC, getUjianBySC, getAllAssessments, getAllClass, getAllSubjects, getAllTask }
 ) (ReportView);

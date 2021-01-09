@@ -8,9 +8,9 @@ import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
-import EventIcon from "@material-ui/icons/Event";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import { FaChalkboardTeacher, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
 
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 const StyledListItem = withStyles((theme) => ({
   root: {
     "&:active, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
 }))(ListItem);
@@ -108,15 +108,28 @@ function DrawerContent(props) {
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
     ]
-  else {
+  else if (user.role === "Student"){
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
-      ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
+      // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
       ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
       ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <BsClipboardData className={classes.drawerListItemIcon} />, "Kuis/Ujian"],
+      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
+      ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
+    ]
+  }
+  else {
+    ListItemContents = [
+      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
+      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
+      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
+      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
+      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
+      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
+      ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"]
     ]
     if (user.role === "Teacher") {
       ListItemContents.push(

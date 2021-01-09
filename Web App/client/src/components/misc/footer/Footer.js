@@ -15,6 +15,11 @@ const useStyles = makeStyles((theme) => ({
     width: "10%",
     height: "10%",
   },
+  schoolySymbolDesktopAssessment: {
+    width: "20%",
+    height: "20%",
+    objectFit: "contain"
+  },
   schoolySymbolMobile: {
     width: "50px",
     height: "50px",
@@ -28,97 +33,115 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "flex-start",
   },
+  mobileFont: {
+    fontSize: "11px",
+    [theme.breakpoints.up("sm")]: {
+      fontSize: "13.5px",
+    },
+  }
 }));
 
-function Footer() {
+function Footer(props) {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
-      <Divider style={{marginBottom: "10px"}} />
       <Hidden mdUp implementation="css">
         {/* Mobile = Column View */}
-        <Grid container justify="space-between">
-          <Grid item>
-            <div className={classes.footerMobileContainer}>
-              <Typography variant="caption" color="textSecondary">
-                Schooly System
-              </Typography>
-              <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolMobile} />
-            </div>
-          </Grid>
-          <Grid item>
-            <div className={classes.footerMobileContainer}>
-              <Typography variant="caption">
-                <Link to="/bantuan">
-                  Bantuan
-                </Link>
-              </Typography>
-              <Typography variant="caption">
-                <Link to="/tentang-schooly">
-                  Tentang Schooly
-                </Link>
-              </Typography>
-              <Typography variant="caption">
-                <Link to="/kebijakan-penggunaan">
-                  Kebijakan Pengunaan
-                </Link>
-              </Typography>
-            </div>
-          </Grid>
-          <Grid item>
-            <div className={classes.footerMobileContainer}>
-              <Typography variant="caption">
-                <Link to="mailto:schoolysystem@gmail.com">
-                  Hubungi Kami
-                </Link>
-              </Typography>
-              <Typography variant="caption">
-                <Link to="http://www.instagram.com">
-                  Instagram
-                </Link>
-              </Typography>
-            </div>
-          </Grid>
-        </Grid>
+        {(props.assessmentState !== "ujian") ?
+          <div>
+            <Divider style={{marginBottom: "10px"}} />
+            <Grid container justify="space-between">
+              <Grid item>
+                <div className={classes.footerMobileContainer}>
+                  <Typography color="textSecondary" className={classes.mobileFont}>
+                    Schooly System
+                  </Typography>
+                  <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolMobile} />
+                </div>
+              </Grid>
+              <Grid item>
+                <div className={classes.footerMobileContainer}>
+                  <Typography gutterBottom className={classes.mobileFont}>
+                    <Link to="/bantuan">
+                      Bantuan
+                    </Link>
+                  </Typography>
+                  <Typography gutterBottom className={classes.mobileFont}>
+                    <Link to="/tentang-schooly">
+                      Tentang Schooly
+                    </Link>
+                  </Typography>
+                  <Typography gutterBottom className={classes.mobileFont}>
+                    <Link to="/kebijakan-penggunaan">
+                      Kebijakan Pengunaan
+                    </Link>
+                  </Typography>
+                </div>
+              </Grid>
+              <Grid item>
+                <div className={classes.footerMobileContainer}>
+                  <Typography gutterBottom className={classes.mobileFont}>
+                    <Link to="mailto:schoolysystem@gmail.com">
+                      Hubungi Kami
+                    </Link>
+                  </Typography>
+                  <Typography gutterBottom className={classes.mobileFont}>
+                    <Link to="http://www.instagram.com">
+                      Media Sosial
+                    </Link>
+                  </Typography>
+                </div>
+              </Grid>
+            </Grid>
+          </div>
+        :
+          null
+        }
       </Hidden>
       <Hidden smDown implementation="css">
         {/* Desktop = Row View */}
-        <div className={classes.footerDesktopContainer}>
-          <Grid container spacing={2} justify="flex-start">
-            <Grid item style={{color: "grey"}}>
-              Schooly System
+        {(props.assessmentState !== "ujian") ?
+        <div>
+          <Divider style={{marginBottom: "10px"}} />
+          <div className={classes.footerDesktopContainer}>
+            <Grid item container spacing={2} justify="flex-start">
+              <Grid item style={{color: "grey"}}>
+                Schooly System
+              </Grid>
+              <Grid item>
+                <Link to="/bantuan">
+                  Bantuan
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="/kebijakan-penggunaan">
+                  Kebijakan Pengunaan
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to="/bantuan">
-                Bantuan
-              </Link>
+            <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolDesktop} />
+            <Grid container spacing={2} justify="flex-end">
+              <Grid item>
+                <Link to="/tentang-schooly">
+                  Tentang Schooly
+                </Link>
+              </Grid>
+              <Grid item>
+                <a href="mailto:schoolysystem@gmail.com">
+                  Hubungi Kami
+                </a>
+              </Grid>
+              <Grid item>
+                <a href="http://www.instagram.com">
+                  Media Sosial
+                </a>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to="/kebijakan-penggunaan">
-                Kebijakan Pengunaan
-              </Link>
-            </Grid>
-          </Grid>
-          <img src={schoolySymbolLogo} alt="Schooly Symbol Logo" className={classes.schoolySymbolDesktop} />
-          <Grid container spacing={2} justify="flex-end">
-            <Grid item>
-              <Link to="/tentang-schooly">
-                Tentang Schooly
-              </Link>
-            </Grid>
-            <Grid item>
-              <a href="mailto:schoolysystem@gmail.com">
-                Hubungi Kami
-              </a>
-            </Grid>
-            <Grid item>
-              <a href="http://www.instagram.com">
-                Instagram
-              </a>
-            </Grid>
-          </Grid>
+          </div>
         </div>
+        :
+        null
+        }
       </Hidden>
     </div>
   )

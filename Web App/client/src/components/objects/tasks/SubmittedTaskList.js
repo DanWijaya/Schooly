@@ -36,16 +36,16 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.button.main,
+      backgroundColor: theme.palette.primary.fade,
     },
   },
   checkCircleIcon: {
     marginRight: "10px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.create.main
+      color: theme.palette.success.main
     },
   },
   downloadAllButton: {
@@ -391,6 +391,9 @@ function SubmittedTaskList(props) {
                   onPreviewFile={onPreviewFile}
                   onDownloadFile={onDownloadFile}/>)
               }
+            }
+            if(task_list_on_panel.length === 0) {
+              task_list_on_panel.push(<Typography align="center" color="textSecondary" variant="subtitle1">Kosong</Typography>)
             }
             students_in_class.push(
               <ExpansionPanel>

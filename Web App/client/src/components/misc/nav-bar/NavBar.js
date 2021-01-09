@@ -33,10 +33,10 @@ const useStyles = makeStyles((theme) => ({
     width: "75px",
     height: "30px",
     marginRight: "15px",
-    backgroundColor: theme.palette.create.main,
+    backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.create.main,
+      backgroundColor: theme.palette.success.main,
       color: "white",
     },
   },
@@ -89,7 +89,7 @@ function NavBar(props) {
       </Link>
     )
     rightNavBarContents = (
-      <NavBarLoggedInContents isMobileView={isMobileView} />
+      <NavBarLoggedInContents isMobileView={isMobileView}/>
     )
   }
 
@@ -128,11 +128,21 @@ function NavBar(props) {
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar>
-        {leftNavBarContents}
-        {middleNavBarContents}
-        {rightNavBarContents}
-      </Toolbar>
+      {(props.assessmentState !== "ujian") ?
+        <Toolbar>
+          {leftNavBarContents}
+          {middleNavBarContents}
+          {rightNavBarContents}
+        </Toolbar>
+      :
+        <Toolbar>
+          <img
+            alt="SchoolyLogoNavBar"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
+        </Toolbar>
+      }
     </AppBar>
   )
 }
