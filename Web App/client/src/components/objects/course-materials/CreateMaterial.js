@@ -269,7 +269,7 @@ class CreateMaterial extends Component {
   render() {
     const { classes, success, errors }  = this.props;
     const { all_classes } = this.props.classesCollection;
-    // const { all_subjects } = this.props.subjectsCollection;
+    const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran }  = this.state;
     const { user } = this.props.auth
 
@@ -332,8 +332,6 @@ class CreateMaterial extends Component {
     document.title = "Schooly | Buat Materi";
     
     if (user.role === "Teacher") {
-      // all_subjects.sort((a, b) => (a.name > b.name) ? 1 : -1)
-      // all_classes.sort((a, b) => (a.name > b.name) ? 1 : -1)
       return (
         <div className={classes.root}>
           <UploadDialog
