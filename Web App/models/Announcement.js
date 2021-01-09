@@ -26,12 +26,12 @@ const AnnoucementSchema = new Schema({
     author_id: {
         type: ObjectId,
         required: true
-    },
-    date_announced: {
-        type: Date,
-        required: true
     }
-})
+    // date_announced: {
+    //     type: Date,
+    //     required: true
+    // }
+}, { timestamps: true })
 
 const Announcement = mongoose.model("announcements", AnnoucementSchema);
 module.exports = Announcement;

@@ -115,6 +115,6 @@ const AssessmentSchema = new Schema({
     // (di CreateAssessment.js, di fungsi onSubmit) jika assessment tidak punya suatu tipe soal, value untuk key tipe soal tersebut = null
     // (di CreateAssessment.js, di fungsi onSubmit) bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai 0 
 
-})
+}, {timestamps: true})
 
 module.exports = Assessment = mongoose.model("assessments", AssessmentSchema);

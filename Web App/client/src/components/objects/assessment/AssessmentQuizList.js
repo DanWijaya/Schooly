@@ -28,8 +28,8 @@ import { FaTasks } from "react-icons/fa";
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
-function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type) {
-  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type };
+function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt) {
+  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -489,7 +489,8 @@ function AssessmentList(props) {
               data.start_date,
               data.end_date,
               data.class_assigned,
-              data.type
+              data.type,
+              data.createdAt
         )
       )
     }
@@ -757,7 +758,7 @@ function AssessmentList(props) {
                       </Typography>
                     </div>
                     <div>
-                      <Hidden smUp implementation="css">
+                      {/* <Hidden smUp implementation="css">
                         <Typography variant="body2" align="right" color="textSecondary">
                           Batas Waktu:
                         </Typography>
@@ -769,7 +770,21 @@ function AssessmentList(props) {
                         <Typography variant="body2" align="right" color="textSecondary">
                           Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
-                      </Hidden>
+                      </Hidden> */}
+                      <Typography
+                        variant="subtitle"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("HH.mm")}
+                      </Typography>
                     </div>
                   </Paper>
                 }

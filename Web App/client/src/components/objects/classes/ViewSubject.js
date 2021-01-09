@@ -154,6 +154,15 @@ function MaterialListitem(props) {
                   }
                   secondary={!props.work_subject ? " " : props.work_subject}
                 />
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="subtitle" color="textSecondary">
+                      {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                    </Typography>
+                  }
+                  secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                />
               </ListItem>
             </Paper>
         </Link>
@@ -183,7 +192,7 @@ function AssignmentListItem(props) {
                   />
                 </Grid>
                 <Grid item xs={5}>
-                  <ListItemText
+                  {/* <ListItemText
                     align="right"
                     primary={
                       <Typography variant="body2" className={classes.warningText}>
@@ -195,6 +204,15 @@ function AssignmentListItem(props) {
                         {props.work_status}
                       </Typography>
                     }
+                  /> */}
+                  <ListItemText
+                    align="right"
+                    primary={
+                      <Typography variant="subtitle" color="textSecondary">
+                        {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                      </Typography>
+                    }
+                    secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
                   />
                 </Grid>
               </Grid>
@@ -217,7 +235,7 @@ function AssignmentListItem(props) {
                 }
                 secondary={props.work_subject}
               />
-              <ListItemText
+              {/* <ListItemText
                 align="right"
                 primary={
                   <Typography variant="body2" className={classes.warningText}>
@@ -225,6 +243,15 @@ function AssignmentListItem(props) {
                   </Typography>
                 }
                 secondary={props.work_status}
+              /> */}
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
               />
             </ListItem>
           </Paper>
@@ -265,7 +292,7 @@ function AssessmentListItem(props) {
               secondary={props.work_subject}
             />
 
-            <ListItemText
+            {/* <ListItemText
               align="right"
               primary={
                 <Typography variant="body2" className={classes.warningText}>
@@ -277,6 +304,15 @@ function AssessmentListItem(props) {
                   {props.work_status}
                 </Typography>
               }
+            /> */}
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="subtitle" color="textSecondary">
+                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                </Typography>
+              }
+              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
             />
           </ListItem>
         </Paper>
@@ -295,7 +331,7 @@ function AssessmentListItem(props) {
               }
               secondary={props.work_subject}
             />
-            <ListItemText
+            {/* <ListItemText
               align="right"
               primary={
                 <Typography variant="body2" className={classes.warningText}>
@@ -303,6 +339,15 @@ function AssessmentListItem(props) {
                 </Typography>
               }
               secondary={props.work_status}
+            /> */}
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="subtitle" color="textSecondary">
+                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                </Typography>
+              }
+              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
             />
           </ListItem>
         </Paper>
@@ -439,6 +484,7 @@ function ViewSubject(props) {
               work_category_avatar={workCategoryAvatar}
               work_subject={category === "subject" ? null : all_subjects_map.get(material.subject)}
               work_link={`/materi/${material._id}`}
+              work_dateposted={material.createdAt}
             />
           )
         }
@@ -505,7 +551,8 @@ function ViewSubject(props) {
                 work_category_avatar={workCategoryAvatar}
                 work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
                 work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_dateposted={task.createdAt}
                 work_link={`/tugas-murid/${task._id}`}
               />
             )
@@ -524,7 +571,8 @@ function ViewSubject(props) {
                 work_category_avatar={workCategoryAvatar}
                 work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
                 work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_dateposted={task.createdAt}
                 work_link={`/tugas-murid/${task._id}`}
               />
             )
@@ -585,6 +633,7 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
@@ -599,6 +648,7 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
@@ -622,6 +672,7 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
@@ -636,6 +687,7 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }

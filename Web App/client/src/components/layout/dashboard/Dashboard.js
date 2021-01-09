@@ -143,13 +143,22 @@ function TaskListItem(props) {
               primary={props.work_title}
               secondary={props.work_sender}
             />
-            <ListItemText
+            {/* <ListItemText
               align="right"
               primary={
                 <Typography variant="body2" color="textSecondary">
                   Tenggat: {props.work_deadline_desktop}
                 </Typography>
               }
+            /> */}
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="subtitle" color="textSecondary">
+                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                </Typography>
+              }
+              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
             />
           </ListItem>
         </Paper>
@@ -194,7 +203,7 @@ function ListAssessments(props){
               }
               secondary={props.work_subject}
             />
-            <ListItemText
+            {/* <ListItemText
               align="right"
               primary={
                 <Typography variant="body2" color="textSecondary">
@@ -202,6 +211,15 @@ function ListAssessments(props){
                 </Typography>
               }
               secondary={props.work_status}
+            /> */}
+            <ListItemText
+              align="right"
+              primary={
+                <Typography variant="subtitle" color="textSecondary">
+                  {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                </Typography>
+              }
+              secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
             />
           </ListItem>
         </Paper>
@@ -251,7 +269,7 @@ function ListAssessments(props){
           <AssignmentLateIcon/>
         </Avatar>
       )
-      let workStatus = "Belum Ditempuh"
+      // let workStatus = "Belum Ditempuh"
       if(type === "Kuis"){
         if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis"){
           result.push(
@@ -259,9 +277,10 @@ function ListAssessments(props){
               work_title={assessment.name}
               work_category_avatar={workCategoryAvatar}
               work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
-              work_status={workStatus}
+              // work_status={workStatus}
               work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
               work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              work_dateposted={assessment.createdAt}
             />
           )
         }
@@ -273,9 +292,10 @@ function ListAssessments(props){
               work_title={assessment.name}
               work_category_avatar={workCategoryAvatar}
               work_subject={category === "subject" ? null : all_subjects_map.get(assessment.subject)}
-              work_status={workStatus}
+              // work_status={workStatus}
               work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
               work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              work_dateposted={assessment.createdAt}
             />
           )
         }
@@ -398,6 +418,7 @@ class Dashboard extends Component {
               work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
               work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
               work_link={`/tugas-murid/${task._id}`}
+              work_dateposted={task.createdAt}
             />
           )
         }
@@ -429,6 +450,7 @@ class Dashboard extends Component {
                 work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                 work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                 work_link={`/tugas-guru/${task._id}`}
+                work_dateposted={task.createdAt}
               />
             )
           }
@@ -615,6 +637,7 @@ class Dashboard extends Component {
                               work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                               work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                               work_link={`/tugas-murid/${task._id}`}
+                              work_dateposted={task.createdAt}
                             />
                           )
                         })}
@@ -663,6 +686,7 @@ class Dashboard extends Component {
                               work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                               work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                               work_link={`/tugas-murid/${task._id}`}
+                              work_dateposted={task.createdAt}
                             />
                           )
                         })}
@@ -711,6 +735,7 @@ class Dashboard extends Component {
                               work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                               work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
                               work_link={`/tugas-murid/${task._id}`}
+                              work_dateposted={task.createdAt}
                             />
                           )
                         })}

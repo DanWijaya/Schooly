@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
 import {
   getAllMaterials,
   getMaterial,
@@ -705,7 +706,7 @@ function MaterialList(props) {
                       </Typography>
                     </div>
                     <div>
-                      <Hidden smUp implementation="css">
+                      {/* <Hidden smUp implementation="css">
                         <Typography
                           variant="body2"
                           color="textSecondary"
@@ -729,7 +730,21 @@ function MaterialList(props) {
                         >
                           Pemberi Materi: {!row.author ? null : row.author.name}
                         </Typography>
-                      </Hidden>
+                      </Hidden> */}
+                      <Typography
+                        variant="subtitle"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("HH.mm")}
+                      </Typography>
                     </div>
                   </Paper>
                 </Link>

@@ -21,8 +21,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 
-function createData(_id, tasktitle, subject, deadline, class_assigned) {
-  return { _id, tasktitle, subject, deadline, class_assigned };
+function createData(_id, tasktitle, subject, deadline, class_assigned, createdAt) {
+  return { _id, tasktitle, subject, deadline, class_assigned, createdAt };
 }
 
 var rows = [];
@@ -435,6 +435,7 @@ function TaskList(props) {
         data.subject,
         data.deadline,
         data.class_assigned,
+        data.createdAt
       )
     )
   }
@@ -643,7 +644,7 @@ function TaskList(props) {
                     </Typography>
                   </div>
                   <div>
-                    <Hidden smUp implementation="css">
+                    {/* <Hidden smUp implementation="css">
                       <Typography variant="body2" align="right" color="textSecondary">
                         Batas Waktu:
                       </Typography>
@@ -655,7 +656,21 @@ function TaskList(props) {
                       <Typography variant="body2" align="right" color="textSecondary">
                         Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                       </Typography>
-                    </Hidden>
+                    </Hidden> */}
+                      <Typography
+                        variant="subtitle"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("HH.mm")}
+                      </Typography>
                   </div>
                 </Paper>
               </Link>

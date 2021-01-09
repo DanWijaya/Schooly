@@ -36,6 +36,6 @@ const TaskSchema = new Schema({
         type: Map,
         default: new Map()  // userId -> the score.
     }
-})
+}, { timestamps: true })
 
 module.exports = Task = mongoose.model("tasks", TaskSchema);

@@ -405,9 +405,12 @@ function AnnouncementList(props) {
         (!retrieved_users.get(data.author_id) ? null: retrieved_users.get(data.author_id).name),
         (data.title),
         (`/pengumuman/${data._id}`),
-        (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
-        (moment(data.date_announced).locale("id").format("HH.mm")),
-        (moment(data.date_announced).locale("id")),
+        // (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
+        // (moment(data.date_announced).locale("id").format("HH.mm")),
+        // (moment(data.date_announced).locale("id")),
+        (moment(data.createdAt).locale("id").format("DD MMM YYYY")),
+        (moment(data.createdAt).locale("id").format("HH.mm")),
+        (moment(data.createdAt).locale("id")),
         (!retrieved_users.get(data.author_id) ? null: retrieved_users.get(data.author_id).name.toLowerCase())
       )
     )
