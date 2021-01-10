@@ -41,9 +41,22 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "30px"
   },
   expansionPanelList: {
-    marginLeft: "20px",
-    marginRight: "15px",
-    marginBottom: "10px",
+    margin: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch"
+  },
+  listItemPaper: {
+    marginBottom: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch"
+  },
+  listItem: {
+    minHeight: "70px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
   },
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
@@ -650,7 +663,7 @@ function ViewSubject(props) {
         if(tab === "pekerjaan_kelas"){
           let workStatus = "Belum Ditempuh"
           if(type === "Kuis"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -665,7 +678,7 @@ function ViewSubject(props) {
             }
           }
           if(type === "Ujian"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -689,7 +702,7 @@ function ViewSubject(props) {
           console.log(assessment.subject)
           console.log(subject)
           if(type === "Kuis"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -704,7 +717,7 @@ function ViewSubject(props) {
             }
           }
           if(type === "Ujian"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -737,68 +750,60 @@ function ViewSubject(props) {
           <h5 className={classes.subtitleColor}>Kelas: {kelas.name}</h5>
         </Typography>
       </Paper>
-      <Grid container direction="column" style={{marginTop: "20px"}}>
-      <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Materi
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listMaterials("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listMaterials("subject", id, "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-        <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Tugas
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listTasks("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listTasks("subject", id, "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-        <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Kuis
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listAssessments("subject", id, "Kuis", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-        <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Ujian
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listAssessments("subject", id, "Ujian", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-      </Grid>
+      <div style={{marginTop: "20px"}}>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Materi
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listMaterials("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listMaterials("subject", id, "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Tugas
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listTasks("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listTasks("subject", id, "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Kuis
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Ujian
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listAssessments("subject", id, "Ujian", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+      </div>
     </div>
   )
 }

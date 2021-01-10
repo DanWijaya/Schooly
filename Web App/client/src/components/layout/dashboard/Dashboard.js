@@ -287,7 +287,7 @@ function ListAssessments(props){
       )
       // let workStatus = "Belum Ditempuh"
       if(type === "Kuis"){
-        if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis"){
+        if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis" && assessment.posted){
           result.push(
             <AssessmentListItem
               work_title={assessment.name}
@@ -302,7 +302,7 @@ function ListAssessments(props){
         }
       }
       if(type === "Ujian"){
-        if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian"){
+        if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian" && assessment.posted){
           result.push(
             <AssessmentListItem
               work_title={assessment.name}

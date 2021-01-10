@@ -619,7 +619,7 @@ function ViewClass(props) {
         if(tab === "pekerjaan_kelas"){
           let workStatus = "Belum Ditempuh"
           if(type === "Kuis"){
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -634,7 +634,7 @@ function ViewClass(props) {
             }
           }
           if(type === "Ujian"){
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -657,7 +657,7 @@ function ViewClass(props) {
           let workStatus = (!assessment.submissions ? "Belum Ditempuh" : "Sudah Ditempuh")
           if(type === "Kuis"){
             console.log(assessment.type)
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -673,7 +673,7 @@ function ViewClass(props) {
           }
           if(type === "Ujian"){
             console.log(assessment.type)
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}

@@ -531,6 +531,7 @@ function AssessmentList(props) {
       else if (user.role === "Student") {
         all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
         .forEach((data) => {
+          console.log(data)
           let class_assigned = data.class_assigned;
           if (class_assigned.indexOf(user.kelas) !== -1 && data.posted){
             assessmentRowItem(data)
