@@ -548,8 +548,8 @@ function AssessmentList(props) {
   // This function is defined above.
   retrieveAssessments()
 
-  const onDeleteAssessment = (id) => {
-    deleteAssessment(id)
+  const onDeleteAssessment = (id, type) => {
+    deleteAssessment(id, type)
   }
 
   // Delete Dialog
@@ -603,7 +603,7 @@ function AssessmentList(props) {
           handleCloseDeleteDialog={handleCloseDeleteDialog}
           itemType="Kuis"
           itemName={selectedAssessmentName}
-          deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+          deleteItem={() => { onDeleteAssessment(selectedAssessmentId, "Kuis") }}
           isWarning={true}
         />
         <Dialog

@@ -208,9 +208,14 @@ function ViewAssessmentTeacher(props) {
                     <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
                   </Typography>
                   <Hidden smDown implementation="css">
-                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                      Deskripsi Kuis/Ujian:
-                    </Typography>
+                    <Grid item style={{marginTop: "40px"}}>
+                      <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                        Deskripsi Kuis/Ujian:
+                      </Typography>
+                      <Typography>
+                        {selectedAssessments.description}
+                      </Typography>
+                    </Grid>
                   </Hidden>
                 </Grid>
                 <Grid item xs={12} md={5} spacing={2}>
@@ -220,9 +225,6 @@ function ViewAssessmentTeacher(props) {
                     </Typography>
                     <Typography variant="body2" className={classes.endDateText}>
                       Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" style={{ marginTop: "20px" }}>
-                      Nilai Maksimum: 100
                     </Typography>
                     <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
                       Deskripsi Kuis/Ujian:
@@ -238,19 +240,8 @@ function ViewAssessmentTeacher(props) {
                     <Typography align="right" variant="body2" className={classes.endDateText}>
                       Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
-                    <Typography align="right" variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
-                      Nilai Maksimum: 100
-                    </Typography>
                   </Hidden>  
                 </Grid>
-                <Hidden smDown>
-                  <Grid item xs={12}>
-                    <Typography align="justify">
-                      {selectedAssessments.description}
-                    </Typography>
-                  </Grid>
-                </Hidden>
-
               </Grid>
             </Paper>
           </Grid>

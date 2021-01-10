@@ -186,7 +186,7 @@ export const getOneAssessment = (id, rslv=null) => dispatch => {
     })
 }
 
-export const deleteAssessment = (id) => dispatch => {
+export const deleteAssessment = (id, type="Kuis") => dispatch => {
   axios
     .delete(`/api/assessments/delete/${id}`)
     .then((res) => {
@@ -204,7 +204,12 @@ export const deleteAssessment = (id) => dispatch => {
     })
     .then((res) => {
       console.log(res)
-      window.location.href="/daftar-kuis"
+      if(type === "Kuis"){
+        window.location.href="/daftar-kuis"
+      }
+      else{
+        window.location.href="/daftar-ujian"
+      }
     })
     .catch(err => {
       console.log(err);
