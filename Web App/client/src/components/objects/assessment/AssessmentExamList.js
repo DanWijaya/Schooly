@@ -9,7 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge, List, ListItem, ListItemAvatar, ListItemText,
    Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography, Dialog} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -24,12 +24,13 @@ import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { BsClipboardData } from "react-icons/bs";
 import { FaTasks } from "react-icons/fa";
+import WarningIcon from '@material-ui/icons/Warning';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
-function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt) {
-  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt };
+function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt, submissions) {
+  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt, submissions };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -436,21 +437,22 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   assessmentPaper: {
+    marginBottom: "5px",
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
-    "&:focus, &:hover": {
-      cursor: "pointer",
-      backgroundColor: theme.palette.primary.fade,
-    },
+    flexDirection: "column",
+    alignItems: "stretch",
+    justifyContent: 'space-between',
+    flexWrap: "nowrap"
   },
   titleIcon: {
     fontSize: "28px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
     marginRight: "10px"
-  }
+  },
+  warningIcon: {
+    color: theme.palette.warning.main
+  },
 }));
 
 
@@ -498,7 +500,8 @@ function AssessmentList(props) {
                 data.end_date,
                 data.class_assigned,
                 data.type,
-                data.createdAt
+                data.createdAt,
+                data.submissions
             )
         )
     }
@@ -589,6 +592,12 @@ function AssessmentList(props) {
     e.target.focus();
     document.body.removeChild(textArea);
     handleOpenCopySnackBar(type)
+  }
+
+  const workStatus = (assessment) => {
+    console.log(assessment)
+    let workStatus = (!assessment.submissions ? "Belum Ditempuh" : "Sudah Ditempuh")
+    return workStatus
   }
 
   document.title = "Schooly | Daftar Ujian";
@@ -756,43 +765,38 @@ function AssessmentList(props) {
                   className={classes.assessmentPaper}
                   onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm"))}
                 >
-                  <div>
-                    <Typography variant="h6" id={labelId}>
-                      {row.assessmenttitle}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {all_subjects_map.get(row.subject)}
-                    </Typography>
-                  </div>
-                  <div>
-                    {/* <Hidden smUp implementation="css">
-                      <Typography variant="body2" align="right" color="textSecondary">
-                        Batas Waktu:
-                      </Typography>
-                      <Typography variant="caption" align="right" color="textSecondary">
-                        {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                      </Typography>
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <Typography variant="body2" align="right" color="textSecondary">
-                        Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                      </Typography>
-                    </Hidden> */}
-                    <Typography
-                      variant="subtitle"
-                      color="textSecondary"
-                      align="right"
-                    >
-                      {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      align="right"
-                    >
-                      {moment(row.createdAt).locale("id").format("HH.mm")}
-                    </Typography>
-                  </div>
+                  <Badge
+                    style={{display: "flex", flexDirection: "row"}}
+                    badgeContent={
+                      (workStatus(row) === "Belum Ditempuh") ? (
+                        <WarningIcon className={classes.warningIcon}/>
+                      ) : null
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <ListItem button className={classes.listItem}>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6">
+                            {row.assessmenttitle}
+                          </Typography>
+                        }
+                        secondary={all_subjects_map.get(row.subject)}
+                      />
+                      <ListItemText
+                        align="right"
+                        primary={
+                          <Typography variant="body2" color="textSecondary">
+                            {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                          </Typography>
+                        }
+                        secondary={moment(row.createdAt).locale("id").format("HH.mm")}
+                      />
+                    </ListItem>
+                  </Badge>
                 </Paper>
               }
             </Grid>

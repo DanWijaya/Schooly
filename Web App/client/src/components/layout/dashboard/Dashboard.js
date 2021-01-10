@@ -206,11 +206,7 @@ function ListAssessments(props){
           <Badge
             style={{display: "flex", flexDirection: "row"}}
             badgeContent={
-              (props.work_status === "Belum Ditempuh") ? (
-                <WarningIcon className={classes.warningIcon}/>
-              ) : (
-                null
-              )
+              <WarningIcon className={classes.warningIcon}/>
             }
             anchorOrigin={{
               vertical: "bottom",
@@ -276,9 +272,9 @@ function ListAssessments(props){
       if(class_assigned.indexOf(classId) !== -1){
         AssessmentsList.push(assessment)
       }
-      if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
-        break;
-      }
+      // if(i === all_assessments.length - 5){ // item terakhir harus pas index ke 4.
+      //   break;
+      // }
     }
 
     for (i = 0; i < AssessmentsList.length; i++){

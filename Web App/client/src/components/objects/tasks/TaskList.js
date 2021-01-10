@@ -670,33 +670,27 @@ function TaskList(props) {
                       }}
                     >
                       <ListItem button className={classes.listItem}>
-                        <Grid container alignItems="center">
-                          <Grid item xs={7}>
-                            <ListItemText
-                              primary={
-                                <Typography variant="h6">
-                                  {row.tasktitle}
-                                </Typography>
-                              }
-                              secondary={all_subjects_map.get(row.subject)}
-                            />
-                          </Grid>
-                          <Grid item xs={5}>
-                            <ListItemText
-                              align="right"
-                              primary={
-                                <Typography variant="body2" color="textSecondary">
-                                  {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                                </Typography>
-                              }
-                              secondary={
-                                <Typography variant="body2" color="textSecondary">
-                                  {moment(row.createdAt).locale("id").format("HH.mm")}
-                                </Typography>
-                              }
-                            />
-                          </Grid>
-                        </Grid>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h6">
+                              {row.tasktitle}
+                            </Typography>
+                          }
+                          secondary={all_subjects_map.get(row.subject)}
+                        />
+                        <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt).locale("id").format("HH.mm")}
+                            </Typography>
+                          }
+                        />
                       </ListItem>
                     </Badge>
                   </Paper>

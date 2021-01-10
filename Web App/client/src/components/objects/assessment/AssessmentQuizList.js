@@ -29,8 +29,8 @@ import WarningIcon from '@material-ui/icons/Warning';
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
-function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt) {
-  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt };
+function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt, submissions) {
+  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt, submissions };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -468,6 +468,8 @@ function AssessmentList(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
 
+  console.log(all_assessments)
+
   const handleOpenDialog = (title, subject, start_date, end_date) => {
     setCurrentDialogInfo({title, subject, start_date, end_date})
     setOpenDialog(true)
@@ -491,7 +493,8 @@ function AssessmentList(props) {
               data.end_date,
               data.class_assigned,
               data.type,
-              data.createdAt
+              data.createdAt,
+              data.submissions
         )
       )
     }
@@ -585,9 +588,8 @@ function AssessmentList(props) {
   }
 
   const workStatus = (assessment) => {
-    let nowTime = Date.now()
-    let endTime = new Date(assessment.end_date)
-    let workStatus = (nowTime <= endTime.getTime() ? "Belum Ditempuh" : "Sudah Ditempuh")
+    console.log(assessment)
+    let workStatus = (!assessment.submissions ? "Belum Ditempuh" : "Sudah Ditempuh")
     return workStatus
   }
 
@@ -770,29 +772,23 @@ function AssessmentList(props) {
                       }}
                     >
                       <ListItem button className={classes.listItem}>
-                        <Grid container alignItems="center">
-                          <Grid item xs={7}>
-                            <ListItemText
-                              primary={
-                                <Typography variant="h6">
-                                  {row.assessmenttitle}
-                                </Typography>
-                              }
-                              secondary={all_subjects_map.get(row.subject)}
-                            />
-                          </Grid>
-                          <Grid item xs={5}>
-                            <ListItemText
-                              align="right"
-                              primary={
-                                <Typography variant="body2" color="textSecondary">
-                                  {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                                </Typography>
-                              }
-                              secondary={moment(row.createdAt).locale("id").format("HH.mm")}
-                            />
-                          </Grid>
-                        </Grid>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h6">
+                              {row.assessmenttitle}
+                            </Typography>
+                          }
+                          secondary={all_subjects_map.get(row.subject)}
+                        />
+                        <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                            </Typography>
+                          }
+                          secondary={moment(row.createdAt).locale("id").format("HH.mm")}
+                        />
                       </ListItem>
                     </Badge>
                   </Paper>
