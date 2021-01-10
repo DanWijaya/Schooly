@@ -99,9 +99,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   itemIcon: {
-    color: theme.palette.primary.main,
-    marginRight: "5px",
-    fontSize: "20px"
+    marginRight: "10px", 
+    fontSize: "22px", 
+    color: "grey"
   },
   errorIcon: {
     color: theme.palette.error.main,

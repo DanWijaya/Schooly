@@ -173,22 +173,9 @@ function QuestionItem(props){
         <Grid container>
           <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
             <Grid item>
-              <div className={classes.questionNameDiv}>
-                {(type === "radio") ?
-                  <RadioButtonChecked className={`${classes.addQuestionButton} ${classes.RadioQst}`}/>
-                :
-                (type === "checkbox") ? 
-                  <CheckBox className={`${classes.addQuestionButton} ${classes.CheckboxQst}`}/>
-                : 
-                (type === "shorttext") ?
-                  <TextFormat className={`${classes.addQuestionButton} ${classes.ShorttextQst}`}/>
-                :
-                  <Subject className={`${classes.addQuestionButton} ${classes.LongtextQst}`}/>
-                }
-                <Typography variant="h6" style={{marginLeft: "5px"}}>
-                  Soal {index + 1}
-                </Typography>
-              </div>
+              <Typography variant="h6" style={{marginLeft: "5px"}}>
+                Soal {index + 1}
+              </Typography>
               <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
                 {isEdit ?
                   currentLampiran.map((image, i) =>
