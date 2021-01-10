@@ -55,7 +55,7 @@ router.post("/lampiran/:id", uploadLampiranAssessment.array("lampiran_assessment
       // kalau udah ada lampiran, push aja.
       assessment.questions = questionsArray
       assessment.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
-                  .then(assessment => res.json({success: "Successfully uploaded the lampiran file"}))
+                  .then(assessment => res.json({success: "Successfully uploaded the lampiran file",  _id: req.params.id}))
                   .catch(err => {console.log("error kan ini")})
 
         }

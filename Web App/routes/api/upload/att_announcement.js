@@ -53,12 +53,12 @@ router.post("/lampiran/:id", uploadLampiranAnnouncement.array("lampiran_announce
       }
 
       announcement.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
-                  .then(announcement => console.log("Lampiran announcement"))
+                  .then(announcement => res.json({success: "Successfully uploaded the lampiran file", _id: req.params.id}))
                   .catch(err => {console.log("error kan ini")})
 
         }
     })
-  res.json({success: "Successfully uploaded the lampiran file"})
+  // res.json({success: "Successfully uploaded the lampiran file", _id: req.params.id})
 })
 
 router.delete("/lampiran/:id", (req,res) => {

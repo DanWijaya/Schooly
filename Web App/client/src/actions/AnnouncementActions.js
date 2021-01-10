@@ -19,13 +19,14 @@ export const createAnnouncement = (formData, announcementData, history) => dispa
               return axios.post(`/api/upload/att_announcement/lampiran/${res.data._id}`, formData);
           }
           else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-              return "Successfully created announcement with no lampiran"
+              return {message: "Successfully created announcement with no lampiran", _id:res.data._id}
       })
       .then(res => {
           console.log("Announcement is Created!!!!")
+          let success_res = res.data ? res.data._id : res._id
           dispatch({
               type: GET_SUCCESS_RESPONSE,
-              payload: true
+              payload: success_res
             })
             //   history.push("/daftar-pengumuman")
           })

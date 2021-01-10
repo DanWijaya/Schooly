@@ -18,12 +18,13 @@ export const createTask = (formData, taskData, history) => dispatch => {
         if (formData.has('lampiran_tugas'))
             return axios.post(`/api/upload/att_task/lampiran/${res.data._id}`, formData);
         else // Must return something, if false it won't continue to the next "then"
-            return "Successfully created task with no lampiran"
+            return {message: "Successfully created task with no lampiran", _id: res.data._id}
     })
     .then(res => { console.log("Lampiran tugas is uploaded")
+        let success_res = res.data ? res.data._id : res._id
             dispatch({
                 type: GET_SUCCESS_RESPONSE,
-                payload: true
+                payload: success_res
             })
         })
     .catch(err =>{
