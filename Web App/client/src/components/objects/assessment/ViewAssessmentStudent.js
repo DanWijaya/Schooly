@@ -450,6 +450,9 @@ function ViewAssessmentStudent(props) {
     window.location.reload(false);
     setFinish(true)
     setStart(false);
+    // setTimeout(() => {
+    //   handleCloseSubmitDialog();
+    // }, 3000);
     // console.log(localStorage.getItem(`status`))
     let data = {
       "answers" : answer,
@@ -720,6 +723,7 @@ function ViewAssessmentStudent(props) {
         itemType="Ujian"
         itemName={selectedAssessments.name}
         onSubmit={onSubmit}
+        messageLoading="Jawaban Anda sedang disimpan"
       />
       <TimeoutDialog
         openTimeoutDialog={openTimeoutDialog}
