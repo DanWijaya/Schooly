@@ -181,7 +181,7 @@ function ViewAssessmentTeacher(props) {
     handleOpenCopySnackBar(type)
   }
 
-  let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
+  let linkToShare = (selectedAssessments.type === "Kuis") ? `http://${window.location.host}/kuis-murid/${assessment_id}` : `http://${window.location.host}/ujian-murid/${assessment_id}`;
 
   return (
     <div className={classes.root}>
@@ -305,7 +305,7 @@ function ViewAssessmentTeacher(props) {
           ))}
           <Grid item container spacing={2} justify="flex-end" alignItems="center">
             <Grid item>
-              <Link to={`/daftar-kuis-terkumpul/${assessment_id}`}>
+              <Link to={(selectedAssessments.type === "Kuis") ? `/daftar-kuis-terkumpul/${assessment_id}` : `/daftar-ujian-terkumpul/${assessment_id}`}>
                 <Fab variant="extended" className={classes.seeAllAssessmentButton}>
                   <AssignmentIcon style={{ marginRight: "10px" }} />
                     Lihat Hasil

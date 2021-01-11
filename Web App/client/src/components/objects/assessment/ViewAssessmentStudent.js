@@ -94,12 +94,13 @@ const useStyles = makeStyles((theme) => ({
     color: "black"
   },
   timeoutDialog: {
-    maxWidth: "450px",
+    width: "300px",
+    maxWidth: "100%",
     minHeight: "175px",
     padding: "15px",
   },
   timeoutDialogButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -163,7 +164,7 @@ function TimeoutDialog(props){
 
   return (
     <Dialog open={openTimeoutDialog}>
-      <Grid container direction="column" justify="space-between" alignItems="center" spacing={2} className={classes.timeoutDialog}>
+      <Grid container direction="column" justify="space-between" alignItems="center" className={classes.timeoutDialog}>
         <Grid>
           <Typography variant="h6" align="center" gutterBottom>
             Waktu pengerjaan sudah selesai, jawaban anda telah terkumpulkan
@@ -647,7 +648,6 @@ function ViewAssessmentStudent(props) {
                           multiline
                           rowsMax={10}
                           value={answer[qnsIndex][0]}
-                          label="Jawaban Anda"
                           variant="outlined"
                           onChange={(e) => { handleChangeAnswer(e, "longtext") }}
                         />
@@ -719,6 +719,7 @@ function ViewAssessmentStudent(props) {
         itemType="Ujian"
         itemName={selectedAssessments.name}
         onSubmit={onSubmit}
+        messageLoading="Jawaban Anda sedang disimpan"
       />
       <TimeoutDialog
         openTimeoutDialog={openTimeoutDialog}

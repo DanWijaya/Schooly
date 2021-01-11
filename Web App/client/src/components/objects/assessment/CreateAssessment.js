@@ -796,6 +796,14 @@ class CreateAssessment extends Component {
     if (filteredtypeCount.length !== 0) {
       // mobile view
       // for (let type of Object.keys(typeCount)) {
+        
+      gridItemMobileView.push(
+        <Typography variant="h6">Bobot Per Soal:</Typography>
+      );
+      gridItemMobileView.push(
+        <Divider className={classes.customMargin} />
+      );
+
       for (let pair of filteredtypeCount) {
         let type = pair[0];
         let weight = this.state.weights[type];
@@ -1174,7 +1182,7 @@ class CreateAssessment extends Component {
           success={success}
           messageUploading="Kuis/Ujian sedang dibuat"
           messageSuccess="Kuis/Ujian telah dibuat"
-          redirectLink={`/kuis-guru/${success}`}
+          redirectLink={(this.state.type === "Kuis") ? `/kuis-guru/${success}` : `/ujian-guru/${success}`}
         />
         <form onSubmit={(e) => this.onSubmit(e, user.id)} id="submitForm">
           <Grid container direction="column" spacing={3}>

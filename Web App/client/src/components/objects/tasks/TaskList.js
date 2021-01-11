@@ -68,7 +68,8 @@ function TaskListToolbar(props) {
   const headCells = [
     { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
+    // { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
+    { id: "createdAt", numeric: false, disablePadding: false, label: "Waktu Dibuat" },
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
@@ -643,6 +644,11 @@ function TaskList(props) {
                       <Grid item xs={12}>
                         <Typography variant="body1" color="textSecondary">
                           Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="body1" color="textSecondary">
+                          Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
                     </Grid>

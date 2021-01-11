@@ -122,7 +122,7 @@ const ManageUsersToolbar = (props) => {
           <>
             {(lengthListCheckbox === 0) ?
               <>  
-                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Checkbox" : "Matikan Mode Checkbox"}>
+                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Kotak Centang" : "Matikan Mode Kotak Centang"}>
                   <IconButton className={classes.checkboxModeButton}
                   onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Student") : () => deactivateCheckboxMode("Student")}>
                     <CheckBoxIcon />
@@ -198,7 +198,7 @@ const ManageUsersToolbar = (props) => {
           <>
             {(lengthListCheckbox === 0) ? 
               <>
-                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Checkbox" : "Matikan Mode Checkbox"}>
+                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Kotak Centang" : "Matikan Mode Kotak Centang"}>
                   <IconButton className={classes.checkboxModeButton} 
                   onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Teacher") : () => deactivateCheckboxMode("Teacher")}>
                     <CheckBoxIcon />

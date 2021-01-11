@@ -91,9 +91,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   select: {
-    minWidth:"230px",
-    maxWidth:"230px"
-  }
+    minWidth:"150px",
+    maxWidth:"150px"
+  },
+  selectposition: {
+    justifyContent: "flex-end",
+    [theme.breakpoints.down("sm")] : {
+      justifyContent: "flex-start"
+    }
+  },
 }));
 
 function ReportView(props) {
@@ -102,9 +108,9 @@ function ReportView(props) {
 
   const { role, nama, kelas, id  } = location.state;
   // role = "Teacher" / "Student" / "Other" ("Other" kalau guru mengklik icon lihat rapor di side drawer)
-  // nama                                   (ini tidak ada kalau rolenya "Other")
+  // nama                                   (ini tidak ada kalau rolenya "Other". akan berisi nama murid)
   // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
-  // id                                     (ini tidak ada kalau rolenya "Other")
+  // id                                     (ini tidak ada kalau rolenya "Other". akan berisi id murid)
 
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
@@ -299,11 +305,13 @@ function ReportView(props) {
       // subjectArray isinya [{subject_id, subject_name},...]
       subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
     } else {
-      // jika guru adalah wali kelas dan guru membuka rapor murid yang diwalikannya
-      if ((kelasWali.size !== 0) && (kelas._id === kelasWali.get("id"))) {
-        subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
-      } else {
-        subjectArray = user.subject_teached.map((subjectTeachedId) => {return {subjectId: subjectTeachedId, subjectName: all_subjects_map.get(subjectTeachedId)}});
+      if (kelas) {
+        // jika guru adalah wali kelas dan guru membuka rapor murid yang diwalikannya
+        if ((kelasWali.size !== 0) && (kelas._id === kelasWali.get("id"))) {
+          subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
+        } else {
+          subjectArray = user.subject_teached.map((subjectTeachedId) => { return { subjectId: subjectTeachedId, subjectName: all_subjects_map.get(subjectTeachedId) } });
+        }
       }
     }
 
@@ -331,7 +339,7 @@ function ReportView(props) {
       });
 
       for (let task of allTaskArray) {
-        // id adalah id mahasiswa
+        // id adalah id murid
         // task.grades sudah dipastikan ada saat pembuatan task baru sehingga tidak perlu dicek null atau tidaknya lagi
         if ((Object.keys(scores).includes(task.subject)) && (task.grades.constructor === Object) &&
         (Object.keys(task.grades).length !== 0) && (task.grades[id] !== undefined)) {
@@ -590,7 +598,7 @@ function ReportView(props) {
             </Grid>
           </Grid>
           <Grid container direction="column" spacing={3} style={{margin:"auto"}}>
-            <Grid item xs={12} style={{marginRight:"20px"}}>
+            <Grid item style={{marginRight:"20px"}}>
               <TableContainer component={Paper}>
                 <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
                   <TableHead className={classes.tableHeader}>
@@ -620,7 +628,7 @@ function ReportView(props) {
             <Divider className={classes.profileDivider}/>
           </Grid>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
-            <Grid item xs={12} style={{marginRight:"20px"}}>
+            <Grid item style={{marginRight:"20px"}}>
               <TableContainer component={Paper}>
                 <Table aria-label="simple table" size="medium" style={{overflow:"hidden", paddingLeft:"5px"}}>
                   <TableHead className={classes.tableHeader}>
@@ -648,16 +656,16 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider}/>
           </Grid>
-          <Grid item container justify="space-between" alignItems="center">
-            <Grid item xs={12} md={4}>
+          <Grid item container justify="space-between" alignItems="center" spacing={3}>
+            <Grid item md={6}>
               <Typography>
                 Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata Pelajaran yang Dipilih
               </Typography>
             </Grid>
-            <Grid item container xs={12} md={8}>
-              <Grid item xs={12} sm={6} container justify="flex-end">
+            <Grid item container md={5} spacing={3}>
+              <Grid item md={6} container className={classes.selectposition}>
                 <Grid item>
-                  <FormControl margin="dense" variant="outlined">
+                  <FormControl variant="outlined">
                     <InputLabel id="kelas-label">Kelas</InputLabel>
                     <Select
                       labelId="kelas-label"
@@ -665,15 +673,21 @@ function ReportView(props) {
                       value={valueKelas}
                       onChange={(event) => {handleKelasChange(event)}}
                       className={classes.select}
+                      label="Kelas"
+                      SelectDisplayProps={{
+                        style: {
+                          padding: null
+                        }
+                      }}
                     >
                       {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
                     </Select>
                   </FormControl>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={6} container justify="flex-end">
+                <Grid item md={6} container className={classes.selectposition}>
                 <Grid item>
-                  <FormControl margin="dense">
+                  <FormControl variant="outlined">
                     <InputLabel id="matpel-label">Mata Pelajaran</InputLabel>
                     <Select
                       labelId="matpel-label"
@@ -681,6 +695,12 @@ function ReportView(props) {
                       value={valueMatpel}
                       onChange={(event) => {handleMatPelChange(event)}}
                       className={classes.select}
+                      label="Mata Pelajaran"
+                      SelectDisplayProps={{
+                        style: {
+                          padding: null
+                        }
+                      }}
                     >
                       {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
                     </Select>
@@ -690,7 +710,7 @@ function ReportView(props) {
             </Grid>
           </Grid>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
-            <Grid item sm={12} style={{marginRight:"20px"}}>
+            <Grid item style={{marginRight:"20px"}}>
               {
                 (emptyCondition.length === 0) ? (
                   <TableContainer component={Paper}>
