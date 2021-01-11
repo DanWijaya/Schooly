@@ -76,11 +76,11 @@ function About(props) {
             src={whatIsSchooly}
             style={{maxWidth: "100%", maxHeight: "100%", marginBottom: "20px"}}
           />
-          <Typography variant="h3" align="center" gutterBottom className={classes.whatIsSchoolyTitle}>
+          <Typography variant="h3" align="center" gutterBottom>
             Apa itu Schooly?
           </Typography>
           <Typography variant="h6" align="center" paragraph>
-            Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
+            Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang ada di sekolah.
           </Typography>
           <Typography align="center" style={{marginBottom: "40px"}}>
             "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien."
@@ -102,7 +102,8 @@ function About(props) {
                Semua kegiatan persekolahanmu ada di tanganmu
               </Typography>
               <Typography variant="h6">
-               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti materi pembelajaran, tugas, hingga pengumuman.
+               Fitur Schooly yang bermacam-macam membuat kegiatan persekolahan lebih efektif dan efisien. Contohnya pengecekkan pekerjaan sekolah secara otomatis,
+               pemberian materi tanpa harus mencetak, dan masih banyak lagi.
               </Typography>
             </Grid>
           </Grid>
@@ -138,7 +139,7 @@ function About(props) {
               </Typography>
               <Typography variant="h6">
                Temukan kontak orang-orang sepersekolahan dengan mudah di Schooly.
-               Anda juga tidak akan pernah lupa lagi akan tugas sekolah Anda dengan fitur pengingat baik untuk guru dan murid.
+               Sebarkan informasi mengenai kegiatan sekolah hanya dengan beberapa ketuk.
               </Typography>
             </Grid>
           </Grid>

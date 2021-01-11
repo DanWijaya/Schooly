@@ -389,9 +389,7 @@ class Register extends Component {
             <Grid container direction="column" spacing={4}>
               <Grid item>
                 <Typography align="center">
-                  Dengan mendaftar, Anda dan sekolah Anda telah membaca dan
-                  menyetujui <Link onClick={handleToggleDialog} style={{cursor: "pointer"}}>
-                  Kebijakan Penggunaan Schooly</Link>.
+                  Setelah registrasi selesai, silahkan hubungi pengelola sekolah Anda untuk mengaktifkan akun Anda.
                 </Typography>
                 <Dialog
                   fullWidth
@@ -414,12 +412,9 @@ class Register extends Component {
                     </Grid>
                   </Grid>
                 </Dialog>
-                <Typography align="center" style={{marginTop: "20px"}}>
-                  Setelah registrasi selesai, silahkan hubungi pengelola sekolah Anda untuk mengaktifkan akun Anda.
-                </Typography>
                 <Typography variant="body2" color="textSecondary" align="center" style={{marginTop: "20px"}}>
-                  Jangan lupa untuk melengkapi profil Anda pada halaman profil yang dapat diakses pada
-                  foto profil pada bagian kanan atas aplikasi.
+                  Dengan mendaftar, Anda telah membaca dan menyetujui <Link onClick={handleToggleDialog} style={{cursor: "pointer"}}>
+                  Kebijakan Penggunaan Schooly</Link>.
                 </Typography>
               </Grid>
             </Grid>

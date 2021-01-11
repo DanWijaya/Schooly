@@ -49,12 +49,9 @@ const styles = (theme) => ({
     textAlign: "center",
     margin: "auto",
     maxWidth: "1000px",
-    marginTop: "75px",
+    marginTop: "50px",
     marginBottom: "75px",
     padding: "20px",
-  },
-  schoolyFeaturesTitle: {
-    color: "grey",
   },
   featuresPaper: {
     display: "flex",
@@ -62,6 +59,9 @@ const styles = (theme) => ({
     alignItems: "center",
     height: "100%",
     padding: "20px",
+    "&:focus, &:hover": {
+      boxShadow: "1px 3px 5px 2px rgba(0, 0, 0, .2)",
+    },
   },
   featuresAvatar: {
     width: theme.spacing(15),
@@ -76,9 +76,9 @@ const styles = (theme) => ({
     color: theme.palette.primary.main,
   },
   featuresText: {
-    fontSize: "14px",
+    fontSize: "12px",
     [theme.breakpoints.down("sm")]: {
-      fontSize: "12.5px",
+      fontSize: "11px",
     },
   },
   useSchooly: {
@@ -156,9 +156,9 @@ class Landing extends Component {
                 Schooly membuat pekerjaan sekolahmu lebih mudah.
               </Typography>
               <Typography variant="h6">
-                Berikan pekerjaan sekolah dengan mudah. <br />
-                Rangkum hasil pengecekkan dengan mudah. <br />
-                Tidak pernah lupa dengan tugas sekolahmu.
+                Tidak pernah lupa lagi dengan tugas sekolah yang ada. <br />
+                Berikan materi dan pekerjaan sekolah dengan mudah. <br />
+                Periksa hasil kuis dan ujian secara otomatis.
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -197,9 +197,55 @@ class Landing extends Component {
         <div className={classes.schoolyFeatures}>
           <Grid container spacing={3} justify="center" alignItems="stretch">
             <Grid item xs={12}>
-              <Typography variant="h4" gutterBottom className={classes.schoolyFeaturesTitle}>
+              <Typography variant="h4" color="textSecondary" gutterBottom>
                 Fitur-Fitur Schooly
               </Typography>
+              <Typography color="textSecondary">
+                Apa saja yang Schooly dapat lakukan?
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <AssignmentIcon className={classes.featuresIcon} />
+                </Avatar>
+                <Typography gutterBottom>
+                  Akun Pengelola
+                </Typography>
+                <Typography className={classes.featuresText}>
+                  Atur guru-guru dan murid yang ada di sekolah mu.
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <PeopleIcon className={classes.featuresIcon} />
+                </Avatar>
+                <Typography className={classes.featuresText}>
+                  Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari murid, guru, hingga pengelola.
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <WatchLaterIcon className={classes.featuresIcon} />
+                </Avatar>
+                <Typography className={classes.featuresText}>
+                  Tidak pernah lupa untuk mengumpulkan atau memeriksa pekerjaan sekolah lagi dengan pengingat dari Schooly.
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Paper variant="outlined" className={classes.featuresPaper}>
+                <Avatar className={classes.featuresAvatar}>
+                  <ContactlessIcon className={classes.featuresIcon} />
+                </Avatar>
+                <Typography className={classes.featuresText}>
+                  Temukan kontak orang-orang sepersekolahanmu dengan mudah.
+                </Typography>
+              </Paper>
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
