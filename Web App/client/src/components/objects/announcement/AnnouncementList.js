@@ -18,8 +18,11 @@ import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-function createData(sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased) {
-  return { sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased };
+// function createData(sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased) {
+//   return { sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased };
+// }
+function createData(sender_icon, author_name, notification_title, notification_link, createdAt, name_lowcased) {
+  return { sender_icon, author_name, notification_title, notification_link, createdAt, name_lowcased };
 }
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,13 +62,14 @@ function AnnouncementListToolbar(props) {
   const headCells = [
     { id: "author_name", numeric: false, disablePadding: true, label: "Pemberi Tugas" },
     { id: "notification_title", numeric: false, disablePadding: false, label: "Nama Tugas" },
-    { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
+    { id: "createdAt", numeric: false, disablePadding: false, label: "Waktu Dibuat" },
+    // { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
   ];
 
-  if (role === "Student") {
+  // if (role === "Student") {
     // Don't include the class_assigned basically.
-    headCells.pop()
-  }
+    // headCells.pop()
+  // }
 
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -408,9 +412,7 @@ function AnnouncementList(props) {
         // (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
         // (moment(data.date_announced).locale("id").format("HH.mm")),
         // (moment(data.date_announced).locale("id")),
-        (moment(data.createdAt).locale("id").format("DD MMM YYYY")),
-        (moment(data.createdAt).locale("id").format("HH.mm")),
-        (moment(data.createdAt).locale("id")),
+        data.createdAt,
         (!retrieved_users.get(data.author_id) ? null: retrieved_users.get(data.author_id).name.toLowerCase())
       )
     )
@@ -510,7 +512,7 @@ function AnnouncementList(props) {
                       }
                     />
                   </Hidden>
-                    <ListItemText
+                    {/* <ListItemText
                       align="right"
                       primary={
                         <Typography variant="subtitle" color="textSecondary">
@@ -518,6 +520,15 @@ function AnnouncementList(props) {
                         </Typography>
                       }
                       secondary={row.time}
+                    /> */}
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Typography variant="subtitle" color="textSecondary">
+                          {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                        </Typography>
+                      }
+                      secondary={moment(row.createdAt).locale("id").format("HH.mm")}
                     />
                   </ListItem>
                   </Link>
