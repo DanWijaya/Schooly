@@ -652,8 +652,8 @@ function AssessmentList(props) {
       {stableSort(rows, getComparator(order, orderBy))
         .map((row, index) => {
           const labelId = `enhanced-table-checkbox-${index}`;
-          let viewpage = user.role === "Student" ? `/kuis-murid/${row._id}` : `/kuis-guru/${row._id}`
-          let linkToShare = `http://localhost:3000/kuis-murid/${row._id}`;
+          let viewpage = user.role === "Student" ? `/ujian-murid/${row._id}` : `/ujian-guru/${row._id}`
+          let linkToShare = `http://localhost:3000/ujian-murid/${row._id}`;
           return (
             <Grid item>
               {user.role === "Teacher" ?

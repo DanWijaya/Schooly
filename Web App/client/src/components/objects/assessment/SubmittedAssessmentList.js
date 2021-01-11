@@ -262,11 +262,11 @@ function TabIndex(index) {
 
 function GradeButton(props) {
   const classes = useStyles()
-  const { studentId, classId, assessmentId } = props;
+  const { studentId, classId, assessmentId, assessmentType } = props;
 
   return (
     <Link to={{
-      pathname: `/lihat-jawaban-kuis/${assessmentId}`,
+      pathname: (assessmentType === "Kuis") ? `/lihat-jawaban-kuis/${assessmentId}` : `/lihat-jawaban-ujian/${assessmentId}`,
       state: {
         classId,
         studentId
@@ -794,7 +794,11 @@ function SubmittedAssessmentList(props) {
                             </div>
                         )                          
                         }
-                      <GradeButton assessmentId={selectedAssessments._id} studentId={student._id} classId={selectedAssessments.class_assigned[i]} />
+                      <GradeButton 
+                        assessmentId={selectedAssessments._id} 
+                        assessmentType={selectedAssessments.type}
+                        studentId={student._id} 
+                        classId={selectedAssessments.class_assigned[i]} />
                     </Grid>
                   </div>
                   ) : (
@@ -849,7 +853,7 @@ function SubmittedAssessmentList(props) {
               </Typography>
 
               <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
-                <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
+                <Link to={(selectedAssessments.type === "Kuis") ? `/lihat-jawaban-kuis/${selectedAssessments._id}` : `/lihat-jawaban-ujian/${selectedAssessments._id}`}>
                   <Fab size="medium" variant="extended" className={classes.editFab}>
                     <EditIcon className={classes.editIconFab} />
                     Periksa
@@ -907,7 +911,7 @@ function SubmittedAssessmentList(props) {
               </Typography>
 
               <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
-                <Link to={`/lihat-jawaban-kuis/${selectedAssessments._id}`}>
+                <Link to={(selectedAssessments.type === "Kuis") ? `/lihat-jawaban-kuis/${selectedAssessments._id}` : `/lihat-jawaban-ujian/${selectedAssessments._id}`}>
                   <Fab size="medium" variant="extended" className={classes.editFab}>
                     <EditIcon className={classes.editIconFab} />
                     Periksa

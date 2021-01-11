@@ -68,6 +68,7 @@ import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUse
 import SubjectList from "./components/objects/admin-only/SubjectList";
 //Prototypes
 import Tester from "./prototypes/Tester";
+// import CSV from "./prototypes/contoh-tugas/CSV";
 import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
 //Dropbox
@@ -186,9 +187,9 @@ class App extends Component {
                     <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
+                    {/* <Route exact path="/csv" component={CSV} /> */}
                     <Route exact path="/timer" component={Timer} /> {/*prototype*/}
                     <Route exact path="/graph" component={Graph} /> {/*prototype*/}
-                    <Route exact path="/lihat-jawaban-kuis/:id" component={ViewAssessmentAnswer} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
                     <PrivateRoute exact path="/profil" component={Profile} />
                     <PrivateRoute exact path="/lihat-profil" component={ProfileView} />
@@ -222,8 +223,13 @@ class App extends Component {
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-ujian" component={AssessmentTestList} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-kuis/:id" handleSideDrawerExist={this.handleSideDrawerExist} component={EditAssessment} />
                     <PrivateRoute exact access={["Student"]} path="/kuis-murid/:id" component={ViewAssessmentStudent} loginRedirect={true}/>
+                    <PrivateRoute exact access={["Student"]} path="/ujian-murid/:id" component={ViewAssessmentStudent} loginRedirect={true} />
                     <PrivateRoute exact access={["Teacher"]} path="/kuis-guru/:id" component={ViewAssessmentTeacher} />
+                    <PrivateRoute exact access={["Teacher"]} path="/ujian-guru/:id" component={ViewAssessmentTeacher} />
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-kuis-terkumpul/:id" component={SubmittedAssessmentList} />
+                    <PrivateRoute exact access={["Teacher"]} path="/daftar-ujian-terkumpul/:id" component={SubmittedAssessmentList} />
+                    <PrivateRoute exact access={["Teacher"]} path="/lihat-jawaban-kuis/:id" component={ViewAssessmentAnswer} />
+                    <PrivateRoute exact access={["Teacher"]} path="/lihat-jawaban-ujian/:id" component={ViewAssessmentAnswer} />
                     {/* Route Admin-Only */}
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />

@@ -450,9 +450,6 @@ function ViewAssessmentStudent(props) {
     window.location.reload(false);
     setFinish(true)
     setStart(false);
-    // setTimeout(() => {
-    //   handleCloseSubmitDialog();
-    // }, 3000);
     // console.log(localStorage.getItem(`status`))
     let data = {
       "answers" : answer,
@@ -651,7 +648,6 @@ function ViewAssessmentStudent(props) {
                           multiline
                           rowsMax={10}
                           value={answer[qnsIndex][0]}
-                          label="Jawaban Anda"
                           variant="outlined"
                           onChange={(e) => { handleChangeAnswer(e, "longtext") }}
                         />
