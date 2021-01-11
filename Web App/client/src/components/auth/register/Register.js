@@ -116,10 +116,12 @@ class Register extends Component {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
+    this.props.handleNavbar(false)
   }
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.handleNavbar(true)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {

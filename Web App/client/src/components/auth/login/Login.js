@@ -61,10 +61,13 @@ class Login extends Component {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");
     }
+    this.props.handleNavbar(false)
   }
 
   componentWillUnmount(){
     this.props.clearErrors()
+    const { handleNavbar } = this.props;
+    handleNavbar(true)
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -194,7 +197,7 @@ class Login extends Component {
               <Link to="/akun/lupa-katasandi">
                 Lupa Kata Sandi?
               </Link>
-              ·
+              |
               <Link to="/daftar">
                 Belum ada Akun?
               </Link>

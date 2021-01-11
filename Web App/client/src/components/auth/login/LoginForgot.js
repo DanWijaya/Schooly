@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { createHash } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
-import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, Divider, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -72,8 +72,12 @@ class LoginForgot extends Component {
     this.props.createHash(this.state.email)
   }
 
+  componentDidMount(){
+    this.props.handleNavbar(false)
+  }
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.handleNavbar(true)
   }
 
   render() {
@@ -141,6 +145,16 @@ class LoginForgot extends Component {
                   Kirim Ulang Email
                 </Button>
               }
+            </Grid>
+            <Divider />
+            <Grid item container justify="space-around">
+              <Link to="/masuk">
+                Sudah ada Akun?
+              </Link>
+              |
+              <Link to="/daftar">
+                Belum ada Akun?
+              </Link>
             </Grid>
           </Grid>
         </Paper>

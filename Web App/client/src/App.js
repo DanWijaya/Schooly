@@ -106,6 +106,7 @@ class App extends Component {
     mobileOpen: false,
     desktopOpen: false,
     loggedIn: false,
+    showNavBar: true,
     marginTopValue: 20,
     posts: [],
     sideDrawerExist: true
@@ -134,6 +135,9 @@ class App extends Component {
     this.setState({ sideDrawerExist: dataFromChild})
   }
 
+  handleNavbar = (showBool) => {
+    this.setState({ showNavBar: showBool})
+  }
   render() {
     console.log(localStorage.getItem(`status`))
     return (
@@ -142,12 +146,16 @@ class App extends Component {
           <ThemeProvider theme={globalStyles}>
             <Router>
               <div style={{display: "flex"}}>
+                {this.state.showNavBar ? 
                 <NavBar
                   handleDrawerDesktop={this.handleDrawerDesktop}
                   handleDrawerMobile={this.handleDrawerMobile}
                   sideDrawerExist={this.state.sideDrawerExist}
                   assessmentState={localStorage.getItem(`status`)}
                 />
+                : 
+                null
+                }
                 {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ?
                   <SideDrawer
                     mobileOpen={this.state.mobileOpen}
@@ -181,9 +189,15 @@ class App extends Component {
                     />
                     <Route exact path="/dropbox-auth" component={DropboxAuth}/>
                     <Route exact path="/dropbox-connect" component={DropboxConnect}/>
-                    <Route exact path="/daftar" component={Register} />
-                    <Route exact path="/masuk" component={Login} />
-                    <Route exact path="/akun/lupa-katasandi" component={LoginForgot} />
+                    <Route exact path="/daftar" render={(props) => (
+                      <Register {...props} handleNavbar={(data) => this.handleNavbar(data)}/>
+                      )}/>
+                    <Route exact path="/masuk" render={(props) => (
+                      <Login {...props} handleNavbar={(data) => this.handleNavbar(data)}/>
+                    )}/>
+                    <Route exact path="/akun/lupa-katasandi" render={(props) => (
+                      <LoginForgot {...props} handleNavbar={(data) => this.handleNavbar(data)}/>
+                    )}/>
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
                     <Route exact path="/timer" component={Timer} /> {/*prototype*/}
