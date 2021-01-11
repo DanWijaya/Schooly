@@ -108,9 +108,9 @@ function ReportView(props) {
 
   const { role, nama, kelas, id  } = location.state;
   // role = "Teacher" / "Student" / "Other" ("Other" kalau guru mengklik icon lihat rapor di side drawer)
-  // nama                                   (ini tidak ada kalau rolenya "Other")
+  // nama                                   (ini tidak ada kalau rolenya "Other". akan berisi nama murid)
   // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
-  // id                                     (ini tidak ada kalau rolenya "Other")
+  // id                                     (ini tidak ada kalau rolenya "Other". akan berisi id murid)
 
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
@@ -305,11 +305,13 @@ function ReportView(props) {
       // subjectArray isinya [{subject_id, subject_name},...]
       subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
     } else {
-      // jika guru adalah wali kelas dan guru membuka rapor murid yang diwalikannya
-      if ((kelasWali.size !== 0) && (kelas._id === kelasWali.get("id"))) {
-        subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
-      } else {
-        subjectArray = user.subject_teached.map((subjectTeachedId) => {return {subjectId: subjectTeachedId, subjectName: all_subjects_map.get(subjectTeachedId)}});
+      if (kelas) {
+        // jika guru adalah wali kelas dan guru membuka rapor murid yang diwalikannya
+        if ((kelasWali.size !== 0) && (kelas._id === kelasWali.get("id"))) {
+          subjectArray = Array.from(all_subjects_map, ([subjectId, subjectName]) => ({ subjectId, subjectName }));
+        } else {
+          subjectArray = user.subject_teached.map((subjectTeachedId) => { return { subjectId: subjectTeachedId, subjectName: all_subjects_map.get(subjectTeachedId) } });
+        }
       }
     }
 
@@ -337,7 +339,7 @@ function ReportView(props) {
       });
 
       for (let task of allTaskArray) {
-        // id adalah id mahasiswa
+        // id adalah id murid
         // task.grades sudah dipastikan ada saat pembuatan task baru sehingga tidak perlu dicek null atau tidaknya lagi
         if ((Object.keys(scores).includes(task.subject)) && (task.grades.constructor === Object) &&
         (Object.keys(task.grades).length !== 0) && (task.grades[id] !== undefined)) {
