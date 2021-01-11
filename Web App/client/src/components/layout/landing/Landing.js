@@ -213,7 +213,7 @@ class Landing extends Component {
                   Akun Pengelola
                 </Typography>
                 <Typography className={classes.featuresText}>
-                  Atur guru-guru dan murid yang ada di sekolah mu.
+                  Atur guru dan murid yang ada di sekolah mu. Buang akun yang mencurigakan.
                 </Typography>
               </Paper>
             </Grid>
@@ -222,8 +222,11 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <PeopleIcon className={classes.featuresIcon} />
                 </Avatar>
+                <Typography gutterBottom>
+                  Pendataan Pengguna
+                </Typography>
                 <Typography className={classes.featuresText}>
-                  Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari murid, guru, hingga pengelola.
+                  Temukan kontak orang sepersekolahanmu. Perbarui pendataan data pribadi kepada sekolah dengan mudah.
                 </Typography>
               </Paper>
             </Grid>
@@ -232,8 +235,11 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <WatchLaterIcon className={classes.featuresIcon} />
                 </Avatar>
+                <Typography gutterBottom>
+                  Kelas
+                </Typography>
                 <Typography className={classes.featuresText}>
-                  Tidak pernah lupa untuk mengumpulkan atau memeriksa pekerjaan sekolah lagi dengan pengingat dari Schooly.
+                  Kelompokkan murid-murid yang ada dengan sesuai kelas masing-masing.
                 </Typography>
               </Paper>
             </Grid>
@@ -242,8 +248,11 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <ContactlessIcon className={classes.featuresIcon} />
                 </Avatar>
+                <Typography gutterBottom>
+                  Pengumuman
+                </Typography>
                 <Typography className={classes.featuresText}>
-                  Temukan kontak orang-orang sepersekolahanmu dengan mudah.
+                  Sebarkan informasi mengenai kegiatan sekolah baik dari akun pengelola atau akun guru.
                 </Typography>
               </Paper>
             </Grid>
@@ -252,8 +261,11 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <AssignmentIcon className={classes.featuresIcon} />
                 </Avatar>
+                <Typography gutterBottom>
+                  Materi
+                </Typography>
                 <Typography className={classes.featuresText}>
-                  Publikasi pekerjaan sekolah dengan mudah dan tidak pernah takut kehilangan data.
+                  Go Paperless. Berikan materi kepada murid dengan beberapa ketuk saja, tanpa harus dicetak.
                 </Typography>
               </Paper>
             </Grid>
@@ -262,8 +274,11 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <PeopleIcon className={classes.featuresIcon} />
                 </Avatar>
+                <Typography gutterBottom>
+                  Tugas
+                </Typography>
                 <Typography className={classes.featuresText}>
-                  Sistem yang terstruktur dengan jenis akun yang berbeda-beda mulai dari murid, guru, hingga pengelola.
+                  Tidak perlu lupa akan tugas-tugas yang ada dan kumpulkam dengan mudah.
                 </Typography>
               </Paper>
             </Grid>
@@ -272,8 +287,11 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <WatchLaterIcon className={classes.featuresIcon} />
                 </Avatar>
+                <Typography gutterBottom>
+                  Kuis & Ujian
+                </Typography>
                 <Typography className={classes.featuresText}>
-                  Tidak pernah lupa untuk mengumpulkan atau memeriksa pekerjaan sekolah lagi dengan pengingat dari Schooly.
+                  Buat kuis atau ujian dimana saja, dimana hasil pekerjaan pun periksa secara otomatis.
                 </Typography>
               </Paper>
             </Grid>
@@ -282,8 +300,11 @@ class Landing extends Component {
                 <Avatar className={classes.featuresAvatar}>
                   <ContactlessIcon className={classes.featuresIcon} />
                 </Avatar>
+                <Typography gutterBottom>
+                  Rapor
+                </Typography>
                 <Typography className={classes.featuresText}>
-                  Temukan kontak orang-orang sepersekolahanmu dengan mudah.
+                  Pantau perubahan nilai-nilai yang ada secara cepat dan dinamis.
                 </Typography>
               </Paper>
             </Grid>
