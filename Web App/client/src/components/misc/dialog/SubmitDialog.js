@@ -6,12 +6,13 @@ import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "350px",
+    width: "300px",
+    maxWidth: "100%",
     minHeight: "175px",
     padding: "15px",
   },
   dialogSubmitButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     border: `1px solid ${theme.palette.success.main}`,
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogCancelButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.error.main,
     color: "white",
     border: `1px solid ${theme.palette.error.main}`,
@@ -48,7 +49,7 @@ function SubmitDialog(props) {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h6" align="center" gutterBottom>
+          <Typography align="center" gutterBottom>
             <b>{itemName}</b>
           </Typography>
         </Grid>
