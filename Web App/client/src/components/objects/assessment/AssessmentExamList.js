@@ -74,13 +74,14 @@ function AssessmentListToolbar(props) {
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
     { id: "start_date", numeric: false, disablePadding: false, label: "Mulai" },
     { id: "end_date", numeric: false, disablePadding: false, label: "Selesai" },
-    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
+    { id: "createdAt", numeric: false, disablePadding: false, label: "Waktu Dibuat" },
+    // { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
-  if (role === "Student") {
+  // if (role === "Student") {
     // Don't include the class_assigned basically.
-    headCells.pop()
-  }
+  //   headCells.pop()
+  // }
 
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -732,7 +733,7 @@ function AssessmentList(props) {
                   <ExpansionPanelDetails>
                     <Grid conntainer direction="column">
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
+                        <Typography variant="body1">
                           <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
                            row.class_assigned.map((id,i) => {
 
@@ -744,6 +745,11 @@ function AssessmentList(props) {
                             return null
                            })
                           }
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="body1" color="textSecondary" gutterBottom>
+                          Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
                       <Grid item>
