@@ -26,8 +26,8 @@ router.post("/create", (req, res) => {
         title: req.body.title,
         description: req.body.description,
         class_assigned: class_assigned_ids,
-        author_id: req.body.author_id,
-        date_announced: new Date()
+        author_id: req.body.author_id
+        // date_announced: new Date()
     })
     newAnnouncement
             .save()

@@ -9,8 +9,9 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, InputAdornment, Hidden, Paper, Menu, MenuItem, TableSortLabel, TextField, Typography } from "@material-ui/core/";
+import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge,
+   Fab, Grid, InputAdornment, Hidden, Paper, Menu, MenuItem, TableSortLabel, TextField, Typography,
+   List, ListItem, ListItemAvatar, ListItemText } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -20,9 +21,11 @@ import SortIcon from "@material-ui/icons/Sort";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { GoSearch } from "react-icons/go";
 import ClearIcon from '@material-ui/icons/Clear';
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-function createData(_id, tasktitle, subject, deadline, class_assigned) {
-  return { _id, tasktitle, subject, deadline, class_assigned };
+function createData(_id, tasktitle, subject, deadline, class_assigned, createdAt) {
+  return { _id, tasktitle, subject, deadline, class_assigned, createdAt };
 }
 
 var rows = [];
@@ -65,7 +68,8 @@ function TaskListToolbar(props) {
   const headCells = [
     { id: "tasktitle", numeric: false, disablePadding: true, label: "Nama Tugas" },
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
+    // { id: "deadline", numeric: false, disablePadding: false, label: "Batas Waktu" },
+    { id: "createdAt", numeric: false, disablePadding: false, label: "Waktu Dibuat" },
     { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
@@ -391,24 +395,30 @@ const useStyles = makeStyles((theme) => ({
   },
   taskPaper: {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
+    flexDirection: "column",
+    alignItems: "stretch",
+  },
+  titleIcon: {
+    fontSize: "28px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    marginRight: "10px"
+  },
+  errorIcon: {
+    color: theme.palette.error.main,
+  },
+  warningIcon: {
+    color: theme.palette.warning.main
+  },
+  checkIcon: {
+    color: theme.palette.success.main
+  },
+  listItem: {
+  
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  titleIcon: {
-    backgroundColor: "white",
-    color: theme.palette.primary.main,
-    boxShadow: theme.shadows[0],
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-      cursor: "default"
-    },
-    marginRight: "10px"
-  }
 }));
 
 function TaskList(props) {
@@ -435,6 +445,7 @@ function TaskList(props) {
         data.subject,
         data.deadline,
         data.class_assigned,
+        data.createdAt
       )
     )
   }
@@ -502,6 +513,17 @@ function TaskList(props) {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
+  const workStatus = (task) => {
+    let workStatus = "Belum Dikumpulkan"
+    for(let i=0;i<user.tugas.length;i++){
+      if(user.tugas[i].for_task_object === task._id){
+        workStatus = "Sudah Dikumpulkan"
+        break;
+      }
+    }
+    return workStatus
+  }
 
   document.title = "Schooly | Daftar Tugas";
 
@@ -624,41 +646,61 @@ function TaskList(props) {
                           Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="body1" color="textSecondary">
+                          Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               :
-              <Link to={viewpage}>
-                <Paper
-                  button component="a"
-                  variant="outlined"
-                  className={classes.taskPaper}
-                >
-                  <div>
-                    <Typography variant="h6" id={labelId}>
-                      {row.tasktitle}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {all_subjects_map.get(row.subject)}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Hidden smUp implementation="css">
-                      <Typography variant="body2" align="right" color="textSecondary">
-                        Batas Waktu:
-                      </Typography>
-                      <Typography variant="caption" align="right" color="textSecondary">
-                        {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
-                      </Typography>
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <Typography variant="body2" align="right" color="textSecondary">
-                        Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
-                      </Typography>
-                    </Hidden>
-                  </div>
-                </Paper>
-              </Link>
+                <Link to={viewpage}>
+                  <Paper
+                    button component="a"
+                    variant="outlined"
+                    className={classes.taskPaper}
+                  >
+                    <Badge
+                      style={{display: "flex", flexDirection: "row"}}
+                      badgeContent={
+                        (workStatus(row) === "Belum Dikumpulkan") ? (
+                          <ErrorIcon className={classes.errorIcon}/>
+                        ) : (
+                          <CheckCircleIcon className={classes.checkIcon}/>
+                        )
+                      }
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                    >
+                      <ListItem button className={classes.listItem}>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h6">
+                              {row.tasktitle}
+                            </Typography>
+                          }
+                          secondary={all_subjects_map.get(row.subject)}
+                        />
+                        <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt).locale("id").format("HH.mm")}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                    </Badge>
+                  </Paper>
+                </Link>
               }
             </Grid>
           );

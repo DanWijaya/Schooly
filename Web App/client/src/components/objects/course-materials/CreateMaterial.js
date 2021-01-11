@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getAllClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -246,6 +247,7 @@ class CreateMaterial extends Component {
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   handleLampiranDelete = (e, i) => {
@@ -268,7 +270,7 @@ class CreateMaterial extends Component {
   render() {
     const { classes, success, errors }  = this.props;
     const { all_classes } = this.props.classesCollection;
-    // const { all_subjects } = this.props.subjectsCollection;
+    const { all_subjects } = this.props.subjectsCollection;
     const { class_assigned, fileLampiran }  = this.state;
     const { user } = this.props.auth
 
@@ -340,7 +342,7 @@ class CreateMaterial extends Component {
             success={success}
             messageUploading="Materi sedang dibuat"
             messageSuccess="Materi telah dibuat"
-            redirectLink="/daftar-materi"
+            redirectLink={`/materi/${success}`}
           />
           <Paper>
             <div className={classes.content}>
@@ -404,7 +406,7 @@ class CreateMaterial extends Component {
                       <Typography component="label" for="subject" color="primary">
                         Mata Pelajaran
                       </Typography>
-                      {/* <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
                         <Select
                           value={this.state.subject}
                           onChange={(event) => {this.onChange(event, "subject")}}
@@ -416,7 +418,7 @@ class CreateMaterial extends Component {
                         <FormHelperText>
                           {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
                         </FormHelperText>
-                      </FormControl> */}
+                      </FormControl>
                     </Grid>
                     <Grid item>
                       <Typography component="label" for="class_assigned" color="primary">
@@ -526,5 +528,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createMaterial, clearErrors }
+  mapStateToProps, { getAllClass, getAllSubjects, createMaterial, clearErrors, clearSuccess }
 ) (withStyles(styles)(CreateMaterial))

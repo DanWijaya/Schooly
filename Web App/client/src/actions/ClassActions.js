@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_ALL_CLASSES, GET_ALL_CLASSES_MAP, GET_CLASSES, SET_CURRENT_CLASS } from "./Types";
+import { GET_ERRORS, GET_ALL_CLASSES, GET_ALL_CLASSES_MAP, GET_CLASSES, SET_CURRENT_CLASS, GET_SUCCESS_RESPONSE } from "./Types";
 
 // Add Class
 export const createClass = (classData, history) => dispatch => {
@@ -10,6 +10,7 @@ export const createClass = (classData, history) => dispatch => {
         console.log(res.data)
         alert("Kelas telah dibuat")
         history.push("/daftar-kelas")
+
     })
     .catch(err =>
         dispatch({

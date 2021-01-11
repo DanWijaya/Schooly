@@ -28,14 +28,15 @@ export const createAssessment = (formData, assessment, history) => dispatch => {
         return axios.post(`/api/upload/att_assessment/lampiran/${res.data._id}`, formData)
       }
       else{
-        return "Successfully created Assessment with no lampiran"
+        return {message: "Successfully created Assessment with no lampiran", _id:res.data._id}
       }
     })
     .then(res => {
       console.log('Successfully created Assessment.')
+      let success_res = res.data ? res.data._id : res._id
       dispatch({
           type: GET_SUCCESS_RESPONSE,
-          payload: true
+          payload: success_res
         });
     })
     .catch(err => {
@@ -186,7 +187,7 @@ export const getOneAssessment = (id, rslv=null) => dispatch => {
     })
 }
 
-export const deleteAssessment = (id) => dispatch => {
+export const deleteAssessment = (id, type="Kuis") => dispatch => {
   axios
     .delete(`/api/assessments/delete/${id}`)
     .then((res) => {
@@ -204,7 +205,12 @@ export const deleteAssessment = (id) => dispatch => {
     })
     .then((res) => {
       console.log(res)
-      window.location.href="/daftar-kuis"
+      if(type === "Kuis"){
+        window.location.href="/daftar-kuis"
+      }
+      else{
+        window.location.href="/daftar-ujian"
+      }
     })
     .catch(err => {
       console.log(err);

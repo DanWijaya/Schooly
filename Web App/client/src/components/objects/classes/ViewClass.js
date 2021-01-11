@@ -99,9 +99,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   itemIcon: {
-    color: theme.palette.primary.main,
-    marginRight: "5px",
-    fontSize: "20px"
+    marginRight: "10px", 
+    fontSize: "22px", 
+    color: "grey"
   },
   errorIcon: {
     color: theme.palette.error.main,
@@ -152,44 +152,45 @@ function AssignmentListItem(props) {
       <Hidden smUp implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
-          <Badge
-          style={{display: "flex", flexDirection: "row"}}
-          badgeContent={
-            (props.work_status === "Belum Dikumpulkan") ? (
-              <ErrorIcon className={classes.errorIcon}/>
-            ) : (
-              <CheckCircleIcon className={classes.checkIcon}/>
-            )
-          }
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
-            <ListItem button className={classes.listItem}>
-              <Grid container alignItems="center">
-                <Grid item xs={7}>
-                  <ListItemText
-                    primary={
-                      <Typography variant="body1">
-                        {props.work_title}
-                      </Typography>
-                    }
-                    secondary={props.work_subject}
-                  />
+            <Badge
+              style={{display: "flex", flexDirection: "row"}}
+              badgeContent={
+                (props.work_status === "Belum Dikumpulkan") ? (
+                  <ErrorIcon className={classes.errorIcon}/>
+                ) : (
+                  <CheckCircleIcon className={classes.checkIcon}/>
+                )
+              }
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <ListItem button className={classes.listItem}>
+                <Grid container alignItems="center">
+                  <Grid item xs={7}>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1">
+                          {props.work_title}
+                        </Typography>
+                      }
+                      secondary={props.work_subject}
+                    />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Typography variant="subtitle" color="textSecondary">
+                          {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                        </Typography>
+                      }
+                      secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={5}>
-                  <ListItemText
-                    align="right"
-                    primary={
-                      <Typography variant="body2" color="textSecondary">
-                        Batas Waktu: <br /> {props.work_deadline}
-                      </Typography>
-                    }
-                  />
-                </Grid>
-              </Grid>
-            </ListItem>
+              </ListItem>
             </Badge>
           </Paper>
         </Link>
@@ -197,41 +198,42 @@ function AssignmentListItem(props) {
       <Hidden xsDown implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
-          <Badge
-          style={{display: "flex", flexDirection: "row"}}
-          badgeContent={
-            (props.work_status === "Belum Dikumpulkan") ? (
-              <ErrorIcon className={classes.errorIcon}/>
-            ) : (
-              <CheckCircleIcon className={classes.checkIcon}/>
-            )
-          }
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
-            <ListItem button className={classes.listItem}>
-              <ListItemAvatar>
-                {props.work_category_avatar}
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">
-                    {props.work_title}
-                  </Typography>
-                }
-                secondary={props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" color="textSecondary">
-                    Batas Waktu: {props.work_deadline}
-                  </Typography>
-                }
-              />
-            </ListItem>
+            <Badge
+              style={{display: "flex", flexDirection: "row"}}
+              badgeContent={
+                (props.work_status === "Belum Dikumpulkan") ? (
+                  <ErrorIcon className={classes.errorIcon}/>
+                ) : (
+                  <CheckCircleIcon className={classes.checkIcon}/>
+                )
+              }
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <ListItem button className={classes.listItem}>
+                <ListItemAvatar>
+                  {props.work_category_avatar}
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      {props.work_title}
+                    </Typography>
+                  }
+                  secondary={props.work_subject}
+                />
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="subtitle" color="textSecondary">
+                      {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                    </Typography>
+                  }
+                  secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                />
+              </ListItem>
             </Badge>
           </Paper>
         </Link>
@@ -260,21 +262,21 @@ function AssessmentListItem(props) {
   return (
     <div>
       <Hidden smUp implementation="css">
-          <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
+        <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
           <Badge
-          style={{display: "flex", flexDirection: "row"}}
-          badgeContent={
-            (props.work_status === "Belum Ditempuh") ? (
-              <WarningIcon className={classes.warningIcon}/>
-            ) : (
-              null
-            )
-          }
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
+            style={{display: "flex", flexDirection: "row"}}
+            badgeContent={
+              (props.work_status === "Belum Ditempuh") ? (
+                <WarningIcon className={classes.warningIcon}/>
+              ) : (
+                null
+              )
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
             <ListItem button className={classes.listItem}>
               <ListItemText
                 primary={
@@ -285,35 +287,42 @@ function AssessmentListItem(props) {
                 secondary={props.work_subject}
               />
 
-              <ListItemText
+              {/* <ListItemText
                 align="right"
                 primary={
                   <Typography variant="body2" color="textSecondary">
                     Mulai: <br /> {props.work_starttime}
                   </Typography>
                 }
+              /> */}
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
               />
             </ListItem>
-            </Badge>
-          </Paper>
+          </Badge>
+        </Paper>
       </Hidden>
       <Hidden xsDown implementation="css">
-        <>
-      
-          <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
+        <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
           <Badge
-          badgeContent={
-            (props.work_status === "Belum Ditempuh") ? (
-              <WarningIcon className={classes.warningIcon}/>
-            ) : (
-              null
-            )
-          }
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
+            badgeContent={
+              (props.work_status === "Belum Ditempuh") ? (
+                <WarningIcon className={classes.warningIcon}/>
+              ) : (
+                null
+              )
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
             <ListItem button className={classes.listItem}>
               <ListItemAvatar>
                 {props.work_category_avatar}
@@ -326,19 +335,26 @@ function AssessmentListItem(props) {
                 }
                 secondary={props.work_subject}
               />
-              <ListItemText
+              {/* <ListItemText
                 align="right"
                 primary={
                   <Typography variant="body2" color="textSecondary">
                     Mulai: {props.work_starttime}
                   </Typography>
                 }
+              /> */}
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
               />
             </ListItem>
-            </Badge>
-          </Paper>
-        
-        </>
+          </Badge>
+        </Paper>
       </Hidden>
       <Dialog
         fullScreen={false}
@@ -398,6 +414,15 @@ function MaterialListitem(props) {
                     </Typography>
                   }
                   secondary={!props.work_subject ? " " : props.work_subject}
+                />
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="subtitle" color="textSecondary">
+                      {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                    </Typography>
+                  }
+                  secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
                 />
               </ListItem>
             </Paper>
@@ -524,7 +549,8 @@ function ViewClass(props) {
                 work_category_avatar={workCategoryAvatar}
                 work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
                 work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_dateposted={task.createdAt}
                 work_link={`/tugas-murid/${task._id}`}
               />
             )
@@ -543,7 +569,8 @@ function ViewClass(props) {
                 work_category_avatar={workCategoryAvatar}
                 work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
                 work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_dateposted={task.createdAt}
                 work_link={`/tugas-murid/${task._id}`}
               />
             )
@@ -592,7 +619,7 @@ function ViewClass(props) {
         if(tab === "pekerjaan_kelas"){
           let workStatus = "Belum Ditempuh"
           if(type === "Kuis"){
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -601,12 +628,13 @@ function ViewClass(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
           }
           if(type === "Ujian"){
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && !assessment.submissions && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -615,6 +643,7 @@ function ViewClass(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
@@ -628,7 +657,7 @@ function ViewClass(props) {
           let workStatus = (!assessment.submissions ? "Belum Ditempuh" : "Sudah Ditempuh")
           if(type === "Kuis"){
             console.log(assessment.type)
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -637,13 +666,14 @@ function ViewClass(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
           }
           if(type === "Ujian"){
             console.log(assessment.type)
-            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject._id)) && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -652,6 +682,7 @@ function ViewClass(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
@@ -681,6 +712,7 @@ function ViewClass(props) {
               work_category_avatar={workCategoryAvatar}
               work_subject={all_subjects_map.get(material.subject)}
               work_link={`/materi/${material._id}`}
+              work_dateposted={material.createdAt}
             />
           )
         }

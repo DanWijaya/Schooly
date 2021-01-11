@@ -335,7 +335,7 @@ class CreateAnnouncement extends Component {
           success={success}
           messageUploading="Pengumuman sedang dibuat"
           messageSuccess="Pengumuman telah dibuat"
-          redirectLink="/daftar-pengumuman"
+          redirectLink={`/pengumuman/${success}`}
         />
         <Paper>
           <div className={classes.content}>

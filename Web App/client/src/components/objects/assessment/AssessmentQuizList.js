@@ -9,7 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
+import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge, List, ListItem, ListItemAvatar, ListItemText,
    Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography, Dialog} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -24,12 +24,13 @@ import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { FaClipboardList } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
+import WarningIcon from '@material-ui/icons/Warning';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
 
-function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type) {
-  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type };
+function createData(_id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt, submissions) {
+  return { _id, assessmenttitle, subject, start_date, end_date, class_assigned, type, createdAt, submissions };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -73,13 +74,14 @@ function AssessmentListToolbar(props) {
     { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
     { id: "start_date", numeric: false, disablePadding: false, label: "Mulai" },
     { id: "end_date", numeric: false, disablePadding: false, label: "Selesai" },
-    { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
+    { id: "createdAt", numeric: false, disablePadding: false, label: "Waktu Dibuat" },
+    // { id: "class_assigned", numeric: false, disablePadding: false, label: "Ditugaskan Pada" },
   ];
 
-  if (role === "Student") {
+  // if (role === "Student") {
     // Don't include the class_assigned basically.
-    headCells.pop()
-  }
+  //   headCells.pop()
+  // }
 
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -429,20 +431,20 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   assessmentPaper: {
+    marginBottom: "5px",
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
+    flexDirection: "column",
+    alignItems: "stretch",
   },
   titleIcon: {
     fontSize: "28px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
     marginRight: "10px"
-  }
+  },
+  warningIcon: {
+    color: theme.palette.warning.main
+  },
 }));
 
 
@@ -467,6 +469,8 @@ function AssessmentList(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [currentDialogInfo, setCurrentDialogInfo] = React.useState({})
 
+  console.log(all_assessments)
+
   const handleOpenDialog = (title, subject, start_date, end_date) => {
     setCurrentDialogInfo({title, subject, start_date, end_date})
     setOpenDialog(true)
@@ -489,7 +493,9 @@ function AssessmentList(props) {
               data.start_date,
               data.end_date,
               data.class_assigned,
-              data.type
+              data.type,
+              data.createdAt,
+              data.submissions
         )
       )
     }
@@ -543,8 +549,8 @@ function AssessmentList(props) {
   // This function is defined above.
   retrieveAssessments()
 
-  const onDeleteAssessment = (id) => {
-    deleteAssessment(id)
+  const onDeleteAssessment = (id, type) => {
+    deleteAssessment(id, type)
   }
 
   // Delete Dialog
@@ -582,6 +588,12 @@ function AssessmentList(props) {
     handleOpenCopySnackBar(type)
   }
 
+  const workStatus = (assessment) => {
+    console.log(assessment)
+    let workStatus = (!assessment.submissions ? "Belum Ditempuh" : "Sudah Ditempuh")
+    return workStatus
+  }
+
   document.title = "Schooly | Daftar Kuis";
   return (
     <>
@@ -592,7 +604,7 @@ function AssessmentList(props) {
           handleCloseDeleteDialog={handleCloseDeleteDialog}
           itemType="Kuis"
           itemName={selectedAssessmentName}
-          deleteItem={() => { onDeleteAssessment(selectedAssessmentId) }}
+          deleteItem={() => { onDeleteAssessment(selectedAssessmentId, "Kuis") }}
           isWarning={true}
         />
         <Dialog
@@ -714,7 +726,7 @@ function AssessmentList(props) {
                     <ExpansionPanelDetails>
                       <Grid conntainer direction="column">
                         <Grid item>
-                          <Typography variant="body1" gutterBottom>
+                          <Typography variant="body1">
                             <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
                             row.class_assigned.map((id,i) => {
 
@@ -729,6 +741,11 @@ function AssessmentList(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
+                          <Typography variant="body1" color="textSecondary" gutterBottom>
+                            Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
                           <Typography variant="body2" className={classes.startDateText}>
                             Waktu Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
@@ -738,6 +755,7 @@ function AssessmentList(props) {
                             Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
+                        
                       </Grid>
                     </ExpansionPanelDetails>
                   </ExpansionPanel>
@@ -748,29 +766,38 @@ function AssessmentList(props) {
                     className={classes.assessmentPaper}
                     onClick={() => handleOpenDialog(row.assessmenttitle, all_subjects_map.get(row.subject), moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm"), moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm"))}
                   >
-                    <div>
-                      <Typography variant="h6" id={labelId}>
-                        {row.assessmenttitle}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {all_subjects_map.get(row.subject)}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Hidden smUp implementation="css">
-                        <Typography variant="body2" align="right" color="textSecondary">
-                          Batas Waktu:
-                        </Typography>
-                        <Typography variant="caption" align="right" color="textSecondary">
-                          {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                        </Typography>
-                      </Hidden>
-                      <Hidden xsDown implementation="css">
-                        <Typography variant="body2" align="right" color="textSecondary">
-                          Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                        </Typography>
-                      </Hidden>
-                    </div>
+                    <Badge
+                      style={{display: "flex", flexDirection: "row"}}
+                      badgeContent={
+                        (workStatus(row) === "Belum Ditempuh") ? (
+                          <WarningIcon className={classes.warningIcon}/>
+                        ) : null
+                      }
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                    >
+                      <ListItem button className={classes.listItem}>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h6">
+                              {row.assessmenttitle}
+                            </Typography>
+                          }
+                          secondary={all_subjects_map.get(row.subject)}
+                        />
+                        <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                            </Typography>
+                          }
+                          secondary={moment(row.createdAt).locale("id").format("HH.mm")}
+                        />
+                      </ListItem>
+                    </Badge>
                   </Paper>
                 }
               </Grid>

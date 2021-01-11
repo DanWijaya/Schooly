@@ -181,7 +181,7 @@ function ViewAssessmentTeacher(props) {
     handleOpenCopySnackBar(type)
   }
 
-  let linkToShare = `http://${window.location.host}/kuis-murid/${assessment_id}`;
+  let linkToShare = (selectedAssessments.type === "Kuis") ? `http://${window.location.host}/kuis-murid/${assessment_id}` : `http://${window.location.host}/ujian-murid/${assessment_id}`;
 
   return (
     <div className={classes.root}>
@@ -208,9 +208,14 @@ function ViewAssessmentTeacher(props) {
                     <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
                   </Typography>
                   <Hidden smDown implementation="css">
-                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                      Deskripsi Kuis/Ujian:
-                    </Typography>
+                    <Grid item style={{marginTop: "40px"}}>
+                      <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
+                        Deskripsi Kuis/Ujian:
+                      </Typography>
+                      <Typography>
+                        {selectedAssessments.description}
+                      </Typography>
+                    </Grid>
                   </Hidden>
                 </Grid>
                 <Grid item xs={12} md={5} spacing={2}>
@@ -220,9 +225,6 @@ function ViewAssessmentTeacher(props) {
                     </Typography>
                     <Typography variant="body2" className={classes.endDateText}>
                       Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" style={{ marginTop: "20px" }}>
-                      Nilai Maksimum: 100
                     </Typography>
                     <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
                       Deskripsi Kuis/Ujian:
@@ -238,19 +240,8 @@ function ViewAssessmentTeacher(props) {
                     <Typography align="right" variant="body2" className={classes.endDateText}>
                       Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
-                    <Typography align="right" variant="body2" color="textSecondary" style={{marginTop: "20px"}}>
-                      Nilai Maksimum: 100
-                    </Typography>
                   </Hidden>  
                 </Grid>
-                <Hidden smDown>
-                  <Grid item xs={12}>
-                    <Typography align="justify">
-                      {selectedAssessments.description}
-                    </Typography>
-                  </Grid>
-                </Hidden>
-
               </Grid>
             </Paper>
           </Grid>
@@ -314,7 +305,7 @@ function ViewAssessmentTeacher(props) {
           ))}
           <Grid item container spacing={2} justify="flex-end" alignItems="center">
             <Grid item>
-              <Link to={`/daftar-kuis-terkumpul/${assessment_id}`}>
+              <Link to={(selectedAssessments.type === "Kuis") ? `/daftar-kuis-terkumpul/${assessment_id}` : `/daftar-ujian-terkumpul/${assessment_id}`}>
                 <Fab variant="extended" className={classes.seeAllAssessmentButton}>
                   <AssignmentIcon style={{ marginRight: "10px" }} />
                     Lihat Hasil

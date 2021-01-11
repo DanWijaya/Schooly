@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
 import {
   getAllMaterials,
   getMaterial,
@@ -39,8 +40,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {GoSearch} from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
 
-function createData(_id, materialtitle, subject, author, class_assigned) {
-  return {_id, materialtitle, subject, author, class_assigned};
+function createData(_id, materialtitle, subject, author, class_assigned, createdAt) {
+  return { _id, materialtitle, subject, author, class_assigned, createdAt};
 }
 
 var rows = [];
@@ -106,6 +107,12 @@ function MaterialListToolbar(props) {
       numeric: false,
       disablePadding: false,
       label: "Pemberi Materi"
+    },
+    {
+      id: "createdAt", 
+      numeric: false, 
+      disablePadding: false, 
+      label: "Waktu Dibuat"
     },
     {
       id: "class_assigned",
@@ -486,7 +493,8 @@ function MaterialList(props) {
         !all_teachers.size || !all_teachers.get(data.author_id)
           ? {}
           : all_teachers.get(data.author_id),
-        data.class_assigned
+        data.class_assigned,
+        data.createdAt
       )
     );
   };
@@ -685,6 +693,11 @@ function MaterialList(props) {
                           Pemberi Materi: {!row.author ? null : row.author.name}
                         </Typography>
                       </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="body1" color="textSecondary">
+                          Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
@@ -705,7 +718,7 @@ function MaterialList(props) {
                       </Typography>
                     </div>
                     <div>
-                      <Hidden smUp implementation="css">
+                      {/* <Hidden smUp implementation="css">
                         <Typography
                           variant="body2"
                           color="textSecondary"
@@ -729,7 +742,21 @@ function MaterialList(props) {
                         >
                           Pemberi Materi: {!row.author ? null : row.author.name}
                         </Typography>
-                      </Hidden>
+                      </Hidden> */}
+                      <Typography
+                        variant="subtitle"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        align="right"
+                      >
+                        {moment(row.createdAt).locale("id").format("HH.mm")}
+                      </Typography>
                     </div>
                   </Paper>
                 </Link>

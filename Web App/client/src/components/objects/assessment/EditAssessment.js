@@ -928,6 +928,14 @@ class EditAssessment extends Component {
     if (filteredtypeCount.length !== 0) {
       // mobile view
       // for (let type of Object.keys(typeCount)) {
+
+      gridItemMobileView.push(
+        <Typography variant="h6">Bobot Per Soal:</Typography>
+      );
+      gridItemMobileView.push(
+        <Divider className={classes.customMargin} />
+      );
+
       for (let pair of filteredtypeCount) {
         let type = pair[0];
         let weight = this.state.weights[type];
@@ -1225,7 +1233,7 @@ class EditAssessment extends Component {
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
 
-    const linkToShare = `http://${window.location.host}/kuis-murid/${this.props.match.params.id}`;
+    const linkToShare = (this.state.type === "Kuis") ? `http://${window.location.host}/kuis-murid/${this.props.match.params.id}` : `http://${window.location.host}/ujian-murid/${this.props.match.params.id}`;
     const ToggleViewQuiz = withStyles((theme) => ({
       root: {
         width: 42,
@@ -1298,6 +1306,7 @@ class EditAssessment extends Component {
           // messageSuccess="Kuis/Ujian telah disunting"
           messageSuccess={`${this.state.type} telah disunting`}
           redirectLink="/daftar-kuis"
+          // redirectLink={(this.state.type === "Kuis") ? `/daftar-kuis` : `/daftar-ujian`}
         />
         <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>

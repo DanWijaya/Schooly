@@ -11,11 +11,14 @@ import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import { Avatar, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, List, 
-  ListItem, ListItemAvatar, ListItemText, Paper, Typography, Hidden, Dialog } from "@material-ui/core";
+  ListItem, ListItemAvatar, ListItemText, Paper, Typography, Hidden, Dialog, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import ErrorIcon from '@material-ui/icons/Error';
+import WarningIcon from '@material-ui/icons/Warning';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,9 +41,22 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "30px"
   },
   expansionPanelList: {
-    marginLeft: "20px",
-    marginRight: "15px",
-    marginBottom: "10px",
+    margin: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch"
+  },
+  listItemPaper: {
+    marginBottom: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch"
+  },
+  listItem: {
+    minHeight: "70px",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
   },
   assignmentLate: {
     backgroundColor: theme.palette.error.main,
@@ -59,6 +75,15 @@ const useStyles = makeStyles((theme) => ({
   },
   subtitleColor: {
     color: "rgba(255, 255, 255, 0.7)"
+  },
+  errorIcon: {
+    color: theme.palette.error.main,
+  },
+  warningIcon: {
+    color: theme.palette.warning.main
+  },
+  checkIcon: {
+    color: theme.palette.success.main
   }
 }));
 
@@ -154,6 +179,15 @@ function MaterialListitem(props) {
                   }
                   secondary={!props.work_subject ? " " : props.work_subject}
                 />
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="subtitle" color="textSecondary">
+                      {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                    </Typography>
+                  }
+                  secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                />
               </ListItem>
             </Paper>
         </Link>
@@ -170,70 +204,95 @@ function AssignmentListItem(props) {
       <Hidden smUp implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
-            <ListItem button className={classes.listItem}>
-              <Grid container alignItems="center">
-                <Grid item xs={7}>
-                  <ListItemText
-                    primary={
-                      <Typography variant="body1">
-                        {props.work_title}
-                      </Typography>
-                    }
-                    secondary={props.work_subject}
-                  />
+            <Badge
+              style={{display: "flex", flexDirection: "row"}}
+              badgeContent={
+                (props.work_status === "Belum Dikumpulkan") ? (
+                  <ErrorIcon className={classes.errorIcon}/>
+                ) : (
+                  <CheckCircleIcon className={classes.checkIcon}/>
+                )
+              }
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <ListItem button className={classes.listItem}>
+                <Grid container alignItems="center">
+                  <Grid item xs={7}>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1">
+                          {props.work_title}
+                        </Typography>
+                      }
+                      secondary={props.work_subject}
+                    />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Typography variant="subtitle" color="textSecondary">
+                          {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                        </Typography>
+                      }
+                      secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={5}>
-                  <ListItemText
-                    align="right"
-                    primary={
-                      <Typography variant="body2" className={classes.warningText}>
-                        Batas Waktu: <br /> {props.work_deadline}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography variant="caption">
-                        {props.work_status}
-                      </Typography>
-                    }
-                  />
-                </Grid>
-              </Grid>
-            </ListItem>
+              </ListItem>
+            </Badge>
           </Paper>
         </Link>
       </Hidden>
       <Hidden xsDown implementation="css">
         <Link to={props.work_link}>
           <Paper variant="outlined" className={classes.listItemPaper}>
-            <ListItem button className={classes.listItem}>
-              <ListItemAvatar>
-                {props.work_category_avatar}
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body1">
-                    {props.work_title}
-                  </Typography>
-                }
-                secondary={props.work_subject}
-              />
-              <ListItemText
-                align="right"
-                primary={
-                  <Typography variant="body2" className={classes.warningText}>
-                    Batas Waktu: {props.work_deadline}
-                  </Typography>
-                }
-                secondary={props.work_status}
-              />
-            </ListItem>
+            <Badge
+              style={{display: "flex", flexDirection: "row"}}
+              badgeContent={
+                (props.work_status === "Belum Dikumpulkan") ? (
+                  <ErrorIcon className={classes.errorIcon}/>
+                ) : (
+                  <CheckCircleIcon className={classes.checkIcon}/>
+                )
+              }
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <ListItem button className={classes.listItem}>
+                <ListItemAvatar>
+                  {props.work_category_avatar}
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      {props.work_title}
+                    </Typography>
+                  }
+                  secondary={props.work_subject}
+                />
+                <ListItemText
+                  align="right"
+                  primary={
+                    <Typography variant="subtitle" color="textSecondary">
+                      {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                    </Typography>
+                  }
+                  secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                />
+              </ListItem>
+            </Badge>
           </Paper>
         </Link>
       </Hidden>
     </div>
   )
 }
-
 function AssessmentListItem(props) {
   const classes = useStyles()
 
@@ -255,56 +314,81 @@ function AssessmentListItem(props) {
     <div>
       <Hidden smUp implementation="css">
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-          <ListItem button className={classes.listItem}>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
-
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Mulai: <br /> {props.work_starttime}
-                </Typography>
-              }
-              secondary={
-                <Typography variant="caption">
-                  {props.work_status}
-                </Typography>
-              }
-            />
-          </ListItem>
+          <Badge
+            style={{display: "flex", flexDirection: "row"}}
+            badgeContent={
+              (props.work_status === "Belum Ditempuh") ? (
+                <WarningIcon className={classes.warningIcon}/>
+              ) : (
+                null
+              )
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+              />
+            </ListItem>
+          </Badge>
         </Paper>
       </Hidden>
       <Hidden xsDown implementation="css">
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
-          <ListItem button className={classes.listItem}>
-            <ListItemAvatar>
-              {props.work_category_avatar}
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Typography variant="body1">
-                  {props.work_title}
-                </Typography>
-              }
-              secondary={props.work_subject}
-            />
-            <ListItemText
-              align="right"
-              primary={
-                <Typography variant="body2" className={classes.warningText}>
-                  Mulai: {props.work_starttime}
-                </Typography>
-              }
-              secondary={props.work_status}
-            />
-          </ListItem>
+          <Badge
+            style={{display: "flex", flexDirection: "row"}}
+            badgeContent={
+              (props.work_status === "Belum Ditempuh") ? (
+                <WarningIcon className={classes.warningIcon}/>
+              ) : (
+                null
+              )
+            }
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <ListItemAvatar>
+                {props.work_category_avatar}
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Typography variant="body1">
+                    {props.work_title}
+                  </Typography>
+                }
+                secondary={props.work_subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="subtitle" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+              />
+            </ListItem>
+          </Badge>
         </Paper>
       </Hidden>
       <Dialog
@@ -439,6 +523,7 @@ function ViewSubject(props) {
               work_category_avatar={workCategoryAvatar}
               work_subject={category === "subject" ? null : all_subjects_map.get(material.subject)}
               work_link={`/materi/${material._id}`}
+              work_dateposted={material.createdAt}
             />
           )
         }
@@ -505,7 +590,8 @@ function ViewSubject(props) {
                 work_category_avatar={workCategoryAvatar}
                 work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
                 work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_dateposted={task.createdAt}
                 work_link={`/tugas-murid/${task._id}`}
               />
             )
@@ -524,7 +610,8 @@ function ViewSubject(props) {
                 work_category_avatar={workCategoryAvatar}
                 work_subject={category === "subject" ? null : all_subjects_map.get(task.subject)}
                 work_status={workStatus}
-                work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
+                work_dateposted={task.createdAt}
                 work_link={`/tugas-murid/${task._id}`}
               />
             )
@@ -576,7 +663,7 @@ function ViewSubject(props) {
         if(tab === "pekerjaan_kelas"){
           let workStatus = "Belum Ditempuh"
           if(type === "Kuis"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -585,12 +672,13 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
           }
           if(type === "Ujian"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && !assessment.submissions && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -599,6 +687,7 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
@@ -613,7 +702,7 @@ function ViewSubject(props) {
           console.log(assessment.subject)
           console.log(subject)
           if(type === "Kuis"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Kuis"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Kuis" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -622,12 +711,13 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
           }
           if(type === "Ujian"){
-            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Ujian"){
+            if((!category || (category === "subject" && assessment.subject === subject)) && assessment.type === "Ujian" && assessment.posted){
               result.push(
                 <AssessmentListItem
                   work_title={assessment.name}
@@ -636,6 +726,7 @@ function ViewSubject(props) {
                   work_status={workStatus}
                   work_starttime={moment(assessment.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                   work_endtime={moment(assessment.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  work_dateposted={assessment.createdAt}
                 />
               )
             }
@@ -659,68 +750,60 @@ function ViewSubject(props) {
           <h5 className={classes.subtitleColor}>Kelas: {kelas.name}</h5>
         </Typography>
       </Paper>
-      <Grid container direction="column" style={{marginTop: "20px"}}>
-      <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Materi
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listMaterials("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listMaterials("subject", id, "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-        <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Tugas
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listTasks("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listTasks("subject", id, "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-        <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Kuis
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listAssessments("subject", id, "Kuis", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-        <Grid item>
-          <ExpansionPanel>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="h6">
-                Ujian
-              </Typography>
-            </ExpansionPanelSummary>
-            <Divider />
-            <List className={classes.expansionPanelList}>
-              {listAssessments("subject", id, "Ujian", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-                <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
-              }
-            </List>
-          </ExpansionPanel>
-        </Grid>
-      </Grid>
+      <div style={{marginTop: "20px"}}>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Materi
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listMaterials("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listMaterials("subject", id, "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Tugas
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listTasks("subject", id, "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listTasks("subject", id, "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Kuis
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listAssessments("subject", id, "Kuis", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listAssessments("subject", id, "Kuis", "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">
+              Ujian
+            </Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <List className={classes.expansionPanelList}>
+            {listAssessments("subject", id, "Ujian", "mata_pelajaran").length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+              <>{listAssessments("subject", id, "Ujian", "mata_pelajaran")}</>
+            }
+          </List>
+        </ExpansionPanel>
+      </div>
     </div>
   )
 }

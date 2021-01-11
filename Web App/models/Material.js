@@ -28,6 +28,6 @@ const MaterialSchema = new Schema({
         type: Object,
         default: []
     }]
-})
+}, { timestamps: true })
 
 module.exports = Material = mongoose.model("materials", MaterialSchema);

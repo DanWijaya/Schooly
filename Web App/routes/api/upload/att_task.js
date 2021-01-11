@@ -56,12 +56,12 @@ router.post("/lampiran/:task_id", uploadLampiranTugas.array("lampiran_tugas", 10
 
       console.log(task.lampiran)
       task.save()// kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
-          .then(task => console.log("Task"))
+          .then(task => res.json({success: "Successfully uploaded the lampiran file", _id: req.params.task_id}))
           .catch(err => {console.log("error kan ini")})
 
         }
     })
-  res.json({success: "Successfully uploaded the lampiran file"})
+  // res.json({success: "Successfully uploaded the lampiran file", _id: req.params.task_id})
 })
 
 router.get("/lampiran/:task_id", (req,res) => {

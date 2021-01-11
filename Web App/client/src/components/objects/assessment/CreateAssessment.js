@@ -8,6 +8,7 @@ import { createAssessment } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -221,8 +222,8 @@ class CreateAssessment extends Component {
   imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
 
   componentWillUnmount(){
-    console.log(this.state.subject)
     this.props.clearErrors()
+    this.props.clearSuccess()
     this.props.handleSideDrawerExist(true)
   }
 
@@ -795,6 +796,14 @@ class CreateAssessment extends Component {
     if (filteredtypeCount.length !== 0) {
       // mobile view
       // for (let type of Object.keys(typeCount)) {
+        
+      gridItemMobileView.push(
+        <Typography variant="h6">Bobot Per Soal:</Typography>
+      );
+      gridItemMobileView.push(
+        <Divider className={classes.customMargin} />
+      );
+
       for (let pair of filteredtypeCount) {
         let type = pair[0];
         let weight = this.state.weights[type];
@@ -1173,7 +1182,7 @@ class CreateAssessment extends Component {
           success={success}
           messageUploading="Kuis/Ujian sedang dibuat"
           messageSuccess="Kuis/Ujian telah dibuat"
-          redirectLink="/daftar-kuis"
+          redirectLink={(this.state.type === "Kuis") ? `/kuis-guru/${success}` : `/ujian-guru/${success}`}
         />
         <form onSubmit={(e) => this.onSubmit(e, user.id)} id="submitForm">
           <Grid container direction="column" spacing={3}>
@@ -1536,5 +1545,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createAssessment, clearErrors }
+  mapStateToProps, { getAllClass, getAllSubjects, createAssessment, clearErrors, clearSuccess }
 )(withStyles(styles)(React.memo(CreateAssessment)));

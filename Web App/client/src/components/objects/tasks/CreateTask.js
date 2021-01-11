@@ -10,6 +10,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
@@ -244,6 +245,7 @@ class CreateTask extends Component {
 
   componentWillUnmount(){
     this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   // akan selalu dirun kalau ada terima state atau props yang berubah.
@@ -347,7 +349,7 @@ class CreateTask extends Component {
             success={success}
             messageUploading="Tugas sedang dibuat"
             messageSuccess="Tugas telah dibuat"
-            redirectLink="/daftar-tugas"
+            redirectLink={`/tugas-guru/${success}`}
           />
           <Paper>
             <div className={classes.content}>
@@ -560,5 +562,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-  mapStateToProps, { createTask, getAllClass, getAllSubjects, getOneUser, clearErrors }
+  mapStateToProps, { createTask, getAllClass, getAllSubjects, getOneUser, clearErrors, clearSuccess }
 ) (withStyles(styles)(CreateTask))
