@@ -6,11 +6,15 @@ import classnames from "classnames";
 import { createHash } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import { Button, Divider, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     margin: "auto",
     maxWidth: "1000px",
     minHeight: "500px",
@@ -23,7 +27,12 @@ const styles = (theme) => ({
       backgroundSize: "contain",
     },
   },
-  mainPaper: {
+  schoolyLogo: {
+    width: "250px",
+    height: "125px",
+    marginBottom: "25px",
+  },
+  loginForgotPaper: {
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
@@ -91,7 +100,14 @@ class LoginForgot extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper elevation={11} className={classes.mainPaper}>
+        <Link to="/">
+          <img
+            alt="Schooly Introduction"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
+        </Link>
+        <Paper elevation={11} className={classes.loginForgotPaper}>
           <Grid container direction="column" spacing={5}>
             {!isPasswordReset ?
               <Grid item>
@@ -115,11 +131,11 @@ class LoginForgot extends Component {
             <Grid item>
               {!isPasswordReset ?
                 <form noValidate onSubmit={this.onSubmit}>
-                  <label for="email">Email</label>
                   <TextField
                     fullWidth
                     variant="outlined"
                     id="email"
+                    label="Email"
                     onChange={this.onChange}
                     value={email}
                     error={Boolean(errors.problem)}

@@ -10,10 +10,11 @@ import { registerUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions"
 import authBackground from "../AuthBackground.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import PolicyContent from "../../layout/policy/PolicyContent";
 import RegisterStepIcon from "./RegisterStepIcon";
 import RegisterStepConnector from "./RegisterStepConnector";
-import { Button, Dialog, Divider, FormControl, FormHelperText, Grid,
+import { Button, Dialog, Divider, FormControl, FormHelperText, Grid, InputLabel,
    MenuItem, Paper, Select, Snackbar, Stepper, Step, StepLabel, TextField, Typography } from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
@@ -22,6 +23,9 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     margin: "auto",
     maxWidth: "1000px",
     minHeight: "500px",
@@ -34,15 +38,15 @@ const styles = (theme) => ({
       backgroundSize: "contain",
     },
   },
-  mainPaper: {
+  schoolyLogo: {
+    width: "250px",
+    height: "125px",
+    marginBottom: "25px",
+  },
+  registerPaper: {
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
-  },
-  schoolyLogo: {
-    width: "30%",
-    height: "30%",
-    marginBottom: "30px",
   },
   instructions: {
     marginTop: theme.spacing(1),
@@ -197,11 +201,11 @@ class Register extends Component {
           return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
-                <label for="email">Email</label>
                 <TextField
                   fullWidth
                   variant="outlined"
                   id="email"
+                  label="Email"
                   onChange={this.onChange}
                   value={this.state.email}
                   error={errors.email}
@@ -213,11 +217,11 @@ class Register extends Component {
                 />
               </Grid>
               <Grid item>
-                <label for="password">Kata Sandi</label>
                 <TextField
                   fullWidth
                   variant="outlined"
                   id="password"
+                  label="Kata Sandi"
                   onChange={this.onChange}
                   value={this.state.password}
                   error={errors.password}
@@ -229,11 +233,11 @@ class Register extends Component {
                 />
               </Grid>
               <Grid item>
-                <label for="password2">Konfirmasi Kata Sandi</label>
                 <TextField
                   fullWidth
                   variant="outlined"
                   id="password2"
+                  label="Konfirmasi Kata Sandi"
                   onChange={this.onChange}
                   value={this.state.password2}
                   error={errors.password2}
@@ -250,9 +254,11 @@ class Register extends Component {
           return (
             <Grid container direction="column" spacing={4}>
               <Grid item>
-                <label id="role">Daftar Sebagai</label>
                 <FormControl id="role" variant="outlined" color="primary" fullWidth error={Boolean(errors.role)}>
+                  <InputLabel id="role-label">Daftar Sebagai</InputLabel>
                   <Select
+                    labelId="role-label"
+                    label="Daftar Sebagai"
                     value={this.state.role}
                     onChange={(event) => {this.onChange(event, "role")}}
                   >
@@ -266,11 +272,11 @@ class Register extends Component {
                 </FormControl>
               </Grid>
               <Grid item>
-                <label for="name">Nama</label>
                 <TextField
                   fullWidth
                   variant="outlined"
                   id="name"
+                  label="Nama"
                   onChange={this.onChange}
                   value={this.state.name}
                   error={errors.name}
@@ -283,9 +289,11 @@ class Register extends Component {
               </Grid>
               {this.state.role === "Student" ?
                 <Grid item>
-                  <label id="kelas">Kelas</label>
                   <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
+                    <InputLabel id="kelas-label">kelas</InputLabel>
                     <Select
+                      labelId="kelas-label"
+                      label="Kelas"
                       value={this.state.kelas}
                       onChange={(event) => {this.onChange(event, "kelas")}}
                     >
@@ -300,9 +308,11 @@ class Register extends Component {
                 </Grid>
               : this.state.role === "Teacher" ?
                 <Grid item>
-                  <label id="subject">Mata Pelajaran</label>
                   <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject_teached)}>
+                    <InputLabel id="subject-label">Mata Pelajaran</InputLabel>
                     <Select
+                      labelId="subject-label"
+                      label="Mata Pelajaran"
                       value={this.state.subject_teached}
                       onChange={(event) => {this.onChange(event, "subject")}}
                     >
@@ -319,11 +329,11 @@ class Register extends Component {
                 null
               }
               <Grid item>
-                <label for="phone">Nomor Telepon</label>
                 <TextField
                   fullWidth
                   variant="outlined"
                   id="phone"
+                  label="Nomor Telepon"
                   onChange={this.onChange}
                   value={this.state.phone}
                   error={errors.phone}
@@ -335,11 +345,11 @@ class Register extends Component {
                 />
               </Grid>
               <Grid item>
-                <label for="emergency_phone">Nomor Telepon Darurat</label>
                 <TextField
                   fullWidth
                   variant="outlined"
                   id="emergency_phone"
+                  label="Nomor Telepon Darurat"
                   onChange={this.onChange}
                   value={this.state.emergency_phone}
                   error={errors.emergency_phone}
@@ -351,11 +361,11 @@ class Register extends Component {
                 />
               </Grid>
               <Grid item>
-                <label for="address">Alamat</label>
                 <TextField
                   fullWidth
                   variant="outlined"
                   id="address"
+                  label="Alamat"
                   onChange={this.onChange}
                   value={this.state.address}
                   error={errors.address}
@@ -367,11 +377,11 @@ class Register extends Component {
                 />
               </Grid>
               <Grid item>
-                <label for="tanggal_lahir">Tanggal Lahir</label>
                 <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     fullWidth
                     disableFuture
+                    label="Tanggal Lahir"
                     inputVariant="outlined"
                     maxDateMessage="Batas waktu harus waktu yang akan datang"
                     invalidDateMessage="Format tanggal tidak benar"
@@ -462,7 +472,14 @@ class Register extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper elevation={11} className={classes.mainPaper}>
+        <Link to="/">
+          <img
+            alt="Schooly Introduction"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
+        </Link>
+        <Paper elevation={11} className={classes.registerPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h6" align="center">

@@ -91,6 +91,11 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         },
       },
     },
+    MuiTextField: {
+      InputLabelProps: {
+        shrink: true,
+      },
+    },
     MuiInput: {
       InputProps: {
         style: {

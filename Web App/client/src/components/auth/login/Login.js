@@ -6,6 +6,7 @@ import classnames from "classnames";
 import { loginUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import { Button, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -13,6 +14,9 @@ import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     margin: "auto",
     maxWidth: "1000px",
     minHeight: "500px",
@@ -25,7 +29,12 @@ const styles = (theme) => ({
       backgroundSize: "contain",
     },
   },
-  mainPaper: {
+  schoolyLogo: {
+    width: "250px",
+    height: "125px",
+    marginBottom: "25px",
+  },
+  loginPaper: {
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
@@ -127,7 +136,14 @@ class Login extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper elevation={11} className={classes.mainPaper}>
+        <Link to="/">
+          <img
+            alt="Schooly Introduction"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
+        </Link>
+        <Paper elevation={11} className={classes.loginPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h6" align="center">
@@ -138,11 +154,11 @@ class Login extends Component {
               <form noValidate onSubmit={this.onSubmit}>
                 <Grid container direction="column" spacing={4}>
                   <Grid item>
-                    <label for="email">Email</label>
                     <TextField
                       fullWidth
                       variant="outlined"
                       id="email"
+                      label="Email"
                       onChange={this.onChange}
                       value={this.state.email}
                       error={Boolean(errors.email || errors.emailnotfound || errors.notactive)}
@@ -154,11 +170,11 @@ class Login extends Component {
                     />
                   </Grid>
                   <Grid item>
-                    <label>Kata Sandi</label>
                     <TextField
                       fullWidth
                       variant="outlined"
                       id="password"
+                      label="Kata Sandi"
                       onChange={this.onChange}
                       value={this.state.password}
                       error={Boolean(errors.password || errors.passwordincorrect)}

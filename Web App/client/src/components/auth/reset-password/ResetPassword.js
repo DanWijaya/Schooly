@@ -1,16 +1,20 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions"
 import authBackground from "../AuthBackground.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     margin: "auto",
     maxWidth: "1000px",
     minHeight: "500px",
@@ -23,7 +27,12 @@ const styles = (theme) => ({
       backgroundSize: "contain",
     },
   },
-  mainPaper: {
+  schoolyLogo: {
+    width: "250px",
+    height: "125px",
+    marginBottom: "25px",
+  },
+  resetPasswordPaper: {
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
@@ -83,7 +92,14 @@ class ResetPassword extends Component {
 
     return (
       <div className={classes.root}>
-        <Paper elevation={11} className={classes.mainPaper}>
+        <Link to="/">
+          <img
+            alt="Schooly Introduction"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
+        </Link>
+        <Paper elevation={11} className={classes.resetPasswordPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h6" align="center" gutterBottom>
@@ -97,11 +113,11 @@ class ResetPassword extends Component {
               <form noValidate onSubmit={onSubmit}>
                 <Grid container direction="column" spacing={4}>
                   <Grid item>
-                    <label for="password">Kata Sandi</label>
                     <TextField
                       fullWidth
                       variant="outlined"
                       id="password"
+                      label="Kata Sandi"
                       onChange={this.onChange}
                       value={password}
                       error={Boolean(errors.password_entry)}
@@ -113,11 +129,11 @@ class ResetPassword extends Component {
                     />
                   </Grid>
                   <Grid item>
-                    <label for="password2">Konfirmasi Kata Sandi</label>
                     <TextField
                       fullWidth
                       variant="outlined"
                       id="password2"
+                      label="Konfirmasi Kata Sandi"
                       onChange={this.onChange}
                       value={password2}
                       error={Boolean(errors.password_match)}
