@@ -674,11 +674,6 @@ function ReportView(props) {
                       onChange={(event) => {handleKelasChange(event)}}
                       className={classes.select}
                       label="Kelas"
-                      SelectDisplayProps={{
-                        style: {
-                          padding: null
-                        }
-                      }}
                     >
                       {((kontenKelas.size !== 0) || (kelasWali.size !== 0)) ? (generateKelasMenuItem()) : (null)}
                     </Select>
@@ -696,11 +691,6 @@ function ReportView(props) {
                       onChange={(event) => {handleMatPelChange(event)}}
                       className={classes.select}
                       label="Mata Pelajaran"
-                      SelectDisplayProps={{
-                        style: {
-                          padding: null
-                        }
-                      }}
                     >
                       {(kontenMatpel.size !== 0) ? (generateMatPelMenuItem()) : (null)}
                     </Select>

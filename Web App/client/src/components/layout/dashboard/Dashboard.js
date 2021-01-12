@@ -451,7 +451,7 @@ class Dashboard extends Component {
     const { all_user_files } = this.props.filesCollection
     const { all_subjects_map } = this.props.subjectsCollection
     const { all_assessments } = this.props.assessmentsCollection
-    
+
     const classId = user.kelas
 
     console.log(all_assessments)
@@ -541,6 +541,7 @@ class Dashboard extends Component {
     }
 
     document.title = "Schooly | Dashboard";
+    document.body.style = "background: #FFFFFF";
 
     return (
       <div className={classes.root}>
@@ -858,7 +859,7 @@ Dashboard.propTypes = {
   getStudentsByClass: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
   getTasksBySC: PropTypes.func.isRequired,
-  getKuisBySC: PropTypes.func.isRequired, 
+  getKuisBySC: PropTypes.func.isRequired,
   getUjianBySC: PropTypes.func.isRequired
 };
 

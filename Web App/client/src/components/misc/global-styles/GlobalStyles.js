@@ -56,13 +56,6 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         },
       },
     },
-    MuiPickersDay: {
-      daySelected: {
-        "&:focus, &:hover": {
-          backgroundColor: "#2196f3",
-        },
-      },
-    },
     MuiIconButton: {
       root: {
         "&:focus, &:hover": {
@@ -77,12 +70,30 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         },
       },
     },
+    MuiPickersDay: {
+      daySelected: {
+        "&:focus, &:hover": {
+          backgroundColor: "#2196f3",
+        },
+      },
+    },
   },
   props: {
     MuiTab: {
       disableRipple: true,
     },
+    MuiInputLabel: {
+      shrink: true,
+      style: {
+        backgroundColor: "white",
+      }
+    },
     MuiSelect: {
+      inputProps: {
+        style: {
+          backgroundColor: "white"
+        }
+      },
       SelectDisplayProps: {
         style: {
           paddingTop: "14px",

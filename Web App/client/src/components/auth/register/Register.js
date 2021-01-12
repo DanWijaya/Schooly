@@ -290,7 +290,7 @@ class Register extends Component {
               {this.state.role === "Student" ?
                 <Grid item>
                   <FormControl id="kelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.kelas)}>
-                    <InputLabel id="kelas-label">kelas</InputLabel>
+                    <InputLabel id="kelas-label">Kelas</InputLabel>
                     <Select
                       labelId="kelas-label"
                       label="Kelas"

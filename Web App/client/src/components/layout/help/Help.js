@@ -39,16 +39,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "50px",
     padding: "10px",
   },
-  moreHelpText: {
-    fontFamily: "Cambria",
-  },
   moreHelp: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    fontFamily: "Cambria",
+    color: "white",
     maxWidth: "1000px",
     height: "200px",
     marginBottom: "30px",
@@ -111,6 +108,7 @@ function Help(props) {
   },[])
 
   document.title = "Schooly | Bantuan";
+  document.body.style = "background: #FFFFFF";
 
   return (
     <div className={classes.root}>
@@ -470,11 +468,11 @@ function Help(props) {
           </Grid>
         </div>
         <div className={classes.moreHelp}>
-          <Typography variant="h4" gutterBottom className={classes.moreHelpText}>
+          <Typography variant="h4" gutterBottom>
             Ada yang bisa kami bantu?
           </Typography>
-          <Typography variant="h6" className={classes.moreHelpText}>
-            Masih belum menemukan solusi dari permasalahan Anda? Silahkan hubungi kami.
+          <Typography variant="h6">
+            Masih belum menemukan solusi dari permasalahan Anda? Silahkan hubungi kami!
           </Typography>
         </div>
         <Grid container spacing={2} justify="center" alignItems="center">
