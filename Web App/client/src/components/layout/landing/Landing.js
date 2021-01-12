@@ -156,6 +156,7 @@ class Landing extends Component {
     const { classes } = this.props;
 
     document.title = "Schooly | Sistem Manajamen Persekolahan";
+    document.body.style = "background: #FFFFFF";
 
     return (
     <div className={classes.root}>

@@ -271,7 +271,7 @@ function ViewAnnouncement(props) {
                 }
                 secondary={
                   <Typography variant="body2" color="textSecondary" style={{marginTop: "10px"}}>
-                    Oleh : <b>{!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id) ?  "" : retrieved_users.get(selectedAnnouncements.author_id).name }</b>
+                    Oleh: <b>{!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id) ?  "" : retrieved_users.get(selectedAnnouncements.author_id).name }</b>
                   </Typography>
                 }
               />

@@ -274,7 +274,7 @@ console.log(all_classes_map)
               <h6>Mata Pelajaran: {all_subjects_map.get(tasksCollection.subject)}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Penanggung Jawab: <b>{user.name}</b>
+              Oleh: <b>{user.name}</b>
             </Typography>
           </Grid>
           <Grid item xs={12} md={5}>

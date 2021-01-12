@@ -278,7 +278,7 @@ function ViewMaterial(props) {
               <h6>Mata Pelajaran: {all_subjects_map.get(selectedMaterials.subject)}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Penanggung Jawab: <b>{selectedUser.name}</b>
+              Oleh: <b>{selectedUser.name}</b>
             </Typography>
           </Grid>
           {user.role === "Teacher" ?

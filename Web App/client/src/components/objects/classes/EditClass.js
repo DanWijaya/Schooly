@@ -14,7 +14,7 @@ const styles = (theme) => ({
     maxWidth: "1000px",
     padding: "10px",
   },
-  content: {  
+  content: {
     padding: "20px",
   },
   divider: {
@@ -144,7 +144,7 @@ class EditClass extends Component {
         return null;
 
 
-      return options.map(user => 
+      return options.map(user =>
           <MenuItem
             value={returnId(user, arr)}>
             {user.name}
@@ -170,7 +170,7 @@ class EditClass extends Component {
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
                       <Typography component="label" for="name" color="primary">
-                        Judul
+                        Nama Kelas
                       </Typography>
                       <TextField
                         fullWidth

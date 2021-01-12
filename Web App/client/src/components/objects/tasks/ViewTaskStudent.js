@@ -224,7 +224,7 @@ function WorkFile(props) {
 
   return (
     <>
-    {type === "chosen" ? 
+    {type === "chosen" ?
       <Paper variant="outlined" className={classes.listItemPaper}>
         <ListItem
           button
@@ -282,7 +282,7 @@ function WorkFile(props) {
           />
         </ListItem>
       </Paper>
-    : 
+    :
       <Paper variant="outlined" className={classes.listItemPaperUnSubmitted}>
         <ListItem
           button
@@ -623,7 +623,7 @@ function ViewTaskStudent(props) {
                   <h6>Mata Pelajaran: {all_subjects_map.get(tasksCollection.subject)}</h6>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Penanggung Jawab: <b>{selectedUser._id !== tasksCollection.person_in_charge_id ? null : selectedUser.name}</b>
+                  Oleh: <b>{selectedUser._id !== tasksCollection.person_in_charge_id ? null : selectedUser.name}</b>
                 </Typography>
               </Grid>
               <Grid item xs={12} md={5}>
@@ -684,12 +684,12 @@ function ViewTaskStudent(props) {
               </Typography>
             </Grid>
             <Divider/>
-            {!fileTugas && filesCollection.files.length === 0 ? 
+            {!fileTugas && filesCollection.files.length === 0 ?
               <Grid item style={{padding: "10px", display: "flex", flexDirection: "row", justifyContent: "center"}}>
                 {/* Kasus Kosong */}
                 {listFileChosen()}
               </Grid>
-            : 
+            :
               <Grid item style={{padding: "10px", display: "flex", flexDirection: "column"}}>
                 {listWorkFile()}
                 {listFileChosen()}

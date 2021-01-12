@@ -218,14 +218,18 @@ function Help(props) {
                                 Masuk dengan akun pengelola sekolah Anda.
                               </li>
                               <li>
-                                Undang guru-guru dan murid-murid di sekolah Anda dengan mengirim tautan untuk registrasi
-                                yang dapat diakses pada halaman "Beranda" yang dapat ditemukan pada bagian kiri aplikasi
-                                (tautan tersebut hanya berlaku pada waktu yang terbatas).
+                                Ajak guru-guru dan murid-murid di sekolah Anda untuk mendaftar ke Schooly, kemudian aktifkan
+                                akun-akun tersebut di halaman "Pengguna Tertunda", yang dapat ditemukan pada bagian kiri aplikasi (Anda akan diarahkan ke suatu halaman yang berisi
+                                daftar pengguna yang mendaftar). Kemudian klik tombol "Aktifkan" untuk mengaktifkan suatu akun atau tombol "Hapus" untuk menghapus suatu akun.
                               </li>
                               <li>
-                                Buat kelas-kelas yang Anda butuhkan yang dapat diakses dengan pada halaman "Kelas"
+                                Buat semua kelas yang Anda butuhkan pada halaman "Kelas",
                                 yang dapat ditemukan pada bagian kiri aplikasi (Anda akan diarahkan ke suatu halaman yang berisi
                                 daftar kelas Anda), kemudian klik tombol "Buat Kelas".
+                              </li>
+                              <li>
+                                Setelah Anda membuat semua kelas yang Anda butuhkan, kelompokkan murid-murid dan berikan peran wali kelas kepada guru-guru yang ada inginkan.
+                                Tombol-tombol tersebut dapat ditemukan di halaman "Kelas", di samping kanan tombol "Buat Kelas".
                               </li>
                               <li>
                                 Lakukan penyuntingan kelas untuk memberikan peran murid seperti Ketua Kelas, Sekretaris, dan Bendahara.
@@ -338,7 +342,531 @@ function Help(props) {
               <ExpansionPanel variant="outlined" defaultExpanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="h5" color="primary">
+                    Pengumuman
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+                <ExpansionPanelDetails>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa itu pengumuman?</b>
+                      </Typography>
+                      <Typography>
+                        Pengumuman adalah informasi berupa teks yang disebarkan oleh pengelola kepada guru dan/atau murid, guru kepada murid, atau ketua kelas kepada murid-murid yang di kelasnya sendiri.
+                        File dapat dilampirkan pada pengumuman.
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa saja isi suatu pengumuman?</b>
+                      </Typography>
+                      <Typography>
+                        Suatu pengumuman terdiri dari judul pengumuman, deskripsi pengumuman, pemberi pengumuman, dan lampiran berkas.
+                        Tugas yang dikumpulkan adalah dalam bentuk file dengan jenis apa saja.
+                      </Typography>
+                    </Grid>
+                    { user.role === "Student" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk mengumpulkan tugas?</b>
+                            </Typography>
+                            <Typography paragraph>
+                               <ol>
+                                <li>
+                                  Tekan tombol "Pilih File" pada halaman tugas yang bersangkutan.
+                                </li>
+                                <li>
+                                  Pilih file-file yang ingin Anda kumpulkan. <br />
+                                  Tips: Tahan tombol "CTRL" dan menekan klik kiri pada mouse untuk memilih file dalam jumlah banyak.
+                                </li>
+                                <li>
+                                  File yang Anda pilih akan muncul pada daftar "File Terpilih".
+                                </li>
+                                <li>
+                                  Tekan tombol kumpul tugas untuk mengunggah file Anda. File Anda yang terkumpul akan muncul pada daftar di bagian
+                                  hasil pekeraan.
+                                </li>
+                              </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah file yang sudah saya kumpulkan dapat diunduh atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, file yang sudah dikumpulkan dapat diunduh dengan menekan tombol unduh pada file tersebut dan dapat
+                               dihapus dengan menekan tombol hapus pada file tersebut.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Teacher" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk membuat suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               <ol>
+                                <li>
+                                  Buka halaman daftar tugas dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi.
+                                </li>
+                                <li>
+                                  Klik tombol "Buat Tugas" untuk membuat tugas.
+                                </li>
+                                <li>
+                                  Lengkapi tugas dengan keterangan seperti deskripsi, batas waktu, dan lampiran berkas.
+                                </li>
+                               </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah tugas yang dibuat dapat disunting atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, tugas yang dibuat dapat disunting atau dihapus pada halaman daftar tugas yang telah dibuat (dapat ditemukan pada
+                               dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi).
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Siapa saja yang dapat menyunting atau menghapus suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas hanya dapat disunting atau dihapus oleh guru yang membuat tugas tersebut.
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" color="primary" align="center" gutterBottom>
+                              <b>Tips Mengenai Tugas</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas dapat digunakan juga sebagai ulangan harian, kuis, ataupun pekerjaan sekolah yang lainnya, dikarenakan fleksibilitas
+                               file yang diunggah bisa dalam bentuk apapun, dan batas waktu yang akurat.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Admin" ?
+                        <Grid item>
+                          <Typography variant="h6" gutterBottom>
+                            <b>Apakah akun pengelola memiliki wewenang akan tugas yang telah dibuat?</b>
+                          </Typography>
+                          <Typography>
+                            Tidak, akun pengelola tidak memiliki wewenang akan tugas apapun. Suatu tugas hanya dapat diubah
+                            oleh guru yang membuat tugas tersebut.
+                          </Typography>
+                        </Grid>
+                      :
+                      <Grid item>
+                        <Typography align="center" color="primary">
+                          <b>Silahkan masuk ke akun Schooly Anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
+                        </Typography>
+                      </Grid>
+                    }
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+            <Grid item>
+              <ExpansionPanel variant="outlined" defaultExpanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h5" color="primary">
+                    Materi
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+                <ExpansionPanelDetails>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa itu tugas?</b>
+                      </Typography>
+                      <Typography>
+                        Sama seperti pengertian tugas secara harafiah, di Schooly suatu kelas berarti suatu target pembelajaran yang harus diberikan oleh pengajar ke pelajar untuk diselesaikan.
+                        Suatu kelas dapat dibuat oleh akun guru terhadap 1 kelas atau lebih pada suatu lingkup sekolah.
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa saja isi suatu tugas?</b>
+                      </Typography>
+                      <Typography>
+                        Suatu tugas terdiri dari judul tugas, deskripsi tugas, penanggung jawab, lampiran berkas, dan batas waktu.
+                        Tugas yang dikumpulkan adalah dalam bentuk file dengan jenis apa saja.
+                      </Typography>
+                    </Grid>
+                    { user.role === "Student" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk mengumpulkan tugas?</b>
+                            </Typography>
+                            <Typography paragraph>
+                               <ol>
+                                <li>
+                                  Tekan tombol "Pilih File" pada halaman tugas yang bersangkutan.
+                                </li>
+                                <li>
+                                  Pilih file-file yang ingin Anda kumpulkan. <br />
+                                  Tips: Tahan tombol "CTRL" dan menekan klik kiri pada mouse untuk memilih file dalam jumlah banyak.
+                                </li>
+                                <li>
+                                  File yang Anda pilih akan muncul pada daftar "File Terpilih".
+                                </li>
+                                <li>
+                                  Tekan tombol kumpul tugas untuk mengunggah file Anda. File Anda yang terkumpul akan muncul pada daftar di bagian
+                                  hasil pekeraan.
+                                </li>
+                              </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah file yang sudah saya kumpulkan dapat diunduh atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, file yang sudah dikumpulkan dapat diunduh dengan menekan tombol unduh pada file tersebut dan dapat
+                               dihapus dengan menekan tombol hapus pada file tersebut.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Teacher" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk membuat suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               <ol>
+                                <li>
+                                  Buka halaman daftar tugas dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi.
+                                </li>
+                                <li>
+                                  Klik tombol "Buat Tugas" untuk membuat tugas.
+                                </li>
+                                <li>
+                                  Lengkapi tugas dengan keterangan seperti deskripsi, batas waktu, dan lampiran berkas.
+                                </li>
+                               </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah tugas yang dibuat dapat disunting atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, tugas yang dibuat dapat disunting atau dihapus pada halaman daftar tugas yang telah dibuat (dapat ditemukan pada
+                               dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi).
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Siapa saja yang dapat menyunting atau menghapus suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas hanya dapat disunting atau dihapus oleh guru yang membuat tugas tersebut.
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" color="primary" align="center" gutterBottom>
+                              <b>Tips Mengenai Tugas</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas dapat digunakan juga sebagai ulangan harian, kuis, ataupun pekerjaan sekolah yang lainnya, dikarenakan fleksibilitas
+                               file yang diunggah bisa dalam bentuk apapun, dan batas waktu yang akurat.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Admin" ?
+                        <Grid item>
+                          <Typography variant="h6" gutterBottom>
+                            <b>Apakah akun pengelola memiliki wewenang akan tugas yang telah dibuat?</b>
+                          </Typography>
+                          <Typography>
+                            Tidak, akun pengelola tidak memiliki wewenang akan tugas apapun. Suatu tugas hanya dapat diubah
+                            oleh guru yang membuat tugas tersebut.
+                          </Typography>
+                        </Grid>
+                      :
+                      <Grid item>
+                        <Typography align="center" color="primary">
+                          <b>Silahkan masuk ke akun Schooly Anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
+                        </Typography>
+                      </Grid>
+                    }
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+            <Grid item>
+              <ExpansionPanel variant="outlined" defaultExpanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h5" color="primary">
                     Tugas
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+                <ExpansionPanelDetails>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa itu tugas?</b>
+                      </Typography>
+                      <Typography>
+                        Sama seperti pengertian tugas secara harafiah, di Schooly suatu kelas berarti suatu target pembelajaran yang harus diberikan oleh pengajar ke pelajar untuk diselesaikan.
+                        Suatu kelas dapat dibuat oleh akun guru terhadap 1 kelas atau lebih pada suatu lingkup sekolah.
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa saja isi suatu tugas?</b>
+                      </Typography>
+                      <Typography>
+                        Suatu tugas terdiri dari judul tugas, deskripsi tugas, penanggung jawab, lampiran berkas, dan batas waktu.
+                        Tugas yang dikumpulkan adalah dalam bentuk file dengan jenis apa saja.
+                      </Typography>
+                    </Grid>
+                    { user.role === "Student" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk mengumpulkan tugas?</b>
+                            </Typography>
+                            <Typography paragraph>
+                               <ol>
+                                <li>
+                                  Tekan tombol "Pilih File" pada halaman tugas yang bersangkutan.
+                                </li>
+                                <li>
+                                  Pilih file-file yang ingin Anda kumpulkan. <br />
+                                  Tips: Tahan tombol "CTRL" dan menekan klik kiri pada mouse untuk memilih file dalam jumlah banyak.
+                                </li>
+                                <li>
+                                  File yang Anda pilih akan muncul pada daftar "File Terpilih".
+                                </li>
+                                <li>
+                                  Tekan tombol kumpul tugas untuk mengunggah file Anda. File Anda yang terkumpul akan muncul pada daftar di bagian
+                                  hasil pekeraan.
+                                </li>
+                              </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah file yang sudah saya kumpulkan dapat diunduh atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, file yang sudah dikumpulkan dapat diunduh dengan menekan tombol unduh pada file tersebut dan dapat
+                               dihapus dengan menekan tombol hapus pada file tersebut.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Teacher" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk membuat suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               <ol>
+                                <li>
+                                  Buka halaman daftar tugas dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi.
+                                </li>
+                                <li>
+                                  Klik tombol "Buat Tugas" untuk membuat tugas.
+                                </li>
+                                <li>
+                                  Lengkapi tugas dengan keterangan seperti deskripsi, batas waktu, dan lampiran berkas.
+                                </li>
+                               </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah tugas yang dibuat dapat disunting atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, tugas yang dibuat dapat disunting atau dihapus pada halaman daftar tugas yang telah dibuat (dapat ditemukan pada
+                               dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi).
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Siapa saja yang dapat menyunting atau menghapus suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas hanya dapat disunting atau dihapus oleh guru yang membuat tugas tersebut.
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" color="primary" align="center" gutterBottom>
+                              <b>Tips Mengenai Tugas</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas dapat digunakan juga sebagai ulangan harian, kuis, ataupun pekerjaan sekolah yang lainnya, dikarenakan fleksibilitas
+                               file yang diunggah bisa dalam bentuk apapun, dan batas waktu yang akurat.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Admin" ?
+                        <Grid item>
+                          <Typography variant="h6" gutterBottom>
+                            <b>Apakah akun pengelola memiliki wewenang akan tugas yang telah dibuat?</b>
+                          </Typography>
+                          <Typography>
+                            Tidak, akun pengelola tidak memiliki wewenang akan tugas apapun. Suatu tugas hanya dapat diubah
+                            oleh guru yang membuat tugas tersebut.
+                          </Typography>
+                        </Grid>
+                      :
+                      <Grid item>
+                        <Typography align="center" color="primary">
+                          <b>Silahkan masuk ke akun Schooly Anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
+                        </Typography>
+                      </Grid>
+                    }
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+            <Grid item>
+              <ExpansionPanel variant="outlined" defaultExpanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h5" color="primary">
+                    Kuis dan Ujian
+                  </Typography>
+                </ExpansionPanelSummary>
+                <Divider />
+                <ExpansionPanelDetails>
+                  <Grid container direction="column" spacing={4}>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa itu tugas?</b>
+                      </Typography>
+                      <Typography>
+                        Sama seperti pengertian tugas secara harafiah, di Schooly suatu kelas berarti suatu target pembelajaran yang harus diberikan oleh pengajar ke pelajar untuk diselesaikan.
+                        Suatu kelas dapat dibuat oleh akun guru terhadap 1 kelas atau lebih pada suatu lingkup sekolah.
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h6" gutterBottom>
+                        <b>Apa saja isi suatu tugas?</b>
+                      </Typography>
+                      <Typography>
+                        Suatu tugas terdiri dari judul tugas, deskripsi tugas, penanggung jawab, lampiran berkas, dan batas waktu.
+                        Tugas yang dikumpulkan adalah dalam bentuk file dengan jenis apa saja.
+                      </Typography>
+                    </Grid>
+                    { user.role === "Student" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk mengumpulkan tugas?</b>
+                            </Typography>
+                            <Typography paragraph>
+                               <ol>
+                                <li>
+                                  Tekan tombol "Pilih File" pada halaman tugas yang bersangkutan.
+                                </li>
+                                <li>
+                                  Pilih file-file yang ingin Anda kumpulkan. <br />
+                                  Tips: Tahan tombol "CTRL" dan menekan klik kiri pada mouse untuk memilih file dalam jumlah banyak.
+                                </li>
+                                <li>
+                                  File yang Anda pilih akan muncul pada daftar "File Terpilih".
+                                </li>
+                                <li>
+                                  Tekan tombol kumpul tugas untuk mengunggah file Anda. File Anda yang terkumpul akan muncul pada daftar di bagian
+                                  hasil pekeraan.
+                                </li>
+                              </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah file yang sudah saya kumpulkan dapat diunduh atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, file yang sudah dikumpulkan dapat diunduh dengan menekan tombol unduh pada file tersebut dan dapat
+                               dihapus dengan menekan tombol hapus pada file tersebut.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Teacher" ?
+                        <Grid item container spacing={4}>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Bagaimana cara untuk membuat suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               <ol>
+                                <li>
+                                  Buka halaman daftar tugas dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi.
+                                </li>
+                                <li>
+                                  Klik tombol "Buat Tugas" untuk membuat tugas.
+                                </li>
+                                <li>
+                                  Lengkapi tugas dengan keterangan seperti deskripsi, batas waktu, dan lampiran berkas.
+                                </li>
+                               </ol>
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Apakah tugas yang dibuat dapat disunting atau dihapus?</b>
+                            </Typography>
+                            <Typography>
+                               Bisa, tugas yang dibuat dapat disunting atau dihapus pada halaman daftar tugas yang telah dibuat (dapat ditemukan pada
+                               dengan menekan tombol "Tugas" yang dapat ditemukan pada bagian kiri aplikasi).
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                              <b>Siapa saja yang dapat menyunting atau menghapus suatu tugas?</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas hanya dapat disunting atau dihapus oleh guru yang membuat tugas tersebut.
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h6" color="primary" align="center" gutterBottom>
+                              <b>Tips Mengenai Tugas</b>
+                            </Typography>
+                            <Typography>
+                               Suatu tugas dapat digunakan juga sebagai ulangan harian, kuis, ataupun pekerjaan sekolah yang lainnya, dikarenakan fleksibilitas
+                               file yang diunggah bisa dalam bentuk apapun, dan batas waktu yang akurat.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      : user.role === "Admin" ?
+                        <Grid item>
+                          <Typography variant="h6" gutterBottom>
+                            <b>Apakah akun pengelola memiliki wewenang akan tugas yang telah dibuat?</b>
+                          </Typography>
+                          <Typography>
+                            Tidak, akun pengelola tidak memiliki wewenang akan tugas apapun. Suatu tugas hanya dapat diubah
+                            oleh guru yang membuat tugas tersebut.
+                          </Typography>
+                        </Grid>
+                      :
+                      <Grid item>
+                        <Typography align="center" color="primary">
+                          <b>Silahkan masuk ke akun Schooly Anda untuk mendapatkan bantuan lebih lanjut mengenai topik ini.</b>
+                        </Typography>
+                      </Grid>
+                    }
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+            <Grid item>
+              <ExpansionPanel variant="outlined" defaultExpanded>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h5" color="primary">
+                    Rapor
                   </Typography>
                 </ExpansionPanelSummary>
                 <Divider />

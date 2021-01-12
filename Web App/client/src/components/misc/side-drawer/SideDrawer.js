@@ -100,8 +100,8 @@ function DrawerContent(props) {
   if (user.role === "Admin")
     ListItemContents = [
       ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
-      ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemIcon}/>, "Pengguna Aktif"],
       ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Tertunda"],
+      ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemIcon}/>, "Pengguna Aktif"],
       [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
       ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
     ]

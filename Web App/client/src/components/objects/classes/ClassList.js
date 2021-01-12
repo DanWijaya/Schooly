@@ -354,7 +354,7 @@ function ClassList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container spacing={2}>
-        {(rows.length === 0) ? <div style={{display: "flex", justifyContent: "center", flexDirection: "row"}}><Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography></div> :
+        {(rows.length === 0) ? null :
           stableSort(rows, getComparator(order, orderBy))
             .map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;

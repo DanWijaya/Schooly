@@ -89,11 +89,6 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
       }
     },
     MuiSelect: {
-      inputProps: {
-        style: {
-          backgroundColor: "white"
-        }
-      },
       SelectDisplayProps: {
         style: {
           paddingTop: "14px",
