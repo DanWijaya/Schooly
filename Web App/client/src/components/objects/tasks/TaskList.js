@@ -549,76 +549,77 @@ function TaskList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-      {stableSort(rows, getComparator(order, orderBy))
-        .map((row, index) => {
-          const labelId = `enhanced-table-checkbox-${index}`;
-          let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
-          return (
-            <Grid item>
-              {user.role === "Teacher" ?
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                >
-                  <ExpansionPanelSummary className={classes.taskPanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
-                      <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.tasktitle}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.tasktitle}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
+        {(rows.length === 0) ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+        stableSort(rows, getComparator(order, orderBy))
+          .map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = user.role === "Student" ? `/tugas-murid/${row._id}` : `/tugas-guru/${row._id}`
+            return (
+              <Grid item>
+                {user.role === "Teacher" ?
+                  <ExpansionPanel
+                    button
+                    variant="outlined"
+                  >
+                    <ExpansionPanelSummary className={classes.taskPanelSummary}>
+                      <Grid container spacing={1} justify="space-between" alignItems="center">
                         <Grid item>
-                          <LightTooltip title="Lihat Lebih Lanjut">
-                            <Link to={viewpage}>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.tasktitle}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <Typography variant="h6" id={labelId}>
+                              {row.tasktitle}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <Link to={viewpage}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewTaskButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <Link to={`/sunting-tugas/${row._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.editTaskButton}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
                               <IconButton
                                 size="small"
-                                className={classes.viewTaskButton}
+                                className={classes.deleteTaskButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.tasktitle)}}
                               >
-                                <PageviewIcon fontSize="small" />
+                                <DeleteIcon fontSize="small" />
                               </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Sunting">
-                            <Link to={`/sunting-tugas/${row._id}`}>
-                              <IconButton
-                                size="small"
-                                className={classes.editTaskButton}
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.deleteTaskButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.tasktitle)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </ExpansionPanelSummary>
+                    </ExpansionPanelSummary>
                   <Divider />
                   <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                     <Grid container>
@@ -633,75 +634,75 @@ function TaskList(props) {
                                 return (`${all_classes_map.get(id).name}`)
                               return (`${all_classes_map.get(id).name}, `)
                             }
-                            return null
-                           })
+                            })
                           }
-                        </Typography>
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="body1" color="textSecondary">
+                            Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="body1" color="textSecondary">
+                            Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="body1" color="textSecondary">
-                          Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="body1" color="textSecondary">
-                          Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              :
-                <Link to={viewpage}>
-                  <Paper
-                    button component="a"
-                    variant="outlined"
-                    className={classes.taskPaper}
-                  >
-                    <Badge
-                      style={{display: "flex", flexDirection: "row"}}
-                      badgeContent={
-                        (workStatus(row) === "Belum Dikumpulkan") ? (
-                          <ErrorIcon className={classes.errorIcon}/>
-                        ) : (
-                          <CheckCircleIcon className={classes.checkIcon}/>
-                        )
-                      }
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                :
+                  <Link to={viewpage}>
+                    <Paper
+                      button component="a"
+                      variant="outlined"
+                      className={classes.taskPaper}
                     >
-                      <ListItem button className={classes.listItem}>
-                        <ListItemText
-                          primary={
-                            <Typography variant="h6">
-                              {row.tasktitle}
-                            </Typography>
-                          }
-                          secondary={all_subjects_map.get(row.subject)}
-                        />
-                        <ListItemText
-                          align="right"
-                          primary={
-                            <Typography variant="body2" color="textSecondary">
-                              {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                            </Typography>
-                          }
-                          secondary={
-                            <Typography variant="body2" color="textSecondary">
-                              {moment(row.createdAt).locale("id").format("HH.mm")}
-                            </Typography>
-                          }
-                        />
-                      </ListItem>
-                    </Badge>
-                  </Paper>
-                </Link>
-              }
-            </Grid>
-          );
-        })}
+                      <Badge
+                        style={{display: "flex", flexDirection: "row"}}
+                        badgeContent={
+                          (workStatus(row) === "Belum Dikumpulkan") ? (
+                            <ErrorIcon className={classes.errorIcon}/>
+                          ) : (
+                            <CheckCircleIcon className={classes.checkIcon}/>
+                          )
+                        }
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                      >
+                        <ListItem button className={classes.listItem}>
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6">
+                                {row.tasktitle}
+                              </Typography>
+                            }
+                            secondary={all_subjects_map.get(row.subject)}
+                          />
+                          <ListItemText
+                            align="right"
+                            primary={
+                              <Typography variant="body2" color="textSecondary">
+                                {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography variant="body2" color="textSecondary">
+                                {moment(row.createdAt).locale("id").format("HH.mm")}
+                              </Typography>
+                            }
+                          />
+                        </ListItem>
+                      </Badge>
+                    </Paper>
+                  </Link>
+                }
+              </Grid>
+            );
+          })
+        }
       </Grid>
     </div>
   );

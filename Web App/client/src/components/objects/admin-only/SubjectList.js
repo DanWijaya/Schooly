@@ -479,33 +479,35 @@ function SubjectList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-        {stableSort(rows, getComparator(order, orderBy))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            return (
-                <Grid item>
-                <Paper variant="outlined" className={classes.subjectPaper}>
-                    <Grid item>
-                        <Typography variant="h6" id={labelId} >
-                          {row.name}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs container spacing={1} justify="flex-end">
+        {(rows.length === 0) ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+          stableSort(rows, getComparator(order, orderBy))
+            .map((row, index) => {
+              const labelId = `enhanced-table-checkbox-${index}`;
+              return (
+                  <Grid item>
+                  <Paper variant="outlined" className={classes.subjectPaper}>
                       <Grid item>
-                        <IconButton size="small" className={classes.editSubjectButton} onClick={(e)=> handleOpenFormDialog(e,row._id, row.name, true)}>
-                            <EditIcon fontSize="small" />
-                        </IconButton>
+                          <Typography variant="h6" id={labelId} >
+                            {row.name}
+                          </Typography>
                       </Grid>
-                      <Grid item>
-                        <IconButton size="small" className={classes.deleteSubjectlButton} onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}>
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
+                      <Grid item xs container spacing={1} justify="flex-end">
+                        <Grid item>
+                          <IconButton size="small" className={classes.editSubjectButton} onClick={(e)=> handleOpenFormDialog(e,row._id, row.name, true)}>
+                              <EditIcon fontSize="small" />
+                          </IconButton>
+                        </Grid>
+                        <Grid item>
+                          <IconButton size="small" className={classes.deleteSubjectlButton} onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}>
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                </Paper>
-            </Grid>
-            );
-          })}
+                  </Paper>
+              </Grid>
+              );
+            })
+        }
       </Grid>
     </div>
   );

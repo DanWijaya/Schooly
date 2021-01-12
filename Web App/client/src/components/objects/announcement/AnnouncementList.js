@@ -477,65 +477,67 @@ function AnnouncementList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-        {stableSort(rows, getComparator(order, orderBy))
-          .map((row, index) => {
-            return (
-              <Grid item>
-                <Paper variant="outlined">
-                  <Link to={row.notification_link}>
-                  <ListItem button component="a" className={classes.announcementListItem}>
-                  <Hidden smUp implementation="css">
-                    <ListItemText
-                      primary={
-                        <Typography variant="subtitle1" color="textPrimary">
-                          {row.notification_title}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography variant="caption" color="textSecondary">
-                          {row.author_name}
-                        </Typography>
-                      }
-                    />
-                  </Hidden>
-                  <Hidden xsDown implementation="css">
-                    <ListItemText
-                      primary={
-                        <Typography variant="h6" color="textPrimary">
-                          {row.notification_title}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography variant="body2" color="textSecondary">
-                          {row.author_name}
-                        </Typography>
-                      }
-                    />
-                  </Hidden>
-                    {/* <ListItemText
-                      align="right"
-                      primary={
-                        <Typography variant="subtitle" color="textSecondary">
-                          {row.date}
-                        </Typography>
-                      }
-                      secondary={row.time}
-                    /> */}
-                    <ListItemText
-                      align="right"
-                      primary={
-                        <Typography variant="subtitle" color="textSecondary">
-                          {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                        </Typography>
-                      }
-                      secondary={moment(row.createdAt).locale("id").format("HH.mm")}
-                    />
-                  </ListItem>
-                  </Link>
-                </Paper>
-              </Grid>
-            )
-        })}
+        {(rows.length === 0) ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+          stableSort(rows, getComparator(order, orderBy))
+            .map((row, index) => {
+              return (
+                <Grid item>
+                  <Paper variant="outlined">
+                    <Link to={row.notification_link}>
+                    <ListItem button component="a" className={classes.announcementListItem}>
+                    <Hidden smUp implementation="css">
+                      <ListItemText
+                        primary={
+                          <Typography variant="subtitle1" color="textPrimary">
+                            {row.notification_title}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="caption" color="textSecondary">
+                            {row.author_name}
+                          </Typography>
+                        }
+                      />
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6" color="textPrimary">
+                            {row.notification_title}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="body2" color="textSecondary">
+                            {row.author_name}
+                          </Typography>
+                        }
+                      />
+                    </Hidden>
+                      {/* <ListItemText
+                        align="right"
+                        primary={
+                          <Typography variant="subtitle" color="textSecondary">
+                            {row.date}
+                          </Typography>
+                        }
+                        secondary={row.time}
+                      /> */}
+                      <ListItemText
+                        align="right"
+                        primary={
+                          <Typography variant="subtitle" color="textSecondary">
+                            {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                          </Typography>
+                        }
+                        secondary={moment(row.createdAt).locale("id").format("HH.mm")}
+                      />
+                    </ListItem>
+                    </Link>
+                  </Paper>
+                </Grid>
+              )
+          })
+        }
       </Grid>
       </div>
   )
