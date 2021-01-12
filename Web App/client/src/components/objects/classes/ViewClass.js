@@ -874,7 +874,7 @@ function ViewClass(props) {
                       }
                     </Grid>
                   ) :
-                    null}
+                  <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>}
                 </List>
               </div>
             <div style={{padding: "20px"}}>
@@ -883,51 +883,53 @@ function ViewClass(props) {
               </Typography>
               <Divider className={classes.personListDivider} />
               <List className={classes.listContainer}>
-                {students_by_class.map((student) => (
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid item>
-                      <PersonListItem
-                        person_avatar={`/api/upload/avatar/${student.avatar}`}
-                        person_name={student.name}
-                        person_id={student._id}
-                        person_role={student_role(student._id)}
-                      />
-                    </Grid>
-                    <Grid item xs container justify="flex-end">
+                {students_by_class.length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+                  students_by_class.map((student) => (
+                    <Grid container justify="space-between" alignItems="center">
                       <Grid item>
-                        <LightTooltip title="Lihat Profil">
-                          <Link to={{
-                            pathname:"/lihat-profil",
-                            state: {
-                              kelas: student.kelas,
-                              avatar: student.avatar,
-                              nama: student.name,
-                              viewable_section: "with_karir",
-                              role: student.role,
-                              jenis_kelamin: student.jenis_kelamin,
-                              email: student.email,
-                              phone: student.phone,
-                              emergency_phone : student.emergency_phone,
-                              hobi: student.hobi_minat,
-                              ket: student.ket_non_teknis,
-                              cita: student.cita_cita,
-                              uni: student.uni_impian,
-                              id: student._id,
-                              tanggal_lahir: student.tanggal_lahir
-                            }
-                          }}>
-                            <IconButton
-                              size="small"
-                              className={classes.viewMaterialButton}
-                              >
-                              <PageviewIcon fontSize="small" />
-                            </IconButton>
-                          </Link>
-                        </LightTooltip>
+                        <PersonListItem
+                          person_avatar={`/api/upload/avatar/${student.avatar}`}
+                          person_name={student.name}
+                          person_id={student._id}
+                          person_role={student_role(student._id)}
+                        />
+                      </Grid>
+                      <Grid item xs container justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Profil">
+                            <Link to={{
+                              pathname:"/lihat-profil",
+                              state: {
+                                kelas: student.kelas,
+                                avatar: student.avatar,
+                                nama: student.name,
+                                viewable_section: "with_karir",
+                                role: student.role,
+                                jenis_kelamin: student.jenis_kelamin,
+                                email: student.email,
+                                phone: student.phone,
+                                emergency_phone : student.emergency_phone,
+                                hobi: student.hobi_minat,
+                                ket: student.ket_non_teknis,
+                                cita: student.cita_cita,
+                                uni: student.uni_impian,
+                                id: student._id,
+                                tanggal_lahir: student.tanggal_lahir
+                              }
+                            }}>
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
+                                >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                ))}
+                  ))
+                }
               </List>
             </div>
           </div>
@@ -1126,7 +1128,7 @@ function ViewClass(props) {
                     <Divider className={classes.personListDivider} />
                     <List className={classes.listContainer}>
                       {isObjEmpty(walikelas) ?
-                        null
+                        <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>
                       : (
                         <Grid container justify="space-between" alignItems="center">
                           <Grid item>
@@ -1173,7 +1175,8 @@ function ViewClass(props) {
                     </Typography>
                     <Divider className={classes.personListDivider} />
                     <List className={classes.listContainer}>
-                      {students_by_class.map((student) => (
+                      {students_by_class.length === 0 ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+                      students_by_class.map((student) => (
                         <Grid container justify="space-between" alignItems="center">
                           {[<Grid item>
                               <PersonListItem

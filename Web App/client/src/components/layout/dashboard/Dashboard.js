@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { Chart } from 'react-charts'
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
-import { getAllTask } from "../../../actions/TaskActions";
+import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getAllAssessments } from "../../../actions/AssessmentActions";
+import { getKuisBySC, getUjianBySC, getAllAssessments } from "../../../actions/AssessmentActions";
 import { getStudents, getStudentsByClass } from "../../../actions/UserActions";
 import dashboardStudentBackground from "./DashboardStudentBackground.png";
 import dashboardTeacherBackground from "./DashboardTeacherBackground.png";
@@ -178,6 +179,46 @@ function TaskListItem(props) {
         </Paper>
       </Link>
     </Grid>
+  )
+}
+
+function DashboardGraph(){
+  const data = React.useMemo(
+    () => [
+      {
+        label: 'Series 1',
+        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7], [5, 7], [6, 7], [7, 7], [8, 7], [9, 7], [10, 7], [11, 7], [12, 7], [13, 7]]
+      },
+    ],
+    []
+  )
+
+  const series = React.useMemo(
+    () => ({
+      type: 'bar'
+    }),
+    []
+  )
+
+  const axes = React.useMemo(
+    () => [
+      { primary: true, type: 'linear', position: 'bottom', label: "Coba" },
+      { type: 'linear', position: 'left' }
+    ],
+    []
+  )
+
+  return (
+    // A react-chart hyper-responsively and continuously fills the available
+    // space of its parent element automatically
+    <div
+      style={{
+        width: '260px',
+        height: '300px'
+      }}
+    >
+      <Chart data={data} series={series} axes={axes} tooltip />
+    </div>
   )
 }
 
@@ -381,10 +422,13 @@ class Dashboard extends Component {
     getAllSubjects("map") // untuk dapatin subject"nya gitu
     if (user.role === "Student"){
       getStudentsByClass(user.kelas)
+      // getTasksBySC
+      // getKuisBySC
+      // getUjianBySC
     }
-      getAllAssessments()
-      getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
-      getStudents()
+    getAllAssessments()
+    getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
+    getStudents()
   }
 
   componentWillUnmount() {
@@ -407,9 +451,10 @@ class Dashboard extends Component {
     const { all_user_files } = this.props.filesCollection
     const { all_subjects_map } = this.props.subjectsCollection
     const { all_assessments } = this.props.assessmentsCollection
+    
     const classId = user.kelas
 
-    console.log(all_students)
+    console.log(all_assessments)
     console.log(user)
     function listTasks(){
       let result = []
@@ -447,7 +492,6 @@ class Dashboard extends Component {
 
     function listTasksTeacher(){
       let result = []
-      console.log(user)
       for(let i=0;i<tasksCollection.length;i++){
         if(tasksCollection[i].person_in_charge_id === user.id){
           let number_students_assigned = 0
@@ -635,28 +679,7 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {
-                        tasksByClass.map((task) => {
-                          for (var i = 0; i < all_user_files.length; i++) {
-                            if (all_user_files[i].for_task_object === task._id) {
-                              return null;
-                            }
-                          }
-                          if(!all_subjects_map.get(task.subject)){
-                            return null;
-                          }
-                          return (
-                            <TaskListItem
-                              classes={classes}
-                              work_title={task.name}
-                              work_sender={all_subjects_map.get(task.subject)}
-                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_link={`/tugas-murid/${task._id}`}
-                              work_dateposted={task.createdAt}
-                            />
-                          )
-                        })}
+                        <DashboardGraph/>
                       </Grid>
                     </Paper>
                   </Grid>
@@ -675,7 +698,7 @@ class Dashboard extends Component {
                           </Grid>
                         </Grid>
                         <Grid item>
-                          <Link to="/daftar-tugas">
+                          <Link to="/daftar-kuis">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
                                 <ChevronRightIcon />
@@ -685,27 +708,7 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {tasksByClass.map((task) => {
-                          for (var i = 0; i < all_user_files.length; i++) {
-                            if (all_user_files[i].for_task_object === task._id) {
-                              return null;
-                            }
-                          }
-                          if(!all_subjects_map.get(task.subject)){
-                            return null;
-                          }
-                          return (
-                            <TaskListItem
-                              classes={classes}
-                              work_title={task.name}
-                              work_sender={all_subjects_map.get(task.subject)}
-                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_link={`/tugas-murid/${task._id}`}
-                              work_dateposted={task.createdAt}
-                            />
-                          )
-                        })}
+                        <DashboardGraph/>
                       </Grid>
                     </Paper>
                   </Grid>
@@ -724,7 +727,7 @@ class Dashboard extends Component {
                           </Grid>
                         </Grid>
                         <Grid item>
-                          <Link to="/daftar-tugas">
+                          <Link to="/daftar-ujian">
                             <LightTooltip title="Lihat Semua" placement="top">
                               <IconButton>
                                 <ChevronRightIcon />
@@ -734,27 +737,7 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        {tasksByClass.map((task) => {
-                          for (var i = 0; i < all_user_files.length; i++) {
-                            if (all_user_files[i].for_task_object === task._id) {
-                              return null;
-                            }
-                          }
-                          if(!all_subjects_map.get(task.subject)){
-                            return null;
-                          }
-                          return (
-                            <TaskListItem
-                              classes={classes}
-                              work_title={task.name}
-                              work_sender={all_subjects_map.get(task.subject)}
-                              work_deadline_mobile={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_deadline_desktop={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                              work_link={`/tugas-murid/${task._id}`}
-                              work_dateposted={task.createdAt}
-                            />
-                          )
-                        })}
+                        <DashboardGraph/>
                       </Grid>
                     </Paper>
                   </Grid>
@@ -873,7 +856,10 @@ Dashboard.propTypes = {
   getAllTaskFilesByUser: PropTypes.func.isRequired,
   getAllAssessments: PropTypes.func.isRequired,
   getStudentsByClass: PropTypes.func.isRequired,
-  getStudents: PropTypes.func.isRequired
+  getStudents: PropTypes.func.isRequired,
+  getTasksBySC: PropTypes.func.isRequired,
+  getKuisBySC: PropTypes.func.isRequired, 
+  getUjianBySC: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -886,6 +872,6 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments, getStudentsByClass, getStudents })
+  connect(mapStateToProps, { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments, getStudentsByClass, getStudents, getTasksBySC, getKuisBySC, getUjianBySC })
   (withStyles(styles)(Dashboard))
 )

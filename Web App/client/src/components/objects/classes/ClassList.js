@@ -354,113 +354,115 @@ function ClassList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container spacing={2}>
-        {stableSort(rows, getComparator(order, orderBy))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            console.log(row)
-            let viewpage = `/kelas/${row._id}`;
-            return (
-              <Grid item xs={12} sm={6} md={4}>
-                <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
-                  <Paper button square
-                    variant="outlined"
-                    className={classes.classPaper}
-                  >
-                    <Avatar
-                      variant="square"
-                      style={{
-                        backgroundColor: colorMap.get(row._id),
-                        width: "100%",
-                        height: "120px",
-                      }}
+        {(rows.length === 0) ? <div style={{display: "flex", justifyContent: "center", flexDirection: "row"}}><Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography></div> :
+          stableSort(rows, getComparator(order, orderBy))
+            .map((row, index) => {
+              const labelId = `enhanced-table-checkbox-${index}`;
+              console.log(row)
+              let viewpage = `/kelas/${row._id}`;
+              return (
+                <Grid item xs={12} sm={6} md={4}>
+                  <Link to={viewpage} onClick={(e) => e.stopPropagation()}>
+                    <Paper button square
+                      variant="outlined"
+                      className={classes.classPaper}
                     >
-                      <FaChalkboardTeacher
+                      <Avatar
+                        variant="square"
                         style={{
-                          width: "50px",
-                          height: "50px",
+                          backgroundColor: colorMap.get(row._id),
+                          width: "100%",
+                          height: "120px",
                         }}
-                      />
-                    </Avatar>
-                    <Divider />
-                    <div style={{padding: "10px 20px 20px 10px"}}>
-                      <Typography id={labelId} variant="h5" align="center">
-                        {row.name}
-                      </Typography>
-                      <Typography variant="body1" color="textSecondary" align="center">
-                        Wali Kelas: <b>{row.homeroomTeacher}</b>
-                      </Typography>
-                    </div>
-                    <Divider />
-                    <Grid container direction="row" justify="space-between" alignItems="center" className={classes.classActionContainer}>
-                      {user.role === "Admin" ?
-                        <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
-                          <Grid item>
-                            <LightTooltip title="Jumlah Peserta">
-                              <Badge
-                                badgeContent={row.size}
-                                color="secondary"
-                                anchorOrigin={{
-                                  vertical: "bottom",
-                                  horizontal: "left",
-                                }}
-                                showZero
-                              >
-                                <IconButton size="small" disabled>
-                                  <SupervisorAccountIcon className={classes.classPersonIcon} />
-                                </IconButton>
-                              </Badge>
-                            </LightTooltip>
-                          </Grid>
-                          <Grid item>
-                            <LightTooltip title="Sunting">
-                              <Link to={`/sunting-kelas/${row._id}`} onClick={(e) => e.stopPropagation()}>
+                      >
+                        <FaChalkboardTeacher
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                          }}
+                        />
+                      </Avatar>
+                      <Divider />
+                      <div style={{padding: "10px 20px 20px 10px"}}>
+                        <Typography id={labelId} variant="h5" align="center">
+                          {row.name}
+                        </Typography>
+                        <Typography variant="body1" color="textSecondary" align="center">
+                          Wali Kelas: <b>{row.homeroomTeacher}</b>
+                        </Typography>
+                      </div>
+                      <Divider />
+                      <Grid container direction="row" justify="space-between" alignItems="center" className={classes.classActionContainer}>
+                        {user.role === "Admin" ?
+                          <Grid item xs container spacing={1} justify="flex-end" alignItems="center">
+                            <Grid item>
+                              <LightTooltip title="Jumlah Peserta">
+                                <Badge
+                                  badgeContent={row.size}
+                                  color="secondary"
+                                  anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                  }}
+                                  showZero
+                                >
+                                  <IconButton size="small" disabled>
+                                    <SupervisorAccountIcon className={classes.classPersonIcon} />
+                                  </IconButton>
+                                </Badge>
+                              </LightTooltip>
+                            </Grid>
+                            <Grid item>
+                              <LightTooltip title="Sunting">
+                                <Link to={`/sunting-kelas/${row._id}`} onClick={(e) => e.stopPropagation()}>
+                                  <IconButton
+                                    size="small"
+                                    className={classes.editClassButton}>
+                                    <EditIcon fontSize="small" />
+                                  </IconButton>
+                                </Link>
+                              </LightTooltip>
+                            </Grid>
+                            <Grid item>
+                              <LightTooltip title="Hapus">
                                 <IconButton
                                   size="small"
-                                  className={classes.editClassButton}>
-                                  <EditIcon fontSize="small" />
+                                  className={classes.deleteClassButton}
+                                  onClick={(e) => handleOpenDeleteDialog(e, row._id, row.name)}
+                                >
+                                  <DeleteIcon fontSize="small"/>
                                 </IconButton>
-                              </Link>
-                            </LightTooltip>
+                              </LightTooltip>
+                            </Grid>
                           </Grid>
-                          <Grid item>
-                            <LightTooltip title="Hapus">
-                              <IconButton
-                                size="small"
-                                className={classes.deleteClassButton}
-                                onClick={(e) => handleOpenDeleteDialog(e, row._id, row.name)}
-                              >
-                                <DeleteIcon fontSize="small"/>
-                              </IconButton>
-                            </LightTooltip>
+                        :
+                          <Grid container direction="row" justify="flex-end" alignItems="center">
+                            <Grid item>
+                              <LightTooltip title="Jumlah Peserta">
+                                <Badge
+                                  badgeContent={row.size}
+                                  color="secondary"
+                                  anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                  }}
+                                  showZero
+                                >
+                                  <IconButton size="small" disabled>
+                                    <SupervisorAccountIcon className={classes.classPersonIcon} />
+                                  </IconButton>
+                                </Badge>
+                              </LightTooltip>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      :
-                        <Grid container direction="row" justify="flex-end" alignItems="center">
-                          <Grid item>
-                            <LightTooltip title="Jumlah Peserta">
-                              <Badge
-                                badgeContent={row.size}
-                                color="secondary"
-                                anchorOrigin={{
-                                  vertical: "bottom",
-                                  horizontal: "left",
-                                }}
-                                showZero
-                              >
-                                <IconButton size="small" disabled>
-                                  <SupervisorAccountIcon className={classes.classPersonIcon} />
-                                </IconButton>
-                              </Badge>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      }
-                    </Grid>
-                  </Paper>
-              </Link>
-            </Grid>
-            );
-          })}
+                        }
+                      </Grid>
+                    </Paper>
+                </Link>
+              </Grid>
+              );
+            })
+        }
       </Grid>
     </div>
   )

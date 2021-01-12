@@ -427,96 +427,98 @@ function ManageUsers(props) {
       />
       <Divider variant="inset" />
       <Grid container direction="column" spacing={2} style={{marginTop: "10px", marginBottom: "75px"}}>
-        {stableSort(student_rows, getComparator(order_student, orderBy_student))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            return (
-              <Grid item>
-                <Link to={{
-                    pathname:"/lihat-profil",
-                    state: {
-                       avatar: row.avatar,
-                       nama: row.name,
-                       kelas: all_students[index].kelas,
-                       viewable_section: "with_karir",
-                       tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
-                       jenis_kelamin: all_students[index].jenis_kelamin,
-                       role: "Student",
-                       sekolah: row.sekolah,
-                       email: row.email,
-                       phone: row.phone,
-                       emergency_phone : row.emergency_phone,
-                       alamat: row.address,
-                       hobi: all_students[index].hobi_minat,
-                       ket: all_students[index].ket_non_teknis,
-                       cita: all_students[index].cita_cita,
-                       uni: all_students[index].uni_impian,
-                       admin: true
-                    }
-                  }}>
-                  <Paper variant="outlined" className={classes.profilePanelSummary}>
-                    <Grid container spacing={0} justify="space-between" alignItems="center" className={classes.summary}>
-                      <Grid item>
-                        {
-                          !row.avatar ?
-                            <ListItemAvatar>
-                              <Avatar />
-                            </ListItemAvatar>
-                          :
-                            <ListItemAvatar>
-                              <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
-                            </ListItemAvatar>
-                        }
-                      </Grid>
-                      <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
+        {(student_rows.length === 0) ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+          stableSort(student_rows, getComparator(order_student, orderBy_student))
+            .map((row, index) => {
+              const labelId = `enhanced-table-checkbox-${index}`;
+              return (
+                <Grid item>
+                  <Link to={{
+                      pathname:"/lihat-profil",
+                      state: {
+                        avatar: row.avatar,
+                        nama: row.name,
+                        kelas: all_students[index].kelas,
+                        viewable_section: "with_karir",
+                        tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                        jenis_kelamin: all_students[index].jenis_kelamin,
+                        role: "Student",
+                        sekolah: row.sekolah,
+                        email: row.email,
+                        phone: row.phone,
+                        emergency_phone : row.emergency_phone,
+                        alamat: row.address,
+                        hobi: all_students[index].hobi_minat,
+                        ket: all_students[index].ket_non_teknis,
+                        cita: all_students[index].cita_cita,
+                        uni: all_students[index].uni_impian,
+                        admin: true
+                      }
+                    }}>
+                    <Paper variant="outlined" className={classes.profilePanelSummary}>
+                      <Grid container spacing={0} justify="space-between" alignItems="center" className={classes.summary}>
                         <Grid item>
-                          <LightTooltip title="Nonaktifkan">
-                            <IconButton
-                              size="small"
-                              style={{display: "none"}}
-                              className={classes.profileDisableButton}
-                              onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
-                            >
-                              <BlockIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                          {
+                            !row.avatar ?
+                              <ListItemAvatar>
+                                <Avatar />
+                              </ListItemAvatar>
+                            :
+                              <ListItemAvatar>
+                                <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
+                              </ListItemAvatar>
+                          }
                         </Grid>
                         <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.profileDeleteButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.name}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {row.email}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <Typography variant="h6" id={labelId}>
+                              {row.name}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {row.email}
+                            </Typography>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Nonaktifkan">
+                              <IconButton
+                                size="small"
+                                style={{display: "none"}}
+                                className={classes.profileDisableButton}
+                                onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
+                              >
+                                <BlockIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.profileDeleteButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </Paper>
-                </Link>
-              </Grid>
-          )
-        })}
+                    </Paper>
+                  </Link>
+                </Grid>
+            )
+          })
+        }
       </Grid>
       <ManageUsersToolbar
         heading="Daftar Guru"
@@ -530,129 +532,131 @@ function ManageUsers(props) {
       />
       <Divider variant="inset" />
       <Grid container direction="column" spacing={1} style={{marginTop: "10px"}}>
-        {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            console.log(all_teachers[index])
-            return (
-              <Grid item>
-                <Link to={{
-                    pathname:"/lihat-profil",
-                    state: {
-                       avatar: row.avatar,
-                       nama: row.name,
-                       subject_teached: all_teachers[index].subject_teached,
-                       viewable_section: "with_karir",
-                       tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
-                       jenis_kelamin: all_teachers[index].jenis_kelamin,
-                       role: "Teacher",
-                       sekolah: row.sekolah,
-                       email: row.email,
-                       phone: row.phone,
-                       emergency_phone : row.emergency_phone,
-                       alamat: row.address,
-                       hobi: all_teachers[index].hobi_minat,
-                       ket: all_teachers[index].ket_non_teknis,
-                       cita: all_teachers[index].cita_cita,
-                       uni: all_teachers[index].uni_impian,
-                       admin: true
-                    }
-                  }}>
-                  <Paper variant="outlined" className={classes.profilePanelSummary}>
-                    <Grid container spacing={0} justify="space-between" alignItems="center" className={classes.summary}>
-                      <Grid item>
-                        {
-                          !row.avatar ?
-                            <ListItemAvatar>
-                              <Avatar />
-                            </ListItemAvatar>
-                          :
-                            <ListItemAvatar>
-                              <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
-                            </ListItemAvatar>
-                        }
-                      </Grid>
-                      <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
+        {(teacher_rows.length === 0) ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
+          stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
+            .map((row, index) => {
+              const labelId = `enhanced-table-checkbox-${index}`;
+              console.log(all_teachers[index])
+              return (
+                <Grid item>
+                  <Link to={{
+                      pathname:"/lihat-profil",
+                      state: {
+                        avatar: row.avatar,
+                        nama: row.name,
+                        subject_teached: all_teachers[index].subject_teached,
+                        viewable_section: "with_karir",
+                        tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                        jenis_kelamin: all_teachers[index].jenis_kelamin,
+                        role: "Teacher",
+                        sekolah: row.sekolah,
+                        email: row.email,
+                        phone: row.phone,
+                        emergency_phone : row.emergency_phone,
+                        alamat: row.address,
+                        hobi: all_teachers[index].hobi_minat,
+                        ket: all_teachers[index].ket_non_teknis,
+                        cita: all_teachers[index].cita_cita,
+                        uni: all_teachers[index].uni_impian,
+                        admin: true
+                      }
+                    }}>
+                    <Paper variant="outlined" className={classes.profilePanelSummary}>
+                      <Grid container spacing={0} justify="space-between" alignItems="center" className={classes.summary}>
                         <Grid item>
-                        <LightTooltip title="Lihat Profil">
+                          {
+                            !row.avatar ?
+                              <ListItemAvatar>
+                                <Avatar />
+                              </ListItemAvatar>
+                            :
+                              <ListItemAvatar>
+                                <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
+                              </ListItemAvatar>
+                          }
+                        </Grid>
+                        <Grid item>
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.name}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {row.email}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <Typography variant="h6" id={labelId}>
+                              {row.name}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {row.email}
+                            </Typography>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                          <LightTooltip title="Lihat Profil">
 
-                            <Link to={{
-                              pathname:'/lihat-profil',
-                              state: {
-                                avatar: row.avatar,
-                                nama: row.name,
-                                subject_teached: all_teachers[index].subject_teached,
-                                viewable_section: 'with_karir',
-                                tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
-                                jenis_kelamin: all_teachers[index].jenis_kelamin,
-                                role: 'Teacher',
-                                sekolah: row.sekolah,
-                                email: row.email,
-                                phone: row.phone,
-                                emergency_phone : row.emergency_phone,
-                                alamat: row.address,
-                                hobi: all_teachers[index].hobi_minat,
-                                ket: all_teachers[index].ket_non_teknis,
-                                cita: all_teachers[index].cita_cita,
-                                uni: all_teachers[index].uni_impian,
-                                admin: true
-                              }
-                            }}>
-                              {/* <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
+                              <Link to={{
+                                pathname:'/lihat-profil',
+                                state: {
+                                  avatar: row.avatar,
+                                  nama: row.name,
+                                  subject_teached: all_teachers[index].subject_teached,
+                                  viewable_section: 'with_karir',
+                                  tanggal_lahir: moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY"),
+                                  jenis_kelamin: all_teachers[index].jenis_kelamin,
+                                  role: 'Teacher',
+                                  sekolah: row.sekolah,
+                                  email: row.email,
+                                  phone: row.phone,
+                                  emergency_phone : row.emergency_phone,
+                                  alamat: row.address,
+                                  hobi: all_teachers[index].hobi_minat,
+                                  ket: all_teachers[index].ket_non_teknis,
+                                  cita: all_teachers[index].cita_cita,
+                                  uni: all_teachers[index].uni_impian,
+                                  admin: true
+                                }
+                              }}>
+                                {/* <IconButton
+                                    size="small"
+                                    className={classes.viewMaterialButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton> */}
+                              </Link>
+                            </LightTooltip>
+                            <LightTooltip title="Nonaktifkan">
+                              <IconButton
+                                size="small"
+                                style={{display: "none"}}
+                                className={classes.profileDisableButton}
+                                onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
                               >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton> */}
-                            </Link>
-                          </LightTooltip>
-                          <LightTooltip title="Nonaktifkan">
-                            <IconButton
-                              size="small"
-                              style={{display: "none"}}
-                              className={classes.profileDisableButton}
-                              onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
-                            >
-                              <BlockIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.profileDeleteButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                                <BlockIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.profileDeleteButton}
+                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </Paper>
-                </Link>
-              </Grid>
-            )
-          })}
+                    </Paper>
+                  </Link>
+                </Grid>
+              )
+            })
+        }
       </Grid>
     </div>
   );
