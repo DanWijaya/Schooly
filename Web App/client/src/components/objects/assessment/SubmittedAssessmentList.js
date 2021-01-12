@@ -107,12 +107,6 @@ const useStyles = makeStyles((theme) => ({
   // otherFileTypeIcon: {
   //   backgroundColor: "#808080",
   // },
-  startDateText: {
-    color: theme.palette.primary.main
-  },
-  endDateText: {
-    color: theme.palette.warning.main
-  },
   content: {
     padding: "20px",
   },
@@ -839,11 +833,11 @@ function SubmittedAssessmentList(props) {
           </Grid>
           <Grid item xs={12} md={5} spacing={2}>
             <Hidden mdUp implementation="css">
-              <Typography variant="body2" className={classes.startDateText}>
-                Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              <Typography variant="body2" color="textSecondary">
+                Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
               </Typography>
-              <Typography variant="body2" className={classes.endDateText}>
-                Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              <Typography variant="body2" color="textSecondary">
+                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
               </Typography>
               <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
                 Deskripsi Kuis/Ujian:
@@ -903,11 +897,11 @@ function SubmittedAssessmentList(props) {
               </Grid>
             </Hidden>
             <Hidden smDown implementation="css">
-              <Typography align="right" variant="body2" className={classes.startDateText}>
-                Waktu mulai kerja: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              <Typography align="right" variant="body2" color="textSecondary">
+                Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
               </Typography>
-              <Typography align="right" variant="body2" className={classes.endDateText}>
-                Batas waktu kerja: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              <Typography align="right" variant="body2" color="textSecondary">
+                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
               </Typography>
 
               <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>

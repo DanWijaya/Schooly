@@ -385,9 +385,6 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
-  taskPanelDivider: {
-    backgroundColor: theme.palette.primary.main,
-  },
   taskPanelSummary: {
     "&:hover": {
       backgroundColor: theme.palette.primary.fade,
@@ -622,12 +619,12 @@ function TaskList(props) {
                       </Grid>
                     </Grid>
                   </ExpansionPanelSummary>
-                  <Divider className={classes.taskPanelDivider} />
-                  <ExpansionPanelDetails>
+                  <Divider />
+                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                     <Grid container>
                       <Grid item xs={12}>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kelas yang Ditugaskan: </b>
+                        <Typography variant="body1">
+                          Kelas yang Ditugaskan:{" "}
                           {!all_classes_map.size  ? null :
                            row.class_assigned.map((id,i) => {
 
