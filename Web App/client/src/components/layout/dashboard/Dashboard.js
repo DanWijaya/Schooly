@@ -182,44 +182,59 @@ function TaskListItem(props) {
   )
 }
 
-function DashboardGraph(){
-  const data = React.useMemo(
-    () => [
-      {
-        label: 'Series 1',
-        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7], [5, 7], [6, 7], [7, 7], [8, 7], [9, 7], [10, 7], [11, 7], [12, 7], [13, 7]]
-      },
-    ],
-    []
-  )
+function DashboardGraph(props){
+    const { scores, workType } = props
+    console.log(scores)
+    // let graphData = []
+    // if(scores){
+    //   for(let i=0;i<scores.length;i++){
+    //     let individualData = []
+    //     individualData.push(i+1)
+    //     individualData.push(scores[i])
+    //     graphData.push(individualData)
+    //   }
+    // }
+    const data = React.useMemo(
+      () => [
+        {
+          label: `Hasil ${workType}`,
+          data: scores
+        },
+      ],
+      []
+    )
+    // console.log(graphData)
+    console.log(data)
+    const series = React.useMemo(
+      () => ({
+        type: 'bar'
+      }),
+      []
+    )
 
-  const series = React.useMemo(
-    () => ({
-      type: 'bar'
-    }),
-    []
-  )
-
-  const axes = React.useMemo(
-    () => [
-      { primary: true, type: 'linear', position: 'bottom', label: "Coba" },
-      { type: 'linear', position: 'left' }
-    ],
-    []
-  )
-
-  return (
-    // A react-chart hyper-responsively and continuously fills the available
-    // space of its parent element automatically
-    <div
-      style={{
-        width: '260px',
-        height: '300px'
-      }}
-    >
-      <Chart data={data} series={series} axes={axes} tooltip />
-    </div>
-  )
+    const axes = React.useMemo(
+      () => [
+        { primary: true, type: 'linear', position: 'bottom', label: "Coba" },
+        { type: 'linear', position: 'left' }
+      ],
+      []
+    )
+    if(scores){
+      console.log(data)
+      return (
+        // A react-chart hyper-responsively and continuously fills the available
+        // space of its parent element automatically
+        <div
+          style={{
+            width: '260px',
+            height: '300px'
+          }}
+        >
+          <Chart data={data} series={series} axes={axes} tooltip/>
+        </div>
+      )
+    }
+    else return <Typography>hehe</Typography>
 }
 
 function ListAssessments(props){
@@ -411,6 +426,9 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       anchorEl: null,
+      taskGraphCurrentSubject: 0,
+      quizGraphCurrentSubject: 0,
+      examGraphCurrentSubject: 0,
     };
   }
 
@@ -419,7 +437,12 @@ class Dashboard extends Component {
     const { user } = this.props.auth;
 
     getAllTask() // actions yang membuat GET request ke Database.
+    getAllSubjects()
     getAllSubjects("map") // untuk dapatin subject"nya gitu
+
+    // const { all_subjects_map } = this.props.subjectsCollection
+    // let subjectArray = Object.keys(all_subjects_map)
+    
     if (user.role === "Student"){
       getStudentsByClass(user.kelas)
       // getTasksBySC
@@ -443,19 +466,128 @@ class Dashboard extends Component {
     this.setState({ anchorEl: null });
   };
 
+  changeGraphSubject = (workType, direction, subjectsLength) => {
+    if(workType === "Tugas"){
+      if(direction === "Left" && this.state.taskGraphCurrentSubject > 0){
+        this.setState({ taskGraphCurrentSubject: this.state.taskGraphCurrentSubject - 1});
+      }
+      else if(direction === "Right" && this.state.taskGraphCurrentSubject < subjectsLength - 1){
+        this.setState({ taskGraphCurrentSubject: this.state.taskGraphCurrentSubject + 1});
+      }
+    }
+    else if(workType === "Kuis"){
+      if(direction === "Left" && this.state.quizGraphCurrentSubject > 0){
+        this.setState({ quizGraphCurrentSubject: this.state.quizGraphCurrentSubject - 1});
+      }
+      else if(direction === "Right" && this.state.quizGraphCurrentSubject < subjectsLength - 1){
+        this.setState({ quizGraphCurrentSubject: this.state.quizGraphCurrentSubject + 1});
+      }
+    }
+    else if(workType === "Ujian"){
+      if(direction === "Left" && this.state.examGraphCurrentSubject > 0){
+        this.setState({ examGraphCurrentSubject: this.state.examGraphCurrentSubject - 1});
+      }
+      else if(direction === "Right" && this.state.examGraphCurrentSubject < subjectsLength - 1){
+        this.setState({ examGraphCurrentSubject: this.state.examGraphCurrentSubject + 1});
+      }
+    }
+  }
+
   render() {
 
     const { classes, tasksCollection } = this.props;
 
     const { user, all_students } = this.props.auth;
     const { all_user_files } = this.props.filesCollection
-    const { all_subjects_map } = this.props.subjectsCollection
+    const { all_subjects_map, all_subjects } = this.props.subjectsCollection
     const { all_assessments } = this.props.assessmentsCollection
 
     const classId = user.kelas
 
     console.log(all_assessments)
     console.log(user)
+    console.log(tasksCollection)
+
+    function graphTask(subjectIndex){
+      if(all_subjects[subjectIndex]){
+        let subject = all_subjects[subjectIndex]._id
+        let subjectScores = []
+        for(let i=0;i<tasksCollection.length;i++){
+          if(tasksCollection[i].grades && tasksCollection[i].subject === subject){
+            let keysArray = Object.keys(tasksCollection[i].grades)
+            let valuesArray = Object.values(tasksCollection[i].grades)
+            for(let j=0;j<keysArray.length;j++){
+              if(keysArray[j] === user.id){
+                subjectScores.push(valuesArray[j])
+                break;
+              }
+            }
+          }
+        }
+        let graphData = [[0,0]]
+        for(let i=0;i<subjectScores.length;i++){
+          let individualData = []
+          individualData.push(i+1)
+          individualData.push(subjectScores[i])
+          graphData.push(individualData)
+        }
+        if(graphData.length !== 1){
+          return <DashboardGraph scores={graphData} workType="Tugas"/>
+        }
+        else return null
+      }
+      else return null
+    }
+
+    function graphAssessment(subjectIndex, type){
+      if(all_subjects[subjectIndex]){
+        console.log(all_subjects[subjectIndex])
+        let subject = all_subjects[subjectIndex]._id
+        let subjectScores = []
+        if(type === "Kuis"){
+          for(let i=0;i<all_assessments.length;i++){
+            if(all_assessments[i].grades && all_assessments[i].subject === subject && all_assessments[i].type === "Kuis"){
+              let keysArray = Object.keys(all_assessments[i].grades)
+              let valuesArray = Object.values(all_assessments[i].grades)
+              for(let j=0;j<keysArray.length;j++){
+                if(keysArray[j] === user.id){
+                  subjectScores.push(valuesArray[j].total_grade)
+                  break;
+                }
+              }
+            }
+          }
+          console.log(subjectScores)
+        }
+        else if(type === "Ujian"){
+          for(let i=0;i<all_assessments.length;i++){
+            if(all_assessments[i].grades && all_assessments[i].subject === subject && all_assessments[i].type === "Ujian"){
+              let keysArray = Object.keys(all_assessments[i].grades)
+              let valuesArray = Object.values(all_assessments[i].grades)
+              for(let j=0;j<keysArray.length;j++){
+                if(keysArray[j] === user.id){
+                  subjectScores.push(valuesArray[j].total_grade)
+                  break;
+                }
+              }
+            }
+          }
+        }
+        let graphData = [[0,0]]
+        for(let i=0;i<subjectScores.length;i++){
+          let individualData = []
+          individualData.push(i+1)
+          individualData.push(subjectScores[i])
+          graphData.push(individualData)
+        }
+        if(graphData.length !== 1){
+          return <DashboardGraph scores={graphData} workType={type}/>
+        }
+        else return null
+      }
+      else return null
+    }
+
     function listTasks(){
       let result = []
       tasksByClass.map((task) => {
@@ -520,6 +652,14 @@ class Dashboard extends Component {
         result.push(<Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography>)
       }
       return result
+    }
+
+    function showSubject(subjectIndex){
+      console.log(subjectIndex)
+      if(all_subjects[subjectIndex]){
+        return <Typography>{all_subjects[subjectIndex].name}</Typography>
+      }
+      else return null
     }
 
     let tasksByClass = []
@@ -680,7 +820,12 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        <DashboardGraph/>
+                        {graphTask(this.state.taskGraphCurrentSubject)}
+                        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: "10px"}}>
+                          <Typography onClick={() => this.changeGraphSubject("Tugas", "Left", all_subjects.length)}>L</Typography>
+                          {showSubject(this.state.taskGraphCurrentSubject)}
+                          <Typography onClick={() => this.changeGraphSubject("Tugas", "Right", all_subjects.length)}>R</Typography>
+                        </div>
                       </Grid>
                     </Paper>
                   </Grid>
@@ -709,7 +854,12 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        <DashboardGraph/>
+                        {graphAssessment(this.state.quizGraphCurrentSubject, "Kuis")}
+                        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: "10px"}}>
+                          <Typography onClick={() => this.changeGraphSubject("Kuis", "Left", all_subjects.length)}>L</Typography>
+                          {showSubject(this.state.quizGraphCurrentSubject)}
+                          <Typography onClick={() => this.changeGraphSubject("Kuis", "Right", all_subjects.length)}>R</Typography>
+                        </div>
                       </Grid>
                     </Paper>
                   </Grid>
@@ -738,7 +888,12 @@ class Dashboard extends Component {
                         </Grid>
                       </Grid>
                       <Grid container direction="column" spacing={1}>
-                        <DashboardGraph/>
+                        {graphAssessment(this.state.examGraphCurrentSubject, "Ujian")}
+                        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: "10px"}}>
+                          <Typography onClick={() => this.changeGraphSubject("Ujian", "Left", all_subjects.length)}>L</Typography>
+                          {showSubject(this.state.examGraphCurrentSubject)}
+                          <Typography onClick={() => this.changeGraphSubject("Ujian", "Right", all_subjects.length)}>R</Typography>
+                        </div>
                       </Grid>
                     </Paper>
                   </Grid>
