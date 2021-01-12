@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     padding: "20px",
     "&:focus, &:hover": {
-      boxShadow: "1px 3px 5px 2px rgba(0, 0, 0, .3)",
+      boxShadow: "1px 3px 5px 2px rgba(0, 0, 0, .2)",
     },
   },
   iconAvatar: {
@@ -106,7 +106,7 @@ function Help(props) {
     handleMarginTopValue(0);
     return () => {
       handleMarginTopValue(20)
-    } // dirun pas komponennya diunmount. 
+    } // dirun pas komponennya diunmount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 

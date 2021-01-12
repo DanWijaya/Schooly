@@ -429,9 +429,6 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.error.dark
     }
   },
-  materialPanelDivider: {
-    backgroundColor: theme.palette.primary.main
-  },
   materialPanelSummary: {
     "&:hover": {
       backgroundColor: theme.palette.primary.fade
@@ -670,12 +667,12 @@ function MaterialList(props) {
                       </Grid>
                     </Grid>
                   </ExpansionPanelSummary>
-                  <Divider className={classes.materialPanelDivider} />
-                  <ExpansionPanelDetails>
+                  <Divider />
+                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                     <Grid container>
                       <Grid item xs={12}>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kelas yang Diberikan:</b>{" "}
+                        <Typography variant="body1">
+                          Kelas yang Diberikan:{" "}
                           {!all_classes_map.size
                             ? null
                             : row.class_assigned.map((kelas, i) => {
@@ -688,11 +685,11 @@ function MaterialList(props) {
                               })}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      {/* <Grid item xs={12}>
                         <Typography variant="body1" color="textSecondary">
                           Pemberi Materi: {!row.author ? null : row.author.name}
                         </Typography>
-                      </Grid>
+                      </Grid> */}
                       <Grid item xs={12}>
                         <Typography variant="body1" color="textSecondary">
                           Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
