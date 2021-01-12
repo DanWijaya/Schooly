@@ -7,15 +7,12 @@ import { Drawer, Divider, Hidden, List, ListItem, ListItemIcon, ListItemText, To
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
+import AssessmentIcon from "@material-ui/icons/Assessment";
 import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
-import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
-
-// bm drawer
-import AssessmentIcon from '@material-ui/icons/Assessment';
+import { FaChalkboardTeacher, FaClipboardList, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
 
 const drawerWidth = 240;
 
