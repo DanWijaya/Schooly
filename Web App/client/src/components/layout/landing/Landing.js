@@ -1,17 +1,31 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
 import schoolyIntroduction from "./SchoolyIntroduction.png";
 import schoolyAccess from "./SchoolyAccess.png";
-import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
+import schoolyFeatureBackground1 from "./SchoolyFeatureBackground1.png";
+import schoolyFeatureBackground2 from "./SchoolyFeatureBackground2.png";
+import schoolyFeatureBackground3 from "./SchoolyFeatureBackground3.png";
+import schoolyFeatureBackground4 from "./SchoolyFeatureBackground4.png";
+import schoolyFeatureBackground5 from "./SchoolyFeatureBackground5.png";
+import schoolyFeatureBackground6 from "./SchoolyFeatureBackground6.png";
+import schoolyFeatureBackground7 from "./SchoolyFeatureBackground7.png";
+import schoolyFeatureBackground8 from "./SchoolyFeatureBackground8.png";
+import { Avatar, Badge, Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
+import AssessmentIcon from "@material-ui/icons/Assessment";
 import ContactlessIcon from "@material-ui/icons/Contactless";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
+import FaceIcon from '@material-ui/icons/Face';
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PeopleIcon from "@material-ui/icons/People";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
-import PropTypes from "prop-types";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { BsClipboardData } from "react-icons/bs";
 
 const styles = (theme) => ({
   root: {
@@ -30,9 +44,6 @@ const styles = (theme) => ({
     maxWidth: "1000px",
     padding: "20px",
     color: "white",
-  },
-  schoolyAccessBackground: {
-    backgroundColor: "#F5F5F5",
   },
   schoolyAccess: {
     textAlign: "center",
@@ -64,15 +75,15 @@ const styles = (theme) => ({
     },
   },
   featuresAvatar: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-    marginBottom: "10px",
+    width: "120px",
+    height: "120px",
+    marginBottom: "5px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
   },
   featuresIcon: {
-    width: theme.spacing(10),
-    height: theme.spacing(10),
+    width: "80px",
+    height: "80px",
     color: theme.palette.primary.main,
   },
   featuresText: {
@@ -171,27 +182,25 @@ class Landing extends Component {
           </Grid>
         </div>
       </div>
-      <div className={classes.schoolyAccessBackground}>
-        <div className={classes.schoolyAccess}>
-          <Grid item container direction="column" alignItems="center">
-            <Grid item>
-              <img
-                alt="Schooly Access"
-                src={schoolyAccess}
-                style={{maxWidth: "100%", maxHeight: "100%"}}
-              />
-            </Grid>
-            <Grid item>
-              <Typography variant="h4" color="primary" gutterBottom>
-                Akses dengan mudah di mana saja.
-              </Typography>
-              <Typography>
-                Buka dan gunakan Schooly dengan mudah pada browser Anda di perangkat apa saja,
-                dimana saja, dan kapan saja.
-              </Typography>
-            </Grid>
+      <div className={classes.schoolyAccess}>
+        <Grid item container direction="column" alignItems="center">
+          <Grid item>
+            <img
+              alt="Schooly Access"
+              src={schoolyAccess}
+              style={{maxWidth: "100%", maxHeight: "100%"}}
+            />
           </Grid>
-        </div>
+          <Grid item>
+            <Typography variant="h4" color="primary" gutterBottom>
+              Akses dengan mudah di mana saja.
+            </Typography>
+            <Typography>
+              Buka dan gunakan Schooly dengan mudah pada browser Anda di perangkat apa saja,
+              dimana saja, dan kapan saja.
+            </Typography>
+          </Grid>
+        </Grid>
       </div>
       <div className={classes.schoolyFeaturesBackground}>
         <div className={classes.schoolyFeatures}>
@@ -206,8 +215,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <AssignmentIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground1})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <PeopleIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Akun Pengelola
@@ -219,8 +235,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <PeopleIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground2})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <FaceIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Pendataan Pengguna
@@ -232,8 +255,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <WatchLaterIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground3})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <FaChalkboardTeacher className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Kelas
@@ -245,8 +275,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <ContactlessIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground4})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <AnnouncementIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Pengumuman
@@ -258,8 +295,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <AssignmentIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground5})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <MenuBookIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Materi
@@ -271,8 +315,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <PeopleIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground6})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <AssignmentIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Tugas
@@ -284,8 +335,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <WatchLaterIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground7})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <BsClipboardData className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Kuis & Ujian
@@ -297,8 +355,15 @@ class Landing extends Component {
             </Grid>
             <Grid item xs={6} sm={3}>
               <Paper variant="outlined" className={classes.featuresPaper}>
-                <Avatar className={classes.featuresAvatar}>
-                  <ContactlessIcon className={classes.featuresIcon} />
+                <Avatar className={classes.featuresAvatar}
+                  style={{
+                    backgroundImage: `url(${schoolyFeatureBackground8})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <AssessmentIcon className={classes.featuresIcon} />
                 </Avatar>
                 <Typography gutterBottom>
                   Rapor

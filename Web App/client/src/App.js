@@ -166,7 +166,11 @@ class App extends Component {
                   null
                 }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
-                  <Toolbar />
+                {this.state.showNavBar ? 
+                  <Toolbar /> 
+                  : 
+                  null
+                }
                   <Switch>
                     <Route exact path="/"
                       render={(props) => (
