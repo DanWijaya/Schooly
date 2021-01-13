@@ -785,9 +785,15 @@ function Help(props) {
                               <b>Bagaimana sistem penilaian soal jenis kotak centang?</b>
                             </Typography>
                             <Typography>
-                              Untuk setiap pilihan yang di jawab benar, murid mendapat poin +1 per jumlah pilihan yang benar. Untuk setiap pilihan yang di jawab salah,
-                              murid diberikan pengurangan poin -2 per jumlah pilihan yang benar. Untuk pilihan yang seharusnya benar namun dikosongkan, murid tidak mendapatkan poin (0 poin). 
-                              Kemudian poin tersebut dijumlahkan dan dikalikan dengan nilai bobot 1 soal untuk soal jenis kotak centang.
+                              Untuk setiap pilihan yang di jawab benar, murid mendapat +1 poin per jumlah pilihan yang benar. Untuk setiap pilihan yang di jawab salah,
+                              murid mendapatkan penailti -2 poin per jumlah pilihan yang benar. Untuk pilihan yang seharusnya benar namun dikosongkan, murid tidak mendapatkan poin (0 poin).
+                              Kemudian poin tersebut dijumlahkan dan dikalikan dengan nilai bobot 1 soal untuk soal jenis kotak centang. <br />
+                              Contoh: Terdapat suatu soal dengan 5 pilihan yaitu A, B, C, D, dan E, dimana 4 pilihannya benar yaitu A, B, C, dan D. Asumsi soal tersebut memiliki bobot 5 poin per soalnya.
+                              Murid menjawab A, B, C, dan E sebagai pilihan yang benar. <br />
+                              Karena terdapat 3 pilihan yang benar dijawab yaitu A, B, dan C, maka murid mendapatkan 3 poin. Pilihan D yang dikosongkan tidak memberikan poin apa-apa (0 poin).
+                              Pilihan E yang seharusnya tidak dijawab namun dijawab memberikan penalti sebesar -2 poin. Kemudian poin-poin ini ditotalkan menjadi 1 poin dibagi dengan jumlah pilihan yang benar yaitu 4 pilihan,
+                              menjadi 1/4. Kemudian nilai ini dikallikan bobot soal tersebut yaitu 5, menghasilkan 1.25. <br />
+                              Kesimpulan, murid mendapatkan 1.25 poin dari 5 poin.
                             </Typography>
                           </Grid>
                           <Grid item>
