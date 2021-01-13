@@ -30,6 +30,8 @@ import { BsClipboardData } from "react-icons/bs";
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 const styles = (theme) => ({
   root: {
@@ -134,6 +136,19 @@ const styles = (theme) => ({
   },
   checkIcon: {
     color: theme.palette.success.main
+  },
+  graph: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    marginRight: "10px"
+  },
+  graphButtons: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    marginTop: "10px",
+    alignItems: "center"
   }
 });
 
@@ -170,9 +185,10 @@ function TaskListItem(props) {
                 align="right"
                 primary={
                   <Typography variant="body2" color="textSecondary">
-                    Tenggat: {props.work_deadline_desktop}
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
                   </Typography>
                 }
+                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
               />
             </ListItem>
           </Badge>
@@ -219,6 +235,13 @@ function DashboardGraph(props){
       ],
       []
     )
+
+    const tooltip = React.useMemo(
+      () => ({
+        anchor: 'bottom'
+      }),[]
+    )
+
     if(scores){
       console.log(data)
       return (
@@ -230,7 +253,7 @@ function DashboardGraph(props){
             height: '300px'
           }}
         >
-          <Chart data={data} series={series} axes={axes} tooltip/>
+          <Chart data={data} series={series} axes={axes} tooltip={tooltip}/>
         </div>
       )
     }
@@ -534,9 +557,9 @@ class Dashboard extends Component {
         if(graphData.length !== 1){
           return <DashboardGraph scores={graphData} workType="Tugas"/>
         }
-        else return null
+        else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
       }
-      else return null
+      else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
     }
 
     function graphAssessment(subjectIndex, type){
@@ -583,9 +606,9 @@ class Dashboard extends Component {
         if(graphData.length !== 1){
           return <DashboardGraph scores={graphData} workType={type}/>
         }
-        else return null
+        else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada {type} yang telah dinilai untuk mata pelajaran terkait</Typography>
       }
-      else return null
+      else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada {type} yang telah dinilai untuk mata pelajaran terkait</Typography>
     }
 
     function listTasks(){
@@ -689,7 +712,7 @@ class Dashboard extends Component {
         <div style={{marginTop: "20px"}}>
           {user.role === "Student" ?
             <Grid item container spacing={3}>
-              <Grid item md={8}>
+              <Grid item xs={12} md={7} lg={8}>
                 <Grid container direction="column" spacing={2}>
                   <Grid item>
                     <Paper style={{padding: "20px"}}>
@@ -793,112 +816,132 @@ class Dashboard extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item md={4}>
-                <Grid container direction="column" spacing={2}>
-                  <Grid item>
-                    <Paper style={{padding: "20px"}}>
-                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIndIcon
-                              color="action"
-                              style={{marginRight: "10px"}}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Bar Chart Tugas
-                            </Typography>
+              <Hidden smDown>
+                <Grid item xs={12} md={5} lg={4}>
+                  <Grid container direction="column" spacing={2}>
+                    <Grid item>
+                      <Paper style={{padding: "20px"}}>
+                        <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                          <Grid item>
+                            <Grid container alignItems="center">
+                              <AssignmentIndIcon
+                                color="action"
+                                style={{marginRight: "10px"}}
+                              />
+                              <Typography variant="h5" color="primary">
+                                Bar Chart Tugas
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <Link to="/daftar-tugas">
+                              <LightTooltip title="Lihat Semua" placement="top">
+                                <IconButton>
+                                  <ChevronRightIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            </Link>
                           </Grid>
                         </Grid>
-                        <Grid item>
-                          <Link to="/daftar-tugas">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <ChevronRightIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        {graphTask(this.state.taskGraphCurrentSubject)}
-                        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: "10px"}}>
-                          <Typography onClick={() => this.changeGraphSubject("Tugas", "Left", all_subjects.length)}>L</Typography>
-                          {showSubject(this.state.taskGraphCurrentSubject)}
-                          <Typography onClick={() => this.changeGraphSubject("Tugas", "Right", all_subjects.length)}>R</Typography>
-                        </div>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{padding: "20px"}}>
-                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIndIcon
-                              color="action"
-                              style={{marginRight: "10px"}}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Bar Chart Kuis
-                            </Typography>
+                        <Grid container direction="column" spacing={1}>
+                          <Grid item className={classes.graph}>
+                            {graphTask(this.state.taskGraphCurrentSubject)}
+                          </Grid>
+                          <Grid item className={classes.graphButtons}>
+                            <IconButton onClick={() => this.changeGraphSubject("Tugas", "Left", all_subjects.length)}>
+                              <ArrowBackIosIcon/>
+                            </IconButton>
+                            {showSubject(this.state.taskGraphCurrentSubject)}
+                            <IconButton onClick={() => this.changeGraphSubject("Tugas", "Right", all_subjects.length)}>
+                              <ArrowForwardIosIcon/>
+                            </IconButton>
                           </Grid>
                         </Grid>
-                        <Grid item>
-                          <Link to="/daftar-kuis">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <ChevronRightIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        {graphAssessment(this.state.quizGraphCurrentSubject, "Kuis")}
-                        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: "10px"}}>
-                          <Typography onClick={() => this.changeGraphSubject("Kuis", "Left", all_subjects.length)}>L</Typography>
-                          {showSubject(this.state.quizGraphCurrentSubject)}
-                          <Typography onClick={() => this.changeGraphSubject("Kuis", "Right", all_subjects.length)}>R</Typography>
-                        </div>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{padding: "20px"}}>
-                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIndIcon
-                              color="action"
-                              style={{marginRight: "10px"}}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Bar Chart Ujian
-                            </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item>
+                      <Paper style={{padding: "20px"}}>
+                        <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                          <Grid item>
+                            <Grid container alignItems="center">
+                              <AssignmentIndIcon
+                                color="action"
+                                style={{marginRight: "10px"}}
+                              />
+                              <Typography variant="h5" color="primary">
+                                Bar Chart Kuis
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <Link to="/daftar-kuis">
+                              <LightTooltip title="Lihat Semua" placement="top">
+                                <IconButton>
+                                  <ChevronRightIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            </Link>
                           </Grid>
                         </Grid>
-                        <Grid item>
-                          <Link to="/daftar-ujian">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <ChevronRightIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
+                        <Grid container direction="column" spacing={1}>
+                          <Grid item className={classes.graph}>
+                            {graphAssessment(this.state.quizGraphCurrentSubject, "Kuis")}
+                          </Grid>
+                          <Grid item className={classes.graphButtons}>
+                            <IconButton onClick={() => this.changeGraphSubject("Kuis", "Left", all_subjects.length)}>
+                              <ArrowBackIosIcon onClick={() => this.changeGraphSubject("Kuis", "Left", all_subjects.length)}/>
+                            </IconButton>
+                            {showSubject(this.state.quizGraphCurrentSubject)}
+                            <IconButton onClick={() => this.changeGraphSubject("Kuis", "Right", all_subjects.length)}>
+                              <ArrowForwardIosIcon/>
+                            </IconButton>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        {graphAssessment(this.state.examGraphCurrentSubject, "Ujian")}
-                        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: "10px"}}>
-                          <Typography onClick={() => this.changeGraphSubject("Ujian", "Left", all_subjects.length)}>L</Typography>
-                          {showSubject(this.state.examGraphCurrentSubject)}
-                          <Typography onClick={() => this.changeGraphSubject("Ujian", "Right", all_subjects.length)}>R</Typography>
-                        </div>
-                      </Grid>
-                    </Paper>
+                      </Paper>
+                    </Grid>
+                    <Grid item>
+                      <Paper style={{padding: "20px"}}>
+                        <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                          <Grid item>
+                            <Grid container alignItems="center">
+                              <AssignmentIndIcon
+                                color="action"
+                                style={{marginRight: "10px"}}
+                              />
+                              <Typography variant="h5" color="primary">
+                                Bar Chart Ujian
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <Link to="/daftar-ujian">
+                              <LightTooltip title="Lihat Semua" placement="top">
+                                <IconButton>
+                                  <ChevronRightIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            </Link>
+                          </Grid>
+                        </Grid>
+                        <Grid container direction="column" spacing={1}>
+                          <Grid item className={classes.graph}>
+                            {graphAssessment(this.state.examGraphCurrentSubject, "Ujian")}
+                          </Grid>
+                          <Grid item className={classes.graphButtons}>
+                            <IconButton onClick={() => this.changeGraphSubject("Ujian", "Left", all_subjects.length)}>
+                              <ArrowBackIosIcon/>
+                            </IconButton>
+                            {showSubject(this.state.examGraphCurrentSubject)}
+                            <IconButton onClick={() => this.changeGraphSubject("Ujian", "Right", all_subjects.length)}>
+                              <ArrowForwardIosIcon/>
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Hidden>
             </Grid>
           : user.role === "Teacher" ?
             <>
