@@ -9,7 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge, List, ListItem, ListItemAvatar, ListItemText,
+import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge, List, ListItem, ListItemAvatar, ListItemText, Avatar,
    Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography, Dialog} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -429,7 +429,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   assessmentPaper: {
-    marginBottom: "5px",
     display: "flex",
     flexDirection: "column",
     alignItems: "stretch",
@@ -444,6 +443,9 @@ const useStyles = makeStyles((theme) => ({
   },
   warningIcon: {
     color: theme.palette.warning.main
+  },
+  assignmentLate: {
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -776,15 +778,43 @@ function AssessmentList(props) {
                         horizontal: "right",
                       }}
                     >
-                      <ListItem button className={classes.listItem}>
-                        <ListItemText
+                      <ListItem button component="a" className={classes.listItem}>
+                        <Hidden smUp implementation="css">
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6">
+                                {row.assessmenttitle}
+                              </Typography>
+                            }
+                            secondary={all_subjects_map.get(row.subject)}
+                          />
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                            <ListItemAvatar>
+                              <Avatar className={classes.assignmentLate}>
+                                <BsClipboardData/>
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={
+                                <Typography variant="h6">
+                                  {row.assessmenttitle}
+                                </Typography>
+                              }
+                              secondary={all_subjects_map.get(row.subject)}
+                            />
+                          </div>
+                        </Hidden>
+                        {/* <ListItemText
+                          align="right"
                           primary={
-                            <Typography variant="h6">
-                              {row.assessmenttitle}
+                            <Typography variant="subtitle" color="textSecondary">
+                              {row.date}
                             </Typography>
                           }
-                          secondary={all_subjects_map.get(row.subject)}
-                        />
+                          secondary={row.time}
+                        /> */}
                         <ListItemText
                           align="right"
                           primary={

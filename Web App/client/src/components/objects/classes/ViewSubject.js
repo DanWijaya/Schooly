@@ -19,6 +19,9 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { FaClipboardList } from "react-icons/fa";
+import { BsClipboardData } from "react-icons/bs";
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   assignmentLate: {
-    backgroundColor: theme.palette.error.main,
+    backgroundColor: theme.palette.primary.main,
   },
   assignmentTurnedIn: {
     backgroundColor: theme.palette.success.main,
@@ -84,7 +87,12 @@ const useStyles = makeStyles((theme) => ({
   },
   checkIcon: {
     color: theme.palette.success.main
-  }
+  },
+  itemIcon: {
+    marginRight: "10px", 
+    fontSize: "22px", 
+    color: "grey"
+  },
 }));
 
 function SubjectListitem(props){
@@ -558,7 +566,7 @@ function ViewSubject(props) {
         let task = tasksList[i]
         let workCategoryAvatar = (
           <Avatar className={classes.assignmentLate}>
-            <AssignmentLateIcon/>
+            <AssignmentIcon/>
           </Avatar>
         )
 
@@ -641,10 +649,14 @@ function ViewSubject(props) {
 
       for (i = 0; i < AssessmentsList.length; i++){
         let assessment = AssessmentsList[i]
-        let workCategoryAvatar = (
-          <Avatar className={classes.assignmentLate}>
-            <AssignmentLateIcon/>
-          </Avatar>
+        let workCategoryAvatar = ( type === "Kuis" ?
+            <Avatar className={classes.assignmentLate}>
+              <FaClipboardList/>
+            </Avatar>
+          :
+            <Avatar className={classes.assignmentLate}>
+              <BsClipboardData/>
+            </Avatar>
         )
 
         // console.log(all_user_files)
@@ -753,9 +765,12 @@ function ViewSubject(props) {
       <div style={{marginTop: "20px"}}>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6">
-              Materi
-            </Typography>
+            <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <MenuBookIcon className={classes.itemIcon}/>
+              <Typography variant="h6">
+                Materi
+              </Typography>
+            </Grid>
           </ExpansionPanelSummary>
           <Divider />
           <List className={classes.expansionPanelList}>
@@ -766,9 +781,12 @@ function ViewSubject(props) {
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6">
-              Tugas
-            </Typography>
+            <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <AssignmentIcon className={classes.itemIcon}/>
+              <Typography variant="h6">
+                Tugas
+              </Typography>
+            </Grid>
           </ExpansionPanelSummary>
           <Divider />
           <List className={classes.expansionPanelList}>
@@ -779,9 +797,12 @@ function ViewSubject(props) {
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6">
-              Kuis
-            </Typography>
+            <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <FaClipboardList className={classes.itemIcon}/>
+              <Typography variant="h6">
+                Kuis
+              </Typography>
+            </Grid>
           </ExpansionPanelSummary>
           <Divider />
           <List className={classes.expansionPanelList}>
@@ -792,9 +813,12 @@ function ViewSubject(props) {
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6">
-              Ujian
-            </Typography>
+            <Grid item style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <BsClipboardData className={classes.itemIcon}/>
+              <Typography variant="h6">
+                Ujian
+              </Typography>
+            </Grid>
           </ExpansionPanelSummary>
           <Divider />
           <List className={classes.expansionPanelList}>

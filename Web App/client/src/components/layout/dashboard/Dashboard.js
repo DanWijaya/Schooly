@@ -126,7 +126,7 @@ const styles = (theme) => ({
     },
   },
   assignmentLate: {
-    backgroundColor: theme.palette.error.main,
+    backgroundColor: theme.palette.primary.main,
   },
   errorIcon: {
     color: theme.palette.error.main,
@@ -173,7 +173,7 @@ function TaskListItem(props) {
               <Hidden xsDown>
                 <ListItemAvatar>
                   <Avatar className={classes.assignmentLate}>
-                    <AssignmentLateIcon/>
+                    <AssignmentIcon/>
                   </Avatar>
                 </ListItemAvatar>
               </Hidden>
@@ -188,7 +188,11 @@ function TaskListItem(props) {
                     {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
                   </Typography>
                 }
-                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("HH.mm")}
+                  </Typography>
+                }
               />
             </ListItem>
           </Badge>
@@ -309,11 +313,15 @@ function ListAssessments(props){
               <ListItemText
                 align="right"
                 primary={
-                  <Typography variant="subtitle" color="textSecondary">
+                  <Typography variant="body2" color="textSecondary">
                     {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
                   </Typography>
                 }
-                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("HH.mm")}
+                  </Typography>
+                }
               />
             </ListItem>
           </Badge>
@@ -359,10 +367,14 @@ function ListAssessments(props){
     for (i = 0; i < AssessmentsList.length; i++){
       let assessment = AssessmentsList[i]
       console.log(assessment)
-      let workCategoryAvatar = (
-        <Avatar className={classes.assignmentLate}>
-          <AssignmentLateIcon/>
-        </Avatar>
+      let workCategoryAvatar = ( type === "Kuis" ?
+          <Avatar className={classes.assignmentLate}>
+            <FaClipboardList/>
+          </Avatar>
+        :
+          <Avatar className={classes.assignmentLate}>
+            <BsClipboardData/>
+          </Avatar>
       )
       // let workStatus = "Belum Ditempuh"
       if(type === "Kuis"){
@@ -680,7 +692,7 @@ class Dashboard extends Component {
     function showSubject(subjectIndex){
       console.log(subjectIndex)
       if(all_subjects[subjectIndex]){
-        return <Typography>{all_subjects[subjectIndex].name}</Typography>
+        return <Typography align="center">{all_subjects[subjectIndex].name}</Typography>
       }
       else return null
     }

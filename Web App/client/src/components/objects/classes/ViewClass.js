@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   assignmentLate: {
-    backgroundColor: theme.palette.error.main,
+    backgroundColor: theme.palette.primary.main,
   },
   assignmentTurnedIn: {
     backgroundColor: theme.palette.success.main,
@@ -517,7 +517,7 @@ function ViewClass(props) {
         let task = tasksList[i]
         let workCategoryAvatar = (
           <Avatar className={classes.assignmentLate}>
-            <AssignmentLateIcon/>
+            <AssignmentIcon/>
           </Avatar>
         )
 
@@ -597,10 +597,14 @@ function ViewClass(props) {
 
       for (i = 0; i < AssessmentsList.length; i++){
         let assessment = AssessmentsList[i]
-        let workCategoryAvatar = (
-          <Avatar className={classes.assignmentLate}>
-            <AssignmentLateIcon/>
-          </Avatar>
+        let workCategoryAvatar = ( type === "Kuis" ?
+            <Avatar className={classes.assignmentLate}>
+              <FaClipboardList/>
+            </Avatar>
+          :
+            <Avatar className={classes.assignmentLate}>
+              <BsClipboardData/>
+            </Avatar>
         )
 
         // console.log(all_user_files)

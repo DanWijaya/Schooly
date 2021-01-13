@@ -11,7 +11,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { IconButton, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge,
    Fab, Grid, InputAdornment, Hidden, Paper, Menu, MenuItem, TableSortLabel, TextField, Typography,
-   List, ListItem, ListItemAvatar, ListItemText } from "@material-ui/core/";
+   List, ListItem, ListItemAvatar, ListItemText, Avatar } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -416,6 +416,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
+  assignmentLate: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 function TaskList(props) {
@@ -573,12 +576,19 @@ function TaskList(props) {
                             </Typography>
                           </Hidden>
                           <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.tasktitle}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                              <Avatar className={classes.assignmentLate}>
+                                <AssignmentIcon/>
+                              </Avatar>
+                              <div>
+                                <Typography variant="subtitle1" id={labelId}>
+                                  {row.tasktitle}
+                                </Typography>
+                                <Typography variant="caption" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              </div>
+                            </div>
                           </Hidden>
                         </Grid>
                         <Grid item xs container spacing={1} justify="flex-end">
@@ -672,15 +682,43 @@ function TaskList(props) {
                           horizontal: "right",
                         }}
                       >
-                        <ListItem button className={classes.listItem}>
-                          <ListItemText
+                        <ListItem button component="a" className={classes.listItem}>
+                          <Hidden smUp implementation="css">
+                            <ListItemText
+                              primary={
+                                <Typography variant="h6">
+                                  {row.tasktitle}
+                                </Typography>
+                              }
+                              secondary={all_subjects_map.get(row.subject)}
+                            />
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                              <ListItemAvatar>
+                                <Avatar className={classes.assignmentLate}>
+                                  <AssignmentIcon/>
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText
+                                primary={
+                                  <Typography variant="h6">
+                                    {row.tasktitle}
+                                  </Typography>
+                                }
+                                secondary={all_subjects_map.get(row.subject)}
+                              />
+                            </div>
+                          </Hidden>
+                          {/* <ListItemText
+                            align="right"
                             primary={
-                              <Typography variant="h6">
-                                {row.tasktitle}
+                              <Typography variant="subtitle" color="textSecondary">
+                                {row.date}
                               </Typography>
                             }
-                            secondary={all_subjects_map.get(row.subject)}
-                          />
+                            secondary={row.time}
+                          /> */}
                           <ListItemText
                             align="right"
                             primary={
@@ -688,11 +726,7 @@ function TaskList(props) {
                                 {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
                               </Typography>
                             }
-                            secondary={
-                              <Typography variant="body2" color="textSecondary">
-                                {moment(row.createdAt).locale("id").format("HH.mm")}
-                              </Typography>
-                            }
+                            secondary={moment(row.createdAt).locale("id").format("HH.mm")}
                           />
                         </ListItem>
                       </Badge>
