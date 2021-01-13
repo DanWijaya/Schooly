@@ -699,7 +699,7 @@ function AssessmentList(props) {
                           </Grid>
                           <Grid item>
                             <LightTooltip title="Sunting">
-                              <Link to={`/sunting-kuis/${row._id}`}>
+                              <Link to={`/sunting-ujian/${row._id}`}>
                                 <IconButton
                                   size="small"
                                   className={classes.editAssessmentButton}
@@ -723,12 +723,12 @@ function AssessmentList(props) {
                         </Grid>
                       </Grid>
                     </ExpansionPanelSummary>
-                    <Divider className={classes.assessmentPanelDivider} />
-                    <ExpansionPanelDetails>
+                    <Divider />
+                    <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid conntainer direction="column">
                         <Grid item>
                           <Typography variant="body1">
-                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
+                            Kelas yang Ditugaskan: {!all_classes_map.size  ? null :
                             row.class_assigned.map((id,i) => {
 
                               if(all_classes_map.get(id)){
@@ -742,18 +742,18 @@ function AssessmentList(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="body1" color="textSecondary" gutterBottom>
+                          <Typography variant="body1" color="textSecondary">
                             Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="body2" className={classes.startDateText}>
-                            Waktu Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          <Typography variant="body2" color="textSecondary">
+                            Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="body2" className={classes.endDateWarningText}>
-                            Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          <Typography variant="body2" color="textSecondary">
+                            Selesai: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                       </Grid>
