@@ -13,8 +13,9 @@ import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,
-   Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemText, Paper, Select, TextField, Typography } from "@material-ui/core";
+   Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemText, Paper, Select, Snackbar, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import MuiAlert from "@material-ui/lab/Alert";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
@@ -175,6 +176,8 @@ class EditMaterial extends Component {
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
+      over_limit: [],
+      fileLimitSnackbar: false
     }
   }
 
@@ -248,17 +251,21 @@ class EditMaterial extends Component {
     }
 
   handleLampiranUpload = (e) => {
-    const files = e.target.files;
-    let temp;
-    let tempToAdd;
-
-    if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
+    const files = Array.from(e.target.files);
+    if (this.state.fileLampiran.length === 0){
+      let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10)
+      let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10)
+      this.setState({fileLampiran: allowed_file, fileLampiranToAdd: allowed_file, over_limit: over_limit,fileLimitSnackbar: over_limit.length > 0})
+    }
     else {
       if (files.length !== 0) {
-        temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-        tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+        let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10);
+        let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10);
+
+        let temp = [...this.state.fileLampiran, ...allowed_file];
+        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file]
+        allowed_file = temp
+        this.setState({ fileLampiran: allowed_file, fileLampiranToAdd: file_to_upload, over_limit: over_limit, fileLimitSnackbar: over_limit.length > 0})
       }
     }
     document.getElementById("file_control").value = null
@@ -320,6 +327,13 @@ class EditMaterial extends Component {
   onDateChange = (date) => {
     console.log(date)
     this.setState({ deadline: date})
+  }
+
+  handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({fileLimitSnackbar: false});
   }
 
   render() {
@@ -572,6 +586,15 @@ class EditMaterial extends Component {
               </div>
             </form>
           </Paper>
+          <Snackbar
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+              <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
+                {this.state.over_limit.length} file melebihi batas 10MB!
+              </MuiAlert>
+          </Snackbar> 
         </div>
       );
     }

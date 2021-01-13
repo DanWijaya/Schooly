@@ -15,10 +15,11 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Divider, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText,
-   Paper, Typography, Badge } from "@material-ui/core";
+   Paper, Typography, Badge, Snackbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
+import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PublishIcon from "@material-ui/icons/Publish";
 import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
@@ -409,9 +410,10 @@ function ViewTaskStudent(props) {
   const uploadedTugas = React.useRef(null);
   const [fileTugas, setFileTugas] = React.useState([]);
   const [fileToSubmit, setFileToSubmit] = React.useState([])
-  const [tasksContents, setTaskContents] = React.useState([]);
+  // const [tasksContents, setTaskContents] = React.useState([]);
   const [fileLampiran, setFileLampiran] = React.useState([]);
-  // React HOOKS React.use bla2
+  const [over_limit, setOverLimit] = React.useState([])
+  const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
   // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
@@ -507,10 +509,17 @@ function ViewTaskStudent(props) {
   }
 
   const handleTugasUpload = (e) => {
-    const files = e.target.files;
-    let temp = [...fileToSubmit, ...files]
+    const files = Array.from(e.target.files);
+
+    let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10)
+    let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10)
+
+    let temp = [...fileToSubmit, ...allowed_file]
     setFileToSubmit(temp)
+    setOverLimit(over_limit)
+    setFileLimitSnackbar(over_limit.length > 0)
   }
+
 
   const onSubmitTugas = (e) => {
     e.preventDefault();
@@ -525,6 +534,12 @@ function ViewTaskStudent(props) {
     setFileToSubmit([])
   }
 
+  const handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setFileLimitSnackbar(false);
+  }
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
@@ -707,6 +722,15 @@ function ViewTaskStudent(props) {
           Nilai: {!tasksCollection.grades ? "N/A" : !tasksCollection.grades[user.id] ? "N/A" :  `${tasksCollection.grades[user.id]}/100`}
         </Typography>
       </Grid>
+      <Snackbar
+        open={fileLimitSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseErrorSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+          <MuiAlert elevation={6} variant="filled" severity="error">
+            {over_limit.length} file melebihi batas 10MB!
+          </MuiAlert>
+      </Snackbar> 
     </div>
   )
 }
