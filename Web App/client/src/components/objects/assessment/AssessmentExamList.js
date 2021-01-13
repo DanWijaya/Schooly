@@ -447,6 +447,10 @@ const useStyles = makeStyles((theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
   },
+  assignmentLateTeacher: {
+    backgroundColor: theme.palette.primary.main,
+    marginRight: "10px"
+  }
 }));
 
 
@@ -666,12 +670,19 @@ function AssessmentList(props) {
                             </Typography>
                           </Hidden>
                           <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.assessmenttitle}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                              <Avatar className={classes.assignmentLateTeacher}>
+                                <BsClipboardData/>
+                              </Avatar>
+                              <div>
+                                <Typography variant="h6" id={labelId}>
+                                  {row.assessmenttitle}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              </div>
+                            </div>
                           </Hidden>
                         </Grid>
                         <Grid item xs container spacing={1} justify="flex-end">

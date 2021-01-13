@@ -419,6 +419,10 @@ const useStyles = makeStyles((theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
   },
+  assignmentLateTeacher: {
+    backgroundColor: theme.palette.primary.main,
+    marginRight: "10px"
+  }
 }));
 
 function TaskList(props) {
@@ -568,7 +572,7 @@ function TaskList(props) {
                       <Grid container spacing={1} justify="space-between" alignItems="center">
                         <Grid item>
                           <Hidden smUp implementation="css">
-                            <Typography variant="subtitle1" id={labelId}>
+                            <Typography variant="h6" id={labelId}>
                               {row.tasktitle}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
@@ -577,11 +581,11 @@ function TaskList(props) {
                           </Hidden>
                           <Hidden xsDown implementation="css">
                             <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                              <Avatar className={classes.assignmentLate}>
+                              <Avatar className={classes.assignmentLateTeacher}>
                                 <AssignmentIcon/>
                               </Avatar>
                               <div>
-                                <Typography variant="subtitle1" id={labelId}>
+                                <Typography variant="h6" id={labelId}>
                                   {row.tasktitle}
                                 </Typography>
                                 <Typography variant="caption" color="textSecondary">

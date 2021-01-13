@@ -456,6 +456,10 @@ const useStyles = makeStyles(theme => ({
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
   },
+  assignmentLateTeacher: {
+    backgroundColor: theme.palette.primary.main,
+    marginRight: "10px"
+  }
 }));
 
 function MaterialList(props) {
@@ -617,23 +621,17 @@ function MaterialList(props) {
                         </Hidden>
                         <Hidden xsDown implementation="css">
                           <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                            <ListItemAvatar>
-                              <Avatar className={classes.assignmentLate}>
+                              <Avatar className={classes.assignmentLateTeacher}>
                                 <MenuBookIcon/>
                               </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={
+                              <div>
                                 <Typography variant="h6" color="textPrimary">
                                   {row.materialtitle}
                                 </Typography>
-                              }
-                              secondary={
                                 <Typography variant="body2" color="textSecondary">
                                   {all_subjects_map.get(row.subject)}
                                 </Typography>
-                              }
-                            />
+                              </div>
                           </div>
                         </Hidden>
                       </Grid>
