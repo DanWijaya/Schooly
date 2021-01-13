@@ -218,7 +218,7 @@ function MaterialListToolbar(props) {
                   </InputAdornment>
                 ),
                 style:{
-                  borderRadius: "20px"
+                  borderRadius: "22.5px"
                 }
               }}
             />
@@ -271,7 +271,7 @@ function MaterialListToolbar(props) {
                 </InputAdornment>
               ),
               style:{
-                borderRadius: "20px"
+                borderRadius: "22.5px"
               }
             }}
           />

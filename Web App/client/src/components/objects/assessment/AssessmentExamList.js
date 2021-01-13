@@ -177,7 +177,7 @@ function AssessmentListToolbar(props) {
                       </InputAdornment>
                     ),
                     style:{
-                      borderRadius: "20px"
+                      borderRadius: "22.5px"
                     }
                   }}
                 />
@@ -234,7 +234,7 @@ function AssessmentListToolbar(props) {
                   </InputAdornment>
                 ),
                 style:{
-                  borderRadius: "20px"
+                  borderRadius: "22.5px"
                 }
               }}
             />

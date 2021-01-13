@@ -167,7 +167,7 @@ function TaskListToolbar(props) {
                   </InputAdornment>
                 ),
                 style:{
-                  borderRadius: "20px"
+                  borderRadius: "22.5px"
                 }
               }}
             />
@@ -220,7 +220,7 @@ function TaskListToolbar(props) {
                 </InputAdornment>
               ),
               style:{
-                borderRadius: "20px"
+                borderRadius: "22.5px"
               }
             }}
           />

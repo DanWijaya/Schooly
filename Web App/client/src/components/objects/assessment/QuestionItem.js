@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function QuestionItem(props){
-  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion, 
+  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion,
     handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, type,
     check_data, parseAnswer, handleLongtextWeight, longtextWeight } = props
   const classes = useStyles()
@@ -213,7 +213,7 @@ function QuestionItem(props){
               </GridList>
               {
                 (type === "shorttext") ? (
-                  <TextField 
+                  <TextField
                     helperText={!name.length ? "Belum diisi" : null}
                     error={!name.length}
                     multiline
@@ -233,7 +233,7 @@ function QuestionItem(props){
                               <HelpIcon />
                             </IconButton>
                           </LightTooltip>
-                        </InputAdornment> 
+                        </InputAdornment>
                       )
                     }}
                   />
@@ -356,9 +356,9 @@ function QuestionItem(props){
                   visibility: "hidden",
                 }}
               />
-              <LightTooltip title="Tambahkan " placement="right">
+              <LightTooltip title="Tambahkan Gambar" placement="right">
                 <IconButton
-                onClick={imageUpload}
+                  onClick={imageUpload}
                 >
                   <AddPhotoAlternateIcon/>
                 </IconButton>
@@ -399,7 +399,7 @@ function QuestionItem(props){
                 onChange={(e) => { handleLongtextWeight(e, index); }}
                 variant="outlined"
                 // lihat catatan inisialisasi state longtextWeight di edit/create assessment untuk info terkait nilai longtextValue
-                error={(isNaN(Number(longtextValue)) || Number(longtextValue) <= 0) && (longtextValue !== undefined)} 
+                error={(isNaN(Number(longtextValue)) || Number(longtextValue) <= 0) && (longtextValue !== undefined)}
                 helperText={(isNaN(Number(longtextValue)) || Number(longtextValue) <= 0) && (longtextValue !== undefined) ? "Periksa Kembali!" : null}
                 FormHelperTextProps={{
                   style: {
