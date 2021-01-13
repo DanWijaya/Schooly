@@ -10,10 +10,11 @@ import { getAllTask } from "../../../actions/TaskActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
-import { Avatar, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, List, 
+import subjectBackground1 from "./SubjectBackground1.png";
+import { Avatar, Divider, ExpansionPanel, ExpansionPanelSummary, Grid, List,
   ListItem, ListItemAvatar, ListItemText, Paper, Typography, Hidden, Dialog, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import ErrorIcon from '@material-ui/icons/Error';
@@ -21,7 +22,6 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
-import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,10 +38,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
   },
   subjectCardPaper: {
-    paddingBottom: "40px",
-    padding:"20px",
-    background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)",
-    paddingLeft: "30px"
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "40px 0px 40px 30px",
+    backgroundColor: "#5ec9cc",
+    backgroundImage: `url(${subjectBackground1})`,
+    backgroundPosition: "right bottom",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
   },
   expansionPanelList: {
     margin: "20px",
@@ -89,8 +94,8 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.success.main
   },
   itemIcon: {
-    marginRight: "10px", 
-    fontSize: "22px", 
+    marginRight: "10px",
+    fontSize: "22px",
     color: "grey"
   },
 }));
@@ -116,40 +121,6 @@ function SubjectListitem(props){
     </Link>
   )
 }
-
-// function AssignmentListItem(props) {
-// const classes = useStyles()
-//   return (
-//     <Link to={props.work_link}>
-//     <ListItem button>
-//       <ListItemAvatar>
-//         <Avatar>
-//           {props.work_category_avatar}
-//         </Avatar>
-//       </ListItemAvatar>
-//       <ListItemText
-//         primary={
-//           <Typography variant="h6">
-//             {props.work_title}
-//           </Typography>
-//         }
-//         secondary={props.work_sender}
-//       />
-//       <ListItemText
-//         align="right"
-//         primary={
-//           <Typography variant="body2" className={classes.warningText}>
-//             Batas Waktu: {props.work_deadline}
-//           </Typography>
-//         }
-//         secondary={
-//             props.work_status
-//         }
-//       />
-//     </ListItem>
-//     </Link>
-//   )
-// }
 
 function MaterialListitem(props) {
   const classes = useStyles()
@@ -427,7 +398,7 @@ function ViewSubject(props) {
 
   const { user } = props.auth;
   const id = props.match.params.id;
-  const{ setCurrentClass, getAllTask, getAllSubjects, tasksCollection, getAllTaskFilesByUser, 
+  const{ setCurrentClass, getAllTask, getAllSubjects, tasksCollection, getAllTaskFilesByUser,
     getMaterial, getAllAssessments, assessmentsCollection} = props;
   const all_assessments = assessmentsCollection.all_assessments
   const { kelas } = props.classesCollection
@@ -749,17 +720,16 @@ function ViewSubject(props) {
     return result;
   }
 
-  // generateTaskBySubject()
   document.title = `Schooly | ${all_subjects_map.get(id)}`
 
   return (
     <div className={classes.root}>
       <Paper className={classes.subjectCardPaper}>
-        <Typography variant="subtitle1" style={{color: "white"}}>
-          <h3><b>{all_subjects_map.get(id)}</b></h3>
+        <Typography variant="h4" gutterBottom style={{color: "white"}}>
+          <b>{all_subjects_map.get(id)}</b>
         </Typography>
-        <Typography>
-          <h5 className={classes.subtitleColor}>Kelas: {kelas.name}</h5>
+        <Typography variant="h5" className={classes.subtitleColor}>
+          Kelas: {kelas.name}
         </Typography>
       </Paper>
       <div style={{marginTop: "20px"}}>
