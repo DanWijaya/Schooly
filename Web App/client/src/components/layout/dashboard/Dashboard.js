@@ -284,7 +284,7 @@ function ListAssessments(props){
     }
 
     return (
-      <div>
+      <Grid item>
         <Paper variant="outlined" className={classes.listItemPaper} onClick={() => handleOpenDialog(props.work_title, props.work_subject, props.work_starttime, props.work_endtime)}>
           <Badge
             style={{display: "flex", flexDirection: "row"}}
@@ -345,7 +345,7 @@ function ListAssessments(props){
             </Typography>
           </div>
         </Dialog>
-      </div>
+      </Grid>
     )
   }
 
@@ -777,7 +777,7 @@ class Dashboard extends Component {
                           </Link>
                         </Grid>
                       </Grid>
-                      <Grid container direction="column" spacing={2}>
+                      <Grid container direction="column" spacing={1}>
                         <ListAssessments category={null}
                           subject={{}}
                           type="Kuis"

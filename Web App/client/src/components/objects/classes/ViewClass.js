@@ -386,7 +386,7 @@ function MaterialListitem(props) {
     <div>
       <Hidden smUp implementation="css">
         <Link to={props.work_link}>
-          <Paper variant="outlined" className={classes.listItemPaper} style={{display: "flex", alignItems: "center"}}>
+          <Paper variant="outlined" className={classes.listItemPaper}>
             <ListItem button className={classes.listItem}>
               <ListItemText
                 primary={
