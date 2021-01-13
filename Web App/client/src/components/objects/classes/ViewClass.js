@@ -269,7 +269,7 @@ function AssessmentListItem(props) {
               (props.work_status === "Belum Ditempuh") ? (
                 <WarningIcon className={classes.warningIcon}/>
               ) : (
-                null
+                <CheckCircleIcon className={classes.checkIcon}/>
               )
             }
             anchorOrigin={{
@@ -315,7 +315,7 @@ function AssessmentListItem(props) {
               (props.work_status === "Belum Ditempuh") ? (
                 <WarningIcon className={classes.warningIcon}/>
               ) : (
-                null
+                <CheckCircleIcon className={classes.checkIcon}/>
               )
             }
             anchorOrigin={{

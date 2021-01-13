@@ -25,6 +25,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { FaClipboardList } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import WarningIcon from '@material-ui/icons/Warning';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -435,6 +436,9 @@ const useStyles = makeStyles((theme) => ({
   warningIcon: {
     color: theme.palette.warning.main
   },
+  checkIcon: {
+    color: theme.palette.success.main
+  },
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -776,7 +780,7 @@ function AssessmentList(props) {
                           badgeContent={
                             (workStatus(row) === "Belum Ditempuh") ? (
                               <WarningIcon className={classes.warningIcon}/>
-                            ) : null
+                            ) : <CheckCircleIcon className={classes.checkIcon}/>
                           }
                           anchorOrigin={{
                             vertical: "bottom",

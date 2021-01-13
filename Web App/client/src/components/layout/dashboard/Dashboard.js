@@ -777,7 +777,7 @@ class Dashboard extends Component {
                           </Link>
                         </Grid>
                       </Grid>
-                      <Grid container direction="column" spacing={1}>
+                      <Grid container direction="column" spacing={2}>
                         <ListAssessments category={null}
                           subject={{}}
                           type="Kuis"
