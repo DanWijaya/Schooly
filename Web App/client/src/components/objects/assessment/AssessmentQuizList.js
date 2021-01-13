@@ -668,9 +668,11 @@ function AssessmentList(props) {
                               </Hidden>
                               <Hidden xsDown implementation="css">
                                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                                  <Avatar className={classes.assignmentLateTeacher}>
-                                    <FaClipboardList/>
-                                  </Avatar>
+                                  <ListItemAvatar>
+                                    <Avatar className={classes.assignmentLateTeacher}>
+                                      <FaClipboardList />
+                                    </Avatar>
+                                  </ListItemAvatar>
                                   <div>
                                     <Typography variant="h6" id={labelId}>
                                       {row.assessmenttitle}

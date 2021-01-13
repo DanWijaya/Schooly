@@ -621,9 +621,11 @@ function MaterialList(props) {
                         </Hidden>
                         <Hidden xsDown implementation="css">
                           <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                            <ListItemAvatar>
                               <Avatar className={classes.assignmentLateTeacher}>
-                                <MenuBookIcon/>
+                                <MenuBookIcon />
                               </Avatar>
+                            </ListItemAvatar>
                               <div>
                                 <Typography variant="h6" color="textPrimary">
                                   {row.materialtitle}

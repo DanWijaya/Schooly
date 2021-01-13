@@ -581,14 +581,16 @@ function TaskList(props) {
                           </Hidden>
                           <Hidden xsDown implementation="css">
                             <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                              <Avatar className={classes.assignmentLateTeacher}>
-                                <AssignmentIcon/>
-                              </Avatar>
+                              <ListItemAvatar>
+                                <Avatar className={classes.assignmentLateTeacher}>
+                                  <AssignmentIcon />
+                                </Avatar>
+                              </ListItemAvatar>
                               <div>
                                 <Typography variant="h6" id={labelId}>
                                   {row.tasktitle}
                                 </Typography>
-                                <Typography variant="caption" color="textSecondary">
+                                <Typography variant="body2" color="textSecondary">
                                   {all_subjects_map.get(row.subject)}
                                 </Typography>
                               </div>
