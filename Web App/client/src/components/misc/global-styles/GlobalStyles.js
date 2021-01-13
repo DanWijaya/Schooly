@@ -77,6 +77,11 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
         },
       },
     },
+    PrivateNotchedOutline: {
+      legendLabelled: {
+        maxWidth: "none",
+      }
+    }
   },
   props: {
     MuiTab: {
