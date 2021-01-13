@@ -9,7 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge, List, ListItem, ListItemAvatar, ListItemText,
+import { Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Badge, List, ListItem, ListItemAvatar, ListItemText, Avatar,
    Fab, Grid, Hidden, IconButton, InputAdornment, Paper, Menu, MenuItem, Snackbar, TextField, TableSortLabel, Typography, Dialog} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -25,6 +25,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { BsClipboardData } from "react-icons/bs";
 import { FaTasks } from "react-icons/fa";
 import WarningIcon from '@material-ui/icons/Warning';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 // import { Dropbox } from 'dropbox';
   // Parses the url and gets the access token if it is in the urls hash
@@ -429,7 +430,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   assessmentPaper: {
-    marginBottom: "5px",
     display: "flex",
     flexDirection: "column",
     alignItems: "stretch",
@@ -445,6 +445,16 @@ const useStyles = makeStyles((theme) => ({
   warningIcon: {
     color: theme.palette.warning.main
   },
+  checkIcon: {
+    color: theme.palette.success.main
+  },
+  assignmentLate: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  assignmentLateTeacher: {
+    backgroundColor: theme.palette.primary.main,
+    marginRight: "10px"
+  }
 }));
 
 
@@ -664,12 +674,19 @@ function AssessmentList(props) {
                             </Typography>
                           </Hidden>
                           <Hidden xsDown implementation="css">
-                            <Typography variant="h6" id={labelId}>
-                              {row.assessmenttitle}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                              <Avatar className={classes.assignmentLateTeacher}>
+                                <BsClipboardData/>
+                              </Avatar>
+                              <div>
+                                <Typography variant="h6" id={labelId}>
+                                  {row.assessmenttitle}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              </div>
+                            </div>
                           </Hidden>
                         </Grid>
                         <Grid item xs container spacing={1} justify="flex-end">
@@ -697,7 +714,7 @@ function AssessmentList(props) {
                           </Grid>
                           <Grid item>
                             <LightTooltip title="Sunting">
-                              <Link to={`/sunting-kuis/${row._id}`}>
+                              <Link to={`/sunting-ujian/${row._id}`}>
                                 <IconButton
                                   size="small"
                                   className={classes.editAssessmentButton}
@@ -721,12 +738,12 @@ function AssessmentList(props) {
                         </Grid>
                       </Grid>
                     </ExpansionPanelSummary>
-                    <Divider className={classes.assessmentPanelDivider} />
-                    <ExpansionPanelDetails>
+                    <Divider />
+                    <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                       <Grid conntainer direction="column">
                         <Grid item>
                           <Typography variant="body1">
-                            <b>Kelas yang Ditugaskan:</b> {!all_classes_map.size  ? null :
+                            Kelas yang Ditugaskan: {!all_classes_map.size  ? null :
                             row.class_assigned.map((id,i) => {
 
                               if(all_classes_map.get(id)){
@@ -740,18 +757,18 @@ function AssessmentList(props) {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="body1" color="textSecondary" gutterBottom>
+                          <Typography variant="body1" color="textSecondary">
                             Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="body2" className={classes.startDateText}>
-                            Waktu Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          <Typography variant="body2" color="textSecondary">
+                            Mulai: {moment(row.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <Typography variant="body2" className={classes.endDateWarningText}>
-                            Batas Waktu: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
+                          <Typography variant="body2" color="textSecondary">
+                            Selesai: {moment(row.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -769,22 +786,50 @@ function AssessmentList(props) {
                       badgeContent={
                         (workStatus(row) === "Belum Ditempuh") ? (
                           <WarningIcon className={classes.warningIcon}/>
-                        ) : null
+                        ) : <CheckCircleIcon className={classes.checkIcon}/>
                       }
                       anchorOrigin={{
                         vertical: "bottom",
                         horizontal: "right",
                       }}
                     >
-                      <ListItem button className={classes.listItem}>
-                        <ListItemText
+                      <ListItem button component="a" className={classes.listItem}>
+                        <Hidden smUp implementation="css">
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6">
+                                {row.assessmenttitle}
+                              </Typography>
+                            }
+                            secondary={all_subjects_map.get(row.subject)}
+                          />
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                          <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                            <ListItemAvatar>
+                              <Avatar className={classes.assignmentLate}>
+                                <BsClipboardData/>
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={
+                                <Typography variant="h6">
+                                  {row.assessmenttitle}
+                                </Typography>
+                              }
+                              secondary={all_subjects_map.get(row.subject)}
+                            />
+                          </div>
+                        </Hidden>
+                        {/* <ListItemText
+                          align="right"
                           primary={
-                            <Typography variant="h6">
-                              {row.assessmenttitle}
+                            <Typography variant="subtitle" color="textSecondary">
+                              {row.date}
                             </Typography>
                           }
-                          secondary={all_subjects_map.get(row.subject)}
-                        />
+                          secondary={row.time}
+                        /> */}
                         <ListItemText
                           align="right"
                           primary={

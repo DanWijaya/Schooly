@@ -8,8 +8,8 @@ import { setCurrentClass } from "../../../actions/ClassActions";
 import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Divider, Fab, Grid, Hidden, ListItem, ListItemText, Paper, Typography, TextField, InputAdornment,
-  IconButton, Menu, MenuItem, TableSortLabel} from "@material-ui/core";
+import { Divider, Fab, Grid, Hidden, ListItem, ListItemText, ListItemAvatar, Paper, Typography, TextField, InputAdornment,
+  IconButton, Menu, MenuItem, TableSortLabel, Avatar} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -187,7 +187,7 @@ function AnnouncementListToolbar(props) {
         </Hidden>
       </div>
       <div style={{display: "flex"}}>
-      <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation="css">
             <TextField
               // fullWidth
               variant="outlined"
@@ -368,16 +368,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   titleIcon: {
+    fontSize: "28px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
-    boxShadow: theme.shadows[0],
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-      cursor: "default"
-    },
     marginRight: "10px"
-  }
+  },
+  assignmentLate: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 function AnnouncementList(props) {
@@ -484,54 +482,62 @@ function AnnouncementList(props) {
                 <Grid item>
                   <Paper variant="outlined">
                     <Link to={row.notification_link}>
-                    <ListItem button component="a" className={classes.announcementListItem}>
-                    <Hidden smUp implementation="css">
-                      <ListItemText
-                        primary={
-                          <Typography variant="subtitle1" color="textPrimary">
-                            {row.notification_title}
-                          </Typography>
-                        }
-                        secondary={
-                          <Typography variant="caption" color="textSecondary">
-                            {row.author_name}
-                          </Typography>
-                        }
-                      />
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6" color="textPrimary">
-                            {row.notification_title}
-                          </Typography>
-                        }
-                        secondary={
-                          <Typography variant="body2" color="textSecondary">
-                            {row.author_name}
-                          </Typography>
-                        }
-                      />
-                    </Hidden>
-                      {/* <ListItemText
-                        align="right"
-                        primary={
-                          <Typography variant="subtitle" color="textSecondary">
-                            {row.date}
-                          </Typography>
-                        }
-                        secondary={row.time}
-                      /> */}
-                      <ListItemText
-                        align="right"
-                        primary={
-                          <Typography variant="subtitle" color="textSecondary">
-                            {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                          </Typography>
-                        }
-                        secondary={moment(row.createdAt).locale("id").format("HH.mm")}
-                      />
-                    </ListItem>
+                      <ListItem button component="a" className={classes.announcementListItem}>
+                      <Hidden smUp implementation="css">
+                        <ListItemText
+                          primary={
+                            <Typography variant="subtitle1" color="textPrimary">
+                              {row.notification_title}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="caption" color="textSecondary">
+                              {row.author_name}
+                            </Typography>
+                          }
+                        />
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                          <ListItemAvatar>
+                            <Avatar className={classes.assignmentLate}>
+                              <AnnouncementIcon/>
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6" color="textPrimary">
+                                {row.notification_title}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography variant="body2" color="textSecondary">
+                                {row.author_name}
+                              </Typography>
+                            }
+                          />
+                        </div>
+                      </Hidden>
+                        {/* <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="subtitle" color="textSecondary">
+                              {row.date}
+                            </Typography>
+                          }
+                          secondary={row.time}
+                        /> */}
+                        <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="body2" color="textSecondary">
+                              {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                            </Typography>
+                          }
+                          secondary={
+                            moment(row.createdAt).locale("id").format("HH.mm")}
+                        />
+                      </ListItem>
                     </Link>
                   </Paper>
                 </Grid>

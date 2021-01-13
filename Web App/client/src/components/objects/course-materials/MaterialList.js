@@ -28,7 +28,11 @@ import {
   Paper,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar
 } from "@material-ui/core/";
 import {makeStyles} from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -444,14 +448,16 @@ const useStyles = makeStyles(theme => ({
     }
   },
   titleIcon: {
+    fontSize: "28px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
-    boxShadow: theme.shadows[0],
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-      cursor: "default"
-    },
+    marginRight: "10px"
+  },
+  assignmentLate: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  assignmentLateTeacher: {
+    backgroundColor: theme.palette.primary.main,
     marginRight: "10px"
   }
 }));
@@ -614,12 +620,19 @@ function MaterialList(props) {
                           </Typography>
                         </Hidden>
                         <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.materialtitle}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
+                          <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                              <Avatar className={classes.assignmentLateTeacher}>
+                                <MenuBookIcon/>
+                              </Avatar>
+                              <div>
+                                <Typography variant="h6" color="textPrimary">
+                                  {row.materialtitle}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              </div>
+                          </div>
                         </Hidden>
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
@@ -701,60 +714,63 @@ function MaterialList(props) {
               ) : (
                 <Link to={viewpage}>
                   <Paper
-                    button
-                    component="a"
                     variant="outlined"
-                    className={classes.materialPaper}
                   >
-                    <div>
-                      <Typography variant="h6" id={labelId}>
-                        {row.materialtitle}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {all_subjects_map.get(row.subject)}
-                      </Typography>
-                    </div>
-                    <div>
-                      {/* <Hidden smUp implementation="css">
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          align="right"
-                        >
-                          Pemberi Materi:
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          color="textSecondary"
-                          align="right"
-                        >
-                          {!row.author ? null : row.author.name}
-                        </Typography>
+                    <ListItem button component="a" className={classes.announcementListItem}>
+                      <Hidden smUp implementation="css">
+                        <ListItemText
+                          primary={
+                            <Typography variant="subtitle1" color="textPrimary">
+                              {row.materialtitle}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="caption" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          }
+                        />
                       </Hidden>
                       <Hidden xsDown implementation="css">
-                        <Typography
-                          variant="overline"
-                          color="textSecondary"
-                          align="right"
-                        >
-                          Pemberi Materi: {!row.author ? null : row.author.name}
-                        </Typography>
-                      </Hidden> */}
-                      <Typography
-                        variant="subtitle"
-                        color="textSecondary"
+                        <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                          <ListItemAvatar>
+                            <Avatar className={classes.assignmentLate}>
+                              <MenuBookIcon/>
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6" color="textPrimary">
+                                {row.materialtitle}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography variant="body2" color="textSecondary">
+                                {all_subjects_map.get(row.subject)}
+                              </Typography>
+                            }
+                          />
+                        </div>
+                      </Hidden>
+                      {/* <ListItemText
                         align="right"
-                      >
-                        {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
+                        primary={
+                          <Typography variant="subtitle" color="textSecondary">
+                            {row.date}
+                          </Typography>
+                        }
+                        secondary={row.time}
+                      /> */}
+                      <ListItemText
                         align="right"
-                      >
-                        {moment(row.createdAt).locale("id").format("HH.mm")}
-                      </Typography>
-                    </div>
+                        primary={
+                          <Typography variant="body2" color="textSecondary">
+                            {moment(row.createdAt).locale("id").format("DD MMM YYYY")}
+                          </Typography>
+                        }
+                        secondary={moment(row.createdAt).locale("id").format("HH.mm")}
+                      />
+                    </ListItem>
                   </Paper>
                 </Link>
               )}

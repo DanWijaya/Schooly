@@ -30,6 +30,8 @@ import { BsClipboardData } from "react-icons/bs";
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 const styles = (theme) => ({
   root: {
@@ -124,7 +126,7 @@ const styles = (theme) => ({
     },
   },
   assignmentLate: {
-    backgroundColor: theme.palette.error.main,
+    backgroundColor: theme.palette.primary.main,
   },
   errorIcon: {
     color: theme.palette.error.main,
@@ -134,6 +136,19 @@ const styles = (theme) => ({
   },
   checkIcon: {
     color: theme.palette.success.main
+  },
+  graph: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    marginRight: "10px"
+  },
+  graphButtons: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    marginTop: "10px",
+    alignItems: "center"
   }
 });
 
@@ -158,7 +173,7 @@ function TaskListItem(props) {
               <Hidden xsDown>
                 <ListItemAvatar>
                   <Avatar className={classes.assignmentLate}>
-                    <AssignmentLateIcon/>
+                    <AssignmentIcon/>
                   </Avatar>
                 </ListItemAvatar>
               </Hidden>
@@ -170,7 +185,12 @@ function TaskListItem(props) {
                 align="right"
                 primary={
                   <Typography variant="body2" color="textSecondary">
-                    Tenggat: {props.work_deadline_desktop}
+                    {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("HH.mm")}
                   </Typography>
                 }
               />
@@ -182,44 +202,66 @@ function TaskListItem(props) {
   )
 }
 
-function DashboardGraph(){
-  const data = React.useMemo(
-    () => [
-      {
-        label: 'Series 1',
-        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7], [5, 7], [6, 7], [7, 7], [8, 7], [9, 7], [10, 7], [11, 7], [12, 7], [13, 7]]
-      },
-    ],
-    []
-  )
+function DashboardGraph(props){
+    const { scores, workType } = props
+    console.log(scores)
+    // let graphData = []
+    // if(scores){
+    //   for(let i=0;i<scores.length;i++){
+    //     let individualData = []
+    //     individualData.push(i+1)
+    //     individualData.push(scores[i])
+    //     graphData.push(individualData)
+    //   }
+    // }
+    const data = React.useMemo(
+      () => [
+        {
+          label: `Hasil ${workType}`,
+          data: scores
+        },
+      ],
+      []
+    )
+    // console.log(graphData)
+    console.log(data)
+    const series = React.useMemo(
+      () => ({
+        type: 'bar'
+      }),
+      []
+    )
 
-  const series = React.useMemo(
-    () => ({
-      type: 'bar'
-    }),
-    []
-  )
+    const axes = React.useMemo(
+      () => [
+        { primary: true, type: 'linear', position: 'bottom', label: "Coba" },
+        { type: 'linear', position: 'left' }
+      ],
+      []
+    )
 
-  const axes = React.useMemo(
-    () => [
-      { primary: true, type: 'linear', position: 'bottom', label: "Coba" },
-      { type: 'linear', position: 'left' }
-    ],
-    []
-  )
+    const tooltip = React.useMemo(
+      () => ({
+        anchor: 'bottom'
+      }),[]
+    )
 
-  return (
-    // A react-chart hyper-responsively and continuously fills the available
-    // space of its parent element automatically
-    <div
-      style={{
-        width: '260px',
-        height: '300px'
-      }}
-    >
-      <Chart data={data} series={series} axes={axes} tooltip />
-    </div>
-  )
+    if(scores){
+      console.log(data)
+      return (
+        // A react-chart hyper-responsively and continuously fills the available
+        // space of its parent element automatically
+        <div
+          style={{
+            width: '260px',
+            height: '300px'
+          }}
+        >
+          <Chart data={data} series={series} axes={axes} tooltip={tooltip}/>
+        </div>
+      )
+    }
+    else return <Typography>hehe</Typography>
 }
 
 function ListAssessments(props){
@@ -271,11 +313,15 @@ function ListAssessments(props){
               <ListItemText
                 align="right"
                 primary={
-                  <Typography variant="subtitle" color="textSecondary">
+                  <Typography variant="body2" color="textSecondary">
                     {moment(props.work_dateposted).locale("id").format("DD MMM YYYY")}
                   </Typography>
                 }
-                secondary={moment(props.work_dateposted).locale("id").format("HH.mm")}
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.work_dateposted).locale("id").format("HH.mm")}
+                  </Typography>
+                }
               />
             </ListItem>
           </Badge>
@@ -321,10 +367,14 @@ function ListAssessments(props){
     for (i = 0; i < AssessmentsList.length; i++){
       let assessment = AssessmentsList[i]
       console.log(assessment)
-      let workCategoryAvatar = (
-        <Avatar className={classes.assignmentLate}>
-          <AssignmentLateIcon/>
-        </Avatar>
+      let workCategoryAvatar = ( type === "Kuis" ?
+          <Avatar className={classes.assignmentLate}>
+            <FaClipboardList/>
+          </Avatar>
+        :
+          <Avatar className={classes.assignmentLate}>
+            <BsClipboardData/>
+          </Avatar>
       )
       // let workStatus = "Belum Ditempuh"
       if(type === "Kuis"){
@@ -411,6 +461,9 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       anchorEl: null,
+      taskGraphCurrentSubject: 0,
+      quizGraphCurrentSubject: 0,
+      examGraphCurrentSubject: 0,
     };
   }
 
@@ -419,7 +472,12 @@ class Dashboard extends Component {
     const { user } = this.props.auth;
 
     getAllTask() // actions yang membuat GET request ke Database.
+    getAllSubjects()
     getAllSubjects("map") // untuk dapatin subject"nya gitu
+
+    // const { all_subjects_map } = this.props.subjectsCollection
+    // let subjectArray = Object.keys(all_subjects_map)
+    
     if (user.role === "Student"){
       getStudentsByClass(user.kelas)
       // getTasksBySC
@@ -443,19 +501,128 @@ class Dashboard extends Component {
     this.setState({ anchorEl: null });
   };
 
+  changeGraphSubject = (workType, direction, subjectsLength) => {
+    if(workType === "Tugas"){
+      if(direction === "Left" && this.state.taskGraphCurrentSubject > 0){
+        this.setState({ taskGraphCurrentSubject: this.state.taskGraphCurrentSubject - 1});
+      }
+      else if(direction === "Right" && this.state.taskGraphCurrentSubject < subjectsLength - 1){
+        this.setState({ taskGraphCurrentSubject: this.state.taskGraphCurrentSubject + 1});
+      }
+    }
+    else if(workType === "Kuis"){
+      if(direction === "Left" && this.state.quizGraphCurrentSubject > 0){
+        this.setState({ quizGraphCurrentSubject: this.state.quizGraphCurrentSubject - 1});
+      }
+      else if(direction === "Right" && this.state.quizGraphCurrentSubject < subjectsLength - 1){
+        this.setState({ quizGraphCurrentSubject: this.state.quizGraphCurrentSubject + 1});
+      }
+    }
+    else if(workType === "Ujian"){
+      if(direction === "Left" && this.state.examGraphCurrentSubject > 0){
+        this.setState({ examGraphCurrentSubject: this.state.examGraphCurrentSubject - 1});
+      }
+      else if(direction === "Right" && this.state.examGraphCurrentSubject < subjectsLength - 1){
+        this.setState({ examGraphCurrentSubject: this.state.examGraphCurrentSubject + 1});
+      }
+    }
+  }
+
   render() {
 
     const { classes, tasksCollection } = this.props;
 
     const { user, all_students } = this.props.auth;
     const { all_user_files } = this.props.filesCollection
-    const { all_subjects_map } = this.props.subjectsCollection
+    const { all_subjects_map, all_subjects } = this.props.subjectsCollection
     const { all_assessments } = this.props.assessmentsCollection
 
     const classId = user.kelas
 
     console.log(all_assessments)
     console.log(user)
+    console.log(tasksCollection)
+
+    function graphTask(subjectIndex){
+      if(all_subjects[subjectIndex]){
+        let subject = all_subjects[subjectIndex]._id
+        let subjectScores = []
+        for(let i=0;i<tasksCollection.length;i++){
+          if(tasksCollection[i].grades && tasksCollection[i].subject === subject){
+            let keysArray = Object.keys(tasksCollection[i].grades)
+            let valuesArray = Object.values(tasksCollection[i].grades)
+            for(let j=0;j<keysArray.length;j++){
+              if(keysArray[j] === user.id){
+                subjectScores.push(valuesArray[j])
+                break;
+              }
+            }
+          }
+        }
+        let graphData = [[0,0]]
+        for(let i=0;i<subjectScores.length;i++){
+          let individualData = []
+          individualData.push(i+1)
+          individualData.push(subjectScores[i])
+          graphData.push(individualData)
+        }
+        if(graphData.length !== 1){
+          return <DashboardGraph scores={graphData} workType="Tugas"/>
+        }
+        else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
+      }
+      else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
+    }
+
+    function graphAssessment(subjectIndex, type){
+      if(all_subjects[subjectIndex]){
+        console.log(all_subjects[subjectIndex])
+        let subject = all_subjects[subjectIndex]._id
+        let subjectScores = []
+        if(type === "Kuis"){
+          for(let i=0;i<all_assessments.length;i++){
+            if(all_assessments[i].grades && all_assessments[i].subject === subject && all_assessments[i].type === "Kuis"){
+              let keysArray = Object.keys(all_assessments[i].grades)
+              let valuesArray = Object.values(all_assessments[i].grades)
+              for(let j=0;j<keysArray.length;j++){
+                if(keysArray[j] === user.id){
+                  subjectScores.push(valuesArray[j].total_grade)
+                  break;
+                }
+              }
+            }
+          }
+          console.log(subjectScores)
+        }
+        else if(type === "Ujian"){
+          for(let i=0;i<all_assessments.length;i++){
+            if(all_assessments[i].grades && all_assessments[i].subject === subject && all_assessments[i].type === "Ujian"){
+              let keysArray = Object.keys(all_assessments[i].grades)
+              let valuesArray = Object.values(all_assessments[i].grades)
+              for(let j=0;j<keysArray.length;j++){
+                if(keysArray[j] === user.id){
+                  subjectScores.push(valuesArray[j].total_grade)
+                  break;
+                }
+              }
+            }
+          }
+        }
+        let graphData = [[0,0]]
+        for(let i=0;i<subjectScores.length;i++){
+          let individualData = []
+          individualData.push(i+1)
+          individualData.push(subjectScores[i])
+          graphData.push(individualData)
+        }
+        if(graphData.length !== 1){
+          return <DashboardGraph scores={graphData} workType={type}/>
+        }
+        else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada {type} yang telah dinilai untuk mata pelajaran terkait</Typography>
+      }
+      else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada {type} yang telah dinilai untuk mata pelajaran terkait</Typography>
+    }
+
     function listTasks(){
       let result = []
       tasksByClass.map((task) => {
@@ -522,6 +689,14 @@ class Dashboard extends Component {
       return result
     }
 
+    function showSubject(subjectIndex){
+      console.log(subjectIndex)
+      if(all_subjects[subjectIndex]){
+        return <Typography align="center">{all_subjects[subjectIndex].name}</Typography>
+      }
+      else return null
+    }
+
     let tasksByClass = []
     if (Boolean(tasksCollection.length)) {
       if (user.role === "Student") {
@@ -549,7 +724,7 @@ class Dashboard extends Component {
         <div style={{marginTop: "20px"}}>
           {user.role === "Student" ?
             <Grid item container spacing={3}>
-              <Grid item md={8}>
+              <Grid item xs={12} md={7} lg={8}>
                 <Grid container direction="column" spacing={2}>
                   <Grid item>
                     <Paper style={{padding: "20px"}}>
@@ -602,7 +777,7 @@ class Dashboard extends Component {
                           </Link>
                         </Grid>
                       </Grid>
-                      <Grid container direction="column" spacing={1}>
+                      <Grid container direction="column" spacing={2}>
                         <ListAssessments category={null}
                           subject={{}}
                           type="Kuis"
@@ -653,97 +828,132 @@ class Dashboard extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item md={4}>
-                <Grid container direction="column" spacing={2}>
-                  <Grid item>
-                    <Paper style={{padding: "20px"}}>
-                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIndIcon
-                              color="action"
-                              style={{marginRight: "10px"}}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Bar Chart Tugas
-                            </Typography>
+              <Hidden smDown>
+                <Grid item xs={12} md={5} lg={4}>
+                  <Grid container direction="column" spacing={2}>
+                    <Grid item>
+                      <Paper style={{padding: "20px"}}>
+                        <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                          <Grid item>
+                            <Grid container alignItems="center">
+                              <AssignmentIndIcon
+                                color="action"
+                                style={{marginRight: "10px"}}
+                              />
+                              <Typography variant="h5" color="primary">
+                                Bar Chart Tugas
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <Link to="/daftar-tugas">
+                              <LightTooltip title="Lihat Semua" placement="top">
+                                <IconButton>
+                                  <ChevronRightIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            </Link>
                           </Grid>
                         </Grid>
-                        <Grid item>
-                          <Link to="/daftar-tugas">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <ChevronRightIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        <DashboardGraph/>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{padding: "20px"}}>
-                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIndIcon
-                              color="action"
-                              style={{marginRight: "10px"}}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Bar Chart Kuis
-                            </Typography>
+                        <Grid container direction="column" spacing={1}>
+                          <Grid item className={classes.graph}>
+                            {graphTask(this.state.taskGraphCurrentSubject)}
+                          </Grid>
+                          <Grid item className={classes.graphButtons}>
+                            <IconButton onClick={() => this.changeGraphSubject("Tugas", "Left", all_subjects.length)}>
+                              <ArrowBackIosIcon/>
+                            </IconButton>
+                            {showSubject(this.state.taskGraphCurrentSubject)}
+                            <IconButton onClick={() => this.changeGraphSubject("Tugas", "Right", all_subjects.length)}>
+                              <ArrowForwardIosIcon/>
+                            </IconButton>
                           </Grid>
                         </Grid>
-                        <Grid item>
-                          <Link to="/daftar-kuis">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <ChevronRightIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        <DashboardGraph/>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  <Grid item>
-                    <Paper style={{padding: "20px"}}>
-                      <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
-                        <Grid item>
-                          <Grid container alignItems="center">
-                            <AssignmentIndIcon
-                              color="action"
-                              style={{marginRight: "10px"}}
-                            />
-                            <Typography variant="h5" color="primary">
-                              Bar Chart Ujian
-                            </Typography>
+                      </Paper>
+                    </Grid>
+                    <Grid item>
+                      <Paper style={{padding: "20px"}}>
+                        <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                          <Grid item>
+                            <Grid container alignItems="center">
+                              <AssignmentIndIcon
+                                color="action"
+                                style={{marginRight: "10px"}}
+                              />
+                              <Typography variant="h5" color="primary">
+                                Bar Chart Kuis
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <Link to="/daftar-kuis">
+                              <LightTooltip title="Lihat Semua" placement="top">
+                                <IconButton>
+                                  <ChevronRightIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            </Link>
                           </Grid>
                         </Grid>
-                        <Grid item>
-                          <Link to="/daftar-ujian">
-                            <LightTooltip title="Lihat Semua" placement="top">
-                              <IconButton>
-                                <ChevronRightIcon />
-                              </IconButton>
-                            </LightTooltip>
-                          </Link>
+                        <Grid container direction="column" spacing={1}>
+                          <Grid item className={classes.graph}>
+                            {graphAssessment(this.state.quizGraphCurrentSubject, "Kuis")}
+                          </Grid>
+                          <Grid item className={classes.graphButtons}>
+                            <IconButton onClick={() => this.changeGraphSubject("Kuis", "Left", all_subjects.length)}>
+                              <ArrowBackIosIcon onClick={() => this.changeGraphSubject("Kuis", "Left", all_subjects.length)}/>
+                            </IconButton>
+                            {showSubject(this.state.quizGraphCurrentSubject)}
+                            <IconButton onClick={() => this.changeGraphSubject("Kuis", "Right", all_subjects.length)}>
+                              <ArrowForwardIosIcon/>
+                            </IconButton>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                      <Grid container direction="column" spacing={1}>
-                        <DashboardGraph/>
-                      </Grid>
-                    </Paper>
+                      </Paper>
+                    </Grid>
+                    <Grid item>
+                      <Paper style={{padding: "20px"}}>
+                        <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
+                          <Grid item>
+                            <Grid container alignItems="center">
+                              <AssignmentIndIcon
+                                color="action"
+                                style={{marginRight: "10px"}}
+                              />
+                              <Typography variant="h5" color="primary">
+                                Bar Chart Ujian
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <Link to="/daftar-ujian">
+                              <LightTooltip title="Lihat Semua" placement="top">
+                                <IconButton>
+                                  <ChevronRightIcon />
+                                </IconButton>
+                              </LightTooltip>
+                            </Link>
+                          </Grid>
+                        </Grid>
+                        <Grid container direction="column" spacing={1}>
+                          <Grid item className={classes.graph}>
+                            {graphAssessment(this.state.examGraphCurrentSubject, "Ujian")}
+                          </Grid>
+                          <Grid item className={classes.graphButtons}>
+                            <IconButton onClick={() => this.changeGraphSubject("Ujian", "Left", all_subjects.length)}>
+                              <ArrowBackIosIcon/>
+                            </IconButton>
+                            {showSubject(this.state.examGraphCurrentSubject)}
+                            <IconButton onClick={() => this.changeGraphSubject("Ujian", "Right", all_subjects.length)}>
+                              <ArrowForwardIosIcon/>
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Hidden>
             </Grid>
           : user.role === "Teacher" ?
             <>
