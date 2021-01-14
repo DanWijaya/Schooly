@@ -7,7 +7,7 @@ import moment from "moment";
 import "moment/locale/id";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
+import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText,
   Paper, Typography, Button } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonRapor: {
     backgroundColor: theme.palette.warning.main,
-    color:"white", 
+    color:"white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.warning.dark,
       color: "white",
@@ -79,13 +79,11 @@ const useStyles = makeStyles((theme) => ({
   descriptionText: {
     color: "white",
     marginTop: "10px",
-    marginLeft: "20px",
     fontWeight: "300",
-    fontStyle: "italic"
   },
   backgroundGradient: {
     padding:"20px",
-    background: "linear-gradient(to bottom right, #00b7ff, #2196F3, #00b7ff)"
+    backgroundColor: theme.palette.primary.main,
   }
 }));
 
@@ -115,7 +113,7 @@ function ProfileDataItem(props) {
               </Typography>
             }
             secondary={
-              !props.profile_data_info ?                
+              !props.profile_data_info ?
                   <Typography>
                     -
                   </Typography>
@@ -187,7 +185,7 @@ function ProfileView(props) {
   if (location.state === undefined) {
     return(<Redirect to="/tidak-ditemukan"/>);
   }
-  
+
   const { avatar, nama, role, viewable_section, jenis_kelamin,
     email, phone, emergency_phone, alamat, hobi, ket, cita, uni,
     kelas, admin, id, tanggal_lahir } = location.state;
@@ -242,7 +240,7 @@ function ProfileView(props) {
               }
             }}>
               <LightTooltip title="Klik Untuk Melihat Rapor">
-                <Button className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon/>}>
+                <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon/>}>
                   Lihat Rapor
                 </Button>
               </LightTooltip>
@@ -252,17 +250,17 @@ function ProfileView(props) {
           null
         )
       }
-      <Grid container direction="column" spacing={10}>
+      <Grid container direction="column" spacing={4}>
           {
             (user.role === "Teacher" ||  user.role === "Student" || user.role === "Admin") ? [
               <Grid item>
                 <Paper className={classes.informationPaper}>
                   <div className={classes.backgroundGradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
-                      INFORMASI PENGGUNA
+                      Informasi Pengguna
                     </Typography>
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
-                      Berikut ini informasi data diri dari user terkait.
+                      Berikut adalah informasi pribadi dari pengguna terkait.
                     </Typography>
                   </div>
                   <List style={{padding: "20px"}}>
@@ -324,10 +322,10 @@ function ProfileView(props) {
                 <Paper className={classes.informationPaper}>
                   <div className={classes.backgroundGradient}>
                     <Typography variant="h5" gutterBottom style={{color:"white"}}>
-                      KARIR
+                      Karir
                     </Typography>
                     <Typography variant="h7" color="textSecondary" gutterBottom className={classes.descriptionText}>
-                      Berikut ini adalah status karir dan informasi lain yang dimiliki user.
+                      Berikut adalah pilihan karir yang diinginkan dari pengguna terkait.
                     </Typography>
                   </div>
                   <List style={{padding: "20px", marginBottom:"30px"}}>

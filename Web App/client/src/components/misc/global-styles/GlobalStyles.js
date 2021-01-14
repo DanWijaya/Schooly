@@ -21,7 +21,7 @@ export const globalStyles = responsiveFontSizes(createMuiTheme({
     },
     info: {
       main: "#1976d2",
-      light: "#4791d",
+      light: "#4791db",
       dark: "#115293",
     },
     warning: {
