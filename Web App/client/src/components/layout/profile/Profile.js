@@ -168,11 +168,10 @@ function Profile(props) {
 
   React.useEffect(() => {
     console.log("use effect")
-    getFileAvatar(user.avatar)
+    let id = user._id ? user._id : user.id
+    getFileAvatar(id)
     .then((result) => setAvatar(result))
     .catch((err) => console.log(err))
-
-    
   }, [user.avatar])
 
   // Alert control for ProfilePictureEditorDialog

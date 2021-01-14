@@ -42,9 +42,10 @@ function NavBarLoggedInContents(props) {
   const { user } = props.auth;
   const [avatar, setAvatar] = React.useState(avatar)
 
+  console.log(user)
   React.useEffect(() => {
-    console.log("SDSD")
-    getFileAvatar(user.avatar)
+    let id = user._id ? user._id : user.id
+    getFileAvatar(id)
       .then((result) => {
         console.log(result)
         setAvatar(result)

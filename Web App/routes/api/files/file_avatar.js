@@ -63,7 +63,7 @@ router.post("/upload/:id", upload.single("avatar"), (req, res) =>  {
             } 
           }).on("httpUploadProgress", function(data){
             if(data.loaded == data.total){
-                FileAvatar.findOneAndRemove({ _id: id},  function( error, file, result) {
+                FileAvatar.findOneAndDelete({ user_id: id},  function( error, file, result) {
                     if(!file){
                         return "No avatar uplaoded"
                     }
@@ -73,7 +73,7 @@ router.post("/upload/:id", upload.single("avatar"), (req, res) =>  {
                       };
                     s3bucket.deleteObject(params, (error, data) => {
                     if (error)
-                        throw error
+                        return res.status(404).json(error)
                     });
                 })
 
@@ -81,20 +81,23 @@ router.post("/upload/:id", upload.single("avatar"), (req, res) =>  {
                     filename: file.originalname,
                     s3_key: params.Key,
                     s3_directory: "avatar/",
-                    user_id: id
+                    user_id: ObjectId(id)
                 }
 
                 var document = new FileAvatar(newFileUploaded);
                 document.save(function(error, newFile) {
                     if (error) {
-                        throw error;
+                        return res.status(404).json(error);
                     }
+                    console.log("USER ID:", id)
+                    console.log("New file: ", newFile._id)
                 User.findOneAndUpdate({_id: id}, {$set:{avatar: newFile._id}}, {new: true}, (error,user) => {
                     if (error) {
-                        throw error;
+                        return res.status(404).json(error)
                     }
                     delete user["password"]
-                    console.log("Avatar baru: ", user.avatar)
+                    // Karena selama ini pakai user.id
+                    // user.id = user._id
                     return res.json({success: "Successfully uploaded the lampiran file", user: user})
                 })
             });
@@ -188,7 +191,7 @@ router.post("/upload/:id", upload.single("avatar"), (req, res) =>  {
     const { id} = req.params
     // .findOne({ user_id: id })
     console.log(id)
-    FileAvatar.findById(id).then((result, err) => {
+    FileAvatar.findOne({ user_id: id }).then((result, err) => {
         console.log(result, err)
       if(!result){
         console.log("No avatar added")
