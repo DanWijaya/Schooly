@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { Chart } from 'react-charts'
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
@@ -32,6 +31,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import {Bar} from 'react-chartjs-2';
 
 const styles = (theme) => ({
   root: {
@@ -203,8 +203,9 @@ function TaskListItem(props) {
 }
 
 function DashboardGraph(props){
-    const { scores, workType } = props
+    const { scores, workType, names } = props
     console.log(scores)
+    console.log(names)
     // let graphData = []
     // if(scores){
     //   for(let i=0;i<scores.length;i++){
@@ -214,54 +215,69 @@ function DashboardGraph(props){
     //     graphData.push(individualData)
     //   }
     // }
-    const data = React.useMemo(
-      () => [
-        {
-          label: `Hasil ${workType}`,
-          data: scores
-        },
-      ],
-      []
-    )
-    // console.log(graphData)
-    console.log(data)
-    const series = React.useMemo(
-      () => ({
-        type: 'bar'
-      }),
-      []
-    )
-
-    const axes = React.useMemo(
-      () => [
-        { primary: true, type: 'linear', position: 'bottom', label: "Coba" },
-        { type: 'linear', position: 'left' }
-      ],
-      []
-    )
-
-    const tooltip = React.useMemo(
-      () => ({
-        anchor: 'bottom'
-      }),[]
-    )
-
-    if(scores){
-      console.log(data)
-      return (
-        // A react-chart hyper-responsively and continuously fills the available
-        // space of its parent element automatically
-        <div
-          style={{
-            width: '260px',
-            height: '300px'
-          }}
-        >
-          <Chart data={data} series={series} axes={axes} tooltip={tooltip}/>
-        </div>
-      )
+    let label = []
+    for(let i=0;i<scores.length;i++){
+      label.push(i+1)
     }
-    else return <Typography>hehe</Typography>
+    const state = {
+      labels: label,
+      datasets: [
+        {
+          label: [1,2],
+          backgroundColor: '#1976d2',
+          borderColor: 'rgba(0,0,0,0)',
+          borderWidth: 2,
+          data: scores
+        }
+      ]
+    }
+
+    return (
+      // A react-chart hyper-responsively and continuously fills the available
+      // space of its parent element automatically
+      <div>
+        <Bar
+          data={state}
+          options={{
+            title:{
+              display:true,
+              text:`Nilai ${workType} Anda`,
+              fontSize:20
+            },
+            legend:{
+              display:false,
+              position:'right'
+            },
+            scales: {
+              yAxes: [{
+                  id: 'first-y-axis',
+                  type: 'linear',
+                  ticks: {
+                    min: 0,
+                    max: 100
+                  }
+              }]
+            },
+            tooltips: {
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var label = names[tooltipItem.index] || '';
+
+                  if (label) {
+                      label += ': ';
+                  }
+                  label += Math.round(tooltipItem.yLabel * 100) / 100;
+                  return label;
+                }
+              }
+            }
+          }}
+          width="250px"
+          height="270px"
+        />
+      </div>
+    )
+    
 }
 
 function ListAssessments(props){
@@ -276,7 +292,6 @@ function ListAssessments(props){
     const handleOpenDialog = (title, subject, start_date, end_date) => {
       setCurrentDialogInfo({title, subject, start_date, end_date})
       setOpenDialog(true)
-      console.log(title)
     }
 
     const handleCloseDialog = () => {
@@ -366,7 +381,6 @@ function ListAssessments(props){
 
     for (i = 0; i < AssessmentsList.length; i++){
       let assessment = AssessmentsList[i]
-      console.log(assessment)
       let workCategoryAvatar = ( type === "Kuis" ?
           <Avatar className={classes.assignmentLate}>
             <FaClipboardList/>
@@ -539,14 +553,11 @@ class Dashboard extends Component {
 
     const classId = user.kelas
 
-    console.log(all_assessments)
-    console.log(user)
-    console.log(tasksCollection)
-
     function graphTask(subjectIndex){
       if(all_subjects[subjectIndex]){
         let subject = all_subjects[subjectIndex]._id
         let subjectScores = []
+        let subjectNames = []
         for(let i=0;i<tasksCollection.length;i++){
           if(tasksCollection[i].grades && tasksCollection[i].subject === subject){
             let keysArray = Object.keys(tasksCollection[i].grades)
@@ -554,20 +565,14 @@ class Dashboard extends Component {
             for(let j=0;j<keysArray.length;j++){
               if(keysArray[j] === user.id){
                 subjectScores.push(valuesArray[j])
+                subjectNames.push(tasksCollection[i].name)
                 break;
               }
             }
           }
         }
-        let graphData = [[0,0]]
-        for(let i=0;i<subjectScores.length;i++){
-          let individualData = []
-          individualData.push(i+1)
-          individualData.push(subjectScores[i])
-          graphData.push(individualData)
-        }
-        if(graphData.length !== 1){
-          return <DashboardGraph scores={graphData} workType="Tugas"/>
+        if(subjectScores.length !== 0){
+          return <DashboardGraph scores={subjectScores} names={subjectNames} workType="Tugas"/>
         }
         else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
       }
@@ -576,9 +581,9 @@ class Dashboard extends Component {
 
     function graphAssessment(subjectIndex, type){
       if(all_subjects[subjectIndex]){
-        console.log(all_subjects[subjectIndex])
         let subject = all_subjects[subjectIndex]._id
         let subjectScores = []
+        let subjectNames = []
         if(type === "Kuis"){
           for(let i=0;i<all_assessments.length;i++){
             if(all_assessments[i].grades && all_assessments[i].subject === subject && all_assessments[i].type === "Kuis"){
@@ -587,12 +592,12 @@ class Dashboard extends Component {
               for(let j=0;j<keysArray.length;j++){
                 if(keysArray[j] === user.id){
                   subjectScores.push(valuesArray[j].total_grade)
+                  subjectNames.push(all_assessments[i].name)
                   break;
                 }
               }
             }
           }
-          console.log(subjectScores)
         }
         else if(type === "Ujian"){
           for(let i=0;i<all_assessments.length;i++){
@@ -602,21 +607,15 @@ class Dashboard extends Component {
               for(let j=0;j<keysArray.length;j++){
                 if(keysArray[j] === user.id){
                   subjectScores.push(valuesArray[j].total_grade)
+                  subjectNames.push(all_assessments[i].name)
                   break;
                 }
               }
             }
           }
         }
-        let graphData = [[0,0]]
-        for(let i=0;i<subjectScores.length;i++){
-          let individualData = []
-          individualData.push(i+1)
-          individualData.push(subjectScores[i])
-          graphData.push(individualData)
-        }
-        if(graphData.length !== 1){
-          return <DashboardGraph scores={graphData} workType={type}/>
+        if(subjectScores.length !== 0){
+          return <DashboardGraph scores={subjectScores} names={subjectNames} workType={type}/>
         }
         else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada {type} yang telah dinilai untuk mata pelajaran terkait</Typography>
       }
@@ -633,7 +632,6 @@ class Dashboard extends Component {
             break;
           }
         }
-        console.log(task)
         if(!all_subjects_map.get(task.subject)){
           flag = false
         }
@@ -690,7 +688,6 @@ class Dashboard extends Component {
     }
 
     function showSubject(subjectIndex){
-      console.log(subjectIndex)
       if(all_subjects[subjectIndex]){
         return <Typography align="center">{all_subjects[subjectIndex].name}</Typography>
       }
@@ -836,23 +833,10 @@ class Dashboard extends Component {
                         <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                           <Grid item>
                             <Grid container alignItems="center">
-                              <AssignmentIndIcon
-                                color="action"
-                                style={{marginRight: "10px"}}
-                              />
                               <Typography variant="h5" color="primary">
-                                Bar Chart Tugas
+                                Diagram Batang Tugas
                               </Typography>
                             </Grid>
-                          </Grid>
-                          <Grid item>
-                            <Link to="/daftar-tugas">
-                              <LightTooltip title="Lihat Semua" placement="top">
-                                <IconButton>
-                                  <ChevronRightIcon />
-                                </IconButton>
-                              </LightTooltip>
-                            </Link>
                           </Grid>
                         </Grid>
                         <Grid container direction="column" spacing={1}>
@@ -876,23 +860,10 @@ class Dashboard extends Component {
                         <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                           <Grid item>
                             <Grid container alignItems="center">
-                              <AssignmentIndIcon
-                                color="action"
-                                style={{marginRight: "10px"}}
-                              />
                               <Typography variant="h5" color="primary">
-                                Bar Chart Kuis
+                                Diagram Batang Kuis
                               </Typography>
                             </Grid>
-                          </Grid>
-                          <Grid item>
-                            <Link to="/daftar-kuis">
-                              <LightTooltip title="Lihat Semua" placement="top">
-                                <IconButton>
-                                  <ChevronRightIcon />
-                                </IconButton>
-                              </LightTooltip>
-                            </Link>
                           </Grid>
                         </Grid>
                         <Grid container direction="column" spacing={1}>
@@ -916,23 +887,10 @@ class Dashboard extends Component {
                         <Grid container justify="space-between" alignItems="center" style={{marginBottom: "15px"}}>
                           <Grid item>
                             <Grid container alignItems="center">
-                              <AssignmentIndIcon
-                                color="action"
-                                style={{marginRight: "10px"}}
-                              />
                               <Typography variant="h5" color="primary">
-                                Bar Chart Ujian
+                                Diagram Batang Ujian
                               </Typography>
                             </Grid>
-                          </Grid>
-                          <Grid item>
-                            <Link to="/daftar-ujian">
-                              <LightTooltip title="Lihat Semua" placement="top">
-                                <IconButton>
-                                  <ChevronRightIcon />
-                                </IconButton>
-                              </LightTooltip>
-                            </Link>
                           </Grid>
                         </Grid>
                         <Grid container direction="column" spacing={1}>
@@ -1048,7 +1006,6 @@ class Dashboard extends Component {
                 </Link>
               </Grid>
             </Grid>
-
           }
         </div>
       </div>
