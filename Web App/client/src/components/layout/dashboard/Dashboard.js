@@ -31,7 +31,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import {Bar} from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
 const styles = (theme) => ({
   root: {
@@ -204,17 +204,7 @@ function TaskListItem(props) {
 
 function DashboardGraph(props){
     const { scores, workType, names } = props
-    console.log(scores)
-    console.log(names)
-    // let graphData = []
-    // if(scores){
-    //   for(let i=0;i<scores.length;i++){
-    //     let individualData = []
-    //     individualData.push(i+1)
-    //     individualData.push(scores[i])
-    //     graphData.push(individualData)
-    //   }
-    // }
+    
     let label = []
     for(let i=0;i<scores.length;i++){
       label.push(i+1)
@@ -475,14 +465,15 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       anchorEl: null,
-      taskGraphCurrentSubject: 0,
-      quizGraphCurrentSubject: 0,
-      examGraphCurrentSubject: 0,
+      taskGraphCurrentSubject: null,
+      quizGraphCurrentSubject: null,
+      examGraphCurrentSubject: null,
     };
   }
 
   componentDidMount() {
     const { getAllTask, getAllTaskFilesByUser, getAllSubjects, getAllAssessments, getStudentsByClass, getStudents } = this.props;
+    const { all_subjects_map, all_subjects } = this.props.subjectsCollection
     const { user } = this.props.auth;
 
     getAllTask() // actions yang membuat GET request ke Database.
@@ -552,6 +543,19 @@ class Dashboard extends Component {
     const { all_assessments } = this.props.assessmentsCollection
 
     const classId = user.kelas
+
+    if(this.state.taskGraphCurrentSubject === null && all_subjects.length !== 0){
+      let randomNumber = Math.floor(Math.random() * all_subjects.length)
+      this.setState({taskGraphCurrentSubject: randomNumber})
+    }
+    if(this.state.quizGraphCurrentSubject === null && all_subjects.length !== 0){
+      let randomNumber = Math.floor(Math.random() * all_subjects.length)
+      this.setState({quizGraphCurrentSubject: randomNumber})
+    }
+    if(this.state.examGraphCurrentSubject === null && all_subjects.length !== 0){
+      let randomNumber = Math.floor(Math.random() * all_subjects.length)
+      this.setState({examGraphCurrentSubject: randomNumber})
+    }
 
     function graphTask(subjectIndex){
       if(all_subjects[subjectIndex]){

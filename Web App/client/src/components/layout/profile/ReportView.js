@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
-import { Divider, Grid, Paper, Typography } from "@material-ui/core";
+import { Divider, Grid, Paper, Typography, IconButton } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -22,6 +22,9 @@ import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
 import { getKuisBySC, getUjianBySC, getAllAssessments} from "../../../actions/AssessmentActions"
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { Bar } from 'react-chartjs-2';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,7 +103,88 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "flex-start"
     }
   },
+  graph: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    marginRight: "10px"
+  },
+  graphButtons: {
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    marginTop: "10px",
+    alignItems: "center"
+  }
 }));
+
+function DashboardGraph(props){
+  const { scores, workType, names } = props
+  
+  let label = []
+  for(let i=0;i<scores.length;i++){
+    label.push(i+1)
+  }
+  const state = {
+    labels: label,
+    datasets: [
+      {
+        label: [1,2],
+        backgroundColor: '#1976d2',
+        borderColor: 'rgba(0,0,0,0)',
+        borderWidth: 2,
+        data: scores
+      }
+    ]
+  }
+
+  return (
+    // A react-chart hyper-responsively and continuously fills the available
+    // space of its parent element automatically
+    <div>
+      <Bar
+        data={state}
+        options={{
+          title:{
+            display:true,
+            text:`Nilai ${workType} Anda`,
+            fontSize:20
+          },
+          legend:{
+            display:false,
+            position:'right'
+          },
+          scales: {
+            yAxes: [{
+                id: 'first-y-axis',
+                type: 'linear',
+                ticks: {
+                  min: 0,
+                  max: 100
+                }
+            }]
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = names[tooltipItem.index] || '';
+
+                if (label) {
+                    label += ': ';
+                }
+                label += Math.round(tooltipItem.yLabel * 100) / 100;
+                return label;
+              }
+            }
+          }
+        }}
+        width="200px"
+        height="270px"
+      />
+    </div>
+  )
+  
+}
 
 function ReportView(props) {
   const classes = useStyles();
@@ -115,11 +199,11 @@ function ReportView(props) {
   const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
   const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
 
-  const { getTasksBySC, getKuisBySC, getUjianBySC, getAllAssessments, getAllClass, getAllSubjects, getStudentsByClass, getAllTask } = props;
+  const { getTasksBySC, getKuisBySC, getUjianBySC, getAllAssessments, getAllClass, getAllSubjects, getStudentsByClass, getAllTask, tasksCollection } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
   const { user, students_by_class } = props.auth;
-  const { all_subjects_map } = props.subjectsCollection;
+  const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const allTaskArray = props.tasksCollection; // mengambil data dari DB
   const { all_assessments } = props.assessmentsCollection;
 
@@ -153,6 +237,127 @@ function ReportView(props) {
 
   // elemen array: (1) kode bahwa tidak ada murid dan (2) kode bahwa tidak ada task, kuis, dan assessment
   const [emptyCondition, setEmptyCondition] = React.useState([]);
+
+  // Graph
+  const [taskGraphCurrentSubject, setTaskGraphCurrentSubject] = React.useState(null)
+  const [quizGraphCurrentSubject, setQuizGraphCurrentSubject] = React.useState(null)
+  const [examGraphCurrentSubject, setExamGraphCurrentSubject] = React.useState(null)
+
+  if(taskGraphCurrentSubject === null && all_subjects.length !== 0){
+    let randomNumber = Math.floor(Math.random() * all_subjects.length)
+    setTaskGraphCurrentSubject(randomNumber)
+  }
+  if(quizGraphCurrentSubject === null && all_subjects.length !== 0){
+    let randomNumber = Math.floor(Math.random() * all_subjects.length)
+    setQuizGraphCurrentSubject(randomNumber)
+  }
+  if(examGraphCurrentSubject === null && all_subjects.length !== 0){
+    let randomNumber = Math.floor(Math.random() * all_subjects.length)
+    setExamGraphCurrentSubject(randomNumber)
+  }
+
+  function graphTask(subjectIndex){
+    if(all_subjects[subjectIndex]){
+      let subject = all_subjects[subjectIndex]._id
+      let subjectScores = []
+      let subjectNames = []
+      for(let i=0;i<tasksCollection.length;i++){
+        if(tasksCollection[i].grades && tasksCollection[i].subject === subject){
+          let keysArray = Object.keys(tasksCollection[i].grades)
+          let valuesArray = Object.values(tasksCollection[i].grades)
+          for(let j=0;j<keysArray.length;j++){
+            if(keysArray[j] === user.id){
+              subjectScores.push(valuesArray[j])
+              subjectNames.push(tasksCollection[i].name)
+              break;
+            }
+          }
+        }
+      }
+      if(subjectScores.length !== 0){
+        return <DashboardGraph scores={subjectScores} names={subjectNames} workType="Tugas"/>
+      }
+      else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
+    }
+    else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
+  }
+
+  function graphAssessment(subjectIndex, type){
+    if(all_subjects[subjectIndex]){
+      let subject = all_subjects[subjectIndex]._id
+      let subjectScores = []
+      let subjectNames = []
+      if(type === "Kuis"){
+        for(let i=0;i<all_assessments.length;i++){
+          if(all_assessments[i].grades && all_assessments[i].subject === subject && all_assessments[i].type === "Kuis"){
+            let keysArray = Object.keys(all_assessments[i].grades)
+            let valuesArray = Object.values(all_assessments[i].grades)
+            for(let j=0;j<keysArray.length;j++){
+              if(keysArray[j] === user.id){
+                subjectScores.push(valuesArray[j].total_grade)
+                subjectNames.push(all_assessments[i].name)
+                break;
+              }
+            }
+          }
+        }
+      }
+      else if(type === "Ujian"){
+        for(let i=0;i<all_assessments.length;i++){
+          if(all_assessments[i].grades && all_assessments[i].subject === subject && all_assessments[i].type === "Ujian"){
+            let keysArray = Object.keys(all_assessments[i].grades)
+            let valuesArray = Object.values(all_assessments[i].grades)
+            for(let j=0;j<keysArray.length;j++){
+              if(keysArray[j] === user.id){
+                subjectScores.push(valuesArray[j].total_grade)
+                subjectNames.push(all_assessments[i].name)
+                break;
+              }
+            }
+          }
+        }
+      }
+      if(subjectScores.length !== 0){
+        return <DashboardGraph scores={subjectScores} names={subjectNames} workType={type}/>
+      }
+      else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada {type} yang telah dinilai untuk mata pelajaran terkait</Typography>
+    }
+    else return <Typography align="center" color="textSecondary" variant="subtitle-1">Belum ada {type} yang telah dinilai untuk mata pelajaran terkait</Typography>
+  }
+
+  const changeGraphSubject = (workType, direction, subjectsLength) => {
+    if(workType === "Tugas"){
+      if(direction === "Left" && taskGraphCurrentSubject > 0){
+        setTaskGraphCurrentSubject(taskGraphCurrentSubject - 1)
+      }
+      else if(direction === "Right" && taskGraphCurrentSubject < subjectsLength - 1){
+        setTaskGraphCurrentSubject(taskGraphCurrentSubject + 1)
+      }
+    }
+    else if(workType === "Kuis"){
+      if(direction === "Left" && quizGraphCurrentSubject > 0){
+        setQuizGraphCurrentSubject(quizGraphCurrentSubject - 1)
+      }
+      else if(direction === "Right" && quizGraphCurrentSubject < subjectsLength - 1){
+        setQuizGraphCurrentSubject(quizGraphCurrentSubject + 1)
+      }
+    }
+    else if(workType === "Ujian"){
+      if(direction === "Left" && examGraphCurrentSubject > 0){
+        setExamGraphCurrentSubject(examGraphCurrentSubject - 1)
+      }
+      else if(direction === "Right" && examGraphCurrentSubject < subjectsLength - 1){
+        setExamGraphCurrentSubject(examGraphCurrentSubject + 1)
+      }
+    }
+  }
+
+  function showSubject(subjectIndex){
+    if(all_subjects[subjectIndex]){
+      return <Typography align="center">{all_subjects[subjectIndex].name}</Typography>
+    }
+    else return null
+  }
 
   function generateKelasMenuItem() {
     let menuItems = [];
@@ -413,6 +618,7 @@ function ReportView(props) {
       getAllClass();
       getAllClass("map");
     }
+    getAllSubjects();
     getAllSubjects("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
@@ -626,6 +832,44 @@ function ReportView(props) {
               Rapor Semester X (Tahun {(new Date()).getFullYear()})
             </Typography>
             <Divider className={classes.profileDivider}/>
+          </Grid>
+          <Grid item container direction="row" justify="center">
+            <Grid item xs={4}>
+              {graphTask(taskGraphCurrentSubject)}
+              <div className={classes.graphButtons}>
+                <IconButton onClick={() => changeGraphSubject("Tugas", "Left", all_subjects.length)}>
+                  <ArrowBackIosIcon onClick={() => changeGraphSubject("Tugas", "Left", all_subjects.length)}/>
+                </IconButton>
+                {showSubject(taskGraphCurrentSubject)}
+                <IconButton onClick={() => changeGraphSubject("Tugas", "Right", all_subjects.length)}>
+                  <ArrowForwardIosIcon/>
+                </IconButton>
+              </div>
+            </Grid>
+            <Grid item xs={4}>
+              {graphAssessment(quizGraphCurrentSubject, "Kuis")}
+              <div className={classes.graphButtons}>
+                <IconButton onClick={() => changeGraphSubject("Kuis", "Left", all_subjects.length)}>
+                  <ArrowBackIosIcon onClick={() => changeGraphSubject("Kuis", "Left", all_subjects.length)}/>
+                </IconButton>
+                {showSubject(quizGraphCurrentSubject)}
+                <IconButton onClick={() => changeGraphSubject("Kuis", "Right", all_subjects.length)}>
+                  <ArrowForwardIosIcon/>
+                </IconButton>
+              </div>
+            </Grid>
+            <Grid item xs={4}>
+              {graphAssessment(examGraphCurrentSubject, "Ujian")}
+              <div className={classes.graphButtons}>
+                <IconButton onClick={() => changeGraphSubject("Ujian", "Left", all_subjects.length)}>
+                  <ArrowBackIosIcon onClick={() => changeGraphSubject("Ujian", "Left", all_subjects.length)}/>
+                </IconButton>
+                {showSubject(examGraphCurrentSubject)}
+                <IconButton onClick={() => changeGraphSubject("Ujian", "Right", all_subjects.length)}>
+                  <ArrowForwardIosIcon/>
+                </IconButton>
+              </div>
+            </Grid>
           </Grid>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
             <Grid item style={{marginRight:"20px"}}>
