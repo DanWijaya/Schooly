@@ -200,41 +200,18 @@ router.post("/update/data/:id", (req,res) => {
               .then(console.log("Done with updating user data"))
               .catch(err => console.log(err))
 
-          var payload = {
-            id: user.id,
-            role: user.role,
-            avatar: user.avatar,
+          // var payload = user
+          // if (user.role === "Student") {
+          //   payload.kelas = user.kelas
+          //   payload.tugas = user.tugas
+          // }
 
-            // Informasi Pribadi
-            name : user.name,
-            tanggal_lahir : user.tanggal_lahir,
-            jenis_kelamin : user.jenis_kelamin,
-            sekolah : user.sekolah,
-
-            //Kontak
-            email : user.email,
-            phone : user.phone,
-            emergency_phone : user.emergency_phone,
-            address : user.address,
-
-            //Karir
-            hobi_minat : user.hobi_minat,
-            ket_non_teknis : user.ket_non_teknis,
-            cita_cita : user.cita_cita,
-            uni_impian : user.uni_impian
-          }
-
-          if (user.role === "Student") {
-            payload.kelas = user.kelas
-            payload.tugas = user.tugas
-          }
-
-          else if (user.role === "Teacher") {
-            payload.subject_teached = user.subject_teached
-          }
+          // else if (user.role === "Teacher") {
+          //   payload.subject_teached = user.subject_teached
+          // }
 
           jwt.sign(
-            payload,
+            user,
             keys.secretOrKey,
             {
               expiresIn: 31556926 // 1 year in seconds

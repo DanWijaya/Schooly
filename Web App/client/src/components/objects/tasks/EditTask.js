@@ -9,7 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { deleteFileTasks, getFileTasks} from "../../../actions/Files/FileTaskActions"
+import { deleteFileTasks, getFileTasks} from "../../../actions/files/FileTaskActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,

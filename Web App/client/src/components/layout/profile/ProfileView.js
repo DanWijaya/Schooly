@@ -200,7 +200,7 @@ function ProfileView(props) {
           {avatar ?
             <StyledBadge>
               <Avatar
-                src={`/api/upload/avatar/${avatar}`}
+                src={avatar}
                 className={classes.avatar}
               />
             </StyledBadge>

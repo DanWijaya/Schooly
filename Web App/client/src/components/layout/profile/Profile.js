@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
+import { uploadFileAvatar, getFileAvatar } from "../../../actions/files/FileAvatarActions"
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import informationContacts from "./InformationContacts.png";
@@ -162,7 +163,17 @@ function ProfileDataItem(props) {
 function Profile(props) {
   const classes = useStyles();
   const { user } = props.auth;
-  const { updateAvatar, setCurrentClass, classesCollection } = props;
+  const { updateAvatar, setCurrentClass, classesCollection, uploadFileAvatar, getFileAvatar } = props;
+  const [avatar, setAvatar] = React.useState(null);
+
+  React.useEffect(() => {
+    console.log("use effect")
+    getFileAvatar(user.avatar)
+    .then((result) => setAvatar(result))
+    .catch((err) => console.log(err))
+
+    
+  }, [user.avatar])
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -175,7 +186,7 @@ function Profile(props) {
     }
     setOpenAlert(false);
   }
-
+  console.log(avatar)
   // Alert control for ProfileDataEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
@@ -209,7 +220,6 @@ function Profile(props) {
   }
 
   document.title = "Schooly | Profil Saya"
-
   return (
     <div className={classes.root}>
       {/* ProfilePictureEditorDialog Snackbar */}
@@ -252,13 +262,14 @@ function Profile(props) {
             badgeContent={
               <ProfilePictureEditorDialog
                 user={user}
-                updateAvatar={updateAvatar}
+                avatar={avatar}
+                // updateAvatar={uploadFileAvatar}
                 handleOpenAlert={handleOpenAlert}
               />
             }
           >
             <Avatar
-              src={`/api/upload/avatar/${user.avatar}`}
+              src={avatar}
               className={classes.avatar}
             />
           </StyledBadge>
@@ -267,12 +278,12 @@ function Profile(props) {
             badgeContent={
               <ProfilePictureEditorDialog
                 user={user}
-                updateAvatar={updateAvatar}
+                // updateAvatar={uploadFileAvatar}
                 handleOpenAlert={handleOpenAlert}
               />
             }
           >
-            <Avatar className={classes.avatar} />
+            <Avatar className={classes.avatar}/>
           </StyledBadge>
         }
         </Grid>
@@ -513,7 +524,6 @@ function Profile(props) {
 Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
-  updateAvatar: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
 }
 
@@ -523,5 +533,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(
-  mapStateToProps, { updateAvatar, setCurrentClass }
+  mapStateToProps, { updateAvatar, setCurrentClass, uploadFileAvatar, getFileAvatar }
 ) (Profile);

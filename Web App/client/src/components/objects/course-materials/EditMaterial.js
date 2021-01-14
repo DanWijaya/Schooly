@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import "date-fns";
-import { getFileMaterials, downloadFileMaterial, viewFileMaterial, getAllS3} from "../../../actions/Files/FileMaterialActions"
+import { getFileMaterials, downloadFileMaterial, viewFileMaterial, getAllS3} from "../../../actions/files/FileMaterialActions"
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneMaterial } from "../../../actions/MaterialActions";

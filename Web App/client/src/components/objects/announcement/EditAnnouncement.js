@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { getFileAnnouncements} from "../../../actions/Files/FileAnnouncementActions"
+import { getFileAnnouncements} from "../../../actions/files/FileAnnouncementActions"
 import { getOneAnnouncement, updateAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";

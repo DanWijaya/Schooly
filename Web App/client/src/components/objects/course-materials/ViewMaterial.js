@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom"
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getFileMaterials, downloadFileMaterial, viewFileMaterial} from "../../../actions/Files/FileMaterialActions"
+import { getFileMaterials, downloadFileMaterial, viewFileMaterial} from "../../../actions/files/FileMaterialActions"
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getOneMaterial, deleteMaterial } from "../../../actions/MaterialActions";

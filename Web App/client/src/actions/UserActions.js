@@ -55,7 +55,6 @@ export const updateUserData = (userData, userId, history) => dispatch => {
 
 export const updateAvatar = (userData, userId, formData) => dispatch => {
   axios.post("/api/users/update/avatar/" + userId, formData)
-    
       .then(res => {
         // Set token to localStorage
         const { token } = res.data;

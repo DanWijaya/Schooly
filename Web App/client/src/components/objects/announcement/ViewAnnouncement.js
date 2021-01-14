@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getFileAnnouncements, downloadFileAnnouncements, viewFileAnnouncement} from "../../../actions/Files/FileAnnouncementActions"
+import { getFileAnnouncements, downloadFileAnnouncements, viewFileAnnouncement} from "../../../actions/files/FileAnnouncementActions"
 import { getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
 import { getSelectedClasses } from "../../../actions/ClassActions"
 import { getUsers } from "../../../actions/UserActions";

@@ -19,23 +19,6 @@ AWS.config.update({
   region: process.env.AWS_REGION
 })
 
-// Get all Documents Routes
-router.get("/", (req, res, next) => {
-  FileMaterial.find(
-    {},
-    null,
-    {
-      sort: { createdAt: 1 }
-    },
-    (err, docs) => {
-      if (err) {
-        return next(err);
-      }
-      res.status(200).send(docs);
-    }
-  );
-});
-
 // route to upload a pdf document file
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post("/upload/:id", upload.array("lampiran_materi"), (req, res) =>  {

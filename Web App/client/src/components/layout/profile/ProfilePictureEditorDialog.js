@@ -7,7 +7,8 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-
+import { uploadFileAvatar, getFileAvatar  } from "../../../actions/files/FileAvatarActions"
+import { connect } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(25),
@@ -75,8 +76,7 @@ function ProfilePictureEditorDialog(props) {
     setProfileImg(null)
   };
 
-  const { user } = props;
-  const { updateAvatar } = props;
+  const { user, updateAvatar, uploadFileAvatar, avatar } = props;
 
   const handleImageUpload = e => {
     const [file] = e.target.files;
@@ -100,7 +100,8 @@ function ProfilePictureEditorDialog(props) {
     let userData = user
     let userId = user.id;
 
-    updateAvatar(userData, userId, formData)
+    // updateAvatar(userData, userId, formData)
+    uploadFileAvatar(userId, formData)
     props.handleOpenAlert()
 
     handleCloseDialog()
@@ -124,13 +125,14 @@ function ProfilePictureEditorDialog(props) {
     }
 
     if (!profileImg) {
-      if (user.avatar) {
+      if (avatar) {
         return (
           <Avatar className={classes.avatar}>
             <img
               alt="profile"
               onLoad={onImgLoad}
-              src={`/api/upload/avatar/${user.avatar}`}
+              src={avatar}
+              // src={`/api/upload/avatar/${user.avatar}`}
               ref={uploadedImage}
               className={avatarImgClass}
             />
@@ -244,4 +246,11 @@ function ProfilePictureEditorDialog(props) {
   )
 }
 
-export default ProfilePictureEditorDialog;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  classesCollection: state.classesCollection,
+});
+
+export default connect( 
+  mapStateToProps, { uploadFileAvatar, getFileAvatar }
+)( ProfilePictureEditorDialog)

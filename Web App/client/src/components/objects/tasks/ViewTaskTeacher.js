@@ -11,7 +11,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { uploadTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
-import { getFileTasks, viewFileTasks, downloadFileTasks } from "../../../actions/Files/FileTaskActions";
+import { getFileTasks, viewFileTasks, downloadFileTasks } from "../../../actions/files/FileTaskActions";
 
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
