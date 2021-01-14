@@ -832,7 +832,7 @@ class Dashboard extends Component {
                 </Grid>
               </Grid>
               <Hidden smDown>
-                <Grid item xs={12} md={5} lg={4}>
+                <Grid item sm={12} md={5} lg={4}>
                   <Grid container direction="column" spacing={2}>
                     <Grid item>
                       <Paper style={{padding: "20px"}}>

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useLocation , Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
-import { Divider, Grid, Paper, Typography, IconButton } from "@material-ui/core";
+import { Divider, Grid, Paper, Typography, IconButton, Hidden } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -846,89 +846,91 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider}/>
           </Grid>
-          <Grid item container direction="row" justify="center" spacing={4} alignItems="center">
-            <Grid item container alignItems="center" spacing={4}>
-              <Grid item xs={4}>
-                <Typography variant="h6" align="center">Nilai Tugas Anda</Typography>
+          <Hidden smDown>
+            <Grid item container direction="row" justify="center" spacing={4} alignItems="center">
+              <Grid item container alignItems="center" spacing={4}>
+                <Grid item xs={4}>
+                  <Typography variant="h6" align="center">Nilai Tugas Anda</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="h6" align="center">Nilai Kuis Anda</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="h6" align="center">Nilai Ujian Anda</Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <Typography variant="h6" align="center">Nilai Kuis Anda</Typography>
+              <Grid container item alignItems="center" spacing={4}>
+                <Grid item xs={4}>
+                  {graphTask(taskGraphCurrentSubject) === null ?
+                    <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
+                      <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
+                    </div>
+                  : 
+                    <div>
+                      {graphTask(taskGraphCurrentSubject)}
+                    </div>
+                  }
+                </Grid>
+                <Grid item xs={4}>
+                  {graphAssessment(quizGraphCurrentSubject, "Kuis") === null ?
+                    <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
+                      <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Kuis yang telah dinilai untuk mata pelajaran terkait</Typography>
+                    </div>
+                  : 
+                    <div>
+                      {graphAssessment(quizGraphCurrentSubject, "Kuis")}
+                    </div>
+                  }
+                </Grid>
+                <Grid item xs={4}>
+                  {graphAssessment(examGraphCurrentSubject, "Ujian") === null ?
+                    <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
+                      <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Ujian yang telah dinilai untuk mata pelajaran terkait</Typography>
+                    </div>
+                  : 
+                    <div>
+                      {graphAssessment(examGraphCurrentSubject, "Ujian")}
+                    </div>
+                  }
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <Typography variant="h6" align="center">Nilai Ujian Anda</Typography>
+              <Grid item container direction="row" justify="center" alignItems="center" spacing={4} style={{paddingTop: "0px"}}>
+                <Grid item xs={4}>
+                  <div className={classes.graphButtons}>
+                    <IconButton onClick={() => changeGraphSubject("Tugas", "Left", all_subjects.length)}>
+                      <ArrowBackIosIcon/>
+                    </IconButton>
+                    {showSubject(taskGraphCurrentSubject)}
+                    <IconButton onClick={() => changeGraphSubject("Tugas", "Right", all_subjects.length)}>
+                      <ArrowForwardIosIcon/>
+                    </IconButton>
+                  </div>
+                </Grid>
+                <Grid item xs={4}>
+                  <div className={classes.graphButtons}>
+                    <IconButton onClick={() => changeGraphSubject("Kuis", "Left", all_subjects.length)}>
+                      <ArrowBackIosIcon/>
+                    </IconButton>
+                    {showSubject(quizGraphCurrentSubject)}
+                    <IconButton onClick={() => changeGraphSubject("Kuis", "Right", all_subjects.length)}>
+                      <ArrowForwardIosIcon/>
+                    </IconButton>
+                  </div>
+                </Grid>
+                <Grid item xs={4}>
+                  <div className={classes.graphButtons}>
+                    <IconButton onClick={() => changeGraphSubject("Ujian", "Left", all_subjects.length)}>
+                      <ArrowBackIosIcon/>
+                    </IconButton>
+                    {showSubject(examGraphCurrentSubject)}
+                    <IconButton onClick={() => changeGraphSubject("Ujian", "Right", all_subjects.length)}>
+                      <ArrowForwardIosIcon/>
+                    </IconButton>
+                  </div>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid container item alignItems="center" spacing={4}>
-              <Grid item xs={4}>
-                {graphTask(taskGraphCurrentSubject) === null ?
-                  <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
-                    <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
-                  </div>
-                : 
-                  <div>
-                    {graphTask(taskGraphCurrentSubject)}
-                  </div>
-                }
-              </Grid>
-              <Grid item xs={4}>
-                {graphAssessment(quizGraphCurrentSubject, "Kuis") === null ?
-                  <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
-                    <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Kuis yang telah dinilai untuk mata pelajaran terkait</Typography>
-                  </div>
-                : 
-                  <div>
-                    {graphAssessment(quizGraphCurrentSubject, "Kuis")}
-                  </div>
-                }
-              </Grid>
-              <Grid item xs={4}>
-                {graphAssessment(examGraphCurrentSubject, "Ujian") === null ?
-                  <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
-                    <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Ujian yang telah dinilai untuk mata pelajaran terkait</Typography>
-                  </div>
-                : 
-                  <div>
-                    {graphAssessment(examGraphCurrentSubject, "Ujian")}
-                  </div>
-                }
-              </Grid>
-            </Grid>
-            <Grid item container direction="row" justify="center" alignItems="center" spacing={4} style={{paddingTop: "0px"}}>
-              <Grid item xs={4}>
-                <div className={classes.graphButtons}>
-                  <IconButton onClick={() => changeGraphSubject("Tugas", "Left", all_subjects.length)}>
-                    <ArrowBackIosIcon/>
-                  </IconButton>
-                  {showSubject(taskGraphCurrentSubject)}
-                  <IconButton onClick={() => changeGraphSubject("Tugas", "Right", all_subjects.length)}>
-                    <ArrowForwardIosIcon/>
-                  </IconButton>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div className={classes.graphButtons}>
-                  <IconButton onClick={() => changeGraphSubject("Kuis", "Left", all_subjects.length)}>
-                    <ArrowBackIosIcon/>
-                  </IconButton>
-                  {showSubject(quizGraphCurrentSubject)}
-                  <IconButton onClick={() => changeGraphSubject("Kuis", "Right", all_subjects.length)}>
-                    <ArrowForwardIosIcon/>
-                  </IconButton>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div className={classes.graphButtons}>
-                  <IconButton onClick={() => changeGraphSubject("Ujian", "Left", all_subjects.length)}>
-                    <ArrowBackIosIcon/>
-                  </IconButton>
-                  {showSubject(examGraphCurrentSubject)}
-                  <IconButton onClick={() => changeGraphSubject("Ujian", "Right", all_subjects.length)}>
-                    <ArrowForwardIosIcon/>
-                  </IconButton>
-                </div>
-              </Grid>
-            </Grid>
-          </Grid>
+          </Hidden>
           <Grid container direction="column" spacing={2} style={{margin:"auto"}}>
             <Grid item style={{marginRight:"20px"}}>
               <TableContainer component={Paper}>
