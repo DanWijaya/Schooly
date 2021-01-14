@@ -656,12 +656,12 @@ function TaskList(props) {
                         </Grid>
                         <Grid item xs={12}>
                           <Typography variant="body1" color="textSecondary">
-                            Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                            Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
                           <Typography variant="body1" color="textSecondary">
-                            Waktu Dibuat: {moment(row.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
+                            Batas Waktu: {moment(row.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
                           </Typography>
                         </Grid>
                       </Grid>
