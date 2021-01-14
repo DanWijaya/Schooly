@@ -218,7 +218,8 @@ function DashboardGraph(props){
           backgroundColor: '#1976d2',
           borderColor: 'rgba(0,0,0,0)',
           borderWidth: 2,
-          data: scores
+          data: scores,
+          maxBarThickness: 60
         }
       ]
     }
