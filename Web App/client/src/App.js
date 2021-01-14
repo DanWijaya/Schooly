@@ -147,14 +147,14 @@ class App extends Component {
           <ThemeProvider theme={globalStyles}>
             <Router>
               <div style={{display: "flex"}}>
-                {this.state.showNavBar ? 
+                {this.state.showNavBar ?
                 <NavBar
                   handleDrawerDesktop={this.handleDrawerDesktop}
                   handleDrawerMobile={this.handleDrawerMobile}
                   sideDrawerExist={this.state.sideDrawerExist}
                   assessmentState={localStorage.getItem(`status`)}
                 />
-                : 
+                :
                 null
                 }
                 {(this.state.sideDrawerExist && localStorage.getItem(`status`) !== "ujian") ?
@@ -166,9 +166,9 @@ class App extends Component {
                   null
                 }
                 <div style={{flexGrow: "1", overflowX: "hidden", marginTop: `${this.state.marginTopValue}px`}}>
-                {this.state.showNavBar ? 
-                  <Toolbar /> 
-                  : 
+                {this.state.showNavBar ?
+                  <Toolbar />
+                  :
                   null
                 }
                   <Switch>
@@ -236,7 +236,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Teacher"]} path="/daftar-tugas-terkumpul/:id" component={SubmittedTaskList} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-tugas" component={TaskList} />
                     {/* Route Assessment - Prototype */}
-                    <PrivateRoute exact access={["Student", "Teacher"]} path="/kuis" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
+                    <PrivateRoute exact access={["Student", "Teacher"]} path="/buat-kuis-ujian" handleSideDrawerExist={this.handleSideDrawerExist} component={CreateAssessment} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-kuis" component={AssessmentList} />
                     <PrivateRoute exact access={["Student", "Teacher"]} path="/daftar-ujian" component={AssessmentTestList} />
                     <PrivateRoute exact access={["Teacher"]} path="/sunting-kuis/:id" handleSideDrawerExist={this.handleSideDrawerExist} component={EditAssessment} />

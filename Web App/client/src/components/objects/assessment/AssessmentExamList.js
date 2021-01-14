@@ -244,7 +244,7 @@ function AssessmentListToolbar(props) {
             null
           :
             <LightTooltip title="Buat Kuis/Ujian">
-              <Link to="/kuis">
+              <Link to="/buat-kuis-ujian">
                 <Fab size="small" className={classes.newAssessmentButton}>
                   <FaTasks className={classes.newAssessmentIconMobile} />
                 </Fab>
@@ -257,7 +257,7 @@ function AssessmentListToolbar(props) {
             null
           :
           // ANCHOR contoh tombol round edge
-            <Link to="/kuis">
+            <Link to="/buat-kuis-ujian">
               <Fab size="medium" variant="extended" className={classes.newAssessmentButton}>
                 <FaTasks className={classes.newAssessmentIconDesktop} />
                 Buat Kuis/Ujian

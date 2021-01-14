@@ -31,6 +31,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { FaTasks } from "react-icons/fa";
 import { Bar } from 'react-chartjs-2';
 
 const styles = (theme) => ({
@@ -138,15 +139,15 @@ const styles = (theme) => ({
     color: theme.palette.success.main
   },
   graph: {
-    display: "flex", 
-    flexDirection: "row", 
-    justifyContent: "center", 
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
     marginRight: "10px"
   },
   graphButtons: {
-    display: "flex", 
-    flexDirection: "row", 
-    justifyContent: "space-between", 
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: "10px",
     alignItems: "center"
   }
@@ -204,7 +205,7 @@ function TaskListItem(props) {
 
 function DashboardGraph(props){
     const { scores, workType, names } = props
-    
+
     let label = []
     for(let i=0;i<scores.length;i++){
       label.push(i+1)
@@ -267,7 +268,7 @@ function DashboardGraph(props){
         />
       </div>
     )
-    
+
 }
 
 function ListAssessments(props){
@@ -482,7 +483,7 @@ class Dashboard extends Component {
 
     // const { all_subjects_map } = this.props.subjectsCollection
     // let subjectArray = Object.keys(all_subjects_map)
-    
+
     if (user.role === "Student"){
       getStudentsByClass(user.kelas)
       // getTasksBySC
@@ -965,6 +966,12 @@ class Dashboard extends Component {
                       <AssignmentIcon />
                     </ListItemIcon>
                     <ListItemText primary="Buat Tugas" />
+                  </MenuItem>
+                  <MenuItem button component="a" href="/buat-kuis-ujian" className={classes.menuItem}>
+                    <ListItemIcon>
+                      <FaTasks />
+                    </ListItemIcon>
+                    <ListItemText primary="Buat Kuis/Ujian" />
                   </MenuItem>
                 </Menu>
               </Grid>
