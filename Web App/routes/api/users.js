@@ -482,4 +482,36 @@ router.delete("/delete/:id", (req,res) => {
       return res.json(user)
   })
 })
+
+router.post("/bulkupdateclass", (req, res) => {
+  let operations= [];
+
+  let allStudentId = [];
+  for (let entries of Object.entries(req.body)) {
+    // let classId = ObjectId(entries[0]);
+    // let studentIdArray = entries[1].map((id) => {return ObjectId(id)});
+
+    let classId = entries[0];
+    let studentIdArray = entries[1];
+
+    for (let studentId of studentIdArray) {
+      allStudentId.push(studentId);
+    }
+
+    operations.push({
+      updateMany: {
+        filter: { _id: { $in: studentIdArray } },
+        update: { kelas: classId }
+      }
+    });
+  }
+
+  Student.bulkWrite(operations, { ordered: false }).then(() => {
+    return res.json("Bulkupdate student class completed");
+  }).catch((err) => {
+    console.log(err);
+    return res.status(500).json(err);
+  });
+});
+
 module.exports = router;

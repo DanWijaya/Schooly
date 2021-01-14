@@ -199,27 +199,67 @@ function ViewAssessmentTeacher(props) {
 
   // cek note di model assessment (Assessment.js) untuk melihat aturan-aturan tambahan yang digunakan
 
-  // state ini menyimpan object yang berisi semua murid yang sudah mengumpulkan jawaban assessment ini.
-  // jika belum ada murid yang mengerjakan assessment, state ini akan berisi object kosong.
+  /* 
+  jika belum ada murid yang mengerjakan assessment, state ini akan berisi object kosong {}.
+  isi: 
+  {
+    <id murid 1>: {
+      ...document untuk model murid
+    }, 
+    <id murid 2>: {
+      ...document
+    },
+    ...
+  } key -> id semua murid yang sudah mengumpulkan jawaban assessment ini
+  */
   const [all_student_object, setAllStudentObj] = React.useState(null);
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
+  
+  /* 
+  jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, state ini akan diisi object kosong {}.
+  jika assessment ini tidak punya soal uraian, state ini akan diset menjadi null.
+  akan diinisialisasi dengan isi:
+  {
+    <id murid 1>: {
+      <index soal uraian 1>: <0 s/d nilai maksimum untuk soal ini>
+      <index soal uraian 2>: <0 s/d nilai maksimum untuk soal ini>
+      ...
+    }, key -> index semua soal uraian yang sudah dinilai (soal uraian yang belum dinilai tidak disimpan di object ini)
+    
+    <id murid 2>: {
+      <index soal uraian 1>: <0 s/d nilai maksimum untuk soal ini>
+      <index soal uraian 2>: <0 s/d nilai maksimum untuk soal ini>
+      ...
+    },
 
-  // object yang berisi pasangan: id murid - object grade.
-  // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, longtextGrades akan diisi object kosong {}.
-  // object grade berisi pasangan: index soal uraian - nilai , soal uraian yang belum dinilai tidak disimpan di object ini.
-  // kalau assessment ini tidak punya soal uraian, state ini akan diset menjadi null.
+    <id murid 3>: {}, -> diisi object kosong jika semua jawaban uraian murid ini belum dinilai
+    
+    ...
+  } key -> id semua murid yang sudah mengumpulkan jawaban assessment ini
+  
+  saat textfield nilai diisi, nilai soal tersebut (bagian <0 s/d nilai maksimum untuk soal ini>) akan diisi dengan nilai dalam bentuk string.
+  nilai ini akan dikonversi menjadi angka saat klik tombol simpan diklik.
+  */
   const [longtextGrades, setLongtextGrades] = React.useState(undefined);
   
-  // berisi object yang memiliki 2 pasangan: 
-  // 1. "studentOptions" dengan value object. 
-  // Ada 1 pasangan pada object ini dengan key "combined" dan value berupa array yang berisi 
-  // semua murid dari semua kelas yang menerima assessment ini. 
-  // Object value ini juga berisi pasangan: id kelas (kelas-kelas yang menerima assessment ini) - array.
-  // Array ini berisi semua murid yang berada pada kelas tersebut.
-  // Bentuk elemen array ini adalah object yang memiliki atribut id dan nama.
-  // 2. "classOptions" dengan value berupa array yang berisi semua kelas yang menerima assessment ini.
-  // Bentuk elemen array ini adalah object yang memiliki atribut id dan nama.
+  /* 
+  bentuk isi: 
+    {
+      studentOptions: {
+        combined: [<id murid>, <id murid>, ...] -> semua murid dari semua kelas yang menerima assessment ini
+        <id kelas 1>: [<id murid>, <id murid>, ...] -> semua murid yang berada pada kelas ini
+        <id kelas 2>: [<id murid>, <id murid>, ...]
+        ...
+      } key -> id semua kelas yang menerima assessment ini 
+      ,  
+      classOptions: [
+        {id: <id kelas 1>, name: <nama kelas 1>}, 
+        {id: <id kelas 2>, name: <nama kelas 2>},
+        ...
+      ] -> semua kelas yang menerima assessment ini
+    }
+  */
   const [menuOption, setMenuOption ] = React.useState(null);
   
   // berisi id kelas yang sedang dipilih pada menu kelas 
@@ -230,7 +270,7 @@ function ViewAssessmentTeacher(props) {
   const [selectedStudent, setSelectedStudent] = React.useState(null);
   // const [selectedStudent, setSelectedStudent] = React.useState("5f44d55155cedc284824f5c1"); //dev
 
-  // jika belum diload, bernilai null. jika sudah diproses, nilainya pasti false atau true
+  // jika belum diload, bernilai null. jika sudah diproses, nilainya pasti false atau true.
   const hasLongtextQst = React.useRef(null);
 
   const questionCount = React.useRef(null);
@@ -268,10 +308,11 @@ function ViewAssessmentTeacher(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAssessments])
-
+  
+  const rows = React.useRef([]); // akan digunakan untuk sorting
   React.useEffect(() => {    
     if (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) {
-      let students = {};
+      let students = {}; 
       let classOptions = [];
       let studentOptions = {combined : []};
       
@@ -280,17 +321,20 @@ function ViewAssessmentTeacher(props) {
         studentOptions[classId] = [];
       }
       
+      rows.current = [];
       // jika atribut submissions ada, brarti ada minimal 1 murid yang sudah mengumpulkan jawaban assessment
       if (selectedAssessments.submissions) {
         let submittedStudentList = Object.keys(selectedAssessments.submissions);
         for (var j = 0; j < all_students.length; j++) {
           let std = all_students[j];
-          if (submittedStudentList.includes(std._id)) {
+          if (submittedStudentList.includes(std._id) && selectedAssessments.class_assigned.includes(std.kelas)) {
+            rows.current.push({ id: std._id, name: std.name, classname: all_classes_map.get(std.kelas).name });
             students[std._id] = std;
-
             studentOptions[std.kelas].push({ id: std._id, name: std.name });
             studentOptions.combined.push({ id: std._id, name: std.name });
           }
+          // jika setelah menjawab assessment, murid ini dipindahkan ke kelas yang tidak mendapatkan assessment ini,
+          // murid tersebut tidak akan ditampilkan
         }
       }
 
@@ -334,20 +378,20 @@ function ViewAssessmentTeacher(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("name");
-  const rows = React.useRef([]);
+  // const rows = React.useRef([]);
 
-  React.useEffect(() => {
-    if (isAssessmentLoaded() && all_student_object) {
-      if (selectedAssessments.submissions) {
-        rows.current = Object.keys(selectedAssessments.submissions).map((studentId) => {
-          return { id: studentId, name: all_student_object[studentId].name, classname: all_student_object[studentId].kelas }
-        });
-      } else {
-        rows.current = [];
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAssessments, all_student_object])
+  // React.useEffect(() => {
+  //   if (isAssessmentLoaded() && all_student_object) {
+  //     if (selectedAssessments.submissions) {
+  //       rows.current = Object.keys(selectedAssessments.submissions).map((studentId) => {
+  //         return { id: studentId, name: all_student_object[studentId].name, classname: all_student_object[studentId].kelas }
+  //       });
+  //     } else {
+  //       rows.current = [];
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedAssessments, all_student_object])
 
   function handleOpenSortMenu(event) {
     setAnchorEl(event.currentTarget);
@@ -571,8 +615,8 @@ function ViewAssessmentTeacher(props) {
 
     let numberGrade = Number(grade);
 
-    if (isNaN(numberGrade) || numberGrade <= 0) {
-      handleOpenSnackbar("error", "Nilai harus berupa angka dan tidak boleh kurang dari sama dengan 0")
+    if (grade === "" || isNaN(numberGrade) || numberGrade < 0) {
+      handleOpenSnackbar("error", "Nilai harus berupa angka dan tidak boleh kurang dari 0")
     } else {
       temp[studentId] = { ...temp[studentId], [questionIndex]: numberGrade };
       setLongtextGrades(temp);
@@ -695,7 +739,7 @@ function ViewAssessmentTeacher(props) {
         questionWeight = weights[question.type][questionIndex];
 
         // let longtextGrade = longtextGrades[studentId][questionIndex];
-        if (longtextGrades[studentId] && longtextGrades[studentId][questionIndex]) {
+        if (longtextGrades[studentId] && (longtextGrades[studentId][questionIndex] !== undefined)) {
           // jika sudah pernah dinilai
           mark = longtextGrades[studentId][questionIndex];
         } else {
@@ -745,11 +789,11 @@ function ViewAssessmentTeacher(props) {
       return (
         <QuestionAnswerPerStudent
           // key={`permurid-${questionIndex + 1}`}
-          longtextGrades={
-            (question.type === "longtext" && longtextGrades[studentId]) ? (
-              longtextGrades[studentId][questionIndex]
-            ) : (null)
-          }
+          // longtextGrades={
+          //   (question.type === "longtext" && longtextGrades[studentId]) ? (
+          //     longtextGrades[studentId][questionIndex]
+          //   ) : (null)
+          // }
           classes={classes}
           studentId={studentId}
           studentAnswer={studentAnswer}
@@ -797,7 +841,8 @@ function ViewAssessmentTeacher(props) {
     if (selectedAssessments.submissions) {
       if (question_type === "longtext") {
         for (let studentId of Object.keys(selectedAssessments.submissions)) {
-          if (!longtextGrades[studentId] || !longtextGrades[studentId][question_number - 1]) {
+          // jika soal uraian ini belum diberi nilai (perlu undefined karena nilai soal uraian bisa 0)
+          if (!longtextGrades[studentId] || (longtextGrades[studentId][question_number - 1] === undefined)) {
             fullyGraded = false;
             break;
           }
@@ -1186,7 +1231,7 @@ function ViewAssessmentTeacher(props) {
         </Grid>
       </Grid>
       <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
-        <MuiAlert severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+        <MuiAlert variant="filled" severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
@@ -1496,8 +1541,8 @@ function QuestionAnswerPerStudent(props) {
           (studentMark === null) ? (
             <ErrorIcon className={classes.warningBadge} fontSize="large" />
           ) : (
-              <CheckCircleIcon className={classes.checkBadge} fontSize="large" />
-            )
+            <CheckCircleIcon className={classes.checkBadge} fontSize="large" />
+          )
         }
       >
         <Grid container item xs={12} style={{ padding: "20px" }}>

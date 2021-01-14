@@ -154,6 +154,7 @@ export const getStudents = () => dispatch => {
         type: GET_ALL_STUDENTS,
         payload: res.data
       })
+      console.log('getStudents completed');
     })
     .catch(err => {
       console.log("Error in getting all Students");
@@ -311,4 +312,15 @@ export const setDropboxToken = (token) => dispatch => {
     });
   }
   
+}
+
+export const updateStudentsClass = (data) => {
+  return axios
+    .post("/api/users/bulkupdateclass", data)
+    .then(() => {
+      console.log('updateStudentsClass completed');
+    })
+    .catch((err) => {
+      throw new Error(err.response.data);
+    })
 }

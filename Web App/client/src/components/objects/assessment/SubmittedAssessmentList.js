@@ -326,7 +326,7 @@ function SubmittedAssessmentList(props) {
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("name");
 
-  const rows = React.useRef([]);
+  const rows = React.useRef([]); // akan menyimpan object-object yang berisi id dan nama murid (1 object = 1 murid) untuk semua murid yang mendapatkan assessment ini 
   function createData(_id, name) {
     return { _id, name };
   }
@@ -498,25 +498,31 @@ function SubmittedAssessmentList(props) {
       for (var i = 0; i < selectedAssessments.class_assigned.length; i++) {
         let students_in_class = [];
 
-        let all_student_object = {};
-        rows.current = []
+        let all_student_object = {}; // akan menyimpan info semua murid yang mendapatkan assessment ini 
+        rows.current = [] // akan menyimpan object-object yang berisi id dan nama murid (1 object = 1 murid) untuk semua murid yang mendapatkan assessment ini  
+        
         for (var j = 0; j < all_students.length; j++) {
+
+          // jika murid ini mendapatkan assessment ini,
           if (all_students[j].kelas === selectedAssessments.class_assigned[i]) {
             let student = all_students[j];
+
             assessmentRowItem(student);
             all_student_object[student._id] = student;
           }
         }
 
         let sortedRows = stableSort(rows.current, getComparator(order, orderBy));
+
+        // untuk setiap murid,
         for (let row of sortedRows) {
-          // check if the id of the class is the same or not (means student is inside)
           let student = all_student_object[row._id];
           let scores = null;
           let isAllEssayGraded = false;
+
           // jika murid mengerjakan assessment ini
           if (selectedAssessments.submissions && selectedAssessments.submissions[student._id]) {
-            // harus deep cloning
+            // harus deep cloning. object ini akan digunakan untuk menyimpan nilai tiap tipe soal
             scores = JSON.parse(JSON.stringify(scoresTemplate));
 
             if (hasLongtextQuestion) {
@@ -526,12 +532,15 @@ function SubmittedAssessmentList(props) {
                 // ini cukup karena asumsi: bobot setiap soal uraian sudah dipastikan ada.
                 if (Object.keys(selectedAssessments.grades[student._id].longtext_grades).length === Object.keys(selectedAssessments.question_weight.longtext).length) {
                   isAllEssayGraded = true;
+
+                  // menjumlahkan nilai semua soal uraian murid ini
                   scores.longtext.totalpoint = Object.values(selectedAssessments.grades[student._id].longtext_grades).reduce((sum, currentVal) => (sum + currentVal));
                 } // jika tidak, scores.longtext.totalpoint tetap bernilai null (tampilkan pesan belum dinilai)
               }
             }
 
             let weights = selectedAssessments.question_weight;
+            // untuk setiap soal yang ada pada assessment ini,
             for (let questionIdx = 0; questionIdx < selectedAssessments.questions.length; questionIdx++) {
               let questionType = selectedAssessments.questions[questionIdx].type;
               let questionAnswer = selectedAssessments.questions[questionIdx].answer;
@@ -540,6 +549,7 @@ function SubmittedAssessmentList(props) {
               if (studentAnswer.length !== 0) {
                 // jika murid menjawab soal ini
 
+                // menghitung nilai untuk soal ini
                 if (questionType === "radio") {
                   if (questionAnswer[0] === studentAnswer[0]) {
                     scores.radio.totalpoint += 1 * weights.radio;
@@ -574,9 +584,12 @@ function SubmittedAssessmentList(props) {
                   scores.shorttext.totalpoint += weights.shorttext * temp_correct / questionAnswer.length;
                   scores.shorttext.totalweight += 1 * weights.shorttext;
                 }
+                // soal uraian tidak dicek
+
               } else {
                 // jika murid ga menjawab soal ini
 
+                // beri nilai 0
                 if (questionType === "radio") {
                   scores.radio.totalweight += 1 * weights.radio;
                 } else if (questionType === "checkbox") {
@@ -592,10 +605,11 @@ function SubmittedAssessmentList(props) {
           let columns1 = [];
           // layar mobile
           let columns2 = [];
+
           if (scores) {
-            let c = 0;
+            let c = 0; // digunakan untuk menambahkan divider di antara elemen tipe soal
             for (let typeArray of types.entries()) {
-              let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama
+              let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama, yaitu tipe soal
               // layar desktop
               columns1.push(
                 <Grid container item xs={3} spacing="1" wrap="nowrap" direction="column" justify="space-between" alignItems="center" >

@@ -132,3 +132,14 @@ export const setCurrentClass = (classId) => dispatch => {
     //     payload: decoded,
     // }
 }
+
+export const updateClassAdmin = (classData, classId) => {
+    return axios
+        .post("/api/classes/update/" + classId, classData)
+        .then(() => {
+            console.log("updateClassAdmin completed");
+        })
+        .catch(err => {
+            throw new Error(err.response.data);
+        })
+}

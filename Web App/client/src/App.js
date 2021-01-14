@@ -66,9 +66,10 @@ import ViewAssessmentAnswer from "./components/objects/assessment/ViewAssessment
 import ManageUsers from "./components/objects/admin-only/ManageUsers";
 import ManagePendingUsers from "./components/objects/admin-only/ManagePendingUsers";
 import SubjectList from "./components/objects/admin-only/SubjectList";
+import EditClassTeacher from "./components/objects/classes/EditClassTeacher";
 //Prototypes
 import Tester from "./prototypes/Tester";
-// import CSV from "./prototypes/contoh-tugas/CSV";
+import CSV from "./prototypes/contoh-tugas/CSV";
 import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
 //Dropbox
@@ -205,7 +206,7 @@ class App extends Component {
                     )}/>
                     <Route exact path="/akun/ubah-katasandi/:hash" component={ResetPassword}/>
                     <Route exact path="/tester" component={Tester} /> {/*prototype*/}
-                    {/* <Route exact path="/csv" component={CSV} /> */}
+                    <Route exact path="/csv" component={CSV} />
                     <Route exact path="/timer" component={Timer} /> {/*prototype*/}
                     <Route exact path="/graph" component={Graph} /> {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
@@ -253,6 +254,7 @@ class App extends Component {
                     <PrivateRoute exact access={["Admin"]} path="/atur-pengguna" component={ManageUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/pending-users" component={ManagePendingUsers} />
                     <PrivateRoute exact access={["Admin"]} path="/daftar-mata-pelajaran" component={SubjectList} />
+                    <PrivateRoute exact access={["Admin"]} path="/atur-walikelas" component={EditClassTeacher} />
                     {/* Not Found */}
                     <Route
                       exact path="/tidak-ditemukan"
