@@ -146,7 +146,7 @@ function DashboardGraph(props){
   return (
     // A react-chart hyper-responsively and continuously fills the available
     // space of its parent element automatically
-    <div>
+    <div style={{transform: "translateX(-15px)"}}>
       <Bar
         data={state}
         options={{
@@ -860,7 +860,7 @@ function ReportView(props) {
                 </Grid>
               </Grid>
               <Grid container item alignItems="center" spacing={4}>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={{maxHeight: "395px"}}>
                   {graphTask(taskGraphCurrentSubject) === null ?
                     <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
                       <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
@@ -871,7 +871,7 @@ function ReportView(props) {
                     </div>
                   }
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={{maxHeight: "395px"}}>
                   {graphAssessment(quizGraphCurrentSubject, "Kuis") === null ?
                     <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
                       <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Kuis yang telah dinilai untuk mata pelajaran terkait</Typography>
@@ -882,7 +882,7 @@ function ReportView(props) {
                     </div>
                   }
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={{maxHeight: "395px"}}>
                   {graphAssessment(examGraphCurrentSubject, "Ujian") === null ?
                     <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
                       <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Ujian yang telah dinilai untuk mata pelajaran terkait</Typography>
@@ -894,7 +894,7 @@ function ReportView(props) {
                   }
                 </Grid>
               </Grid>
-              <Grid item container direction="row" justify="center" alignItems="center" spacing={4} style={{paddingTop: "0px"}}>
+              <Grid item container direction="row" justify="center" alignItems="center" spacing={4}>
                 <Grid item xs={4}>
                   <div className={classes.graphButtons}>
                     <IconButton onClick={() => changeGraphSubject("Tugas", "Left", all_subjects.length)}>
