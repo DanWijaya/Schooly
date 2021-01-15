@@ -465,7 +465,8 @@ function ManageUsers(props) {
     for(let i=0;i<listCheckboxStudent.length;i++){
       if(listCheckboxStudent[i].row._id === row._id){
         result = listCheckboxStudent
-        result.splice(i,i+1)
+        // result.splice(i,i+1)
+        result.splice(i, 1)
         status = false
         break;
       }
@@ -487,7 +488,8 @@ function ManageUsers(props) {
     for(let i=0;i<listCheckboxTeacher.length;i++){
       if(listCheckboxTeacher[i].row._id === row._id){
         result = listCheckboxTeacher
-        result.splice(i,i+1)
+        // result.splice(i,i+1)
+        result.splice(i, 1)
         status = false
         break;
       }
@@ -636,13 +638,15 @@ function ManageUsers(props) {
     currentListBooleanTeacher = []
     console.log("retrieve users")
     if(Array.isArray(pending_students)){
-      pending_students.map((data) => {
+      // pending_students.map((data) => {
+      pending_students.forEach((data) => {
         userRowItem(data, "Student")
         currentListBooleanStudent.push(false)
       })
     }
     if(Array.isArray(pending_teachers)){
-      pending_teachers.map((data) => {
+      // pending_teachers.map((data) => {
+      pending_teachers.forEach((data) => {
         userRowItem(data, "Teacher")
         currentListBooleanTeacher.push(false)
       })

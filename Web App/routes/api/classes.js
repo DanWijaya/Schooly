@@ -147,8 +147,8 @@ router.post("/update/:id", (req, res) => {
 
 
         classData.save()
-            .then(res.status(200).json("Done with updating class"))
-            .catch(console.log("Error in updating class"))
+            .then(() => {res.status(200).json("Done with updating class")})
+            .catch(() => {console.log("Error in updating class")})
         // Pipeline on how to create a Async functions to be Synchronous function call
         // Step 1: declare promise
         // var myPromise = (id) => {
@@ -185,5 +185,64 @@ router.post("/update/:id", (req, res) => {
         // });
     })
 })
+
+router.post("/bulkupdateclass", (req, res) => {
+    let operations = [];
+
+    for (let entries of Object.entries(req.body)) {
+        let classId = entries[0];
+        let rolesToDelete = entries[1];
+        let fieldToUnset = {};
+        
+        for (let role of rolesToDelete) {
+            fieldToUnset[role] = "";
+            // valuenya akan diabaikan, jadi boleh apa saja
+        }
+
+        operations.push({
+            updateOne: {
+                filter: { _id: classId },
+                update: { $unset: fieldToUnset }
+            }
+        });
+    }
+
+    Class.bulkWrite(operations, { ordered: false }).then(() => {
+        res.json("Bulkupdate pengurus kelas completed");
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
+
+router.post("/bulkupdatewali", (req, res) => {
+    let operations = [];
+
+    for (let entries of Object.entries(req.body)) {
+        let classId = entries[0];
+        let teacherId = entries[1];
+        let updateArgument = {};
+
+        if (teacherId) {
+            updateArgument = { walikelas: teacherId };
+        } else {
+            updateArgument = { $unset: { walikelas: "" } };
+        }
+
+        operations.push({
+            updateOne: {
+                filter: { _id: classId },
+                update: updateArgument
+            }
+        });
+    }
+
+    Class.bulkWrite(operations, { ordered: false }).then(() => {
+        res.json("Bulkupdate wali kelas completed");
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
 
 module.exports = router;

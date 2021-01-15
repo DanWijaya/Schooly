@@ -133,11 +133,22 @@ export const setCurrentClass = (classId) => dispatch => {
     // }
 }
 
-export const updateClassAdmin = (classData, classId) => {
+export const updateClassAdmin = (classesData) => {
     return axios
-        .post("/api/classes/update/" + classId, classData)
+        .post("/api/classes/bulkupdateclass", classesData)
         .then(() => {
             console.log("updateClassAdmin completed");
+        })
+        .catch(err => {
+            throw new Error(err.response.data);
+        })
+}
+
+export const updateWaliAdmin = (classesData) => {
+    return axios
+        .post("/api/classes/bulkupdatewali", classesData)
+        .then(() => {
+            console.log("updateWaliAdmin completed");
         })
         .catch(err => {
             throw new Error(err.response.data);

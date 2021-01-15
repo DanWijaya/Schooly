@@ -507,10 +507,10 @@ router.post("/bulkupdateclass", (req, res) => {
   }
 
   Student.bulkWrite(operations, { ordered: false }).then(() => {
-    return res.json("Bulkupdate student class completed");
+    res.json("Bulkupdate student class completed");
   }).catch((err) => {
     console.log(err);
-    return res.status(500).json(err);
+    res.status(500).json(err);
   });
 });
 

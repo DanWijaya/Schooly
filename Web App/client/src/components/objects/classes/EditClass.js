@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getTeachers , getStudentsByClass} from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions"
-import { setCurrentClass, updateClass } from "../../../actions/ClassActions";
+import { getAllClass, setCurrentClass, updateClass } from "../../../actions/ClassActions";
 import { Button, Divider, FormControl, FormHelperText, MenuItem, Grid, Select, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -48,7 +48,8 @@ class EditClass extends Component {
       classesCollection: [],
       ketua_kelas: null,
       sekretaris: null,
-      bendahara: null
+      bendahara: null,
+      teacher_options: []
     }
     const { id } = this.props.match.params;
     console.log(id);
@@ -68,9 +69,15 @@ class EditClass extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("Class props is received")
-    const {kelas} = nextProps.classesCollection
+    const { kelas, all_classes } = nextProps.classesCollection;
+    const { all_teachers } = nextProps.auth;
+    
 
-    if (Boolean(kelas)) {
+    if (Boolean(kelas) && Array.isArray(all_classes) && (all_classes.length !== 0) && Array.isArray(all_teachers) && (all_teachers.length !== 0)) {
+      let all_walikelas = new Set(all_classes.map(cls => cls.walikelas));
+      all_walikelas.delete(kelas.walikelas);
+      let teacher_options = all_teachers.filter(teacher => !all_walikelas.has(teacher._id));
+
       this.setState({
         name: kelas.name,
         nihil: kelas.nihil,
@@ -78,7 +85,8 @@ class EditClass extends Component {
         ukuran: kelas.ukuran,
         ketua_kelas: kelas.ketua_kelas,
         sekretaris: kelas.sekretaris,
-        bendahara: kelas.bendahara
+        bendahara: kelas.bendahara,
+        teacher_options: teacher_options
       });
     }
   }
@@ -100,9 +108,10 @@ class EditClass extends Component {
   }
 
   componentDidMount() {
-    const { getTeachers, getStudentsByClass} = this.props;
+    const { getTeachers, getStudentsByClass, getAllClass} = this.props;
     getTeachers()
     getStudentsByClass(this.props.match.params.id)
+    getAllClass()
   }
 
   componentWillUnmount(){
@@ -114,11 +123,11 @@ class EditClass extends Component {
     const { classes } = this.props;
     const { errors } = this.props;
     const { user } = this.props.auth;
-    const { all_teachers} = this.props.auth;
+    // const { all_teachers} = this.props.auth;
     const { students_by_class } = this.props.auth;
-    const { sekretaris, bendahara, ketua_kelas, walikelas} = this.state;
-    var teacher_options = all_teachers
-    var student_options = students_by_class
+    const { sekretaris, bendahara, ketua_kelas, walikelas, teacher_options} = this.state;
+    // var teacher_options = all_teachers
+    var student_options = students_by_class;
 
     const returnId = (user, arr) => {
       var i;
@@ -142,14 +151,15 @@ class EditClass extends Component {
     const showValue = (options, arr) => {
       if(!Array.isArray(options))
         return null;
-
-
-      return options.map(user =>
-          <MenuItem
-            value={returnId(user, arr)}>
-            {user.name}
-          </MenuItem>
-      )
+      
+      let menuItems = (arr === "teacher") ? [<MenuItem value={undefined}>Kosong</MenuItem>] : []; 
+      
+      return menuItems.concat(options.map(user =>
+        <MenuItem
+          value={returnId(user, arr)}>
+          {user.name}
+        </MenuItem>
+      ));
     }
 
     document.title = "Schooly | Sunting Kelas";
@@ -193,7 +203,7 @@ class EditClass extends Component {
                       <FormControl id="walikelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.walikelas) && !this.state.walikelas}>
                         <Select
                           value={walikelas}
-                          displayEmpty
+                          // displayEmpty
                           onChange={(event) => {this.onChange(event, "walikelas")}}
                         >
                           {showValue(teacher_options, "teacher")}
@@ -290,7 +300,9 @@ EditClass.propTypes = {
     clearErrors: PropTypes.func.isRequired,
     getStudentsByClass: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    classesCollection: PropTypes.object.isRequired
+    classesCollection: PropTypes.object.isRequired,
+    getAllClass: PropTypes.func.isRequired
+
 };
 
 const mapStateToProps = state => ({
@@ -300,5 +312,5 @@ const mapStateToProps = state => ({
 })
 
 export default connect(
-    mapStateToProps, { setCurrentClass, updateClass, getStudentsByClass, getTeachers, clearErrors}
+  mapStateToProps, { setCurrentClass, updateClass, getStudentsByClass, getTeachers, clearErrors, getAllClass}
 ) (withStyles(styles)(EditClass));

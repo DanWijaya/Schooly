@@ -55,12 +55,10 @@ function stableSort(array, comparator) {
 
 function ClassListToolbar(props) {
   const { classes, user, order, orderBy, onRequestSort } = props;
-  const { all_students, all_teachers, all_assessments, tasksCollection } = props;
+  const { all_students, all_teachers } = props;
   // NOTE changehere 2 ClassListToolbar props
-  // const { updateClassAdmin, updateStudentsClass } = props;
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
-  // ketika fungsi ini dipanggil, all_students, all_teachers, all_classes_map, tasksCollection, all_assessments masih bisa undefined
   // const all_classes = Array.from(all_classes_map.values());
 
   const createSortHandler = (property) => (event) => {
@@ -192,7 +190,6 @@ function ClassListToolbar(props) {
     fileInput.current.click();
   }
 
-  // FIXME manageusertoolbar
   const handleImportCSV = (event) => {
     event.preventDefault();
     // if (!all_students || !all_teachers || !all_classes_map || !tasksCollection || !all_assessments) {
@@ -236,7 +233,7 @@ function ClassListToolbar(props) {
         }
       }
 
-
+      let classesToUpdate = {}; 
       let newClassParticipant = {};
       // traverse dari kiri ke kanan, atas ke bawah
       // for (let row of dataMatrix) {
@@ -273,33 +270,25 @@ function ClassListToolbar(props) {
 
               //  jika murid ini merupakan ketua kelas/bendahara/sekretaris pada kelas sebelumnya, ubah info kelas sebelumnya
               let oldClassInfo = all_classes_map.get(oldClassId);
-              let newclassData = {
-                ...oldClassInfo,
-              }
+              // let newclassData = {
+              //   ...oldClassInfo,
+              // }
               let fieldToDelete = [];
               if (oldClassInfo.ketua_kelas === studentId) {
-                newclassData.ketua_kelas = undefined;
-                fieldToDelete.push("ketua");
+                // newclassData.ketua_kelas = undefined;
+                fieldToDelete.push("ketua_kelas");
               } 
               if (oldClassInfo.bendahara === studentId) {
-                newclassData.bendahara = undefined;
+                // newclassData.bendahara = undefined;
                 fieldToDelete.push("bendahara");
               }
               if (oldClassInfo.sekretaris === studentId) {
-                newclassData.sekretaris = undefined;
+                // newclassData.sekretaris = undefined;
                 fieldToDelete.push("sekretaris");
               }
 
-              if (fieldToDelete.length !== 0) {
-                updateClassAdmin(newclassData, oldClassId).then(() => {
-                  fieldToDelete.forEach((field) => {
-                    console.log(`Berhasil menghapus ${field} kelas "${oldClassInfo.name}"`)
-                  })
-                }).catch(() => {
-                  fieldToDelete.forEach((field) => {
-                    console.log(`Gagal menghapus ${field} kelas "${oldClassInfo.name}"`);
-                  })
-                });
+              if (fieldToDelete.length > 0) {
+                classesToUpdate[oldClassId] = fieldToDelete;
               }
 
               // tugas
@@ -316,10 +305,16 @@ function ClassListToolbar(props) {
         }
       }
 
+      if (Object.keys(classesToUpdate).length !== 0) {
+        updateClassAdmin(classesToUpdate).then(() => {
+          console.log("Penghapusan pengurus kelas berhasil dilakukan")
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+
       if (Object.keys(newClassParticipant).length !== 0) {
         updateStudentsClass(newClassParticipant).then(() =>{
-          // TODO dialog berhasil dan kasi tau yg gagal yg mana aja
-
           // agar jumlah murid diperbarui, panggil ulang getStudents
           getStudents();
           handleOpenSnackbar("success", "Pemindahan murid berhasil dilakukan");
@@ -415,7 +410,6 @@ function ClassListToolbar(props) {
               <input type="file" ref={fileInput} accept=".csv" />
             </form>
 
-            {/* ANCHOR elemen tombol export import */}
             <LightTooltip title="Atur Kelas Murid">
               <IconButton onClick={handleOpenCSVMenu} className={classes.sortButton} style={{ marginRight: "3px" }}>
                 <AccountTreeIcon />
