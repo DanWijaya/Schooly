@@ -3,7 +3,10 @@ import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { getOneAssessment, updateAssessmentGrades } from "../../../actions/AssessmentActions"
+import {
+  getOneAssessment,
+  updateAssessmentGrades,
+} from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
@@ -34,7 +37,7 @@ import {
   TableSortLabel,
   Dialog,
   DialogContent,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -48,8 +51,8 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MuiAlert from "@material-ui/lab/Alert";
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,10 +64,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   answerText: {
-    color: theme.palette.success.dark
+    color: theme.palette.success.dark,
   },
   optionText: {
-    color: "black"
+    color: "black",
   },
   sortButton: {
     backgroundColor: theme.palette.action.selected,
@@ -77,61 +80,61 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   perStudentSelect: {
-      paddingTop: "10px",
-      paddingBottom: "10px",
-      marginBottom: "30px"
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    marginBottom: "30px",
   },
   navigationHelpIcon: {
-      fontSize: "10px",
-      color: theme.palette.text.secondary,
-      marginLeft: "5px"
+    fontSize: "10px",
+    color: theme.palette.text.secondary,
+    marginLeft: "5px",
   },
   selectDiv: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center"
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   select: {
-      marginLeft: "10px",
-      minWidth:"180px",
-      maxWidth:"180px",
-      [theme.breakpoints.down("xs")]: {
-        minWidth: "100px",
-        maxWidth: "100px",
-      }
+    marginLeft: "10px",
+    minWidth: "180px",
+    maxWidth: "180px",
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "100px",
+      maxWidth: "100px",
+    },
   },
   selectDescription: {
-      display: "flex",
-      justifyContent: "flex-end",
-      alignItems: "center"
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   contentItem: {
-      padding: "20px",
-      marginBottom: "30px"
+    padding: "20px",
+    marginBottom: "30px",
   },
   checkBadge: {
-      color: theme.palette.success.dark
-  },    
+    color: theme.palette.success.dark,
+  },
   warningBadge: {
-      color: theme.palette.error.dark
+    color: theme.palette.error.dark,
   },
   saveButton: {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-      marginLeft: "10px",
-      height: "80%",
-      "&:focus, &:hover": {
-        backgroundColor: theme.palette.primary.dark,
-      },
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    marginLeft: "10px",
+    height: "80%",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.dark,
+    },
   },
   mobileNav: {
-      display: "flex", 
-      flexDirection: "column", 
-      alignItems: "center"
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   mobileNavButton: {
-      color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   visuallyHidden: {
     border: 0,
@@ -151,19 +154,19 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     "&:after": {
       content: "''",
-      flexGrow: "1"
-    }
+      flexGrow: "1",
+    },
   },
   toggleGroupChildren: {
     padding: "0px",
     width: "35px",
     height: "35px",
-    '&:not(:first-child)': {
+    "&:not(:first-child)": {
       margin: theme.spacing(1),
       borderRadius: theme.shape.borderRadius,
-      borderLeft: "1px solid rgba(0,0,0,0.12)"
+      borderLeft: "1px solid rgba(0,0,0,0.12)",
     },
-    '&:first-child': {
+    "&:first-child": {
       margin: theme.spacing(1),
       borderRadius: theme.shape.borderRadius,
     },
@@ -175,16 +178,16 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
       cursor: "pointer",
       "&:hover": {
-        backgroundColor: theme.palette.primary.main
-      }
-    }
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
   },
   toggleButtonSelected: {
     //harus ada meskipun kosong
   },
   dividerColor: {
-    backgroundColor: theme.palette.primary.main
-  }
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 function ViewAssessmentTeacher(props) {
@@ -218,7 +221,7 @@ function ViewAssessmentTeacher(props) {
   const [all_student_object, setAllStudentObj] = React.useState(null);
 
   const [qnsIndex, setQnsIndex] = React.useState(0);
-  
+
   /* 
   jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, state ini akan diisi object kosong {}.
   jika assessment ini tidak punya soal uraian, state ini akan diset menjadi null.
@@ -245,7 +248,7 @@ function ViewAssessmentTeacher(props) {
   nilai ini akan dikonversi menjadi angka saat klik tombol simpan diklik.
   */
   const [longtextGrades, setLongtextGrades] = React.useState(undefined);
-  
+
   /* 
   bentuk isi: 
     {
@@ -263,9 +266,9 @@ function ViewAssessmentTeacher(props) {
       ] -> semua kelas yang menerima assessment ini
     }
   */
-  const [menuOption, setMenuOption ] = React.useState(null);
-  
-  // berisi id kelas yang sedang dipilih pada menu kelas 
+  const [menuOption, setMenuOption] = React.useState(null);
+
+  // berisi id kelas yang sedang dipilih pada menu kelas
   const [selectedClass, setSelectedClass] = React.useState(null);
   // const [selectedClass, setSelectedClass] = React.useState("5f4760f98dccb3468ccc0ffc"); //dev
 
@@ -283,10 +286,10 @@ function ViewAssessmentTeacher(props) {
   // const [value, setValue] = React.useState(1); //dev
 
   React.useEffect(() => {
-    getOneAssessment(assessment_id)
-    getAllClass("map")
-    getAllSubjects("map")
-    getStudents() 
+    getOneAssessment(assessment_id);
+    getAllClass("map");
+    getAllSubjects("map");
+    getStudents();
 
     if (location.state) {
       setSelectedStudent(location.state.studentId);
@@ -296,7 +299,7 @@ function ViewAssessmentTeacher(props) {
       setValue(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   React.useEffect(() => {
     if (isAssessmentLoaded()) {
@@ -310,28 +313,38 @@ function ViewAssessmentTeacher(props) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAssessments])
-  
+  }, [selectedAssessments]);
+
   const rows = React.useRef([]); // akan digunakan untuk sorting
-  React.useEffect(() => {    
+  React.useEffect(() => {
     if (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) {
-      let students = {}; 
+      let students = {};
       let classOptions = [];
-      let studentOptions = {combined : []};
-      
+      let studentOptions = { combined: [] };
+
       for (let classId of selectedAssessments.class_assigned) {
-        classOptions.push({ id: classId, name: all_classes_map.get(classId).name});
+        classOptions.push({
+          id: classId,
+          name: all_classes_map.get(classId).name,
+        });
         studentOptions[classId] = [];
       }
-      
+
       rows.current = [];
       // jika atribut submissions ada, brarti ada minimal 1 murid yang sudah mengumpulkan jawaban assessment
       if (selectedAssessments.submissions) {
         let submittedStudentList = Object.keys(selectedAssessments.submissions);
         for (var j = 0; j < all_students.length; j++) {
           let std = all_students[j];
-          if (submittedStudentList.includes(std._id) && selectedAssessments.class_assigned.includes(std.kelas)) {
-            rows.current.push({ id: std._id, name: std.name, classname: all_classes_map.get(std.kelas).name });
+          if (
+            submittedStudentList.includes(std._id) &&
+            selectedAssessments.class_assigned.includes(std.kelas)
+          ) {
+            rows.current.push({
+              id: std._id,
+              name: std.name,
+              classname: all_classes_map.get(std.kelas).name,
+            });
             students[std._id] = std;
             studentOptions[std.kelas].push({ id: std._id, name: std.name });
             studentOptions.combined.push({ id: std._id, name: std.name });
@@ -346,37 +359,35 @@ function ViewAssessmentTeacher(props) {
       setAllStudentObj(students);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [all_students, selectedAssessments, all_classes_map])
-  
+  }, [all_students, selectedAssessments, all_classes_map]);
+
   React.useEffect(() => {
     if (isAssessmentLoaded() && all_student_object) {
       if (hasLongtextQst.current === true) {
-
         let ltGrade = {};
         // jika minimal ada 1 murid yang jawaban uraiannya sudah dinilai,
         if (selectedAssessments.grades) {
-
           // traverse semua murid yang sudah mengumpulkan jawaban assessment
           Object.keys(all_student_object).forEach((studentId) => {
-
             // jika jawaban uraian murid ini sudah pernah dinilai
             if (selectedAssessments.grades[studentId]) {
-              ltGrade[studentId] = selectedAssessments.grades[studentId].longtext_grades;
+              ltGrade[studentId] =
+                selectedAssessments.grades[studentId].longtext_grades;
             } else {
               // jika semua jawaban uraian murid ini belum dinilai,
               ltGrade[studentId] = {};
             }
           });
         } // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, longtextGrades akan diisi object kosong {}
-        
+
         setLongtextGrades(ltGrade);
       } else {
         // jika tidak ada soal uraian, set null
         setLongtextGrades(null);
       }
-    } 
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAssessments, all_student_object, hasLongtextQst.current])
+  }, [selectedAssessments, all_student_object, hasLongtextQst.current]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [order, setOrder] = React.useState("desc");
@@ -398,18 +409,23 @@ function ViewAssessmentTeacher(props) {
 
   function handleOpenSortMenu(event) {
     setAnchorEl(event.currentTarget);
-  };
+  }
   function handleCloseSortMenu() {
     setAnchorEl(null);
-  };
+  }
   function handleRequestSort(property) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
+  }
   const headCells = [
     { id: "name", numeric: false, disablePadding: true, label: "Nama Murid" },
-    { id: "classname", numeric: false, disablePadding: true, label: "Nama Kelas" }
+    {
+      id: "classname",
+      numeric: false,
+      disablePadding: true,
+      label: "Nama Kelas",
+    },
   ];
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -436,15 +452,15 @@ function ViewAssessmentTeacher(props) {
   }
 
   // Tabs
-  function handleChange (event, newValue) {
+  function handleChange(event, newValue) {
     setValue(newValue);
-  };
-  
+  }
+
   function TabIndex(index) {
     return {
       id: `simple-tab-${index}`,
     };
-  };
+  }
 
   const [snackbarContent, setSnackbarContent] = React.useState("");
   const [severity, setSeverity] = React.useState("info");
@@ -473,9 +489,19 @@ function ViewAssessmentTeacher(props) {
     if (questionType === "longtext") {
       content = (
         <div>
-          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography
+            align="center"
+            variant="h6"
+            style={{ marginBottom: "10px" }}
+          >
+            <b>{`Soal ${questionNumber}`}</b>
+          </Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
-          <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+          <Typography
+            align="center"
+            style={{ marginTop: "15px" }}
+            color="primary"
+          >{`Bobot : ${questionWeight}`}</Typography>
         </div>
       );
     } else if (questionType === "shorttext") {
@@ -489,19 +515,28 @@ function ViewAssessmentTeacher(props) {
             key={`${questionNumber}-${iterator}`}
             disabled={true}
             value={questionAnswer[iterator]}
-          />);
+          />
+        );
         iterator++;
       }
 
       content = (
         <Grid item>
-          <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
-          <Typography align="justify">
-            <form>
-              {splitResult}
-            </form>
+          <Typography
+            align="center"
+            variant="h6"
+            style={{ marginBottom: "10px" }}
+          >
+            <b>{`Soal ${questionNumber}`}</b>
           </Typography>
-          <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+          <Typography align="justify">
+            <form>{splitResult}</form>
+          </Typography>
+          <Typography
+            align="center"
+            style={{ marginTop: "15px" }}
+            color="primary"
+          >{`Bobot : ${questionWeight}`}</Typography>
         </Grid>
       );
     } else {
@@ -511,7 +546,7 @@ function ViewAssessmentTeacher(props) {
           <Grid item>
             <Typography align="justify">{`${questionName}`}</Typography>
             <RadioGroup value={questionAnswer[0]}>
-              {questionOptions.map((option, i) =>
+              {questionOptions.map((option, i) => (
                 <div style={{ display: "flex" }}>
                   <FormControlLabel
                     disabled
@@ -521,17 +556,18 @@ function ViewAssessmentTeacher(props) {
                     label={option}
                   />
                 </div>
-              )}
+              ))}
             </RadioGroup>
           </Grid>
         );
-      } else { // type = checkbox
+      } else {
+        // type = checkbox
         answer = (
           <Grid item>
             {/* <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography> */}
             <Typography align="justify">{`${questionName}`}</Typography>
             <FormGroup>
-              {questionOptions.map((option, i) =>
+              {questionOptions.map((option, i) => (
                 <div style={{ display: "flex" }}>
                   <FormControlLabel
                     disabled
@@ -540,13 +576,15 @@ function ViewAssessmentTeacher(props) {
                     label={option}
                     control={
                       <Checkbox
-                        checked={questionAnswer.includes(String.fromCharCode(97 + i).toUpperCase())}
+                        checked={questionAnswer.includes(
+                          String.fromCharCode(97 + i).toUpperCase()
+                        )}
                         color="primary"
                       />
                     }
                   />
                 </div>
-              )}
+              ))}
             </FormGroup>
           </Grid>
         );
@@ -556,22 +594,43 @@ function ViewAssessmentTeacher(props) {
         <Hidden smDown>
           <Grid container>
             <Grid item xs={12}>
-              <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+              <Typography
+                align="center"
+                variant="h6"
+                style={{ marginBottom: "10px" }}
+              >
+                <b>{`Soal ${questionNumber}`}</b>
+              </Typography>
             </Grid>
             <Grid item xs={9}>
               {answer}
             </Grid>
 
             <Grid item>
-              <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
+              <Divider
+                orientation="vertical"
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              />
             </Grid>
 
-            <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+            <Grid
+              item
+              wrap="nowrap"
+              direction="column"
+              justify="center"
+              alignItems="center"
+              style={{ display: "flex", flexGrow: "1" }}
+            >
               <Grid item>
-                <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+                <Typography align="center" color="primary">
+                  Kunci Jawaban : {questionAnswer.join(", ")}
+                </Typography>
               </Grid>
               <Grid container item justify="center" alignItems="center">
-                <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+                <Typography
+                  style={{ marginTop: "5px", marginRight: "10px" }}
+                  color="primary"
+                >{`Bobot : ${questionWeight}`}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -579,34 +638,48 @@ function ViewAssessmentTeacher(props) {
         <Hidden mdUp>
           <Grid container>
             <Grid item xs={12}>
-              <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+              <Typography
+                align="center"
+                variant="h6"
+                style={{ marginBottom: "10px" }}
+              >
+                <b>{`Soal ${questionNumber}`}</b>
+              </Typography>
             </Grid>
             <Grid item xs={12}>
               {answer}
             </Grid>
 
-            <Grid item xs={12} wrap="nowrap" direction="column" justify="center" alignItems="center">
+            <Grid
+              item
+              xs={12}
+              wrap="nowrap"
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
               <Grid item>
-                <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+                <Typography align="center" color="primary">
+                  Kunci Jawaban : {questionAnswer.join(", ")}
+                </Typography>
               </Grid>
               <Grid container item justify="center" alignItems="center">
-                <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+                <Typography
+                  style={{ marginTop: "5px", marginRight: "10px" }}
+                  color="primary"
+                >{`Bobot : ${questionWeight}`}</Typography>
               </Grid>
             </Grid>
           </Grid>
-        </Hidden>
+        </Hidden>,
       ];
     }
 
-    return (
-      <Paper className={classes.contentItem}>
-          {content}
-      </Paper>
-    )
+    return <Paper className={classes.contentItem}>{content}</Paper>;
   }
 
   function handleGradeChange(e, studentId, questionIndex) {
-    let temp = { ...longtextGrades};
+    let temp = { ...longtextGrades };
     let grade = e.target.value; // masih dalam bentuk string, akan dikonversi menjadi angka pada saat klik tombol simpan
     temp[studentId] = { ...temp[studentId], [questionIndex]: grade };
     setLongtextGrades(temp);
@@ -619,16 +692,26 @@ function ViewAssessmentTeacher(props) {
     let numberGrade = Number(grade);
 
     if (grade === "" || isNaN(numberGrade) || numberGrade < 0) {
-      handleOpenSnackbar("error", "Nilai harus berupa angka dan tidak boleh kurang dari 0")
+      handleOpenSnackbar(
+        "error",
+        "Nilai harus berupa angka dan tidak boleh kurang dari 0"
+      );
     } else {
       temp[studentId] = { ...temp[studentId], [questionIndex]: numberGrade };
       setLongtextGrades(temp);
-      updateAssessmentGrades(assessment_id, studentId, questionIndex, numberGrade).then(() => {
-        handleOpenSnackbar("success", "Nilai berhasil diperbarui")
-      }).catch((err) => {
-        console.log(err);
-        handleOpenSnackbar("error", "Nilai gagal diperbarui")
-      });
+      updateAssessmentGrades(
+        assessment_id,
+        studentId,
+        questionIndex,
+        numberGrade
+      )
+        .then(() => {
+          handleOpenSnackbar("success", "Nilai berhasil diperbarui");
+        })
+        .catch((err) => {
+          console.log(err);
+          handleOpenSnackbar("error", "Nilai gagal diperbarui");
+        });
     }
   }
   function generateAllStudentAnswer() {
@@ -645,7 +728,7 @@ function ViewAssessmentTeacher(props) {
       let studentId = student.id;
       let studentAnswer = submissions[studentId][qnsIndex];
 
-      let studentInfo = all_student_object[studentId]; 
+      let studentInfo = all_student_object[studentId];
 
       let studentClassName = all_classes_map.get(studentInfo.kelas).name;
       let questionWeight;
@@ -653,7 +736,7 @@ function ViewAssessmentTeacher(props) {
       let mark = 0;
       if (question.type === "longtext") {
         questionWeight = weights[question.type][qnsIndex];
-      
+
         // let longtextGrade = longtextGrades[studentId][qnsIndex]; // object
         if (longtextGrades[studentId] && longtextGrades[studentId][qnsIndex]) {
           // jika sudah pernah dinilai
@@ -680,27 +763,31 @@ function ViewAssessmentTeacher(props) {
             studentAnswer.forEach((answer) => {
               if (questionAnswer.includes(answer)) {
                 temp_correct += 1;
-              }
-              else {
+              } else {
                 temp_correct -= 2;
               }
             });
 
             if (temp_correct > 0) {
-              mark = weights.checkbox * temp_correct / questionAnswer.length;
+              mark = (weights.checkbox * temp_correct) / questionAnswer.length;
             }
-          } else { // type === "shorttext"
+          } else {
+            // type === "shorttext"
             let temp_correct = 0;
-            for (let answerIdx = 0; answerIdx < questionAnswer.length; answerIdx++) {
+            for (
+              let answerIdx = 0;
+              answerIdx < questionAnswer.length;
+              answerIdx++
+            ) {
               if (questionAnswer[answerIdx] === studentAnswer[answerIdx]) {
                 temp_correct++;
               }
             }
-            mark = weights.shorttext * temp_correct / questionAnswer.length;
+            mark = (weights.shorttext * temp_correct) / questionAnswer.length;
           }
         } // jika murid tidak menjawab soal ini, mark tetap 0
       }
-      
+
       return (
         <QuestionPerQuestion
           classes={classes}
@@ -719,7 +806,7 @@ function ViewAssessmentTeacher(props) {
     });
   }
 
-  function generateQstStdAnswer () {
+  function generateQstStdAnswer() {
     let studentId = selectedStudent;
     let studentAnswers;
 
@@ -733,7 +820,7 @@ function ViewAssessmentTeacher(props) {
     let weights = selectedAssessments.question_weight;
 
     // traverse submission semua murid, (murid yang belum mengerjakan assessment ini tidak akan ditampilkan)
-    return questions.map((question, questionIndex ) => {
+    return questions.map((question, questionIndex) => {
       let studentAnswer = studentAnswers[questionIndex];
       let questionWeight;
 
@@ -742,7 +829,10 @@ function ViewAssessmentTeacher(props) {
         questionWeight = weights[question.type][questionIndex];
 
         // let longtextGrade = longtextGrades[studentId][questionIndex];
-        if (longtextGrades[studentId] && (longtextGrades[studentId][questionIndex] !== undefined)) {
+        if (
+          longtextGrades[studentId] &&
+          longtextGrades[studentId][questionIndex] !== undefined
+        ) {
           // jika sudah pernah dinilai
           mark = longtextGrades[studentId][questionIndex];
         } else {
@@ -767,24 +857,28 @@ function ViewAssessmentTeacher(props) {
             studentAnswer.forEach((answer) => {
               if (questionAnswer.includes(answer)) {
                 temp_correct += 1;
-              }
-              else {
+              } else {
                 temp_correct -= 2;
               }
             });
 
             if (temp_correct > 0) {
-              mark = weights.checkbox * temp_correct / questionAnswer.length;
+              mark = (weights.checkbox * temp_correct) / questionAnswer.length;
             }
-          } else { // type === "shorttext"
+          } else {
+            // type === "shorttext"
             let temp_correct = 0;
-            for (let answerIdx = 0; answerIdx < questionAnswer.length; answerIdx++) {
+            for (
+              let answerIdx = 0;
+              answerIdx < questionAnswer.length;
+              answerIdx++
+            ) {
               if (questionAnswer[answerIdx] === studentAnswer[answerIdx]) {
                 temp_correct++;
               }
             }
 
-            mark = weights.shorttext * temp_correct / questionAnswer.length;
+            mark = (weights.shorttext * temp_correct) / questionAnswer.length;
           }
         } // jika murid tidak menjawab soal ini, mark tetap 0
       }
@@ -812,18 +906,18 @@ function ViewAssessmentTeacher(props) {
   }
 
   function isAssessmentLoaded() {
-    return (Object.keys(selectedAssessments).length !== 0);
+    return Object.keys(selectedAssessments).length !== 0;
   }
   function isAllStudentsLoaded() {
-    return (all_students.length !== 0);
+    return all_students.length !== 0;
   }
   function isAllClassMapEmpty() {
-    return (all_classes_map.size !== 0);
+    return all_classes_map.size !== 0;
   }
 
   function handleChangeQuestion(i) {
     if (i >= 0 && i <= questionCount.current - 1) {
-      setQnsIndex(i)
+      setQnsIndex(i);
     }
   }
 
@@ -845,7 +939,10 @@ function ViewAssessmentTeacher(props) {
       if (question_type === "longtext") {
         for (let studentId of Object.keys(selectedAssessments.submissions)) {
           // jika soal uraian ini belum diberi nilai (perlu undefined karena nilai soal uraian bisa 0)
-          if (!longtextGrades[studentId] || (longtextGrades[studentId][question_number - 1] === undefined)) {
+          if (
+            !longtextGrades[studentId] ||
+            longtextGrades[studentId][question_number - 1] === undefined
+          ) {
             fullyGraded = false;
             break;
           }
@@ -858,18 +955,41 @@ function ViewAssessmentTeacher(props) {
       <ToggleButton
         value={question_number - 1}
         aria-label={question_number - 1}
-        classes={{ root: classes.toggleButtonRoot, selected: classes.toggleButtonSelected}}
+        classes={{
+          root: classes.toggleButtonRoot,
+          selected: classes.toggleButtonSelected,
+        }}
         selected={qnsIndex === question_number - 1}
       >
         <Badge
-          style={{ width: "35px", height: "35px", display: "flex", alignItems: "center", justifyContent: "center" }}
+          style={{
+            width: "35px",
+            height: "35px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           badgeContent={
-            (fullyGraded) ? (
-              <Avatar style={{ backgroundColor: "green", color: "white", width: "20px", height: "20px" }}>
+            fullyGraded ? (
+              <Avatar
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  width: "20px",
+                  height: "20px",
+                }}
+              >
                 <CheckCircleIcon style={{ width: "15px", height: "15px" }} />
               </Avatar>
             ) : (
-              <Avatar style={{ backgroundColor: "red", color: "white", width: "20px", height: "20px" }}>
+              <Avatar
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  width: "20px",
+                  height: "20px",
+                }}
+              >
                 <ErrorIcon style={{ width: "15px", height: "15px" }} />
               </Avatar>
             )
@@ -879,22 +999,20 @@ function ViewAssessmentTeacher(props) {
             horizontal: "right",
           }}
         >
-          <Typography>
-            {question_number}
-          </Typography>
+          <Typography>{question_number}</Typography>
         </Badge>
-    </ToggleButton>
-    )
+      </ToggleButton>
+    );
   }
 
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
-        <Grid container direction="column" spacing={3}>
-          <Grid item>
-            <Paper className={classes.content}>
-              <Grid container spacing={2}>
-                {/* <Grid item xs={12} md={7}>
+      <Grid container direction="column" spacing={3}>
+        <Grid item>
+          <Paper className={classes.content}>
+            <Grid container spacing={2}>
+              {/* <Grid item xs={12} md={7}>
                   <Typography variant="h4" gutterBottom>
                     {selectedAssessments.name}
                   </Typography>
@@ -939,20 +1057,46 @@ function ViewAssessmentTeacher(props) {
                   </Typography>
                 </Grid>
 
-                <Grid item xs={12} md={7} spacing={8} style={{ paddingTop: "0" }}>
+                <Grid
+                  item
+                  xs={12}
+                  md={7}
+                  spacing={8}
+                  style={{ paddingTop: "0" }}
+                >
                   <Typography variant="caption" color="textSecondary">
                     <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
                   </Typography>
                 </Grid>
 
-                <Grid item xs={12} md={5} spacing={8} style={{ paddingTop: "0" }}>
+                <Grid
+                  item
+                  xs={12}
+                  md={5}
+                  spacing={8}
+                  style={{ paddingTop: "0" }}
+                >
                   <h6 style={{ marginBottom: "0" }}>
-                    <Typography align="right" variant="body2" color="textSecondary">
-                      Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                    <Typography
+                      align="right"
+                      variant="body2"
+                      color="textSecondary"
+                    >
+                      Mulai:{" "}
+                      {moment(selectedAssessments.start_date)
+                        .locale("id")
+                        .format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   </h6>
-                  <Typography align="right" variant="body2" color="textSecondary">
-                    Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  <Typography
+                    align="right"
+                    variant="body2"
+                    color="textSecondary"
+                  >
+                    Selesai:{" "}
+                    {moment(selectedAssessments.end_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
                   </Typography>
                 </Grid>
               </Hidden>
@@ -969,10 +1113,16 @@ function ViewAssessmentTeacher(props) {
 
                 <Grid item xs={12} md={7} spacing={8}>
                   <Typography variant="body2" color="textSecondary">
-                    Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                    Mulai:{" "}
+                    {moment(selectedAssessments.start_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                    Selesai:{" "}
+                    {moment(selectedAssessments.end_date)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH:mm")}
                   </Typography>
                 </Grid>
               </Hidden>
@@ -986,15 +1136,19 @@ function ViewAssessmentTeacher(props) {
                   Kelas yang Diberikan:
                 </Typography>
                 <Typography>
-                  {!selectedAssessments.class_assigned || !all_classes_map.size ? null :
-                    selectedAssessments.class_assigned.map((kelas, i) => {
-                      if (all_classes_map.get(kelas)) {
-                        if (i === selectedAssessments.class_assigned.length - 1)
-                          return `${all_classes_map.get(kelas).name}`
-                        return (`${all_classes_map.get(kelas).name}, `)
-                      }
-                      return null;
-                    })}
+                  {!selectedAssessments.class_assigned || !all_classes_map.size
+                    ? null
+                    : selectedAssessments.class_assigned.map((kelas, i) => {
+                        if (all_classes_map.get(kelas)) {
+                          if (
+                            i ===
+                            selectedAssessments.class_assigned.length - 1
+                          )
+                            return `${all_classes_map.get(kelas).name}`;
+                          return `${all_classes_map.get(kelas).name}, `;
+                        }
+                        return null;
+                      })}
                 </Typography>
               </Grid>
 
@@ -1002,13 +1156,9 @@ function ViewAssessmentTeacher(props) {
                 <Typography color="primary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
-                <Typography>
-                  {selectedAssessments.description}
-                </Typography>
+                <Typography>{selectedAssessments.description}</Typography>
               </Grid>
-
-
-              </Grid>
+            </Grid>
             {/* <Hidden smDown>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -1027,10 +1177,27 @@ function ViewAssessmentTeacher(props) {
 
             <Grid container spacing={2}>
               <Hidden xsDown>
-                <Grid item xs={12} md={2} style={{ display: "flex", flexDirection: "row", marginTop: "10px" }}>
+                <Grid
+                  item
+                  xs={12}
+                  md={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "10px",
+                  }}
+                >
                   <Typography>Navigasi Soal :</Typography>
                   <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
-                    <Badge badgeContent={<HelpOutlineIcon className={classes.navigationHelpIcon} />} variant="standard" style={{ marginLeft: "4px" }}>
+                    <Badge
+                      badgeContent={
+                        <HelpOutlineIcon
+                          className={classes.navigationHelpIcon}
+                        />
+                      }
+                      variant="standard"
+                      style={{ marginLeft: "4px" }}
+                    >
                       {/* Hanya Sebagai Anchor */}
                       <Typography style={{ display: "none" }}>:</Typography>
                     </Badge>
@@ -1040,40 +1207,48 @@ function ViewAssessmentTeacher(props) {
                   <ToggleButtonGroup
                     value={qnsIndex}
                     exclusive
-                    onChange={(e, newIndex) => { handleChangeToggleButton(e, newIndex) }}
+                    onChange={(e, newIndex) => {
+                      handleChangeToggleButton(e, newIndex);
+                    }}
                     aria-label="question index"
-                    classes={{ root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren }}
+                    classes={{
+                      root: classes.toggleGroupRoot,
+                      grouped: classes.toggleGroupChildren,
+                    }}
                   >
-                  {
-                    (hasLongtextQst.current === true) ? (
-                      (isAssessmentLoaded() && longtextGrades) ? (
-                        selectedAssessments.questions.map((qns, i) => {
-                          return questionPage(classes, i + 1, qns.type)
-                        })
-                      ) : (
-                        null
-                      )
-                    ) : (
-                      (hasLongtextQst.current === false) ? (
-                        (isAssessmentLoaded()) ? (
-                          selectedAssessments.questions.map((qns, i) => {
-                            return (questionPage(classes, i + 1, qns.type)
-                            )
+                    {hasLongtextQst.current === true
+                      ? isAssessmentLoaded() && longtextGrades
+                        ? selectedAssessments.questions.map((qns, i) => {
+                            return questionPage(classes, i + 1, qns.type);
                           })
-                        ) : (
-                          null
-                        )
-                    ) : (
-                      null
-                    )
-                    )
-                  }
+                        : null
+                      : hasLongtextQst.current === false
+                      ? isAssessmentLoaded()
+                        ? selectedAssessments.questions.map((qns, i) => {
+                            return questionPage(classes, i + 1, qns.type);
+                          })
+                        : null
+                      : null}
                   </ToggleButtonGroup>
                 </Grid>
               </Hidden>
               <Hidden smUp>
-                <Grid item xs={12} md={2} style={{ display: "flex", flexDirection: "row", marginTop: "10px", justifyContent: "space-between" }}>
-                  <Button onClick={() => { handleChangeQuestion(qnsIndex - 1) }}>
+                <Grid
+                  item
+                  xs={12}
+                  md={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "10px",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      handleChangeQuestion(qnsIndex - 1);
+                    }}
+                  >
                     <div className={classes.mobileNav}>
                       <NavigateBeforeIcon className={classes.mobileNavButton} />
                       <Typography variant="subtitle-2">Sebelum</Typography>
@@ -1082,10 +1257,16 @@ function ViewAssessmentTeacher(props) {
                   <Button onClick={handleOpenNavDialog}>
                     <div className={classes.mobileNav}>
                       <ExploreIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">Navigasi Soal</Typography>
+                      <Typography variant="subtitle-2">
+                        Navigasi Soal
+                      </Typography>
                     </div>
                   </Button>
-                  <Button onClick={() => { handleChangeQuestion(qnsIndex + 1) }}>
+                  <Button
+                    onClick={() => {
+                      handleChangeQuestion(qnsIndex + 1);
+                    }}
+                  >
                     <div className={classes.mobileNav}>
                       <NavigateNextIcon className={classes.mobileNavButton} />
                       <Typography variant="subtitle-2">Sesudah</Typography>
@@ -1113,13 +1294,34 @@ function ViewAssessmentTeacher(props) {
                   value={value}
                   onChange={handleChange}
                 >
-                  <Tab icon={<BallotIcon />} label="Per Soal" {...TabIndex(0)} />
-                  <Tab icon={<SupervisorAccountIcon />} label="Per Murid" {...TabIndex(1)} />
+                  <Tab
+                    icon={<BallotIcon />}
+                    label="Per Soal"
+                    {...TabIndex(0)}
+                  />
+                  <Tab
+                    icon={<SupervisorAccountIcon />}
+                    label="Per Murid"
+                    {...TabIndex(1)}
+                  />
                 </Tabs>
               </Grid>
-              <Grid item xs={2} md={2} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", position: "relative" }}>
+              <Grid
+                item
+                xs={2}
+                md={2}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                  position: "relative",
+                }}
+              >
                 <LightTooltip title="Urutkan Tugas">
-                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                  <IconButton
+                    onClick={handleOpenSortMenu}
+                    className={classes.sortButton}
+                  >
                     <SortIcon />
                   </IconButton>
                 </LightTooltip>
@@ -1145,15 +1347,18 @@ function ViewAssessmentTeacher(props) {
                       <TableSortLabel
                         active={orderBy === headCell.id}
                         direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={() => { handleRequestSort(headCell.id) }}
+                        onClick={() => {
+                          handleRequestSort(headCell.id);
+                        }}
                       >
                         {headCell.label}
-                        {orderBy === headCell.id ?
+                        {orderBy === headCell.id ? (
                           <span className={classes.visuallyHidden}>
-                            {order === "desc" ? "sorted descending" : "sorted ascending"}
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
                           </span>
-                          : null
-                        }
+                        ) : null}
                       </TableSortLabel>
                     </MenuItem>
                   ))}
@@ -1163,86 +1368,89 @@ function ViewAssessmentTeacher(props) {
           </Paper>
 
           {/* Tab Panel Per Soal */}
-          <div hidden={value === 1} style={{ padding: "24px"}}>
-            {
-              (isAssessmentLoaded()) ? (
-                (selectedAssessments.questions[qnsIndex].type === "longtext") ? (
-                  generateQuestion(
+          <div hidden={value === 1} style={{ padding: "24px" }}>
+            {isAssessmentLoaded()
+              ? selectedAssessments.questions[qnsIndex].type === "longtext"
+                ? generateQuestion(
                     qnsIndex + 1,
                     selectedAssessments.question_weight.longtext[qnsIndex],
                     selectedAssessments.questions[qnsIndex]
                   )
-                ) : (
-                  generateQuestion(
+                : generateQuestion(
                     qnsIndex + 1,
-                    selectedAssessments.question_weight[selectedAssessments.questions[qnsIndex].type],
+                    selectedAssessments.question_weight[
+                      selectedAssessments.questions[qnsIndex].type
+                    ],
                     selectedAssessments.questions[qnsIndex]
                   )
-                )
-              ) : (
-                null
-              )
-            }
+              : null}
 
-            {
-              (isAssessmentLoaded() && selectedAssessments.submissions) ? (
-                (hasLongtextQst.current === true) ? (
-                  (longtextGrades && isAllClassMapEmpty()) ? (
-                    generateAllStudentAnswer()
-                  ) : (
-                    null
-                  )
-                ) : (
-                  (hasLongtextQst.current === false) ? (
-                    (isAssessmentLoaded() && isAllStudentsLoaded() && isAllClassMapEmpty()) ? (
-                      generateAllStudentAnswer()
-                    ) : (
-                      null
-                    )
-                  ) : (
-                      // hasLongtextQst.current === null
-                    null
-                  )
-                )
-              ) : (
-                null
-              )
-            }
-            </div>
-          
+            {isAssessmentLoaded() && selectedAssessments.submissions
+              ? hasLongtextQst.current === true
+                ? longtextGrades && isAllClassMapEmpty()
+                  ? generateAllStudentAnswer()
+                  : null
+                : hasLongtextQst.current === false
+                ? isAssessmentLoaded() &&
+                  isAllStudentsLoaded() &&
+                  isAllClassMapEmpty()
+                  ? generateAllStudentAnswer()
+                  : null
+                : // hasLongtextQst.current === null
+                  null
+              : null}
+          </div>
+
           {/* Tab Panel Per Murid */}
           <div hidden={value === 0} style={{ padding: "24px" }}>
             <Paper className={classes.perStudentSelect}>
               <div className={classes.selectDiv}>
                 <Grid container>
                   <Grid item xs={1} sm={3}></Grid>
-                  <Grid item xs={5} sm={2} className={classes.selectDescription}>
+                  <Grid
+                    item
+                    xs={5}
+                    sm={2}
+                    className={classes.selectDescription}
+                  >
                     <Typography>Nama Murid :</Typography>
                   </Grid>
                   <Grid item xs={5} sm={2}>
                     <Select
-                      disabled={!menuOption || menuOption.studentOptions.combined.length === 0}
+                      disabled={
+                        !menuOption ||
+                        menuOption.studentOptions.combined.length === 0
+                      }
                       id="murid"
                       className={classes.select}
                       variant="outlined"
                       value={selectedStudent}
-                      onChange={(e) => { setSelectedStudent(e.target.value) }}
+                      onChange={(e) => {
+                        setSelectedStudent(e.target.value);
+                      }}
                     >
-                      {
-                        (menuOption && menuOption.studentOptions.combined.length !== 0) ? (
-                          (selectedClass) ? (
-                            menuOption.studentOptions[selectedClass].map((student) => {
-                              return <MenuItem key={student.id} value={student.id}>{student.name}</MenuItem>
-                            })
-                          ) : (
-                              menuOption.studentOptions.combined.map((student) => {
-                                return <MenuItem key={student.id} value={student.id}>{student.name}</MenuItem>
-                              })
+                      {menuOption &&
+                      menuOption.studentOptions.combined.length !== 0
+                        ? selectedClass
+                          ? menuOption.studentOptions[selectedClass].map(
+                              (student) => {
+                                return (
+                                  <MenuItem key={student.id} value={student.id}>
+                                    {student.name}
+                                  </MenuItem>
+                                );
+                              }
                             )
-                        ) : (
-                          null
-                        )
-                      }
+                          : menuOption.studentOptions.combined.map(
+                              (student) => {
+                                return (
+                                  <MenuItem key={student.id} value={student.id}>
+                                    {student.name}
+                                  </MenuItem>
+                                );
+                              }
+                            )
+                        : null}
                     </Select>
                   </Grid>
                   <Grid item xs={1} sm={5}></Grid>
@@ -1251,31 +1459,46 @@ function ViewAssessmentTeacher(props) {
               <div className={classes.selectDiv} style={{ marginTop: "10px" }}>
                 <Grid container>
                   <Grid item xs={1} sm={3}></Grid>
-                  <Grid item xs={5} sm={2} className={classes.selectDescription}>
+                  <Grid
+                    item
+                    xs={5}
+                    sm={2}
+                    className={classes.selectDescription}
+                  >
                     <Typography>Kelas :</Typography>
                   </Grid>
                   <Grid item xs={5} sm={2}>
                     <Select
-                      disabled={!menuOption || menuOption.studentOptions.combined.length === 0}
+                      disabled={
+                        !menuOption ||
+                        menuOption.studentOptions.combined.length === 0
+                      }
                       id="kelas"
                       className={classes.select}
                       variant="outlined"
                       value={
-                        (selectedStudent) ? (
-                          (all_student_object && Object.keys(all_student_object).length !== 0) ? (all_student_object[selectedStudent].kelas) : (selectedClass)
-                        ) : (selectedClass)
+                        selectedStudent
+                          ? all_student_object &&
+                            Object.keys(all_student_object).length !== 0
+                            ? all_student_object[selectedStudent].kelas
+                            : selectedClass
+                          : selectedClass
                       }
-                      onChange={(e) => { setSelectedClass(e.target.value); setSelectedStudent(null); }}
+                      onChange={(e) => {
+                        setSelectedClass(e.target.value);
+                        setSelectedStudent(null);
+                      }}
                     >
-                      {
-                        (menuOption && menuOption.studentOptions.combined.length !== 0) ? (
-                          menuOption.classOptions.map((kelas) => {
-                            return <MenuItem key={kelas.id} value={kelas.id}>{kelas.name}</MenuItem>
+                      {menuOption &&
+                      menuOption.studentOptions.combined.length !== 0
+                        ? menuOption.classOptions.map((kelas) => {
+                            return (
+                              <MenuItem key={kelas.id} value={kelas.id}>
+                                {kelas.name}
+                              </MenuItem>
+                            );
                           })
-                        ) : (
-                          null
-                        )
-                      }
+                        : null}
                     </Select>
                   </Grid>
                   <Grid item xs={1} sm={5}></Grid>
@@ -1283,99 +1506,90 @@ function ViewAssessmentTeacher(props) {
               </div>
             </Paper>
 
-            {
-              (isAssessmentLoaded() && selectedAssessments.submissions) ? (
-                (hasLongtextQst.current === true) ? (
-                  ((longtextGrades !== undefined) && isAllClassMapEmpty() && selectedStudent) ? (
-                    generateQstStdAnswer()
-                  ) : (
-                      null
-                    )
-                ) : (
-                  (hasLongtextQst.current === false) ? (
-                    (isAllClassMapEmpty() && selectedStudent) ? (
-                      generateQstStdAnswer()
-                    ) : (
-                        null
-                      )
-                  ) : (
-                      // hasLongtextQst.current === null
-                      null
-                    )
-                )
-              ) : (
-                null
-              )
-            }
+            {isAssessmentLoaded() && selectedAssessments.submissions
+              ? hasLongtextQst.current === true
+                ? longtextGrades !== undefined &&
+                  isAllClassMapEmpty() &&
+                  selectedStudent
+                  ? generateQstStdAnswer()
+                  : null
+                : hasLongtextQst.current === false
+                ? isAllClassMapEmpty() && selectedStudent
+                  ? generateQstStdAnswer()
+                  : null
+                : // hasLongtextQst.current === null
+                  null
+              : null}
           </div>
         </Grid>
       </Grid>
-      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
-        <MuiAlert variant="filled" severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseNavDialog}
-        fullWidth
-      >
-        <DialogTitle style={{ textAlign: "center", padding: "16px 24px 8px" }}>Navigasi Soal</DialogTitle>
+      <Dialog open={openDialog} onClose={handleCloseNavDialog} fullWidth>
+        <DialogTitle style={{ textAlign: "center", padding: "16px 24px 8px" }}>
+          Navigasi Soal
+        </DialogTitle>
         <DialogContent style={{ padding: "8px 24px 16px" }}>
           <Grid container item>
             <ToggleButtonGroup
               value={qnsIndex}
               exclusive
-              onChange={(e, newIndex) => { handleChangeToggleButton(e, newIndex) }}
+              onChange={(e, newIndex) => {
+                handleChangeToggleButton(e, newIndex);
+              }}
               aria-label="question index"
-              classes={{ root: classes.toggleGroupRoot, grouped: classes.toggleGroupChildren }}
+              classes={{
+                root: classes.toggleGroupRoot,
+                grouped: classes.toggleGroupChildren,
+              }}
             >
-            {
-              (hasLongtextQst.current === true) ? (
-                (isAssessmentLoaded() && longtextGrades) ? (
-                  selectedAssessments.questions.map((qns, i) => {
-                    return (
-                      questionPage(classes, i + 1, qns.type)
-                    )
-                  })
-                ) : (
-                  null
-                )
-              ) : (
-                (hasLongtextQst.current === false) ? (
-                  (isAssessmentLoaded()) ? (
-                    selectedAssessments.questions.map((qns, i) => {
-                      return (
-                        questionPage(classes, i + 1, qns.type)
-                      )
+              {hasLongtextQst.current === true
+                ? isAssessmentLoaded() && longtextGrades
+                  ? selectedAssessments.questions.map((qns, i) => {
+                      return questionPage(classes, i + 1, qns.type);
                     })
-                  ) : (
-                    null
-                  )
-                ) : (
-                  null
-                )
-              )
-            }
+                  : null
+                : hasLongtextQst.current === false
+                ? isAssessmentLoaded()
+                  ? selectedAssessments.questions.map((qns, i) => {
+                      return questionPage(classes, i + 1, qns.type);
+                    })
+                  : null
+                : null}
             </ToggleButtonGroup>
           </Grid>
         </DialogContent>
       </Dialog>
     </div>
-  )
-};
+  );
+}
 
 function QuestionPerQuestion(props) {
-  const { 
-    classes, 
-    studentId, 
+  const {
+    classes,
+    studentId,
     studentName,
     studentClass,
-    studentAnswer, 
-    studentMark, 
+    studentAnswer,
+    studentMark,
     questionNumber,
     questionWeight,
-    questionInfo
+    questionInfo,
   } = props;
   const { handleGradeChange, handleSaveGrade } = props;
   let questionType = questionInfo.type;
@@ -1389,19 +1603,27 @@ function QuestionPerQuestion(props) {
           variant="standard"
           style={{ marginLeft: "4px", width: "100%" }}
           badgeContent={
-            (studentMark === null) ? (
+            studentMark === null ? (
               <ErrorIcon className={classes.warningBadge} fontSize="large" />
             ) : (
-              <CheckCircleIcon className={classes.checkBadge} fontSize="large" />
+              <CheckCircleIcon
+                className={classes.checkBadge}
+                fontSize="large"
+              />
             )
           }
         >
           <Grid container item xs={12} style={{ padding: "20px" }}>
             <Grid item xs={12}>
-              <Typography variant="h6"><b>{`${studentName}`}</b></Typography>
+              <Typography variant="h6">
+                <b>{`${studentName}`}</b>
+              </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="subtitle-1" color="textSecondary">{`${studentClass}`}</Typography>
+              <Typography
+                variant="subtitle-1"
+                color="textSecondary"
+              >{`${studentClass}`}</Typography>
             </Grid>
 
             <Grid item xs={12}>
@@ -1409,11 +1631,24 @@ function QuestionPerQuestion(props) {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography align="justify">{(studentAnswer[0]) ? `${studentAnswer[0]}` : "Tidak menjawab"}</Typography>
+              <Typography align="justify">
+                {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
+              </Typography>
             </Grid>
 
-            <Grid container item justify="flex-end" alignItems="center" style={{ marginTop: "25px" }}>
-              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+            <Grid
+              container
+              item
+              justify="flex-end"
+              alignItems="center"
+              style={{ marginTop: "25px" }}
+            >
+              <Typography
+                style={{ marginTop: "5px", marginRight: "10px" }}
+                color="textSecondary"
+              >
+                Poin :
+              </Typography>
               <TextField
                 value={studentMark}
                 key={`${studentId}-${questionNumber}`}
@@ -1422,22 +1657,26 @@ function QuestionPerQuestion(props) {
                     borderBottom: "none",
                     boxShadow: "none",
                     margin: "0px",
-                    width: "30px"
-                  }
+                    width: "30px",
+                  },
                 }}
                 InputProps={{
                   endAdornment: `/ ${questionWeight}`,
                 }}
-                onChange={(e) => { handleGradeChange(e, studentId, questionNumber - 1) }}
+                onChange={(e) => {
+                  handleGradeChange(e, studentId, questionNumber - 1);
+                }}
               />
               <div>
                 <Button
                   className={classes.saveButton}
                   size="small"
-                  onClick={() => { handleSaveGrade(studentId, questionNumber - 1) }}
+                  onClick={() => {
+                    handleSaveGrade(studentId, questionNumber - 1);
+                  }}
                 >
                   SIMPAN
-                  </Button>
+                </Button>
               </div>
             </Grid>
           </Grid>
@@ -1450,7 +1689,7 @@ function QuestionPerQuestion(props) {
       answer = (
         <Grid item>
           <RadioGroup value={studentAnswer[0]}>
-            {questionOptions.map((option, i) =>
+            {questionOptions.map((option, i) => (
               <div style={{ display: "flex" }}>
                 <FormControlLabel
                   disabled
@@ -1460,7 +1699,7 @@ function QuestionPerQuestion(props) {
                   label={option}
                 />
               </div>
-            )}
+            ))}
           </RadioGroup>
         </Grid>
       );
@@ -1468,7 +1707,7 @@ function QuestionPerQuestion(props) {
       answer = (
         <Grid item>
           <FormGroup>
-            {questionOptions.map((option, i) =>
+            {questionOptions.map((option, i) => (
               <div style={{ display: "flex" }}>
                 <FormControlLabel
                   disabled
@@ -1477,13 +1716,15 @@ function QuestionPerQuestion(props) {
                   label={option}
                   control={
                     <Checkbox
-                      checked={studentAnswer.includes(String.fromCharCode(97 + i).toUpperCase())}
+                      checked={studentAnswer.includes(
+                        String.fromCharCode(97 + i).toUpperCase()
+                      )}
                       color="primary"
                     />
                   }
                 />
               </div>
-            )}
+            ))}
           </FormGroup>
         </Grid>
       );
@@ -1498,16 +1739,15 @@ function QuestionPerQuestion(props) {
             key={`${studentId}-${iterator}`}
             disabled={true}
             value={studentAnswer[iterator]}
-          />);
+          />
+        );
         iterator++;
       }
 
       answer = (
         <Grid item>
           <Typography align="justify">
-            <form>
-              {splitResult}
-            </form>
+            <form>{splitResult}</form>
           </Typography>
         </Grid>
       );
@@ -1517,10 +1757,15 @@ function QuestionPerQuestion(props) {
       <Paper style={{ width: "100%", marginBottom: "30px" }}>
         <Grid container item xs={12} style={{ padding: "20px" }}>
           <Grid item xs={12}>
-            <Typography variant="h6"><b>{`${studentName}`}</b></Typography>
+            <Typography variant="h6">
+              <b>{`${studentName}`}</b>
+            </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle-1" color="textSecondary">{`${studentClass}`}</Typography>
+            <Typography
+              variant="subtitle-1"
+              color="textSecondary"
+            >{`${studentClass}`}</Typography>
           </Grid>
 
           <Grid item xs={12}>
@@ -1534,12 +1779,27 @@ function QuestionPerQuestion(props) {
               </Grid>
 
               <Grid item>
-                <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
+                <Divider
+                  orientation="vertical"
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                />
               </Grid>
 
-              <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+              <Grid
+                item
+                wrap="nowrap"
+                direction="column"
+                justify="center"
+                alignItems="center"
+                style={{ display: "flex", flexGrow: "1" }}
+              >
                 <Grid container item justify="center" alignItems="center">
-                  <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+                  <Typography
+                    style={{ marginTop: "5px", marginRight: "10px" }}
+                    color="textSecondary"
+                  >
+                    Poin :
+                  </Typography>
                   <TextField
                     disabled
                     key={`${studentId}-${questionNumber}`}
@@ -1549,8 +1809,8 @@ function QuestionPerQuestion(props) {
                         borderBottom: "none",
                         boxShadow: "none",
                         margin: "0px",
-                        width: "30px"
-                      }
+                        width: "30px",
+                      },
                     }}
                     InputProps={{
                       endAdornment: `/ ${questionWeight}`,
@@ -1566,9 +1826,21 @@ function QuestionPerQuestion(props) {
               <Grid item xs={12}>
                 {answer}
               </Grid>
-              <Grid item xs={12} wrap="nowrap" direction="column" justify="center" alignItems="center">
+              <Grid
+                item
+                xs={12}
+                wrap="nowrap"
+                direction="column"
+                justify="center"
+                alignItems="center"
+              >
                 <Grid container item justify="center" alignItems="center">
-                  <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+                  <Typography
+                    style={{ marginTop: "5px", marginRight: "10px" }}
+                    color="textSecondary"
+                  >
+                    Poin :
+                  </Typography>
                   <TextField
                     disabled
                     key={`${studentId}-${questionNumber}`}
@@ -1578,8 +1850,8 @@ function QuestionPerQuestion(props) {
                         borderBottom: "none",
                         boxShadow: "none",
                         margin: "0px",
-                        width: "30px"
-                      }
+                        width: "30px",
+                      },
                     }}
                     InputProps={{
                       endAdornment: `/ ${questionWeight}`,
@@ -1603,7 +1875,7 @@ function QuestionAnswerPerStudent(props) {
     studentMark,
     questionWeight,
     questionNumber,
-    questionInfo
+    questionInfo,
   } = props;
   let questionType = questionInfo.type;
   let questionName = questionInfo.name;
@@ -1618,7 +1890,7 @@ function QuestionAnswerPerStudent(props) {
         variant="standard"
         style={{ marginLeft: "4px", width: "100%" }}
         badgeContent={
-          (studentMark === null) ? (
+          studentMark === null ? (
             <ErrorIcon className={classes.warningBadge} fontSize="large" />
           ) : (
             <CheckCircleIcon className={classes.checkBadge} fontSize="large" />
@@ -1627,13 +1899,23 @@ function QuestionAnswerPerStudent(props) {
       >
         <Grid container item xs={12} style={{ padding: "20px" }}>
           <Grid item xs={12}>
-            <Typography align="center" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+            <Typography
+              align="center"
+              variant="h6"
+              style={{ marginBottom: "10px" }}
+            >
+              <b>{`Soal ${questionNumber}`}</b>
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography align="justify">{`${questionName}`}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography align="center" style={{ marginTop: "15px" }} color="primary">{`Bobot : ${questionWeight}`}</Typography>
+            <Typography
+              align="center"
+              style={{ marginTop: "15px" }}
+              color="primary"
+            >{`Bobot : ${questionWeight}`}</Typography>
           </Grid>
 
           <Grid item xs={12}>
@@ -1641,14 +1923,32 @@ function QuestionAnswerPerStudent(props) {
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="h6" style={{ textDecoration: "underline", marginBottom: "10px" }}><b>Jawaban</b></Typography>
+            <Typography
+              variant="h6"
+              style={{ textDecoration: "underline", marginBottom: "10px" }}
+            >
+              <b>Jawaban</b>
+            </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography align="justify">{(studentAnswer[0]) ? `${studentAnswer[0]}` : "Tidak menjawab"}</Typography>
+            <Typography align="justify">
+              {studentAnswer[0] ? `${studentAnswer[0]}` : "Tidak menjawab"}
+            </Typography>
           </Grid>
 
-          <Grid container item justify="flex-end" alignItems="center" style={{ marginTop: "25px" }}>
-            <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+          <Grid
+            container
+            item
+            justify="flex-end"
+            alignItems="center"
+            style={{ marginTop: "25px" }}
+          >
+            <Typography
+              style={{ marginTop: "5px", marginRight: "10px" }}
+              color="textSecondary"
+            >
+              Poin :
+            </Typography>
             <TextField
               key={`${studentId}-${questionNumber}`}
               value={studentMark}
@@ -1657,19 +1957,23 @@ function QuestionAnswerPerStudent(props) {
                   borderBottom: "none",
                   boxShadow: "none",
                   margin: "0px",
-                  width: "30px"
-                }
+                  width: "30px",
+                },
               }}
               InputProps={{
                 endAdornment: `/ ${questionWeight}`,
               }}
-              onChange={(e) => { handleGradeChange(e, studentId, questionNumber - 1) }}
+              onChange={(e) => {
+                handleGradeChange(e, studentId, questionNumber - 1);
+              }}
             />
             <div>
               <Button
                 className={classes.saveButton}
                 size="small"
-                onClick={() => { handleSaveGrade(studentId, questionNumber - 1) }}
+                onClick={() => {
+                  handleSaveGrade(studentId, questionNumber - 1);
+                }}
               >
                 SIMPAN
               </Button>
@@ -1684,16 +1988,28 @@ function QuestionAnswerPerStudent(props) {
     if (questionType === "radio") {
       answer = (
         <Grid item>
-          <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography
+            align="left"
+            variant="h6"
+            style={{ marginBottom: "10px" }}
+          >
+            <b>{`Soal ${questionNumber}`}</b>
+          </Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
 
           <Hidden mdUp>
-            <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer[0]}</Typography>
+            <Typography
+              align="center"
+              color="primary"
+              style={{ marginTop: "15px" }}
+            >
+              Kunci Jawaban : {questionAnswer[0]}
+            </Typography>
             <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
           </Hidden>
 
           <RadioGroup value={studentAnswer[0]}>
-            {questionOptions.map((option, i) =>
+            {questionOptions.map((option, i) => (
               <div style={{ display: "flex" }}>
                 <FormControlLabel
                   disabled
@@ -1703,23 +2019,35 @@ function QuestionAnswerPerStudent(props) {
                   label={option}
                 />
               </div>
-            )}
+            ))}
           </RadioGroup>
         </Grid>
       );
     } else if (questionType === "checkbox") {
       answer = (
         <Grid item>
-          <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography
+            align="left"
+            variant="h6"
+            style={{ marginBottom: "10px" }}
+          >
+            <b>{`Soal ${questionNumber}`}</b>
+          </Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
-          <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+          <Typography
+            align="center"
+            color="primary"
+            style={{ marginTop: "15px" }}
+          >
+            Kunci Jawaban : {questionAnswer.join(", ")}
+          </Typography>
 
           <Hidden mdUp>
             <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
           </Hidden>
 
           <FormGroup>
-            {questionOptions.map((option, i) =>
+            {questionOptions.map((option, i) => (
               <div style={{ display: "flex" }}>
                 <FormControlLabel
                   disabled
@@ -1728,17 +2056,20 @@ function QuestionAnswerPerStudent(props) {
                   label={option}
                   control={
                     <Checkbox
-                      checked={studentAnswer.includes(String.fromCharCode(97 + i).toUpperCase())}
+                      checked={studentAnswer.includes(
+                        String.fromCharCode(97 + i).toUpperCase()
+                      )}
                       color="primary"
                     />
                   }
                 />
               </div>
-            )}
+            ))}
           </FormGroup>
         </Grid>
       );
-    } else { //type = shorttext
+    } else {
+      //type = shorttext
       let splitResult = questionName.split("`");
       let iterator = 0;
 
@@ -1749,17 +2080,22 @@ function QuestionAnswerPerStudent(props) {
             key={`${questionNumber}-${iterator}`}
             disabled={true}
             value={studentAnswer[iterator]}
-          />);
+          />
+        );
         iterator++;
       }
 
       answer = (
         <Grid item>
-          <Typography align="left" variant="h6" style={{ marginBottom: "10px" }}><b>{`Soal ${questionNumber}`}</b></Typography>
+          <Typography
+            align="left"
+            variant="h6"
+            style={{ marginBottom: "10px" }}
+          >
+            <b>{`Soal ${questionNumber}`}</b>
+          </Typography>
           <Typography align="justify">
-            <form>
-              {splitResult}
-            </form>
+            <form>{splitResult}</form>
           </Typography>
         </Grid>
       );
@@ -1773,15 +2109,32 @@ function QuestionAnswerPerStudent(props) {
           </Grid>
 
           <Grid item>
-            <Divider orientation="vertical" style={{ marginLeft: "10px", marginRight: "10px" }} />
+            <Divider
+              orientation="vertical"
+              style={{ marginLeft: "10px", marginRight: "10px" }}
+            />
           </Grid>
 
-          <Grid item wrap="nowrap" direction="column" justify="center" alignItems="center" style={{ display: "flex", flexGrow: "1" }}>
+          <Grid
+            item
+            wrap="nowrap"
+            direction="column"
+            justify="center"
+            alignItems="center"
+            style={{ display: "flex", flexGrow: "1" }}
+          >
             <Grid item>
-              <Typography align="center" color="primary">Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+              <Typography align="center" color="primary">
+                Kunci Jawaban : {questionAnswer.join(", ")}
+              </Typography>
             </Grid>
             <Grid container item justify="center" alignItems="center">
-              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+              <Typography
+                style={{ marginTop: "5px", marginRight: "10px" }}
+                color="textSecondary"
+              >
+                Poin :
+              </Typography>
               <TextField
                 disabled
                 defaultValue={studentMark}
@@ -1791,8 +2144,8 @@ function QuestionAnswerPerStudent(props) {
                     borderBottom: "none",
                     boxShadow: "none",
                     margin: "0px",
-                    width: "30px"
-                  }
+                    width: "30px",
+                  },
                 }}
                 InputProps={{
                   endAdornment: `/ ${questionWeight}`,
@@ -1808,17 +2161,33 @@ function QuestionAnswerPerStudent(props) {
             {answer}
           </Grid>
 
-          <Grid item xs={12} wrap="nowrap" direction="column" justify="center" alignItems="center">
-            {(questionType === "shorttext") ? (
+          <Grid
+            item
+            xs={12}
+            wrap="nowrap"
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            {questionType === "shorttext" ? (
               <Grid item>
-                <Typography align="center" color="primary" style={{ marginTop: "15px" }}>Kunci Jawaban : {questionAnswer.join(", ")}</Typography>
+                <Typography
+                  align="center"
+                  color="primary"
+                  style={{ marginTop: "15px" }}
+                >
+                  Kunci Jawaban : {questionAnswer.join(", ")}
+                </Typography>
               </Grid>
-            ) : (
-              null
-            )}
-            
+            ) : null}
+
             <Grid container item justify="center" alignItems="center">
-              <Typography style={{ marginTop: "5px", marginRight: "10px" }} color="textSecondary">Poin :</Typography>
+              <Typography
+                style={{ marginTop: "5px", marginRight: "10px" }}
+                color="textSecondary"
+              >
+                Poin :
+              </Typography>
               <TextField
                 disabled
                 defaultValue={studentMark}
@@ -1828,8 +2197,8 @@ function QuestionAnswerPerStudent(props) {
                     borderBottom: "none",
                     boxShadow: "none",
                     margin: "0px",
-                    width: "30px"
-                  }
+                    width: "30px",
+                  },
                 }}
                 InputProps={{
                   endAdornment: `/ ${questionWeight}`,
@@ -1838,17 +2207,14 @@ function QuestionAnswerPerStudent(props) {
             </Grid>
           </Grid>
         </Grid>
-      </Hidden>
+      </Hidden>,
     ];
   }
 
   return (
-    <Paper style={{ width: "100%", marginBottom: "30px" }}>
-      {content}
-    </Paper>
-  )
+    <Paper style={{ width: "100%", marginBottom: "30px" }}>{content}</Paper>
+  );
 }
-
 
 ViewAssessmentTeacher.propTypes = {
   auth: PropTypes.object.isRequired,
@@ -1858,15 +2224,18 @@ ViewAssessmentTeacher.propTypes = {
   getAllClass: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   assessmentsCollection: state.assessmentsCollection,
   subjectsCollection: state.subjectsCollection,
-  classesCollection: state.classesCollection
-})
+  classesCollection: state.classesCollection,
+});
 
-export default connect(
-  mapStateToProps, { getOneAssessment, getAllClass, getAllSubjects, getStudents }
-)(ViewAssessmentTeacher);
+export default connect(mapStateToProps, {
+  getOneAssessment,
+  getAllClass,
+  getAllSubjects,
+  getStudents,
+})(ViewAssessmentTeacher);

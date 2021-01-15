@@ -3,39 +3,46 @@ const Schema = mongoose.Schema;
 const { ObjectId } = require("mongoose");
 
 // Create Task Schema
-const TaskSchema = new Schema({
+const TaskSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     deadline: {
-        type: Date,
-        required: [true, "The task has no deadline?"]
+      type: Date,
+      required: [true, "The task has no deadline?"],
     },
     subject: {
-        type: ObjectId,
-        required: true
+      type: ObjectId,
+      required: true,
     },
-    class_assigned: [{
+    class_assigned: [
+      {
         type: ObjectId,
-        required: true
-    }],
+        required: true,
+      },
+    ],
     person_in_charge_id: {
-        type: ObjectId,
-        required: true
+      type: ObjectId,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    lampiran: [{
+    lampiran: [
+      {
         type: Object,
-        default: []
-    }],
+        default: [],
+      },
+    ],
     grades: {
-        type: Map,
-        default: new Map()  // userId -> the score.
-    }
-}, { timestamps: true })
+      type: Map,
+      default: new Map(), // userId -> the score.
+    },
+  },
+  { timestamps: true }
+);
 
 module.exports = Task = mongoose.model("tasks", TaskSchema);

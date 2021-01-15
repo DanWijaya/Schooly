@@ -1,7 +1,24 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, Divider, FormControl, FormControlLabel, Grid, GridList, GridListTile, GridListTileBar,
-  IconButton, Paper, Radio, RadioGroup, TextField, Typography, Checkbox, FormGroup, InputAdornment} from "@material-ui/core";
+import {
+  Button,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  GridList,
+  GridListTile,
+  GridListTileBar,
+  IconButton,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+  Checkbox,
+  FormGroup,
+  InputAdornment,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
@@ -10,7 +27,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import HelpIcon from "@material-ui/icons/Help";
-import { RadioButtonChecked, CheckBox, TextFormat, Subject } from "@material-ui/icons";
+import {
+  RadioButtonChecked,
+  CheckBox,
+  TextFormat,
+  Subject,
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -49,79 +71,100 @@ const useStyles = makeStyles((theme) => ({
   questionNameDiv: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 }));
 
-function QuestionItem(props){
-  const { index, name, options, answer, lampiran, lampiranToAdd, currentLampiran, isEdit, lampiran_length, deleteQuestion,
-    handleQuestionOptions , handleChangeQuestion, handleDuplicateQuestion, handleQuestionImage, type,
-    check_data, parseAnswer, handleLongtextWeight, longtextWeight } = props
-  const classes = useStyles()
+function QuestionItem(props) {
+  const {
+    index,
+    name,
+    options,
+    answer,
+    lampiran,
+    lampiranToAdd,
+    currentLampiran,
+    isEdit,
+    lampiran_length,
+    deleteQuestion,
+    handleQuestionOptions,
+    handleChangeQuestion,
+    handleDuplicateQuestion,
+    handleQuestionImage,
+    type,
+    check_data,
+    parseAnswer,
+    handleLongtextWeight,
+    longtextWeight,
+  } = props;
+  const classes = useStyles();
 
-  const [checked, setChecked] = React.useState(check_data)
-  const [dummyRender, setDummyRender] = React.useState(0) // Hanya Untuk Force Re-render
+  const [checked, setChecked] = React.useState(check_data);
+  const [dummyRender, setDummyRender] = React.useState(0); // Hanya Untuk Force Re-render
   const [val, setValue] = React.useState("");
   const textRef = React.useRef(null);
   const [longtextValue, setLongtextValue] = React.useState("");
   const [longtextAnswer, setLongtextAnswer] = React.useState("");
 
-  const [lampiranToPreview, setLampiranToPreview] = React.useState([])
+  const [lampiranToPreview, setLampiranToPreview] = React.useState([]);
 
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
   // Fitur 2 - Fungsi Untuk Memastikan Kondisi Checked Pada Checkbox Ketika Dicentang
-  function handleCheck(e, i, index, answer, type){
-    let temp_cek = checked
-    temp_cek[i] = e.target.checked
-    if(check_data[i]){
-      check_data[i] = false
+  function handleCheck(e, i, index, answer, type) {
+    let temp_cek = checked;
+    temp_cek[i] = e.target.checked;
+    if (check_data[i]) {
+      check_data[i] = false;
     }
-    if(!check_data[i]){
-      check_data[i] = true
+    if (!check_data[i]) {
+      check_data[i] = true;
     }
-    setChecked(temp_cek)
-    setDummyRender(dummyRender+1) // Force Re-render
-    handleChangeQuestion(e, index, null, answer, type)
+    setChecked(temp_cek);
+    setDummyRender(dummyRender + 1); // Force Re-render
+    handleChangeQuestion(e, index, null, answer, type);
   }
 
-  let list_options = JSON.parse(options)
+  let list_options = JSON.parse(options);
   const imageUploader = React.useRef();
   // console.log("A".charCodeAt(0))
   const imageUpload = () => {
-    imageUploader.current.value = null
-    imageUploader.current.click()
-  }
+    imageUploader.current.value = null;
+    imageUploader.current.click();
+  };
 
   // console.log(options)
   // console.log(type)
 
   const handlePreviewImage = (arr_lampiran) => {
-    if(Array.isArray(arr_lampiran)){
-      Promise.all(arr_lampiran.map((l) => {
-        return (new Promise((resolve, reject) => {
-          let reader = new FileReader();
-          reader.onload = e => {
-            resolve(e.target.result);
-          }
-          reader.addEventListener('error', reject);
-          reader.readAsDataURL(l);
-        }))
-      }))
-      .then((res) => {
-        setLampiranToPreview(res)
-      })
-      .catch(err => console.log(err))
+    if (Array.isArray(arr_lampiran)) {
+      Promise.all(
+        arr_lampiran.map((l) => {
+          return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+              resolve(e.target.result);
+            };
+            reader.addEventListener("error", reject);
+            reader.readAsDataURL(l);
+          });
+        })
+      )
+        .then((res) => {
+          setLampiranToPreview(res);
+        })
+        .catch((err) => console.log(err));
     }
-  }
+  };
 
   const handleTextFieldChange = (e) => {
-    if (e.target.value.length <= 1) { //agar setelah mengetikan karakter, error "belum diisi" langsung hilang
+    if (e.target.value.length <= 1) {
+      //agar setelah mengetikan karakter, error "belum diisi" langsung hilang
       handleChangeQuestion(e, index);
     }
     setValue(e.target.value);
-  }
+  };
 
   const handleBlur = (e, index) => {
     if (document.activeElement !== textRef.current) {
@@ -130,138 +173,174 @@ function QuestionItem(props){
       parseAnswer(textRef.current.value, index);
       handleChangeQuestion(e, index, textRef.current.value); // e.target.id berisi id elemen pemanggil handleBlur ini
     }
-  }
-
+  };
 
   React.useEffect(() => {
     setValue(name);
-  }, [name])
+  }, [name]);
   React.useEffect(() => {
     if (type === "longtext") {
       if (answer && answer.length !== 0) {
-        setLongtextAnswer(answer[0])
+        setLongtextAnswer(answer[0]);
       }
     }
-  }, [answer, type])
+  }, [answer, type]);
   React.useEffect(() => {
     setLongtextValue(longtextWeight);
   }, [longtextWeight]);
 
   React.useEffect(() => {
-    console.log("Lampiran to preview set to empty")
-    setLampiranToPreview([])
-  },[])
+    console.log("Lampiran to preview set to empty");
+    setLampiranToPreview([]);
+  }, []);
   React.useEffect(() => {
-    if(!isEdit){
-      handlePreviewImage(lampiran)
+    if (!isEdit) {
+      handlePreviewImage(lampiran);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[lampiran_length])
+  }, [lampiran_length]);
 
   React.useEffect(() => {
-    if(isEdit){
-      handlePreviewImage(lampiranToAdd)
+    if (isEdit) {
+      handlePreviewImage(lampiranToAdd);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lampiranToAdd.length])
+  }, [lampiranToAdd.length]);
 
-  console.log("Current lampiran : ", currentLampiran)
-  console.log("Lampiran to preview: ", lampiranToPreview)
-  return(
+  console.log("Current lampiran : ", currentLampiran);
+  console.log("Lampiran to preview: ", lampiranToPreview);
+  return (
     <Grid item>
       <Paper>
         <Grid container>
-          <Grid item xs sm md container direction="column" spacing={2} className={classes.content}>
+          <Grid
+            item
+            xs
+            sm
+            md
+            container
+            direction="column"
+            spacing={2}
+            className={classes.content}
+          >
             <Grid item>
-              <Typography variant="h6" style={{marginLeft: "5px"}}>
+              <Typography variant="h6" style={{ marginLeft: "5px" }}>
                 Soal {index + 1}
               </Typography>
-              <GridList cols={3} cellHeight={300} style={{margin: "10px 0px 10px 0px"}}>
-                {isEdit ?
-                  currentLampiran.map((image, i) =>
-                    <GridListTile key={image} cols={1} >
-                    <img alt="current img" src={`/api/upload/att_assessment/${image}`}/>
+              <GridList
+                cols={3}
+                cellHeight={300}
+                style={{ margin: "10px 0px 10px 0px" }}
+              >
+                {isEdit
+                  ? currentLampiran.map((image, i) => (
+                      <GridListTile key={image} cols={1}>
+                        <img
+                          alt="current img"
+                          src={`/api/upload/att_assessment/${image}`}
+                        />
+                        <GridListTileBar
+                          titlePosition="top"
+                          actionIcon={
+                            <IconButton
+                              style={{ color: "white" }}
+                              onClick={(e) => handleQuestionImage(e, index, i)}
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          }
+                          title={`Gambar ${i + 1}`}
+                          actionPosition="right"
+                        />
+                      </GridListTile>
+                    ))
+                  : null}
+                {lampiranToPreview.map((image, i) => (
+                  <GridListTile key={image} cols={1}>
+                    <img alt="current img" src={image} />
                     <GridListTileBar
                       titlePosition="top"
                       actionIcon={
-                        <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
+                        <IconButton
+                          style={{ color: "white" }}
+                          onClick={(e) => handleQuestionImage(e, index, i)}
+                        >
                           <CloseIcon />
                         </IconButton>
                       }
-                      title={`Gambar ${i+1}`}
-                      actionPosition="right"/>
-                    </GridListTile>
-                  )
-                :
-                null
-                }
-              {lampiranToPreview.map((image, i) =>
-                <GridListTile key={image} cols={1} >
-                  <img alt="current img" src={image}/>
-                  <GridListTileBar
-                      titlePosition="top"
-                      actionIcon={
-                        <IconButton style={{color: "white"}} onClick={(e) => handleQuestionImage(e, index, i)}>
-                          <CloseIcon />
-                        </IconButton>
-                      }
-                      title={`Gambar ${i+1+currentLampiran.length}`}
+                      title={`Gambar ${i + 1 + currentLampiran.length}`}
                       actionPosition="right"
                     />
-                </GridListTile>
-              )}
+                  </GridListTile>
+                ))}
               </GridList>
-              {
-                (type === "shorttext") ? (
-                  <TextField
-                    helperText={!name.length ? "Belum diisi" : null}
-                    error={!name.length}
-                    multiline
-                    rowsMax={10}
-                    id="name"
-                    fullWidth
-                    variant="filled"
-                    value={val}
-                    inputRef={textRef}
-                    onChange={(e) => {handleTextFieldChange(e)}}
-                    onBlur={(e) => {handleBlur(e, index)}}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
-                            <IconButton>
-                              <HelpIcon />
-                            </IconButton>
-                          </LightTooltip>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                ) : (
-                  <TextField
-                    helperText={!name.length ? "Belum diisi" : null}
-                    error={!name.length}
-                    multiline
-                    rowsMax={10}
-                    id="name"
-                    fullWidth
-                    variant="filled"
-                    value={val}
-                    inputRef={textRef}
-                    onChange={(e) => {handleTextFieldChange(e)}}
-                    onBlur={(e) => {handleChangeQuestion(e, index, textRef.current.value)}}
-                  />
-                )
-              }
+              {type === "shorttext" ? (
+                <TextField
+                  helperText={!name.length ? "Belum diisi" : null}
+                  error={!name.length}
+                  multiline
+                  rowsMax={10}
+                  id="name"
+                  fullWidth
+                  variant="filled"
+                  value={val}
+                  inputRef={textRef}
+                  onChange={(e) => {
+                    handleTextFieldChange(e);
+                  }}
+                  onBlur={(e) => {
+                    handleBlur(e, index);
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
+                          <IconButton>
+                            <HelpIcon />
+                          </IconButton>
+                        </LightTooltip>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              ) : (
+                <TextField
+                  helperText={!name.length ? "Belum diisi" : null}
+                  error={!name.length}
+                  multiline
+                  rowsMax={10}
+                  id="name"
+                  fullWidth
+                  variant="filled"
+                  value={val}
+                  inputRef={textRef}
+                  onChange={(e) => {
+                    handleTextFieldChange(e);
+                  }}
+                  onBlur={(e) => {
+                    handleChangeQuestion(e, index, textRef.current.value);
+                  }}
+                />
+              )}
             </Grid>
             <Grid item>
-                {(type === "radio") ? (
+              {type === "radio" ? (
                 <FormControl component="fieldset" id="answer" fullWidth>
-                  <RadioGroup value={(answer && answer.length !== 0) ? answer[0].toUpperCase() : null} id="answer" onChange={(e) => handleChangeQuestion(e, index, null,"answer", "radio")}>
-                    {list_options.map((option, i) =>
-                      <div style={{display: "flex"}}>
+                  <RadioGroup
+                    value={
+                      answer && answer.length !== 0
+                        ? answer[0].toUpperCase()
+                        : null
+                    }
+                    id="answer"
+                    onChange={(e) =>
+                      handleChangeQuestion(e, index, null, "answer", "radio")
+                    }
+                  >
+                    {list_options.map((option, i) => (
+                      <div style={{ display: "flex" }}>
                         <FormControlLabel
-                          style={{width: "100%"}}
+                          style={{ width: "100%" }}
                           value={String.fromCharCode(97 + i).toUpperCase()}
                           control={<Radio color="primary" />}
                           label={
@@ -269,87 +348,145 @@ function QuestionItem(props){
                               helperText={!option.length ? "Belum diisi" : null}
                               error={!option.length}
                               onError={() => console.log("ERROR textfield")}
-                              style={{flexGrow: 1}}
+                              style={{ flexGrow: 1 }}
                               value={option}
-                              onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
+                              onChange={(e) =>
+                                handleQuestionOptions(e, i, index, "Edit")
+                              }
                               placeholder="Isi Pilihan"
                             />
                           }
                         />
-                        <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
-                          <ClearIcon/>
+                        <IconButton
+                          onClick={(e) =>
+                            handleQuestionOptions(e, i, index, "Delete")
+                          }
+                        >
+                          <ClearIcon />
                         </IconButton>
                       </div>
-                    )}
+                    ))}
                     <div>
-                      <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
-                        Tambah  pilihan
+                      <Button
+                        className={classes.addOptionButton}
+                        startIcon={<AddCircleIcon />}
+                        onClick={(e) =>
+                          handleQuestionOptions(e, null, index, "Add")
+                        }
+                      >
+                        Tambah pilihan
                       </Button>
                     </div>
                   </RadioGroup>
                 </FormControl>
-                ) : (type === "checkbox") ? (
+              ) : type === "checkbox" ? (
                 <FormControl component="fieldset" id="answer" fullWidth>
                   <FormGroup>
-                  {list_options.map((option, i) =>
-                    <div style={{display: "flex"}}>
-                      <FormControlLabel
-                        style={{width: "100%"}}
-                        value={String.fromCharCode(97 + i).toUpperCase()}
-                        control={<Checkbox checked={check_data[i]} color="primary" onChange={(e) => handleCheck(e, i, index, "answer", "checkbox")}/>}
-                        label={
-                          <TextField
-                            helperText={!option.length ? "Belum diisi" : null}
-                            error={!option.length}
-                            onError={() => console.log("ERROR textfield")}
-                            style={{flexGrow: 1}}
-                            value={option}
-                            onChange={(e) => handleQuestionOptions(e, i, index, "Edit" )}
-                            placeholder="Isi Pilihan"
-                          />
-                        }
-                      />
-                      <IconButton onClick={(e) => handleQuestionOptions(e, i, index, "Delete" )}>
-                        <ClearIcon/>
-                      </IconButton>
-                    </div>
-                  )}
+                    {list_options.map((option, i) => (
+                      <div style={{ display: "flex" }}>
+                        <FormControlLabel
+                          style={{ width: "100%" }}
+                          value={String.fromCharCode(97 + i).toUpperCase()}
+                          control={
+                            <Checkbox
+                              checked={check_data[i]}
+                              color="primary"
+                              onChange={(e) =>
+                                handleCheck(e, i, index, "answer", "checkbox")
+                              }
+                            />
+                          }
+                          label={
+                            <TextField
+                              helperText={!option.length ? "Belum diisi" : null}
+                              error={!option.length}
+                              onError={() => console.log("ERROR textfield")}
+                              style={{ flexGrow: 1 }}
+                              value={option}
+                              onChange={(e) =>
+                                handleQuestionOptions(e, i, index, "Edit")
+                              }
+                              placeholder="Isi Pilihan"
+                            />
+                          }
+                        />
+                        <IconButton
+                          onClick={(e) =>
+                            handleQuestionOptions(e, i, index, "Delete")
+                          }
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      </div>
+                    ))}
                     <div>
-                      <Button className={classes.addOptionButton} startIcon={<AddCircleIcon/>} onClick={(e) => handleQuestionOptions(e, null, index, "Add")}>
-                        Tambah  pilihan
+                      <Button
+                        className={classes.addOptionButton}
+                        startIcon={<AddCircleIcon />}
+                        onClick={(e) =>
+                          handleQuestionOptions(e, null, index, "Add")
+                        }
+                      >
+                        Tambah pilihan
                       </Button>
                     </div>
                   </FormGroup>
                 </FormControl>
-                ) : (type === "longtext") ? (
-                  <div style={{marginTop: "16px"}}>
-                    <Typography style={{ marginBottom: "16px" }}><b>Jawaban:</b></Typography>
-                    <TextField
-                      helperText={longtextAnswer.length === 0 ? "Belum diisi" : null}
-                      error={longtextAnswer.length === 0}
-                      multiline
-                      rowsMax={10}
-                      fullWidth
-                      variant="outlined"
-                      // defaultValue={longtextAnswer}
-                      defaultValue={(answer && answer.length !== 0) ? answer[0] : null}
-                      onBlur={() => { handleChangeQuestion(longtextAnswer, index, null, "answer", "longtext") }}
-                      onChange={(e) => { setLongtextAnswer(e.target.value)} }
-                    />
-                  </div>
-                ) : null
-              }
+              ) : type === "longtext" ? (
+                <div style={{ marginTop: "16px" }}>
+                  <Typography style={{ marginBottom: "16px" }}>
+                    <b>Jawaban:</b>
+                  </Typography>
+                  <TextField
+                    helperText={
+                      longtextAnswer.length === 0 ? "Belum diisi" : null
+                    }
+                    error={longtextAnswer.length === 0}
+                    multiline
+                    rowsMax={10}
+                    fullWidth
+                    variant="outlined"
+                    // defaultValue={longtextAnswer}
+                    defaultValue={
+                      answer && answer.length !== 0 ? answer[0] : null
+                    }
+                    onBlur={() => {
+                      handleChangeQuestion(
+                        longtextAnswer,
+                        index,
+                        null,
+                        "answer",
+                        "longtext"
+                      );
+                    }}
+                    onChange={(e) => {
+                      setLongtextAnswer(e.target.value);
+                    }}
+                  />
+                </div>
+              ) : null}
             </Grid>
           </Grid>
           <Divider flexItem orientation="vertical" />
-          <Grid item xs={3} sm={2} md={1} container direction="column" alignItems="center" className={classes.content}>
+          <Grid
+            item
+            xs={3}
+            sm={2}
+            md={1}
+            container
+            direction="column"
+            alignItems="center"
+            className={classes.content}
+          >
             <Grid item>
               <input
                 accept="image/*"
                 multiple
                 type="file"
                 name="avatar"
-                onChange={(e) =>{handleQuestionImage(e, index, null)}}
+                onChange={(e) => {
+                  handleQuestionImage(e, index, null);
+                }}
                 ref={imageUploader}
                 style={{
                   display: "none",
@@ -357,18 +494,14 @@ function QuestionItem(props){
                 }}
               />
               <LightTooltip title="Tambahkan Gambar" placement="right">
-                <IconButton
-                  onClick={imageUpload}
-                >
-                  <AddPhotoAlternateIcon/>
+                <IconButton onClick={imageUpload}>
+                  <AddPhotoAlternateIcon />
                 </IconButton>
               </LightTooltip>
             </Grid>
             <Grid item>
               <LightTooltip title="Duplikat Soal" placement="right">
-                <IconButton
-                onClick={() => handleDuplicateQuestion(index)}
-                >
+                <IconButton onClick={() => handleDuplicateQuestion(index)}>
                   <FilterNoneIcon />
                 </IconButton>
               </LightTooltip>
@@ -376,7 +509,9 @@ function QuestionItem(props){
             <Grid item>
               <LightTooltip title="Hapus Soal" placement="right">
                 <IconButton
-                onClick={() => { deleteQuestion(index)}}
+                  onClick={() => {
+                    deleteQuestion(index);
+                  }}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -385,52 +520,74 @@ function QuestionItem(props){
           </Grid>
         </Grid>
 
-        {(props.type === "longtext") ? (
+        {props.type === "longtext" ? (
           <div>
-          <Divider />
-          <Grid container style={{ padding: "20px" }} justify="flex-end" alignItems="center" >
-            {/* <Grid item style={{ marginRight: "20px", height: "3rem", display: "flex", alignItems: "center"}}> */}
-            <Grid item style={{ marginRight: "20px" }}>
-              <Typography color="primary">Bobot: </Typography>
-            </Grid>
-            <Grid item style={{ height: "3rem" }}>
-              <TextField
-                value={longtextValue}
-                onChange={(e) => { handleLongtextWeight(e, index); }}
-                variant="outlined"
-                // lihat catatan inisialisasi state longtextWeight di edit/create assessment untuk info terkait nilai longtextValue
-                error={(isNaN(Number(longtextValue)) || Number(longtextValue) <= 0) && (longtextValue !== undefined)}
-                helperText={(isNaN(Number(longtextValue)) || Number(longtextValue) <= 0) && (longtextValue !== undefined) ? "Periksa Kembali!" : null}
-                FormHelperTextProps={{
-                  style: {
-                    margin: "0px"
+            <Divider />
+            <Grid
+              container
+              style={{ padding: "20px" }}
+              justify="flex-end"
+              alignItems="center"
+            >
+              {/* <Grid item style={{ marginRight: "20px", height: "3rem", display: "flex", alignItems: "center"}}> */}
+              <Grid item style={{ marginRight: "20px" }}>
+                <Typography color="primary">Bobot: </Typography>
+              </Grid>
+              <Grid item style={{ height: "3rem" }}>
+                <TextField
+                  value={longtextValue}
+                  onChange={(e) => {
+                    handleLongtextWeight(e, index);
+                  }}
+                  variant="outlined"
+                  // lihat catatan inisialisasi state longtextWeight di edit/create assessment untuk info terkait nilai longtextValue
+                  error={
+                    (isNaN(Number(longtextValue)) ||
+                      Number(longtextValue) <= 0) &&
+                    longtextValue !== undefined
                   }
-                }}
-                InputProps={{
-                  style: {
-                    borderBottom: "none",
-                    boxShadow: "none",
-                    width: "100px"
-                  },
-                  endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
-                }}
-              />
+                  helperText={
+                    (isNaN(Number(longtextValue)) ||
+                      Number(longtextValue) <= 0) &&
+                    longtextValue !== undefined
+                      ? "Periksa Kembali!"
+                      : null
+                  }
+                  FormHelperTextProps={{
+                    style: {
+                      margin: "0px",
+                    },
+                  }}
+                  InputProps={{
+                    style: {
+                      borderBottom: "none",
+                      boxShadow: "none",
+                      width: "100px",
+                    },
+                    endAdornment: (
+                      <Typography color="textSecondary">{` Poin`}</Typography>
+                    ),
+                  }}
+                />
+              </Grid>
             </Grid>
-          </Grid>
           </div>
-        ) : (
-          null
-        )}
+        ) : null}
       </Paper>
     </Grid>
-  )
+  );
 }
 
-export default React.memo(QuestionItem, function arePropsEqual(prevProps, nextProps) { // second argument
-  return (
-    prevProps.name === nextProps.name &&
-    prevProps.options === nextProps.options &&
-    prevProps.answer === nextProps.answer &&
-    prevProps.lampiran_length === nextProps.lampiran_length) &&
-    prevProps.longtextWeight === nextProps.longtextWeight
-})
+export default React.memo(
+  QuestionItem,
+  function arePropsEqual(prevProps, nextProps) {
+    // second argument
+    return (
+      prevProps.name === nextProps.name &&
+      prevProps.options === nextProps.options &&
+      prevProps.answer === nextProps.answer &&
+      prevProps.lampiran_length === nextProps.lampiran_length &&
+      prevProps.longtextWeight === nextProps.longtextWeight
+    );
+  }
+);

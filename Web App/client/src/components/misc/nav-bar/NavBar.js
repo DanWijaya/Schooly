@@ -4,7 +4,14 @@ import PropTypes from "prop-types";
 import { logoutUser } from "../../../actions/UserActions";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import NavBarLoggedInContents from "./NavBarLoggedInContents";
-import { AppBar, Button, Grid, IconButton, Toolbar, useMediaQuery } from "@material-ui/core";
+import {
+  AppBar,
+  Button,
+  Grid,
+  IconButton,
+  Toolbar,
+  useMediaQuery,
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -49,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "white",
       color: theme.palette.primary.main,
     },
-  }
+  },
 }));
 
 function NavBar(props) {
@@ -67,18 +74,25 @@ function NavBar(props) {
 
   if (user.name) {
     leftNavBarContents = (
-      <div className={classes.navbarContainer} style={{display: !sideDrawerExist ? "none" : "block"}}>
-        {isMobileView ?
+      <div
+        className={classes.navbarContainer}
+        style={{ display: !sideDrawerExist ? "none" : "block" }}
+      >
+        {isMobileView ? (
           <IconButton edge="start" color="inherit" onClick={handleDrawerMobile}>
             <MenuIcon />
           </IconButton>
-          :
-          <IconButton edge="start" color="inherit" onClick={handleDrawerDesktop}>
+        ) : (
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={handleDrawerDesktop}
+          >
             <MenuIcon />
           </IconButton>
-        }
+        )}
       </div>
-    )
+    );
     middleNavBarContents = (
       <Link to="/beranda">
         <img
@@ -87,13 +101,11 @@ function NavBar(props) {
           className={classes.schoolyLogo}
         />
       </Link>
-    )
+    );
     rightNavBarContents = (
-      <NavBarLoggedInContents isMobileView={isMobileView}/>
-    )
-  }
-
-  else {
+      <NavBarLoggedInContents isMobileView={isMobileView} />
+    );
+  } else {
     leftNavBarContents = (
       <Grid className={classes.navbarContainer}>
         <Link to="/">
@@ -104,8 +116,8 @@ function NavBar(props) {
           />
         </Link>
       </Grid>
-    )
-    middleNavBarContents = null
+    );
+    middleNavBarContents = null;
     rightNavBarContents = (
       <div>
         <Link to="/daftar">
@@ -118,23 +130,27 @@ function NavBar(props) {
           </Button>
         </Link>
         <Link to="/masuk">
-          <Button variant="contained" size="small" className={classes.loginButton}>
+          <Button
+            variant="contained"
+            size="small"
+            className={classes.loginButton}
+          >
             Masuk
           </Button>
         </Link>
       </div>
-    )
+    );
   }
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
-      {(props.assessmentState !== "ujian") ?
+      {props.assessmentState !== "ujian" ? (
         <Toolbar>
           {leftNavBarContents}
           {middleNavBarContents}
           {rightNavBarContents}
         </Toolbar>
-      :
+      ) : (
         <Toolbar>
           <img
             alt="SchoolyLogoNavBar"
@@ -142,20 +158,18 @@ function NavBar(props) {
             className={classes.schoolyLogo}
           />
         </Toolbar>
-      }
+      )}
     </AppBar>
-  )
+  );
 }
 
 NavBar.propTypes = {
-   auth: PropTypes.object.isRequired,
-   logoutUser: PropTypes.func.isRequired,
- }
+  auth: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
-   auth: state.auth,
- });
+  auth: state.auth,
+});
 
-export default connect(
-  mapStateToProps, { logoutUser }
- ) (React.memo(NavBar));
+export default connect(mapStateToProps, { logoutUser })(React.memo(NavBar));

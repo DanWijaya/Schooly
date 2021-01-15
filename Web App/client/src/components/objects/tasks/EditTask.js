@@ -11,13 +11,40 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,
-  Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
+} from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -102,48 +129,43 @@ function LampiranFile(props) {
       <Paper variant="outlined">
         <ListItem disableRipple>
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={name} placement="top">
                 <Typography>
-                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                  {name.length < 21
+                    ? name
+                    : `${name.slice(0, 15)}..${path.extname(name)}`}
                 </Typography>
               </LightTooltip>
             }
@@ -152,14 +174,16 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.deleteIconButton}
-            onClick={(e) => {handleLampiranDelete(e, i)}}
+            onClick={(e) => {
+              handleLampiranDelete(e, i);
+            }}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 class EditTask extends Component {
@@ -180,19 +204,19 @@ class EditTask extends Component {
       anchorEl: null,
       openUploadDialog: null,
       errors: {},
-    }
+    };
   }
 
-  tugasUploader = React.createRef(null)
+  tugasUploader = React.createRef(null);
 
   componentDidMount() {
-    this.props.getOneTask(this.props.match.params.id)
-    this.props.getAllClass()
-    this.props.getAllSubjects()
+    this.props.getOneTask(this.props.match.params.id);
+    this.props.getAllClass();
+    this.props.getAllSubjects();
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -201,21 +225,25 @@ class EditTask extends Component {
 
     // pass errorsnya false makanya berhasil
     if (!nextProps.errors) {
-      this.handleOpenUploadDialog()
+      this.handleOpenUploadDialog();
     }
 
-    console.log(tasksCollection.class_assigned)
+    console.log(tasksCollection.class_assigned);
     if (Boolean(tasksCollection) && errors) {
       this.setState({
-          name: tasksCollection.name,
-          subject: tasksCollection.subject,
-          deadline: tasksCollection.deadline,
-          class_assigned: Boolean(tasksCollection.class_assigned) ? tasksCollection.class_assigned : [],
-          description: tasksCollection.description,
-          fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
-          // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
-          // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      })
+        name: tasksCollection.name,
+        subject: tasksCollection.subject,
+        deadline: tasksCollection.deadline,
+        class_assigned: Boolean(tasksCollection.class_assigned)
+          ? tasksCollection.class_assigned
+          : [],
+        description: tasksCollection.description,
+        fileLampiran: Boolean(tasksCollection.lampiran)
+          ? tasksCollection.lampiran
+          : [],
+        // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
+        // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      });
     }
   }
 
@@ -223,67 +251,83 @@ class EditTask extends Component {
     e.preventDefault();
 
     const { id } = this.props.match.params;
-    const { class_assigned, classChanged, fileLampiranToAdd, fileLampiranToDelete } = this.state;
+    const {
+      class_assigned,
+      classChanged,
+      fileLampiranToAdd,
+      fileLampiranToDelete,
+    } = this.state;
 
     let classesSelected = [];
-    console.log(class_assigned)
+    console.log(class_assigned);
 
     class_assigned.map((id) => {
-      for ( var i = 0; i < classesOptions.length; i++) {
+      for (var i = 0; i < classesOptions.length; i++) {
         if (classesOptions[i]._id === id) {
-          classesSelected.push(classesOptions[i])
+          classesSelected.push(classesOptions[i]);
           break;
         }
       }
-    return classesSelected
-  })
+      return classesSelected;
+    });
 
-  const taskObject = {
-    name: this.state.name,
-    deadline: this.state.deadline,
-    subject: this.state.subject,
-    description: this.state.description,
-    errors: {}
-  }
+    const taskObject = {
+      name: this.state.name,
+      deadline: this.state.deadline,
+      subject: this.state.subject,
+      description: this.state.description,
+      errors: {},
+    };
 
-  if (classChanged)
-    taskObject.class_assigned = classesSelected // When the classes is changed
-  else
-    taskObject.class_assigned = class_assigned // When it has no change
+    if (classChanged) taskObject.class_assigned = classesSelected;
+    // When the classes is changed
+    else taskObject.class_assigned = class_assigned; // When it has no change
 
-  let formData = new FormData()
-  for (var i = 0; i< fileLampiranToAdd.length; i++) {
-    console.log(this.state.fileLampiran[i])
-    formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i])
-  }
-  this.props.updateTask(formData, fileLampiranToDelete,
-    this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
+    let formData = new FormData();
+    for (var i = 0; i < fileLampiranToAdd.length; i++) {
+      console.log(this.state.fileLampiran[i]);
+      formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
+    }
+    this.props.updateTask(
+      formData,
+      fileLampiranToDelete,
+      this.props.tasksCollection.lampiran,
+      taskObject,
+      id,
+      this.props.history
+    );
 
-    this.setState({ fileLampiranToDelete: []})
-  }
+    this.setState({ fileLampiranToDelete: [] });
+  };
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    console.log(this.state.fileLampiran)
+    console.log(this.state.fileLampiran);
     let temp;
     let tempToAdd;
 
     if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
+      this.setState({
+        fileLampiran: files,
+        fileLampiranToAdd: Array.from(files),
+      });
     else {
-      console.log(files)
+      console.log(files);
       if (files.length !== 0) {
         temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-        tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+        tempToAdd = [
+          ...Array.from(this.state.fileLampiranToAdd),
+          ...Array.from(files),
+        ];
+        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd });
       }
     }
-    document.getElementById("file_control").value = null
-  }
+    document.getElementById("file_control").value = null;
+  };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault()
-    console.log("Index is: ", i)
+    e.preventDefault();
+    console.log("Index is: ", i);
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
@@ -291,66 +335,67 @@ class EditTask extends Component {
     // For the one that has already in DB
     if (this.state.fileLampiran[i].filename !== undefined) {
       // Remove the file in fileLampiranToDelete
-      tempToDelete.push(temp[i])
-    }
-    else { // For the one that"s not yet in DB
+      tempToDelete.push(temp[i]);
+    } else {
+      // For the one that"s not yet in DB
       // Remove the file in fileLampiranToAdd
       for (var j = 0; j < tempToAdd.length; j++) {
-        console.log(temp[i].name, tempToAdd[j].name)
+        console.log(temp[i].name, tempToAdd[j].name);
         if (tempToAdd[j].name === temp[i].name) {
-          tempToAdd.splice(j,1)
+          tempToAdd.splice(j, 1);
         }
       }
     }
     temp.splice(i, 1);
-    if (temp.length === 0)
-      this.handleCloseMenu()
-    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
-      fileLampiranToDelete: tempToDelete})
-  }
+    if (temp.length === 0) this.handleCloseMenu();
+    this.setState({
+      fileLampiran: temp,
+      fileLampiranToAdd: tempToAdd,
+      fileLampiranToDelete: tempToDelete,
+    });
+  };
 
   handleClickMenu = (event) => {
     if (!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
-      this.setState({ anchorEl: event.currentTarget})
-  }
+      this.setState({ anchorEl: event.currentTarget });
+  };
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null})
-  }
+    this.setState({ anchorEl: null });
+  };
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true})
+    this.setState({ openUploadDialog: true });
   };
 
   onChange = (e, otherfield) => {
-    console.log(this.state.class_assigned)
-    if(otherfield){
+    console.log(this.state.class_assigned);
+    if (otherfield) {
       // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-      this.setState({ [otherfield] : e.target.value})
+      this.setState({ [otherfield]: e.target.value });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
     }
-    else{
-      this.setState({ [e.target.id]: e.target.value});
-    }
-  }
+  };
 
   onDateChange = (date) => {
-    console.log(date)
-    this.setState({ deadline: date})
-  }
+    console.log(date);
+    this.setState({ deadline: date });
+  };
 
   render() {
     const { fileLampiran, class_assigned } = this.state;
     const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
-    const { all_subjects } = this.props.subjectsCollection
+    const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
 
-    console.log("FileLampiran:", this.state.fileLampiran)
+    console.log("FileLampiran:", this.state.fileLampiran);
     console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
-    console.log(class_assigned)
+    console.log(class_assigned);
 
-    let classIds = []
+    let classIds = [];
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -363,54 +408,67 @@ class EditTask extends Component {
     };
 
     const fileType = (filename) => {
-      let ext_file = path.extname(filename)
-      switch(ext_file) {
-        case ".docx" : return "Word"
-        case ".xlsx" :
-        case ".csv"  : return "Excel"
+      let ext_file = path.extname(filename);
+      switch (ext_file) {
+        case ".docx":
+          return "Word";
+        case ".xlsx":
+        case ".csv":
+          return "Excel";
 
-        case ".png" :
-        case ".jpg" :
-        case ".jpeg" : return "Gambar"
+        case ".png":
+        case ".jpg":
+        case ".jpeg":
+          return "Gambar";
 
-        case ".pdf" : return "PDF"
+        case ".pdf":
+          return "PDF";
 
-        case ".txt" :
-        case ".rtf" : return "Teks"
+        case ".txt":
+        case ".rtf":
+          return "Teks";
 
-        case ".ppt" :
-        case ".pptx" : return "Presentasi"
+        case ".ppt":
+        case ".pptx":
+          return "Presentasi";
 
-        default: return "File Lainnya"
+        default:
+          return "File Lainnya";
       }
-    }
+    };
 
     const listFileChosen = () => {
-      let temp = []
+      let temp = [];
       if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
           temp.push(
             <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
               classes={classes}
-              name={!fileLampiran[i].filename ? fileLampiran[i].name : fileLampiran[i].filename}
-              filetype={!fileLampiran[i].filename ? fileType(fileLampiran[i].name) : fileType(fileLampiran[i].filename)}
+              name={
+                !fileLampiran[i].filename
+                  ? fileLampiran[i].name
+                  : fileLampiran[i].filename
+              }
+              filetype={
+                !fileLampiran[i].filename
+                  ? fileType(fileLampiran[i].name)
+                  : fileType(fileLampiran[i].filename)
+              }
               handleLampiranDelete={this.handleLampiranDelete}
               i={i}
             />
-          )
+          );
         }
       }
       return temp;
-    }
+    };
 
-    if (class_assigned !== null) //When firstly received.
+    if (class_assigned !== null)
+      //When firstly received.
       class_assigned.map((kelas) => {
-        if (kelas._id !== undefined)
-          return classIds.push(kelas._id)
-        else
-          return classIds.push(kelas)
-      }
-    )
+        if (kelas._id !== undefined) return classIds.push(kelas._id);
+        else return classIds.push(kelas);
+      });
 
     document.title = "Schooly | Sunting Tugas";
 
@@ -431,7 +489,12 @@ class EditTask extends Component {
               </Typography>
             </div>
             <Divider />
-            <form noValidate onSubmit={(e) => {this.onSubmit(e, all_classes)}}>
+            <form
+              noValidate
+              onSubmit={(e) => {
+                this.onSubmit(e, all_classes);
+              }}
+            >
               <Grid container>
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
@@ -449,12 +512,16 @@ class EditTask extends Component {
                         type="text"
                         helperText={errors.name}
                         className={classnames("", {
-                          invalid: errors.name
+                          invalid: errors.name,
                         })}
                       />
                     </Grid>
                     <Grid item>
-                      <Typography component="label" for="description" color="primary">
+                      <Typography
+                        component="label"
+                        for="description"
+                        color="primary"
+                      >
                         Deskripsi
                       </Typography>
                       <TextField
@@ -470,27 +537,45 @@ class EditTask extends Component {
                         type="text"
                         helperText={errors.description}
                         className={classnames("", {
-                          invalid: errors.description
+                          invalid: errors.description,
                         })}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
-                <Divider flexItem orientation="vertical" className={classes.divider} />
+                <Divider
+                  flexItem
+                  orientation="vertical"
+                  className={classes.divider}
+                />
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
                     <Grid item container spacing={2}>
                       <Grid item xs={12} md={6}>
-                        <Typography component="label" for="subject" color="primary">
+                        <Typography
+                          component="label"
+                          for="subject"
+                          color="primary"
+                        >
                           Mata Pelajaran
                         </Typography>
-                        <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject)}>
+                        <FormControl
+                          id="subject"
+                          variant="outlined"
+                          color="primary"
+                          fullWidth
+                          error={Boolean(errors.subject)}
+                        >
                           <Select
                             value={this.state.subject}
-                            onChange={(event) => {this.onChange(event, "subject")}}
+                            onChange={(event) => {
+                              this.onChange(event, "subject");
+                            }}
                           >
                             {all_subjects.map((subject) => (
-                              <MenuItem value={subject._id}>{subject.name}</MenuItem>
+                              <MenuItem value={subject._id}>
+                                {subject.name}
+                              </MenuItem>
                             ))}
                           </Select>
                           <FormHelperText>
@@ -499,10 +584,17 @@ class EditTask extends Component {
                         </FormControl>
                       </Grid>
                       <Grid item xs={12} md={6}>
-                        <Typography component="label" for="deadline" color="primary">
+                        <Typography
+                          component="label"
+                          for="deadline"
+                          color="primary"
+                        >
                           Batas Waktu
                         </Typography>
-                        <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                        <MuiPickersUtilsProvider
+                          locale={lokal}
+                          utils={DateFnsUtils}
+                        >
                           <KeyboardDateTimePicker
                             fullWidth
                             disablePast
@@ -521,39 +613,61 @@ class EditTask extends Component {
                       </Grid>
                     </Grid>
                     <Grid item>
-                      <Typography component="label" for="class_assigned" color="primary">
+                      <Typography
+                        component="label"
+                        for="class_assigned"
+                        color="primary"
+                      >
                         Kelas yang Ditugaskan
                       </Typography>
-                      <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        error={Boolean(errors.class_assigned)}
+                      >
                         <Select
                           multiple
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "class_assigned")}}
+                          onChange={(event) => {
+                            this.onChange(event, "class_assigned");
+                          }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
                               {selected.map((id) => {
-                                let name
-                                for (var i in all_classes) { // i is the index
+                                let name;
+                                for (var i in all_classes) {
+                                  // i is the index
                                   if (all_classes[i]._id === id) {
-                                    name = all_classes[i].name
+                                    name = all_classes[i].name;
                                     break;
                                   }
                                 }
                                 return (
-                                  <Chip key={id} label={name} className={classes.chip} />
-                                )
+                                  <Chip
+                                    key={id}
+                                    label={name}
+                                    className={classes.chip}
+                                  />
+                                );
                               })}
                             </div>
                           )}
                         >
-                          {!all_classes.length ? null : all_classes.map((kelas) => (
-                              <MenuItem value={kelas._id} selected>{kelas.name}</MenuItem>
-                          ))}
+                          {!all_classes.length
+                            ? null
+                            : all_classes.map((kelas) => (
+                                <MenuItem value={kelas._id} selected>
+                                  {kelas.name}
+                                </MenuItem>
+                              ))}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
+                          {Boolean(errors.class_assigned) &&
+                          class_assigned.length === 0
+                            ? errors.class_assigned
+                            : null}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -566,41 +680,45 @@ class EditTask extends Component {
                         onChange={this.handleLampiranUpload}
                         ref={this.tugasUploader}
                         accept="file/*"
-                        style={{display: "none"}}
+                        style={{ display: "none" }}
                       />
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}
-                        onClick={() => {this.tugasUploader.current.click()}}
+                        onClick={() => {
+                          this.tugasUploader.current.click();
+                        }}
                         className={classes.addFileButton}
                       >
                         Tambah Lampiran Berkas
-                       </Button>
-                       <Grid container spacing={1} style={{marginTop: "10px"}}>
-                         {listFileChosen()}
-                       </Grid>
+                      </Button>
+                      <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                        {listFileChosen()}
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            <Divider />
-            <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
-              <div>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.editTaskButton}
-                >
-                  Sunting Tugas
-                </Button>
+              <Divider />
+              <div
+                style={{ display: "flex", justifyContent: "flex-end" }}
+                className={classes.content}
+              >
+                <div>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.editTaskButton}
+                  >
+                    Sunting Tugas
+                  </Button>
+                </div>
               </div>
-            </div>
             </form>
           </Paper>
         </div>
       );
-    }
-    else {
+    } else {
       return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
@@ -619,7 +737,7 @@ EditTask.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  getOneTask : PropTypes.func.isRequired,
+  getOneTask: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
@@ -633,8 +751,12 @@ const mapStateToProps = (state) => ({
   tasksCollection: state.tasksCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
-})
+});
 
-export default connect(
-    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors }
-) (withStyles(styles)(EditTask))
+export default connect(mapStateToProps, {
+  getOneTask,
+  updateTask,
+  getAllClass,
+  getAllSubjects,
+  clearErrors,
+})(withStyles(styles)(EditTask));

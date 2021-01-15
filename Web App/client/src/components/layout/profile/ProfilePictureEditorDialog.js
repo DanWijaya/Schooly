@@ -1,7 +1,14 @@
 import React from "react";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import defaultAvatar from "./DefaultAvatar.svg";
-import { Avatar, Button, Dialog, Grid, IconButton, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  Grid,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
@@ -13,10 +20,12 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(25),
     height: theme.spacing(25),
   },
-  avatarImg1: { // If width is smaller than height
+  avatarImg1: {
+    // If width is smaller than height
     width: theme.spacing(25),
   },
-  avatarImg2: { //If height is smaller than width
+  avatarImg2: {
+    //If height is smaller than width
     height: theme.spacing(25),
   },
   profilePictureGrid: {
@@ -53,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
-  }
+  },
 }));
 
 function ProfilePictureEditorDialog(props) {
@@ -64,7 +73,10 @@ function ProfilePictureEditorDialog(props) {
   const imageUploader = React.useRef(null);
   const [profileImg, setProfileImg] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [avatarDimensions, setAvatarDimensions] = React.useState({height: null , width: null})
+  const [avatarDimensions, setAvatarDimensions] = React.useState({
+    height: null,
+    width: null,
+  });
 
   // Dialog
   const handleOpenDialog = () => {
@@ -72,20 +84,20 @@ function ProfilePictureEditorDialog(props) {
   };
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setProfileImg(null)
+    setProfileImg(null);
   };
 
   const { user } = props;
   const { updateAvatar } = props;
 
-  const handleImageUpload = e => {
+  const handleImageUpload = (e) => {
     const [file] = e.target.files;
-    setProfileImg(e.target.files[0])
+    setProfileImg(e.target.files[0]);
     if (file) {
       const reader = new FileReader();
       const { current } = uploadedImage;
       current.file = file;
-      reader.onload = e => {
+      reader.onload = (e) => {
         current.src = e.target.result;
       };
       reader.readAsDataURL(file);
@@ -93,34 +105,39 @@ function ProfilePictureEditorDialog(props) {
   };
 
   const onSubmitForm = (e) => {
-    e.preventDefault()
-    let formData = new FormData()
-    formData.append("avatar", profileImg)
+    e.preventDefault();
+    let formData = new FormData();
+    formData.append("avatar", profileImg);
 
-    let userData = user
+    let userData = user;
     let userId = user.id;
 
-    updateAvatar(userData, userId, formData)
-    props.handleOpenAlert()
+    updateAvatar(userData, userId, formData);
+    props.handleOpenAlert();
 
-    handleCloseDialog()
+    handleCloseDialog();
+  };
+
+  function onImgLoad({ target: img }) {
+    setAvatarDimensions({ height: img.offsetHeight, width: img.offsetWidth });
   }
 
-  function onImgLoad({target:img}) {
-    setAvatarDimensions({ height:img.offsetHeight, width:img.offsetWidth })
-  }
-
-  console.log("width is smaller", avatarDimensions.width < avatarDimensions.height)
-  console.log("height is smaller", avatarDimensions.height < avatarDimensions.width)
+  console.log(
+    "width is smaller",
+    avatarDimensions.width < avatarDimensions.height
+  );
+  console.log(
+    "height is smaller",
+    avatarDimensions.height < avatarDimensions.width
+  );
 
   const imageUploadPreview = () => {
     let avatarImgClass;
 
     if (avatarDimensions.width < avatarDimensions.height) {
-      avatarImgClass = classes.avatarImg1
-    }
-    else {
-      avatarImgClass = classes.avatarImg2
+      avatarImgClass = classes.avatarImg1;
+    } else {
+      avatarImgClass = classes.avatarImg2;
     }
 
     if (!profileImg) {
@@ -135,9 +152,8 @@ function ProfilePictureEditorDialog(props) {
               className={avatarImgClass}
             />
           </Avatar>
-        )
-      }
-      else {
+        );
+      } else {
         return (
           <Avatar className={classes.avatar}>
             <img
@@ -148,10 +164,9 @@ function ProfilePictureEditorDialog(props) {
               className={avatarImgClass}
             />
           </Avatar>
-        )
+        );
       }
-    }
-    else {
+    } else {
       return (
         <Avatar className={classes.avatar}>
           <img
@@ -161,9 +176,9 @@ function ProfilePictureEditorDialog(props) {
             className={avatarImgClass}
           />
         </Avatar>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div>
@@ -182,18 +197,29 @@ function ProfilePictureEditorDialog(props) {
         </IconButton>
       </LightTooltip>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <Grid container direction="column" alignItems="center" className={classes.profilePictureGrid}>
-          <Grid item container justify="flex-end" alignItems="flex-start" style={{marginBottom: "10px"}}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.profilePictureGrid}
+        >
+          <Grid
+            item
+            container
+            justify="flex-end"
+            alignItems="flex-start"
+            style={{ marginBottom: "10px" }}
+          >
             <IconButton size="small" onClick={handleCloseDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item style={{marginBottom: "20px"}}>
+          <Grid item style={{ marginBottom: "20px" }}>
             <Typography variant="h5" align="center">
               <b>Perbarui Foto Profil</b>
             </Typography>
           </Grid>
-          <Grid item style={{marginBottom: "40px"}}>
+          <Grid item style={{ marginBottom: "40px" }}>
             <form onSubmit={onSubmitForm}>
               <input
                 accept="image/*"
@@ -202,18 +228,25 @@ function ProfilePictureEditorDialog(props) {
                 onChange={handleImageUpload}
                 ref={imageUploader}
                 style={{
-                  display: "none"
+                  display: "none",
                 }}
               />
-              <Grid container direction="column" spacing={2} alignItems="center">
-                <Grid item style={{marginBottom: "20px"}}>
+              <Grid
+                container
+                direction="column"
+                spacing={2}
+                alignItems="center"
+              >
+                <Grid item style={{ marginBottom: "20px" }}>
                   {imageUploadPreview()}
                 </Grid>
                 <Grid item>
                   <Button
                     variant="contained"
                     startIcon={<AddAPhotoIcon />}
-                    onClick={() => {imageUploader.current.click()}}
+                    onClick={() => {
+                      imageUploader.current.click();
+                    }}
                     className={classes.uploadButton}
                   >
                     Unggah Foto
@@ -234,14 +267,19 @@ function ProfilePictureEditorDialog(props) {
             </form>
           </Grid>
           <Grid item>
-          <Typography variant="subtitle2" align="center" color="textSecondary">
-            Foto profil Anda dapat dilihat oleh semua orang yang menggunakan layanan Schooly.
-          </Typography>
+            <Typography
+              variant="subtitle2"
+              align="center"
+              color="textSecondary"
+            >
+              Foto profil Anda dapat dilihat oleh semua orang yang menggunakan
+              layanan Schooly.
+            </Typography>
           </Grid>
         </Grid>
       </Dialog>
     </div>
-  )
+  );
 }
 
 export default ProfilePictureEditorDialog;

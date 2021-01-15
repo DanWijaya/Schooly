@@ -1,9 +1,19 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Drawer, Divider, Hidden, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import {
+  Drawer,
+  Divider,
+  Hidden,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
@@ -12,7 +22,13 @@ import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { BsClipboardData } from "react-icons/bs";
-import { FaChalkboardTeacher, FaClipboardList, FaDropbox, FaUserCheck, FaUserClock } from "react-icons/fa";
+import {
+  FaChalkboardTeacher,
+  FaClipboardList,
+  FaDropbox,
+  FaUserCheck,
+  FaUserClock,
+} from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -72,89 +88,166 @@ function DrawerContent(props) {
 
   const { user, handleDrawerMobile } = props;
 
-  const generateList = (linkto, icon, itemText, subheader=false) => {
+  const generateList = (linkto, icon, itemText, subheader = false) => {
     return (
       <Link to={linkto} onClick={handleDrawerMobile}>
         <StyledListItem button>
-          <ListItemIcon>
-            {icon}
-          </ListItemIcon>
+          <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText
             primary={<Typography color="textPrimary">{itemText}</Typography>}
           />
         </StyledListItem>
       </Link>
-    )
-  }
+    );
+  };
 
   /* directedTo is for the page that is directed when clicking the classIcon in NavBarContents*/
   let directedTo;
   if (user !== undefined) {
-    if (user.role === "Student")
-      directedTo = `/kelas/${user.kelas}`
-    else
-      directedTo = "/daftar-kelas"
+    if (user.role === "Student") directedTo = `/kelas/${user.kelas}`;
+    else directedTo = "/daftar-kelas";
   }
 
   let ListItemContents;
   if (user.role === "Admin")
     ListItemContents = [
-      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
-      ["/pending-users", <FaUserClock className={classes.drawerListItemIcon}/>, "Pengguna Tertunda"],
-      ["/atur-pengguna", <FaUserCheck className={classes.drawerListItemIcon}/>, "Pengguna Aktif"],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
-      ["/daftar-mata-pelajaran", <LibraryBooksIcon className={classes.drawerListItemIcon}/>, "Mata Pelajaran"]
-    ]
-  else if (user.role === "Student"){
+      [
+        "/beranda",
+        <DashboardIcon className={classes.drawerListItemIcon} />,
+        "Beranda",
+      ],
+      [
+        "/pending-users",
+        <FaUserClock className={classes.drawerListItemIcon} />,
+        "Pengguna Tertunda",
+      ],
+      [
+        "/atur-pengguna",
+        <FaUserCheck className={classes.drawerListItemIcon} />,
+        "Pengguna Aktif",
+      ],
+      [
+        directedTo,
+        <FaChalkboardTeacher className={classes.drawerListItemIcon} />,
+        "Kelas",
+      ],
+      [
+        "/daftar-mata-pelajaran",
+        <LibraryBooksIcon className={classes.drawerListItemIcon} />,
+        "Mata Pelajaran",
+      ],
+    ];
+  else if (user.role === "Student") {
     ListItemContents = [
-      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      [
+        "/beranda",
+        <DashboardIcon className={classes.drawerListItemIcon} />,
+        "Beranda",
+      ],
       // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
-      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
-      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
-      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
-      ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"],
-    ]
-  }
-  else {
+      [
+        directedTo,
+        <FaChalkboardTeacher className={classes.drawerListItemIcon} />,
+        "Kelas",
+      ],
+      [
+        "/daftar-pengumuman",
+        <AnnouncementIcon className={classes.drawerListItemIcon} />,
+        "Pengumuman",
+      ],
+      [
+        "/daftar-materi",
+        <MenuBookIcon className={classes.drawerListItemIcon} />,
+        "Materi",
+      ],
+      [
+        "/daftar-tugas",
+        <AssignmentIcon className={classes.drawerListItemIcon} />,
+        "Tugas",
+      ],
+      [
+        "/daftar-kuis",
+        <FaClipboardList className={classes.drawerListItemIcon} />,
+        "Kuis",
+      ],
+      [
+        "/daftar-ujian",
+        <BsClipboardData className={classes.drawerListItemIcon} />,
+        "Ujian",
+      ],
+    ];
+  } else {
     ListItemContents = [
-      ["/beranda", <DashboardIcon className={classes.drawerListItemIcon} />, "Beranda"],
+      [
+        "/beranda",
+        <DashboardIcon className={classes.drawerListItemIcon} />,
+        "Beranda",
+      ],
       // ["/kalender", <EventIcon className={classes.drawerListItemIcon} />,"Kalender"],
-      [directedTo, <FaChalkboardTeacher className={classes.drawerListItemIcon} />, "Kelas"],
-      ["/daftar-pengumuman", <AnnouncementIcon className={classes.drawerListItemIcon} />,"Pengumuman"],
-      ["/daftar-materi", <MenuBookIcon className={classes.drawerListItemIcon}/>, "Materi"],
-      ["/daftar-tugas", <AssignmentIcon className={classes.drawerListItemIcon} />, "Tugas"],
-      ["/daftar-kuis", <FaClipboardList className={classes.drawerListItemIcon} />, "Kuis"],
-      ["/daftar-ujian", <BsClipboardData className={classes.drawerListItemIcon} />, "Ujian"]
-    ]
+      [
+        directedTo,
+        <FaChalkboardTeacher className={classes.drawerListItemIcon} />,
+        "Kelas",
+      ],
+      [
+        "/daftar-pengumuman",
+        <AnnouncementIcon className={classes.drawerListItemIcon} />,
+        "Pengumuman",
+      ],
+      [
+        "/daftar-materi",
+        <MenuBookIcon className={classes.drawerListItemIcon} />,
+        "Materi",
+      ],
+      [
+        "/daftar-tugas",
+        <AssignmentIcon className={classes.drawerListItemIcon} />,
+        "Tugas",
+      ],
+      [
+        "/daftar-kuis",
+        <FaClipboardList className={classes.drawerListItemIcon} />,
+        "Kuis",
+      ],
+      [
+        "/daftar-ujian",
+        <BsClipboardData className={classes.drawerListItemIcon} />,
+        "Ujian",
+      ],
+    ];
     if (user.role === "Teacher") {
-      ListItemContents.push(
-        [{pathname:"/lihat-rapor", state: {role: "Other"}}, <AssessmentIcon className={classes.drawerListItemIcon} />, "Rapor"]
-      )
+      ListItemContents.push([
+        { pathname: "/lihat-rapor", state: { role: "Other" } },
+        <AssessmentIcon className={classes.drawerListItemIcon} />,
+        "Rapor",
+      ]);
     }
   }
 
   return (
     <div>
       <List>
-        {ListItemContents.map((item) => (
-          generateList(item[0],item[1],item[2],item[3]))
+        {ListItemContents.map((item) =>
+          generateList(item[0], item[1], item[2], item[3])
         )}
       </List>
       <Divider />
       <List>
-        {generateList("/dropbox-connect", <FaDropbox className={classes.dropboxIcon}/>, "Dropbox")}
+        {generateList(
+          "/dropbox-connect",
+          <FaDropbox className={classes.dropboxIcon} />,
+          "Dropbox"
+        )}
       </List>
     </div>
-  )
-};
+  );
+}
 
 function SideDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { desktopOpen, mobileOpen, handleDrawerMobile } = props
+  const { desktopOpen, mobileOpen, handleDrawerMobile } = props;
   const { user } = props.auth;
 
   if (user.name !== undefined) {
@@ -174,7 +267,10 @@ function SideDrawer(props) {
               keepMounted: true,
             }}
           >
-            <DrawerContent user={user} handleDrawerMobile={handleDrawerMobile}/>
+            <DrawerContent
+              user={user}
+              handleDrawerMobile={handleDrawerMobile}
+            />
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
@@ -197,23 +293,18 @@ function SideDrawer(props) {
           </Drawer>
         </Hidden>
       </div>
-    )
-  }
-  else {
-    return (
-      <div style={{display: "none"}} />
-    )
+    );
+  } else {
+    return <div style={{ display: "none" }} />;
   }
 }
 
 SideDrawer.propTypes = {
   auth: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-})
+});
 
-export default connect(
-  mapStateToProps
-) (React.memo(SideDrawer));
+export default connect(mapStateToProps)(React.memo(SideDrawer));

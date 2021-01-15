@@ -11,8 +11,7 @@ module.exports = function validateLoginInput(data) {
   // Email checks
   if (Validator.isEmpty(data.email)) {
     errors.email = "Email belum diisi";
-  }
-  else if (!Validator.isEmail(data.email)) {
+  } else if (!Validator.isEmail(data.email)) {
     errors.email = "Email tidak benar";
   }
   // Password checks
@@ -22,6 +21,6 @@ module.exports = function validateLoginInput(data) {
 
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors),
   };
 };

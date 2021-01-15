@@ -3,17 +3,37 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import "moment/locale/id";
-import { createSubject, getAllSubjects, getSubject, editSubject, deleteSubject } from "../../../actions/SubjectActions";
+import {
+  createSubject,
+  getAllSubjects,
+  getSubject,
+  editSubject,
+  deleteSubject,
+} from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Divider, Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, TextField, Typography } from "@material-ui/core/";
+import {
+  Button,
+  IconButton,
+  Dialog,
+  Divider,
+  Fab,
+  Grid,
+  Hidden,
+  Menu,
+  MenuItem,
+  Paper,
+  TableSortLabel,
+  TextField,
+  Typography,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import SortIcon from "@material-ui/icons/Sort";
 
@@ -50,14 +70,25 @@ function stableSort(array, comparator) {
 }
 
 function SubjectListToolbar(props) {
-  const { classes, order, orderBy, onRequestSort, handleOpenFormDialog } = props;
+  const {
+    classes,
+    order,
+    orderBy,
+    onRequestSort,
+    handleOpenFormDialog,
+  } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   const headCells = [
-    { id: "name", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
+    {
+      id: "name",
+      numeric: false,
+      disablePadding: false,
+      label: "Mata Pelajaran",
+    },
   ];
 
   // Sort Menu
@@ -71,25 +102,35 @@ function SubjectListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">
-        Daftar Mata Pelajaran
-      </Typography>
-      <div style={{display: "flex", alignItems: "center"}}>
+      <Typography variant="h4">Daftar Mata Pelajaran</Typography>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <Hidden smUp implementation="css">
           <LightTooltip title="Buat Mata Pelajaran">
-            <Fab size="small" className={classes.newMaterialButton} onClick={(handleOpenFormDialog)}>
+            <Fab
+              size="small"
+              className={classes.newMaterialButton}
+              onClick={handleOpenFormDialog}
+            >
               <MenuBookIcon className={classes.newMaterialIconMobile} />
             </Fab>
           </LightTooltip>
         </Hidden>
         <Hidden xsDown implementation="css">
-          <Fab size="medium" variant="extended" className={classes.newMaterialButton} onClick={handleOpenFormDialog}>
+          <Fab
+            size="medium"
+            variant="extended"
+            className={classes.newMaterialButton}
+            onClick={handleOpenFormDialog}
+          >
             <LibraryBooksIcon className={classes.newMaterialIconDesktop} />
             Buat Mata Pelajaran
           </Fab>
         </Hidden>
         <LightTooltip title="Urutkan Materi">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton
+            onClick={handleOpenSortMenu}
+            className={classes.sortButton}
+          >
             <SortIcon />
           </IconButton>
         </LightTooltip>
@@ -119,12 +160,13 @@ function SubjectListToolbar(props) {
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ?
+                {orderBy === headCell.id ? (
                   <span className={classes.visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </span>
-                  : null
-                }
+                ) : null}
               </TableSortLabel>
             </MenuItem>
           ))}
@@ -132,7 +174,7 @@ function SubjectListToolbar(props) {
       </div>
     </div>
   );
-};
+}
 
 SubjectListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -284,36 +326,38 @@ function SubjectList(props) {
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openFormDialog, setOpenFormDialog] = React.useState(null);
-  const [selectedSubjectId, setSelectedSubjectId] = React.useState(null)
+  const [selectedSubjectId, setSelectedSubjectId] = React.useState(null);
   const [selectedSubjectName, setSelectedSubjectName] = React.useState(null);
   const [action, setAction] = React.useState("");
-  const [subject, setSubject ] = React.useState({});
-  const { subjectsCollection, getAllSubjects, editSubject, clearErrors, createSubject, deleteSubject, errors } = props;
+  const [subject, setSubject] = React.useState({});
+  const {
+    subjectsCollection,
+    getAllSubjects,
+    editSubject,
+    clearErrors,
+    createSubject,
+    deleteSubject,
+    errors,
+  } = props;
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
 
-  console.log(subjectsCollection)
+  console.log(subjectsCollection);
   const subjectRowItem = (data) => {
-    rows.push(
-      createData(
-        data._id,
-        data.name,
-        data.all_class,
-      )
-    )
-  }
+    rows.push(createData(data._id, data.name, data.all_class));
+  };
 
   React.useEffect(() => {
-    getAllSubjects()
+    getAllSubjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const retrieveSubjects = () => {
-    console.log(retrieved_users)
+    console.log(retrieved_users);
     // If all_subjects is not undefined or an empty array
-    rows = []
-    all_subjects.map((data) =>  subjectRowItem(data))
-  }
+    rows = [];
+    all_subjects.map((data) => subjectRowItem(data));
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -323,18 +367,18 @@ function SubjectList(props) {
 
   // Call the function to view the subjects on tablerows.
   // This function is defined above.
-  retrieveSubjects()
+  retrieveSubjects();
 
   const onDeleteSubject = (id) => {
-    deleteSubject(id)
-  }
+    deleteSubject(id);
+  };
 
   // Delete Dialog
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedSubjectId(id)
-    setSelectedSubjectName(name)
+    setSelectedSubjectId(id);
+    setSelectedSubjectName(name);
   };
 
   const handleCloseDeleteDialog = () => {
@@ -342,117 +386,118 @@ function SubjectList(props) {
   };
 
   // Delete Dialog
-  const handleOpenFormDialog = (e, id, name, isEdit=false) => {
+  const handleOpenFormDialog = (e, id, name, isEdit = false) => {
     e.stopPropagation();
-    if(isEdit){
+    if (isEdit) {
       setSubject((prev) => ({
         ...prev,
         name: name,
-        id: id
-      }))
-      setAction("Edit")
-    }else{
-      setAction("Create")
+        id: id,
+      }));
+      setAction("Edit");
+    } else {
+      setAction("Create");
     }
     setOpenFormDialog(true);
   };
 
   const handleCloseFormDialog = () => {
     setOpenFormDialog(false);
-    setSubject({})
-    clearErrors()
+    setSubject({});
+    clearErrors();
   };
 
   const onChange = (e) => {
-    const { id, value} = e.target;
-    console.log(value)
+    const { id, value } = e.target;
+    console.log(value);
     setSubject((prev) => ({
-        ...prev,
-        [id] : value
-    }))
-  }
+      ...prev,
+      [id]: value,
+    }));
+  };
 
   const onSubmit = (e) => {
-    e.preventDefault()
-    if(action === "Edit")
-      editSubject(subject)
-    else
-      createSubject(subject)
-  }
+    e.preventDefault();
+    if (action === "Edit") editSubject(subject);
+    else createSubject(subject);
+  };
 
   function FormDialog() {
     return (
-      <Dialog
-        open={openFormDialog}
-        onClose={handleCloseFormDialog}>
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+      <Dialog open={openFormDialog} onClose={handleCloseFormDialog}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.dialogBox}
+        >
           <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseFormDialog}
-            >
+            <IconButton size="small" onClick={handleCloseFormDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
-          <Grid item container justify="center" spacing={2}>
-            {action === "Edit" ?
-              <Typography variant="h6" gutterBottom>
-                <b>Sunting Mata Pelajaran</b>
-              </Typography>
-            : action === "Create" ?
-              <Typography variant="h6" gutterBottom>
-                <b>Isi Nama Mata Pelajaran</b>
-              </Typography>
-            :
-              null
-            }
-            <TextField
-              style={{margin: "20px 10px"}}
-              fullWidth
-              variant="outlined"
-              id="name"
-              onChange={onChange}
-              value={subject.name}
-              error={errors.name}
-              type="text"
-              helperText={errors.name}
-              className={classnames("", {
-                  invalid: errors.name
-              })}
-            />
-            <Grid item>
-              {action === "Edit" ?
+          <form onSubmit={onSubmit} style={{ paddingTop: "20px" }}>
+            <Grid item container justify="center" spacing={2}>
+              {action === "Edit" ? (
+                <Typography variant="h6" gutterBottom>
+                  <b>Sunting Mata Pelajaran</b>
+                </Typography>
+              ) : action === "Create" ? (
+                <Typography variant="h6" gutterBottom>
+                  <b>Isi Nama Mata Pelajaran</b>
+                </Typography>
+              ) : null}
+              <TextField
+                style={{ margin: "20px 10px" }}
+                fullWidth
+                variant="outlined"
+                id="name"
+                onChange={onChange}
+                value={subject.name}
+                error={errors.name}
+                type="text"
+                helperText={errors.name}
+                className={classnames("", {
+                  invalid: errors.name,
+                })}
+              />
+              <Grid item>
+                {action === "Edit" ? (
+                  <Button
+                    type="submit"
+                    startIcon={<LibraryBooksIcon />}
+                    className={classes.dialogEditButton}
+                  >
+                    Sunting
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    startIcon={<LibraryBooksIcon />}
+                    className={classes.dialogCreateButton}
+                  >
+                    Buat
+                  </Button>
+                )}
+              </Grid>
+              <Grid item>
                 <Button
-                  type="submit"
-                  startIcon={<LibraryBooksIcon />}
-                  className={classes.dialogEditButton}
+                  onClick={handleCloseFormDialog}
+                  startIcon={<CancelIcon />}
+                  className={
+                    action === "Edit"
+                      ? classes.dialogCancelEdit
+                      : classes.dialogCancelButton
+                  }
                 >
-                  Sunting
+                  Batal
                 </Button>
-              :
-                <Button
-                  type="submit"
-                  startIcon={<LibraryBooksIcon />}
-                  className={classes.dialogCreateButton}
-                >
-                  Buat
-                </Button>
-              }
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                onClick={handleCloseFormDialog}
-                startIcon={< CancelIcon/>}
-                className={action === "Edit" ? classes.dialogCancelEdit : classes.dialogCancelButton}
-              >
-                Batal
-              </Button>
-            </Grid>
-          </Grid>
           </form>
-          </Grid>
-      </Dialog>)
+        </Grid>
+      </Dialog>
+    );
   }
 
   document.title = "Schooly | Daftar Mata Pelajaran";
@@ -465,7 +510,9 @@ function SubjectList(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Mata Pelajaran"
         itemName={selectedSubjectName}
-        deleteItem={() => { onDeleteSubject(selectedSubjectId) }}
+        deleteItem={() => {
+          onDeleteSubject(selectedSubjectId);
+        }}
       />
       <SubjectListToolbar
         handleOpenFormDialog={handleOpenFormDialog}
@@ -479,35 +526,50 @@ function SubjectList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-        {(rows.length === 0) ? <Typography variant="subtitle1" align="center" color="textSecondary">Kosong</Typography> :
-          stableSort(rows, getComparator(order, orderBy))
-            .map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
-              return (
+        {rows.length === 0 ? (
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        ) : (
+          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+            return (
+              <Grid item>
+                <Paper variant="outlined" className={classes.subjectPaper}>
                   <Grid item>
-                  <Paper variant="outlined" className={classes.subjectPaper}>
-                      <Grid item>
-                          <Typography variant="h6" id={labelId} >
-                            {row.name}
-                          </Typography>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <IconButton size="small" className={classes.editSubjectButton} onClick={(e)=> handleOpenFormDialog(e,row._id, row.name, true)}>
-                              <EditIcon fontSize="small" />
-                          </IconButton>
-                        </Grid>
-                        <Grid item>
-                          <IconButton size="small" className={classes.deleteSubjectlButton} onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}>
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Grid>
-                      </Grid>
-                  </Paper>
+                    <Typography variant="h6" id={labelId}>
+                      {row.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs container spacing={1} justify="flex-end">
+                    <Grid item>
+                      <IconButton
+                        size="small"
+                        className={classes.editSubjectButton}
+                        onClick={(e) =>
+                          handleOpenFormDialog(e, row._id, row.name, true)
+                        }
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <IconButton
+                        size="small"
+                        className={classes.deleteSubjectlButton}
+                        onClick={(e) => {
+                          handleOpenDeleteDialog(e, row._id, row.name);
+                        }}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Paper>
               </Grid>
-              );
-            })
-        }
+            );
+          })
+        )}
       </Grid>
     </div>
   );
@@ -522,16 +584,20 @@ SubjectList.propTypes = {
   editSubject: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
-})
+});
 
-export default connect(
-  mapStateToProps,
-  { deleteSubject, getAllSubjects, editSubject, getSubject, createSubject, clearErrors }
-)(SubjectList);
+export default connect(mapStateToProps, {
+  deleteSubject,
+  getAllSubjects,
+  editSubject,
+  getSubject,
+  createSubject,
+  clearErrors,
+})(SubjectList);

@@ -1,14 +1,21 @@
-import React, {useEffect} from "react";
-import LightTooltip from "../../misc/light-tooltip/LightTooltip"
-import { Button, Dialog, Grid, IconButton, TextField, Typography } from "@material-ui/core";
+import React, { useEffect } from "react";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+import {
+  Button,
+  Dialog,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import LockIcon from "@material-ui/icons/Lock";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { changePassword } from "../../../actions/AuthActions"
-import { logoutUser } from "../../../actions/UserActions"
-import { clearErrors} from "../../../actions/ErrorActions"
+import { changePassword } from "../../../actions/AuthActions";
+import { logoutUser } from "../../../actions/UserActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 
 const useStyles = makeStyles((theme) => ({
   editPasswordButton: {
@@ -41,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EditPasswordField(props) {
-  const {on_change, value, errors, id} = props;
+  const { on_change, value, errors, id } = props;
 
   return (
     <Grid item>
@@ -59,29 +66,35 @@ function EditPasswordField(props) {
         helperText={errors}
       />
     </Grid>
-  )
+  );
 }
 
 function ProfilePasswordEditorDialog(props) {
   const [old_password, setOldPassword] = React.useState("");
   const [new_password, setNewPassword] = React.useState("");
   const [new_password2, setNewPassword2] = React.useState("");
-  const {changePassword, success, errors, handleOpenAlert, clearErrors} = props;
+  const {
+    changePassword,
+    success,
+    errors,
+    handleOpenAlert,
+    clearErrors,
+  } = props;
   // const [errorMessage, setErrorMessage] = React.useState({})
-  const {user} = props.auth;
+  const { user } = props.auth;
 
   const classes = useStyles();
 
   useEffect(() => {
     if (success) {
-      handleOpenAlert()
+      handleOpenAlert();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success])
+  }, [success]);
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
-    clearErrors()
+    clearErrors();
     setOpen(true);
   };
   const handleClose = (e) => {
@@ -89,40 +102,38 @@ function ProfilePasswordEditorDialog(props) {
   };
 
   const onSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     var passwordData = {
       email: user.email,
       old_password: old_password,
       new_password: new_password,
-      new_password2: new_password2
-    }
-    changePassword(passwordData)
-  }
+      new_password2: new_password2,
+    };
+    changePassword(passwordData);
+  };
 
-  const onChange = e => {
-    if (Object.keys(errors).length)
-      clearErrors()
+  const onChange = (e) => {
+    if (Object.keys(errors).length) clearErrors();
 
-    switch(e.target.id) {
+    switch (e.target.id) {
       case "old_password":
-        setOldPassword(e.target.value)
+        setOldPassword(e.target.value);
         break;
 
       case "new_password":
-        setNewPassword(e.target.value)
+        setNewPassword(e.target.value);
         break;
 
       case "new_password2":
-        setNewPassword2(e.target.value)
+        setNewPassword2(e.target.value);
         break;
 
       default:
         break;
     }
-  }
-  console.log(success)
-
+  };
+  console.log(success);
 
   return (
     <div>
@@ -136,21 +147,31 @@ function ProfilePasswordEditorDialog(props) {
         </Button>
       </LightTooltip>
       <Dialog open={open} onClose={handleClose}>
-        <Grid container direction="column" alignItems="center" className={classes.root}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.root}
+        >
           <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleClose}
-            >
+            <IconButton size="small" onClick={handleClose}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item className={classes.content} style={{marginBottom: "15px"}}>
+          <Grid
+            item
+            className={classes.content}
+            style={{ marginBottom: "15px" }}
+          >
             <Typography variant="h6" align="center" gutterBottom>
               <b>Ganti Kata Sandi</b>
             </Typography>
-            <Typography variant="subtitle2" className={classes.changePasswordCaution}>
-               Kata sandi adalah informasi pribadi yang tidak boleh diketahui oleh orang lain.
+            <Typography
+              variant="subtitle2"
+              className={classes.changePasswordCaution}
+            >
+              Kata sandi adalah informasi pribadi yang tidak boleh diketahui
+              oleh orang lain.
             </Typography>
           </Grid>
           <form onSubmit={onSubmit} className={classes.content}>
@@ -177,7 +198,7 @@ function ProfilePasswordEditorDialog(props) {
                 edit_password_requirement="Konfirmasi kata sandi baru"
               />
             </Grid>
-            <Grid container justify="center" style={{marginTop: "15px"}}>
+            <Grid container justify="center" style={{ marginTop: "15px" }}>
               <Button
                 type="submit"
                 variant="contained"
@@ -190,7 +211,7 @@ function ProfilePasswordEditorDialog(props) {
         </Grid>
       </Dialog>
     </div>
-  )
+  );
 }
 
 ProfilePasswordEditorDialog.propTypes = {
@@ -200,14 +221,16 @@ ProfilePasswordEditorDialog.propTypes = {
   changePassword: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
-}
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   success: state.success,
   auth: state.auth,
   errors: state.errors,
-})
+});
 
-export default connect(
-  mapStateToProps, { changePassword, logoutUser, clearErrors })
-(ProfilePasswordEditorDialog);
+export default connect(mapStateToProps, {
+  changePassword,
+  logoutUser,
+  clearErrors,
+})(ProfilePasswordEditorDialog);

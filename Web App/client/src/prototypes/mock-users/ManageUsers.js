@@ -5,31 +5,78 @@ import moment from "moment";
 import "moment/locale/id";
 // import DeleteDialog from "../components/misc/dialog/DeleteDialog";
 import LightTooltip from "../components/misc/light-tooltip/LightTooltip";
-import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography,
-   TableContainer, Table, TableHead , TableBody, TableRow, TableCell } from "@material-ui/core/";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Dialog,
+  Divider,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  Grid,
+  Hidden,
+  ListItemAvatar,
+  Menu,
+  MenuItem,
+  TableSortLabel,
+  Toolbar,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import SortIcon from "@material-ui/icons/Sort";
-import BlockIcon from '@material-ui/icons/Block';
-import SchoolRoundedIcon from '@material-ui/icons/SchoolRounded';
-import LocalLibraryRoundedIcon from '@material-ui/icons/LocalLibraryRounded';
+import BlockIcon from "@material-ui/icons/Block";
+import SchoolRoundedIcon from "@material-ui/icons/SchoolRounded";
+import LocalLibraryRoundedIcon from "@material-ui/icons/LocalLibraryRounded";
 
 // tugas 3 -------------------------------------------
-import { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } from "./MockActions";
-import csv from 'csvtojson';
+import {
+  importUsers,
+  getMockTeachers,
+  getMockStudents,
+  setMockUserDisabled,
+  deleteMockUser,
+} from "./MockActions";
+import csv from "csvtojson";
 // -----------------------------------------------------
 
-import ImportExportIcon from '@material-ui/icons/ImportExport';
-import PublishIcon from '@material-ui/icons/PublishRounded';
-import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+import ImportExportIcon from "@material-ui/icons/ImportExport";
+import PublishIcon from "@material-ui/icons/PublishRounded";
+import GetAppRoundedIcon from "@material-ui/icons/GetAppRounded";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
-function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
-  return { _id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action };
+function createData(
+  _id,
+  avatar,
+  name,
+  email,
+  phone,
+  emergency_phone,
+  tanggal_lahir,
+  address,
+  action
+) {
+  return {
+    _id,
+    avatar,
+    name,
+    email,
+    phone,
+    emergency_phone,
+    tanggal_lahir,
+    address,
+    action,
+  };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -58,8 +105,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-
-
 function ManageUsersToolbar(props) {
   const { classes, order, orderBy, onRequestSort, role, heading } = props;
 
@@ -70,10 +115,25 @@ function ManageUsersToolbar(props) {
   const headCells = [
     { id: "name", numeric: false, disablePadding: true, label: "Nama" },
     { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    { id: "phone", numeric: true, disablePadding: false, label: "Nomor Telepon" },
-    { id: "tanggal_lahir", numeric: false, disablePadding: false, label: "Tanggal Lahir" },
+    {
+      id: "phone",
+      numeric: true,
+      disablePadding: false,
+      label: "Nomor Telepon",
+    },
+    {
+      id: "tanggal_lahir",
+      numeric: false,
+      disablePadding: false,
+      label: "Tanggal Lahir",
+    },
     { id: "address", numeric: false, disablePadding: false, label: "Alamat" },
-    { id: "emergency_phone", numeric: false, disablePadding: false, label: "Nomor Telepon Darurat"}
+    {
+      id: "emergency_phone",
+      numeric: false,
+      disablePadding: false,
+      label: "Nomor Telepon Darurat",
+    },
   ];
 
   // Sort Menu
@@ -88,13 +148,14 @@ function ManageUsersToolbar(props) {
   return (
     <Toolbar className={classes.toolbar}>
       <div>
-        <Typography variant="h5">
-          {heading}
-        </Typography>
+        <Typography variant="h5">{heading}</Typography>
       </div>
       <div>
         <LightTooltip title="Urutkan Akun">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton
+            onClick={handleOpenSortMenu}
+            className={classes.sortButton}
+          >
             <SortIcon />
           </IconButton>
         </LightTooltip>
@@ -124,22 +185,21 @@ function ManageUsersToolbar(props) {
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ?
+                {orderBy === headCell.id ? (
                   <span className={classes.visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </span>
-                  : null
-                }
+                ) : null}
               </TableSortLabel>
             </MenuItem>
           ))}
         </Menu>
-
       </div>
     </Toolbar>
-
   );
-};
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -156,7 +216,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
-
   },
   profileDeleteButton: {
     backgroundColor: theme.palette.error.dark,
@@ -238,32 +297,34 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#A2F7B5",
       color: "#309B94",
     },
-    "&:focus":{
+    "&:focus": {
       backgroundColor: "#50c878",
       color: "white",
       "&:hover": {
         backgroundColor: "#A2F7B5",
         color: "#309B94",
-    }
-  }},
-    closeButton: {
-        width:'6px',
-        height:'6px',
-        color: "black",
-        "&:hover": {
-          backgroundColor:'#c21807',
-          color: "white",
-        },
-        "&:focus":{
-          color: "white"
-        } },
-    "&:focus":{
-      backgroundColor: "#50c878",
+      },
+    },
+  },
+  closeButton: {
+    width: "6px",
+    height: "6px",
+    color: "black",
+    "&:hover": {
+      backgroundColor: "#c21807",
       color: "white",
-      "&:hover": {
-        backgroundColor: "#A2F7B5",
-        color: "#309B94",
-    }
+    },
+    "&:focus": {
+      color: "white",
+    },
+  },
+  "&:focus": {
+    backgroundColor: "#50c878",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#A2F7B5",
+      color: "#309B94",
+    },
   },
   visuallyHidden: {
     border: 0,
@@ -287,7 +348,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ManageUsers(props) {
-  document.title = "Schooly | Daftar Pengguna"
+  document.title = "Schooly | Daftar Pengguna";
 
   const classes = useStyles();
 
@@ -299,15 +360,21 @@ function ManageUsers(props) {
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [openDisableDialog, setOpenDisableDialog] = React.useState(null);
-  const [selectedUserId, setSelectedUserId] = React.useState(null)
+  const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
   // const { importUsers, setUserDisabled, deleteUser, getTeachers, getStudents } = props;
-  const { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser } = props; // tugas 3
+  const {
+    importUsers,
+    getMockTeachers,
+    getMockStudents,
+    setMockUserDisabled,
+    deleteMockUser,
+  } = props; // tugas 3
   // const { all_students, all_teachers, pending_users } = props.auth;
-  const { all_students, all_teachers} = props.mockUserCollection; // tugas 3
-  let student_rows = []
-  let teacher_rows = []
+  const { all_students, all_teachers } = props.mockUserCollection; // tugas 3
+  let student_rows = [];
+  let teacher_rows = [];
 
   const userRowItem = (data) => {
     let temp = createData(
@@ -319,41 +386,39 @@ function ManageUsers(props) {
       data.emergency_phone,
       data.tanggal_lahir,
       data.address
-    )
+    );
     if (data.role === "MockStudent") {
       student_rows.push(temp);
-    }
-    else if (data.role === "MockTeacher") {
+    } else if (data.role === "MockTeacher") {
       teacher_rows.push(temp);
     }
-  }
+  };
 
   React.useEffect(() => {
     getMockStudents();
     getMockTeachers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const retrieveUsers = () => {
-    student_rows = []
-    teacher_rows = []
-    if(Array.isArray(all_students)) {
+    student_rows = [];
+    teacher_rows = [];
+    if (Array.isArray(all_students)) {
       console.log(all_students);
       all_students.map((data) => userRowItem(data));
     }
-    if(Array.isArray(all_teachers)) {
+    if (Array.isArray(all_teachers)) {
       console.log(all_teachers);
       all_teachers.map((data) => userRowItem(data));
     }
-  }
+  };
 
   const handleRequestSort = (event, property, role) => {
     if (role === "Student") {
       const isAsc = orderBy_student === property && order_student === "asc";
       setOrderStudent(isAsc ? "desc" : "asc");
       setOrderByStudent(property);
-    }
-    else if (role === "Teacher") {
+    } else if (role === "Teacher") {
       const isAsc = orderBy_teacher === property && order_teacher === "asc";
       setOrderTeacher(isAsc ? "desc" : "asc");
       setOrderByTeacher(property);
@@ -362,92 +427,91 @@ function ManageUsers(props) {
 
   // Call the function to get the classes from DB
   // this function is defined above
-  retrieveUsers()
-
+  retrieveUsers();
 
   // Tugas 3 ------------------------------------------------------------------------------------------
-  const [userObjects, setUserObjects] = React.useState({header: [], content: []});
+  const [userObjects, setUserObjects] = React.useState({
+    header: [],
+    content: [],
+  });
   const [openTabelDialog, setOpenTabelDialog] = React.useState(false);
   const fileInput = React.createRef(null);
 
   // Fitur Download/Export==================================
   const prepareDownload = (array_of_users) => {
-    if(array_of_users===all_students){
-      let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,tanggal_lahir,_id\n"
-      for(let individual_user of array_of_users){
-        string+=`${individual_user.active},`
-        string+=`"${individual_user.address}",`
-        string+=`${individual_user.avatar},`
-        string+=`${individual_user.email},`
-        string+=`${individual_user.emergency_phone},`
-        string+=`${individual_user.kelas},`
-        string+=`${individual_user.name},`
-        string+=`${individual_user.phone},`
-        string+=`${individual_user.role},`
-        string+=`${individual_user.tanggal_lahir},`
-        string+=`${individual_user._id}`
-        string+="\n"
+    if (array_of_users === all_students) {
+      let string =
+        "active,address,avatar,email,emergency_phone,kelas,name,phone,role,tanggal_lahir,_id\n";
+      for (let individual_user of array_of_users) {
+        string += `${individual_user.active},`;
+        string += `"${individual_user.address}",`;
+        string += `${individual_user.avatar},`;
+        string += `${individual_user.email},`;
+        string += `${individual_user.emergency_phone},`;
+        string += `${individual_user.kelas},`;
+        string += `${individual_user.name},`;
+        string += `${individual_user.phone},`;
+        string += `${individual_user.role},`;
+        string += `${individual_user.tanggal_lahir},`;
+        string += `${individual_user._id}`;
+        string += "\n";
       }
-      return(string)
-    }
-    else if(array_of_users===all_teachers){
-      let string = "active,address,avatar,email,emergency_phone,kelas,name,phone,role,subject_teached,tanggal_lahir,_id\n"
-      for(let individual_user of array_of_users){
-        string+=`${individual_user.active},`
-        string+=`"${individual_user.address}",`
-        string+=`${individual_user.avatar},`
-        string+=`${individual_user.email},`
-        string+=`${individual_user.emergency_phone},`
-        string+=`${individual_user.kelas},`
-        string+=`${individual_user.name},`
-        string+=`${individual_user.phone},`
-        string+=`${individual_user.role},`
-        string+=`${individual_user.subject_teached},`
-        string+=`${individual_user.tanggal_lahir},`
-        string+=`${individual_user._id}`
-        string+="\n"
+      return string;
+    } else if (array_of_users === all_teachers) {
+      let string =
+        "active,address,avatar,email,emergency_phone,kelas,name,phone,role,subject_teached,tanggal_lahir,_id\n";
+      for (let individual_user of array_of_users) {
+        string += `${individual_user.active},`;
+        string += `"${individual_user.address}",`;
+        string += `${individual_user.avatar},`;
+        string += `${individual_user.email},`;
+        string += `${individual_user.emergency_phone},`;
+        string += `${individual_user.kelas},`;
+        string += `${individual_user.name},`;
+        string += `${individual_user.phone},`;
+        string += `${individual_user.role},`;
+        string += `${individual_user.subject_teached},`;
+        string += `${individual_user.tanggal_lahir},`;
+        string += `${individual_user._id}`;
+        string += "\n";
       }
-      return(string)
+      return string;
     }
-  }
+  };
 
-  const handleClickDownload = (data,user) => {
-		if(data===""){
-			alert("Belum ada data yang di-submit");
-		}
-		else {
-			const blob = new Blob([data],{ type : 'text/csv'});
-			const url = window.URL.createObjectURL(blob);
-			const a = document.createElement('a');
-			a.setAttribute('hidden','')
-      a.setAttribute('href',url)
-      if(user===all_students){
-        a.setAttribute('download','Data_Murid.csv')
+  const handleClickDownload = (data, user) => {
+    if (data === "") {
+      alert("Belum ada data yang di-submit");
+    } else {
+      const blob = new Blob([data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.setAttribute("hidden", "");
+      a.setAttribute("href", url);
+      if (user === all_students) {
+        a.setAttribute("download", "Data_Murid.csv");
+      } else if (user === all_teachers) {
+        a.setAttribute("download", "Data_Guru.csv");
       }
-      else if(user===all_teachers){
-        a.setAttribute('download','Data_Guru.csv')
-      }
-			// document.body.appendChild(a);
-			a.click();
+      // document.body.appendChild(a);
+      a.click();
       // document.body.removeChild(a);
-		}
+    }
   };
 
   const downloadcsv = (user) => {
-    let chosen_user = prepareDownload(user)
-    handleClickDownload(chosen_user,user)
-  }
-
+    let chosen_user = prepareDownload(user);
+    handleClickDownload(chosen_user, user);
+  };
 
   // ======================================================
-
 
   // Dialog Import/Export
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = (value) => {
     setOpen(false);
@@ -461,53 +525,58 @@ function ManageUsers(props) {
   const onInputChange = (event) => {
     event.preventDefault();
 
-		fileInput.current.files[0].text().then((fileContent) => {
-        let newUserObjects = {header: null, content: null};
+    fileInput.current.files[0]
+      .text()
+      .then((fileContent) => {
+        let newUserObjects = { header: null, content: null };
         csv()
-        .fromString(fileContent)
-        .then((jsonObj) => {
-          newUserObjects.content = jsonObj;
-          return newUserObjects;
-        })
-        .then((newUserObjects) => {
-          csv()
           .fromString(fileContent)
-          .on('header', (header)=>{
-            newUserObjects.header = header;
+          .then((jsonObj) => {
+            newUserObjects.content = jsonObj;
+            return newUserObjects;
           })
-          .on('done', () => {
-            setUserObjects(newUserObjects);
-            setOpenTabelDialog(true);
-          })
-        })
-    }).catch((err) => {
-			console.log(err);
-    });
+          .then((newUserObjects) => {
+            csv()
+              .fromString(fileContent)
+              .on("header", (header) => {
+                newUserObjects.header = header;
+              })
+              .on("done", () => {
+                setUserObjects(newUserObjects);
+                setOpenTabelDialog(true);
+              });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onClickCancelImport = () => {
     setOpenTabelDialog(false);
-    fileInput.current.value = ''; //supaya onchange pasti dipanggil
+    fileInput.current.value = ""; //supaya onchange pasti dipanggil
   };
 
   const onClickSubmitImport = () => {
-
     new Promise((resolve) => {
       importUsers(resolve, userObjects.content);
       // resolve();
-    }).then(() => {
-      getMockStudents();
-      getMockTeachers();
-      return;
-    }).then(() => {
-      console.log(all_students)
-      retrieveUsers();
-      return;
-    }).then(() => {
-      fileInput.current.value = '';
-      setOpenTabelDialog(false);
-    });
-  }
+    })
+      .then(() => {
+        getMockStudents();
+        getMockTeachers();
+        return;
+      })
+      .then(() => {
+        console.log(all_students);
+        retrieveUsers();
+        return;
+      })
+      .then(() => {
+        fileInput.current.value = "";
+        setOpenTabelDialog(false);
+      });
+  };
 
   function SimpleDialog(props) {
     const { onClose, open } = props;
@@ -517,15 +586,24 @@ function ManageUsers(props) {
     };
 
     return (
-      <Dialog onClose={handleClose} open={open} maxWidth='xs' fullWidth={true}>
-        <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
-          <Grid item container justify="flex-end" alignItems="flex-start"> {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+      <Dialog onClose={handleClose} open={open} maxWidth="xs" fullWidth={true}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          style={{ padding: "15px" }}
+        >
+          <Grid item container justify="flex-end" alignItems="flex-start">
+            {" "}
+            {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
             <IconButton className={classes.closeButton} onClick={onClose}>
               <CloseIcon onClick={onClose} />
             </IconButton>
           </Grid>
           <Grid item>
-            <Typography variant="h6" style={{margin: "10px 0px 20px 0px"}}> {/*Kalo bisa jangan pake fontSize gitu sih pake "variant" props dari material ui biar dia bisa auto resize gitu*/}
+            <Typography variant="h6" style={{ margin: "10px 0px 20px 0px" }}>
+              {" "}
+              {/*Kalo bisa jangan pake fontSize gitu sih pake "variant" props dari material ui biar dia bisa auto resize gitu*/}
               Import/Export CSV Data Pengguna
             </Typography>
           </Grid>
@@ -534,17 +612,29 @@ function ManageUsers(props) {
               {/* Untuk icon di button ada props startIcon coba cek di material ui lagi, coba bandingin sama yang dibawah jadi ga perlu margin left dan typography tag lagi */}
               <Button
                 variant="contained"
-                onClick={() => {onClickImportButton()}}
-                style={{backgroundColor:'#2E8B57',marginRight:'5px',color:'white'}}
-                startIcon={<PublishIcon/>}
+                onClick={() => {
+                  onClickImportButton();
+                }}
+                style={{
+                  backgroundColor: "#2E8B57",
+                  marginRight: "5px",
+                  color: "white",
+                }}
+                startIcon={<PublishIcon />}
               >
                 Import
               </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" style={{backgroundColor:'#c21807',color:'white'}} onClick={() => {handleClickOpenUser()}}>
-                <GetAppRoundedIcon/>
-                <Typography style={{marginLeft:'5px'}}>Export</Typography>
+              <Button
+                variant="contained"
+                style={{ backgroundColor: "#c21807", color: "white" }}
+                onClick={() => {
+                  handleClickOpenUser();
+                }}
+              >
+                <GetAppRoundedIcon />
+                <Typography style={{ marginLeft: "5px" }}>Export</Typography>
               </Button>
             </Grid>
           </Grid>
@@ -563,8 +653,8 @@ function ManageUsers(props) {
   const [openUser, setOpenUser] = React.useState(false);
 
   const handleClickOpenUser = () => {
-    setOpenUser(true)
-  }
+    setOpenUser(true);
+  };
 
   const handleCloseUser = () => {
     setOpenUser(false);
@@ -577,19 +667,38 @@ function ManageUsers(props) {
     };
 
     return (
-      <Dialog onClose={handleCloseUser} aria-labelledby="user-dialog-title" open={openUser} maxWidth='sm' fullWidth={true}>
-       {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
-       <Grid container direction="column" alignItems="center" style={{padding: "15px"}}>
-         <Grid item container justify="flex-end" alignItems="flex-start"> {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
-           <IconButton className={classes.closeButton} onClick={onClose}>
-             <CloseIcon onClick={onClose} />
-           </IconButton>
-         </Grid>
-          <Grid item container justify="flex-start" alignItems="center" style={{margin: "10px 0px 20px 0px"}}>
+      <Dialog
+        onClose={handleCloseUser}
+        aria-labelledby="user-dialog-title"
+        open={openUser}
+        maxWidth="sm"
+        fullWidth={true}
+      >
+        {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          style={{ padding: "15px" }}
+        >
+          <Grid item container justify="flex-end" alignItems="flex-start">
+            {" "}
+            {/* Kalau ada dialog yang ada close button di icon button di pojok kanan atas ikutin format Delete Dialog*/}
+            <IconButton className={classes.closeButton} onClick={onClose}>
+              <CloseIcon onClick={onClose} />
+            </IconButton>
+          </Grid>
+          <Grid
+            item
+            container
+            justify="flex-start"
+            alignItems="center"
+            style={{ margin: "10px 0px 20px 0px" }}
+          >
             <GetAppRoundedIcon
               style={{
-                backgroundColor: '#c21807',
-                color: 'white',
+                backgroundColor: "#c21807",
+                color: "white",
                 borderRadius: 100,
                 marginRight: "5px",
               }}
@@ -597,29 +706,38 @@ function ManageUsers(props) {
             <Typography variant="h6">
               Pilih Jenis User Untuk di-Export
             </Typography>
-         </Grid>
-         <Grid item container justify="flex-end" spacing={1}>
-           <Grid item>
-             <Button variant="contained"
-              startIcon={<SchoolRoundedIcon/>}
-              onClick={() => {downloadcsv(all_students)}}
-              style={{backgroundColor:'#621940', marginRight:'5px', color:'white'}}
-            >
-               Siswa
-             </Button>
-           </Grid>
-           <Grid item>
-             <Button
+          </Grid>
+          <Grid item container justify="flex-end" spacing={1}>
+            <Grid item>
+              <Button
                 variant="contained"
-                startIcon={<LocalLibraryRoundedIcon/>}
-                onClick={() => {downloadcsv(all_teachers)}}
-                style={{backgroundColor:'#0b032d',color:'white'}}
-            >
-               Guru
-             </Button>
-           </Grid>
-         </Grid>
-       </Grid>
+                startIcon={<SchoolRoundedIcon />}
+                onClick={() => {
+                  downloadcsv(all_students);
+                }}
+                style={{
+                  backgroundColor: "#621940",
+                  marginRight: "5px",
+                  color: "white",
+                }}
+              >
+                Siswa
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                startIcon={<LocalLibraryRoundedIcon />}
+                onClick={() => {
+                  downloadcsv(all_teachers);
+                }}
+                style={{ backgroundColor: "#0b032d", color: "white" }}
+              >
+                Guru
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
         {/*<div style={{display:'flex', justifyContent:'space-between',alignItems:'center'}}>
           <div style={{display:'flex',alignItems:'center',margin:'18px'}}>
             <GetAppRoundedIcon style={{backgroundColor:'#c21807',color:'white',borderRadius:100,display:'flex',alignItems:'center',justifyContent:'center'}}/>
@@ -654,55 +772,58 @@ function ManageUsers(props) {
 
   function previewTable() {
     let element = null;
-		if (userObjects) {
+    if (userObjects) {
+      element = (
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {userObjects.header.map((namaKolom) => {
+                  return (
+                    <TableCell>
+                      <b>{namaKolom}</b>
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {userObjects.content.map((baris) => (
+                <TableRow>
+                  {userObjects.header.map((namaKolom) => {
+                    return <TableCell>{baris[namaKolom]}</TableCell>;
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
+    }
 
-			element = (
-				<TableContainer>
-					<Table>
-						<TableHead>
-							<TableRow>
-								{userObjects.header.map((namaKolom) => {
-									return (<TableCell><b>{namaKolom}</b></TableCell>);
-								})}
-							</TableRow>
-						</TableHead>
-						<TableBody>
-						{userObjects.content.map((baris) => (
-							<TableRow>
-								{userObjects.header.map((namaKolom) => {
-									return (<TableCell>{baris[namaKolom]}</TableCell>);
-								})}
-							</TableRow>
-						))}
-						</TableBody>
-					</Table>
-				</TableContainer>
-			);
-		}
-
-		return element;
-  };
+    return element;
+  }
   // ------------------------------------------------------------------------------------------
 
   const onDeleteUser = (id) => {
-    deleteMockUser(id)
-  }
+    deleteMockUser(id);
+  };
   const onDisableUser = (id) => {
-    setMockUserDisabled(id)
-  }
+    setMockUserDisabled(id);
+  };
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedUserId(id)
-    setSelectedUserName(name)
+    setSelectedUserId(id);
+    setSelectedUserName(name);
   };
 
   const handleOpenDisableDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDisableDialog(true);
-    setSelectedUserId(id)
-    setSelectedUserName(name)
+    setSelectedUserId(id);
+    setSelectedUserName(name);
   };
 
   const handleCloseDeleteDialog = () => {
@@ -715,24 +836,34 @@ function ManageUsers(props) {
 
   function DeleteDialog() {
     return (
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.dialogBox}
+        >
           <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDeleteDialog}>
+            <IconButton size="small" onClick={handleCloseDeleteDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
             <Typography variant="h5" gutterBottom>
               Hapus Pengguna berikut?
             </Typography>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
             <Typography variant="h6" align="center" gutterBottom>
               <b>{selectedUserName}</b>
             </Typography>
@@ -743,11 +874,13 @@ function ManageUsers(props) {
             justify="center"
             alignItems="center"
             spacing={2}
-            style={{marginBottom: "10px"}}
+            style={{ marginBottom: "10px" }}
           >
             <Grid item>
               <Button
-                onClick={() => { onDeleteUser(selectedUserId) }}
+                onClick={() => {
+                  onDeleteUser(selectedUserId);
+                }}
                 startIcon={<DeleteOutlineIcon />}
                 className={classes.dialogDeleteButton}
               >
@@ -757,7 +890,7 @@ function ManageUsers(props) {
             <Grid item>
               <Button
                 onClick={handleCloseDeleteDialog}
-                startIcon={< CancelIcon/>}
+                startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
               >
                 Batal
@@ -766,30 +899,39 @@ function ManageUsers(props) {
           </Grid>
         </Grid>
       </Dialog>
-    )
+    );
   }
 
   function DisableDialog() {
     return (
-      <Dialog
-        open={openDisableDialog}
-        onClose={handleCloseDisableDialog}
-      >
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+      <Dialog open={openDisableDialog} onClose={handleCloseDisableDialog}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.dialogBox}
+        >
           <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseDisableDialog}
-            >
+            <IconButton size="small" onClick={handleCloseDisableDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
             <Typography variant="h5" gutterBottom>
               Nonaktifkan pengguna berikut?
             </Typography>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
             <Typography variant="h6" align="center" gutterBottom>
               <b>{selectedUserName}</b>
             </Typography>
@@ -800,11 +942,13 @@ function ManageUsers(props) {
             justify="center"
             alignItems="center"
             spacing={2}
-            style={{marginBottom: "10px"}}
+            style={{ marginBottom: "10px" }}
           >
             <Grid item>
               <Button
-                onClick={() => { onDisableUser(selectedUserId) }}
+                onClick={() => {
+                  onDisableUser(selectedUserId);
+                }}
                 startIcon={<BlockIcon />}
                 className={classes.dialogDisableButton}
               >
@@ -814,7 +958,7 @@ function ManageUsers(props) {
             <Grid item>
               <Button
                 onClick={handleCloseDisableDialog}
-                startIcon={< CancelIcon/>}
+                startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
               >
                 Batal
@@ -823,7 +967,7 @@ function ManageUsers(props) {
           </Grid>
         </Grid>
       </Dialog>
-    )
+    );
   }
 
   // console.log(pending_users)
@@ -836,38 +980,71 @@ function ManageUsers(props) {
       </Typography>
 
       {/* tugas 3 ----------------------------------------------- */}
-      <input type="file" ref={fileInput} accept=".csv" onChange={(event) => {onInputChange(event)}} style={{display:'none'}} />
+      <input
+        type="file"
+        ref={fileInput}
+        accept=".csv"
+        onChange={(event) => {
+          onInputChange(event);
+        }}
+        style={{ display: "none" }}
+      />
 
       {/* <LightTooltip title="Import CSV">
         <IconButton className={classes.sortButton} variant="contained" onClick={() => {onClickImportButton()}}>
             <ImportExportIcon variant="contained" ref={fileInput} />
         </IconButton>
       </LightTooltip> */}
-      <div style={{display:'flex',justifyContent:'flex-end',marginTop:'6px',marginBottom:'10px'}}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "6px",
+          marginBottom: "10px",
+        }}
+      >
         <LightTooltip title="Import/Export CSV">
-          <IconButton className={classes.importButton} onClick={() => handleClickOpen()}>
-              <ImportExportIcon />
+          <IconButton
+            className={classes.importButton}
+            onClick={() => handleClickOpen()}
+          >
+            <ImportExportIcon />
           </IconButton>
         </LightTooltip>
-        <SimpleDialog open={open} onClose={handleClose}/>
-        <DialogPilihDownload open={openUser} onClose={handleCloseUser}/>
+        <SimpleDialog open={open} onClose={handleClose} />
+        <DialogPilihDownload open={openUser} onClose={handleCloseUser} />
       </div>
       <Dialog fullWidth={true} maxWidth="lg" open={openTabelDialog}>
-        <div style={{padding: "10px"}}>
-  				{previewTable()}
-          <Grid container spacing={2} justify="center" style={{padding: "20px 0px 10px 0px"}}>
+        <div style={{ padding: "10px" }}>
+          {previewTable()}
+          <Grid
+            container
+            spacing={2}
+            justify="center"
+            style={{ padding: "20px 0px 10px 0px" }}
+          >
             <Grid item>
               {/* Kalau propsnya panjang biasakan dibikin turun biar ga susah scroll ke samping */}
               <Button
                 variant="contained"
-                onClick={() => {onClickSubmitImport()}}
+                onClick={() => {
+                  onClickSubmitImport();
+                }}
                 className={classes.confirmButton}
               >
                 Konfirmasi
               </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" onClick={()=> {onClickCancelImport()}} className={classes.cancelButton}>Batal</Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  onClickCancelImport();
+                }}
+                className={classes.cancelButton}
+              >
+                Batal
+              </Button>
             </Grid>
           </Grid>
         </div>
@@ -884,103 +1061,119 @@ function ManageUsers(props) {
         rowCount={student_rows ? student_rows.length : 0}
       />
       <Divider variant="inset" />
-      <Grid container direction="column" spacing={2} style={{marginTop: "10px", marginBottom: "75px"}}>
-        {stableSort(student_rows, getComparator(order_student, orderBy_student))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            return (
-              <Grid item>
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                >
-                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        style={{ marginTop: "10px", marginBottom: "75px" }}
+      >
+        {stableSort(
+          student_rows,
+          getComparator(order_student, orderBy_student)
+        ).map((row, index) => {
+          const labelId = `enhanced-table-checkbox-${index}`;
+          return (
+            <Grid item>
+              <ExpansionPanel button variant="outlined">
+                <ExpansionPanelSummary className={classes.profilePanelSummary}>
+                  <Grid
+                    container
+                    spacing={1}
+                    justify="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      {!row.avatar ? (
+                        <ListItemAvatar>
+                          <Avatar />
+                        </ListItemAvatar>
+                      ) : (
+                        <ListItemAvatar>
+                          <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                        </ListItemAvatar>
+                      )}
+                    </Grid>
+                    <Grid item>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="subtitle1" id={labelId}>
+                          {row.name}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {row.email}
+                        </Typography>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="h6" id={labelId}>
+                          {row.name}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {row.email}
+                        </Typography>
+                      </Hidden>
+                    </Grid>
+                    <Grid item xs container spacing={1} justify="flex-end">
                       <Grid item>
-                        {!row.avatar ?
-                          <ListItemAvatar>
-                            <Avatar />
-                          </ListItemAvatar>
-                        :
-                          <ListItemAvatar>
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
-                          </ListItemAvatar>
-                        }
+                        <LightTooltip title="Nonaktifkan">
+                          <IconButton
+                            size="small"
+                            style={{ display: "none" }}
+                            className={classes.profileDisableButton}
+                            onClick={(e) => {
+                              handleOpenDisableDialog(e, row._id, row.name);
+                            }}
+                          >
+                            <BlockIcon fontSize="small" />
+                          </IconButton>
+                        </LightTooltip>
                       </Grid>
                       <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Nonaktifkan">
-                            <IconButton
-                              size="small"
-                              style={{display: "none"}}
-                              className={classes.profileDisableButton}
-                              onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
-                            >
-                              <BlockIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.profileDeleteButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
+                        <LightTooltip title="Hapus">
+                          <IconButton
+                            size="small"
+                            className={classes.profileDeleteButton}
+                            onClick={(e) => {
+                              handleOpenDeleteDialog(e, row._id, row.name);
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </LightTooltip>
                       </Grid>
                     </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak:</b> {row.phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak Darurat:</b> {row.emergency_phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Alamat:</b> {row.address}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
-                        </Typography>
-                      </Grid>
+                  </Grid>
+                </ExpansionPanelSummary>
+                <Divider className={classes.profilePanelDivider} />
+                <ExpansionPanelDetails>
+                  <Grid conntainer direction="column">
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Kontak:</b> {row.phone}
+                      </Typography>
                     </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              </Grid>
-            )
-          })}
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Kontak Darurat:</b> {row.emergency_phone}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Alamat:</b> {row.address}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Tanggal lahir:</b>{" "}
+                        {moment(row.tanggal_lahir)
+                          .locale("id")
+                          .format("DD MMMM YYYY")}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+          );
+        })}
       </Grid>
       <ManageUsersToolbar
         heading="Daftar Guru"
@@ -993,117 +1186,135 @@ function ManageUsers(props) {
         rowCount={student_rows ? student_rows.length : 0}
       />
       <Divider variant="inset" />
-      <Grid container direction="column" spacing={2} style={{marginTop: "10px"}}>
-        {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
-          .map((row, index) => {
-            const labelId = `enhanced-table-checkbox-${index}`;
-            return (
-              <Grid item>
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                >
-                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        style={{ marginTop: "10px" }}
+      >
+        {stableSort(
+          teacher_rows,
+          getComparator(order_teacher, orderBy_teacher)
+        ).map((row, index) => {
+          const labelId = `enhanced-table-checkbox-${index}`;
+          return (
+            <Grid item>
+              <ExpansionPanel button variant="outlined">
+                <ExpansionPanelSummary className={classes.profilePanelSummary}>
+                  <Grid
+                    container
+                    spacing={1}
+                    justify="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      {!row.avatar ? (
+                        <ListItemAvatar>
+                          <Avatar />
+                        </ListItemAvatar>
+                      ) : (
+                        <ListItemAvatar>
+                          <Avatar src={`/api/upload/avatar/${row.avatar}`} />
+                        </ListItemAvatar>
+                      )}
+                    </Grid>
+                    <Grid item>
+                      <Hidden smUp implementation="css">
+                        <Typography variant="subtitle1" id={labelId}>
+                          {row.name}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {row.email}
+                        </Typography>
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <Typography variant="h6" id={labelId}>
+                          {row.name}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {row.email}
+                        </Typography>
+                      </Hidden>
+                    </Grid>
+                    <Grid item xs container spacing={1} justify="flex-end">
                       <Grid item>
-                        {!row.avatar ?
-                          <ListItemAvatar>
-                            <Avatar />
-                          </ListItemAvatar>
-                        :
-                          <ListItemAvatar>
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
-                          </ListItemAvatar>
-                        }
+                        <LightTooltip title="Nonaktifkan">
+                          <IconButton
+                            style={{ display: "none" }}
+                            size="small"
+                            className={classes.profileDisableButton}
+                            onClick={(e) => {
+                              handleOpenDisableDialog(e, row._id, row.name);
+                            }}
+                          >
+                            <BlockIcon fontSize="small" />
+                          </IconButton>
+                        </LightTooltip>
                       </Grid>
                       <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.name}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {row.email}
-                          </Typography>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
-                        <Grid item>
-                          <LightTooltip title="Nonaktifkan">
-                            <IconButton
-                              style={{display: "none"}}
-                              size="small"
-                              className={classes.profileDisableButton}
-                              onClick={(e) =>{handleOpenDisableDialog(e, row._id, row.name)}}
-                            >
-                              <BlockIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.profileDeleteButton}
-                              onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
-                        </Grid>
+                        <LightTooltip title="Hapus">
+                          <IconButton
+                            size="small"
+                            className={classes.profileDeleteButton}
+                            onClick={(e) => {
+                              handleOpenDeleteDialog(e, row._id, row.name);
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </LightTooltip>
                       </Grid>
                     </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak:</b> {row.phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak Darurat:</b> {row.emergency_phone}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Alamat:</b> {row.address}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
-                        </Typography>
-                      </Grid>
+                  </Grid>
+                </ExpansionPanelSummary>
+                <Divider className={classes.profilePanelDivider} />
+                <ExpansionPanelDetails>
+                  <Grid conntainer direction="column">
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Kontak:</b> {row.phone}
+                      </Typography>
                     </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              </Grid>
-            )
-          })}
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Kontak Darurat:</b> {row.emergency_phone}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Alamat:</b> {row.address}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Tanggal lahir:</b>{" "}
+                        {moment(row.tanggal_lahir)
+                          .locale("id")
+                          .format("DD MMMM YYYY")}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+          );
+        })}
       </Grid>
     </div>
   );
 }
-
-
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   // auth: state.auth,
   // classesCollection: state.classesCollection,
   mockUserCollection: state.mockUserCollection, //tugas 3
-})
+});
 
-export default connect(
-  mapStateToProps, { importUsers, getMockTeachers, getMockStudents, setMockUserDisabled, deleteMockUser }
-) (ManageUsers);
+export default connect(mapStateToProps, {
+  importUsers,
+  getMockTeachers,
+  getMockStudents,
+  setMockUserDisabled,
+  deleteMockUser,
+})(ManageUsers);

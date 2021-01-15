@@ -1,12 +1,12 @@
 var async = require("async");
 var mailCompose = require("./mailCompose");
 
-const DOMAIN = "sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org"
-const api_key = "9e91381d8c5088b2140f67f03315d628-7fba8a4e-31179542"
+const DOMAIN = "sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org";
+const api_key = "9e91381d8c5088b2140f67f03315d628-7fba8a4e-31179542";
 
 const mailgun_js = require("mailgun-js");
 
-var mailgun = mailgun_js({ apiKey: api_key, domain: DOMAIN})
+var mailgun = mailgun_js({ apiKey: api_key, domain: DOMAIN });
 
 // var mail = {
 //   from: "Excited User <me@samples.mailgun.org>",
@@ -17,30 +17,30 @@ var mailgun = mailgun_js({ apiKey: api_key, domain: DOMAIN})
 
 module.exports = {
   // Email to send when user with the generated OTP
-  sendOTPToVisitor: function(email, generatedCode) {
+  sendOTPToVisitor: function (email, generatedCode) {
     this.email = email;
     this.generatedCode = generatedCode;
 
     new Promise((resolve, reject) => {
       var mail = {
-        from: "Sender Dan <dan@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>",
+        from:
+          "Sender Dan <dan@sandboxa9362837cf4f4b1ca75f325216ac2b8e.mailgun.org>",
         to: "danwijayaa@gmail.com",
         subject:
           "One time Code to view download the document that you requested",
         text: "Testing some Mailgun awesomeness!",
-        html: mailCompose.otpSendingEmail(generatedCode, email)
+        html: mailCompose.otpSendingEmail(generatedCode, email),
       };
 
-      mailgun.messages().send(mail, function(err) {
+      mailgun.messages().send(mail, function (err) {
         if (err) {
           return reject(err);
-        }
-        else {
+        } else {
           return resolve();
         }
       });
     });
-  }
+  },
 };
 
 /*

@@ -6,16 +6,40 @@ import "date-fns";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneMaterial } from "../../../actions/MaterialActions";
-import { updateMaterial} from "../../../actions/MaterialActions"
-import { clearErrors } from "../../../actions/ErrorActions"
+import { updateMaterial } from "../../../actions/MaterialActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,
-   Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemText, Paper, Select, TextField, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  MenuItem,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -99,48 +123,43 @@ function LampiranFile(props) {
       <Paper variant="outlined">
         <ListItem disableRipple>
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={name} placement="top">
                 <Typography>
-                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                  {name.length < 21
+                    ? name
+                    : `${name.slice(0, 15)}..${path.extname(name)}`}
                 </Typography>
               </LightTooltip>
             }
@@ -149,14 +168,16 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.deleteIconButton}
-            onClick={(e) => {handleLampiranDelete(e, i)}}
+            onClick={(e) => {
+              handleLampiranDelete(e, i);
+            }}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 class EditMaterial extends Component {
@@ -174,21 +195,21 @@ class EditMaterial extends Component {
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
-    }
+    };
   }
 
-  lampiranUploader = React.createRef(null)
+  lampiranUploader = React.createRef(null);
 
   componentDidMount() {
     const { getAllClass, getAllSubjects, getOneMaterial } = this.props;
 
-    getAllClass()
-    getOneMaterial(this.props.match.params.id)
-    getAllSubjects()
+    getAllClass();
+    getOneMaterial(this.props.match.params.id);
+    getAllSubjects();
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -197,19 +218,23 @@ class EditMaterial extends Component {
 
     // console.log(selectedMaterials.deadline);
     if (!nextProps.errors) {
-      this.handleOpenUploadDialog()
+      this.handleOpenUploadDialog();
     }
     if (Boolean(selectedMaterials) && nextProps.errors) {
       this.setState({
-          name: selectedMaterials.name,
-          subject: selectedMaterials.subject,
-          deadline: selectedMaterials.deadline,
-          class_assigned: Boolean(selectedMaterials.class_assigned) ? selectedMaterials.class_assigned : [],
-          fileLampiran: Boolean(selectedMaterials.lampiran) ? selectedMaterials.lampiran : [],
-          description: selectedMaterials.description,
-          // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
-          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      })
+        name: selectedMaterials.name,
+        subject: selectedMaterials.subject,
+        deadline: selectedMaterials.deadline,
+        class_assigned: Boolean(selectedMaterials.class_assigned)
+          ? selectedMaterials.class_assigned
+          : [],
+        fileLampiran: Boolean(selectedMaterials.lampiran)
+          ? selectedMaterials.lampiran
+          : [],
+        description: selectedMaterials.description,
+        // fileLampiran must made like above soalnya because maybe selectedMaterials is still a plain object.
+        // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      });
     }
   }
 
@@ -217,10 +242,14 @@ class EditMaterial extends Component {
     e.preventDefault();
 
     const { id } = this.props.match.params;
-    const { class_assigned, fileLampiranToAdd, fileLampiranToDelete } = this.state;
+    const {
+      class_assigned,
+      fileLampiranToAdd,
+      fileLampiranToDelete,
+    } = this.state;
 
-    console.log(class_assigned)
-    console.log(Array.from(this.state.fileLampiran))
+    console.log(class_assigned);
+    console.log(Array.from(this.state.fileLampiran));
     const materialObject = {
       name: this.state.name,
       deadline: this.state.deadline,
@@ -228,48 +257,61 @@ class EditMaterial extends Component {
       description: this.state.description,
       class_assigned: this.state.class_assigned,
       lampiran: Array.from(this.state.fileLampiran),
-      errors: {}
-    }
+      errors: {},
+    };
 
     // if (classChanged)
     //   materialObject.class_assigned = classesSelected // When the classes is changed
     // else
     //   materialObject.class_assigned = class_assigned // When it has no change
 
-    let formData = new FormData()
-    for (var i = 0; i< fileLampiranToAdd.length; i++) {
-      console.log(this.state.fileLampiran[i])
-      formData.append("lampiran_materi", this.state.fileLampiranToAdd[i])
+    let formData = new FormData();
+    for (var i = 0; i < fileLampiranToAdd.length; i++) {
+      console.log(this.state.fileLampiran[i]);
+      formData.append("lampiran_materi", this.state.fileLampiranToAdd[i]);
     }
 
-    const {selectedMaterials} = this.props.materialsCollection;
-    console.log(materialObject)
-    this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
-    this.setState({ fileLampiranToDelete: []})
-    }
+    const { selectedMaterials } = this.props.materialsCollection;
+    console.log(materialObject);
+    this.props.updateMaterial(
+      formData,
+      fileLampiranToDelete,
+      selectedMaterials.lampiran,
+      materialObject,
+      id,
+      this.props.history
+    );
+    this.setState({ fileLampiranToDelete: [] });
+  };
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    console.log(this.state.fileLampiran)
+    console.log(this.state.fileLampiran);
     let temp;
     let tempToAdd;
 
     if (this.state.fileLampiran.length === 0)
-      this.setState({fileLampiran: files, fileLampiranToAdd: Array.from(files)})
+      this.setState({
+        fileLampiran: files,
+        fileLampiranToAdd: Array.from(files),
+      });
     else {
-      console.log(files)
+      console.log(files);
       if (files.length !== 0) {
         temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-        tempToAdd = [...Array.from(this.state.fileLampiranToAdd), ...Array.from(files)]
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
+        tempToAdd = [
+          ...Array.from(this.state.fileLampiranToAdd),
+          ...Array.from(files),
+        ];
+        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd });
       }
     }
-    document.getElementById("file_control").value = null
-  }
+    document.getElementById("file_control").value = null;
+  };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault()
-    console.log("Index is: ", i)
+    e.preventDefault();
+    console.log("Index is: ", i);
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
@@ -277,72 +319,70 @@ class EditMaterial extends Component {
     // For the one that has already in DB
     if (this.state.fileLampiran[i].filename !== undefined) {
       // Remove the file in fileLampiranToDelete
-      tempToDelete.push(temp[i])
-    }
-    else { // For the one that"s not yet in DB
+      tempToDelete.push(temp[i]);
+    } else {
+      // For the one that"s not yet in DB
       // Remove the file in fileLampiranToAdd
       for (var j = 0; j < tempToAdd.length; j++) {
-        console.log(temp[i].name, tempToAdd[j].name)
+        console.log(temp[i].name, tempToAdd[j].name);
         if (tempToAdd[j].name === temp[i].name) {
-          tempToAdd.splice(j,1)
+          tempToAdd.splice(j, 1);
         }
       }
     }
     temp.splice(i, 1);
-    console.log(tempToDelete)
-    if (temp.length === 0)
-      this.handleCloseMenu()
-    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd, fileLampiranToDelete: tempToDelete})
-  }
+    console.log(tempToDelete);
+    if (temp.length === 0) this.handleCloseMenu();
+    this.setState({
+      fileLampiran: temp,
+      fileLampiranToAdd: tempToAdd,
+      fileLampiranToDelete: tempToDelete,
+    });
+  };
 
   handleClickMenu = (event) => {
     if (!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
-      this.setState({ anchorEl: event.currentTarget})
-  }
+      this.setState({ anchorEl: event.currentTarget });
+  };
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null})
-  }
+    this.setState({ anchorEl: null });
+  };
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true})
+    this.setState({ openUploadDialog: true });
   };
 
   onChange = (e, otherfield) => {
-    console.log(this.state.fileLampiran)
-    if(otherfield){
-      if(otherfield === "deadline")
-        this.setState({ [otherfield] : e}) // e is the date value itself for KeyboardDatePicker
-
-      else
-        this.setState({ [otherfield] : e.target.value})
-    }
-
-    else
-      this.setState({ [e.target.id]: e.target.value });
-  }
+    console.log(this.state.fileLampiran);
+    if (otherfield) {
+      if (otherfield === "deadline") this.setState({ [otherfield]: e });
+      // e is the date value itself for KeyboardDatePicker
+      else this.setState({ [otherfield]: e.target.value });
+    } else this.setState({ [e.target.id]: e.target.value });
+  };
 
   onDateChange = (date) => {
-    console.log(date)
-    this.setState({ deadline: date})
-  }
+    console.log(date);
+    this.setState({ deadline: date });
+  };
 
   render() {
-    const { classes, errors, success}  = this.props;
+    const { classes, errors, success } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { selectedMaterials} = this.props.materialsCollection;
-    const { class_assigned, fileLampiran}  = this.state;
-    const { user } = this.props.auth
+    const { selectedMaterials } = this.props.materialsCollection;
+    const { class_assigned, fileLampiran } = this.state;
+    const { user } = this.props.auth;
 
-    console.log("FileLampiran:", this.state.fileLampiran)
+    console.log("FileLampiran:", this.state.fileLampiran);
     console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
     console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
 
-    console.log(all_classes)
+    console.log(all_classes);
     console.log(selectedMaterials);
 
-    let classIds = []
+    let classIds = [];
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -354,55 +394,68 @@ class EditMaterial extends Component {
       },
     };
 
-  const fileType = (filename) => {
-    let ext_file = path.extname(filename)
-    switch(ext_file) {
-      case ".docx" : return "Word"
-      case ".xlsx" :
-      case ".csv"  : return "Excel"
+    const fileType = (filename) => {
+      let ext_file = path.extname(filename);
+      switch (ext_file) {
+        case ".docx":
+          return "Word";
+        case ".xlsx":
+        case ".csv":
+          return "Excel";
 
-      case ".png" :
-      case ".jpg" :
-      case ".jpeg" : return "Gambar"
+        case ".png":
+        case ".jpg":
+        case ".jpeg":
+          return "Gambar";
 
-      case ".pdf" : return "PDF"
+        case ".pdf":
+          return "PDF";
 
-      case ".txt" :
-      case ".rtf" : return "Teks"
+        case ".txt":
+        case ".rtf":
+          return "Teks";
 
-      case ".ppt" :
-      case ".pptx" : return "Presentasi"
+        case ".ppt":
+        case ".pptx":
+          return "Presentasi";
 
-      default: return "File Lainnya"
-    }
-  }
-
-  const listFileChosen = () => {
-    let temp = []
-    if (fileLampiran.length > 0) {
-      for (var i = 0; i < fileLampiran.length; i++) {
-        temp.push(
-          <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
-            classes={classes}
-            name={!fileLampiran[i].filename  ? fileLampiran[i].name : fileLampiran[i].filename}
-            filetype={!fileLampiran[i].filename ? fileType(fileLampiran[i].name) : fileType(fileLampiran[i].filename)}
-            handleLampiranDelete={this.handleLampiranDelete}
-            i={i}
-          />
-        )
+        default:
+          return "File Lainnya";
       }
-    }
-    return temp;
-  }
+    };
 
-    if (this.state.class_assigned !== null) //When firstly received.
+    const listFileChosen = () => {
+      let temp = [];
+      if (fileLampiran.length > 0) {
+        for (var i = 0; i < fileLampiran.length; i++) {
+          temp.push(
+            <LampiranFile // The one that is being displayed is in DB (filename) and the one that has just been uploaded (name)
+              classes={classes}
+              name={
+                !fileLampiran[i].filename
+                  ? fileLampiran[i].name
+                  : fileLampiran[i].filename
+              }
+              filetype={
+                !fileLampiran[i].filename
+                  ? fileType(fileLampiran[i].name)
+                  : fileType(fileLampiran[i].filename)
+              }
+              handleLampiranDelete={this.handleLampiranDelete}
+              i={i}
+            />
+          );
+        }
+      }
+      return temp;
+    };
+
+    if (this.state.class_assigned !== null)
+      //When firstly received.
       this.state.class_assigned.map((kelas) => {
-        if (kelas._id !== undefined)
-          return classIds.push(kelas._id)
-        else
-          return classIds.push(kelas)
-      }
-    )
+        if (kelas._id !== undefined) return classIds.push(kelas._id);
+        else return classIds.push(kelas);
+      });
 
     document.title = "Schooly | Sunting Materi";
 
@@ -423,7 +476,7 @@ class EditMaterial extends Component {
               </Typography>
             </div>
             <Divider />
-            <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
+            <form noValidate onSubmit={(e) => this.onSubmit(e, user.id)}>
               <Grid container>
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
@@ -441,12 +494,16 @@ class EditMaterial extends Component {
                         type="text"
                         helperText={errors.name}
                         className={classnames("", {
-                          invalid: errors.name
+                          invalid: errors.name,
                         })}
                       />
                     </Grid>
                     <Grid item>
-                      <Typography component="label" for="description" color="primary">
+                      <Typography
+                        component="label"
+                        for="description"
+                        color="primary"
+                      >
                         Deskripsi
                       </Typography>
                       <TextField
@@ -462,74 +519,112 @@ class EditMaterial extends Component {
                         type="text"
                         helperText={errors.description}
                         className={classnames("", {
-                          invalid: errors.description
+                          invalid: errors.description,
                         })}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
-                <Divider flexItem orientation="vertical" className={classes.divider} />
+                <Divider
+                  flexItem
+                  orientation="vertical"
+                  className={classes.divider}
+                />
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography component="label" for="subject" color="primary">
+                      <Typography
+                        component="label"
+                        for="subject"
+                        color="primary"
+                      >
                         Mata Pelajaran
                       </Typography>
-                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                      <FormControl
+                        id="subject"
+                        variant="outlined"
+                        color="primary"
+                        fullWidth
+                        error={Boolean(errors.subject) && !this.state.subject}
+                      >
                         <Select
                           value={this.state.subject}
-                          onChange={(event) => {this.onChange(event, "subject")}}
+                          onChange={(event) => {
+                            this.onChange(event, "subject");
+                          }}
                         >
                           {all_subjects.map((subject) => (
-                            <MenuItem value={subject._id}>{subject.name}</MenuItem>
+                            <MenuItem value={subject._id}>
+                              {subject.name}
+                            </MenuItem>
                           ))}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
+                          {Boolean(errors.subject) && !this.state.subject
+                            ? errors.subject
+                            : null}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item>
-                      <Typography component="label" for="class_assigned" color="primary">
+                      <Typography
+                        component="label"
+                        for="class_assigned"
+                        color="primary"
+                      >
                         Kelas yang Diberikan
                       </Typography>
-                      <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        error={Boolean(errors.class_assigned)}
+                      >
                         <Select
                           multiple
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "class_assigned")}}
+                          onChange={(event) => {
+                            this.onChange(event, "class_assigned");
+                          }}
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>
                                 {selected.map((id) => {
-                                  let name
-                                  if (all_classes.length === 0)
-                                    return null;
-                                  else{
+                                  let name;
+                                  if (all_classes.length === 0) return null;
+                                  else {
                                     for (var i in all_classes) {
                                       if (all_classes[i]._id === id) {
-                                        name = all_classes[i].name
+                                        name = all_classes[i].name;
                                         break;
                                       }
                                     }
-                                  return (
-                                    <Chip key={id} label={name} className={classes.chip} />
-                                  )
-                                }
+                                    return (
+                                      <Chip
+                                        key={id}
+                                        label={name}
+                                        className={classes.chip}
+                                      />
+                                    );
+                                  }
                                 })}
                               </div>
-                            )
+                            );
                           }}
                         >
                           {all_classes.map((kelas) => {
                             return (
-                              <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-                          )})}
+                              <MenuItem value={kelas._id}>
+                                {kelas.name}
+                              </MenuItem>
+                            );
+                          })}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) ? errors.class_assigned : null}
+                          {Boolean(errors.class_assigned)
+                            ? errors.class_assigned
+                            : null}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -542,28 +637,33 @@ class EditMaterial extends Component {
                         onChange={this.handleLampiranUpload}
                         ref={this.lampiranUploader}
                         accept="file/*"
-                        style={{display: "none"}}
+                        style={{ display: "none" }}
                       />
                       <Button
                         variant="contained"
                         startIcon={<AttachFileIcon />}
-                        onClick={() => {this.lampiranUploader.current.click()}}
+                        onClick={() => {
+                          this.lampiranUploader.current.click();
+                        }}
                         className={classes.addFileButton}
                       >
                         Tambah Lampiran Berkas
-                       </Button>
-                       <FormHelperText error>
-                         {errors.lampiran_materi}
-                       </FormHelperText>
-                       <Grid container spacing={1} style={{marginTop: "10px"}}>
-                         {listFileChosen()}
-                       </Grid>
+                      </Button>
+                      <FormHelperText error>
+                        {errors.lampiran_materi}
+                      </FormHelperText>
+                      <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                        {listFileChosen()}
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               <Divider />
-              <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+              <div
+                style={{ display: "flex", justifyContent: "flex-end" }}
+                className={classes.content}
+              >
                 <div>
                   <Button
                     variant="contained"
@@ -578,8 +678,7 @@ class EditMaterial extends Component {
           </Paper>
         </div>
       );
-    }
-    else {
+    } else {
       return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
@@ -612,8 +711,12 @@ const mapStateToProps = (state) => ({
   materialsCollection: state.materialsCollection,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
-})
+});
 
-export default connect(
-    mapStateToProps, { getAllClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial }
-) (withStyles(styles)(EditMaterial))
+export default connect(mapStateToProps, {
+  getAllClass,
+  getAllSubjects,
+  clearErrors,
+  getOneMaterial,
+  updateMaterial,
+})(withStyles(styles)(EditMaterial));

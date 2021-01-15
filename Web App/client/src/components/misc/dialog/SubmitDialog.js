@@ -1,6 +1,12 @@
 import React from "react";
 // import { Link } from "react-router-dom";
-import { Button, Dialog, Grid, Typography, CircularProgress } from "@material-ui/core/";
+import {
+  Button,
+  Dialog,
+  Grid,
+  Typography,
+  CircularProgress,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 
@@ -39,7 +45,14 @@ function SubmitDialog(props) {
   const classes = useStyles();
 
   const [loading, setLoading] = React.useState(false);
-  const { openSubmitDialog, handleCloseSubmitDialog, itemType, itemName, onSubmit, messageLoading } = props;
+  const {
+    openSubmitDialog,
+    handleCloseSubmitDialog,
+    itemType,
+    itemName,
+    onSubmit,
+    messageLoading,
+  } = props;
 
   function handleClick() {
     setLoading(true);
@@ -48,8 +61,14 @@ function SubmitDialog(props) {
 
   return (
     <Dialog open={openSubmitDialog} onClose={handleCloseSubmitDialog}>
-      {(loading) ? (
-        <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
+      {loading ? (
+        <Grid
+          container
+          direction="column"
+          justify="space-between"
+          alignItems="center"
+          className={classes.root}
+        >
           <Grid item>
             <Typography variant="h6" align="center" gutterBottom>
               {messageLoading}
@@ -65,7 +84,13 @@ function SubmitDialog(props) {
           </Grid>
         </Grid>
       ) : (
-        <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
+        <Grid
+          container
+          direction="column"
+          justify="space-between"
+          alignItems="center"
+          className={classes.root}
+        >
           <Grid item>
             <Typography variant="h5" align="center" gutterBottom>
               Kumpul {itemType} berikut?
@@ -98,7 +123,7 @@ function SubmitDialog(props) {
         </Grid>
       )}
     </Dialog>
-  )
+  );
 }
 
 export default SubmitDialog;

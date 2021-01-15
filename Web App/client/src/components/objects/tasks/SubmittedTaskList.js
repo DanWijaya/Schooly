@@ -2,17 +2,48 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getOneTask, gradeTask } from "../../../actions/TaskActions";
-import { getTaskFilesByUser, moveToDropbox ,downloadTugas, previewTugas } from "../../../actions/UploadActions";
+import {
+  getTaskFilesByUser,
+  moveToDropbox,
+  downloadTugas,
+  previewTugas,
+} from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
-import { Avatar, Box, Button, Divider, ExpansionPanel, ExpansionPanelSummary, IconButton,
-   List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Paper, Snackbar, Tabs, Tab, TextField, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Snackbar,
+  Tabs,
+  Tab,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 import MuiAlert from "@material-ui/lab/Alert";
 
 const path = require("path");
@@ -32,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "5px",
   },
   listItemPaper: {
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
   listItem: {
     "&:focus, &:hover": {
@@ -45,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.success.main
+      color: theme.palette.success.main,
     },
   },
   downloadAllButton: {
@@ -53,8 +84,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.primary.main
-    }
+      color: theme.palette.primary.main,
+    },
   },
   downloadIconButton: {
     marginLeft: "5px",
@@ -96,11 +127,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      {...other}
-    >
+    <div hidden={value !== index} id={`simple-tabpanel-${index}`} {...other}>
       {value === index && (
         <Box p={3}>
           <Typography>{children}</Typography>
@@ -125,49 +152,54 @@ function TabIndex(index) {
 function WorkFile(props) {
   const classes = useStyles();
 
-  const { file_id, file_name, file_type, onDownloadFile, onPreviewFile} = props;
+  const {
+    file_id,
+    file_name,
+    file_type,
+    onDownloadFile,
+    onPreviewFile,
+  } = props;
 
   return (
     <Paper variant="outlined" className={classes.listItemPaper}>
-      <ListItem button disableRipple className={classes.listItem}
-      onClick={() => {onPreviewFile(file_id, "lampiran")}}>
+      <ListItem
+        button
+        disableRipple
+        className={classes.listItem}
+        onClick={() => {
+          onPreviewFile(file_id, "lampiran");
+        }}
+      >
         <ListItemAvatar>
-          {file_type === "Word" ?
-              <Avatar className={classes.wordFileTypeIcon}>
-                <FaFileWord />
-              </Avatar>
-            :
-            file_type === "Excel" ?
-              <Avatar className={classes.excelFileTypeIcon}>
-                <FaFileExcel />
-              </Avatar>
-            :
-            file_type === "Gambar" ?
-              <Avatar className={classes.imageFileTypeIcon}>
-                <FaFileImage />
-              </Avatar>
-            :
-            file_type === "PDF" ?
-              <Avatar className={classes.pdfFileTypeIcon}>
-                <FaFilePdf />
-              </Avatar>
-            :
-            file_type === "Teks" ?
-              <Avatar className={classes.textFileTypeIcon}>
-                <FaFileAlt />
-              </Avatar>
-            :
-            file_type === "Presentasi" ?
-              <Avatar className={classes.presentationFileTypeIcon}>
-                <FaFilePowerpoint />
-              </Avatar>
-            :
-            file_type === "File Lainnya" ?
-              <Avatar className={classes.otherFileTypeIcon}>
-                <FaFile />
-              </Avatar>
-            : null
-          }
+          {file_type === "Word" ? (
+            <Avatar className={classes.wordFileTypeIcon}>
+              <FaFileWord />
+            </Avatar>
+          ) : file_type === "Excel" ? (
+            <Avatar className={classes.excelFileTypeIcon}>
+              <FaFileExcel />
+            </Avatar>
+          ) : file_type === "Gambar" ? (
+            <Avatar className={classes.imageFileTypeIcon}>
+              <FaFileImage />
+            </Avatar>
+          ) : file_type === "PDF" ? (
+            <Avatar className={classes.pdfFileTypeIcon}>
+              <FaFilePdf />
+            </Avatar>
+          ) : file_type === "Teks" ? (
+            <Avatar className={classes.textFileTypeIcon}>
+              <FaFileAlt />
+            </Avatar>
+          ) : file_type === "Presentasi" ? (
+            <Avatar className={classes.presentationFileTypeIcon}>
+              <FaFilePowerpoint />
+            </Avatar>
+          ) : file_type === "File Lainnya" ? (
+            <Avatar className={classes.otherFileTypeIcon}>
+              <FaFile />
+            </Avatar>
+          ) : null}
         </ListItemAvatar>
         <ListItemText
           primary={file_name}
@@ -178,50 +210,81 @@ function WorkFile(props) {
           }
         />
         <ListItemIcon>
-          <IconButton size="small" className={classes.downloadIconButton} onClick={(e) => { e.stopPropagation()
-            onDownloadFile(file_id, "lampiran")}}>
-            <CloudDownloadIcon fontSize="small"/>
+          <IconButton
+            size="small"
+            className={classes.downloadIconButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDownloadFile(file_id, "lampiran");
+            }}
+          >
+            <CloudDownloadIcon fontSize="small" />
           </IconButton>
         </ListItemIcon>
       </ListItem>
     </Paper>
-  )
+  );
 }
 function GradeButton(props) {
-  const classes = useStyles()
-  const {onGradeTugas, task_id, student_id, grade, student_name, student_task_files_id} = props
+  const classes = useStyles();
+  const {
+    onGradeTugas,
+    task_id,
+    student_id,
+    grade,
+    student_name,
+    student_task_files_id,
+  } = props;
 
   return (
     <Button
       variant="contained"
-      startIcon={<CheckCircleIcon/>}
+      startIcon={<CheckCircleIcon />}
       className={classes.checkCircleIcon}
-      onClick={() => onGradeTugas(task_id, student_task_files_id, student_id, student_name, grade)}
+      onClick={() =>
+        onGradeTugas(
+          task_id,
+          student_task_files_id,
+          student_id,
+          student_name,
+          grade
+        )
+      }
     >
       Simpan
     </Button>
-  )
+  );
 }
 
 function UnduhSemuaButton(props) {
-  const classes = useStyles()
+  const classes = useStyles();
   const { onDownloadFile, student_task_files_id } = props;
-    return (
-      <Button
-        variant="contained"
-        startIcon={<GetAppIcon />}
-        className={classes.downloadAllButton}
-        onClick={() => onDownloadFile(student_task_files_id, "lampiran/bulk")}
-      >
-        Unduh Semua
-      </Button>
-    )
+  return (
+    <Button
+      variant="contained"
+      startIcon={<GetAppIcon />}
+      className={classes.downloadAllButton}
+      onClick={() => onDownloadFile(student_task_files_id, "lampiran/bulk")}
+    >
+      Unduh Semua
+    </Button>
+  );
 }
 
 function SubmittedTaskList(props) {
   const classes = useStyles();
 
-  const { getOneTask, getAllClass, tasksCollection, getStudents, downloadTugas, previewTugas, moveToDropbox, gradeTask, success } = props;
+  const {
+    getOneTask,
+    getAllClass,
+    tasksCollection,
+    getStudents,
+    downloadTugas,
+    previewTugas,
+    moveToDropbox,
+    gradeTask,
+    success,
+  } = props;
   const { all_classes } = props.classesCollection;
   const { all_students, dropbox_token } = props.auth;
   const task_id = props.match.params.id;
@@ -230,117 +293,134 @@ function SubmittedTaskList(props) {
   const [gradeStatus, setGradeStatus] = React.useState(new Map());
   const [openAlert, setOpenAlert] = React.useState(false);
 
-  console.log(grade)
-  console.log(all_students)
+  console.log(grade);
+  console.log(all_students);
 
   const handleOpenAlert = () => {
     setOpenAlert(true);
-  }
+  };
   const handleCloseAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setOpenAlert(false);
-  }
+  };
 
   React.useEffect(() => {
-    getOneTask(task_id)
-    getStudents()
-    getAllClass()
+    getOneTask(task_id);
+    getStudents();
+    getAllClass();
     // ini successnya bakal return 3 barang di list.
-    if(success instanceof Array){
-      if(success.length === 3)
-        handleOpenAlert()
+    if (success instanceof Array) {
+      if (success.length === 3) handleOpenAlert();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasksCollection._id, success])
+  }, [tasksCollection._id, success]);
 
-  console.log(success)
+  console.log(success);
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const handleChangeGrade = (e, id) => {
-    let gradeMap = grade
-    gradeMap.set(id, e.target.value)
-    setGrade(gradeMap)
+    let gradeMap = grade;
+    gradeMap.set(id, e.target.value);
+    setGrade(gradeMap);
   };
 
   const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran")
-      downloadTugas(id)
+    if (fileCategory === "lampiran") downloadTugas(id);
     else if (fileCategory === "lampiran/bulk") {
-      console.log(id)
+      console.log(id);
       for (var i = 0; i < id.length; i++) {
-        downloadTugas(id[i])
+        downloadTugas(id[i]);
       }
     }
-      console.log("File Category is not specified")
-  }
+    console.log("File Category is not specified");
+  };
 
   const onPreviewFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran")
-      previewTugas(id)
-    else
-      console.log("File Category is not specified")
-  }
+    if (fileCategory === "lampiran") previewTugas(id);
+    else console.log("File Category is not specified");
+  };
 
-  const onGradeTugas = (taskId, student_task_files_id, studentId, student_name, grade) => {
-    console.log(studentId, grade)
-    console.log(grade.get(studentId))
+  const onGradeTugas = (
+    taskId,
+    student_task_files_id,
+    studentId,
+    student_name,
+    grade
+  ) => {
+    console.log(studentId, grade);
+    console.log(grade.get(studentId));
     let gradingData = {
       grade: parseInt(grade.get(studentId)),
-      studentId: studentId
-    }
-    let gradeStatusMap = gradeStatus
+      studentId: studentId,
+    };
+    let gradeStatusMap = gradeStatus;
 
     if (grade.has(studentId)) {
-      gradeStatusMap.set(studentId, "Graded")
-      setGradeStatus(gradeStatusMap)
-      getOneTask(task_id)
-      gradeTask(taskId, gradingData, student_name)
-      moveToDropbox(dropbox_token, student_task_files_id)
+      gradeStatusMap.set(studentId, "Graded");
+      setGradeStatus(gradeStatusMap);
+      getOneTask(task_id);
+      gradeTask(taskId, gradingData, student_name);
+      moveToDropbox(dropbox_token, student_task_files_id);
     }
-  }
+  };
 
   const fileType = (filename) => {
-    let ext_file = path.extname(filename)
-    switch(ext_file) {
-      case ".docx" : return "Word"
-      case ".xlsx" :
-      case ".csv"  : return "Excel"
+    let ext_file = path.extname(filename);
+    switch (ext_file) {
+      case ".docx":
+        return "Word";
+      case ".xlsx":
+      case ".csv":
+        return "Excel";
 
       case ".png":
       case ".jpg":
-      case ".jpeg" : return "Gambar"
+      case ".jpeg":
+        return "Gambar";
 
-      case ".pdf" : return "PDF"
+      case ".pdf":
+        return "PDF";
 
-      case ".txt" :
-      case ".rtf" : return "Teks"
+      case ".txt":
+      case ".rtf":
+        return "Teks";
 
-      case ".ppt" :
-      case ".pptx": return "Presentasi"
+      case ".ppt":
+      case ".pptx":
+        return "Presentasi";
 
-      default: return "File Lainnya"
+      default:
+        return "File Lainnya";
     }
-  }
+  };
 
-  let temp = new Map()
+  let temp = new Map();
   if (all_classes.length) {
-    all_classes.map((kelas) => temp.set(kelas._id, kelas))
+    all_classes.map((kelas) => temp.set(kelas._id, kelas));
   }
 
   const listClassTab = () => {
-    let class_assigned = []
+    let class_assigned = [];
     if (!tasksCollection.class_assigned) {
       return null;
-    }
-    else {
+    } else {
       if (temp.size) {
         for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
-          class_assigned.push(<Tab label={!temp.get(tasksCollection.class_assigned[i]) ? null : temp.get(tasksCollection.class_assigned[i]).name} {...TabIndex(i)}/>)
+          class_assigned.push(
+            <Tab
+              label={
+                !temp.get(tasksCollection.class_assigned[i])
+                  ? null
+                  : temp.get(tasksCollection.class_assigned[i]).name
+              }
+              {...TabIndex(i)}
+            />
+          );
         }
         return (
           <Tabs
@@ -349,113 +429,177 @@ function SubmittedTaskList(props) {
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
-            >
-              {class_assigned}
+          >
+            {class_assigned}
           </Tabs>
-        )
+        );
       }
     }
-  }
+  };
 
   // const listClassTabPanel = () => {
   //   return null;
   // }
 
   const listClassTabPanel = () => {
-    let TabPanelList = []
+    let TabPanelList = [];
     if (!tasksCollection.class_assigned || !all_students) {
-      return null
-    }
-    else {
+      return null;
+    } else {
       let student_task_files_id; // to handle the download all, this is needed.
       for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
         let students_in_class = [];
         for (var j = 0; j < all_students.length; j++) {
           // check if the id of the class is the same or not (means student is inside)
-          student_task_files_id = []
+          student_task_files_id = [];
           if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
-            let student = all_students[j]
-            let student_task = all_students[j].tugas
-            console.log(student_task)
-            let task_list_on_panel = []
-            for ( var k = 0; k < student_task.length; k++) {
-              let task = student_task[k]
+            let student = all_students[j];
+            let student_task = all_students[j].tugas;
+            console.log(student_task);
+            let task_list_on_panel = [];
+            for (var k = 0; k < student_task.length; k++) {
+              let task = student_task[k];
               if (student_task[k].for_task_object === task_id) {
-                student_task_files_id.push(task.id)
+                student_task_files_id.push(task.id);
                 task_list_on_panel.push(
-                <WorkFile
-                  file_id={task.id}
-                  file_name={!task.ontime ? <div> {task.filename}  <Typography display="inline" color="error">(TELAT)</Typography></div> : task.filename}
-                  on_time = {task.ontime}
-                  file_type={fileType(task.filename)}
-                  onPreviewFile={onPreviewFile}
-                  onDownloadFile={onDownloadFile}/>)
+                  <WorkFile
+                    file_id={task.id}
+                    file_name={
+                      !task.ontime ? (
+                        <div>
+                          {" "}
+                          {task.filename}{" "}
+                          <Typography display="inline" color="error">
+                            (TELAT)
+                          </Typography>
+                        </div>
+                      ) : (
+                        task.filename
+                      )
+                    }
+                    on_time={task.ontime}
+                    file_type={fileType(task.filename)}
+                    onPreviewFile={onPreviewFile}
+                    onDownloadFile={onDownloadFile}
+                  />
+                );
               }
             }
-            if(task_list_on_panel.length === 0) {
-              task_list_on_panel.push(<Typography align="center" color="textSecondary" variant="subtitle1">Kosong</Typography>)
+            if (task_list_on_panel.length === 0) {
+              task_list_on_panel.push(
+                <Typography
+                  align="center"
+                  color="textSecondary"
+                  variant="subtitle1"
+                >
+                  Kosong
+                </Typography>
+              );
             }
             students_in_class.push(
               <ExpansionPanel>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <ListItem className={classes.personListContainer}>
-                <ListItemAvatar>
-                  {!student.avatar ? <Avatar style={{marginRight: "10px"}}/> :
-                  <Avatar src={`/api/upload/avatar/${student.avatar}`} style={{marginRight: "10px"}}/>}
-                </ListItemAvatar>
-                <ListItemText primary={<Typography variant="h6">{student.name}</Typography>}
-                //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
-                 secondary={!tasksCollection.grades ? "Not graded" : !gradeStatus.has(student._id) && !tasksCollection.grades[student._id] ? "Belum Dinilai" : "Telah Dinilai"}/>
-            </ListItem>
-            </ExpansionPanelSummary>
-             <Divider />
-             <div className={classes.studentFileListContainer}>
-              <List>
-                {task_list_on_panel}
-              </List>
-              {student_task_files_id.length > 0 ?
-                <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
-                  <div style={{marginRight: "20px", display: "flex", alignItems: "center"}}>
-                    <TextField
-                      defaultValue={grade.has(student._id) || tasksCollection.grades === null ? grade.get(student._id) : tasksCollection.grades[student._id]}
-                      onChange={(e) => {handleChangeGrade(e, student._id)}}
-                      inputProps={{
-                        style: {
-                          borderBottom: "none",
-                          boxShadow: "none",
-                          margin: "0px",
-                          width: "35px"
-                        }
-                      }}
-                      InputProps={{
-                        endAdornment: "/ 100"
-                      }}
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <ListItem className={classes.personListContainer}>
+                    <ListItemAvatar>
+                      {!student.avatar ? (
+                        <Avatar style={{ marginRight: "10px" }} />
+                      ) : (
+                        <Avatar
+                          src={`/api/upload/avatar/${student.avatar}`}
+                          style={{ marginRight: "10px" }}
+                        />
+                      )}
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6">{student.name}</Typography>
+                      }
+                      //  secondary={task_list_on_panel.length === 0 || !tasksCollection.grades ? "Belum dikumpul" : Boolean(tasksCollection.grades[student._id]) ? "Graded" : "Not Graded" }/>
+                      secondary={
+                        !tasksCollection.grades
+                          ? "Not graded"
+                          : !gradeStatus.has(student._id) &&
+                            !tasksCollection.grades[student._id]
+                          ? "Belum Dinilai"
+                          : "Telah Dinilai"
+                      }
                     />
-                  </div>
-                  <div>
-                    <GradeButton onGradeTugas={onGradeTugas} student_task_files_id={student_task_files_id} task_id={task_id} student_id={student._id} student_name ={student.name} grade={grade}/>
-                    <UnduhSemuaButton onDownloadFile={onDownloadFile} student_task_files_id={student_task_files_id}/>
-                  </div>
+                  </ListItem>
+                </ExpansionPanelSummary>
+                <Divider />
+                <div className={classes.studentFileListContainer}>
+                  <List>{task_list_on_panel}</List>
+                  {student_task_files_id.length > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div
+                        style={{
+                          marginRight: "20px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TextField
+                          defaultValue={
+                            grade.has(student._id) ||
+                            tasksCollection.grades === null
+                              ? grade.get(student._id)
+                              : tasksCollection.grades[student._id]
+                          }
+                          onChange={(e) => {
+                            handleChangeGrade(e, student._id);
+                          }}
+                          inputProps={{
+                            style: {
+                              borderBottom: "none",
+                              boxShadow: "none",
+                              margin: "0px",
+                              width: "35px",
+                            },
+                          }}
+                          InputProps={{
+                            endAdornment: "/ 100",
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <GradeButton
+                          onGradeTugas={onGradeTugas}
+                          student_task_files_id={student_task_files_id}
+                          task_id={task_id}
+                          student_id={student._id}
+                          student_name={student.name}
+                          grade={grade}
+                        />
+                        <UnduhSemuaButton
+                          onDownloadFile={onDownloadFile}
+                          student_task_files_id={student_task_files_id}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
-                : null
-              }
-            </div>
-             </ExpansionPanel>
-            )
+              </ExpansionPanel>
+            );
           }
         }
         TabPanelList.push(
-        <TabPanel value={value} index={i}>
-          {students_in_class}
-        </TabPanel>
-      )
+          <TabPanel value={value} index={i}>
+            {students_in_class}
+          </TabPanel>
+        );
+      }
     }
-  }
     return tasksCollection.class_assigned.length > 0 ? TabPanelList : null;
-  }
+  };
 
-  document.title = "Schooly | Daftar Tugas Terkumpul"
-  console.log(success)
+  document.title = "Schooly | Daftar Tugas Terkumpul";
+  console.log(success);
   // Before that, run this :
   return (
     <div className={classes.root}>
@@ -463,36 +607,37 @@ function SubmittedTaskList(props) {
         open={openAlert}
         autoHideDuration={4000}
         onClose={handleCloseAlert}
-        anchorOrigin={{vertical : "center", horizontal: "center"}}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseAlert} severity="success" >
-          Nilai  {!success ? null : success[2]} berhasil diganti menjadi {!success ? null : success[1]}
+        <Alert onClose={handleCloseAlert} severity="success">
+          Nilai {!success ? null : success[2]} berhasil diganti menjadi{" "}
+          {!success ? null : success[1]}
         </Alert>
       </Snackbar>
       <Paper>
-        <Typography variant="h4" style={{textAlign: "center"}} gutterBottom>
+        <Typography variant="h4" style={{ textAlign: "center" }} gutterBottom>
           <b>{tasksCollection.name}</b>
         </Typography>
-          {listClassTab()}
+        {listClassTab()}
       </Paper>
       {listClassTabPanel()}
     </div>
-  )
-};
+  );
+}
 
 SubmittedTaskList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
-  getTaskFilesByUser:PropTypes.func.isRequired,
+  getTaskFilesByUser: PropTypes.func.isRequired,
   getOneTask: PropTypes.func.isRequired,
   getStudents: PropTypes.func.isRequired,
   downloadTugas: PropTypes.func.isRequired,
   previewTugas: PropTypes.func.isRequired,
   gradeTask: PropTypes.func.isRequired,
-  getAllClass: PropTypes.func.isRequired
-}
+  getAllClass: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
@@ -501,8 +646,13 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { getStudents,
-    getTaskFilesByUser, getOneTask, downloadTugas,
-    previewTugas, gradeTask, getAllClass, moveToDropbox }
-) (SubmittedTaskList);
+export default connect(mapStateToProps, {
+  getStudents,
+  getTaskFilesByUser,
+  getOneTask,
+  downloadTugas,
+  previewTugas,
+  gradeTask,
+  getAllClass,
+  moveToDropbox,
+})(SubmittedTaskList);

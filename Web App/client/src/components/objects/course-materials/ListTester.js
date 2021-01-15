@@ -2,13 +2,32 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getAllMaterials, getMaterial, deleteMaterial } from "../../../actions/MaterialActions";
+import {
+  getAllMaterials,
+  getMaterial,
+  deleteMaterial,
+} from "../../../actions/MaterialActions";
 import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTeachers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-   Fab, Grid, Hidden, Menu, MenuItem, Paper, TableSortLabel, Typography } from "@material-ui/core/";
+import {
+  Button,
+  IconButton,
+  Dialog,
+  Divider,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  Fab,
+  Grid,
+  Hidden,
+  Menu,
+  MenuItem,
+  Paper,
+  TableSortLabel,
+  Typography,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -59,14 +78,34 @@ function MaterialListToolbar(props) {
   };
 
   const headCells = [
-    { id: "materialtitle", numeric: false, disablePadding: true, label: "Nama Materi" },
-    { id: "subject", numeric: false, disablePadding: false, label: "Mata Pelajaran" },
-    { id: "author", numeric: false, disablePadding: false, label: "Pemberi Materi" },
-    { id: "class_assigned", numeric: false, disablePadding: false, label: "Kelas yang diberikan" },
+    {
+      id: "materialtitle",
+      numeric: false,
+      disablePadding: true,
+      label: "Nama Materi",
+    },
+    {
+      id: "subject",
+      numeric: false,
+      disablePadding: false,
+      label: "Mata Pelajaran",
+    },
+    {
+      id: "author",
+      numeric: false,
+      disablePadding: false,
+      label: "Pemberi Materi",
+    },
+    {
+      id: "class_assigned",
+      numeric: false,
+      disablePadding: false,
+      label: "Kelas yang diberikan",
+    },
   ];
 
   if (role === "Student") {
-    headCells.pop()
+    headCells.pop();
   }
 
   // Sort Menu
@@ -80,14 +119,10 @@ function MaterialListToolbar(props) {
 
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">
-        Daftar Materi
-      </Typography>
-      <div style={{display: "flex", alignItems: "center"}}>
+      <Typography variant="h4">Daftar Materi</Typography>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <Hidden smUp implementation="css">
-          {role === "Student" ?
-            null
-          :
+          {role === "Student" ? null : (
             <LightTooltip title="Buat Materi">
               <Link to="/buat-materi">
                 <Fab size="small" className={classes.newMaterialButton}>
@@ -95,22 +130,27 @@ function MaterialListToolbar(props) {
                 </Fab>
               </Link>
             </LightTooltip>
-          }
+          )}
         </Hidden>
         <Hidden xsDown implementation="css">
-          {role === "Student" ?
-            null
-          :
+          {role === "Student" ? null : (
             <Link to="/buat-materi">
-              <Fab size="medium" variant="extended" className={classes.newMaterialButton}>
+              <Fab
+                size="medium"
+                variant="extended"
+                className={classes.newMaterialButton}
+              >
                 <MenuBookIcon className={classes.newMaterialIconDesktop} />
                 Buat Materi
               </Fab>
             </Link>
-          }
+          )}
         </Hidden>
         <LightTooltip title="Urutkan Materi">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton
+            onClick={handleOpenSortMenu}
+            className={classes.sortButton}
+          >
             <SortIcon />
           </IconButton>
         </LightTooltip>
@@ -140,12 +180,13 @@ function MaterialListToolbar(props) {
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ?
+                {orderBy === headCell.id ? (
                   <span className={classes.visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </span>
-                  : null
-                }
+                ) : null}
               </TableSortLabel>
             </MenuItem>
           ))}
@@ -153,7 +194,7 @@ function MaterialListToolbar(props) {
       </div>
     </div>
   );
-};
+}
 
 MaterialListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -283,60 +324,58 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ListTester(props) {
-
   const classes = useStyles();
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedTaskId, setSelectedTaskId] = React.useState(null)
+  const [selectedTaskId, setSelectedTaskId] = React.useState(null);
   const [selectedMaterialName, setSelectedMaterialName] = React.useState(null);
 
-
-  //props.auth.user 
+  //props.auth.user
   //props.auth.all_teachers
-  const { getAllSubjects, getMaterial, deleteMaterial, getAllClass, getTeachers } = props;
+  const {
+    getAllSubjects,
+    getMaterial,
+    deleteMaterial,
+    getAllClass,
+    getTeachers,
+  } = props;
   const { all_materials, selectedMaterials } = props.materialsCollection;
   const { all_classes_map } = props.classesCollection;
   const { user, all_teachers } = props.auth;
-  const { all_subjects_map} = props.subjectsCollection;
+  const { all_subjects_map } = props.subjectsCollection;
   const materialRowItem = (data) => {
     rows.push(
       createData(
         data._id,
         data.name,
         data.subject,
-        !(all_teachers).size || !all_teachers.get(data.author_id) ? {}: all_teachers.get(data.author_id),
-        data.class_assigned,
+        !all_teachers.size || !all_teachers.get(data.author_id)
+          ? {}
+          : all_teachers.get(data.author_id),
+        data.class_assigned
       )
-    )
-  }
+    );
+  };
 
-  
   React.useEffect(() => {
-    getAllSubjects("map") // yang dapetin semua subjects, terimanya dalam Map/Dictionary/HashMap object
-    getAllClass("map")
-    getTeachers("map")
+    getAllSubjects("map"); // yang dapetin semua subjects, terimanya dalam Map/Dictionary/HashMap object
+    getAllClass("map");
+    getTeachers("map");
     if (user.role === "Teacher") {
-      getMaterial(user.id, "by_author")
-    }
-    else { // for student
-      getMaterial(user.kelas, "by_class")
+      getMaterial(user.id, "by_author");
+    } else {
+      // for student
+      getMaterial(user.kelas, "by_class");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
-  return (
-    <div>
-      HAHAHHA
-    </div>
-  )
-
+  return <div>HAHAHHA</div>;
 }
 
-
 ListTester.propTypes = {
-  
   deleteMaterial: PropTypes.func.isRequired,
   getAllMaterials: PropTypes.func.isRequired,
   getMaterial: PropTypes.func.isRequired,
@@ -345,13 +384,12 @@ ListTester.propTypes = {
   getSelectedClasses: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
 
-  
   classesCollection: PropTypes.object.isRequired,
   materialsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
@@ -359,9 +397,14 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
   materialsCollection: state.materialsCollection,
   subjectsCollection: state.subjectsCollection,
-})
+});
 
-export default connect(
-  mapStateToProps,
-  { deleteMaterial, getAllMaterials, getAllSubjects, getMaterial, getTeachers, getAllClass, getSelectedClasses }
-  )(ListTester)
+export default connect(mapStateToProps, {
+  deleteMaterial,
+  getAllMaterials,
+  getAllSubjects,
+  getMaterial,
+  getTeachers,
+  getAllClass,
+  getSelectedClasses,
+})(ListTester);

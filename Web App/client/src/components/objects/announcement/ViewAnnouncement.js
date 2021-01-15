@@ -4,18 +4,43 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
-import { getSelectedClasses } from "../../../actions/ClassActions"
+import {
+  getOneAnnouncement,
+  deleteAnnouncement,
+} from "../../../actions/AnnouncementActions";
+import { getSelectedClasses } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
-import { downloadLampiranAnnouncement, previewLampiranAnnouncement } from "../../../actions/UploadActions";
+import {
+  downloadLampiranAnnouncement,
+  previewLampiranAnnouncement,
+} from "../../../actions/UploadActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Fab,
+  Grid,
+  Hidden,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -33,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
   listItemPaper: {
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
   listItem: {
     "&:focus, &:hover": {
@@ -97,68 +122,62 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function LampiranFile(props) {
   const classes = useStyles();
 
-  const {file_id, filename, filetype, onDownloadFile, onPreviewFile} = props;
+  const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
 
-  let displayedName = ""
-  filename.length >= 26 ?
-    displayedName = `${filename.slice(0,25)}..${path.extname(filename)}`
-  :
-    displayedName = filename
+  let displayedName = "";
+  filename.length >= 26
+    ? (displayedName = `${filename.slice(0, 25)}..${path.extname(filename)}`)
+    : (displayedName = filename);
 
   return (
     <Grid item xs={12} sm={6}>
       <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem button disableRipple className={classes.listItem}
-          onClick={() => {onPreviewFile(file_id, "lampiran_announcement")}}
+        <ListItem
+          button
+          disableRipple
+          className={classes.listItem}
+          onClick={() => {
+            onPreviewFile(file_id, "lampiran_announcement");
+          }}
         >
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={filename} placement="top">
-                <Typography variant="subtitle2">
-                  {displayedName}
-                </Typography>
+                <Typography variant="subtitle2">{displayedName}</Typography>
               </LightTooltip>
             }
             secondary={filetype}
@@ -166,65 +185,83 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.downloadIconButton}
-            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran_announcement") }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDownloadFile(file_id, "lampiran_announcement");
+            }}
           >
             <CloudDownloadIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 function ViewAnnouncement(props) {
-  document.title = "Schooly | Lihat Pengumuman"
+  document.title = "Schooly | Lihat Pengumuman";
 
   const classes = useStyles();
   const { selectedAnnouncements } = props.announcements;
-  const { getUsers, classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, getSelectedClasses } = props;
+  const {
+    getUsers,
+    classesCollection,
+    getOneAnnouncement,
+    downloadLampiranAnnouncement,
+    previewLampiranAnnouncement,
+    deleteAnnouncement,
+    getSelectedClasses,
+  } = props;
   const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
-    getOneAnnouncement(announcement_id)
-    getSelectedClasses(selectedAnnouncements.class_assigned)
+    getOneAnnouncement(announcement_id);
+    getSelectedClasses(selectedAnnouncements.class_assigned);
     if (selectedAnnouncements._id) {
-      console.log("getusers is runned")
-      getUsers([selectedAnnouncements.author_id])
+      console.log("getusers is runned");
+      getUsers([selectedAnnouncements.author_id]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAnnouncements._id]) // beacause only receive one announcement.
+  }, [selectedAnnouncements._id]); // beacause only receive one announcement.
 
-  console.log(new Date(), classesCollection)
-  console.log("selected announcement: ", selectedAnnouncements)
+  console.log(new Date(), classesCollection);
+  console.log("selected announcement: ", selectedAnnouncements);
   const fileType = (filename) => {
-    let ext_file = path.extname(filename)
-    switch(ext_file) {
-      case ".docx" : return "Word"
-      case ".xlsx" :
-      case ".csv"  : return "Excel"
+    let ext_file = path.extname(filename);
+    switch (ext_file) {
+      case ".docx":
+        return "Word";
+      case ".xlsx":
+      case ".csv":
+        return "Excel";
 
-      case ".png" :
-      case ".jpg" :
-      case ".jpeg" : return "Gambar"
+      case ".png":
+      case ".jpg":
+      case ".jpeg":
+        return "Gambar";
 
-      case ".pdf" : return "PDF"
+      case ".pdf":
+        return "PDF";
 
-      case ".txt" :
-      case ".rtf" : return "Teks"
+      case ".txt":
+      case ".rtf":
+        return "Teks";
 
-      case ".ppt" :
-      case ".pptx" : return "Presentasi"
+      case ".ppt":
+      case ".pptx":
+        return "Presentasi";
 
-      default: return "File Lainnya"
+      default:
+        return "File Lainnya";
     }
-  }
+  };
 
   const onDeleteAnnouncement = (announcement_id) => {
-    deleteAnnouncement(announcement_id)
+    deleteAnnouncement(announcement_id);
     // setFileTugas(null)
-  }
+  };
 
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
@@ -235,21 +272,19 @@ function ViewAnnouncement(props) {
     setOpenDeleteDialog(false);
   };
 
-  const onDownloadFile = (id, fileCategory="none") => {
+  const onDownloadFile = (id, fileCategory = "none") => {
     if (fileCategory === "lampiran_announcement")
-      downloadLampiranAnnouncement(id)
-    else
-      console.log("File Category is not specified")
-  }
+      downloadLampiranAnnouncement(id);
+    else console.log("File Category is not specified");
+  };
 
-  const onPreviewFile = (id, fileCategory="none") => {
-   if (fileCategory === "lampiran_announcement")
-      previewLampiranAnnouncement(id)
-    else
-      console.log("File Category is not specified")
-  }
+  const onPreviewFile = (id, fileCategory = "none") => {
+    if (fileCategory === "lampiran_announcement")
+      previewLampiranAnnouncement(id);
+    else console.log("File Category is not specified");
+  };
 
-  console.log(retrieved_users)
+  console.log(retrieved_users);
   return (
     <div className={classes.root}>
       <DeleteDialog
@@ -257,7 +292,9 @@ function ViewAnnouncement(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Pengumuman"
         itemName={selectedAnnouncements.title}
-        deleteItem={() => { onDeleteAnnouncement(announcement_id)}}
+        deleteItem={() => {
+          onDeleteAnnouncement(announcement_id);
+        }}
       />
       <Paper className={classes.paper}>
         <Grid container direction="column" spacing={6}>
@@ -270,8 +307,20 @@ function ViewAnnouncement(props) {
                   </Typography>
                 }
                 secondary={
-                  <Typography variant="body2" color="textSecondary" style={{marginTop: "10px"}}>
-                    Oleh: <b>{!retrieved_users.size || !selectedAnnouncements.author_id || !retrieved_users.get(selectedAnnouncements.author_id) ?  "" : retrieved_users.get(selectedAnnouncements.author_id).name }</b>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    style={{ marginTop: "10px" }}
+                  >
+                    Oleh:{" "}
+                    <b>
+                      {!retrieved_users.size ||
+                      !selectedAnnouncements.author_id ||
+                      !retrieved_users.get(selectedAnnouncements.author_id)
+                        ? ""
+                        : retrieved_users.get(selectedAnnouncements.author_id)
+                            .name}
+                    </b>
                   </Typography>
                 }
               />
@@ -280,9 +329,15 @@ function ViewAnnouncement(props) {
               <Hidden mdUp implementation="css">
                 <ListItemText
                   primary={
-                    <Typography variant="body2" className={classes.deadlineWarningText}>
+                    <Typography
+                      variant="body2"
+                      className={classes.deadlineWarningText}
+                    >
                       {/* Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")} */}
-                      Tanggal diumumkan: {moment(selectedAnnouncements.createdAt).locale("id").format("DD MMM YYYY, HH:mm")}
+                      Tanggal diumumkan:{" "}
+                      {moment(selectedAnnouncements.createdAt)
+                        .locale("id")
+                        .format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   }
                 />
@@ -291,9 +346,15 @@ function ViewAnnouncement(props) {
                 <ListItemText
                   align="right"
                   primary={
-                    <Typography variant="body2" className={classes.deadlineWarningText}>
+                    <Typography
+                      variant="body2"
+                      className={classes.deadlineWarningText}
+                    >
                       {/* Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")} */}
-                      Tanggal diumumkan: {moment(selectedAnnouncements.createdAt).locale("id").format("DD MMM YYYY, HH:mm")}
+                      Tanggal diumumkan:{" "}
+                      {moment(selectedAnnouncements.createdAt)
+                        .locale("id")
+                        .format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   }
                 />
@@ -305,10 +366,11 @@ function ViewAnnouncement(props) {
               Deskripsi:
             </Typography>
             <Typography variant="body1">
-            {selectedAnnouncements.description}
+              {selectedAnnouncements.description}
             </Typography>
           </Grid>
-          {(!selectedAnnouncements.lampiran || selectedAnnouncements.lampiran.length === 0) ? null :
+          {!selectedAnnouncements.lampiran ||
+          selectedAnnouncements.lampiran.length === 0 ? null : (
             <Grid item>
               <Typography color="primary" gutterBottom>
                 Lampiran Berkas:
@@ -318,35 +380,37 @@ function ViewAnnouncement(props) {
                   <LampiranFile
                     file_id={lampiran.id}
                     onPreviewFile={onPreviewFile}
-                    onDownloadFile ={onDownloadFile}
+                    onDownloadFile={onDownloadFile}
                     filename={lampiran.filename}
                     filetype={fileType(lampiran.filename)}
                   />
                 ))}
               </Grid>
             </Grid>
-          }
+          )}
         </Grid>
       </Paper>
-      { user.role === "Admin" || user.id === selectedAnnouncements.author_id? // kalau studentnya ketua kelas yang buat pengumumannya
-          <div className={classes.teacherButtonContainer}>
-            <Link to={`/sunting-pengumuman/${announcement_id}`}>
-              <LightTooltip title="Sunting Pengumuman" placement="bottom">
-                <Fab className={classes.editAnnouncementButton}>
-                  <EditIcon />
-                </Fab>
-              </LightTooltip>
-            </Link>
-            <LightTooltip title="Hapus Pengumuman" placement="bottom">
-              <Fab className={classes.deleteAnnouncementButton} onClick={(e) => handleOpenDeleteDialog(e,announcement_id)}>
-                <DeleteIcon />
+      {user.role === "Admin" || user.id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
+        <div className={classes.teacherButtonContainer}>
+          <Link to={`/sunting-pengumuman/${announcement_id}`}>
+            <LightTooltip title="Sunting Pengumuman" placement="bottom">
+              <Fab className={classes.editAnnouncementButton}>
+                <EditIcon />
               </Fab>
             </LightTooltip>
-          </div>
-      : null
-    }
+          </Link>
+          <LightTooltip title="Hapus Pengumuman" placement="bottom">
+            <Fab
+              className={classes.deleteAnnouncementButton}
+              onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
+            >
+              <DeleteIcon />
+            </Fab>
+          </LightTooltip>
+        </div>
+      ) : null}
     </div>
-  )
+  );
 }
 
 ViewAnnouncement.propTypes = {
@@ -359,15 +423,19 @@ ViewAnnouncement.propTypes = {
   previewLampiranAnnouncement: PropTypes.func.isRequired,
   getSelectedClasses: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   classesCollection: state.classesCollection,
-  announcements: state.announcementsCollection
+  announcements: state.announcementsCollection,
 });
 
-export default connect(
-  mapStateToProps, { getOneAnnouncement, getUsers, deleteAnnouncement,
-    previewLampiranAnnouncement, downloadLampiranAnnouncement, getSelectedClasses}
-) (ViewAnnouncement);
+export default connect(mapStateToProps, {
+  getOneAnnouncement,
+  getUsers,
+  deleteAnnouncement,
+  previewLampiranAnnouncement,
+  downloadLampiranAnnouncement,
+  getSelectedClasses,
+})(ViewAnnouncement);

@@ -1,6 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, CircularProgress, Dialog, Grid, Typography } from "@material-ui/core/";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  Grid,
+  Typography,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
@@ -14,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   uploadSuccessIcon: {
     color: "green",
     height: "45px",
-    width: "45px"
+    width: "45px",
   },
   uploadFinishButton: {
     width: "100%",
@@ -31,34 +37,50 @@ const useStyles = makeStyles((theme) => ({
 function UploadDialog(props) {
   const classes = useStyles();
 
-  const { openUploadDialog, handleCloseUploadDialog, success, messageUploading, messageSuccess, redirectLink } = props;
+  const {
+    openUploadDialog,
+    handleCloseUploadDialog,
+    success,
+    messageUploading,
+    messageSuccess,
+    redirectLink,
+  } = props;
 
   return (
     <Dialog open={openUploadDialog} onClose={handleCloseUploadDialog}>
-      <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
+      <Grid
+        container
+        direction="column"
+        justify="space-between"
+        alignItems="center"
+        className={classes.root}
+      >
         <Grid item>
           <Typography variant="h6" align="center" gutterBottom>
             {!success ? messageUploading : messageSuccess}
           </Typography>
         </Grid>
         <Grid item>
-          {!success ? <CircularProgress /> : <CheckCircleIcon className={classes.uploadSuccessIcon} />}
+          {!success ? (
+            <CircularProgress />
+          ) : (
+            <CheckCircleIcon className={classes.uploadSuccessIcon} />
+          )}
         </Grid>
         <Grid item>
-          {!success ?
+          {!success ? (
             <Typography variant="body2" align="center" gutterBottom>
               <b>Mohon tunggu sebentar</b>
             </Typography>
-          :
-          !redirectLink ?
+          ) : !redirectLink ? (
             <Button
               variant="contained"
               className={classes.uploadFinishButton}
               onClick={handleCloseUploadDialog}
-              >
+            >
               Selesai
             </Button>
-            :
+          ) : (
             <Link to={redirectLink}>
               <Button
                 variant="contained"
@@ -67,11 +89,11 @@ function UploadDialog(props) {
                 Selesai
               </Button>
             </Link>
-          }
+          )}
         </Grid>
       </Grid>
     </Dialog>
-  )
+  );
 }
 
 export default UploadDialog;

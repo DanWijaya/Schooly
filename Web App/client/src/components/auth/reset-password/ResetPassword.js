@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
@@ -55,40 +55,41 @@ class ResetPassword extends Component {
     this.state = {
       errors: {},
       password: "",
-      password2: ""
+      password2: "",
     };
   }
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value})
+    this.setState({ [e.target.id]: e.target.value });
+  };
+
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-  }
-
-//Dispatch is used as a callback which gets invoked once some async action is complete.
-//In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
+  //Dispatch is used as a callback which gets invoked once some async action is complete.
+  //In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
 
   render() {
     const { password, password2 } = this.state;
     const { errors } = this.props;
-    const { classes, savePassword} = this.props;
+    const { classes, savePassword } = this.props;
     const { hash } = this.props.match.params;
 
     const onSubmit = (e) => {
       e.preventDefault();
-      console.log("Submitted")
+      console.log("Submitted");
 
       let passwordReset = {
-          password : password,
-          password2: password2,
-          hash: hash
-      }
-      savePassword(passwordReset)
-    }
+        password: password,
+        password2: password2,
+        hash: hash,
+      };
+      savePassword(passwordReset);
+    };
 
-    document.title = "Schooly | Lupa Akun"
-    document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
+    document.title = "Schooly | Lupa Akun";
+    document.body.style =
+      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return (
       <div className={classes.root}>
@@ -124,7 +125,7 @@ class ResetPassword extends Component {
                       type="password"
                       helperText={errors.password_entry}
                       classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
+                        invalid: errors.email || errors.emailnotfound,
                       })}
                     />
                   </Grid>
@@ -140,7 +141,7 @@ class ResetPassword extends Component {
                       type="password"
                       helperText={errors.password_match}
                       classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
+                        invalid: errors.email || errors.emailnotfound,
                       })}
                     />
                   </Grid>
@@ -159,7 +160,7 @@ class ResetPassword extends Component {
           </Grid>
         </Paper>
       </div>
-    )
+    );
   }
 }
 
@@ -167,15 +168,17 @@ ResetPassword.propTypes = {
   savePassword: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  passwordMatters: PropTypes.object.isRequired
-}
+  passwordMatters: PropTypes.object.isRequired,
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
   errors: state.errors,
-  passwordMatters: state.passwordMatters
+  passwordMatters: state.passwordMatters,
 });
 
 export default withRouter(
-  connect(mapStateToProps, { savePassword, clearErrors })
-  (withStyles(styles)(ResetPassword)));
+  connect(mapStateToProps, { savePassword, clearErrors })(
+    withStyles(styles)(ResetPassword)
+  )
+);

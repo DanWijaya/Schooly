@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   notFoundText: {
     color: "white",
-    fontFamily: "Arial"
+    fontFamily: "Arial",
   },
   buttonContainer: {
     display: "flex",
@@ -48,14 +48,14 @@ const useStyles = makeStyles((theme) => ({
 function NotFound(props) {
   const classes = useStyles();
 
-  const [isFirsttimeRendered, setFirstTime] = React.useState(false)
+  const [isFirsttimeRendered, setFirstTime] = React.useState(false);
   const { handleMarginTopValue } = props;
   if (!isFirsttimeRendered) {
     handleMarginTopValue(0);
     setFirstTime(true);
   }
 
-  document.title="Schooly | Error 404";
+  document.title = "Schooly | Error 404";
 
   return (
     <div className={classes.root}>
@@ -71,17 +71,17 @@ function NotFound(props) {
       </div>
       <div className={classes.buttonContainer}>
         <Link to="/beranda">
-        <Button
-          variant="contained"
-          size="large"
-          className={classes.backButton}
-        >
-          Kembali ke Beranda
-        </Button>
+          <Button
+            variant="contained"
+            size="large"
+            className={classes.backButton}
+          >
+            Kembali ke Beranda
+          </Button>
         </Link>
       </div>
     </div>
-  )
-};
+  );
+}
 
 export default NotFound;

@@ -12,8 +12,21 @@ import informationPrivate from "./InformationPrivate.png";
 import ProfileDataEditorDialog from "./ProfileDataEditorDialog";
 import ProfilePictureEditorDialog from "./ProfilePictureEditorDialog";
 import ProfilePasswordEditorDialog from "./ProfilePasswordEditorDialog";
-import { Avatar, Badge, Divider, Grid, Hidden, List, ListItem, ListItemAvatar, ListItemText, 
-  Paper, Snackbar, Typography, Button } from "@material-ui/core";
+import {
+  Avatar,
+  Badge,
+  Divider,
+  Grid,
+  Hidden,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Snackbar,
+  Typography,
+  Button,
+} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
@@ -30,7 +43,6 @@ import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,11 +80,11 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonRapor: {
     backgroundColor: theme.palette.warning.main,
-    color:"white", 
+    color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.warning.dark,
       color: "white",
-    }
+    },
   },
   emptyProfileData: {
     display: "flex",
@@ -112,16 +124,15 @@ function ProfileDataItem(props) {
               </Typography>
             }
             secondary={
-              !props.profile_data_info ?
+              !props.profile_data_info ? (
                 <Paper className={classes.emptyProfileData}>
-                  <Typography variant="button">
-                    Kosong
-                  </Typography>
+                  <Typography variant="button">Kosong</Typography>
                 </Paper>
-              :
+              ) : (
                 <Typography variant="body1">
                   {props.profile_data_info}
                 </Typography>
+              )
             }
           />
         </ListItem>
@@ -140,23 +151,19 @@ function ProfileDataItem(props) {
               </Typography>
             </Grid>
             <Grid item xs={7}>
-              {!props.profile_data_info ?
+              {!props.profile_data_info ? (
                 <Paper className={classes.emptyProfileData}>
-                  <Typography variant="button">
-                    Kosong
-                  </Typography>
+                  <Typography variant="button">Kosong</Typography>
                 </Paper>
-                :
-                <Typography>
-                  {props.profile_data_info}
-                </Typography>
-              }
+              ) : (
+                <Typography>{props.profile_data_info}</Typography>
+              )}
             </Grid>
           </Grid>
         </ListItem>
       </Hidden>
     </div>
-  )
+  );
 }
 
 function Profile(props) {
@@ -168,47 +175,48 @@ function Profile(props) {
   const [openAlert, setOpenAlert] = React.useState(false);
   const handleOpenAlert = () => {
     setOpenAlert(true);
-  }
+  };
   const handleCloseAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setOpenAlert(false);
-  }
+  };
 
   // Alert control for ProfileDataEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
     setOpenDataEditorAlert(true);
-  }
+  };
   const handleCloseDataEditorAlert = (e, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setOpenDataEditorAlert(false);
-  }
+  };
 
   // Alert control for ProfilePasswordEditorDialog
-  const [openPasswordEditorAlert, setOpenPasswordEditorAlert] = React.useState(false);
+  const [openPasswordEditorAlert, setOpenPasswordEditorAlert] = React.useState(
+    false
+  );
   const handleOpenPasswordEditorAlert = () => {
     setOpenPasswordEditorAlert(true);
-
-  }
+  };
   const handleClosePasswordEditorAlert = (e, reason) => {
     if (reason === "clickaway") {
-      window.location.reload()
+      window.location.reload();
       return;
     }
     setOpenPasswordEditorAlert(false);
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   // Initially classesCollection.kelas.name === undefined
   if (user.role === "Student" && !classesCollection.kelas.name) {
-    setCurrentClass(user.kelas)
+    setCurrentClass(user.kelas);
   }
 
-  document.title = "Schooly | Profil Saya"
+  document.title = "Schooly | Profil Saya";
 
   return (
     <div className={classes.root}>
@@ -217,9 +225,14 @@ function Profile(props) {
         open={openAlert}
         autoHideDuration={4000}
         onClose={handleCloseAlert}
-        anchorOrigin={{vertical : "center", horizontal: "center"}}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <MuiAlert elevation={6} variant="filled" onClose={handleCloseAlert} severity="success" >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseAlert}
+          severity="success"
+        >
           Foto profil berhasil diganti!
         </MuiAlert>
       </Snackbar>
@@ -228,9 +241,14 @@ function Profile(props) {
         open={openDataEditorAlert}
         autoHideDuration={4000}
         onClose={handleCloseDataEditorAlert}
-        anchorOrigin={{vertical : "center", horizontal: "center"}}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <MuiAlert elevation={6} variant="filled" onClose={handleCloseDataEditorAlert} severity="success" >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseDataEditorAlert}
+          severity="success"
+        >
           Data profil berhasil diganti!
         </MuiAlert>
       </Snackbar>
@@ -239,58 +257,63 @@ function Profile(props) {
         open={openPasswordEditorAlert}
         autoHideDuration={4000}
         onClose={handleClosePasswordEditorAlert}
-        anchorOrigin={{vertical : "center", horizontal: "center"}}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
-        <MuiAlert elevation={6} variant="filled" onClose={handleClosePasswordEditorAlert} severity="success" >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleClosePasswordEditorAlert}
+          severity="success"
+        >
           Kata sandi berhasil diganti!
         </MuiAlert>
       </Snackbar>
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
-          {user.avatar ?
-          <StyledBadge
-            badgeContent={
-              <ProfilePictureEditorDialog
-                user={user}
-                updateAvatar={updateAvatar}
-                handleOpenAlert={handleOpenAlert}
+          {user.avatar ? (
+            <StyledBadge
+              badgeContent={
+                <ProfilePictureEditorDialog
+                  user={user}
+                  updateAvatar={updateAvatar}
+                  handleOpenAlert={handleOpenAlert}
+                />
+              }
+            >
+              <Avatar
+                src={`/api/upload/avatar/${user.avatar}`}
+                className={classes.avatar}
               />
-            }
-          >
-            <Avatar
-              src={`/api/upload/avatar/${user.avatar}`}
-              className={classes.avatar}
-            />
-          </StyledBadge>
-        :
-          <StyledBadge
-            badgeContent={
-              <ProfilePictureEditorDialog
-                user={user}
-                updateAvatar={updateAvatar}
-                handleOpenAlert={handleOpenAlert}
-              />
-            }
-          >
-            <Avatar className={classes.avatar} />
-          </StyledBadge>
-        }
+            </StyledBadge>
+          ) : (
+            <StyledBadge
+              badgeContent={
+                <ProfilePictureEditorDialog
+                  user={user}
+                  updateAvatar={updateAvatar}
+                  handleOpenAlert={handleOpenAlert}
+                />
+              }
+            >
+              <Avatar className={classes.avatar} />
+            </StyledBadge>
+          )}
         </Grid>
         <Grid item>
           <Typography variant="h4" align="center">
             {user.name}
           </Typography>
           <Typography variant="h6" align="center">
-            {user.role === "Student" ?
-              "Murid"
-            : user.role === "Teacher" ?
-              "Guru"
-            :
-              "Pengelola"
-            }
+            {user.role === "Student"
+              ? "Murid"
+              : user.role === "Teacher"
+              ? "Guru"
+              : "Pengelola"}
           </Typography>
           <Typography variant="body1" align="center" color="textSecondary">
-            {!classesCollection.kelas.name ? null : `Kelas ${classesCollection.kelas.name}`}
+            {!classesCollection.kelas.name
+              ? null
+              : `Kelas ${classesCollection.kelas.name}`}
           </Typography>
         </Grid>
       </Grid>
@@ -300,69 +323,82 @@ function Profile(props) {
           <Hidden smUp>
             {/* Mobile = Backdrop Drawer */}
             <Grid item>
-              {
-                (user.role==="Student") ? (
-                  <div style={{display:"flex", justifyContent:"flex-end"}}>
-                    <Link to={{
-                      pathname:"/lihat-rapor",
+              {user.role === "Student" ? (
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Link
+                    to={{
+                      pathname: "/lihat-rapor",
                       state: {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user.id
-                      }
-                    }}>
-                      <LightTooltip title="Klik Untuk Melihat Rapor">
-                        <Button variant="contained" className={classes.buttonRapor}>
-                          <AssessmentOutlinedIcon />
-                        </Button>
-                      </LightTooltip>
-                    </Link>
-                  </div>
-                ) : (
-                  null
-                )
-              }
+                        id: user.id,
+                      },
+                    }}
+                  >
+                    <LightTooltip title="Klik Untuk Melihat Rapor">
+                      <Button
+                        variant="contained"
+                        className={classes.buttonRapor}
+                      >
+                        <AssessmentOutlinedIcon />
+                      </Button>
+                    </LightTooltip>
+                  </Link>
+                </div>
+              ) : null}
             </Grid>
             <Grid item>
-              <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
+              <ProfileDataEditorDialog
+                handleOpenAlert={handleOpenDataEditorAlert}
+                userData={user}
+              />
             </Grid>
             <Grid item>
-              <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
+              <ProfilePasswordEditorDialog
+                handleOpenAlert={handleOpenPasswordEditorAlert}
+              />
             </Grid>
           </Hidden>
           <Hidden xsDown>
             {/* Desktop = Mini Variant Drawer */}
             <Grid item>
-              {
-                (user.role==="Student") ? (
-                  <div style={{display:"flex", justifyContent:"flex-end"}}>
-                    <Link to={{
-                      pathname:"/lihat-rapor",
+              {user.role === "Student" ? (
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Link
+                    to={{
+                      pathname: "/lihat-rapor",
                       state: {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user.id
-                      }
-                    }}>
-                      <LightTooltip title="Klik Untuk Melihat Rapor">
-                        <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon />}>
-                          Lihat Rapor
-                        </Button>
-                      </LightTooltip>
-                    </Link>
-                  </div>
-                ) : (
-                  null
-                )
-              }
+                        id: user.id,
+                      },
+                    }}
+                  >
+                    <LightTooltip title="Klik Untuk Melihat Rapor">
+                      <Button
+                        variant="contained"
+                        className={classes.buttonRapor}
+                        startIcon={<AssessmentOutlinedIcon />}
+                      >
+                        Lihat Rapor
+                      </Button>
+                    </LightTooltip>
+                  </Link>
+                </div>
+              ) : null}
             </Grid>
             <Grid item>
-              <ProfileDataEditorDialog handleOpenAlert={handleOpenDataEditorAlert} userData={user}/>
+              <ProfileDataEditorDialog
+                handleOpenAlert={handleOpenDataEditorAlert}
+                userData={user}
+              />
             </Grid>
             <Grid item>
-              <ProfilePasswordEditorDialog handleOpenAlert={handleOpenPasswordEditorAlert}/>
+              <ProfilePasswordEditorDialog
+                handleOpenAlert={handleOpenPasswordEditorAlert}
+              />
             </Grid>
           </Hidden>
         </Grid>
@@ -375,13 +411,17 @@ function Profile(props) {
                     Informasi Pribadi
                   </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
-                    Jangan lupa untuk mengisi semua informasi profil Anda untuk melengkapi
-                    database sekolah Anda.
+                    Jangan lupa untuk mengisi semua informasi profil Anda untuk
+                    melengkapi database sekolah Anda.
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <div className={classes.informationPictureContainer}>
-                    <img alt="Private Information" src={informationPrivate} className={classes.informationPicture} />
+                    <img
+                      alt="Private Information"
+                      src={informationPrivate}
+                      className={classes.informationPicture}
+                    />
                   </div>
                 </Grid>
               </Grid>
@@ -395,7 +435,9 @@ function Profile(props) {
                 <ProfileDataItem
                   profile_data_icon={<CakeIcon />}
                   profile_data_category="Tanggal Lahir"
-                  profile_data_info={moment(user.tanggal_lahir).locale("id").format("DD-MM-YYYY")}
+                  profile_data_info={moment(user.tanggal_lahir)
+                    .locale("id")
+                    .format("DD-MM-YYYY")}
                 />
                 <Divider variant="inset" />
                 <ProfileDataItem
@@ -420,12 +462,17 @@ function Profile(props) {
                     Kontak
                   </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
-                    Pastikan Anda mengecek kembali kontak-kontak yang Anda masukkan.
+                    Pastikan Anda mengecek kembali kontak-kontak yang Anda
+                    masukkan.
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <div className={classes.informationPictureContainer}>
-                    <img alt="Contacts" src={informationContacts} className={classes.informationPicture} />
+                    <img
+                      alt="Contacts"
+                      src={informationContacts}
+                      className={classes.informationPicture}
+                    />
                   </div>
                 </Grid>
               </Grid>
@@ -456,58 +503,61 @@ function Profile(props) {
               </List>
             </Paper>
           </Grid>
-          {
-            (user.role==="Student") ? ( 
-              <Grid item>
-                <Paper className={classes.informationPaper}>
-                  <Grid container justify="space-between">
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="h4" gutterBottom>
-                        Karir
-                      </Typography>
-                      <Typography variant="subtitle1" color="textSecondary">
-                        Kami ke depannya juga berencana untuk membantu Anda menemukan
-                        jalur karir terbaik untuk Anda.
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <div className={classes.informationPictureContainer}>
-                        <img alt="Career" src={informationJob} className={classes.informationPicture} />
-                      </div>
-                    </Grid>
+          {user.role === "Student" ? (
+            <Grid item>
+              <Paper className={classes.informationPaper}>
+                <Grid container justify="space-between">
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="h4" gutterBottom>
+                      Karir
+                    </Typography>
+                    <Typography variant="subtitle1" color="textSecondary">
+                      Kami ke depannya juga berencana untuk membantu Anda
+                      menemukan jalur karir terbaik untuk Anda.
+                    </Typography>
                   </Grid>
-                  <List>
-                    <ProfileDataItem
-                      profile_data_icon={<SportsEsportsIcon />}
-                      profile_data_category="Hobi dan Minat"
-                      profile_data_info={user.hobi_minat}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<ColorLensIcon />}
-                      profile_data_category="Keterampilan Non-Akademik"
-                      profile_data_info={user.ket_non_teknis}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<WorkIcon />}
-                      profile_data_category="Cita-Cita"
-                      profile_data_info={user.cita_cita}
-                    />
-                    <Divider variant="inset" />
-                    <ProfileDataItem
-                      profile_data_icon={<AccountBalanceIcon />}
-                      profile_data_category="Perguruan Tinggi Impian"
-                      profile_data_info={user.uni_impian}
-                    />
-                  </List>
-                </Paper>
-              </Grid>
-          ) : null }
+                  <Grid item xs={12} md={6}>
+                    <div className={classes.informationPictureContainer}>
+                      <img
+                        alt="Career"
+                        src={informationJob}
+                        className={classes.informationPicture}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+                <List>
+                  <ProfileDataItem
+                    profile_data_icon={<SportsEsportsIcon />}
+                    profile_data_category="Hobi dan Minat"
+                    profile_data_info={user.hobi_minat}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<ColorLensIcon />}
+                    profile_data_category="Keterampilan Non-Akademik"
+                    profile_data_info={user.ket_non_teknis}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<WorkIcon />}
+                    profile_data_category="Cita-Cita"
+                    profile_data_info={user.cita_cita}
+                  />
+                  <Divider variant="inset" />
+                  <ProfileDataItem
+                    profile_data_icon={<AccountBalanceIcon />}
+                    profile_data_category="Perguruan Tinggi Impian"
+                    profile_data_info={user.uni_impian}
+                  />
+                </List>
+              </Paper>
+            </Grid>
+          ) : null}
         </Grid>
       </Grid>
     </div>
-  )
+  );
 }
 
 Profile.propTypes = {
@@ -515,13 +565,13 @@ Profile.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   updateAvatar: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { updateAvatar, setCurrentClass }
-) (Profile);
+export default connect(mapStateToProps, { updateAvatar, setCurrentClass })(
+  Profile
+);

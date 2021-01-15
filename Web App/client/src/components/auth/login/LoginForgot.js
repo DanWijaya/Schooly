@@ -7,7 +7,14 @@ import { createHash } from "../../../actions/AuthActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
 import schoolyLogo from "../../../images/SchoolyLogo.png";
-import { Button, Divider, Grid, Paper, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  Divider,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -70,23 +77,23 @@ class LoginForgot extends Component {
   }
 
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value})
-  }
+    this.setState({ [e.target.id]: e.target.value });
+  };
 
-// Dispatch is used as a callback which gets invoked once some async action is complete.
-// In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
+  // Dispatch is used as a callback which gets invoked once some async action is complete.
+  // In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
   onSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted")
-    this.props.createHash(this.state.email)
-  }
+    console.log("Submitted");
+    this.props.createHash(this.state.email);
+  };
 
-  componentDidMount(){
-    this.props.handleNavbar(false)
+  componentDidMount() {
+    this.props.handleNavbar(false);
   }
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.handleNavbar(true)
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.handleNavbar(true);
   }
 
   render() {
@@ -96,7 +103,8 @@ class LoginForgot extends Component {
     const { isPasswordReset } = this.props.passwordMatters;
 
     document.title = "Schooly | Lupa Akun";
-    document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
+    document.body.style =
+      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return (
       <div className={classes.root}>
@@ -109,27 +117,35 @@ class LoginForgot extends Component {
         </Link>
         <Paper elevation={11} className={classes.loginForgotPaper}>
           <Grid container direction="column" spacing={5}>
-            {!isPasswordReset ?
+            {!isPasswordReset ? (
               <Grid item>
                 <Typography variant="h6" align="center" gutterBottom>
                   <b>Lupa Kata Sandi?</b>
                 </Typography>
-                <Typography variant="body1" align="center" color="textSecondary">
+                <Typography
+                  variant="body1"
+                  align="center"
+                  color="textSecondary"
+                >
                   Masukkan email Anda untuk melanjutkan.
                 </Typography>
               </Grid>
-              :
+            ) : (
               <Grid item>
                 <Typography variant="h6" align="center" gutterBottom>
                   <b>Email telah dikirim</b>
                 </Typography>
-                <Typography variant="body1" align="center" color="textSecondary">
+                <Typography
+                  variant="body1"
+                  align="center"
+                  color="textSecondary"
+                >
                   Silahkan buka email tersebut untuk melanjutkan.
                 </Typography>
               </Grid>
-            }
+            )}
             <Grid item>
-              {!isPasswordReset ?
+              {!isPasswordReset ? (
                 <form noValidate onSubmit={this.onSubmit}>
                   <TextField
                     fullWidth
@@ -142,7 +158,7 @@ class LoginForgot extends Component {
                     type="email"
                     helperText={errors.problem}
                     className={classnames("", {
-                      invalid: errors.email || errors.emailnotfound
+                      invalid: errors.email || errors.emailnotfound,
                     })}
                   />
                   <Button
@@ -153,46 +169,42 @@ class LoginForgot extends Component {
                     Ubah Kata Sandi
                   </Button>
                 </form>
-                :
+              ) : (
                 <Button
                   onClick={() => window.location.reload()}
                   className={classes.resendEmailButton}
                 >
                   Kirim Ulang Email
                 </Button>
-              }
+              )}
             </Grid>
             <Divider />
             <Grid item container justify="space-around">
-              <Link to="/masuk">
-                Sudah ada Akun?
-              </Link>
-              |
-              <Link to="/daftar">
-                Belum ada Akun?
-              </Link>
+              <Link to="/masuk">Sudah ada Akun?</Link>|
+              <Link to="/daftar">Belum ada Akun?</Link>
             </Grid>
           </Grid>
         </Paper>
       </div>
     );
-  };
-};
+  }
+}
 
 LoginForgot.propTypes = {
   createHash: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   passwordMatters: PropTypes.object.isRequired,
-}
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
   errors: state.errors,
   passwordMatters: state.passwordMatters,
 });
 
 export default withRouter(
-  connect(mapStateToProps, { createHash, clearErrors })
-  (withStyles(styles)(LoginForgot))
+  connect(mapStateToProps, { createHash, clearErrors })(
+    withStyles(styles)(LoginForgot)
+  )
 );

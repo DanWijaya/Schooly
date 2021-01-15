@@ -9,28 +9,24 @@ const styles = (theme) => ({
     maxWidth: "1000px",
     display: "flex",
     justifyContent: "center",
-  }
+  },
 });
-
 
 class ScheduleCalendar extends Component {
   state = {
     date: new Date(),
-  }
+  };
 
-  onChange = date => this.setState({ date })
+  onChange = (date) => this.setState({ date });
 
   render() {
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-        <Calendar
-          onChange={this.onChange}
-          value={this.state.date}
-        />
+        <Calendar onChange={this.onChange} value={this.state.date} />
       </div>
     );
   }
 }
-export default (withStyles(styles)(ScheduleCalendar));
+export default withStyles(styles)(ScheduleCalendar);

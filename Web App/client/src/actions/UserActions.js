@@ -2,97 +2,103 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING,
-   GET_USERS, GET_ALL_STUDENTS, GET_ALL_TEACHERS, 
-   GET_ONE_USER, GET_STUDENTS_BY_CLASS,
-   GET_PENDING_STUDENTS, GET_PENDING_TEACHERS,SET_DROPBOX_TOKEN} from "./Types";
+import {
+  GET_ERRORS,
+  SET_CURRENT_USER,
+  USER_LOADING,
+  GET_USERS,
+  GET_ALL_STUDENTS,
+  GET_ALL_TEACHERS,
+  GET_ONE_USER,
+  GET_STUDENTS_BY_CLASS,
+  GET_PENDING_STUDENTS,
+  GET_PENDING_TEACHERS,
+  SET_DROPBOX_TOKEN,
+} from "./Types";
 
 // Register User
-export const registerUser = (userData, history) => dispatch => {
+export const registerUser = (userData, history) => (dispatch) => {
   axios
     .post("/api/users/register", userData)
-    .then(res => {
-      alert("Akun baru telah terdaftar")
-      history.push("/masuk")
+    .then((res) => {
+      alert("Akun baru telah terdaftar");
+      history.push("/masuk");
     })
-    .catch(err => {
+    .catch((err) => {
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
-      })
-    }
-  );
+        payload: err.response.data,
+      });
+    });
 };
 
-export const updateUserData = (userData, userId, history) => dispatch => {
-  console.log("update user data is runned")
+export const updateUserData = (userData, userId, history) => (dispatch) => {
+  console.log("update user data is runned");
   axios
     .post("/api/users/update/data/" + userId, userData)
-    .then(res => {
-
+    .then((res) => {
       const { token } = res.data;
       console.log("Updating User Data");
 
       localStorage.setItem("jwtToken", token);
-      console.log("Foto udah diganti")
+      console.log("Foto udah diganti");
       // Set token to Auth header
       setAuthToken(token);
       // Decode token to get user data
       const decoded = jwt_decode(token);
       // Set current user
       dispatch(setCurrentUser(decoded));
-      }
-    )
-    .catch(err => {
-      console.log("jancuk la")
+    })
+    .catch((err) => {
+      console.log("jancuk la");
       console.log(err);
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
-      })
-    })
-}
+        payload: err.response.data,
+      });
+    });
+};
 
-export const updateAvatar = (userData, userId, formData) => dispatch => {
-  axios.post("/api/users/update/avatar/" + userId, formData)
-    
-      .then(res => {
-        // Set token to localStorage
-        const { token } = res.data;
-        localStorage.setItem("jwtToken", token);
-        console.log("Foto udah diganti")
-        // Set token to Auth header
-        setAuthToken(token);
-        // Decode token to get user data
-        const decoded = jwt_decode(token);
-        // Set current user
-        dispatch(setCurrentUser(decoded));
-        if(Boolean(userData.avatar))
-          return axios.delete(`/api/upload/avatar/${userData.avatar}`)
-        else
-          return "Old avatar does not exist"
-      })
-      .catch(err => {
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      })
-  }
+export const updateAvatar = (userData, userId, formData) => (dispatch) => {
+  axios
+    .post("/api/users/update/avatar/" + userId, formData)
+
+    .then((res) => {
+      // Set token to localStorage
+      const { token } = res.data;
+      localStorage.setItem("jwtToken", token);
+      console.log("Foto udah diganti");
+      // Set token to Auth header
+      setAuthToken(token);
+      // Decode token to get user data
+      const decoded = jwt_decode(token);
+      // Set current user
+      dispatch(setCurrentUser(decoded));
+      if (Boolean(userData.avatar))
+        return axios.delete(`/api/upload/avatar/${userData.avatar}`);
+      else return "Old avatar does not exist";
+    })
+    .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 
 // to initiate a dispatch, pass the result to the dispatch() function.
 // Login - get user token
-export const loginUser = (userData) => dispatch => {
+export const loginUser = (userData) => (dispatch) => {
   axios
     .post("/api/users/login", userData)
-    .then(res => {
-      console.log("Berhasil login")
+    .then((res) => {
+      console.log("Berhasil login");
       // Save to localStorage
 
       // Set token to localStorage
       const { token } = res.data;
       localStorage.setItem("jwtToken", token);
-      
+
       // Set token to Auth header
       setAuthToken(token);
 
@@ -101,36 +107,35 @@ export const loginUser = (userData) => dispatch => {
 
       // Set current user
       dispatch(setCurrentUser(decoded));
-
     })
-    .catch(err => {
-      console.log("error")
+    .catch((err) => {
+      console.log("error");
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
-      })
-    })
+      });
+    });
 };
 
 // Log user out
-export const logoutUser = () => dispatch => {
+export const logoutUser = () => (dispatch) => {
   // Remove token from local storage
   localStorage.removeItem("jwtToken");
-  localStorage.removeItem("dropbox_token")
+  localStorage.removeItem("dropbox_token");
   // Remove auth header for future requests
   setAuthToken(false);
-  console.log("test")
+  console.log("test");
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
-  setDropboxToken(false)
+  setDropboxToken(false);
   // if (history !== undefined)
   //   history.push("/masuk")
-  window.location.href ="/masuk"
+  window.location.href = "/masuk";
 };
 
 // Set logged in user
-export const setCurrentUser = decoded => {
-  console.log("The role is: ", decoded.role)
+export const setCurrentUser = (decoded) => {
+  console.log("The role is: ", decoded.role);
 
   return {
     type: SET_CURRENT_USER,
@@ -145,182 +150,183 @@ export const setUserLoading = () => {
   };
 };
 
-export const getStudents = () => dispatch => {
+export const getStudents = () => (dispatch) => {
   axios
     .get("/api/users/getstudents")
-    .then(res => {
-      console.log(res.data)
+    .then((res) => {
+      console.log(res.data);
       dispatch({
         type: GET_ALL_STUDENTS,
-        payload: res.data
-      })
-      console.log('getStudents completed');
+        payload: res.data,
+      });
+      console.log("getStudents completed");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log("Error in getting all Students");
-    })
-}
+    });
+};
 
-export const getTeachers = (data="array") => dispatch => {
+export const getTeachers = (data = "array") => (dispatch) => {
   // console.log('getTeacher start')
   axios
     .get("/api/users/getteachers")
-    .then(res => {
+    .then((res) => {
       // console.log(res.data)
-      if(data === "map"){
-        let temp = new Map()
-        res.data.map((teacher) => temp.set(teacher._id, teacher))
+      if (data === "map") {
+        let temp = new Map();
+        res.data.map((teacher) => temp.set(teacher._id, teacher));
         dispatch({
           type: GET_ALL_TEACHERS,
-          payload: temp
-        })
+          payload: temp,
+        });
       } else {
         dispatch({
           type: GET_ALL_TEACHERS,
-          payload: res.data
-        })
+          payload: res.data,
+        });
       }
-      console.log('getTeacher completed')
+      console.log("getTeacher completed");
     })
-    .catch(err => { console.log("Error in getting all Teachers");})
-}
+    .catch((err) => {
+      console.log("Error in getting all Teachers");
+    });
+};
 
-export const getOneUser = (userId) => dispatch => {
+export const getOneUser = (userId) => (dispatch) => {
   axios
-      .get("/api/users/getOneUser/" + userId)
-      .then(res => {
-        console.log(res.data)
-        dispatch({
-          type: GET_ONE_USER,
-          payload: res.data
-        })
-      })
-      .catch(err => {
-        console.log("Error in getting one user")
-      })
-}
+    .get("/api/users/getOneUser/" + userId)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: GET_ONE_USER,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log("Error in getting one user");
+    });
+};
 
-export const getUsers = (userIds) => dispatch => {
+export const getUsers = (userIds) => (dispatch) => {
   axios
-    .get("/api/users/getUsers", {params: {userIds: userIds}})
-    .then(res => {
-      console.log("These are the users: ", res.data)
+    .get("/api/users/getUsers", { params: { userIds: userIds } })
+    .then((res) => {
+      console.log("These are the users: ", res.data);
       dispatch({
         type: GET_USERS,
-        payload: res.data
-      })
+        payload: res.data,
+      });
     })
-    .catch(err => console.log("Error in getting users"))
-}
+    .catch((err) => console.log("Error in getting users"));
+};
 
-export const getStudentsByClass = (classId) => dispatch => {
+export const getStudentsByClass = (classId) => (dispatch) => {
   axios
-      .get("/api/users/getstudentsbyclass/" + classId)
-      .then(res => {
-        // console.log(res.data)
-        dispatch({
-          type: GET_STUDENTS_BY_CLASS,
-          payload: res.data
-        })
-        console.log('getStudentsByClass completed')
-      })
-      .catch(err => {
-        console.log("Error in getting Students by class");
-      })
-}
+    .get("/api/users/getstudentsbyclass/" + classId)
+    .then((res) => {
+      // console.log(res.data)
+      dispatch({
+        type: GET_STUDENTS_BY_CLASS,
+        payload: res.data,
+      });
+      console.log("getStudentsByClass completed");
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
 
 // actions for admin only
-export const getPendingStudents = () => dispatch => {
+export const getPendingStudents = () => (dispatch) => {
   axios
-      .get("/api/users/getpendingstudents/")
-      .then(res => {
-        console.log(res.data)
-        dispatch({
-          type: GET_PENDING_STUDENTS,
-          payload: res.data
-        })
-      })
-      .catch(err => {
-        console.log("Error in getting Students by class");
-      })
-}
+    .get("/api/users/getpendingstudents/")
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: GET_PENDING_STUDENTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
 
-export const getPendingTeachers = () => dispatch => {
+export const getPendingTeachers = () => (dispatch) => {
   axios
-      .get("/api/users/getpendingteachers/")
-      .then(res => {
-        console.log(res.data)
-        dispatch({
-          type: GET_PENDING_TEACHERS,
-          payload: res.data
-        })
-      })
-      .catch(err => {
-        console.log("Error in getting Students by class");
-      })
-}
+    .get("/api/users/getpendingteachers/")
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: GET_PENDING_TEACHERS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log("Error in getting Students by class");
+    });
+};
 
-export const setUserActive = (userId) => dispatch => {
+export const setUserActive = (userId) => (dispatch) => {
   axios
-      .post(`/api/users/setuseractive/${userId}`)
-      .then(res => {
-        console.log(res.data)
-        window.location.reload()
-      })
-      .catch(err => {
-        console.log(err)
-      })
-}
+    .post(`/api/users/setuseractive/${userId}`)
+    .then((res) => {
+      console.log(res.data);
+      window.location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-export const setUserDisabled = (userId) => dispatch => {
+export const setUserDisabled = (userId) => (dispatch) => {
   axios
-      .post(`/api/users/setuserdisabled/${userId}`)
-      .then(res => {
-        console.log(res.data)
-        window.location.reload()
-      })
-      .catch(err => {
-        console.log(err)
-      })
-}
+    .post(`/api/users/setuserdisabled/${userId}`)
+    .then((res) => {
+      console.log(res.data);
+      window.location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-export const deleteUser = (userId) => dispatch => {
+export const deleteUser = (userId) => (dispatch) => {
   axios
-      .delete(`/api/users/delete/${userId}`)
-      .then(res => {
-        console.log(res.data)
-        window.location.reload()
-      })
-      .catch(err => {
-        console.log("Error in deleting students")
-      })
-}
+    .delete(`/api/users/delete/${userId}`)
+    .then((res) => {
+      console.log(res.data);
+      window.location.reload();
+    })
+    .catch((err) => {
+      console.log("Error in deleting students");
+    });
+};
 
-export const setDropboxToken = (token) => dispatch => {
-  console.log("SET Drop box lah")
-  if(token) {
-    localStorage.setItem('dropbox_token', token);
+export const setDropboxToken = (token) => (dispatch) => {
+  console.log("SET Drop box lah");
+  if (token) {
+    localStorage.setItem("dropbox_token", token);
     dispatch({
       type: SET_DROPBOX_TOKEN,
       payload: token,
     });
   } else {
-    localStorage.removeItem('dropbox_token')
+    localStorage.removeItem("dropbox_token");
     dispatch({
       type: SET_DROPBOX_TOKEN,
       payload: null,
     });
   }
-  
-}
+};
 
 export const updateStudentsClass = (data) => {
   return axios
     .post("/api/users/bulkupdateclass", data)
     .then(() => {
-      console.log('updateStudentsClass completed');
+      console.log("updateStudentsClass completed");
     })
     .catch((err) => {
       throw new Error(err.response.data);
-    })
-}
+    });
+};

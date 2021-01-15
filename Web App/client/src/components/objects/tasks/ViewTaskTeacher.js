@@ -1,24 +1,47 @@
 import React from "react";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { getOneTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { uploadTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
+import {
+  uploadTugas,
+  downloadLampiran,
+  previewLampiran,
+} from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography, Divider } from "@material-ui/core";
+import {
+  Avatar,
+  Fab,
+  Grid,
+  Hidden,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Typography,
+  Divider,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
-
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -97,8 +120,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
   dividerColor: {
-    backgroundColor: theme.palette.primary.main
-  }
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 function LampiranFile(props) {
@@ -106,11 +129,10 @@ function LampiranFile(props) {
 
   const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
 
-  let displayedName = ""
-  filename.length >= 31 ?
-    displayedName = `${filename.slice(0,30)}..${path.extname(filename)}`
-  :
-    displayedName = filename
+  let displayedName = "";
+  filename.length >= 31
+    ? (displayedName = `${filename.slice(0, 30)}..${path.extname(filename)}`)
+    : (displayedName = filename);
 
   return (
     <Grid item xs={12} md={6}>
@@ -119,52 +141,45 @@ function LampiranFile(props) {
           button
           disableRipple
           className={classes.listItem}
-          onClick={() => {onPreviewFile(file_id, "lampiran")}}
+          onClick={() => {
+            onPreviewFile(file_id, "lampiran");
+          }}
         >
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={filename} placement="top">
-                <Typography>
-                  {displayedName}
-                </Typography>
+                <Typography>{displayedName}</Typography>
               </LightTooltip>
             }
             secondary={filetype}
@@ -172,14 +187,17 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.downloadIconButton}
-            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "lampiran") }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDownloadFile(file_id, "lampiran");
+            }}
           >
             <CloudDownloadIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 // component ini akan view task yang teacher dia sendiri buat.
@@ -187,62 +205,73 @@ function ViewTaskTeacher(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, getOneTask, getAllClass, getAllSubjects } = props;
+  const {
+    deleteTask,
+    tasksCollection,
+    downloadLampiran,
+    previewLampiran,
+    getOneTask,
+    getAllClass,
+    getAllSubjects,
+  } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
-  const { all_subjects_map} = props.subjectsCollection;
+  const { all_subjects_map } = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
   React.useEffect(() => {
-    getOneTask(task_id)
-    getAllClass("map")
-    getAllSubjects("map")
+    getOneTask(task_id);
+    getAllClass("map");
+    getAllSubjects("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
 
   const fileType = (filename) => {
-    let ext_file = path.extname(filename)
-    switch(ext_file) {
-      case ".docx" : return "Word"
-      case ".xlsx" :
-      case ".csv"  : return "Excel"
+    let ext_file = path.extname(filename);
+    switch (ext_file) {
+      case ".docx":
+        return "Word";
+      case ".xlsx":
+      case ".csv":
+        return "Excel";
 
-      case ".png" :
-      case ".jpg" :
-      case ".jpeg" : return "Gambar"
+      case ".png":
+      case ".jpg":
+      case ".jpeg":
+        return "Gambar";
 
-      case ".pdf" : return "PDF"
+      case ".pdf":
+        return "PDF";
 
-      case ".txt" :
-      case ".rtf" : return "Teks"
+      case ".txt":
+      case ".rtf":
+        return "Teks";
 
-      case ".ppt" :
-      case ".pptx" : return "Presentasi"
+      case ".ppt":
+      case ".pptx":
+        return "Presentasi";
 
-      default: return "File Lainnya"
+      default:
+        return "File Lainnya";
     }
-  }
+  };
 
-console.log(all_classes_map)
-  const onDownloadFile = (id, fileCategory="none") => {
-    if (fileCategory === "lampiran")
-      downloadLampiran(id)
-    else
-      console.log("File Category is not specified")
-  }
+  console.log(all_classes_map);
+  const onDownloadFile = (id, fileCategory = "none") => {
+    if (fileCategory === "lampiran") downloadLampiran(id);
+    else console.log("File Category is not specified");
+  };
 
-  const onPreviewFile = (id, fileCategory="none") => {
-   if (fileCategory === "lampiran")
-      previewLampiran(id)
-    else
-      console.log("File Category is not specified")
-  }
+  const onPreviewFile = (id, fileCategory = "none") => {
+    if (fileCategory === "lampiran") previewLampiran(id);
+    else console.log("File Category is not specified");
+  };
 
   const onDeleteTask = (id) => {
-    deleteTask(id)
+    deleteTask(id);
     // setFileTugas(null)
-  }
+  };
 
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
@@ -253,7 +282,9 @@ console.log(all_classes_map)
     setOpenDeleteDialog(false);
   };
 
-  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`
+  document.title = !tasksCollection.name
+    ? "Schooly | Lihat Tugas"
+    : `Schooly | ${tasksCollection.name}`;
 
   return (
     <div className={classes.root}>
@@ -262,14 +293,14 @@ console.log(all_classes_map)
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Tugas"
         itemName={tasksCollection.name}
-        deleteItem={() => { onDeleteTask(task_id)}}
+        deleteItem={() => {
+          onDeleteTask(task_id);
+        }}
       />
       <Paper className={classes.paperBox}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4">
-              {tasksCollection.name}
-            </Typography>
+            <Typography variant="h4">{tasksCollection.name}</Typography>
             <Typography variant="caption" color="textSecondary" gutterBottom>
               <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
             </Typography>
@@ -280,17 +311,23 @@ console.log(all_classes_map)
               Penanggung Jawab: <b>{user.name}</b>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Waktu Dibuat: {moment(tasksCollection.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
+              Waktu Dibuat:{" "}
+              {moment(tasksCollection.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
             </Typography>
             <Hidden mdUp>
               <Typography variant="body2" color="textSecondary">
-                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                Tenggat:{" "}
+                {moment(tasksCollection.deadline)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH.mm")}
               </Typography>
             </Hidden>
           </Grid>
 
           {/* <Grid item xs={12} md={5} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end"}} > */}
-            {/* <Hidden mdUp>
+          {/* <Hidden mdUp>
               <Typography variant="body2" color="textSecondary">
                 Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
               </Typography>
@@ -298,75 +335,85 @@ console.log(all_classes_map)
                 Nilai Maksimum: 100
               </Typography>
             </Hidden> */}
-            <Hidden smDown style={{display: "flex"}}>
-            <Grid item xs={12} md={5} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end" }} >
-
+          <Hidden smDown style={{ display: "flex" }}>
+            <Grid
+              item
+              xs={12}
+              md={5}
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+              }}
+            >
               <Typography variant="body2" align="right" color="textSecondary">
-                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                Tenggat:{" "}
+                {moment(tasksCollection.deadline)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH.mm")}
               </Typography>
               {/* <Typography variant="body2" align="right" color="textSecondary">
                 Nilai Maksimum: 100
               </Typography> */}
             </Grid>
-            </Hidden>
+          </Hidden>
           {/* </Grid> */}
 
           <Grid item xs={12}>
             <Divider className={classes.dividerColor} />
           </Grid>
 
-          <Grid item xs={12} style={{marginTop: "30px"}}>
+          <Grid item xs={12} style={{ marginTop: "30px" }}>
             <Typography color="primary" gutterBottom>
               Kelas yang Diberikan:
             </Typography>
             <Typography>
-              {!tasksCollection.class_assigned || !all_classes_map.size? null :
-              tasksCollection.class_assigned.map((kelas, i) => {
-                if(all_classes_map.get(kelas)){
-                  if (i === tasksCollection.class_assigned.length - 1)
-                    return `${all_classes_map.get(kelas).name}`
-                  return (`${all_classes_map.get(kelas).name}, `)
-                }
-                return null;
-              })}
+              {!tasksCollection.class_assigned || !all_classes_map.size
+                ? null
+                : tasksCollection.class_assigned.map((kelas, i) => {
+                    if (all_classes_map.get(kelas)) {
+                      if (i === tasksCollection.class_assigned.length - 1)
+                        return `${all_classes_map.get(kelas).name}`;
+                      return `${all_classes_map.get(kelas).name}, `;
+                    }
+                    return null;
+                  })}
             </Typography>
           </Grid>
-          {!tasksCollection.description ? null :
-            <Grid item xs={12} style={{marginTop: "30px"}}>
+          {!tasksCollection.description ? null : (
+            <Grid item xs={12} style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Deskripsi Tugas:
               </Typography>
-              <Typography>
-                {tasksCollection.description}
-              </Typography>
+              <Typography>{tasksCollection.description}</Typography>
             </Grid>
-          }
-          {(!tasksCollection.lampiran || tasksCollection.lampiran.length === 0) ? null :
-            <Grid item xs={12} style={{marginTop: "30px"}}>
+          )}
+          {!tasksCollection.lampiran ||
+          tasksCollection.lampiran.length === 0 ? null : (
+            <Grid item xs={12} style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Lampiran Berkas:
               </Typography>
               <Grid container spacing={1}>
-              {
-                tasksCollection.lampiran.map((lampiran) => (
+                {tasksCollection.lampiran.map((lampiran) => (
                   <LampiranFile
                     file_id={lampiran.id}
-                    onPreviewFile ={onPreviewFile}
-                    onDownloadFile ={onDownloadFile}
+                    onPreviewFile={onPreviewFile}
+                    onDownloadFile={onDownloadFile}
                     filename={lampiran.filename}
                     filetype={fileType(lampiran.filename)}
                   />
                 ))}
               </Grid>
             </Grid>
-          }
+          )}
         </Grid>
       </Paper>
       <Grid container spacing={2} justify="flex-end" alignItems="center">
         <Grid item>
           <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
             <Fab variant="extended" className={classes.seeAllTaskButton}>
-              <AssignmentIcon style={{marginRight: "10px"}} />
+              <AssignmentIcon style={{ marginRight: "10px" }} />
               Lihat Hasil
             </Fab>
           </Link>
@@ -375,47 +422,56 @@ console.log(all_classes_map)
           <Link to={`/sunting-tugas/${task_id}`}>
             <LightTooltip title="Sunting Tugas" placement="bottom">
               <Fab className={classes.editTaskButton}>
-                <EditIcon/>
+                <EditIcon />
               </Fab>
             </LightTooltip>
           </Link>
         </Grid>
         <Grid item>
           <LightTooltip title="Hapus" placement="bottom">
-            <Fab className={classes.deleteTaskButton} onClick={(e) => handleOpenDeleteDialog(e,task_id)}>
+            <Fab
+              className={classes.deleteTaskButton}
+              onClick={(e) => handleOpenDeleteDialog(e, task_id)}
+            >
               <DeleteIcon />
             </Fab>
           </LightTooltip>
         </Grid>
       </Grid>
     </div>
-  )
+  );
 }
 
 ViewTaskTeacher.propTypes = {
-   auth: PropTypes.object.isRequired,
-   tasksCollection: PropTypes.object.isRequired,
-   classesCollection: PropTypes.object.isRequired,
-   subjectsCollection: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
 
-   downloadLampiran: PropTypes.func.isRequired,
-   previewLampiran: PropTypes.func.isRequired,
-   deleteTask: PropTypes.func.isRequired,
-   getAllSubjects: PropTypes.func.isRequired,
-   updateUserData: PropTypes.func.isRequired,
-   getOneUser: PropTypes.func.isRequired, // For the person in charge task
-   getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
-   getOneTask: PropTypes.func.isRequired,
- }
+  downloadLampiran: PropTypes.func.isRequired,
+  previewLampiran: PropTypes.func.isRequired,
+  deleteTask: PropTypes.func.isRequired,
+  getAllSubjects: PropTypes.func.isRequired,
+  updateUserData: PropTypes.func.isRequired,
+  getOneUser: PropTypes.func.isRequired, // For the person in charge task
+  getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
+  getOneTask: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
-   auth: state.auth,
-   tasksCollection: state.tasksCollection,
-   classesCollection: state.classesCollection,
-   subjectsCollection: state.subjectsCollection,
- });
+  auth: state.auth,
+  tasksCollection: state.tasksCollection,
+  classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection,
+});
 
-export default connect(
-   mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, getOneTask, getOneUser, getAllClass, getAllSubjects }
- ) (ViewTaskTeacher);
+export default connect(mapStateToProps, {
+  uploadTugas,
+  deleteTask,
+  downloadLampiran,
+  previewLampiran,
+  getOneTask,
+  getOneUser,
+  getAllClass,
+  getAllSubjects,
+})(ViewTaskTeacher);

@@ -6,35 +6,42 @@ const { ObjectId } = require("mongodb");
 const Schema = mongoose.Schema;
 
 // Create Schema
-const AnnoucementSchema = new Schema({
+const AnnoucementSchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     description: {
-        type: String, 
-        required: true
+      type: String,
+      required: true,
     },
-    lampiran: [{
+    lampiran: [
+      {
         type: Object,
-        default: []
-    }],
-    class_assigned: [{
+        default: [],
+      },
+    ],
+    class_assigned: [
+      {
         type: ObjectId,
-        required: true
-    }],
+        required: true,
+      },
+    ],
     author_id: {
-        type: ObjectId,
-        required: true
-    }
+      type: ObjectId,
+      required: true,
+    },
     // date_announced: {
     //     type: Date,
     //     required: true
     // }
-}, { timestamps: true })
+  },
+  { timestamps: true }
+);
 
 const Announcement = mongoose.model("announcements", AnnoucementSchema);
 module.exports = Announcement;
 
-// export 
-// Kalau di Schooly, di luar client folder pakai module.exports. Kalau di dlm client folder pakai export. 
+// export
+// Kalau di Schooly, di luar client folder pakai module.exports. Kalau di dlm client folder pakai export.

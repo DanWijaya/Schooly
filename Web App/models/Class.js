@@ -6,25 +6,25 @@ const Schema = mongoose.Schema;
 const ClassSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
 
-  // 1 guru hanya boleh menjadi wali untuk 1 atau 0 kelas. 
+  // 1 guru hanya boleh menjadi wali untuk 1 atau 0 kelas.
   // ini dipastikan saat pembuatan kelas (opsi wali kelas hanya akan berisi guru nonwali).
   walikelas: {
-      type: ObjectId,
-      // required: true
+    type: ObjectId,
+    // required: true
   },
 
   // ini semestinya bakal dihapus
   ukuran: {
     type: Number,
-    required: true
+    required: true,
   },
 
   nihil: {
-      type: Boolean,
-      default: true
+    type: Boolean,
+    default: true,
   },
 
   /* 
@@ -35,17 +35,16 @@ const ClassSchema = new Schema({
   */
   ketua_kelas: {
     type: ObjectId,
-    ref: "users"
+    ref: "users",
   },
   bendahara: {
     type: ObjectId,
-    ref: "users"
+    ref: "users",
   },
   sekretaris: {
     type: ObjectId,
-    ref: "users"
+    ref: "users",
   },
-
 });
 
 module.exports = Class = mongoose.model("class", ClassSchema);

@@ -7,14 +7,12 @@ const RegisterStepConnector = withStyles((theme) => ({
   },
   active: {
     "& $line": {
-      backgroundImage:
-        "linear-gradient(95deg, #2196F3 30%, #21CBF3 90%)",
+      backgroundImage: "linear-gradient(95deg, #2196F3 30%, #21CBF3 90%)",
     },
   },
   completed: {
     "& $line": {
-      backgroundImage:
-        "linear-gradient(95deg, #2196F3 30%, #21CBF3 90%)",
+      backgroundImage: "linear-gradient(95deg, #2196F3 30%, #21CBF3 90%)",
     },
   },
   line: {

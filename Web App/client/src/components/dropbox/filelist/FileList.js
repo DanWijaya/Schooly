@@ -9,9 +9,30 @@ import { Dropbox } from "dropbox";
 import CustomizedMenu from "../CustomizedMenu";
 import Delete from "../dialog/Delete";
 import { convertBytes } from "./convertBytes.js";
-import { Avatar, ListItemAvatar, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  ListItemAvatar,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { FaFile, FaFolder, FaFileExcel, FaFileAlt, FaFileImage, FaFileWord, FaFilePdf, FaFilePowerpoint } from "react-icons/fa";
+import {
+  FaFile,
+  FaFolder,
+  FaFileExcel,
+  FaFileAlt,
+  FaFileImage,
+  FaFileWord,
+  FaFilePdf,
+  FaFilePowerpoint,
+} from "react-icons/fa";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 const useStyles = makeStyles((theme) => ({
@@ -71,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(2.25),
     height: theme.spacing(2.5),
     backgroundColor: "transparent",
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   otherFileTypeIcon: {
     marginRight: "10px",
@@ -82,8 +103,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-  { id: "name", label: "Name"},
-  { id: "size", label: "Ukuran"},
+  { id: "name", label: "Name" },
+  { id: "size", label: "Ukuran" },
   {
     id: "modified",
     label: "Terakhir diubah",
@@ -96,46 +117,55 @@ const columns = [
   },
   {
     id: "action",
-    label: ""
-  }
+    label: "",
+  },
 ];
 
 function createData(name, size, modified, type, path_display, action) {
-  return { name, size, modified, type, path_display, action};
+  return { name, size, modified, type, path_display, action };
 }
 
-
 function FileList(props) {
-
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   // this selectedDoc used to keep the document selected for further action.
   const [selectedDoc, setSelectedDoc] = useState(null);
   const classes = useStyles();
-  const {page, setPage, allDocs, updatePath, getLinkToFile, searchFilter,
-    renderToUpdate, handleOpenLoadingAlert, handleOpenSuccessAlert, setSuccessMessage, setLoadingMessage } = props;
+  const {
+    page,
+    setPage,
+    allDocs,
+    updatePath,
+    getLinkToFile,
+    searchFilter,
+    renderToUpdate,
+    handleOpenLoadingAlert,
+    handleOpenSuccessAlert,
+    setSuccessMessage,
+    setLoadingMessage,
+  } = props;
   const { dropbox_token } = props.auth;
 
-  const handleClickAction = (event,doc) => {
-    event.stopPropagation()
-    setSelectedDoc(doc)
-    console.log(doc)
+  const handleClickAction = (event, doc) => {
+    event.stopPropagation();
+    setSelectedDoc(doc);
+    console.log(doc);
     setAnchorEl(event.currentTarget);
   };
 
   const handleCloseAction = (event) => {
-    event.stopPropagation()
+    event.stopPropagation();
     setAnchorEl(null);
-    setSelectedDoc(null)
+    setSelectedDoc(null);
   };
 
   const handleDownloadFolder = () => {
-    setLoadingMessage("Folder sedang diunduh, mohon tetap menunggu")
-    handleOpenLoadingAlert()
+    setLoadingMessage("Folder sedang diunduh, mohon tetap menunggu");
+    handleOpenLoadingAlert();
     let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
     dropbox
-      .filesDownloadZip({ path: selectedDoc.path_display})
+      .filesDownloadZip({ path: selectedDoc.path_display })
       .then((res) => {
         let name = res.metadata.name;
         let blobUrl = window.URL.createObjectURL(res.fileBlob);
@@ -143,85 +173,89 @@ function FileList(props) {
         // Set link's href to point to the Blob URL
         link.href = blobUrl;
         link.download = name;
-        link.click()
+        link.click();
         window.URL.revokeObjectURL(blobUrl);
-        renderToUpdate(true)
-        setSuccessMessage("Folder berhasil diunduh")
-        })
-      .catch((err) => console.log(err))
-  }
+        renderToUpdate(true);
+        setSuccessMessage("Folder berhasil diunduh");
+      })
+      .catch((err) => console.log(err));
+  };
 
-  let menuItemList =
-    [
-      {
-        text: "Bagikan",
-        handleClick: function(){
-          setAnchorEl(null)
-        }
+  let menuItemList = [
+    {
+      text: "Bagikan",
+      handleClick: function () {
+        setAnchorEl(null);
       },
-      {
-        text: "Hapus",
-        handleClick: function(){
-          setDeleteDialog(true)
-          setAnchorEl(null)
-        }
+    },
+    {
+      text: "Hapus",
+      handleClick: function () {
+        setDeleteDialog(true);
+        setAnchorEl(null);
       },
-      {
-        text: "Unduh Folder",
-        handleClick: function(){
-          setAnchorEl(null)
-          handleDownloadFolder()
-
-        }
-      }
-  ]
-
+    },
+    {
+      text: "Unduh Folder",
+      handleClick: function () {
+        setAnchorEl(null);
+        handleDownloadFolder();
+      },
+    },
+  ];
 
   const rows = allDocs.map((doc) => {
-
-    if(doc[".tag"] !== "folder"){
+    if (doc[".tag"] !== "folder") {
       menuItemList = [
         {
           text: "Bagikan",
-          handleClick: function(){
-            setAnchorEl(null)
-          }
+          handleClick: function () {
+            setAnchorEl(null);
+          },
         },
         {
           text: "Hapus",
-          handleClick: function(){
-            setDeleteDialog(true)
-            setAnchorEl(null)
-          }
+          handleClick: function () {
+            setDeleteDialog(true);
+            setAnchorEl(null);
+          },
         },
-      ]
+      ];
     }
-    return(
-    createData(
-    doc.name, doc[".tag"] !== "folder" ? convertBytes(doc.size) : "--",!doc.client_modified ? "--" : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),
-    doc[".tag"] !== "folder" ? fileType(doc.name): "Folder", doc.path_display,
-     <div>
-      <MoreHorizIcon onClick={(e) => handleClickAction(e,doc)} className={classes.moreIcon}/>
-      {selectedDoc ? doc.path_display === selectedDoc.path_display ?
-      <CustomizedMenu
-      menuItemList={menuItemList}
-      handleClose={handleCloseAction}
-      anchorEl={anchorEl}
-      setAnchorEl={setAnchorEl}/> : null : null}
-    </div> ))
-  }
-    )
-
-
-
+    return createData(
+      doc.name,
+      doc[".tag"] !== "folder" ? convertBytes(doc.size) : "--",
+      !doc.client_modified
+        ? "--"
+        : "Pukul" + moment(doc.client_modified).format(" HH.mm, DD-MM-YYYY"),
+      doc[".tag"] !== "folder" ? fileType(doc.name) : "Folder",
+      doc.path_display,
+      <div>
+        <MoreHorizIcon
+          onClick={(e) => handleClickAction(e, doc)}
+          className={classes.moreIcon}
+        />
+        {selectedDoc ? (
+          doc.path_display === selectedDoc.path_display ? (
+            <CustomizedMenu
+              menuItemList={menuItemList}
+              handleClose={handleCloseAction}
+              anchorEl={anchorEl}
+              setAnchorEl={setAnchorEl}
+            />
+          ) : null
+        ) : null}
+      </div>
+    );
+  });
 
   const handleClickItem = (event, file_tag, file_path) => {
-    if(file_tag === "Folder"){
-      updatePath(file_path)
+    if (file_tag === "Folder") {
+      updatePath(file_path);
     } else {
-      getLinkToFile(file_path)
+      getLinkToFile(file_path);
     }
-  }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -232,189 +266,224 @@ function FileList(props) {
     setPage(0);
   };
 
-
   function fileType(filename) {
-    let ext_file = path.extname(filename)
-    switch(ext_file) {
-      case ".docx" : return "Word"
-      case ".xlsx" :
-      case ".csv"  : return "Excel"
+    let ext_file = path.extname(filename);
+    switch (ext_file) {
+      case ".docx":
+        return "Word";
+      case ".xlsx":
+      case ".csv":
+        return "Excel";
 
-      case ".png" :
-      case ".jpg" :
-      case ".jpeg" : return "Gambar"
+      case ".png":
+      case ".jpg":
+      case ".jpeg":
+        return "Gambar";
 
-      case ".pdf" : return "PDF"
+      case ".pdf":
+        return "PDF";
 
-      case ".txt" :
-      case ".rtf" : return "Teks"
+      case ".txt":
+      case ".rtf":
+        return "Teks";
 
-      case ".ppt" :
-      case ".pptx" : return "Presentasi"
+      case ".ppt":
+      case ".pptx":
+        return "Presentasi";
 
-      default: return "File Lainnya"
+      default:
+        return "File Lainnya";
     }
   }
 
   function fileIcon(filename, type) {
-    let ext_file = path.extname(filename)
-    if(type === "Folder")
-      return(
-      <Avatar variant="rounded" className={classes.folderTypeIcon}>
-        <FaFolder />
-      </Avatar>)
-    else{
-    switch(ext_file) {
-      case ".docx" :
-        return(
-        <Avatar variant="rounded" className={classes.wordFileTypeIcon}>
-          <FaFileWord />
-        </Avatar>)
+    let ext_file = path.extname(filename);
+    if (type === "Folder")
+      return (
+        <Avatar variant="rounded" className={classes.folderTypeIcon}>
+          <FaFolder />
+        </Avatar>
+      );
+    else {
+      switch (ext_file) {
+        case ".docx":
+          return (
+            <Avatar variant="rounded" className={classes.wordFileTypeIcon}>
+              <FaFileWord />
+            </Avatar>
+          );
 
-      case ".xlsx" :
-      case ".csv"  :
-        return(
-        <Avatar variant="rounded" className={classes.excelFileTypeIcon}>
-         <FaFileExcel />
-        </Avatar>)
+        case ".xlsx":
+        case ".csv":
+          return (
+            <Avatar variant="rounded" className={classes.excelFileTypeIcon}>
+              <FaFileExcel />
+            </Avatar>
+          );
 
-      case ".png" :
-      case ".jpg" :
-      case ".jpeg" :
-        return (
-          <Avatar variant="rounded" className={classes.imageFileTypeIcon}>
-            <FaFileImage />
-          </Avatar>
-          )
+        case ".png":
+        case ".jpg":
+        case ".jpeg":
+          return (
+            <Avatar variant="rounded" className={classes.imageFileTypeIcon}>
+              <FaFileImage />
+            </Avatar>
+          );
 
-      case ".pdf" :
-        return(
-          <Avatar variant="rounded" className={classes.pdfFileTypeIcon}>
-            <FaFilePdf/>
-          </Avatar>
-          )
+        case ".pdf":
+          return (
+            <Avatar variant="rounded" className={classes.pdfFileTypeIcon}>
+              <FaFilePdf />
+            </Avatar>
+          );
 
-      case ".txt" :
-      case ".rtf" :
-        return (
-          <Avatar variant="rounded" className={classes.textFileTypeIcon}>
-            <FaFileAlt />
-          </Avatar>
-        )
+        case ".txt":
+        case ".rtf":
+          return (
+            <Avatar variant="rounded" className={classes.textFileTypeIcon}>
+              <FaFileAlt />
+            </Avatar>
+          );
 
-      case ".ppt" :
-      case ".pptx" :
-        return (
-          <Avatar variant="rounded" className={classes.presentationFileTypeIcon}>
-            <FaFilePowerpoint />
-          </Avatar>
-          )
+        case ".ppt":
+        case ".pptx":
+          return (
+            <Avatar
+              variant="rounded"
+              className={classes.presentationFileTypeIcon}
+            >
+              <FaFilePowerpoint />
+            </Avatar>
+          );
 
-      default: return (
-      <Avatar variant="rounded" className={classes.otherFileTypeIcon}>
-        <FaFile />
-      </Avatar>)
+        default:
+          return (
+            <Avatar variant="rounded" className={classes.otherFileTypeIcon}>
+              <FaFile />
+            </Avatar>
+          );
+      }
     }
   }
 
-
-  }
-
-  console.log(rows)
+  console.log(rows);
   return (
     <Paper className={classes.root}>
       <Delete
-      handleOpenSuccessAlert={handleOpenSuccessAlert}
-      handleOpenLoadingAlert={handleOpenLoadingAlert}
-      doc={selectedDoc}
-      open={deleteDialog}
-      handleOpen={setDeleteDialog}
-      renderToUpdate={renderToUpdate}
-      setLoadingMessage={setLoadingMessage}
-      setSuccessMessage={setSuccessMessage}/>
+        handleOpenSuccessAlert={handleOpenSuccessAlert}
+        handleOpenLoadingAlert={handleOpenLoadingAlert}
+        doc={selectedDoc}
+        open={deleteDialog}
+        handleOpen={setDeleteDialog}
+        renderToUpdate={renderToUpdate}
+        setLoadingMessage={setLoadingMessage}
+        setSuccessMessage={setSuccessMessage}
+      />
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               {columns.map((column) => {
                 let width;
-                switch(column.id){
+                switch (column.id) {
                   case "name":
-                    width= "50%"
-                    break
+                    width = "50%";
+                    break;
 
                   case "size":
-                    width = "5%"
-                    break
+                    width = "5%";
+                    break;
 
                   case "modified":
-                    width = "25%"
-                    break
+                    width = "25%";
+                    break;
 
                   case "type":
-                    width = "20%"
-                    break
+                    width = "20%";
+                    break;
 
                   default:
-                    break
+                    break;
                 }
 
                 return (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ width: width }}
-                >
-                  {column.label}
-                </TableCell>
-              )})}
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ width: width }}
+                  >
+                    {column.label}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-          <ListItemAvatar>
-        </ListItemAvatar>
-            {rows.filter(row => row.name.toLowerCase().includes(searchFilter.toLowerCase()))
+            <ListItemAvatar></ListItemAvatar>
+            {rows
+              .filter((row) =>
+                row.name.toLowerCase().includes(searchFilter.toLowerCase())
+              )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
-              return (
-                <TableRow hover style={{cursor: "pointer"}} role="checkbox" tabIndex={-1} key={row.code} onClick={(event) => handleClickItem(event, row.type, row.path_display)}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    let width;
-                    let icon=null;
-
-                    switch(column.id){
-                      case "name":
-                        width= "50%"
-                        icon=fileIcon(row.name, row.type)
-                        break
-
-                      case "size":
-                        width = "20%"
-                        break
-
-                      case "modified":
-                        width = "20%"
-                        break
-
-                      case "type":
-                        width = "10%"
-                        break
-
-                      default:
-                        break
+                return (
+                  <TableRow
+                    hover
+                    style={{ cursor: "pointer" }}
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.code}
+                    onClick={(event) =>
+                      handleClickItem(event, row.type, row.path_display)
                     }
-                    return (
-                      <TableCell key={column.id} align={column.align} style={{width: width}}>
-                        <Typography style={{display: "flex", flexDirection:"row", alignItems:"center"}}>
-                          {icon}
-                          {value}
-                        </Typography>
-                        {/* {column.format && typeof value === "number" ? column.format(value) : value} */}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
+                  >
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      let width;
+                      let icon = null;
+
+                      switch (column.id) {
+                        case "name":
+                          width = "50%";
+                          icon = fileIcon(row.name, row.type);
+                          break;
+
+                        case "size":
+                          width = "20%";
+                          break;
+
+                        case "modified":
+                          width = "20%";
+                          break;
+
+                        case "type":
+                          width = "10%";
+                          break;
+
+                        default:
+                          break;
+                      }
+                      return (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          style={{ width: width }}
+                        >
+                          <Typography
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            {icon}
+                            {value}
+                          </Typography>
+                          {/* {column.format && typeof value === "number" ? column.format(value) : value} */}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
                 );
               })}
           </TableBody>
@@ -436,15 +505,13 @@ function FileList(props) {
 FileList.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-})
+});
 
-export default connect(
-  mapStateToProps
-)(FileList);
+export default connect(mapStateToProps)(FileList);
 
 // export default React.memo(FileList);

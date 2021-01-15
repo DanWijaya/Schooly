@@ -4,7 +4,7 @@ import { Button, Dialog, Grid, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
       border: `1px solid ${theme.palette.error.dark}`,
     },
   },
-  
+
   dialogCancelButton: {
     width: "125px",
     backgroundColor: "white",
@@ -38,47 +38,73 @@ const useStyles = makeStyles((theme) => ({
   },
   warningText: {
     color: theme.palette.error.main,
-    marginLeft: "3px"
+    marginLeft: "3px",
   },
   warningIcon: {
-    color: theme.palette.error.main
+    color: theme.palette.error.main,
   },
   warning: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: "5px"
-  }
+    marginBottom: "5px",
+  },
 }));
 
 function DeleteDialog(props) {
   const classes = useStyles();
 
-  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, isLink, redirectLink, isWarning } = props;
+  const {
+    openDeleteDialog,
+    handleCloseDeleteDialog,
+    itemType,
+    itemName,
+    deleteItem,
+    isLink,
+    redirectLink,
+    isWarning,
+  } = props;
 
   return (
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-      <Grid container direction="column" justify="space-between" alignItems="center" className={classes.root}>
+      <Grid
+        container
+        direction="column"
+        justify="space-between"
+        alignItems="center"
+        className={classes.root}
+      >
         <Grid item>
           <Typography variant="h5" align="center">
             Hapus {itemType} berikut?
           </Typography>
         </Grid>
-        {(itemName) ? 
+        {itemName ? (
           <Grid item>
-            <Typography align="center" gutterBottom style={{marginTop: "10px"}}>
+            <Typography
+              align="center"
+              gutterBottom
+              style={{ marginTop: "10px" }}
+            >
               <b>{itemName}</b>
             </Typography>
-            {(isWarning) ?
+            {isWarning ? (
               <div className={classes.warning}>
-                <ErrorOutlineIcon className={classes.warningIcon} fontSize="small"/>
-                <Typography variant="caption" align="center" className={classes.warningText}>
+                <ErrorOutlineIcon
+                  className={classes.warningIcon}
+                  fontSize="small"
+                />
+                <Typography
+                  variant="caption"
+                  align="center"
+                  className={classes.warningText}
+                >
                   Nilai Murid pada {itemType} ini juga akan dihapus
                 </Typography>
               </div>
-            : null}
+            ) : null}
           </Grid>
-        : null}
+        ) : null}
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
             <Button
@@ -90,7 +116,7 @@ function DeleteDialog(props) {
             </Button>
           </Grid>
           <Grid item>
-            {!isLink ?
+            {!isLink ? (
               <Button
                 onClick={handleCloseDeleteDialog}
                 startIcon={<CancelIcon />}
@@ -98,7 +124,7 @@ function DeleteDialog(props) {
               >
                 Batal
               </Button>
-            :
+            ) : (
               <Link to={redirectLink}>
                 <Button
                   startIcon={<CancelIcon />}
@@ -107,12 +133,12 @@ function DeleteDialog(props) {
                   Batal
                 </Button>
               </Link>
-            }
+            )}
           </Grid>
         </Grid>
       </Grid>
     </Dialog>
-  )
+  );
 }
 
 export default DeleteDialog;

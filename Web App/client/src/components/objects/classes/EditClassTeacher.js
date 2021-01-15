@@ -6,16 +6,16 @@ import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 
 // import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { 
-  Button, 
-  Divider, 
+import {
+  Button,
+  Divider,
   FormControl,
-  FormHelperText, 
-  MenuItem, 
-  Grid, 
-  Select, 
-  Paper, 
-  TextField, 
+  FormHelperText,
+  MenuItem,
+  Grid,
+  Select,
+  Paper,
+  TextField,
   Typography,
   Hidden,
   InputLabel,
@@ -23,7 +23,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Snackbar
+  Snackbar,
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100px",
     },
   },
-
 }));
 
 function EditClassTeacher(props) {
@@ -92,7 +91,6 @@ function EditClassTeacher(props) {
   */
   const [statusWali, setStatusWali] = React.useState(null);
 
-
   /* 
   {
     <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
@@ -102,7 +100,6 @@ function EditClassTeacher(props) {
   */
   const [statusKelas, setStatusKelas] = React.useState(null);
 
-  
   /*
   bentuk isi:
   {
@@ -116,13 +113,17 @@ function EditClassTeacher(props) {
 
   React.useEffect(() => {
     // const all_classes = Array.from(all_classes_map.values());
-    if (Array.isArray(all_teachers) && (all_teachers.length !== 0) && (all_classes.length !== 0)) {
+    if (
+      Array.isArray(all_teachers) &&
+      all_teachers.length !== 0 &&
+      all_classes.length !== 0
+    ) {
       let tempstatusWali = {};
       for (let teacher of all_teachers) {
         tempstatusWali[teacher._id] = {
           name: teacher.name,
           email: teacher.email,
-          classId: null
+          classId: null,
         };
       }
 
@@ -138,22 +139,24 @@ function EditClassTeacher(props) {
       }
       setStatusKelas(tempstatusKelas);
       setStatusWali(tempstatusWali);
-
     }
-  }, [all_teachers, all_classes])
+  }, [all_teachers, all_classes]);
 
   function generateAllClassMenuItems() {
     let menuItems = [
-      <MenuItem key="null" value={null}>Kosong</MenuItem>
+      <MenuItem key="null" value={null}>
+        Kosong
+      </MenuItem>,
     ];
     for (let classInfo of all_classes) {
       menuItems.push(
-        <MenuItem key={classInfo._id} value={classInfo._id}>{classInfo.name}</MenuItem>
-      )
+        <MenuItem key={classInfo._id} value={classInfo._id}>
+          {classInfo.name}
+        </MenuItem>
+      );
     }
     return menuItems;
   }
-  
 
   function handleKelasWaliChange(event, teacherId) {
     // statusWali sudah dipastikan ada
@@ -161,12 +164,11 @@ function EditClassTeacher(props) {
     let newClassId = event.target.value;
 
     let tempStatusKelas = { ...statusKelas };
-    
+
     if (newClassId) {
       let targetArray = [...tempStatusKelas[newClassId]];
       targetArray.push(teacherId);
       tempStatusKelas[newClassId] = targetArray;
-
     }
 
     if (oldClassId) {
@@ -176,7 +178,10 @@ function EditClassTeacher(props) {
     }
 
     setStatusKelas(tempStatusKelas);
-    setStatusWali({ ...statusWali, [teacherId]: { ...statusWali[teacherId], classId: newClassId}});
+    setStatusWali({
+      ...statusWali,
+      [teacherId]: { ...statusWali[teacherId], classId: newClassId },
+    });
   }
 
   function handleSubmit() {
@@ -199,17 +204,19 @@ function EditClassTeacher(props) {
         }
       }
     }
-    
+
     if (Object.keys(classToUpdate).length !== 0) {
       setOpenUploadDialog(true);
-      updateWaliAdmin(classToUpdate).then(() => {
-        setSuccess(true);
-        // handleOpenSnackbar("success", "Pengubahan wali kelas berhasil dilakukan");
-      }).catch((err) => {
-        setOpenUploadDialog(false);
-        handleOpenSnackbar("error", "Pengubahan wali kelas gagal dilakukan");
-        console.log(err);
-      });
+      updateWaliAdmin(classToUpdate)
+        .then(() => {
+          setSuccess(true);
+          // handleOpenSnackbar("success", "Pengubahan wali kelas berhasil dilakukan");
+        })
+        .catch((err) => {
+          setOpenUploadDialog(false);
+          handleOpenSnackbar("error", "Pengubahan wali kelas gagal dilakukan");
+          console.log(err);
+        });
     } else {
       setOpenUploadDialog(true);
       setSuccess(true);
@@ -243,7 +250,6 @@ function EditClassTeacher(props) {
   //   setOpenUploadDialog(false);
   // }
 
-
   return (
     <div className={classes.root}>
       <UploadDialog
@@ -253,8 +259,20 @@ function EditClassTeacher(props) {
         messageSuccess={`Pengaturan wali kelas berhasil disimpan`}
         redirectLink="/daftar-kelas"
       />
-      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
-        <MuiAlert variant="filled" severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={(event, reason) => {
+          handleCloseSnackbar(event, reason);
+        }}
+      >
+        <MuiAlert
+          variant="filled"
+          severity={severity}
+          onClose={(event, reason) => {
+            handleCloseSnackbar(event, reason);
+          }}
+        >
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
@@ -267,9 +285,8 @@ function EditClassTeacher(props) {
         </div>
         <Divider />
         <div>
-          {
-            (statusKelas && statusWali) ? (
-              Object.entries(statusWali).map((entry) => {
+          {statusKelas && statusWali
+            ? Object.entries(statusWali).map((entry) => {
                 let teacherId = entry[0];
                 let teacherInfo = entry[1];
                 let showError = false;
@@ -307,13 +324,17 @@ function EditClassTeacher(props) {
                             select
                             label="Kelas"
                             value={statusWali[teacherId].classId}
-                            onChange={(event) => { handleKelasWaliChange(event, teacherId) }}
+                            onChange={(event) => {
+                              handleKelasWaliChange(event, teacherId);
+                            }}
                             error={showError}
                             helperText={showError ? "Periksa Kembali!" : null}
                             className={classes.select}
                             variant="outlined"
                           >
-                            {(all_classes.length !== 0) ? (generateAllClassMenuItems()) : (null)}
+                            {all_classes.length !== 0
+                              ? generateAllClassMenuItems()
+                              : null}
                           </TextField>
                         }
                       />
@@ -321,11 +342,12 @@ function EditClassTeacher(props) {
                   </Grid>
                 );
               })
-            ) :
-              null
-          }
+            : null}
           <Divider />
-          <div style={{ display: "flex", justifyContent: "flex-end" }} className={classes.content}>
+          <div
+            style={{ display: "flex", justifyContent: "flex-end" }}
+            className={classes.content}
+          >
             <div>
               <Button
                 variant="contained"
@@ -348,13 +370,13 @@ EditClassTeacher.propTypes = {
 
   getTeachers: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  classesCollection: state.classesCollection
-})
+  classesCollection: state.classesCollection,
+});
 
-export default connect(
-  mapStateToProps, { getTeachers, getAllClass }
-)(EditClassTeacher);
+export default connect(mapStateToProps, { getTeachers, getAllClass })(
+  EditClassTeacher
+);

@@ -9,12 +9,36 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
-   ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -96,48 +120,43 @@ function LampiranFile(props) {
       <Paper variant="outlined">
         <ListItem disableRipple>
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={name} placement="top">
                 <Typography>
-                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                  {name.length < 21
+                    ? name
+                    : `${name.slice(0, 15)}..${path.extname(name)}`}
                 </Typography>
               </LightTooltip>
             }
@@ -146,14 +165,16 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.deleteIconButton}
-            onClick={(e) => {handleLampiranDelete(e, i)}}
+            onClick={(e) => {
+              handleLampiranDelete(e, i);
+            }}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 class CreateMaterial extends Component {
@@ -168,25 +189,25 @@ class CreateMaterial extends Component {
       errors: {},
       fileLampiran: [],
       openUploadDialog: null,
-      anchorEl: null
+      anchorEl: null,
       // sortFlag: false
-    }
+    };
   }
 
-  lampiranUploader = React.createRef(null)
+  lampiranUploader = React.createRef(null);
 
   handleClickMenu = (event) => {
     //Needed so it will not be run when filetugas = null or filetugas array is empty
     if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
-      this.setState({ anchorEl: event.currentTarget })
-  }
+      this.setState({ anchorEl: event.currentTarget });
+  };
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null })
-  }
+    this.setState({ anchorEl: null });
+  };
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true })
+    this.setState({ openUploadDialog: true });
   };
 
   handleCloseUploadDialog = () => {
@@ -194,117 +215,120 @@ class CreateMaterial extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log("On change:", e.target.value)
-    console.log(Array.from(this.state.fileLampiran))
-    if(otherfield){
-      if(otherfield === "deadline")
-        this.setState({ [otherfield] : e}) // e is the date value itself for KeyboardDatePicker
-
-      else
-        this.setState({ [otherfield] : e.target.value})
-    }
-
-    else
-      this.setState({ [e.target.id]: e.target.value });
-  }
+    console.log("On change:", e.target.value);
+    console.log(Array.from(this.state.fileLampiran));
+    if (otherfield) {
+      if (otherfield === "deadline") this.setState({ [otherfield]: e });
+      // e is the date value itself for KeyboardDatePicker
+      else this.setState({ [otherfield]: e.target.value });
+    } else this.setState({ [e.target.id]: e.target.value });
+  };
 
   onSubmit = (e, id) => {
     e.preventDefault();
-    let formData = new FormData()
+    let formData = new FormData();
 
     //Check if there is any lampiran uploaded or not.
     if (this.state.fileLampiran)
       for (var i = 0; i < this.state.fileLampiran.length; i++) {
-        console.log(this.state.fileLampiran[i])
-        formData.append("lampiran_materi", this.state.fileLampiran[i])
+        console.log(this.state.fileLampiran[i]);
+        formData.append("lampiran_materi", this.state.fileLampiran[i]);
       }
-      console.log(formData.getAll("lampiran_materi"), this.state.fileLampiran)
+    console.log(formData.getAll("lampiran_materi"), this.state.fileLampiran);
 
-      const materialData = {
-        name: this.state.name,
-        subject: this.state.subject,
-        class_assigned: this.state.class_assigned,
-        description: this.state.description,
-        lampiran: Array.from(this.state.fileLampiran),
-        author_id: id,
-        errors: {},
-      };
-      
-      console.log(this.state.fileLampiran)
-      this.props.createMaterial(formData, materialData, this.props.history);
-  }
+    const materialData = {
+      name: this.state.name,
+      subject: this.state.subject,
+      class_assigned: this.state.class_assigned,
+      description: this.state.description,
+      lampiran: Array.from(this.state.fileLampiran),
+      author_id: id,
+      errors: {},
+    };
 
-  componentDidUpdate(prevProps, prevState){
-    if(!this.props.errors && this.props.errors !== prevProps.errors){
-      this.handleOpenUploadDialog()
+    console.log(this.state.fileLampiran);
+    this.props.createMaterial(formData, materialData, this.props.history);
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.props.errors && this.props.errors !== prevProps.errors) {
+      this.handleOpenUploadDialog();
     }
   }
 
   componentDidMount() {
-    this.props.getAllClass()
-    this.props.getAllSubjects()
+    this.props.getAllClass();
+    this.props.getAllSubjects();
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   handleLampiranDelete = (e, i) => {
-    e.preventDefault()
-    console.log("Index is: ", i)
+    e.preventDefault();
+    console.log("Index is: ", i);
     let temp = Array.from(this.state.fileLampiran);
-    temp.splice(i,1);
-    if (temp.length === 0) //If it is empty.
-      this.handleCloseMenu()
-    this.setState({ fileLampiran: temp})
-  }
+    temp.splice(i, 1);
+    if (temp.length === 0)
+      //If it is empty.
+      this.handleCloseMenu();
+    this.setState({ fileLampiran: temp });
+  };
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
-    this.setState({ fileLampiran: temp})
-    document.getElementById("file_control").value = null
-  }
+    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
+    this.setState({ fileLampiran: temp });
+    document.getElementById("file_control").value = null;
+  };
 
   render() {
-    const { classes, success, errors }  = this.props;
+    const { classes, success, errors } = this.props;
     const { all_classes } = this.props.classesCollection;
     const { all_subjects } = this.props.subjectsCollection;
-    const { class_assigned, fileLampiran }  = this.state;
-    const { user } = this.props.auth
+    const { class_assigned, fileLampiran } = this.state;
+    const { user } = this.props.auth;
 
-    console.log(class_assigned)
-    console.log(errors)
+    console.log(class_assigned);
+    console.log(errors);
 
     const fileType = (filename) => {
-      let ext_file = path.extname(filename)
-      switch(ext_file) {
-        case ".docx" : return "Word"
-        case ".xlsx" :
-        case ".csv"  : return "Excel"
+      let ext_file = path.extname(filename);
+      switch (ext_file) {
+        case ".docx":
+          return "Word";
+        case ".xlsx":
+        case ".csv":
+          return "Excel";
 
-        case ".png" :
-        case ".jpg" :
-        case ".jpeg" : return "Gambar"
+        case ".png":
+        case ".jpg":
+        case ".jpeg":
+          return "Gambar";
 
-        case ".pdf" : return "PDF"
+        case ".pdf":
+          return "PDF";
 
-        case ".txt" :
-        case ".rtf" : return "Teks"
+        case ".txt":
+        case ".rtf":
+          return "Teks";
 
-        case ".ppt" :
-        case ".pptx" : return "Presentasi"
+        case ".ppt":
+        case ".pptx":
+          return "Presentasi";
 
-        default: return "File Lainnya"
+        default:
+          return "File Lainnya";
       }
-    }
+    };
 
     const listFileChosen = () => {
-      let temp = []
+      let temp = [];
       if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
-          console.log(i)
+          console.log(i);
           temp.push(
             <LampiranFile
               classes={classes}
@@ -313,11 +337,11 @@ class CreateMaterial extends Component {
               handleLampiranDelete={this.handleLampiranDelete}
               i={i}
             />
-          )
+          );
         }
       }
       return temp;
-    }
+    };
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -331,7 +355,7 @@ class CreateMaterial extends Component {
     };
 
     document.title = "Schooly | Buat Materi";
-    
+
     if (user.role === "Teacher") {
       // all_subjects.sort((a, b) => (a.name > b.name) ? 1 : -1)
       // all_classes.sort((a, b) => (a.name > b.name) ? 1 : -1)
@@ -354,7 +378,7 @@ class CreateMaterial extends Component {
               </Typography>
             </div>
             <Divider />
-            <form noValidate onSubmit={(e) =>this.onSubmit(e,user.id)}>
+            <form noValidate onSubmit={(e) => this.onSubmit(e, user.id)}>
               <Grid container>
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
@@ -372,12 +396,16 @@ class CreateMaterial extends Component {
                         type="text"
                         helperText={errors.name}
                         className={classnames("", {
-                          invalid: errors.name
+                          invalid: errors.name,
                         })}
                       />
                     </Grid>
                     <Grid item>
-                      <Typography component="label" for="description" color="primary">
+                      <Typography
+                        component="label"
+                        for="description"
+                        color="primary"
+                      >
                         Deskripsi
                       </Typography>
                       <TextField
@@ -393,63 +421,107 @@ class CreateMaterial extends Component {
                         type="text"
                         helperText={errors.description}
                         className={classnames("", {
-                          invalid: errors.description
+                          invalid: errors.description,
                         })}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
-                <Divider flexItem orientation="vertical" className={classes.divider} />
+                <Divider
+                  flexItem
+                  orientation="vertical"
+                  className={classes.divider}
+                />
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
                     <Grid item>
-                      <Typography component="label" for="subject" color="primary">
+                      <Typography
+                        component="label"
+                        for="subject"
+                        color="primary"
+                      >
                         Mata Pelajaran
                       </Typography>
-                      <FormControl id="subject" variant="outlined" color="primary" fullWidth error={Boolean(errors.subject) && !this.state.subject}>
+                      <FormControl
+                        id="subject"
+                        variant="outlined"
+                        color="primary"
+                        fullWidth
+                        error={Boolean(errors.subject) && !this.state.subject}
+                      >
                         <Select
                           value={this.state.subject}
-                          onChange={(event) => {this.onChange(event, "subject")}}
+                          onChange={(event) => {
+                            this.onChange(event, "subject");
+                          }}
                         >
                           {all_subjects.map((subject) => (
-                            <MenuItem value={subject._id}>{subject.name}</MenuItem>
+                            <MenuItem value={subject._id}>
+                              {subject.name}
+                            </MenuItem>
                           ))}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.subject) && !this.state.subject ? errors.subject : null}
+                          {Boolean(errors.subject) && !this.state.subject
+                            ? errors.subject
+                            : null}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item>
-                      <Typography component="label" for="class_assigned" color="primary">
+                      <Typography
+                        component="label"
+                        for="class_assigned"
+                        color="primary"
+                      >
                         Kelas yang Diberikan
                       </Typography>
-                      <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        error={Boolean(errors.class_assigned)}
+                      >
                         <Select
                           multiple
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "class_assigned")}}
+                          onChange={(event) => {
+                            this.onChange(event, "class_assigned");
+                          }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
                               {selected.map((kelas) => {
-                                console.log(selected)
-                                console.log(kelas, class_assigned)
+                                console.log(selected);
+                                console.log(kelas, class_assigned);
                                 return (
-                                  <Chip key={kelas} label={kelas.name} className={classes.chip} />
-                                )
+                                  <Chip
+                                    key={kelas}
+                                    label={kelas.name}
+                                    className={classes.chip}
+                                  />
+                                );
                               })}
                             </div>
                           )}
                         >
                           {all_classes.map((kelas) => {
                             return (
-                              <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
-                          )})}
+                              <MenuItem
+                                key={kelas}
+                                selected={true}
+                                value={kelas}
+                              >
+                                {kelas.name}
+                              </MenuItem>
+                            );
+                          })}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
+                          {Boolean(errors.class_assigned) &&
+                          class_assigned.length === 0
+                            ? errors.class_assigned
+                            : null}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -462,7 +534,7 @@ class CreateMaterial extends Component {
                         onChange={this.handleLampiranUpload}
                         ref={this.lampiranUploader}
                         accept="file/*"
-                        style={{display: "none"}}
+                        style={{ display: "none" }}
                       />
                       <Button
                         variant="contained"
@@ -471,19 +543,22 @@ class CreateMaterial extends Component {
                         className={classes.addFileButton}
                       >
                         Tambah Lampiran Berkas
-                       </Button>
-                       <FormHelperText error>
-                       {errors.lampiran_materi}
-                       </FormHelperText>
-                       <Grid container spacing={1} style={{marginTop: "10px"}}>
-                         {listFileChosen()}
-                       </Grid>
+                      </Button>
+                      <FormHelperText error>
+                        {errors.lampiran_materi}
+                      </FormHelperText>
+                      <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                        {listFileChosen()}
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               <Divider />
-              <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+              <div
+                style={{ display: "flex", justifyContent: "flex-end" }}
+                className={classes.content}
+              >
                 <Button
                   variant="contained"
                   type="submit"
@@ -496,15 +571,14 @@ class CreateMaterial extends Component {
           </Paper>
         </div>
       );
-    }
-    else {
+    } else {
       return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>
           </Typography>
         </div>
-      )
+      );
     }
   }
 }
@@ -519,14 +593,18 @@ CreateMaterial.propTypes = {
   clearErrors: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
   success: state.success,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
-})
+});
 
-export default connect(
-  mapStateToProps, { getAllClass, getAllSubjects, createMaterial, clearErrors, clearSuccess }
-) (withStyles(styles)(CreateMaterial))
+export default connect(mapStateToProps, {
+  getAllClass,
+  getAllSubjects,
+  createMaterial,
+  clearErrors,
+  clearSuccess,
+})(withStyles(styles)(CreateMaterial));
