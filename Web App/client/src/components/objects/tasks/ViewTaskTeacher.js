@@ -11,7 +11,7 @@ import { getOneUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@material-ui/core";
+import { Avatar, Fab, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText, Paper, Typography, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
@@ -34,9 +34,6 @@ const useStyles = makeStyles((theme) => ({
   paperBox: {
     padding: "20px",
     marginBottom: "10px",
-  },
-  deadlineWarningText: {
-    color: theme.palette.warning.main,
   },
   seeAllTaskButton: {
     backgroundColor: theme.palette.success.main,
@@ -99,6 +96,9 @@ const useStyles = makeStyles((theme) => ({
   otherFileTypeIcon: {
     backgroundColor: "#808080",
   },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main
+  }
 }));
 
 function LampiranFile(props) {
@@ -266,35 +266,55 @@ console.log(all_classes_map)
       />
       <Paper className={classes.paperBox}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12}>
             <Typography variant="h4">
               {tasksCollection.name}
             </Typography>
-            <Typography variant="caption" color="textSecondary">
-              <h6>Mata Pelajaran: {all_subjects_map.get(tasksCollection.subject)}</h6>
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Oleh: <b>{user.name}</b>
+            <Typography variant="caption" color="textSecondary" gutterBottom>
+              <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
             </Typography>
           </Grid>
-          <Grid item xs={12} md={5}>
-            <Hidden mdUp implementation="css">
-              <Typography variant="body2" className={classes.deadlineWarningText} gutterBottom>
-                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+
+          <Grid item xs={12} md={7}>
+            <Typography variant="body2" color="textSecondary">
+              Penanggung Jawab: <b>{user.name}</b>
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat: {moment(tasksCollection.createdAt).locale("id").format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Hidden mdUp>
+              <Typography variant="body2" color="textSecondary">
+                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+              </Typography>
+            </Hidden>
+          </Grid>
+
+          {/* <Grid item xs={12} md={5} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end"}} > */}
+            {/* <Hidden mdUp>
+              <Typography variant="body2" color="textSecondary">
+                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Nilai Maksimum: 100
               </Typography>
-            </Hidden>
-            <Hidden smDown implementation="css" style={{display: "flex"}}>
-              <Typography variant="body2" align="right" className={classes.deadlineWarningText} gutterBottom>
-                Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
-              </Typography>
+            </Hidden> */}
+            <Hidden smDown style={{display: "flex"}}>
+            <Grid item xs={12} md={5} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end" }} >
+
               <Typography variant="body2" align="right" color="textSecondary">
-                Nilai Maksimum: 100
+                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
               </Typography>
+              {/* <Typography variant="body2" align="right" color="textSecondary">
+                Nilai Maksimum: 100
+              </Typography> */}
+            </Grid>
             </Hidden>
+          {/* </Grid> */}
+
+          <Grid item xs={12}>
+            <Divider className={classes.dividerColor} />
           </Grid>
+
           <Grid item xs={12} style={{marginTop: "30px"}}>
             <Typography color="primary" gutterBottom>
               Kelas yang Diberikan:

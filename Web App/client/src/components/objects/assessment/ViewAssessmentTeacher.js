@@ -7,7 +7,7 @@ import { getOneAssessment, deleteAssessment } from "../../../actions/AssessmentA
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar} from "@material-ui/core";
+import { Fab, Grid, GridListTile, GridListTileBar, GridList, Hidden, Paper, Typography, Input, Snackbar, Divider} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -94,6 +94,13 @@ const useStyles = makeStyles((theme) => ({
   },
   optionText: {
     color: "black"
+  },
+  paperBox: {
+    padding: "20px",
+    marginBottom: "10px",
+  },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main
   }
 }));
 
@@ -104,7 +111,7 @@ function ViewAssessmentTeacher(props) {
   const assessment_id = props.match.params.id;
 
   const { getOneAssessment, getAllClass, getAllSubjects, deleteAssessment } = props;
-  // const { all_classes_map } = props.classesCollection;
+  const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
   const { selectedAssessments } = props.assessmentsCollection;
   const { questions, type } = selectedAssessments;
@@ -198,56 +205,96 @@ function ViewAssessmentTeacher(props) {
         />
         <Grid container direction="column" spacing={3}>
           <Grid item style={{marginBottom: "20px"}}>
-            <Paper>
+            <Paper className={classes.paperBox}>
               {/* <Grid container spacing={6} className={classes.content}> */}
-              <Grid container spacing={2} className={classes.content}>
-                <Grid item xs={12} md={7} spacing={8}>
-                  <Typography variant="h4" gutterBottom>
+              {/* <Grid container spacing={2} className={classes.content}> */}
+              <Grid container spacing={2}>
+
+              <Hidden smDown>
+                <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                  <Typography variant="h4">
                     {selectedAssessments.name}
                   </Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
-                  </Typography>
-                  <Hidden smDown implementation="css">
-                    <Grid item style={{marginTop: "40px"}}>
-                      <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                        Deskripsi Kuis/Ujian:
-                      </Typography>
-                      <Typography>
-                        {selectedAssessments.description}
-                      </Typography>
-                    </Grid>
-                  </Hidden>
                 </Grid>
-                <Grid item xs={12} md={5} spacing={2}>
-                  <Hidden mdUp implementation="css">
-                    {/* <Typography variant="body2" className={classes.startDateText}> */}
-                    <Typography variant="body2" color="textSecondary">
-                      Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                    </Typography>
-                    {/* <Typography variant="body2" className={classes.endDateText}> */}
-                    <Typography variant="body2" color="textSecondary">
-                      Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH.mm")}
-                    </Typography>
-                    <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                      Deskripsi Kuis/Ujian:
-                    </Typography>
-                    <Typography align="justify">
-                      {selectedAssessments.description}
-                    </Typography>
-                  </Hidden>
-                  <Hidden smDown implementation="css">
+
+                <Grid item xs={12} md={7} spacing={8} style={{ paddingTop: "0" }}>
+                  <Typography variant="caption" color="textSecondary">
+                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={5} spacing={8} style={{ paddingTop: "0" }}>
+                  <h6 style={{ marginBottom: "0" }}>
                     <Typography align="right" variant="body2" color="textSecondary">
                       Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
-                    <Typography align="right"variant="body2" color="textSecondary">
-                      Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  </Hidden>  
+                  </h6>
+                  <Typography align="right" variant="body2" color="textSecondary">
+                    Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  </Typography>
+                </Grid>
+              </Hidden>
+              
+              <Hidden mdUp>
+                <Grid item xs={12}>
+                  <Typography variant="h4">
+                    {selectedAssessments.name}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={7} spacing={8}>
+                  <Typography variant="body2" color="textSecondary">
+                    Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  </Typography>
+                </Grid>
+              </Hidden>
+
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+
+              <Grid item xs={12} style={{ marginTop: "30px" }}>
+                <Typography color="primary" gutterBottom>
+                  Kelas yang Diberikan:
+                </Typography>
+                <Typography>
+                  {!selectedAssessments.class_assigned || !all_classes_map.size ? null :
+                    selectedAssessments.class_assigned.map((kelas, i) => {
+                      if (all_classes_map.get(kelas)) {
+                        if (i === selectedAssessments.class_assigned.length - 1)
+                          return `${all_classes_map.get(kelas).name}`
+                        return (`${all_classes_map.get(kelas).name}, `)
+                      }
+                      return null;
+                    })}
+                </Typography>
+              </Grid>
+
+                <Grid item xs={12} style={{ marginTop: "30px" }}>
+                {/* <Hidden smDown implementation="css"> */}
+                {/* <Grid item style={{marginTop: "40px"}}> */}
+                {/* <Grid item> */}
+                {/* <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}> */}
+                <Typography color="primary" gutterBottom>
+                  Deskripsi Kuis/Ujian:
+                      </Typography>
+                <Typography>
+                  {selectedAssessments.description}
+                </Typography>
+                {/* </Grid> */}
+                {/* </Hidden> */}
                 </Grid>
               </Grid>
+
             </Paper>
           </Grid>
+
           {!Array.isArray(questions) ? null :
           questions.map((question, i) => (
             <Grid item>

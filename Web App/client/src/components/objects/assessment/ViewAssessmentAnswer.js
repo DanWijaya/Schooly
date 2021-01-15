@@ -181,6 +181,9 @@ const useStyles = makeStyles((theme) => ({
   },
   toggleButtonSelected: {
     //harus ada meskipun kosong
+  },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main
   }
 }));
 
@@ -891,7 +894,7 @@ function ViewAssessmentTeacher(props) {
           <Grid item>
             <Paper className={classes.content}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={7}>
+                {/* <Grid item xs={12} md={7}>
                   <Typography variant="h4" gutterBottom>
                     {selectedAssessments.name}
                   </Typography>
@@ -927,9 +930,86 @@ function ViewAssessmentTeacher(props) {
                       Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
                     </Typography>
                   </Hidden>
+                </Grid> */}
+
+              <Hidden smDown>
+                <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                  <Typography variant="h4">
+                    {selectedAssessments.name}
+                  </Typography>
                 </Grid>
+
+                <Grid item xs={12} md={7} spacing={8} style={{ paddingTop: "0" }}>
+                  <Typography variant="caption" color="textSecondary">
+                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={5} spacing={8} style={{ paddingTop: "0" }}>
+                  <h6 style={{ marginBottom: "0" }}>
+                    <Typography align="right" variant="body2" color="textSecondary">
+                      Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                    </Typography>
+                  </h6>
+                  <Typography align="right" variant="body2" color="textSecondary">
+                    Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  </Typography>
+                </Grid>
+              </Hidden>
+
+              <Hidden mdUp>
+                <Grid item xs={12}>
+                  <Typography variant="h4">
+                    {selectedAssessments.name}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={7} spacing={8}>
+                  <Typography variant="body2" color="textSecondary">
+                    Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                  </Typography>
+                </Grid>
+              </Hidden>
+
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
               </Grid>
-            <Hidden smDown>
+
+              <Grid item xs={12} style={{ marginTop: "30px" }}>
+                <Typography color="primary" gutterBottom>
+                  Kelas yang Diberikan:
+                </Typography>
+                <Typography>
+                  {!selectedAssessments.class_assigned || !all_classes_map.size ? null :
+                    selectedAssessments.class_assigned.map((kelas, i) => {
+                      if (all_classes_map.get(kelas)) {
+                        if (i === selectedAssessments.class_assigned.length - 1)
+                          return `${all_classes_map.get(kelas).name}`
+                        return (`${all_classes_map.get(kelas).name}, `)
+                      }
+                      return null;
+                    })}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} style={{ marginTop: "30px" }}>
+                <Typography color="primary" gutterBottom>
+                  Deskripsi Kuis/Ujian:
+                </Typography>
+                <Typography>
+                  {selectedAssessments.description}
+                </Typography>
+              </Grid>
+
+
+              </Grid>
+            {/* <Hidden smDown>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Typography align="justify">
@@ -937,11 +1017,11 @@ function ViewAssessmentTeacher(props) {
                   </Typography>
                 </Grid>
               </Grid>
-            </Hidden>
+            </Hidden> */}
 
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Divider />
+              <Grid item xs={12} style={{ marginTop: "18px" }}>
+                <Divider className={classes.dividerColor} />
               </Grid>
             </Grid>
 
@@ -1017,7 +1097,7 @@ function ViewAssessmentTeacher(props) {
 
             <Grid container spacing={2}>
               <Grid item xs={12} style={{ marginTop: "18px" }}>
-                <Divider />
+                <Divider className={classes.dividerColor} />
               </Grid>
             </Grid>
 

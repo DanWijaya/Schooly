@@ -220,6 +220,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down(400)]: {
       margin: "8px 8px 8px 0",
     }
+  },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main
   }
 }));
 
@@ -830,9 +833,9 @@ function SubmittedAssessmentList(props) {
   document.title = "Schooly | Daftar Tugas Terkumpul"
   return (
     <div className={classes.root}>
-      <Paper>        
+      <Paper>
         <Grid container spacing={2} className={classes.content}>
-          <Grid item xs={12} md={7}>
+          {/* <Grid item xs={12} md={7}>
             <Typography variant="h4" gutterBottom>
               {selectedAssessments.name}
             </Typography>
@@ -975,7 +978,133 @@ function SubmittedAssessmentList(props) {
                 {selectedAssessments.description}
               </Typography>
             </Grid>
+          </Hidden> */}
+
+          <Hidden smDown>
+            <Grid item xs={12} style={{ paddingBottom: "0" }}>
+              <Typography variant="h4">
+                {selectedAssessments.name}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={7} spacing={8} style={{ paddingTop: "0" }}>
+              <Typography variant="caption" color="textSecondary">
+                <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={5} spacing={8} style={{ paddingTop: "0" }}>
+              <h6 style={{ marginBottom: "0" }}>
+                <Typography align="right" variant="body2" color="textSecondary">
+                  Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+                </Typography>
+              </h6>
+              <Typography align="right" variant="body2" color="textSecondary">
+                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              </Typography>
+            </Grid>
           </Hidden>
+
+          <Hidden mdUp>
+            <Grid item xs={12}>
+              <Typography variant="h4">
+                {selectedAssessments.name}
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                <h6>{all_subjects_map.get(selectedAssessments.subject)}</h6>
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={7} spacing={8}>
+              <Typography variant="body2" color="textSecondary">
+                Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
+              </Typography>
+            </Grid>
+          </Hidden>
+
+          <Grid item xs={12}>
+            <Divider className={classes.dividerColor} />
+          </Grid>
+
+          <Grid item xs={12} style={{ marginTop: "30px" }}>
+            <Typography color="primary" gutterBottom>
+              Kelas yang Diberikan:
+            </Typography>
+            <Typography>
+              {!selectedAssessments.class_assigned || !all_classes.length ? null :
+                selectedAssessments.class_assigned.map((kelas, i) => {
+                  let className = all_classes.find((cls) => (cls._id === kelas)).name;
+                  if (className) {
+                    if (i === selectedAssessments.class_assigned.length - 1)
+                      return `${className}`
+                    return (`${className}, `)
+                  }
+                  return null;
+                })}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} style={{ marginTop: "30px" }}>
+            <Typography color="primary" gutterBottom>
+              Deskripsi Kuis/Ujian:
+            </Typography>
+            <Typography>
+              {selectedAssessments.description}
+            </Typography>
+          </Grid>
+
+          <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
+            <Link to={(selectedAssessments.type === "Kuis") ? `/lihat-jawaban-kuis/${selectedAssessments._id}` : `/lihat-jawaban-ujian/${selectedAssessments._id}`}>
+              <Fab size="medium" variant="extended" className={classes.editFab}>
+                <EditIcon className={classes.editIconFab} />
+                    Periksa
+                  </Fab>
+            </Link>
+
+            <LightTooltip title="Urutkan Kuis">
+              <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                <SortIcon />
+              </IconButton>
+            </LightTooltip>
+            <Menu
+              keepMounted
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseSortMenu}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              {headCells.map((headCell, i) => (
+                <MenuItem
+                  key={headCell.id}
+                  sortDirection={orderBy === headCell.id ? order : false}
+                >
+                  <TableSortLabel
+                    active={orderBy === headCell.id}
+                    direction={orderBy === headCell.id ? order : "asc"}
+                    onClick={() => { handleRequestSort(headCell.id) }}
+                  >
+                    {headCell.label}
+                    {orderBy === headCell.id ?
+                      <span className={classes.visuallyHidden}>
+                        {order === "desc" ? "sorted descending" : "sorted ascending"}
+                      </span>
+                      : null
+                    }
+                  </TableSortLabel>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Grid>
 
         </Grid>
         {listClassTab()}
