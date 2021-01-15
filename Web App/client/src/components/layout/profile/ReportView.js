@@ -839,7 +839,7 @@ function ReportView(props) {
         </Grid>
       :
       (role === "Student") ?
-        <Grid container direction="column" spacing={6}>
+        <Grid container direction="column" spacing={4}>
           <Grid item>
             <Typography variant="h4" align="center" color="textPrimary" style={{marginRight:"15px"}}>
               Rapor Semester X (Tahun {(new Date()).getFullYear()})
@@ -860,7 +860,7 @@ function ReportView(props) {
                 </Grid>
               </Grid>
               <Grid container item alignItems="center" spacing={4}>
-                <Grid item xs={4} style={{maxHeight: "395px"}}>
+                <Grid item xs={4} style={{maxHeight: "400px"}}>
                   {graphTask(taskGraphCurrentSubject) === null ?
                     <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
                       <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait</Typography>
@@ -871,7 +871,7 @@ function ReportView(props) {
                     </div>
                   }
                 </Grid>
-                <Grid item xs={4} style={{maxHeight: "395px"}}>
+                <Grid item xs={4} style={{maxHeight: "400px"}}>
                   {graphAssessment(quizGraphCurrentSubject, "Kuis") === null ?
                     <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
                       <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Kuis yang telah dinilai untuk mata pelajaran terkait</Typography>
@@ -882,7 +882,7 @@ function ReportView(props) {
                     </div>
                   }
                 </Grid>
-                <Grid item xs={4} style={{maxHeight: "395px"}}>
+                <Grid item xs={4} style={{maxHeight: "400px"}}>
                   {graphAssessment(examGraphCurrentSubject, "Ujian") === null ?
                     <div className={classes.greyBackground} style={{padding: "58% 10px"}}>
                       <Typography align="center" color="textSecondary" variant="subtitle2" >Belum ada Ujian yang telah dinilai untuk mata pelajaran terkait</Typography>
