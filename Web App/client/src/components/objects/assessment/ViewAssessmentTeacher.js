@@ -14,6 +14,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LinkIcon from '@material-ui/icons/Link';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -286,14 +287,24 @@ function ViewAssessmentTeacher(props) {
                   <Grid item>
                     {(question.type === "radio") ? (
                       question.options.map((option, i) => (
-                        <Typography className={question.answer[0] === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
-                          {option}
+                        // <Typography className={question.answer[0] === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
+                        <Typography className={classes.optionText}>
+                          {option + " "}
+                          {(question.answer[0] === String.fromCharCode(97 + i).toUpperCase()) ?
+                            <CheckCircleIcon style={{ fontSize: "1rem", verticalAlign: "middle" }} className={classes.answerText} />
+                            : null
+                          }
                         </Typography>
                       ))
                     ) : (question.type === "checkbox") ? (
                       question.options.map((option, i) => (
-                        <Typography className={question.answer.includes(String.fromCharCode(97 + i).toUpperCase()) ? classes.answerText : classes.optionText}>
-                          {option}
+                        // <Typography className={question.answer.includes(String.fromCharCode(97 + i).toUpperCase()) ? classes.answerText : classes.optionText}>
+                        <Typography className={classes.optionText}>
+                          {option + " "}
+                          {(question.answer.includes(String.fromCharCode(97 + i).toUpperCase())) ?
+                            <CheckCircleIcon style={{ fontSize: "1rem", verticalAlign: "middle" }} className={classes.answerText} />
+                            : null
+                          }
                         </Typography>
                       ))
                     ) : ( // question.type === "shorttext" || question.type === "shorttext" 
