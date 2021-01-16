@@ -35,6 +35,10 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import { BsClipboardData } from "react-icons/bs";
+import { FaClipboardList } from "react-icons/fa";
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
+
 import { Bar } from "react-chartjs-2";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +54,8 @@ const useStyles = makeStyles((theme) => ({
   },
   profileDivider: {
     backgroundColor: theme.palette.primary.main,
-    margin: "15px 15px 5px 0px",
+    // margin: "15px 15px 5px 0px",
+    marginTop: "15px",
   },
   informationPaper: {
     backgroundColor: fade(theme.palette.primary.main, 0.2),
@@ -130,6 +135,16 @@ const useStyles = makeStyles((theme) => ({
   greyBackground: {
     backgroundColor: "#e3e5e5",
     padding: "130px 10px",
+  },
+  customMargin: {
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: theme.spacing(3),
+    },
+  },
+  headerTableCell: {
+    color: "white",
+    borderRadius: "0",
+    textAlign: "center",
   },
 }));
 
@@ -249,6 +264,9 @@ function ReportView(props) {
 
   const [valueKelas, setValueKelas] = React.useState(""); // nama kelas yang sedang terpilih di Select
   const [valueMatpel, setValueMatpel] = React.useState(""); // nama matpel yang sedang terpilih di Select
+
+  // const [valueKelas, setValueKelas] = React.useState("5f4760f98dccb3468ccc0ffc"); // dev
+  // const [valueMatpel, setValueMatpel] = React.useState("5ee3443c10dea50651f0433e"); // dev
 
   // berisi semua matpel yang boleh diakses saat pertama kali memilih di Select matpel
   const [semuaMatpel, setSemuaMatpel] = React.useState(new Map());
@@ -529,16 +547,69 @@ function ReportView(props) {
     );
   }
 
-  function generateHeaderCell(nama) {
-    if (nama === "Nama Murid" || nama === "Mata Pelajaran") {
-      return <TableCell style={{ color: "white" }}>{nama}</TableCell>;
+  function generateHeaderCellMatpel(nama) {
+    if (nama === "Mata Pelajaran") {
+      return (
+        <TableCell style={{ color: "white", borderRadius: "0" }}>
+          {nama}
+        </TableCell>
+      );
     } else {
       return (
-        <TableCell style={{ color: "white" }} align="center">
+        <TableCell style={{ color: "white", borderRadius: "0" }} align="center">
           {nama}
         </TableCell>
       );
     }
+  }
+
+  function generateHeaderMurid(headers, classes) {
+    let gradeHeader = headers.slice(1);
+    let row1 = (
+      <TableRow style={{ border: "0" }}>
+        <TableCell rowSpan={2} className={classes.headerTableCell}>
+          {headers[0]}
+        </TableCell>
+        {gradeHeader.map((header) => {
+          let icon;
+          if (header.type === "tugas") {
+            icon = <AssignmentIcon style={{ fontSize: "1rem" }} />;
+          } else if (header.type === "ujian") {
+            icon = <BsClipboardData style={{ fontSize: "1rem" }} />;
+          } else if (header.type === "kuis") {
+            icon = <FaClipboardList style={{ fontSize: "1rem" }} />;
+          }
+          return (
+            <TableCell
+              style={{ border: "0", padding: "16px 0 0 0" }}
+              className={classes.headerTableCell}
+            >
+              {icon}
+            </TableCell>
+          );
+        })}
+      </TableRow>
+    );
+    let row2 = (
+      <TableRow>
+        {gradeHeader.map((header) => {
+          return (
+            <TableCell
+              style={{ paddingTop: "0" }}
+              className={classes.headerTableCell}
+            >
+              {header.name}
+            </TableCell>
+          );
+        })}
+      </TableRow>
+    );
+    return (
+      <TableHead className={classes.tableHeader}>
+        {row1}
+        {row2}
+      </TableHead>
+    );
   }
 
   function generateEmptyMessage() {
@@ -837,14 +908,17 @@ function ReportView(props) {
         condition.push("noStudent");
       }
 
-      const addScore = (items, isAssessment) => {
+      const addScore = (items, type) => {
         if (items.length !== 0) {
           items.forEach((item) => {
-            headerNames.push(item.name);
+            headerNames.push({
+              name: item.name,
+              type: type,
+            });
           });
           hasGrade = true;
 
-          if (isAssessment) {
+          if (type === "kuis" || type === "ujian") {
             students_by_class.forEach((stdInfo) => {
               items.forEach((item) => {
                 if (
@@ -877,16 +951,16 @@ function ReportView(props) {
 
       getTasksBySC(valueMatpel, valueKelas)
         .then((taskArray) => {
-          addScore(taskArray, false);
+          addScore(taskArray, "tugas");
         })
         .then(() => {
           return getKuisBySC(valueMatpel, valueKelas).then((kuisArray) => {
-            addScore(kuisArray, true);
+            addScore(kuisArray, "kuis");
           });
         })
         .then(() => {
           return getUjianBySC(valueMatpel, valueKelas).then((ujianArray) => {
-            addScore(ujianArray, true);
+            addScore(ujianArray, "ujian");
           });
         })
         .then(() => {
@@ -968,33 +1042,28 @@ function ReportView(props) {
       {role === "Teacher" ? (
         <Grid container direction="column" spacing={3}>
           <Grid item>
-            <Typography
-              variant="h4"
-              align="center"
-              color="textPrimary"
-              style={{ marginRight: "15px" }}
-            >
+            <Typography variant="h4" align="center" color="textPrimary">
               Rapor Semester X (Tahun {new Date().getFullYear()})
             </Typography>
             <Divider className={classes.profileDivider} />
           </Grid>
-          <Grid container item direction="row" spacing={5}>
+          <Grid container item direction="row">
             <Grid item xs={7} sm={4}>
-              <Typography style={{ padding: "10px 20px 10px 5px" }}>
-                Nama : {nama}
+              <Typography
+                variant="h6"
+                style={{ padding: "10px 20px 10px 5px" }}
+              >
+                <b>Nama: </b>
+                {nama}
               </Typography>
-              <Typography style={{ padding: "5px 20px 10px 5px" }}>
-                Kelas : {kelas.name}
+              <Typography variant="h6" style={{ padding: "5px 20px 10px 5px" }}>
+                <b>Kelas: </b>
+                {kelas.name}
               </Typography>
             </Grid>
           </Grid>
-          <Grid
-            container
-            direction="column"
-            spacing={3}
-            style={{ margin: "auto" }}
-          >
-            <Grid item style={{ marginRight: "20px" }}>
+          <Grid item container direction="column" style={{ margin: "auto" }}>
+            <Grid item>
               <TableContainer component={Paper}>
                 <Table
                   aria-label="simple table"
@@ -1004,7 +1073,7 @@ function ReportView(props) {
                   <TableHead className={classes.tableHeader}>
                     <TableRow>
                       {headers.map((nama) => {
-                        return generateHeaderCell(nama);
+                        return generateHeaderCellMatpel(nama);
                       })}
                     </TableRow>
                   </TableHead>
@@ -1021,12 +1090,7 @@ function ReportView(props) {
       ) : role === "Student" ? (
         <Grid container direction="column" spacing={4}>
           <Grid item>
-            <Typography
-              variant="h4"
-              align="center"
-              color="textPrimary"
-              style={{ marginRight: "15px" }}
-            >
+            <Typography variant="h4" align="center" color="textPrimary">
               Rapor Semester X (Tahun {new Date().getFullYear()})
             </Typography>
             <Divider className={classes.profileDivider} />
@@ -1198,12 +1262,14 @@ function ReportView(props) {
             </Grid>
           </Hidden>
           <Grid
+            item
             container
             direction="column"
-            spacing={2}
+            // spacing={2}
             style={{ margin: "auto" }}
           >
-            <Grid item style={{ marginRight: "20px" }}>
+            {/* <Grid item style={{ marginRight: "20px" }}> */}
+            <Grid item>
               <TableContainer component={Paper}>
                 <Table
                   aria-label="simple table"
@@ -1213,7 +1279,7 @@ function ReportView(props) {
                   <TableHead className={classes.tableHeader}>
                     <TableRow>
                       {headers.map((nama) => {
-                        return generateHeaderCell(nama);
+                        return generateHeaderCellMatpel(nama);
                       })}
                     </TableRow>
                   </TableHead>
@@ -1230,24 +1296,18 @@ function ReportView(props) {
       ) : (
         <Grid container direction="column" spacing={3}>
           <Grid item>
-            <Typography
-              variant="h4"
-              align="center"
-              color="textPrimary"
-              style={{ marginRight: "15px" }}
-            >
+            <Typography variant="h4" align="center" color="textPrimary">
               Daftar Nilai Tahun {new Date().getFullYear()}
             </Typography>
             <Divider className={classes.profileDivider} />
           </Grid>
           <Grid
             item
-            container
             justify="space-between"
             alignItems="center"
-            spacing={3}
+            style={{ display: "flex", flexWrap: "wrap" }}
           >
-            <Grid item md={6}>
+            <Grid item md={6} className={classes.customMargin}>
               <Typography>
                 Berikut Ini adalah Rapor Seluruh Siswa Sesuai Kelas dan Mata
                 Pelajaran yang Dipilih
@@ -1298,41 +1358,110 @@ function ReportView(props) {
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            container
-            direction="column"
-            spacing={2}
-            style={{ margin: "auto" }}
-          >
-            <Grid item style={{ marginRight: "20px" }}>
+          <Grid item container direction="column" style={{ margin: "auto" }}>
+            <Grid item xs={12}>
               {emptyCondition.length === 0 ? (
                 <TableContainer component={Paper}>
-                  <Table
-                    aria-label="simple table"
-                    size="medium"
-                    style={{ overflow: "hidden" }}
-                  >
-                    <TableHead className={classes.tableHeader}>
-                      <TableRow>
-                        {headers[0] === "Nama Murid" // untuk memastikan isi state "header" sudah berubah ke format baru
-                          ? headers.map((nama) => {
-                              return generateHeaderCell(nama);
-                            })
-                          : null}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {
-                        // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid,
-                        // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
-                        rows.length !== 0 && rows[0].constructor === Map
-                          ? rows.map((row) => {
-                              return generateRowCellFormat1(row);
-                            })
-                          : null
+                  {/* *** yang membedakan isi Hidden ini dengan yang bawah adalah 
+                      hanyalah batas jumlah kolom perubahan ukuran di props style komponen Table *** */}
+                  <Hidden smDown>
+                    <Table
+                      aria-label="simple table"
+                      style={
+                        headers.length > 6
+                          ? // jika jumlah kolom (termasuk kolom nama) sudah lebih dari batas ini, setiap kolom
+                            // akan diberi ukuran fix yang sama
+                            { tableLayout: "fixed" }
+                          : { overflow: "hidden" }
                       }
-                    </TableBody>
-                  </Table>
+                    >
+                      <colgroup>
+                        {headers[0] === "Nama Murid" ? ( // untuk memastikan isi state "header" sudah berubah ke format baru
+                          headers.length > 6 ? (
+                            // jika jumlah kolom (termasuk kolom nama) sudah lebih dari batas ini, setiap kolom
+                            // akan diberi ukuran fix yang sama
+                            headers.map((val, idx) => {
+                              return (
+                                <col
+                                  style={{
+                                    width: idx === 0 ? "200px" : "150px",
+                                  }}
+                                />
+                              );
+                            })
+                          ) : (
+                            // jika masih di bawah batas kolom, setiap kolom kecuali kolom pertama akan
+                            // diberi lebar kolom sesuai isinya dan lebar tabel yang tersedia
+                            <col style={{ width: "200px" }} />
+                          )
+                        ) : null}
+                      </colgroup>
+
+                      {headers[0] === "Nama Murid" // untuk memastikan isi state "header" sudah berubah ke format baru
+                        ? generateHeaderMurid(headers, classes)
+                        : null}
+                      <TableBody>
+                        {
+                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid,
+                          // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
+                          rows.length !== 0 && rows[0].constructor === Map
+                            ? rows.map((row) => {
+                                return generateRowCellFormat1(row);
+                              })
+                            : null
+                        }
+                      </TableBody>
+                    </Table>
+                  </Hidden>
+                  <Hidden mdUp>
+                    <Table
+                      aria-label="simple table"
+                      style={
+                        headers.length > 4
+                          ? // jika jumlah kolom (termasuk kolom nama) sudah lebih dari batas ini, setiap kolom
+                            // akan diberi ukuran fix yang sama
+                            { tableLayout: "fixed" }
+                          : { overflow: "hidden" }
+                      }
+                    >
+                      <colgroup>
+                        {headers[0] === "Nama Murid" ? ( // untuk memastikan isi state "header" sudah berubah ke format baru
+                          headers.length > 4 ? (
+                            // jika jumlah kolom (termasuk kolom nama) sudah lebih dari batas ini, setiap kolom
+                            // akan diberi ukuran fix yang sama
+                            headers.map((val, idx) => {
+                              return (
+                                <col
+                                  style={{
+                                    width: idx === 0 ? "200px" : "150px",
+                                  }}
+                                />
+                              );
+                            })
+                          ) : (
+                            // jika masih di bawah batas kolom, setiap kolom kecuali kolom pertama akan
+                            // diberi lebar kolom sesuai isinya dan lebar tabel yang tersedia
+                            <col style={{ width: "200px" }} />
+                          )
+                        ) : null}
+                      </colgroup>
+
+                      {headers[0] === "Nama Murid" // untuk memastikan isi state "header" sudah berubah ke format baru
+                        ? generateHeaderMurid(headers, classes)
+                        : null}
+                      <TableBody>
+                        {
+                          // jika guru klik icon rapor side drawer ketika sedang melihat halaman lihat-rapor murid,
+                          // isi elemen array "rows" ("rows" merupakan state) berubah dari Object menjadi Map.
+                          rows.length !== 0 && rows[0].constructor === Map
+                            ? rows.map((row) => {
+                                return generateRowCellFormat1(row);
+                              })
+                            : null
+                        }
+                      </TableBody>
+                    </Table>
+                  </Hidden>
                 </TableContainer>
               ) : (
                 generateEmptyMessage()
