@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { getAllClass, updateWaliAdmin } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 // import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -44,13 +45,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   editClassButton: {
-    width: "100%",
-    marginTop: "20px",
+    // width: "100%",
+    // marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
+      color: theme.palette.primary.main,
+      backgroundColor: "white",
     },
   },
   select: {
@@ -60,6 +61,20 @@ const useStyles = makeStyles((theme) => ({
       minWidth: "100px",
       maxWidth: "100px",
     },
+  },
+  cancelButton: {
+    // width: "100%",
+    // marginTop: "20px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: "white",
+      color: theme.palette.error.main,
+    },
+  },
+  assessmentSettings: {
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 }));
 
@@ -242,6 +257,8 @@ function EditClassTeacher(props) {
   }
 
   const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+
   const [success, setSuccess] = React.useState(false);
   // handleOpenUploadDialog = () => {
   //   setOpenUploadDialog(true);
@@ -249,6 +266,12 @@ function EditClassTeacher(props) {
   // handleCloseUploadDialog = () => {
   //   setOpenUploadDialog(false);
   // }
+  function handleOpenDeleteDialog() {
+    setOpenDeleteDialog(true);
+  }
+  function handleCloseDeleteDialog() {
+    setOpenDeleteDialog(false);
+  }
 
   return (
     <div className={classes.root}>
@@ -259,20 +282,18 @@ function EditClassTeacher(props) {
         messageSuccess={`Pengaturan wali kelas berhasil disimpan`}
         redirectLink="/daftar-kelas"
       />
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={(event, reason) => {
-          handleCloseSnackbar(event, reason);
-        }}
-      >
-        <MuiAlert
-          variant="filled"
-          severity={severity}
-          onClose={(event, reason) => {
-            handleCloseSnackbar(event, reason);
-          }}
-        >
+      <DeleteDialog
+        openDeleteDialog={openDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog}
+        itemType="pengaturan wali kelas"
+        deleteItem={null}
+        itemName={null}
+        isLink={true}
+        redirectLink="/daftar-kelas"
+        isWarning={false}
+      />
+      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
+        <MuiAlert variant="filled" severity={severity} onClose={(event, reason) => { handleCloseSnackbar(event, reason) }}>
           {snackbarContent}
         </MuiAlert>
       </Snackbar>
@@ -344,11 +365,17 @@ function EditClassTeacher(props) {
               })
             : null}
           <Divider />
-          <div
-            style={{ display: "flex", justifyContent: "flex-end" }}
-            className={classes.content}
-          >
-            <div>
+          <div style={{ display: "flex", justifyContent: "flex-end" }} className={classes.content}>
+            <div style={{ display: "flex", alignItems: "center", padding: "4px" }}>            
+              <Button
+                variant="contained"
+                onClick={handleOpenDeleteDialog}
+                className={classes.cancelButton}
+              >
+                Batal
+              </Button>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", padding: "4px"}}>
               <Button
                 variant="contained"
                 onClick={handleSubmit}

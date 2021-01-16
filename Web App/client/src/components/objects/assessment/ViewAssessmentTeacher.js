@@ -338,16 +338,10 @@ function ViewAssessmentTeacher(props) {
               </Grid>
 
               <Grid item xs={12} style={{ marginTop: "30px" }}>
-                {/* <Hidden smDown implementation="css"> */}
-                {/* <Grid item style={{marginTop: "40px"}}> */}
-                {/* <Grid item> */}
-                {/* <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}> */}
                 <Typography color="primary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
                 <Typography>{selectedAssessments.description}</Typography>
-                {/* </Grid> */}
-                {/* </Hidden> */}
               </Grid>
             </Grid>
           </Paper>
