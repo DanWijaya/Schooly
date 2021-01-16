@@ -87,7 +87,7 @@ function Footer(props) {
                     </Link>
                   </Typography>
                   <Typography gutterBottom className={classes.mobileFont}>
-                    <Link to="http://https://lin.ee/vmWP2vy">Media Sosial</Link>
+                    <Link to="https://instagram.com/schoolysystem">Media Sosial</Link>
                   </Typography>
                 </div>
               </Grid>
@@ -125,7 +125,7 @@ function Footer(props) {
                   <a href="mailto:schoolysystem@gmail.com">Hubungi Kami</a>
                 </Grid>
                 <Grid item>
-                  <a href="http://https://lin.ee/vmWP2vy">Media Sosial</a>
+                  <a href="https://instagram.com/schoolysystem">Media Sosial</a>
                 </Grid>
               </Grid>
             </div>

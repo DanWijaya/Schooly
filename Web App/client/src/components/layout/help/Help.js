@@ -1198,7 +1198,7 @@ function Help(props) {
                 variant="contained"
                 startIcon={<InstagramIcon />}
                 className={classes.moreHelpMobileButton}
-                href="http://https://lin.ee/vmWP2vy"
+                href="https://instagram.com/schoolysystem"
               >
                 schoolysystem.com
               </Button>
@@ -1209,7 +1209,7 @@ function Help(props) {
                 button
                 component="a"
                 className={classes.paperIcon}
-                href="http://https://lin.ee/vmWP2vy"
+                href="https://instagram.com/schoolysystem"
               >
                 <Avatar className={classes.iconAvatar}>
                   <InstagramIcon className={classes.instagramIcon} />
