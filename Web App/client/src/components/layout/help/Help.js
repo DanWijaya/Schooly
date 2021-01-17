@@ -1200,7 +1200,7 @@ function Help(props) {
                 className={classes.moreHelpMobileButton}
                 href="https://instagram.com/schoolysystem"
               >
-                schoolysystem.com
+                schoolysystem
               </Button>
             </Hidden>
             <Hidden xsDown implementation="css">
