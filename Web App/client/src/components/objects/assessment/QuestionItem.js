@@ -27,12 +27,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import HelpIcon from "@material-ui/icons/Help";
-import {
-  RadioButtonChecked,
-  CheckBox,
-  TextFormat,
-  Subject,
-} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   content: {

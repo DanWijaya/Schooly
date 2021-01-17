@@ -8,23 +8,24 @@ import {
   Paper,
   Grid,
   Typography,
-  AppBar,
-  Dialog,
-  FormControlLabel,
-  Switch,
-  Slide,
-  Toolbar,
+  // AppBar,
+  // Dialog,
+  // FormControlLabel,
+  // Switch,
+  // Slide,
+  // Toolbar,
   TextField,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
+  // IconButton,
+  // List,
+  // ListItem,
+  // ListItemText,
+  // Divider,
 } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/styles";
-import SearchIcon from "@material-ui/icons/Search";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import { makeStyles } from "@material-ui/styles";
+// import { makeStyles, withStyles } from "@material-ui/styles";
+// import SearchIcon from "@material-ui/icons/Search";
+// import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+// import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -63,9 +64,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
 
 function Formula(props) {
   return (
@@ -89,15 +90,15 @@ export default function Tester() {
 
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   return (
     <div style={{ margin: "auto", maxWidth: "1000px" }}>

@@ -18,7 +18,6 @@ import {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   Badge,
-  List,
   ListItem,
   ListItemAvatar,
   ListItemText,
@@ -38,7 +37,6 @@ import {
   Avatar,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import AssignmentIcon from "@material-ui/icons/Assignment";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";

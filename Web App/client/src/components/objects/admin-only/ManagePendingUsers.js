@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -41,7 +41,6 @@ import SortIcon from "@material-ui/icons/Sort";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
-import { set } from "date-fns/esm";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -107,16 +106,16 @@ const ManageUsersToolbar = (props) => {
     currentCheckboxMode,
     OpenDialogCheckboxDelete,
     OpenDialogCheckboxApprove,
-    CloseDialogCheckboxDelete,
-    CloseDialogCheckboxApprove,
+    // CloseDialogCheckboxDelete,
+    // CloseDialogCheckboxApprove,
     CheckboxDialog,
     listCheckbox,
     lengthListCheckbox,
-    reloader,
+    // reloader,
     rowCount,
-    listBooleanCheckbox,
-    listBooleanCheckboxState,
-    setListBooleanCheckboxState,
+    // listBooleanCheckbox,
+    // listBooleanCheckboxState,
+    // setListBooleanCheckboxState,
     selectAllData,
     deSelectAllData,
   } = props;
@@ -171,8 +170,6 @@ const ManageUsersToolbar = (props) => {
   });
 
   console.log(rowCount);
-
-  const [coba, setCoba] = React.useState(null);
 
   return (
     <Toolbar className={classes.toolbar}>
@@ -565,6 +562,7 @@ function ManageUsers(props) {
     console.log(listCheckboxStudent.length);
     console.log(listCheckboxTeacher.length);
     autoReloader();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listCheckboxTeacher, listCheckboxStudent]);
 
   const handleActivateCheckboxMode = (type) => {
@@ -1240,15 +1238,15 @@ function ManageUsers(props) {
         currentCheckboxMode={checkboxModeStudent}
         OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
         OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-        CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-        CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
+        // CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
+        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
         lengthListCheckbox={listCheckboxStudent.length}
         listCheckbox={listCheckboxStudent}
-        reloader={() => autoReloader}
-        listBooleanCheckbox={currentListBooleanStudent}
-        listBooleanCheckboxState={booleanCheckboxStudent}
-        setListBooleanCheckboxState={setBooleanCheckboxStudent}
+        // reloader={() => autoReloader}
+        // listBooleanCheckbox={currentListBooleanStudent}
+        // listBooleanCheckboxState={booleanCheckboxStudent}
+        // setListBooleanCheckboxState={setBooleanCheckboxStudent}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
@@ -1411,15 +1409,15 @@ function ManageUsers(props) {
         currentCheckboxMode={checkboxModeTeacher}
         OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
         OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-        CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-        CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
+        // CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
+        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
         lengthListCheckbox={listCheckboxTeacher.length}
         listCheckbox={listCheckboxTeacher}
-        reloader={() => autoReloader}
-        listBooleanCheckbox={currentListBooleanTeacher}
-        listBooleanCheckboxState={booleanCheckboxTeacher}
-        setListBooleanCheckboxState={setBooleanCheckboxTeacher}
+        // reloader={() => autoReloader}
+        // listBooleanCheckbox={currentListBooleanTeacher}
+        // listBooleanCheckboxState={booleanCheckboxTeacher}
+        // setListBooleanCheckboxState={setBooleanCheckboxTeacher}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />

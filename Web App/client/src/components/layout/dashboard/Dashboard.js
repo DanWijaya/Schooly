@@ -38,16 +38,13 @@ import { withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import AssignmentLateIcon from "@material-ui/icons/AssignmentLate";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import ErrorIcon from "@material-ui/icons/Error";
 import WarningIcon from "@material-ui/icons/Warning";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import { FaTasks } from "react-icons/fa";
@@ -297,7 +294,7 @@ function ListAssessments(props) {
     category,
     subject,
     type,
-    tab,
+    // tab,
     all_assessments,
     classId,
     classes,
@@ -564,7 +561,7 @@ class Dashboard extends Component {
       getStudentsByClass,
       getStudents,
     } = this.props;
-    const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
+    // const { all_subjects_map, all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
 
     getAllTask(); // actions yang membuat GET request ke Database.
@@ -789,7 +786,8 @@ class Dashboard extends Component {
 
     function listTasks() {
       let result = [];
-      tasksByClass.map((task) => {
+      // tasksByClass.map((task) => {
+      tasksByClass.forEach((task) => {
         let flag = true;
         for (var i = 0; i < all_user_files.length; i++) {
           if (all_user_files[i].for_task_object === task._id) {

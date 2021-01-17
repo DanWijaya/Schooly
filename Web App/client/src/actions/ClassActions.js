@@ -5,7 +5,7 @@ import {
   GET_ALL_CLASSES_MAP,
   GET_CLASSES,
   SET_CURRENT_CLASS,
-  GET_SUCCESS_RESPONSE,
+  // GET_SUCCESS_RESPONSE,
 } from "./Types";
 
 // Add Class

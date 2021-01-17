@@ -91,7 +91,6 @@ function AnnouncementListToolbar(props) {
     order,
     orderBy,
     onRequestSort,
-    role,
     searchFilter,
     updateSearchFilter,
     setSearchBarFocus,

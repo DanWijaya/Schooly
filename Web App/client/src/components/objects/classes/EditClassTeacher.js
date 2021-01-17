@@ -5,21 +5,17 @@ import { getAllClass, updateWaliAdmin } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
-
 // import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+
 import {
   Button,
   Divider,
-  FormControl,
-  FormHelperText,
   MenuItem,
   Grid,
-  Select,
   Paper,
   TextField,
   Typography,
   Hidden,
-  InputLabel,
   Avatar,
   ListItem,
   ListItemAvatar,
@@ -91,6 +87,7 @@ function EditClassTeacher(props) {
   React.useEffect(() => {
     getTeachers();
     getAllClass();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* 
@@ -138,7 +135,8 @@ function EditClassTeacher(props) {
         tempstatusWali[teacher._id] = {
           name: teacher.name,
           email: teacher.email,
-          classId: null,
+          avatar: teacher.avatar,
+          classId: null
         };
       }
 
@@ -320,9 +318,11 @@ function EditClassTeacher(props) {
                     <ListItem className={classes.listItem}>
                       <Hidden xsDown>
                         <ListItemAvatar>
-                          <Avatar className={classes.assignmentLate}>
-                            {/* <AssignmentIcon /> */}
-                          </Avatar>
+                        {!teacherInfo.avatar ? (
+                          <Avatar />
+                        ) : (
+                          <Avatar src={`/api/upload/avatar/${teacherInfo.avatar}`} />
+                        )}
                         </ListItemAvatar>
                       </Hidden>
                       <ListItemText

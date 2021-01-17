@@ -92,9 +92,9 @@ const useStyles = makeStyles((theme) => ({
   material: {
     backgroundColor: theme.palette.primary.main,
   },
-  listItem: {
-    minHeight: "70px",
-  },
+  // listItem: {
+  //   minHeight: "70px",
+  // },
   subtitleColor: {
     color: "rgba(255, 255, 255, 0.7)",
   },
@@ -114,21 +114,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SubjectListitem(props) {
-  const classes = useStyles();
+// function SubjectListitem(props) {
+//   const classes = useStyles();
 
-  return (
-    <Link to={props.work_link}>
-      <ListItem button className={classes.listItem}>
-        <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
-        <ListItemText
-          primary={<Typography variant="h6">{props.work_title}</Typography>}
-          secondary={!props.work_subject ? " " : props.work_subject}
-        />
-      </ListItem>
-    </Link>
-  );
-}
+//   return (
+//     <Link to={props.work_link}>
+//       <ListItem button className={classes.listItem}>
+//         <ListItemAvatar>{props.work_category_avatar}</ListItemAvatar>
+//         <ListItemText
+//           primary={<Typography variant="h6">{props.work_title}</Typography>}
+//           secondary={!props.work_subject ? " " : props.work_subject}
+//         />
+//       </ListItem>
+//     </Link>
+//   );
+// }
 
 function MaterialListitem(props) {
   const classes = useStyles();

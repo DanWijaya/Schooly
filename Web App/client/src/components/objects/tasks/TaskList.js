@@ -26,7 +26,6 @@ import {
   TableSortLabel,
   TextField,
   Typography,
-  List,
   ListItem,
   ListItemAvatar,
   ListItemText,
@@ -92,7 +91,6 @@ function TaskListToolbar(props) {
     role,
     searchFilter,
     updateSearchFilter,
-    searchBar,
     searchBarFocus,
     setSearchBarFocus,
   } = props;
@@ -777,6 +775,8 @@ function TaskList(props) {
                                     if (i === row.class_assigned.length - 1)
                                       return `${all_classes_map.get(id).name}`;
                                     return `${all_classes_map.get(id).name}, `;
+                                  } else {
+                                    return undefined;
                                   }
                                 })}
                           </Typography>

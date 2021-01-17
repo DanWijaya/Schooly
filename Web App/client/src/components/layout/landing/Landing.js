@@ -14,7 +14,6 @@ import schoolyFeatureBackground7 from "./SchoolyFeatureBackground7.png";
 import schoolyFeatureBackground8 from "./SchoolyFeatureBackground8.png";
 import {
   Avatar,
-  Badge,
   Button,
   Grid,
   Paper,
@@ -24,13 +23,11 @@ import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import ContactlessIcon from "@material-ui/icons/Contactless";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
 import FaceIcon from "@material-ui/icons/Face";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PeopleIcon from "@material-ui/icons/People";
-import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 
