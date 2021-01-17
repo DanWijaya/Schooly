@@ -50,17 +50,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   RadioQst: {
-    backgroundColor: "#02AFF8",
+    backgroundColor: theme.palette.radio.main,
   },
   CheckboxQst: {
     padding: "3px",
-    backgroundColor: "#049F90",
+    backgroundColor: theme.palette.checkbox.main,
   },
   ShorttextQst: {
-    backgroundColor: "#FD7D2E",
+    backgroundColor: theme.palette.shorttext.main,
   },
   LongtextQst: {
-    backgroundColor: "#B2417C",
+    backgroundColor: theme.palette.longtext.main,
   },
   questionNameDiv: {
     display: "flex",

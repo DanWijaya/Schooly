@@ -141,28 +141,28 @@ const useStyles = makeStyles((theme) => ({
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: "#02AFF8",
+      backgroundColor: theme.palette.radio.main,
     },
   },
   CheckboxQst: {
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: "#049F90",
+      backgroundColor: theme.palette.checkbox.main,
     },
   },
   ShorttextQst: {
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: "#FD7D2E",
+      backgroundColor: theme.palette.shorttext.main,
     },
   },
   LongtextQst: {
     "&$disabled": {
       boxShadow: theme.shadows[2],
       color: "white",
-      backgroundColor: "#B2417C",
+      backgroundColor: theme.palette.longtext.main,
     },
   },
   disabled: {

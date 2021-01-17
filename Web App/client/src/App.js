@@ -46,10 +46,10 @@ import ViewClass from "./components/objects/classes/ViewClass";
 import ViewSubject from "./components/objects/classes/ViewSubject";
 import ClassList from "./components/objects/classes/ClassList";
 //Material
-import CreateMaterial from "./components/objects/course-materials/CreateMaterial";
-import EditMaterial from "./components/objects/course-materials/EditMaterial";
-import ViewMaterial from "./components/objects/course-materials/ViewMaterial";
-import MaterialList from "./components/objects/course-materials/MaterialList";
+import CreateMaterial from "./components/objects/material/CreateMaterial";
+import EditMaterial from "./components/objects/material/EditMaterial";
+import ViewMaterial from "./components/objects/material/ViewMaterial";
+import MaterialList from "./components/objects/material/MaterialList";
 //Announcement
 import CreateAnnouncement from "./components/objects/announcement/CreateAnnouncement";
 import EditAnnouncement from "./components/objects/announcement/EditAnnouncement";

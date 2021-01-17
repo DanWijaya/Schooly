@@ -83,27 +83,27 @@ const styles = (theme) => ({
     },
   },
   RadioQst: {
-    backgroundColor: "#02AFF8",
+    backgroundColor: theme.palette.radio.main,
     "&:focus, &:hover": {
-      color: "#02AFF8",
+      color: theme.palette.radio.main,
     },
   },
   CheckboxQst: {
-    backgroundColor: "#049F90",
+    backgroundColor: theme.palette.checkbox.main,
     "&:focus, &:hover": {
-      color: "#049F90",
+      color: theme.palette.checkbox.main,
     },
   },
   ShorttextQst: {
-    backgroundColor: "#FD7D2E",
+    backgroundColor: theme.palette.shorttext.main,
     "&:focus, &:hover": {
-      color: "#FD7D2E",
+      color: theme.palette.shorttext.main,
     },
   },
   LongtextQst: {
-    backgroundColor: "#B2417C",
+    backgroundColor: theme.palette.longtext.main,
     "&:focus, &:hover": {
-      color: "#B2417C",
+      color: theme.palette.longtext.main,
     },
   },
   pageNavigator: {

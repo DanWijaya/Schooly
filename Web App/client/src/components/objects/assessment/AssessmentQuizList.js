@@ -505,11 +505,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   copyToClipboardButton: {
-    backgroundColor: "#974994",
+    backgroundColor: theme.palette.copylink.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: "#974994",
+      color: theme.palette.copylink.main,
     },
   },
   assessmentPanelSummary: {
