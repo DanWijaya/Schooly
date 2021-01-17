@@ -1215,7 +1215,7 @@ function Help(props) {
                   <InstagramIcon className={classes.instagramIcon} />
                 </Avatar>
                 <Typography variant="caption">
-                  <b>schoolysystem.com</b>
+                  <b>schoolysystem</b>
                 </Typography>
               </Paper>
             </Hidden>
