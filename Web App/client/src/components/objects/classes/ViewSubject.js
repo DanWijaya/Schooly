@@ -10,7 +10,6 @@ import { getAllTask } from "../../../actions/TaskActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
-import subjectBackground1 from "./SubjectBackground1.png";
 import {
   Avatar,
   Divider,
@@ -36,8 +35,10 @@ import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
+import background_images from "./images_list/ImportedImages";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles =
+    makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
@@ -56,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     padding: "40px 0px 40px 30px",
-    backgroundColor: "#5ec9cc",
-    backgroundImage: `url(${subjectBackground1})`,
+    backgroundColor: props => props.backgroundColor,
+    backgroundImage: props => `url(${props.backgroundImage})`,
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
@@ -448,7 +449,6 @@ function AssessmentListItem(props) {
 }
 
 function ViewSubject(props) {
-  const classes = useStyles();
 
   const { user } = props.auth;
   const id = props.match.params.id;
@@ -469,7 +469,20 @@ function ViewSubject(props) {
   const { selectedMaterials } = props.materialsCollection;
   const classId = user.kelas;
 
-  console.log(props.classesCollection);
+  let subjects_list = Array.from(all_subjects_map.keys());
+  let background_idx = subjects_list.indexOf(id) % background_images.length;
+  
+  let background_image, background_color
+
+  if(background_idx != -1){
+    background_image = Object.values(background_images[background_idx])[0]
+    background_color = Object.keys(background_images[background_idx])[0]
+  }
+  const classes = useStyles({
+    backgroundColor: background_color,
+    backgroundImage: background_image,
+  });
+
   React.useEffect(() => {
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class");
@@ -865,7 +878,7 @@ function ViewSubject(props) {
     return result;
   }
 
-  document.title = `Schooly | ${all_subjects_map.get(id)}`;
+  document.title = all_subjects_map.get(id) ? `Schooly | ${all_subjects_map.get(id)}` : "Schooly";
 
   return (
     <div className={classes.root}>
