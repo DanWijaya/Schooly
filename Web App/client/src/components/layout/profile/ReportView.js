@@ -110,8 +110,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   select: {
-    minWidth: "150px",
-    maxWidth: "150px",
+    minWidth: "200px",
+    maxWidth: "200px",
+    [theme.breakpoints.up("md")]: {
+      minWidth: "150px",
+      maxWidth: "150px",
+    },
   },
   selectposition: {
     justifyContent: "flex-end",
@@ -1047,16 +1051,15 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider} />
           </Grid>
-          <Grid container item direction="row">
-            <Grid item xs={7} sm={4}>
-              <Typography
-                variant="h6"
-                style={{ padding: "10px 20px 10px 5px" }}
-              >
+          <Grid container item direction="column" spacing={1}>
+            <Grid item>
+              <Typography>
                 <b>Nama: </b>
                 {nama}
               </Typography>
-              <Typography variant="h6" style={{ padding: "5px 20px 10px 5px" }}>
+            </Grid>
+            <Grid item>
+              <Typography>
                 <b>Kelas: </b>
                 {kelas.name}
               </Typography>
@@ -1097,7 +1100,6 @@ function ReportView(props) {
           </Grid>
           <Hidden smDown>
             <Grid
-              item
               container
               direction="row"
               justify="center"
@@ -1265,10 +1267,8 @@ function ReportView(props) {
             item
             container
             direction="column"
-            // spacing={2}
             style={{ margin: "auto" }}
           >
-            {/* <Grid item style={{ marginRight: "20px" }}> */}
             <Grid item>
               <TableContainer component={Paper}>
                 <Table
@@ -1362,7 +1362,7 @@ function ReportView(props) {
             <Grid item xs={12}>
               {emptyCondition.length === 0 ? (
                 <TableContainer component={Paper}>
-                  {/* *** yang membedakan isi Hidden ini dengan yang bawah adalah 
+                  {/* *** yang membedakan isi Hidden ini dengan yang bawah adalah
                       hanyalah batas jumlah kolom perubahan ukuran di props style komponen Table *** */}
                   <Hidden smDown>
                     <Table

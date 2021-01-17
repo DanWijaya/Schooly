@@ -11,9 +11,11 @@ import {
   Button,
   Box,
   Dialog,
+  FormControl,
   Grid,
   Hidden,
   IconButton,
+  InputLabel,
   List,
   ListItem,
   ListItemAvatar,
@@ -109,7 +111,7 @@ function ProfileDataItemEdit(props) {
   const { errors } = props;
   console.log(errors);
   return (
-    <ListItem>
+    <ListItem style={{margin: "5px 0px 5px 0px"}}>
       <Grid container alignItems="center">
         <Grid item sm={2}>
           <Hidden xsDown implementation="css">
@@ -123,11 +125,11 @@ function ProfileDataItemEdit(props) {
         <Grid item xs={12} sm={10}>
           {props.is_textfield ? (
             <div>
-              <label for={props.id}>{props.profile_data_category}</label>
               <TextField
                 fullWidth
                 variant="outlined"
                 id={props.id}
+                label={props.profile_data_category}
                 onChange={props.on_change}
                 value={props.value}
                 error={!errors ? null : errors.email}
@@ -316,7 +318,6 @@ function ProfileDataEditorDialog(props) {
                   profile_data_category="Tanggal Lahir"
                   non_textfield_content={
                     <div>
-                      <label for="tanggal_lahir">Tanggal Lahir</label>
                       <MuiPickersUtilsProvider
                         locale={lokal}
                         utils={DateFnsUtils}
@@ -324,6 +325,7 @@ function ProfileDataEditorDialog(props) {
                         <KeyboardDatePicker
                           fullWidth
                           disableFuture
+                          label="Tanggal Lahir"
                           inputVariant="outlined"
                           maxDateMessage="Batas waktu harus waktu yang akan datang"
                           invalidDateMessage="Format tanggal tidak benar"
@@ -346,13 +348,16 @@ function ProfileDataEditorDialog(props) {
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
                   non_textfield_content={
-                    <div>
-                      <label for="jenis_kelamin">Jenis kelamin</label>
+                    <FormControl
+                      id="jenis_kelamin"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                    >
+                      <InputLabel id="subject-label">Jenis Kelamin</InputLabel>
                       <Select
-                        fullWidth
-                        variant="outlined"
-                        color="primary"
-                        id="jenis_kelamin"
+                        labelId="subject-label"
+                        label="Mata Pelajaran"
                         value={dataProfil.jenis_kelamin}
                         onChange={(event) => {
                           handleChangeDataProfil(event, "jenis_kelamin");
@@ -361,7 +366,7 @@ function ProfileDataEditorDialog(props) {
                         <MenuItem value="Pria">Pria</MenuItem>
                         <MenuItem value="Wanita">Wanita</MenuItem>
                       </Select>
-                    </div>
+                    </FormControl>
                   }
                 />
                 {/*<ProfileDataItemEdit
