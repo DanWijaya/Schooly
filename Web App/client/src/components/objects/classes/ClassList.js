@@ -330,9 +330,6 @@ function ClassListToolbar(props) {
                   classesToUpdate[oldClassId] = fieldToDelete;
                 }
 
-                // tugas
-                // assessment
-
                 // untuk update kelas user
                 if (newClassParticipant[newClassId]) {
                   newClassParticipant[newClassId].push(studentId);

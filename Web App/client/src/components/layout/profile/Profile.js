@@ -336,7 +336,7 @@ function Profile(props) {
                       },
                     }}
                   >
-                    <LightTooltip title="Klik Untuk Melihat Rapor">
+                    <LightTooltip title="Lihat Rapor">
                       <Button
                         variant="contained"
                         className={classes.buttonRapor}

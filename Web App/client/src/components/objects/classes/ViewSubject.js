@@ -474,7 +474,7 @@ function ViewSubject(props) {
   
   let background_image, background_color
 
-  if(background_idx != -1){
+  if(background_idx !== -1){
     background_image = Object.values(background_images[background_idx])[0]
     background_color = Object.keys(background_images[background_idx])[0]
   }

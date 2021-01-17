@@ -206,6 +206,7 @@ function EditClassTeacher(props) {
 
       if (teacherIdArray.length > 1) {
         // jika masih ada kelas yang memiliki lebih dari 1 wali kelas, batal submit
+        handleOpenSnackbar("error", "Tidak boleh ada kelas yang memiliki lebih dari 1 wali kelas");
         return;
       } else {
         let waliSebelum = all_classes_wali.current[classId];

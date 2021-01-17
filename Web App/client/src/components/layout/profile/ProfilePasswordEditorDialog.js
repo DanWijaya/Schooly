@@ -31,6 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     padding: "0px 10px 0px 10px",
+    marginTop: "15px",
+    width: "100%",
   },
   changePasswordCaution: {
     color: "#A9A9A9",
@@ -52,13 +54,11 @@ function EditPasswordField(props) {
 
   return (
     <Grid item>
-      <Typography component="label" for={id} variant="caption" color="primary">
-        {props.edit_password_requirement}
-      </Typography>
       <TextField
         fullWidth
         variant="outlined"
         id={id}
+        label={props.edit_password_requirement}
         onChange={on_change}
         value={value}
         error={Boolean(errors)}
@@ -175,30 +175,30 @@ function ProfilePasswordEditorDialog(props) {
             </Typography>
           </Grid>
           <form onSubmit={onSubmit} className={classes.content}>
-            <Grid container direction="column" spacing={2}>
+            <Grid container direction="column" spacing={3}>
               <EditPasswordField
                 id="old_password"
                 errors={errors.old_password}
                 value={old_password}
                 on_change={onChange}
-                edit_password_requirement="Masukkan kata sandi saat ini"
+                edit_password_requirement="Kata Sandi Saat Ini"
               />
               <EditPasswordField
                 id="new_password"
                 value={new_password}
                 errors={errors.new_password}
                 on_change={onChange}
-                edit_password_requirement="Masukkan kata sandi baru"
+                edit_password_requirement="Kata Sandi Baru"
               />
               <EditPasswordField
                 id="new_password2"
                 value={new_password2}
                 on_change={onChange}
                 errors={errors.new_password}
-                edit_password_requirement="Konfirmasi kata sandi baru"
+                edit_password_requirement="Konfirmasi Kata Sandi Baru"
               />
             </Grid>
-            <Grid container justify="center" style={{ marginTop: "15px" }}>
+            <Grid container justify="center" style={{ marginTop: "30px" }}>
               <Button
                 type="submit"
                 variant="contained"

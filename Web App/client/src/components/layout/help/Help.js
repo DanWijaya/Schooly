@@ -1200,7 +1200,7 @@ function Help(props) {
                 className={classes.moreHelpMobileButton}
                 href="https://instagram.com/schoolysystem"
               >
-                schoolysystem.com
+                schoolysystem
               </Button>
             </Hidden>
             <Hidden xsDown implementation="css">
@@ -1215,7 +1215,7 @@ function Help(props) {
                   <InstagramIcon className={classes.instagramIcon} />
                 </Avatar>
                 <Typography variant="caption">
-                  <b>schoolysystem.com</b>
+                  <b>schoolysystem</b>
                 </Typography>
               </Paper>
             </Hidden>
