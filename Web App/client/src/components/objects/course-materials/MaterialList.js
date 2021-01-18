@@ -496,7 +496,7 @@ function MaterialList(props) {
     getAllClass("map");
     getTeachers("map");
     if (user.role === "Teacher") {
-      getMaterial(user.id, "by_author");
+      getMaterial(user._id, "by_author");
     } else {
       // for student
       getMaterial(user.kelas, "by_class");

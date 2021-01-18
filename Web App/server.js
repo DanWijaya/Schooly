@@ -97,7 +97,8 @@ app.use("/api/files/material", file_materials)
 app.use("/api/files/announcement", file_announcements)
 app.use("/api/files/tasks", file_tasks);
 app.use("/api/files/submit_tasks", file_submit_tasks);
-app.use("/api/files/avatar", file_avatar)
+console.log("Debugging for Avatar");
+app.use("/api/files/avatar", file_avatar);
 
 //Handle object routing
 app.use("/api/subjects", subjects);

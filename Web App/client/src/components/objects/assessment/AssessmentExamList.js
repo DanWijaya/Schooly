@@ -518,7 +518,7 @@ function AssessmentList(props) {
       if (user.role === "Teacher") {
       all_assessments.filter(item => item.name.toLowerCase().includes(searchFilter.toLowerCase()))
       .forEach((data) => {
-        if (data.author_id === user.id) {
+        if (data.author_id === user._id) {
           assessmentRowItem(data)
           }
         return null;

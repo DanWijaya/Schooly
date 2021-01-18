@@ -639,7 +639,7 @@ function ViewClass(props) {
     getTeachers("map") // get the all_teachers
     getStudents()
 
-    getAllTaskFilesByUser(user.id) // get the all_user_files
+    getAllTaskFilesByUser(user._id) // get the all_user_files
     getAllAssessments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -659,7 +659,7 @@ function ViewClass(props) {
       setFirstAssign(false);
     } else {
       // me-redirect murid yang memasukkan id kelas lain (bukan kelas murid tersebut) pada url
-      if (user.role === "Student" && !students_by_class.map((student) => {return student._id}).includes(user.id)) {
+      if (user.role === "Student" && !students_by_class.map((student) => {return student._id}).includes(user._id)) {
         setAllow("redirect");
       } else {
         setAllow("content");
@@ -669,10 +669,11 @@ function ViewClass(props) {
   }, [students_by_class, user]);
 
   React.useEffect(() => {
-    getTaskAtmpt(user.id).then((data) => {
+    console.log("ID User" , user._id, user._id)
+    getTaskAtmpt(user._id).then((data) => {
       setTaskAtmpt(data)
     })
-  }, [user.id])
+  }, [user._id])
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {

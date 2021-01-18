@@ -396,8 +396,8 @@ class EditAnnouncement extends Component {
       return temp;
     }
 
-    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id) {
-      console.log(kelas.ketua_kelas, user.id)
+    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user._id) {
+      console.log(kelas.ketua_kelas, user._id)
       return (
         <Redirect to="/tidak-ditemukan"/>
       )

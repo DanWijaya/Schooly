@@ -1175,7 +1175,7 @@ class CreateAssessment extends Component {
           messageSuccess="Kuis/Ujian telah dibuat"
           redirectLink="/daftar-kuis"
         />
-        <form onSubmit={(e) => this.onSubmit(e, user.id)} id="submitForm">
+        <form onSubmit={(e) => this.onSubmit(e, user._id)} id="submitForm">
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Paper>
@@ -1489,7 +1489,7 @@ class CreateAssessment extends Component {
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
                     </MenuItem>
-                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e, user.id)}>
+                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e, user._id)}>
                       <ListItemIcon>
                         <SendIcon />
                       </ListItemIcon>

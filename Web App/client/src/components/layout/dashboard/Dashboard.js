@@ -346,7 +346,7 @@ class Dashboard extends Component {
       getStudentsByClass(user.kelas)
     }
       getAllAssessments()
-      getAllTaskFilesByUser(user.id) // yang dapatin takfiles cuma berlaku untuk student soalnya
+      getAllTaskFilesByUser(user._id) // yang dapatin takfiles cuma berlaku untuk student soalnya
       getStudents()
   }
 
@@ -410,7 +410,7 @@ class Dashboard extends Component {
       let result = []
       console.log(user)
       for(let i=0;i<tasksCollection.length;i++){
-        if(tasksCollection[i].person_in_charge_id === user.id){
+        if(tasksCollection[i].person_in_charge_id === user._id){
           let number_students_assigned = 0
           for(let j=0;j<all_students.length;j++){
             if(tasksCollection[i].class_assigned.includes(all_students[j].kelas)){

@@ -166,9 +166,11 @@ function Profile(props) {
   const { updateAvatar, setCurrentClass, classesCollection, uploadFileAvatar, getFileAvatar } = props;
   const [avatar, setAvatar] = React.useState(null);
 
+  console.log(user)
   React.useEffect(() => {
     console.log("use effect")
-    let id = user._id ? user._id : user.id
+    // let id = user._id ? user._id : user._id
+    let id = user._id
     getFileAvatar(id)
     .then((result) => setAvatar(result))
     .catch((err) => console.log(err))
@@ -319,7 +321,7 @@ function Profile(props) {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user.id
+                        id: user._id
                       }
                     }}>
                       <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -353,7 +355,7 @@ function Profile(props) {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user.id
+                        id: user._id
                       }
                     }}>
                       <LightTooltip title="Klik Untuk Melihat Rapor">

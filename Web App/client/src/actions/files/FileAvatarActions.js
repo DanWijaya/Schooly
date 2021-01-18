@@ -2,6 +2,7 @@ import axios from "axios";
 import { setCurrentUser } from "../UserActions";
 
 export const uploadFileAvatar = (id, formData) => dispatch => {
+    console.log("uploading file avatar actions")
     axios.post(`/api/files/avatar/upload/${id}`, formData)
         .then((res) => {
             console.log("Updated avatar user: ", res.data.user.avatar)

@@ -44,7 +44,7 @@ function NavBarLoggedInContents(props) {
 
   console.log(user)
   React.useEffect(() => {
-    let id = user._id ? user._id : user.id
+    let id = user._id ? user._id : user._id
     getFileAvatar(id)
       .then((result) => {
         console.log(result)

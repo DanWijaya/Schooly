@@ -100,7 +100,7 @@ router.post("/login", (req, res) => {
         // Create JWT Payload
 
         var payload = {
-          id: user.id,
+          _id: user._id,
           role: user.role,
           avatar: user.avatar,
 
@@ -282,7 +282,7 @@ router.post("/update/avatar/:id", avatar.uploadAvatar.single("avatar"), (req,res
           .catch(err => console.log(err))
 
       var payload = {
-        id: user.id,
+            _id: user._id,
             role: user.role,
             avatar: user.avatar,
 

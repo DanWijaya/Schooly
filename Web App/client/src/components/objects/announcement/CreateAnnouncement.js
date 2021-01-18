@@ -259,7 +259,7 @@ class CreateAnnouncement extends Component {
       title: this.state.title,
       description: this.state.description,
       class_assigned: user.role === "Student" ? [kelas] : this.state.class_assigned,
-      author_id: user.id,
+      author_id: user._id,
       errors: {}
     };
 
@@ -336,8 +336,8 @@ class CreateAnnouncement extends Component {
 
     console.log(Object.keys(errors).length)
     // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja.
-    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user.id) {
-      console.log(kelas.ketua_kelas, user.id)
+    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user._id) {
+      console.log(kelas.ketua_kelas, user._id)
       return (<Redirect to="/tidak-ditemukan"/>)
     }
 
@@ -360,7 +360,7 @@ class CreateAnnouncement extends Component {
             </Typography>
           </div>
           <Divider />
-          <form noValidate onSubmit={(e) => this.onSubmit(e, user.id)}>
+          <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)}>
             <Grid container>
               <Grid item xs={12} md className={classes.content}>
                 <Grid container direction="column" spacing={4}>

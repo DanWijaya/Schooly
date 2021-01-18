@@ -414,7 +414,7 @@ function ReportView(props) {
     countAllClassUpdate.current++;
     if (countAllClassUpdate.current === 2) {
       new Promise((resolve) => {
-        resolve(all_classes.find((kelas) => {return (kelas.walikelas === user.id)}));
+        resolve(all_classes.find((kelas) => {return (kelas.walikelas === user._id)}));
       }).then((kelasWali) => {
         let infoKelasWali = new Map();
         // jika guru adalah kelas wali, mengisi infoKelasWali dengan id dan nama kelas yang diwalikannya

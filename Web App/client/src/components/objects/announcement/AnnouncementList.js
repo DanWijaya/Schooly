@@ -89,7 +89,7 @@ function AnnouncementListToolbar(props) {
   const canAnnounce = () => {
     console.log(user.role)
     if (Object.keys(kelas).length > 0) {
-      return user.id === kelas.ketua_kelas
+      return user._id === kelas.ketua_kelas
     }
     return user.role === "Teacher"
   }
@@ -432,7 +432,7 @@ function AnnouncementList(props) {
   // retrieved users ini bulk request, dapat data user"nya satu"
   React.useEffect(() => {
     if (user.role === "Teacher" && !annIsRetrieved) {
-      getAnnouncement(user.id, "by_author")
+      getAnnouncement(user._id, "by_author")
       setAnnIsRetrieved(true)
     }
     else if (user.role === "Student" && !annIsRetrieved) {

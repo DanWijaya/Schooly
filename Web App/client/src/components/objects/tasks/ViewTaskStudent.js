@@ -429,8 +429,8 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
-    // getTaskFilesByUser(user.id, tugasId)
-    getFileSubmitTasks(tugasId, user.id).then((results) => setFileTugas(results))
+    // getTaskFilesByUser(user._id, tugasId)
+    getFileSubmitTasks(tugasId, user._id).then((results) => setFileTugas(results))
     getOneTask(tugasId)
     getAllSubjects("map")
     // Will run getOneUser again once the tasksCollection is retrieved
@@ -530,7 +530,7 @@ function ViewTaskStudent(props) {
     }
     handleOpenUploadDialog()
     // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
-    uploadFileSubmitTasks(formData, tugasId, user.id)
+    uploadFileSubmitTasks(formData, tugasId, user._id)
     setFileToSubmit([])
   }
 
@@ -545,7 +545,7 @@ function ViewTaskStudent(props) {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
     setSelectedFileId(fileid)
     setSelectedFileName(filename)
-    // getFileSubmitTasks(tugasId, user.id).then((items) => setTaskContents(items))
+    // getFileSubmitTasks(tugasId, user._id).then((items) => setTaskContents(items))
   };
 
   const handleCloseDeleteDialog = () => {
@@ -716,10 +716,10 @@ function ViewTaskStudent(props) {
       </Grid>
       <Grid container direction="column" alignItems="center">
         <Typography variant="h6">
-          Status: {!tasksCollection.grades ? "Belum Diperiksa" : !tasksCollection.grades[user.id] ? "Belum Diperiksa" :  "Telah Diperiksa"}
+          Status: {!tasksCollection.grades ? "Belum Diperiksa" : !tasksCollection.grades[user._id] ? "Belum Diperiksa" :  "Telah Diperiksa"}
         </Typography>
         <Typography variant="h4" gutterBottom>
-          Nilai: {!tasksCollection.grades ? "N/A" : !tasksCollection.grades[user.id] ? "N/A" :  `${tasksCollection.grades[user.id]}/100`}
+          Nilai: {!tasksCollection.grades ? "N/A" : !tasksCollection.grades[user._id] ? "N/A" :  `${tasksCollection.grades[user._id]}/100`}
         </Typography>
       </Grid>
       <Snackbar

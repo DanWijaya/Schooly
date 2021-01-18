@@ -220,7 +220,7 @@ export const submitAssessment = (assessmentId, data) => dispatch => {
   // let data = {
   //   "answers" : answer,
   //   "classId" : user.kelas,
-  //   "userId" : user.id
+  //   "userId" : user._id
   // }
   return (
     axios

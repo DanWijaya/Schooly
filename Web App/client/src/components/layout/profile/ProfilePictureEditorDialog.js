@@ -96,10 +96,8 @@ function ProfilePictureEditorDialog(props) {
     e.preventDefault()
     let formData = new FormData()
     formData.append("avatar", profileImg)
-
-    let userData = user
-    let userId = user.id;
-
+    // let userId = user._id ? user._id : user._id
+    let userId = user._id
     // updateAvatar(userData, userId, formData)
     uploadFileAvatar(userId, formData)
     props.handleOpenAlert()
@@ -110,9 +108,6 @@ function ProfilePictureEditorDialog(props) {
   function onImgLoad({target:img}) {
     setAvatarDimensions({ height:img.offsetHeight, width:img.offsetWidth })
   }
-
-  console.log("width is smaller", avatarDimensions.width < avatarDimensions.height)
-  console.log("height is smaller", avatarDimensions.height < avatarDimensions.width)
 
   const imageUploadPreview = () => {
     let avatarImgClass;
