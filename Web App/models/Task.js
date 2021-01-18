@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { ObjectId } = require("mongoose");
+const { ObjectId } = require("mongodb");
 
 // Create Task Schema
 const TaskSchema = new Schema(
@@ -38,11 +38,16 @@ const TaskSchema = new Schema(
       },
     ],
     grades: {
-      type: Map,
-      default: new Map(), // userId -> the score.
+        type: Map,
+        default: new Map()  // userId -> the score.
     },
-  },
-  { timestamps: true }
-);
+    submissions: {
+        type: Map,
+        default: new Map
+        //submissions berupa user_id -> Object
+        //Objectnya berupa object dengan key-pair (file id, file name)
+
+    }
+}, { timestamps: true })
 
 module.exports = Task = mongoose.model("tasks", TaskSchema);

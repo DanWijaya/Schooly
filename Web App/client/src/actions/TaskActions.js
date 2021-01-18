@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE } from "./Types";
+import { GET_ALL_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE} from "./Types";
 // import Dropbox from "dropbox";
 
 // Add Task
@@ -48,40 +48,54 @@ export const createTask = (formData, taskData, history) => (dispatch) => {
 export const getAllTask = () => (dispatch) => {
   axios
     .get("/api/tasks/viewall")
-    .then((res) => {
-      dispatch({
-        type: GET_TASKS,
-        payload: res.data,
-      });
-      console.log("getAllTask completed");
+    .then(res => {
+        dispatch({
+            type: GET_ALL_TASKS,
+            payload: res.data
+        })
+        console.log("getAllTask completed");
     })
-    .catch((err) => {
-      console.log("Error has occured");
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
-    });
+    .catch(err => {
+        console.log("Error has occured");
+        dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    })
+    // .catch((err) => {
+    //   console.log("Error has occured");
+    //   dispatch({
+    //     type: GET_ERRORS,
+    //     payload: err.response.data,
+    //   });
+    // });
 };
 
 // View One Task
 export const getOneTask = (taskId) => (dispatch) => {
   axios
     .get("/api/tasks/view/" + taskId)
-    .then((res) => {
-      console.log("Task to be received: ", res.data);
-      dispatch({
-        type: GET_TASKS,
-        payload: res.data,
-      });
+    .then(res => {
+        console.log("Task to be received: ", res.data);
+        dispatch({
+            type: GET_ALL_TASKS,
+            payload: res.data
+        })
     })
-    .catch((err) => {
-      console.log("error");
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
-    });
+    .catch(err => {
+        console.log("error")
+        dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    })
+    // .catch((err) => {
+    //   console.log("error");
+    //   dispatch({
+    //     type: GET_ERRORS,
+    //     payload: err.response.data,
+    //   });
+    // });
 };
 
 export const updateTask = (

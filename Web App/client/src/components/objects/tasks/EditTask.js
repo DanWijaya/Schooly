@@ -9,6 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -215,12 +216,12 @@ class EditTask extends Component {
     this.props.getAllSubjects();
   }
 
-  componentWillUnmount() {
-    this.props.clearErrors();
+  componentWillUnmount(){
+    this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log("Tasks props is received");
     const { tasksCollection, errors } = nextProps;
 
     // pass errorsnya false makanya berhasil
@@ -228,7 +229,6 @@ class EditTask extends Component {
       this.handleOpenUploadDialog();
     }
 
-    console.log(tasksCollection.class_assigned);
     if (Boolean(tasksCollection) && errors) {
       this.setState({
         name: tasksCollection.name,
@@ -259,7 +259,6 @@ class EditTask extends Component {
     } = this.state;
 
     let classesSelected = [];
-    console.log(class_assigned);
 
     class_assigned.map((id) => {
       for (var i = 0; i < classesOptions.length; i++) {
@@ -302,32 +301,24 @@ class EditTask extends Component {
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    console.log(this.state.fileLampiran);
     let temp;
     let tempToAdd;
 
     if (this.state.fileLampiran.length === 0)
-      this.setState({
-        fileLampiran: files,
-        fileLampiranToAdd: Array.from(files),
-      });
+      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
     else {
-      console.log(files);
       if (files.length !== 0) {
-        temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-        tempToAdd = [
-          ...Array.from(this.state.fileLampiranToAdd),
-          ...Array.from(files),
-        ];
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd });
+        temp = [...this.state.fileLampiran, ...Array.from(files)];
+        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
+        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
       }
     }
     document.getElementById("file_control").value = null;
   };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault();
-    console.log("Index is: ", i);
+    e.preventDefault()
+    // console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
@@ -340,7 +331,7 @@ class EditTask extends Component {
       // For the one that"s not yet in DB
       // Remove the file in fileLampiranToAdd
       for (var j = 0; j < tempToAdd.length; j++) {
-        console.log(temp[i].name, tempToAdd[j].name);
+        // console.log(temp[i].name, tempToAdd[j].name)
         if (tempToAdd[j].name === temp[i].name) {
           tempToAdd.splice(j, 1);
         }
@@ -369,8 +360,7 @@ class EditTask extends Component {
   };
 
   onChange = (e, otherfield) => {
-    console.log(this.state.class_assigned);
-    if (otherfield) {
+    if(otherfield){
       // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
       this.setState({ [otherfield]: e.target.value });
     } else {
@@ -379,9 +369,8 @@ class EditTask extends Component {
   };
 
   onDateChange = (date) => {
-    console.log(date);
-    this.setState({ deadline: date });
-  };
+    this.setState({ deadline: date})
+  }
 
   render() {
     const { fileLampiran, class_assigned } = this.state;
@@ -390,12 +379,9 @@ class EditTask extends Component {
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
 
-    console.log("FileLampiran:", this.state.fileLampiran);
-    console.log("FileLampiran to add:", this.state.fileLampiranToAdd);
-    console.log("FileLampiran to delete:", this.state.fileLampiranToDelete);
-    console.log(class_assigned);
+    const task_id = this.props.match.params.id;
 
-    let classIds = [];
+    let classIds = []
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -741,6 +727,7 @@ EditTask.propTypes = {
   updateTask: PropTypes.func.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
 };
 
@@ -753,10 +740,6 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
 });
 
-export default connect(mapStateToProps, {
-  getOneTask,
-  updateTask,
-  getAllClass,
-  getAllSubjects,
-  clearErrors,
-})(withStyles(styles)(EditTask));
+export default connect(
+    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors, clearSuccess }
+) (withStyles(styles)(EditTask))

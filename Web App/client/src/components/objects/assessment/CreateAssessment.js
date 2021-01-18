@@ -1310,8 +1310,8 @@ class CreateAssessment extends Component {
           handleCloseDeleteDialog={this.handleCloseDeleteDialog}
           itemType={this.state.type ? this.state.type : "Penilaian"}
           deleteItem=""
-          itemName={this.state.name}
-          isLink={true}
+          // itemName={this.state.name}
+          // isLink={true}
           redirectLink="/daftar-kuis"
           isWarning={false}
         />

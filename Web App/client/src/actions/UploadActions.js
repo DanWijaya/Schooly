@@ -8,8 +8,7 @@ import {
 import axios from "axios";
 import { Dropbox } from "dropbox";
 
-export const uploadTugas = (tugas, userData, taskId, ontime) => (dispatch) => {
-  console.log(ontime);
+export const uploadTugas = (tugas, userData, taskId, ontime) => dispatch => {
   if (userData.role === "Student") {
     axios
       .post(

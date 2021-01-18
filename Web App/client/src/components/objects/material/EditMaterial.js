@@ -6,8 +6,9 @@ import "date-fns";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneMaterial } from "../../../actions/MaterialActions";
-import { updateMaterial } from "../../../actions/MaterialActions";
-import { clearErrors } from "../../../actions/ErrorActions";
+import { updateMaterial} from "../../../actions/MaterialActions"
+import { clearErrors } from "../../../actions/ErrorActions"
+import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -208,8 +209,9 @@ class EditMaterial extends Component {
     getAllSubjects();
   }
 
-  componentWillUnmount() {
-    this.props.clearErrors();
+  componentWillUnmount(){
+    this.props.clearErrors()
+    this.props.clearSuccess()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -271,18 +273,10 @@ class EditMaterial extends Component {
       formData.append("lampiran_materi", this.state.fileLampiranToAdd[i]);
     }
 
-    const { selectedMaterials } = this.props.materialsCollection;
-    console.log(materialObject);
-    this.props.updateMaterial(
-      formData,
-      fileLampiranToDelete,
-      selectedMaterials.lampiran,
-      materialObject,
-      id,
-      this.props.history
-    );
-    this.setState({ fileLampiranToDelete: [] });
-  };
+    const {selectedMaterials} = this.props.materialsCollection;
+    this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
+    this.setState({ fileLampiranToDelete: []})
+    }
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
@@ -291,19 +285,12 @@ class EditMaterial extends Component {
     let tempToAdd;
 
     if (this.state.fileLampiran.length === 0)
-      this.setState({
-        fileLampiran: files,
-        fileLampiranToAdd: Array.from(files),
-      });
+      this.setState({fileLampiran: Array.from(files), fileLampiranToAdd: Array.from(files)})
     else {
-      console.log(files);
       if (files.length !== 0) {
-        temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
-        tempToAdd = [
-          ...Array.from(this.state.fileLampiranToAdd),
-          ...Array.from(files),
-        ];
-        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd });
+        temp = [...this.state.fileLampiran, ...Array.from(files)];
+        tempToAdd = [...this.state.fileLampiranToAdd, ...Array.from(files)]
+        this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd})
       }
     }
     document.getElementById("file_control").value = null;
@@ -698,6 +685,7 @@ EditMaterial.propTypes = {
   materialsCollection: PropTypes.object.isRequired,
   getAllSubjects: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  clearSuccess: PropTypes.func.isRequired,
   updateMaterial: PropTypes.func.isRequired,
   getOneMaterial: PropTypes.func.isRequired,
   getAllClass: PropTypes.func.isRequired,
@@ -713,10 +701,6 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
 });
 
-export default connect(mapStateToProps, {
-  getAllClass,
-  getAllSubjects,
-  clearErrors,
-  getOneMaterial,
-  updateMaterial,
-})(withStyles(styles)(EditMaterial));
+export default connect(
+    mapStateToProps, { getAllClass, getAllSubjects, clearErrors, getOneMaterial, updateMaterial, clearSuccess }
+) (withStyles(styles)(EditMaterial))
