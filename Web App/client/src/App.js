@@ -70,10 +70,6 @@ import SubjectList from "./components/objects/admin-only/SubjectList";
 import Tester from "./prototypes/Tester";
 import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
-import S3Upload from "./prototypes/S3Upload";
-import S3MaterialView from "./prototypes/S3ViewMaterial";
-import S3CreateMaterial from "./prototypes/S3CreateMaterial";
-import S3EditMaterial from "./prototypes/S3EditMaterial";
 
 //Dropbox
 import DropboxConnect from "./components/dropbox/DropboxConnect";
