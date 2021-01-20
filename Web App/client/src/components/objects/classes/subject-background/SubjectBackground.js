@@ -12,7 +12,7 @@ import _71d0e1 from "./_71d0e1.png";
 import _f6836b from "./_f6836b.png";
 import _53c9cc from "./_53c9cc.png";
 
-const background_images = [
+const subjectBackground = [
     {"#5dc692" : _5dc692},
     {"#5dc692" : _5dc692_2},
     {"#70d0db" : _70d0db},
@@ -28,6 +28,4 @@ const background_images = [
     {"#53c9cc" : _53c9cc}
 ]
 
-export default background_images
-
-
+export default subjectBackground
