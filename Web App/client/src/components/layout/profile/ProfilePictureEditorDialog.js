@@ -110,7 +110,7 @@ function ProfilePictureEditorDialog(props) {
     formData.append("avatar", profileImg);
 
     let userData = user;
-    let userId = user.id;
+    let userId = user._id;
 
     updateAvatar(userData, userId, formData);
     props.handleOpenAlert();

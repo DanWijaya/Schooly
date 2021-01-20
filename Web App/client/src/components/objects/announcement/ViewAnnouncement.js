@@ -390,7 +390,7 @@ function ViewAnnouncement(props) {
           )}
         </Grid>
       </Paper>
-      {user.role === "Admin" || user.id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
+      {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
         <div className={classes.teacherButtonContainer}>
           <Link to={`/sunting-pengumuman/${announcement_id}`}>
             <LightTooltip title="Sunting Pengumuman" placement="bottom">

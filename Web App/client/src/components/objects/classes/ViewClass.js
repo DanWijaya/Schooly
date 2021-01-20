@@ -890,7 +890,7 @@ function ViewClass(props) {
     getTeachers("map"); // get the all_teachers
     getStudents();
 
-    getAllTaskFilesByUser(user.id); // get the all_user_files
+    getAllTaskFilesByUser(user._id); // get the all_user_files
     getAllAssessments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -915,7 +915,7 @@ function ViewClass(props) {
           .map((student) => {
             return student._id;
           })
-          .includes(user.id)
+          .includes(user._id)
       ) {
         setAllow("redirect");
       } else {

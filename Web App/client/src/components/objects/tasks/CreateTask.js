@@ -391,7 +391,7 @@ class CreateTask extends Component {
               </Typography>
             </div>
             <Divider />
-            <form noValidate onSubmit={(e) => this.onSubmit(e, user.id)}>
+            <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)}>
               <Grid container>
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>

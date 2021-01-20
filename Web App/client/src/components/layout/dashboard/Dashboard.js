@@ -578,7 +578,7 @@ class Dashboard extends Component {
       // getUjianBySC
     }
     getAllAssessments();
-    getAllTaskFilesByUser(user.id); // yang dapatin takfiles cuma berlaku untuk student soalnya
+    getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
     getStudents();
   }
 
@@ -682,7 +682,7 @@ class Dashboard extends Component {
             let keysArray = Object.keys(tasksCollection[i].grades);
             let valuesArray = Object.values(tasksCollection[i].grades);
             for (let j = 0; j < keysArray.length; j++) {
-              if (keysArray[j] === user.id) {
+              if (keysArray[j] === user._id) {
                 subjectScores.push(valuesArray[j]);
                 subjectNames.push(tasksCollection[i].name);
                 break;
@@ -698,7 +698,7 @@ class Dashboard extends Component {
               workType="Tugas"
             />
           );
-        } else
+        } else{
           return (
             <Typography
               align="center"
@@ -708,12 +708,14 @@ class Dashboard extends Component {
               Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
             </Typography>
           );
-      } else
+        }
+      } else{
         return (
           <Typography align="center" color="textSecondary" variant="subtitle-1">
             Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
           </Typography>
         );
+      }
     }
 
     function graphAssessment(subjectIndex, type) {
@@ -731,7 +733,7 @@ class Dashboard extends Component {
               let keysArray = Object.keys(all_assessments[i].grades);
               let valuesArray = Object.values(all_assessments[i].grades);
               for (let j = 0; j < keysArray.length; j++) {
-                if (keysArray[j] === user.id) {
+                if (keysArray[j] === user._id) {
                   subjectScores.push(valuesArray[j].total_grade);
                   subjectNames.push(all_assessments[i].name);
                   break;
@@ -749,7 +751,7 @@ class Dashboard extends Component {
               let keysArray = Object.keys(all_assessments[i].grades);
               let valuesArray = Object.values(all_assessments[i].grades);
               for (let j = 0; j < keysArray.length; j++) {
-                if (keysArray[j] === user.id) {
+                if (keysArray[j] === user._id) {
                   subjectScores.push(valuesArray[j].total_grade);
                   subjectNames.push(all_assessments[i].name);
                   break;
@@ -766,7 +768,7 @@ class Dashboard extends Component {
               workType={type}
             />
           );
-        } else
+        } else{
           return (
             <Typography
               align="center"
@@ -776,12 +778,14 @@ class Dashboard extends Component {
               Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
             </Typography>
           );
-      } else
+        }
+      } else{
         return (
           <Typography align="center" color="textSecondary" variant="subtitle-1">
             Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
           </Typography>
         );
+      }
     }
 
     function listTasks() {
@@ -829,7 +833,7 @@ class Dashboard extends Component {
     function listTasksTeacher() {
       let result = [];
       for (let i = 0; i < tasksCollection.length; i++) {
-        if (tasksCollection[i].person_in_charge_id === user.id) {
+        if (tasksCollection[i].person_in_charge_id === user._id) {
           let number_students_assigned = 0;
           for (let j = 0; j < all_students.length; j++) {
             if (

@@ -332,7 +332,7 @@ function Profile(props) {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user.id,
+                        id: user._id,
                       },
                     }}
                   >
@@ -372,7 +372,7 @@ function Profile(props) {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user.id,
+                        id: user._id,
                       },
                     }}
                   >

@@ -516,7 +516,7 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
-    getTaskFilesByUser(user.id, tugasId);
+    getTaskFilesByUser(user._id, tugasId);
     getOneTask(tugasId);
     getAllSubjects("map");
     // Will run getOneUser again once the tasksCollection is retrieved
@@ -899,7 +899,7 @@ function ViewTaskStudent(props) {
           Status:{" "}
           {!tasksCollection.grades
             ? "Belum Diperiksa"
-            : !tasksCollection.grades[user.id]
+            : !tasksCollection.grades[user._id]
             ? "Belum Diperiksa"
             : "Telah Diperiksa"}
         </Typography>
@@ -907,9 +907,9 @@ function ViewTaskStudent(props) {
           Nilai:{" "}
           {!tasksCollection.grades
             ? "N/A"
-            : !tasksCollection.grades[user.id]
+            : !tasksCollection.grades[user._id]
             ? "N/A"
-            : `${tasksCollection.grades[user.id]}/100`}
+            : `${tasksCollection.grades[user._id]}/100`}
         </Typography>
       </Grid>
     </div>

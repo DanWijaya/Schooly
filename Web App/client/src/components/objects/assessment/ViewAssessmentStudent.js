@@ -528,7 +528,7 @@ function ViewAssessmentStudent(props) {
     let data = {
       answers: answer,
       classId: user.kelas,
-      userId: user.id,
+      userId: user._id,
     };
     submitAssessment(id, data)
       .then(() => handleCloseSubmitDialog())
@@ -539,7 +539,7 @@ function ViewAssessmentStudent(props) {
   const showSubmitButton = () => {
     console.log(localStorage.getItem(`remainingTime_${id}`));
     if (submissions) {
-      if (submissions[user.id]) {
+      if (submissions[user._id]) {
         return null;
       }
     }
@@ -561,7 +561,7 @@ function ViewAssessmentStudent(props) {
 
   const showTestStatus = () => {
     if (submissions) {
-      if (submissions[user.id]) {
+      if (submissions[user._id]) {
         return (
           <Paper className={classes.submittedPaper}>
             <CheckCircleOutlineIcon />
@@ -609,7 +609,7 @@ function ViewAssessmentStudent(props) {
 
   const showQuestions = () => {
     if (submissions) {
-      if (submissions[user.id]) {
+      if (submissions[user._id]) {
         return null;
       }
     }
@@ -757,7 +757,7 @@ function ViewAssessmentStudent(props) {
                         "shorttext" ? null : questions[qnsIndex].type ===
                         "longtext" ? (
                         <TextField
-                          key={`${user.id}-${qnsIndex}`}
+                          key={`${user._id}-${qnsIndex}`}
                           id="answer"
                           multiline
                           rowsMax={10}

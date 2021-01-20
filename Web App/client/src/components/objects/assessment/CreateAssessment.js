@@ -1326,7 +1326,7 @@ class CreateAssessment extends Component {
               : `/ujian-guru/${success}`
           }
         />
-        <form onSubmit={(e) => this.onSubmit(e, user.id)} id="submitForm">
+        <form onSubmit={(e) => this.onSubmit(e, user._id)} id="submitForm">
           <Grid container direction="column" spacing={3}>
             <Grid item>
               <Paper>
@@ -1808,7 +1808,7 @@ class CreateAssessment extends Component {
                       button
                       type="submit"
                       className={classes.menuSubmit}
-                      onClick={(e) => this.onSubmit(e, user.id)}
+                      onClick={(e) => this.onSubmit(e, user._id)}
                     >
                       <ListItemIcon>
                         <SendIcon />
