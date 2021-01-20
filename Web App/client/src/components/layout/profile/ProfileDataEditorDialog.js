@@ -5,9 +5,31 @@ import DateFnsUtils from "@date-io/date-fns";
 import "date-fns";
 import lokal from "date-fns/locale/id";
 import { updateUserData } from "../../../actions/UserActions";
-import { clearErrors} from "../../../actions/ErrorActions";
-import { Avatar, Button, Box, Dialog, Grid, Hidden, IconButton, List, ListItem, ListItemAvatar, MenuItem, Select, Tab, Tabs, TextField, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { clearErrors } from "../../../actions/ErrorActions";
+import {
+  Avatar,
+  Button,
+  Box,
+  Dialog,
+  FormControl,
+  Grid,
+  Hidden,
+  IconButton,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemAvatar,
+  MenuItem,
+  Select,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CakeIcon from "@material-ui/icons/Cake";
@@ -66,16 +88,8 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box>
-          {children}
-        </Box>
-      )}
+    <div hidden={value !== index} id={`tabpanel-${index}`} {...other}>
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -95,9 +109,9 @@ function TabIndex(index) {
 function ProfileDataItemEdit(props) {
   const classes = useStyles();
   const { errors } = props;
-  console.log(errors)
+  console.log(errors);
   return (
-    <ListItem>
+    <ListItem style={{margin: "5px 0px 5px 0px"}}>
       <Grid container alignItems="center">
         <Grid item sm={2}>
           <Hidden xsDown implementation="css">
@@ -109,26 +123,26 @@ function ProfileDataItemEdit(props) {
           </Hidden>
         </Grid>
         <Grid item xs={12} sm={10}>
-          { props.is_textfield ?
+          {props.is_textfield ? (
             <div>
-              <label for={props.id}>{props.profile_data_category}</label>
               <TextField
                 fullWidth
                 variant="outlined"
                 id={props.id}
+                label={props.profile_data_category}
                 onChange={props.on_change}
                 value={props.value}
                 error={!errors ? null : errors.email}
                 helperText={!errors ? null : errors.email}
               />
             </div>
-          :
+          ) : (
             props.non_textfield_content
-          }
+          )}
         </Grid>
       </Grid>
     </ListItem>
-  )
+  );
 }
 
 function ProfileDataEditorDialog(props) {
@@ -143,21 +157,20 @@ function ProfileDataEditorDialog(props) {
     setOpen(true);
   };
   const handleClose = (simpan) => {
-    console.log(simpan)
-    if (simpan !== "simpan")
-      setDataProfil(defaultUserData)
-    clearErrors()
+    console.log(simpan);
+    if (simpan !== "simpan") setDataProfil(defaultUserData);
+    clearErrors();
     setOpen(false);
   };
 
   //Tabs
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
-    clearErrors()
+    clearErrors();
     setValue(newValue);
   };
 
-  console.log(user.tanggal_lahir instanceof Date)
+  console.log(user.tanggal_lahir instanceof Date);
   const defaultUserData = {
     // Informasi Pribadi
     nama: user.name,
@@ -175,42 +188,42 @@ function ProfileDataEditorDialog(props) {
     hobi_minat: user.hobi_minat,
     ket_non_teknis: user.ket_non_teknis,
     cita_cita: user.cita_cita,
-    uni_impian: user.uni_impian
-  }
+    uni_impian: user.uni_impian,
+  };
 
-  const [dataProfil, setDataProfil] = React.useState(defaultUserData)
+  const [dataProfil, setDataProfil] = React.useState(defaultUserData);
 
   //pas submit formnya
   const onSubmit = (e) => {
     e.preventDefault()
     let userId = user._id;
     if (!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
-      props.handleOpenAlert()
+      props.handleOpenAlert();
 
-    updateUserData(dataProfil, userId, props.history)
-  }
+    updateUserData(dataProfil, userId, props.history);
+  };
 
   const handleChangeDataProfil = (e, otherfield) => {
-    let { id, value } = e.target
-    clearErrors()
+    let { id, value } = e.target;
+    clearErrors();
     if (otherfield === "jenis_kelamin") {
       setDataProfil((prev) => ({
         ...prev,
-        jenis_kelamin : value
-      }))
+        jenis_kelamin: value,
+      }));
     }
     setDataProfil((prev) => ({
       ...prev,
-      [id] : value
-    }))
-  }
+      [id]: value,
+    }));
+  };
 
   const handleDateChange = (date) => {
     setDataProfil((prev) => ({
       ...prev,
-      tanggal_lahir : date
-    }))
-  }
+      tanggal_lahir: date,
+    }));
+  };
 
   return (
     <div>
@@ -234,21 +247,29 @@ function ProfileDataEditorDialog(props) {
         </Button>
       </Hidden>
       <Dialog fullWidth open={open} onClose={handleClose}>
-        <Grid container direction="column" alignItems="center" className={classes.root}>
-          <Grid item container justify="flex-end" alignItems="flex-start" style={{marginBottom: "10px"}}>
-            <IconButton
-              size="small"
-              onClick={handleClose}
-            >
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.root}
+        >
+          <Grid
+            item
+            container
+            justify="flex-end"
+            alignItems="flex-start"
+            style={{ marginBottom: "10px" }}
+          >
+            <IconButton size="small" onClick={handleClose}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item style={{marginBottom: "10px"}}>
+          <Grid item style={{ marginBottom: "10px" }}>
             <Typography variant="h5" gutterBottom>
               <b>Sunting Profil</b>
             </Typography>
           </Grid>
-          <form onSubmit={onSubmit} style={{width: "90%"}}>
+          <form onSubmit={onSubmit} style={{ width: "90%" }}>
             <Tabs
               variant="fullWidth"
               indicatorColor="primary"
@@ -268,19 +289,15 @@ function ProfileDataEditorDialog(props) {
               <Tab
                 icon={<ContactMailIcon />}
                 label={
-                  <Typography className={classes.tabTitle}>
-                    Kontak
-                  </Typography>
+                  <Typography className={classes.tabTitle}>Kontak</Typography>
                 }
                 {...TabIndex(1)}
               />
-              {(user.role === "Student") ? (
+              {user.role === "Student" ? (
                 <Tab
                   icon={<EmojiPeopleIcon />}
                   label={
-                    <Typography className={classes.tabTitle}>
-                      Karir
-                    </Typography>
+                    <Typography className={classes.tabTitle}>Karir</Typography>
                   }
                   {...TabIndex(2)}
                 />
@@ -301,11 +318,14 @@ function ProfileDataEditorDialog(props) {
                   profile_data_category="Tanggal Lahir"
                   non_textfield_content={
                     <div>
-                      <label for="tanggal_lahir">Tanggal Lahir</label>
-                      <MuiPickersUtilsProvider locale={lokal} utils={DateFnsUtils}>
+                      <MuiPickersUtilsProvider
+                        locale={lokal}
+                        utils={DateFnsUtils}
+                      >
                         <KeyboardDatePicker
                           fullWidth
                           disableFuture
+                          label="Tanggal Lahir"
                           inputVariant="outlined"
                           maxDateMessage="Batas waktu harus waktu yang akan datang"
                           invalidDateMessage="Format tanggal tidak benar"
@@ -314,10 +334,10 @@ function ProfileDataEditorDialog(props) {
                           cancelLabel="Batal"
                           id="tanggal_lahir"
                           onChange={(date) => handleDateChange(date)}
-                          value={dataProfil.tanggal_lahir instanceof Date ?
-                            dataProfil.tanggal_lahir
-                          :
-                            null
+                          value={
+                            dataProfil.tanggal_lahir instanceof Date
+                              ? dataProfil.tanggal_lahir
+                              : null
                           }
                         />
                       </MuiPickersUtilsProvider>
@@ -328,20 +348,25 @@ function ProfileDataEditorDialog(props) {
                   profile_data_icon={<WcIcon />}
                   profile_data_category="Jenis Kelamin"
                   non_textfield_content={
-                    <div>
-                      <label for="jenis_kelamin">Jenis kelamin</label>
+                    <FormControl
+                      id="jenis_kelamin"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                    >
+                      <InputLabel id="subject-label">Jenis Kelamin</InputLabel>
                       <Select
-                        fullWidth
-                        variant="outlined"
-                        color="primary"
-                        id="jenis_kelamin"
+                        labelId="subject-label"
+                        label="Mata Pelajaran"
                         value={dataProfil.jenis_kelamin}
-                        onChange={(event) => {handleChangeDataProfil(event, "jenis_kelamin")}}
+                        onChange={(event) => {
+                          handleChangeDataProfil(event, "jenis_kelamin");
+                        }}
                       >
                         <MenuItem value="Pria">Pria</MenuItem>
                         <MenuItem value="Wanita">Wanita</MenuItem>
                       </Select>
-                    </div>
+                    </FormControl>
                   }
                 />
                 {/*<ProfileDataItemEdit
@@ -391,7 +416,7 @@ function ProfileDataEditorDialog(props) {
                 />
               </List>
             </TabPanel>
-            {(user.role==="Student") ? (
+            {user.role === "Student" ? (
               <TabPanel value={value} index={2}>
                 <List>
                   <ProfileDataItemEdit
@@ -429,7 +454,7 @@ function ProfileDataEditorDialog(props) {
                 </List>
               </TabPanel>
             ) : null}
-            <Grid container justify="center" style={{marginTop: "10px"}}>
+            <Grid container justify="center" style={{ marginTop: "10px" }}>
               <Button
                 type="submit"
                 variant="contained"
@@ -443,7 +468,7 @@ function ProfileDataEditorDialog(props) {
         </Grid>
       </Dialog>
     </div>
-  )
+  );
 }
 
 ProfileDataEditorDialog.propTypes = {
@@ -451,13 +476,13 @@ ProfileDataEditorDialog.propTypes = {
   updateUserData: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
 
-export default connect(
-  mapStateToProps, { updateUserData, clearErrors }
-) (ProfileDataEditorDialog);
+export default connect(mapStateToProps, { updateUserData, clearErrors })(
+  ProfileDataEditorDialog
+);

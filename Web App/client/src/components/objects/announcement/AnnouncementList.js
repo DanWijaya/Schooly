@@ -5,21 +5,57 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { setCurrentClass } from "../../../actions/ClassActions";
-import { getAllAnnouncements, getAnnouncement} from "../../../actions/AnnouncementActions"
+import {
+  getAllAnnouncements,
+  getAnnouncement,
+} from "../../../actions/AnnouncementActions";
 import { getUsers } from "../../../actions/UserActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Divider, Fab, Grid, Hidden, ListItem, ListItemText, Paper, Typography, TextField, InputAdornment,
-  IconButton, Menu, MenuItem, TableSortLabel} from "@material-ui/core";
+import {
+  Divider,
+  Fab,
+  Grid,
+  Hidden,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Paper,
+  Typography,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Menu,
+  MenuItem,
+  TableSortLabel,
+  Avatar,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import SortIcon from "@material-ui/icons/Sort";
 import { GoSearch } from "react-icons/go";
-import ClearIcon from '@material-ui/icons/Clear';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ClearIcon from "@material-ui/icons/Clear";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-function createData(sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased) {
-  return { sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased };
+// function createData(sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased) {
+//   return { sender_icon, author_name, notification_title, notification_link, date, time, complete_date, name_lowcased };
+// }
+function createData(
+  sender_icon,
+  author_name,
+  notification_title,
+  notification_link,
+  createdAt,
+  name_lowcased
+) {
+  return {
+    sender_icon,
+    author_name,
+    notification_title,
+    notification_link,
+    createdAt,
+    name_lowcased,
+  };
 }
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -48,24 +84,49 @@ function stableSort(array, comparator) {
 }
 
 function AnnouncementListToolbar(props) {
-  const { kelas, user, classes, order, orderBy, onRequestSort,
-    role, searchFilter, updateSearchFilter,
-    setSearchBarFocus, searchBarFocus} = props;
+  const {
+    kelas,
+    user,
+    classes,
+    order,
+    orderBy,
+    onRequestSort,
+    searchFilter,
+    updateSearchFilter,
+    setSearchBarFocus,
+    searchBarFocus,
+  } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   const headCells = [
-    { id: "author_name", numeric: false, disablePadding: true, label: "Pemberi Tugas" },
-    { id: "notification_title", numeric: false, disablePadding: false, label: "Nama Tugas" },
-    { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
+    {
+      id: "author_name",
+      numeric: false,
+      disablePadding: true,
+      label: "Pemberi Tugas",
+    },
+    {
+      id: "notification_title",
+      numeric: false,
+      disablePadding: false,
+      label: "Nama Tugas",
+    },
+    {
+      id: "createdAt",
+      numeric: false,
+      disablePadding: false,
+      label: "Waktu Dibuat",
+    },
+    // { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
   ];
 
-  if (role === "Student") {
-    // Don't include the class_assigned basically.
-    headCells.pop()
-  }
+  // if (role === "Student") {
+  // Don't include the class_assigned basically.
+  // headCells.pop()
+  // }
 
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -78,181 +139,217 @@ function AnnouncementListToolbar(props) {
 
   // FOR SEARCH FILTER.
   const onChange = (e) => {
-    updateSearchFilter(e.target.value)
-  }
+    updateSearchFilter(e.target.value);
+  };
 
   const onClear = (e, id) => {
     updateSearchFilter("");
     document.getElementById(id).focus();
-  }
+  };
 
   const canAnnounce = () => {
-    console.log(user.role)
+    console.log(user.role);
     if (Object.keys(kelas).length > 0) {
       return user._id === kelas.ketua_kelas
     }
-    return user.role === "Teacher"
-  }
+    return user.role === "Teacher";
+  };
 
   return (
     // <div className={classes.toolbar}>
     <div className={classes.toolbar}>
-      <div style={{display: "flex", alignItems: "center"}}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <Hidden smUp implementation="css">
-          {searchBarFocus ?
-            null
-            :
-            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-              <Typography variant="h4">
-                Daftar Pengumuman
-              </Typography>
+          {searchBarFocus ? null : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4">Daftar Pengumuman</Typography>
             </div>
-          }
+          )}
         </Hidden>
         <Hidden xsDown implementation="css">
-          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <AnnouncementIcon className={classes.titleIcon} fontSize="large"/>
-            <Typography variant="h4">
-              Daftar Pengumuman
-            </Typography>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <AnnouncementIcon className={classes.titleIcon} fontSize="large" />
+            <Typography variant="h4">Daftar Pengumuman</Typography>
           </div>
         </Hidden>
         <Hidden smUp implementation="css">
-          {searchBarFocus ?
-          <div style={{display: "flex"}}>
-            <IconButton
-              onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
-            >
-              <ArrowBackIcon/>
-            </IconButton>
-            <TextField
-              fullWidth
-              variant="outlined"
-              id="searchFilterMobile"
-              value={searchFilter}
-              onChange={onChange}
-              autoFocus
-              onClick={(e) =>setSearchBarFocus(true)}
-              placeholder="Search Pengumuman"
-              // onBlur={() => setSearchBarFocus(false)}
-              style={{
-                maxWidth: "200px",
-                marginLeft: "10px"
-              }}
-              InputProps={{
-                startAdornment:(
-                  searchBarFocus ? null :
-                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                      <IconButton size="small">
-                        <GoSearch/>
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                endAdornment:(
-                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                    <IconButton
-                      size="small"
-                      id="searchFilterMobile"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onClear(e, "searchFilterMobile")}
-                      }
-                      style={{
-                        opacity: 0.5,
-                        visibility: !searchFilter ? "hidden" : "visible"
-                      }}>
-                      <ClearIcon/>
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                style:{
-                  borderRadius: "20px"
-                }
-              }}
-            />
+          {
+            searchBarFocus ? (
+              <div style={{ display: "flex" }}>
+                <IconButton
+                  onClick={() => {
+                    setSearchBarFocus(false);
+                    updateSearchFilter("");
+                  }}
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id="searchFilterMobile"
+                  value={searchFilter}
+                  onChange={onChange}
+                  autoFocus
+                  onClick={(e) => setSearchBarFocus(true)}
+                  placeholder="Search Pengumuman"
+                  // onBlur={() => setSearchBarFocus(false)}
+                  style={{
+                    maxWidth: "200px",
+                    marginLeft: "10px",
+                  }}
+                  InputProps={{
+                    startAdornment: searchBarFocus ? null : (
+                      <InputAdornment
+                        position="start"
+                        style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                      >
+                        <IconButton size="small">
+                          <GoSearch />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                      >
+                        <IconButton
+                          size="small"
+                          id="searchFilterMobile"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onClear(e, "searchFilterMobile");
+                          }}
+                          style={{
+                            opacity: 0.5,
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    style: {
+                      borderRadius: "22.5px",
+                    },
+                  }}
+                />
               </div>
-              :
-            // <div style={{display: "flex"}}>
-            <LightTooltip title="Search" style={{marginLeft: "10px"}}>
-              <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
-                <GoSearch className={classes.goSearchIconMobile} />
-              </IconButton>
-            </LightTooltip>
-          // </div>
+            ) : (
+              // <div style={{display: "flex"}}>
+              <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+                <IconButton
+                  className={classes.goSearchButton}
+                  onClick={() => setSearchBarFocus(true)}
+                >
+                  <GoSearch className={classes.goSearchIconMobile} />
+                </IconButton>
+              </LightTooltip>
+            )
+            // </div>
           }
         </Hidden>
       </div>
-      <div style={{display: "flex"}}>
-      <Hidden xsDown implementation="css">
-            <TextField
-              // fullWidth
-              variant="outlined"
-              id="searchFilterDesktop"
-              value={searchFilter}
-              onChange={onChange}
-              onClick={() => setSearchBarFocus(true)}
-              onBlur={() => setSearchBarFocus(false)}
-              placeholder="Search Kuis"
-              // onBlur={() => setSearchBarFocus(false)}
-              style={{
-                maxWidth: "250px",
-                marginRight: "10px"
-              }}
-              InputProps={{
-                startAdornment:(
-                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                      <IconButton size="small">
-                        <GoSearch/>
-                      </IconButton>
-                    </InputAdornment>)
-                  ,
-                  endAdornment:(
-                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onClear(e, "searchFilterDesktop")}
-                      }
-                      style={{
-                        opacity: 0.5,
-                        visibility: !searchFilter ? "hidden" : "visible"
-                      }}>
-                      <ClearIcon/>
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                style: {
-                  borderRadius: "20px"
-                }
-              }}
-            />
+      <div style={{ display: "flex" }}>
+        <Hidden xsDown implementation="css">
+          <TextField
+            // fullWidth
+            variant="outlined"
+            id="searchFilterDesktop"
+            value={searchFilter}
+            onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder="Search Kuis"
+            // onBlur={() => setSearchBarFocus(false)}
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                >
+                  <IconButton size="small">
+                    <GoSearch />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e, "searchFilterDesktop");
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
+            }}
+          />
         </Hidden>
-        {canAnnounce() ?
-            <div>
-              <Hidden smUp implementation="css">
-                <LightTooltip title="Buat Pengumuman">
-                  <Link to="/buat-pengumuman">
-                    <Fab size="small" className={classes.newAnnouncementButton}>
-                      <AnnouncementIcon className={classes.newAnnouncementIconMobile} />
-                    </Fab>
-                  </Link>
-                </LightTooltip>
-              </Hidden>
-              <Hidden xsDown implementation="css">
+        {canAnnounce() ? (
+          <div>
+            <Hidden smUp implementation="css">
+              <LightTooltip title="Buat Pengumuman">
                 <Link to="/buat-pengumuman">
-                  <Fab variant="extended" size="medium" className={classes.newAnnouncementButton}>
-                    <AnnouncementIcon className={classes.newAnnouncementIconDesktop} />
-                    Buat Pengumuman
+                  <Fab size="small" className={classes.newAnnouncementButton}>
+                    <AnnouncementIcon
+                      className={classes.newAnnouncementIconMobile}
+                    />
                   </Fab>
                 </Link>
-              </Hidden>
-            </div>
-          :
-            null
-        }
+              </LightTooltip>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+              <Link to="/buat-pengumuman">
+                <Fab
+                  variant="extended"
+                  size="medium"
+                  className={classes.newAnnouncementButton}
+                >
+                  <AnnouncementIcon
+                    className={classes.newAnnouncementIconDesktop}
+                  />
+                  Buat Pengumuman
+                </Fab>
+              </Link>
+            </Hidden>
+          </div>
+        ) : null}
         <LightTooltip title="Urutkan Pengumuman">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton
+            onClick={handleOpenSortMenu}
+            className={classes.sortButton}
+          >
             <SortIcon />
           </IconButton>
         </LightTooltip>
@@ -281,12 +378,13 @@ function AnnouncementListToolbar(props) {
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ?
+                {orderBy === headCell.id ? (
                   <span className={classes.visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </span>
-                  : null
-                }
+                ) : null}
               </TableSortLabel>
             </MenuItem>
           ))}
@@ -294,7 +392,7 @@ function AnnouncementListToolbar(props) {
       </div>
     </div>
   );
-};
+}
 
 AnnouncementListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -364,32 +462,28 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   titleIcon: {
+    fontSize: "28px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
-    boxShadow: theme.shadows[0],
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-      cursor: "default"
-    },
-    marginRight: "10px"
-  }
+    marginRight: "10px",
+  },
+  assignmentLate: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 function AnnouncementList(props) {
   const classes = useStyles();
   const { selectedAnnouncements } = props.announcements;
   const { getAnnouncement, getUsers, setCurrentClass } = props;
-  const { kelas } = props.classesCollection
+  const { kelas } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
-  const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false)
+  const [annIsRetrieved, setAnnIsRetrieved] = React.useState(false);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("subject");
   const [searchFilter, updateSearchFilter] = React.useState("");
   const [searchBarFocus, setSearchBarFocus] = React.useState(false);
-
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -397,37 +491,45 @@ function AnnouncementList(props) {
     setOrderBy(property);
   };
 
-  var rows = []
+  var rows = [];
   const announcementRowItem = (data) => {
     rows.push(
       createData(
-        (<AccountCircleIcon />),
-        (!retrieved_users.get(data.author_id) ? null: retrieved_users.get(data.author_id).name),
-        (data.title),
-        (`/pengumuman/${data._id}`),
-        (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
-        (moment(data.date_announced).locale("id").format("HH.mm")),
-        (moment(data.date_announced).locale("id")),
-        (!retrieved_users.get(data.author_id) ? null: retrieved_users.get(data.author_id).name.toLowerCase())
+        <AccountCircleIcon />,
+        !retrieved_users.get(data.author_id)
+          ? null
+          : retrieved_users.get(data.author_id).name,
+        data.title,
+        `/pengumuman/${data._id}`,
+        // (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
+        // (moment(data.date_announced).locale("id").format("HH.mm")),
+        // (moment(data.date_announced).locale("id")),
+        data.createdAt,
+        !retrieved_users.get(data.author_id)
+          ? null
+          : retrieved_users.get(data.author_id).name.toLowerCase()
       )
-    )
-  }
+    );
+  };
 
   const retrieveAnnouncements = () => {
     // If all_assessments is not undefined or an empty array
     if (selectedAnnouncements.length) {
-      rows = []
-      selectedAnnouncements.filter(item => item.title.toLowerCase().includes(searchFilter.toLowerCase()))
-      .forEach((data) => {
-        if(data){
-          console.log(data)
-        }
-        announcementRowItem(data)
-      })
+      rows = [];
+      selectedAnnouncements
+        .filter((item) =>
+          item.title.toLowerCase().includes(searchFilter.toLowerCase())
+        )
+        .forEach((data) => {
+          if (data) {
+            console.log(data);
+          }
+          announcementRowItem(data);
+        });
     }
-  }
+  };
 
- retrieveAnnouncements()
+  retrieveAnnouncements();
 
   // retrieved users ini bulk request, dapat data user"nya satu"
   React.useEffect(() => {
@@ -440,20 +542,20 @@ function AnnouncementList(props) {
       setCurrentClass(user.kelas)
       setAnnIsRetrieved(true)
     }
-    console.log(selectedAnnouncements.length)
+    console.log(selectedAnnouncements.length);
     if (selectedAnnouncements.length) {
       let author_id_set = new Set();
-      selectedAnnouncements.map(ann => author_id_set.add(ann.author_id))
-      getUsers(Array.from(author_id_set))
+      selectedAnnouncements.map((ann) => author_id_set.add(ann.author_id));
+      getUsers(Array.from(author_id_set));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAnnouncements.length])
+  }, [selectedAnnouncements.length]);
 
   // ini ntah kenapa kalo masukkin selectedAnnouncements di parameter kedua ada error..
 
-  console.log(selectedAnnouncements)
+  console.log(selectedAnnouncements);
 
-  document.title = "Schooly | Daftar Pengumuman"
+  document.title = "Schooly | Daftar Pengumuman";
 
   return (
     <div className={classes.root}>
@@ -472,59 +574,95 @@ function AnnouncementList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-        {stableSort(rows, getComparator(order, orderBy))
-          .map((row, index) => {
+        {rows.length === 0 ? (
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        ) : (
+          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             return (
               <Grid item>
                 <Paper variant="outlined">
                   <Link to={row.notification_link}>
-                  <ListItem button component="a" className={classes.announcementListItem}>
-                  <Hidden smUp implementation="css">
-                    <ListItemText
-                      primary={
-                        <Typography variant="subtitle1" color="textPrimary">
-                          {row.notification_title}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography variant="caption" color="textSecondary">
-                          {row.author_name}
-                        </Typography>
-                      }
-                    />
-                  </Hidden>
-                  <Hidden xsDown implementation="css">
-                    <ListItemText
-                      primary={
-                        <Typography variant="h6" color="textPrimary">
-                          {row.notification_title}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography variant="body2" color="textSecondary">
-                          {row.author_name}
-                        </Typography>
-                      }
-                    />
-                  </Hidden>
-                    <ListItemText
-                      align="right"
-                      primary={
-                        <Typography variant="subtitle" color="textSecondary">
-                          {row.date}
-                        </Typography>
-                      }
-                      secondary={row.time}
-                    />
-                  </ListItem>
+                    <ListItem
+                      button
+                      component="a"
+                      className={classes.announcementListItem}
+                    >
+                      <Hidden smUp implementation="css">
+                        <ListItemText
+                          primary={
+                            <Typography variant="subtitle1" color="textPrimary">
+                              {row.notification_title}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="caption" color="textSecondary">
+                              {row.author_name}
+                            </Typography>
+                          }
+                        />
+                      </Hidden>
+                      <Hidden xsDown implementation="css">
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <ListItemAvatar>
+                            <Avatar className={classes.assignmentLate}>
+                              <AnnouncementIcon />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6" color="textPrimary">
+                                {row.notification_title}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography variant="body2" color="textSecondary">
+                                {row.author_name}
+                              </Typography>
+                            }
+                          />
+                        </div>
+                      </Hidden>
+                      {/* <ListItemText
+                          align="right"
+                          primary={
+                            <Typography variant="subtitle" color="textSecondary">
+                              {row.date}
+                            </Typography>
+                          }
+                          secondary={row.time}
+                        /> */}
+                      <ListItemText
+                        align="right"
+                        primary={
+                          <Typography variant="body2" color="textSecondary">
+                            {moment(row.createdAt)
+                              .locale("id")
+                              .format("DD MMM YYYY")}
+                          </Typography>
+                        }
+                        secondary={moment(row.createdAt)
+                          .locale("id")
+                          .format("HH.mm")}
+                      />
+                    </ListItem>
                   </Link>
                 </Paper>
               </Grid>
-            )
-        })}
+            );
+          })
+        )}
       </Grid>
-      </div>
-  )
+    </div>
+  );
 }
 
 AnnouncementList.propTypes = {
@@ -539,6 +677,9 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { getAnnouncement, getAllAnnouncements, getUsers, setCurrentClass }
-) (AnnouncementList);
+export default connect(mapStateToProps, {
+  getAnnouncement,
+  getAllAnnouncements,
+  getUsers,
+  setCurrentClass,
+})(AnnouncementList);

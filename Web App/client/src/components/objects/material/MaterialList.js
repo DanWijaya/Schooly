@@ -1,15 +1,16 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {connect} from "react-redux";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
 import {
   getAllMaterials,
   getMaterial,
-  deleteMaterial
+  deleteMaterial,
 } from "../../../actions/MaterialActions";
-import {getSelectedClasses, getAllClass} from "../../../actions/ClassActions";
-import {getAllSubjects} from "../../../actions/SubjectActions";
-import {getTeachers} from "../../../actions/UserActions";
+import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getTeachers } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
@@ -27,20 +28,31 @@ import {
   Paper,
   TableSortLabel,
   TextField,
-  Typography
+  Typography,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
 } from "@material-ui/core/";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SortIcon from "@material-ui/icons/Sort";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import {GoSearch} from "react-icons/go";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { GoSearch } from "react-icons/go";
 import ClearIcon from "@material-ui/icons/Clear";
 
-function createData(_id, materialtitle, subject, author, class_assigned) {
-  return {_id, materialtitle, subject, author, class_assigned};
+function createData(
+  _id,
+  materialtitle,
+  subject,
+  author,
+  class_assigned,
+  createdAt
+) {
+  return { _id, materialtitle, subject, author, class_assigned, createdAt };
 }
 
 var rows = [];
@@ -68,7 +80,7 @@ function stableSort(array, comparator) {
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map(el => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 }
 
 function MaterialListToolbar(props) {
@@ -80,11 +92,11 @@ function MaterialListToolbar(props) {
     role,
     searchFilter,
     updateSearchFilter,
-    searchBarFocus, 
-    setSearchBarFocus
+    searchBarFocus,
+    setSearchBarFocus,
   } = props;
 
-  const createSortHandler = property => event => {
+  const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
@@ -93,26 +105,32 @@ function MaterialListToolbar(props) {
       id: "materialtitle",
       numeric: false,
       disablePadding: true,
-      label: "Nama Materi"
+      label: "Nama Materi",
     },
     {
       id: "subject",
       numeric: false,
       disablePadding: false,
-      label: "Mata Pelajaran"
+      label: "Mata Pelajaran",
     },
     {
       id: "author",
       numeric: false,
       disablePadding: false,
-      label: "Pemberi Materi"
+      label: "Pemberi Materi",
+    },
+    {
+      id: "createdAt",
+      numeric: false,
+      disablePadding: false,
+      label: "Waktu Dibuat",
     },
     {
       id: "class_assigned",
       numeric: false,
       disablePadding: false,
-      label: "Kelas yang diberikan"
-    }
+      label: "Kelas yang diberikan",
+    },
   ];
 
   if (role === "Student") {
@@ -121,108 +139,126 @@ function MaterialListToolbar(props) {
 
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleOpenSortMenu = event => {
+  const handleOpenSortMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
 
-  const onChange = e => {
+  const onChange = (e) => {
     updateSearchFilter(e.target.value);
   };
 
-  const onClear = e => {
+  const onClear = (e) => {
     updateSearchFilter("");
   };
 
   return (
     <div className={classes.toolbar}>
-    <div style={{display: "flex", alignItems: "center"}}>
-      <Hidden smUp implementation="css">
-        {searchBarFocus ?
-          null
-          :
-          <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <MenuBookIcon className={classes.titleIcon} fontSize="large"/>
-            <Typography variant="h4">
-              Daftar Materi
-            </Typography>
-          </div>
-        }
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-          <MenuBookIcon className={classes.titleIcon} fontSize="large"/>
-          <Typography variant="h4">
-            Daftar Materi
-          </Typography>
-        </div>
-      </Hidden>
-      <Hidden smUp implementation="css">
-        {searchBarFocus ?
-          <div style={{display: "flex"}}>
-            <IconButton
-              onClick={() => {setSearchBarFocus(false); updateSearchFilter("")}}
-            >
-              <ArrowBackIcon/>
-            </IconButton>
-            <TextField
-              fullWidth
-              variant="outlined"
-              id="searchFilterMobile"
-              value={searchFilter}
-              onChange={onChange}
-              autoFocus
-              onClick={(e) =>setSearchBarFocus(true)}
-              placeholder="Search Materi"
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smUp implementation="css">
+          {searchBarFocus ? null : (
+            <div
               style={{
-                maxWidth: "200px",
-                marginLeft: "10px"
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
               }}
-              InputProps={{
-                startAdornment:(
-                  searchBarFocus ? null :
-                    <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
+            >
+              <MenuBookIcon className={classes.titleIcon} fontSize="large" />
+              <Typography variant="h4">Daftar Materi</Typography>
+            </div>
+          )}
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <MenuBookIcon className={classes.titleIcon} fontSize="large" />
+            <Typography variant="h4">Daftar Materi</Typography>
+          </div>
+        </Hidden>
+        <Hidden smUp implementation="css">
+          {searchBarFocus ? (
+            <div style={{ display: "flex" }}>
+              <IconButton
+                onClick={() => {
+                  setSearchBarFocus(false);
+                  updateSearchFilter("");
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) => setSearchBarFocus(true)}
+                placeholder="Search Materi"
+                style={{
+                  maxWidth: "200px",
+                  marginLeft: "10px",
+                }}
+                InputProps={{
+                  startAdornment: searchBarFocus ? null : (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                    >
                       <IconButton size="small">
-                        <GoSearch/>
+                        <GoSearch />
                       </IconButton>
                     </InputAdornment>
-                ),
-                endAdornment:(
-                  <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                    <IconButton
-                      size="small"
-                      id="searchFilterMobile"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onClear(e, "searchFilterMobile")}
-                      }
-                      style={{
-                        opacity: 0.5,
-                        visibility: !searchFilter ? "hidden" : "visible"
-                      }}>
-                      <ClearIcon/>
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                style:{
-                  borderRadius: "20px"
-                }
-              }}
-            />
-          </div>
-        :
-          <LightTooltip title="Search" style={{marginLeft: "10px"}}>
-            <IconButton  className={classes.goSearchButton} onClick={() => setSearchBarFocus(true)}>
-              <GoSearch className={classes.goSearchIconMobile} />
-            </IconButton>
-          </LightTooltip>
-        }
-      </Hidden>
-    </div>
-    <div style={{display: "flex"}}>
-    <Hidden xsDown implementation="css">
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e, "searchFilterMobile");
+                        }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    borderRadius: "22.5px",
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+              <IconButton
+                className={classes.goSearchButton}
+                onClick={() => setSearchBarFocus(true)}
+              >
+                <GoSearch className={classes.goSearchIconMobile} />
+              </IconButton>
+            </LightTooltip>
+          )}
+        </Hidden>
+      </div>
+      <div style={{ display: "flex" }}>
+        <Hidden xsDown implementation="css">
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
@@ -233,106 +269,117 @@ function MaterialListToolbar(props) {
             placeholder="Search Materi"
             style={{
               maxWidth: "250px",
-              marginRight: "10px"
+              marginRight: "10px",
             }}
             InputProps={{
-              startAdornment:(
-                  <InputAdornment position="start" style={{marginLeft: "-5px", marginRight: "-5px"}}>
-                    <IconButton size="small">
-                      <GoSearch/>
-                    </IconButton>
-                  </InputAdornment>)
-                ,
-                endAdornment:(
-                <InputAdornment position="end" style={{marginLeft: "-10px", marginRight: "-10px"}}>
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onClear(e, "searchFilterDesktop")}
-                    }
-                    style={{
-                      opacity: 0.5,
-                      visibility: !searchFilter ? "hidden" : "visible"
-                    }}>
-                    <ClearIcon/>
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                >
+                  <IconButton size="small">
+                    <GoSearch />
                   </IconButton>
                 </InputAdornment>
               ),
-              style:{
-                borderRadius: "20px"
-              }
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e, "searchFilterDesktop");
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
             }}
           />
-      </Hidden>
-      <Hidden smUp implementation="css">
-        {role === "Student"?
-          null
-        :
-          <LightTooltip title="Buat Materi">
+        </Hidden>
+        <Hidden smUp implementation="css">
+          {role === "Student" ? null : (
+            <LightTooltip title="Buat Materi">
+              <Link to="/buat-materi">
+                <Fab size="small" className={classes.newMaterialButton}>
+                  <MenuBookIcon className={classes.newMaterialIconMobile} />
+                </Fab>
+              </Link>
+            </LightTooltip>
+          )}
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          {role === "Student" ? null : (
+            // ANCHOR contoh tombol round edge
             <Link to="/buat-materi">
-              <Fab size="small" className={classes.newMaterialButton}>
-                <MenuBookIcon className={classes.newMaterialIconMobile} />
+              <Fab
+                size="medium"
+                variant="extended"
+                className={classes.newMaterialButton}
+              >
+                <MenuBookIcon className={classes.newMaterialIconDesktop} />
+                Buat Materi
               </Fab>
             </Link>
-          </LightTooltip>
-        }
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        {role === "Student"?
-          null
-        :
-        // ANCHOR contoh tombol round edge
-          <Link to="/buat-materi">
-            <Fab size="medium" variant="extended" className={classes.newMaterialButton}>
-              <MenuBookIcon className={classes.newMaterialIconDesktop} />
-              Buat Materi
-            </Fab>
-          </Link>
-        }
-      </Hidden>
+          )}
+        </Hidden>
         <LightTooltip title="Urutkan Materi">
-          <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+          <IconButton
+            onClick={handleOpenSortMenu}
+            className={classes.sortButton}
+          >
             <SortIcon />
           </IconButton>
         </LightTooltip>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseSortMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        {headCells.map((headCell, i) => (
-          <MenuItem
-            key={headCell.id}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
             >
-              {headCell.label}
-              {orderBy === headCell.id ?
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-                : null
-              }
-            </TableSortLabel>
-          </MenuItem>
-        ))}
-      </Menu>
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
     </div>
-  </div>
   );
 }
 
@@ -342,24 +389,24 @@ MaterialListToolbar.propTypes = {
   onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
+  rowCount: PropTypes.number.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
-    padding: "10px"
+    padding: "10px",
   },
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
     marginTop: "15px",
-    marginBottom: "15px"
+    marginBottom: "15px",
   },
   newMaterialButton: {
     marginRight: "10px",
@@ -367,25 +414,25 @@ const useStyles = makeStyles(theme => ({
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
-      color: "white"
-    }
+      color: "white",
+    },
   },
   newMaterialIconDesktop: {
     width: theme.spacing(3),
     height: theme.spacing(3),
-    marginRight: "7.5px"
+    marginRight: "7.5px",
   },
   newMaterialIconMobile: {
     width: theme.spacing(3),
-    height: theme.spacing(3)
+    height: theme.spacing(3),
   },
   sortButton: {
     backgroundColor: theme.palette.action.selected,
     color: "black",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.divider,
-      color: "black"
-    }
+      color: "black",
+    },
   },
   visuallyHidden: {
     border: 0,
@@ -396,39 +443,36 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     position: "absolute",
     top: 20,
-    width: 1
+    width: 1,
   },
   viewMaterialButton: {
     backgroundColor: theme.palette.warning.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.warning.main
-    }
+      color: theme.palette.warning.main,
+    },
   },
   editMaterialButton: {
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.primary.main
-    }
+      color: theme.palette.primary.main,
+    },
   },
   deleteMaterialButton: {
     backgroundColor: theme.palette.error.dark,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.error.dark
-    }
-  },
-  materialPanelDivider: {
-    backgroundColor: theme.palette.primary.main
+      color: theme.palette.error.dark,
+    },
   },
   materialPanelSummary: {
     "&:hover": {
-      backgroundColor: theme.palette.primary.fade
-    }
+      backgroundColor: theme.palette.primary.fade,
+    },
   },
   materialPaper: {
     display: "flex",
@@ -436,20 +480,22 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     padding: "15px",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade
-    }
+      backgroundColor: theme.palette.primary.fade,
+    },
   },
   titleIcon: {
+    fontSize: "28px",
     backgroundColor: "white",
     color: theme.palette.primary.main,
-    boxShadow: theme.shadows[0],
-    "&:focus, &:hover": {
-      backgroundColor: "white",
-      color: theme.palette.primary.main,
-      cursor: "default"
-    },
-    marginRight: "10px"
-  }
+    marginRight: "10px",
+  },
+  assignmentLate: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  assignmentLateTeacher: {
+    backgroundColor: theme.palette.primary.main,
+    marginRight: "10px",
+  },
 }));
 
 function MaterialList(props) {
@@ -469,15 +515,15 @@ function MaterialList(props) {
     getMaterial,
     deleteMaterial,
     getAllClass,
-    getTeachers
+    getTeachers,
   } = props;
-  const {all_materials, selectedMaterials} = props.materialsCollection;
-  const {all_classes_map} = props.classesCollection;
-  const {user, all_teachers} = props.auth;
+  const { all_materials, selectedMaterials } = props.materialsCollection;
+  const { all_classes_map } = props.classesCollection;
+  const { user, all_teachers } = props.auth;
 
-  const {all_subjects_map} = props.subjectsCollection;
+  const { all_subjects_map } = props.subjectsCollection;
 
-  const materialRowItem = data => {
+  const materialRowItem = (data) => {
     rows.push(
       createData(
         data._id,
@@ -486,7 +532,8 @@ function MaterialList(props) {
         !all_teachers.size || !all_teachers.get(data.author_id)
           ? {}
           : all_teachers.get(data.author_id),
-        data.class_assigned
+        data.class_assigned,
+        data.createdAt
       )
     );
   };
@@ -511,18 +558,18 @@ function MaterialList(props) {
 
     if (user.role === "Admin") {
       all_materials
-        .filter(item =>
+        .filter((item) =>
           item.name.toLowerCase().includes(searchFilter.toLowerCase())
         )
-        .map(data => materialRowItem(data));
+        .map((data) => materialRowItem(data));
       // all_materials.map(data =>  materialRowItem(data))
     } else {
       if (selectedMaterials.length) {
         selectedMaterials
-          .filter(item =>
+          .filter((item) =>
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
-          .map(data => materialRowItem(data));
+          .map((data) => materialRowItem(data));
         // selectedMaterials.map(data => materialRowItem(data))
       }
     }
@@ -538,7 +585,7 @@ function MaterialList(props) {
   // This function is defined above.
   retrieveMaterials();
 
-  const onDeleteMaterial = id => {
+  const onDeleteMaterial = (id) => {
     deleteMaterial(id);
   };
 
@@ -609,12 +656,28 @@ function MaterialList(props) {
                           </Typography>
                         </Hidden>
                         <Hidden xsDown implementation="css">
-                          <Typography variant="h6" id={labelId}>
-                            {row.materialtitle}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <ListItemAvatar>
+                              <Avatar className={classes.assignmentLateTeacher}>
+                                <MenuBookIcon />
+                              </Avatar>
+                            </ListItemAvatar>
+                            <div>
+                              <Typography variant="h6" color="textPrimary">
+                                {row.materialtitle}
+                              </Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                {all_subjects_map.get(row.subject)}
+                              </Typography>
+                            </div>
+                          </div>
                         </Hidden>
                       </Grid>
                       <Grid item xs container spacing={1} justify="flex-end">
@@ -647,7 +710,7 @@ function MaterialList(props) {
                             <IconButton
                               size="small"
                               className={classes.deleteMaterialButton}
-                              onClick={e => {
+                              onClick={(e) => {
                                 handleOpenDeleteDialog(
                                   e,
                                   row._id,
@@ -662,12 +725,12 @@ function MaterialList(props) {
                       </Grid>
                     </Grid>
                   </ExpansionPanelSummary>
-                  <Divider className={classes.materialPanelDivider} />
-                  <ExpansionPanelDetails>
+                  <Divider />
+                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
                     <Grid container>
                       <Grid item xs={12}>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kelas yang Diberikan:</b>{" "}
+                        <Typography variant="body1">
+                          Kelas yang Diberikan:{" "}
                           {!all_classes_map.size
                             ? null
                             : row.class_assigned.map((kelas, i) => {
@@ -680,9 +743,17 @@ function MaterialList(props) {
                               })}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      {/* <Grid item xs={12}>
                         <Typography variant="body1" color="textSecondary">
                           Pemberi Materi: {!row.author ? null : row.author.name}
+                        </Typography>
+                      </Grid> */}
+                      <Grid item xs={12}>
+                        <Typography variant="body1" color="textSecondary">
+                          Waktu Dibuat:{" "}
+                          {moment(row.createdAt)
+                            .locale("id")
+                            .format("DD MMM YYYY, HH.mm")}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -690,47 +761,77 @@ function MaterialList(props) {
                 </ExpansionPanel>
               ) : (
                 <Link to={viewpage}>
-                  <Paper
-                    button
-                    component="a"
-                    variant="outlined"
-                    className={classes.materialPaper}
-                  >
-                    <div>
-                      <Typography variant="h6" id={labelId}>
-                        {row.materialtitle}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {all_subjects_map.get(row.subject)}
-                      </Typography>
-                    </div>
-                    <div>
+                  <Paper variant="outlined">
+                    <ListItem
+                      button
+                      component="a"
+                      className={classes.announcementListItem}
+                    >
                       <Hidden smUp implementation="css">
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          align="right"
-                        >
-                          Pemberi Materi:
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          color="textSecondary"
-                          align="right"
-                        >
-                          {!row.author ? null : row.author.name}
-                        </Typography>
+                        <ListItemText
+                          primary={
+                            <Typography variant="subtitle1" color="textPrimary">
+                              {row.materialtitle}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography variant="caption" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          }
+                        />
                       </Hidden>
                       <Hidden xsDown implementation="css">
-                        <Typography
-                          variant="overline"
-                          color="textSecondary"
-                          align="right"
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
                         >
-                          Pemberi Materi: {!row.author ? null : row.author.name}
-                        </Typography>
+                          <ListItemAvatar>
+                            <Avatar className={classes.assignmentLate}>
+                              <MenuBookIcon />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6" color="textPrimary">
+                                {row.materialtitle}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography variant="body2" color="textSecondary">
+                                {all_subjects_map.get(row.subject)}
+                              </Typography>
+                            }
+                          />
+                        </div>
                       </Hidden>
-                    </div>
+                      {/* <ListItemText
+                        align="right"
+                        primary={
+                          <Typography variant="subtitle" color="textSecondary">
+                            {row.date}
+                          </Typography>
+                        }
+                        secondary={row.time}
+                      /> */}
+                      <ListItemText
+                        align="right"
+                        primary={
+                          <Typography variant="body2" color="textSecondary">
+                            {moment(row.createdAt)
+                              .locale("id")
+                              .format("DD MMM YYYY")}
+                          </Typography>
+                        }
+                        secondary={moment(row.createdAt)
+                          .locale("id")
+                          .format("HH.mm")}
+                      />
+                    </ListItem>
                   </Paper>
                 </Link>
               )}
@@ -755,15 +856,15 @@ MaterialList.propTypes = {
   materialsCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
   materialsCollection: state.materialsCollection,
-  subjectsCollection: state.subjectsCollection
+  subjectsCollection: state.subjectsCollection,
 });
 
 // parameter 1 : reducer , parameter 2 : actions
@@ -774,5 +875,5 @@ export default connect(mapStateToProps, {
   getMaterial,
   getTeachers,
   getAllClass,
-  getSelectedClasses
+  getSelectedClasses,
 })(MaterialList);

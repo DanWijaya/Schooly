@@ -1,14 +1,14 @@
 import React from "react";
 
 const StandardTextField = (props) => {
-  const [borderStyle, setBorderStyle] = React.useState("1px solid #CCC")
+  const [borderStyle, setBorderStyle] = React.useState("1px solid #CCC");
 
   const onBlur = () => {
-    setBorderStyle("1px solid #CCC")
-  }
+    setBorderStyle("1px solid #CCC");
+  };
   const onFocus = () => {
-    setBorderStyle("2px solid #2196F3")
-  }
+    setBorderStyle("2px solid #2196F3");
+  };
 
   return (
     <div>
@@ -28,7 +28,7 @@ const StandardTextField = (props) => {
         }}
       />
     </div>
-  )
-}
+  );
+};
 
 export default StandardTextField;

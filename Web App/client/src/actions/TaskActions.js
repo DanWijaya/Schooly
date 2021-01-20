@@ -3,7 +3,7 @@ import { GET_ALL_TASKS, GET_ERRORS, GET_SUCCESS_RESPONSE, GET_TASKS_BY_CLASS} fr
 // import Dropbox from "dropbox";
 
 // Add Task
-export const createTask = (formData, taskData, history) => dispatch => {
+export const createTask = (formData, taskData, history) => (dispatch) => {
   axios
     .post("/api/tasks/create", taskData)
     .then(res => {
@@ -15,28 +15,31 @@ export const createTask = (formData, taskData, history) => dispatch => {
             type: GET_ERRORS,
             payload: false
         })
-        if (formData.has('lampiran_tugas'))
-        return axios.post(`/api/files/tasks/upload/${res.data._id}`, formData);
+        if (formData.has('lampiran_tugas')){
+          return axios.post(`/api/files/tasks/upload/${res.data._id}`, formData);
+        }
         else // Must return something, if false it won't continue to the next "then"
             return "Successfully created task with no lampiran"
     })
-    .then(res => { console.log("Lampiran tugas is uploaded")
-            dispatch({
-                type: GET_SUCCESS_RESPONSE,
-                payload: true
-            })
-        })
-    .catch(err =>{
-        console.log("error happened")
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-        })
+    .then((res) => {
+      console.log("Lampiran tugas is uploaded");
+      let success_res = res.data ? res.data._id : res._id;
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: success_res,
+      });
     })
-}
+    .catch((err) => {
+      console.log("error happened");
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 
 // View All Task
-export const getAllTask = () => dispatch => {
+export const getAllTask = () => (dispatch) => {
   axios
     .get("/api/tasks/viewall")
     .then(res => {
@@ -53,10 +56,17 @@ export const getAllTask = () => dispatch => {
             payload: err.response.data
         })
     })
-}
+    // .catch((err) => {
+    //   console.log("Error has occured");
+    //   dispatch({
+    //     type: GET_ERRORS,
+    //     payload: err.response.data,
+    //   });
+    // });
+};
 
 // View One Task
-export const getOneTask = (taskId) => dispatch => {
+export const getOneTask = (taskId) => (dispatch) => {
   axios
     .get("/api/tasks/view/" + taskId)
     .then(res => {
@@ -73,10 +83,24 @@ export const getOneTask = (taskId) => dispatch => {
             payload: err.response.data
         })
     })
-}
+    // .catch((err) => {
+    //   console.log("error");
+    //   dispatch({
+    //     type: GET_ERRORS,
+    //     payload: err.response.data,
+    //   });
+    // });
+};
 
-export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskData, taskId, history) => dispatch => {
-    // formData is the lampiran files
+export const updateTask = (
+  formData,
+  lampiran_to_delete,
+  current_lampiran,
+  taskData,
+  taskId,
+  history
+) => (dispatch) => {
+  // formData is the lampiran files
   axios
     .post(`/api/tasks/update/${taskId}`, taskData)
     .then(res => {
@@ -101,58 +125,58 @@ export const updateTask = (formData, lampiran_to_delete, current_lampiran, taskD
         else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
             return "Successfully updated task with no lampiran"
     })
-    .then(res => {
-        console.log("Lampiran file is uploaded")
-        dispatch({
-            type: GET_SUCCESS_RESPONSE,
-            payload: true
-        })
+    .then((res) => {
+      console.log("Lampiran file is uploaded");
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: true,
+      });
     })
 
-    .catch(err => {
-        console.log(err);
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-        })
-    })
-}
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 
-export const gradeTask = (taskId, gradingData, student_name) => dispatch => {
-    axios
-        .post(`/api/tasks/update/${taskId}`, gradingData)
-        .then(res => {
-            console.log("Grade task is added")
-            // alert(`Tugas ${student_name} berhasil dinilai `);
-            dispatch({
-                type: GET_SUCCESS_RESPONSE,
-                payload: [true, gradingData.grade, student_name ]
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            dispatch({
-                type: GET_ERRORS,
-                payload: err
-            })
-        })
-}
-export const deleteTask = (taskId, history) => dispatch => {
+export const gradeTask = (taskId, gradingData, student_name) => (dispatch) => {
+  axios
+    .post(`/api/tasks/update/${taskId}`, gradingData)
+    .then((res) => {
+      console.log("Grade task is added");
+      // alert(`Tugas ${student_name} berhasil dinilai `);
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: [true, gradingData.grade, student_name],
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err,
+      });
+    });
+};
+export const deleteTask = (taskId, history) => (dispatch) => {
   axios
     .delete("/api/tasks/delete/" + taskId)
     .then((res) => {
-        console.log(res.data)
-        window.location.href="/daftar-tugas"
+      console.log(res.data);
+      window.location.href = "/daftar-tugas";
     })
-    
-    .catch(err => {
-        console.log(err);
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-        })
-    })
-}
+
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 
 export const getTasksBySC = (subjectId, classId) => () => {
     return axios

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import { uploadTugas , deleteTugas, downloadTugas, previewTugas, downloadLampiran, previewLampiran } from "../../../actions/UploadActions";
+import { uploadTugas , deleteTugas } from "../../../actions/UploadActions";
 import { deleteFileSubmitTasks, uploadFileSubmitTasks, getFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks} from "../../../actions/files/FileSubmitTaskActions";
 import { downloadFileTasks, getFileTasks, viewFileTasks } from "../../../actions/files/FileTaskActions";
 import { getOneTask } from "../../../actions/TaskActions";
@@ -22,7 +22,15 @@ import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
 import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PublishIcon from "@material-ui/icons/Publish";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -62,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItemPaper: {
     marginTop: "5px",
-    marginBottom: "5px"
+    marginBottom: "5px",
   },
   listItem: {
     "&:focus, &:hover": {
@@ -124,13 +132,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.success.main,
     color: "white",
     marginBottom: "10px",
-    marginRight: "10px"
+    marginRight: "10px",
   },
   listItemPaperSubmitted: {
     backgroundColor: "#f2f2f2",
     marginTop: "5px",
-    marginBottom: "5px"
-  }
+    marginBottom: "5px",
+  },
 }));
 
 function LampiranFile(props) {
@@ -138,11 +146,10 @@ function LampiranFile(props) {
 
   const { file_id, filename, filetype, onDownloadFile, onPreviewFile } = props;
 
-  let displayedName = ""
-  filename.length >= 16 ?
-    displayedName = `${filename.slice(0,15)}..${path.extname(filename)}`
-  :
-    displayedName = filename
+  let displayedName = "";
+  filename.length >= 16
+    ? (displayedName = `${filename.slice(0, 15)}..${path.extname(filename)}`)
+    : (displayedName = filename);
 
   return (
     <Grid item xs={12} md={6}>
@@ -154,49 +161,40 @@ function LampiranFile(props) {
           onClick={() => {onPreviewFile(file_id)}}
         >
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={filename} placement="top">
-                <Typography>
-                  {displayedName}
-                </Typography>
+                <Typography>{displayedName}</Typography>
               </LightTooltip>
             }
             secondary={filetype}
@@ -211,19 +209,26 @@ function LampiranFile(props) {
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 function WorkFile(props) {
   const classes = useStyles();
 
-  const { file_id, file_name, file_type, onDownloadFile, onPreviewFile, handleOpenDeleteDialog, type } = props;
+  const {
+    file_id,
+    file_name,
+    file_type,
+    onDownloadFile,
+    onPreviewFile,
+    handleOpenDeleteDialog,
+    type,
+  } = props;
 
-  let displayedName = ""
-  file_name.length >= 10 ?
-    displayedName = `${file_name.slice(0,7)}..${path.extname(file_name)}`
-  :
-    displayedName = file_name
+  let displayedName = "";
+  file_name.length >= 10
+    ? (displayedName = `${file_name.slice(0, 7)}..${path.extname(file_name)}`)
+    : (displayedName = file_name);
 
   return (
     <>
@@ -234,42 +239,36 @@ function WorkFile(props) {
           className={classes.listItem}
         >
           <ListItemAvatar>
-            {file_type === "Word" ?
+            {file_type === "Word" ? (
                 <Avatar className={classes.wordFileTypeIcon}>
                   <FaFileWord />
                 </Avatar>
-              :
-              file_type === "Excel" ?
+              ) : file_type === "Excel" ? (
                 <Avatar className={classes.excelFileTypeIcon}>
                   <FaFileExcel />
                 </Avatar>
-              :
-              file_type === "Gambar" ?
+              ) : file_type === "Gambar" ? (
                 <Avatar className={classes.imageFileTypeIcon}>
                   <FaFileImage />
                 </Avatar>
-              :
-              file_type === "PDF" ?
+              ) : file_type === "PDF" ? (
                 <Avatar className={classes.pdfFileTypeIcon}>
                   <FaFilePdf />
                 </Avatar>
-              :
-              file_type === "Teks" ?
+              ) : file_type === "Teks" ? (
                 <Avatar className={classes.textFileTypeIcon}>
                   <FaFileAlt />
                 </Avatar>
-              :
-              file_type === "Presentasi" ?
+              ) : file_type === "Presentasi" ? (
                 <Avatar className={classes.presentationFileTypeIcon}>
                   <FaFilePowerpoint />
                 </Avatar>
-              :
-              file_type === "File Lainnya" ?
+              ) : file_type === "File Lainnya" ? (
                 <Avatar className={classes.otherFileTypeIcon}>
                   <FaFile />
                 </Avatar>
-              : null
-            }
+              ): null
+          }
           </ListItemAvatar>
           <ListItemText
             primary={
@@ -292,105 +291,157 @@ function WorkFile(props) {
           onClick={() => {onPreviewFile(file_id, "tugas")}}
         >
             <ListItemAvatar>
-              {file_type === "Word" ?
-                <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}>
+              {file_type === "Word" ? (
+                <Badge
+                  badgeContent={
+                    <PublishIcon
+                      className={classes.checkButton}
+                      fontSize="small"
+                    />
+                  }
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                >
                   <Avatar className={classes.wordFileTypeIcon}>
                     <FaFileWord />
                   </Avatar>
-                  </Badge>
-                :
-                file_type === "Excel" ?
-                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                </Badge>
+              ) : file_type === "Excel" ? (
+                <Badge
+                  badgeContent={
+                    <PublishIcon
+                      className={classes.checkButton}
+                      fontSize="small"
+                    />
+                  }
+                  anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
-                  }}>
-                    <Avatar className={classes.excelFileTypeIcon}>
-                      <FaFileExcel />
-                    </Avatar>
-                  </Badge>
-                :
-                file_type === "Gambar" ?
-                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                  }}
+                >
+                  <Avatar className={classes.excelFileTypeIcon}>
+                    <FaFileExcel />
+                  </Avatar>
+                </Badge>
+              ) : file_type === "Gambar" ? (
+                <Badge
+                  badgeContent={
+                    <PublishIcon
+                      className={classes.checkButton}
+                      fontSize="small"
+                    />
+                  }
+                  anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
-                  }}>
-                    <Avatar className={classes.imageFileTypeIcon}>
-                      <FaFileImage />
-                    </Avatar>
-                  </Badge>
-                :
-                file_type === "PDF" ?
-                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                  }}
+                >
+                  <Avatar className={classes.imageFileTypeIcon}>
+                    <FaFileImage />
+                  </Avatar>
+                </Badge>
+              ) : file_type === "PDF" ? (
+                <Badge
+                  badgeContent={
+                    <PublishIcon
+                      className={classes.checkButton}
+                      fontSize="small"
+                    />
+                  }
+                  anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
-                  }}>
-                    <Avatar className={classes.pdfFileTypeIcon}>
-                      <FaFilePdf />
-                    </Avatar>
-                  </Badge>
-                :
-                file_type === "Teks" ?
-                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                  }}
+                >
+                  <Avatar className={classes.pdfFileTypeIcon}>
+                    <FaFilePdf />
+                  </Avatar>
+                </Badge>
+              ) : file_type === "Teks" ? (
+                <Badge
+                  badgeContent={
+                    <PublishIcon
+                      className={classes.checkButton}
+                      fontSize="small"
+                    />
+                  }
+                  anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
-                  }}>
-                    <Avatar className={classes.textFileTypeIcon}>
-                      <FaFileAlt />
-                    </Avatar>
-                  </Badge>
-                :
-                file_type === "Presentasi" ?
-                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                  }}
+                >
+                  <Avatar className={classes.textFileTypeIcon}>
+                    <FaFileAlt />
+                  </Avatar>
+                </Badge>
+              ) : file_type === "Presentasi" ? (
+                <Badge
+                  badgeContent={
+                    <PublishIcon
+                      className={classes.checkButton}
+                      fontSize="small"
+                    />
+                  }
+                  anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
-                  }}>
-                    <Avatar className={classes.presentationFileTypeIcon}>
-                      <FaFilePowerpoint />
-                    </Avatar>
-                  </Badge>
-                :
-                file_type === "File Lainnya" ?
-                  <Badge badgeContent={<PublishIcon className={classes.checkButton} fontSize="small"/>} anchorOrigin={{
+                  }}
+                >
+                  <Avatar className={classes.presentationFileTypeIcon}>
+                    <FaFilePowerpoint />
+                  </Avatar>
+                </Badge>
+              ) : file_type === "File Lainnya" ? (
+                <Badge
+                  badgeContent={
+                    <PublishIcon
+                      className={classes.checkButton}
+                      fontSize="small"
+                    />
+                  }
+                  anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
-                  }}>
-                    <Avatar className={classes.otherFileTypeIcon}>
-                      <FaFile />
-                    </Avatar>
-                  </Badge>
-                : null
-              }
+                  }}
+                >
+                  <Avatar className={classes.otherFileTypeIcon}>
+                    <FaFile />
+                  </Avatar>
+                </Badge>
+              ) : null}
             </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={file_name} placement="top">
-                <Typography variant="subtitle2">
-                  {displayedName}
-                </Typography>
-              </LightTooltip>
-            }
-            secondary={file_type}
-          />
-          <IconButton
-            size="small"
-            className={classes.downloadIconButton}
-            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id, "tugas") }}
-          >
-            <CloudDownloadIcon fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            className={classes.deleteIconButton}
-            onClick={(e) => { e.stopPropagation()
-              handleOpenDeleteDialog(props.file_id, props.file_name)}}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </ListItem>
-      </Paper>}
+            <ListItemText
+              primary={
+                <LightTooltip title={file_name} placement="top">
+                  <Typography variant="subtitle2">{displayedName}</Typography>
+                </LightTooltip>
+              }
+              secondary={file_type}
+            />
+            <IconButton
+              size="small"
+              className={classes.downloadIconButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDownloadFile(file_id, "tugas");
+              }}
+            >
+              <CloudDownloadIcon fontSize="small" />
+            </IconButton>
+            <IconButton
+              size="small"
+              className={classes.deleteIconButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenDeleteDialog(props.file_id, props.file_name);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </ListItem>
+        </Paper>}
     </>
   )
 }
@@ -400,8 +451,8 @@ function ViewTaskStudent(props) {
 
   const { user, selectedUser } = props.auth;
   const { uploadFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks , getFileSubmitTasks, deleteFileSubmitTasks, deleteTugas, success, tasksCollection,
-    filesCollection, downloadTugas, previewTugas, clearSuccess,
-    getOneTask, getOneUser, getAllSubjects, downloadLampiran, previewLampiran, getFileTasks, viewFileTasks, downloadFileTasks } = props;
+    filesCollection, clearSuccess,
+    getOneTask, getOneUser, getAllSubjects, getFileTasks, viewFileTasks, downloadFileTasks } = props;
   const { all_subjects_map} = props.subjectsCollection;
 
   // ref itu untuk ngerefer html yang ada di render.
@@ -421,7 +472,7 @@ function ViewTaskStudent(props) {
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
   let tugasId = props.match.params.id;
-  console.log(filesCollection)
+  console.log(filesCollection);
 
   // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
   // useEffect(() => {getAllSubjects("map")}, [])
@@ -440,30 +491,37 @@ function ViewTaskStudent(props) {
     }
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success, tasksCollection.person_in_charge_id])
+  }, [success, tasksCollection.person_in_charge_id]);
 
   const fileType = (filename) => {
-    let ext_file = path.extname(filename)
-    switch(ext_file) {
-      case ".docx" : return "Word"
-      case ".xlsx" :
-      case ".csv"  : return "Excel"
+    let ext_file = path.extname(filename);
+    switch (ext_file) {
+      case ".docx":
+        return "Word";
+      case ".xlsx":
+      case ".csv":
+        return "Excel";
 
-      case ".png" :
-      case ".jpg" :
-      case ".jpeg" : return "Gambar"
+      case ".png":
+      case ".jpg":
+      case ".jpeg":
+        return "Gambar";
 
-      case ".pdf" : return "PDF"
+      case ".pdf":
+        return "PDF";
 
-      case ".txt" :
-      case ".rtf" : return "Teks"
+      case ".txt":
+      case ".rtf":
+        return "Teks";
 
-      case ".ppt" :
-      case ".pptx" : return "Presentasi"
+      case ".ppt":
+      case ".pptx":
+        return "Presentasi";
 
-      default: return "File Lainnya"
+      default:
+        return "File Lainnya";
     }
-  }
+  };
 
   const listWorkFile = () => {
     return fileTugas.map((item) => (
@@ -502,7 +560,7 @@ function ViewTaskStudent(props) {
             file_type={fileType(fileToSubmit[i].name)}
             type="chosen"
           />
-        )
+        );
       }
       return temp
     }
@@ -559,10 +617,12 @@ function ViewTaskStudent(props) {
   };
   const handleCloseUploadDialog = () => {
     setOpenUploadDialog(false);
-    clearSuccess()
+    clearSuccess();
   };
 
-  document.title = !tasksCollection.name ? "Schooly | Lihat Tugas" : `Schooly | ${tasksCollection.name}`;
+  document.title = !tasksCollection.name
+    ? "Schooly | Lihat Tugas"
+    : `Schooly | ${tasksCollection.name}`;
 
   console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
   console.log(success, filesCollection.files)
@@ -584,40 +644,68 @@ function ViewTaskStudent(props) {
         handleCloseUploadDialog={handleCloseUploadDialog}
         redirectLink={false}
       />
-      <Grid container
+      <Grid
+        container
         spacing={2}
         justify="space-between"
         alignItems="stretch"
-        style={{marginBottom: "30px"}}
+        style={{ marginBottom: "30px" }}
       >
         <Grid item xs={12} md={8}>
           <Paper className={classes.paperBox}>
             <Grid container spacing={6}>
               <Grid item xs={12} md={7}>
-                <Typography variant="h4">
-                  {tasksCollection.name}
-                </Typography>
+                <Typography variant="h4">{tasksCollection.name}</Typography>
                 <Typography variant="caption" color="textSecondary">
-                  <h6>Mata Pelajaran: {all_subjects_map.get(tasksCollection.subject)}</h6>
+                  <h6>
+                    Mata Pelajaran:{" "}
+                    {all_subjects_map.get(tasksCollection.subject)}
+                  </h6>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Penanggung Jawab: <b>{selectedUser._id !== tasksCollection.person_in_charge_id ? null : selectedUser.name}</b>
+                  Oleh:{" "}
+                  <b>
+                    {selectedUser._id !== tasksCollection.person_in_charge_id
+                      ? null
+                      : selectedUser.name}
+                  </b>
                 </Typography>
               </Grid>
               <Grid item xs={12} md={5}>
                 <Hidden mdUp implementation="css">
-                  <Typography variant="body2" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    className={classes.deadlineWarningText}
+                    gutterBottom
+                  >
+                    Batas Waktu:{" "}
+                    {moment(tasksCollection.deadline)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     Nilai Maksimum: 100
                   </Typography>
                 </Hidden>
                 <Hidden smDown implementation="css">
-                  <Typography variant="body2" align="right" color="textSecondary" className={classes.deadlineWarningText} gutterBottom>
-                    Batas Waktu: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+                  <Typography
+                    variant="body2"
+                    align="right"
+                    color="textSecondary"
+                    className={classes.deadlineWarningText}
+                    gutterBottom
+                  >
+                    Batas Waktu:{" "}
+                    {moment(tasksCollection.deadline)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
                   </Typography>
-                  <Typography variant="body2" align="right" color="textSecondary">
+                  <Typography
+                    variant="body2"
+                    align="right"
+                    color="textSecondary"
+                  >
                     Nilai Maksimum: 100
                   </Typography>
                 </Hidden>
@@ -652,7 +740,11 @@ function ViewTaskStudent(props) {
         <Grid item xs={12} md={4}>
           <Paper className={classes.paperBox}>
             <Grid item>
-              <Typography variant="h5" align="center" style={{marginBottom: "20px"}}>
+              <Typography
+                variant="h5"
+                align="center"
+                style={{ marginBottom: "20px" }}
+              >
                 Hasil Pekerjaan
               </Typography>
             </Grid>
@@ -667,10 +759,17 @@ function ViewTaskStudent(props) {
                 {listFileChosen()}
               </Grid>
             }
-            <Divider/>
-            <Grid item container direction="column" alignItems="center" spacing={2} style={{padding: "20px"}}>
+            <Divider />
+            <Grid
+              item
+              container
+              direction="column"
+              alignItems="center"
+              spacing={2}
+              style={{ padding: "20px" }}
+            >
               <form onSubmit={onSubmitTugas}>
-                <div style={{ marginBottom: "15px"}}>
+                <div style={{ marginBottom: "15px" }}>
                   <input
                     type="file"
                     multiple={true}
@@ -678,7 +777,7 @@ function ViewTaskStudent(props) {
                     onChange={handleTugasUpload}
                     ref={tugasUploader}
                     accept="file/*"
-                    style={{display: "none"}}
+                    style={{ display: "none" }}
                   />
                   <input
                     type="file"
@@ -686,13 +785,15 @@ function ViewTaskStudent(props) {
                     name="file"
                     id="file"
                     ref={uploadedTugas}
-                    style={{display: "none"}}
+                    style={{ display: "none" }}
                   />
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}
                     className={classes.selectFileButton}
-                    onClick={() => {tugasUploader.current.click()}}
+                    onClick={() => {
+                      tugasUploader.current.click();
+                    }}
                   >
                     Pilih Berkas
                   </Button>
@@ -732,7 +833,7 @@ function ViewTaskStudent(props) {
           </MuiAlert>
       </Snackbar> 
     </div>
-  )
+  );
 }
 
 ViewTaskStudent.propTypes = {
@@ -748,13 +849,13 @@ const mapStateToProps = (state) => ({
   success: state.success,
   tasksCollection: state.tasksCollection,
   subjectsCollection: state.subjectsCollection,
-  filesCollection: state.filesCollection
+  filesCollection: state.filesCollection,
 });
 
 export default connect(
-   mapStateToProps, { uploadTugas, clearSuccess, deleteTugas, downloadTugas,
-     previewTugas, getFileTasks,downloadFileTasks, viewFileTasks, getTaskFilesByUser, getOneUser, downloadLampiran,
-     previewLampiran, getOneTask, getAllSubjects, 
+   mapStateToProps, { uploadTugas, clearSuccess, deleteTugas,
+      getFileTasks,downloadFileTasks, viewFileTasks, getTaskFilesByUser, getOneUser,
+      getOneTask, getAllSubjects, 
      uploadFileSubmitTasks, getFileSubmitTasks,viewFileSubmitTasks, downloadFileSubmitTasks, deleteFileSubmitTasks
      }
  ) (ViewTaskStudent);

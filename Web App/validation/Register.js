@@ -8,7 +8,9 @@ module.exports = function validateRegisterInput(data) {
   data.name = !isEmpty(data.name) ? data.name : "";
   data.email = !isEmpty(data.email) ? data.email : "";
   data.phone = !isEmpty(data.phone) ? data.phone : "";
-  data.emergency_phone = !isEmpty(data.emergency_phone) ? data.emergency_phone : "";
+  data.emergency_phone = !isEmpty(data.emergency_phone)
+    ? data.emergency_phone
+    : "";
   data.address = !isEmpty(data.address) ? data.address : "";
   data.password = !isEmpty(data.password) ? data.password : "";
   data.password2 = !isEmpty(data.password2) ? data.password2 : "";
@@ -22,8 +24,7 @@ module.exports = function validateRegisterInput(data) {
   // Email checks
   if (Validator.isEmpty(data.email)) {
     errors.email = "Email belum diisi";
-  }
-  else if (!Validator.isEmail(data.email)) {
+  } else if (!Validator.isEmail(data.email)) {
     errors.email = "Email tidak benar";
   }
 
@@ -37,22 +38,22 @@ module.exports = function validateRegisterInput(data) {
     errors.kelas = "Kelas belum dipilih";
   }
   if (data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
-    errors.subject_teached = "Mata pelajaran belum dipilih"
+    errors.subject_teached = "Mata pelajaran belum dipilih";
   }
 
   // Phone checks
   if (Validator.isEmpty(data.phone)) {
-    errors.phone = "Nomor telepon belum diisi"
+    errors.phone = "Nomor telepon belum diisi";
   }
 
   // Emergency phone checks
   if (Validator.isEmpty(data.emergency_phone)) {
-    errors.emergency_phone = "Nomor telepon darurat belum diisi"
+    errors.emergency_phone = "Nomor telepon darurat belum diisi";
   }
 
   // Address checks
   if (Validator.isEmpty(data.address)) {
-    errors.address = "Alamat belum diisi"
+    errors.address = "Alamat belum diisi";
   }
 
   // Password checks
@@ -64,17 +65,19 @@ module.exports = function validateRegisterInput(data) {
     errors.password2 = "Konfirmasi kata sandi belum diisi";
   }
 
-  if (!Validator.isEmpty(data.password) && !Validator.isLength(data.password, { min: 8, max: 30 })) {
-      errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
+  if (
+    !Validator.isEmpty(data.password) &&
+    !Validator.isLength(data.password, { min: 8, max: 30 })
+  ) {
+    errors.password = "Kata sandi wajib memiliki 8 karakter atau lebih";
   }
 
   if (!Validator.equals(data.password, data.password2)) {
     errors.password2 = "Kata sandi harus sama";
   }
 
-
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors),
   };
 };

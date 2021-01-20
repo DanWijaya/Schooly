@@ -3,51 +3,56 @@ const Schema = mongoose.Schema;
 const { ObjectId } = require("mongodb");
 
 // Create AssessmentSchema
-const AssessmentSchema = new Schema({ 
+const AssessmentSchema = new Schema(
+  {
     name: {
-        type: String, 
-        required: true
+      type: String,
+      required: true,
     },
-    class_assigned: [{
+    class_assigned: [
+      {
         type: ObjectId,
-        required: true
-    }],
+        required: true,
+      },
+    ],
     author_id: {
-        type: ObjectId,
-        required: true
+      type: ObjectId,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     subject: {
       type: ObjectId,
-      required: true
+      required: true,
     },
     start_date: {
       type: Date,
-      required: true
+      required: true,
     },
     end_date: {
       type: Date,
-      required: true
+      required: true,
     },
-    questions: [{
-        name: {type: String, default: ""},
-        options: {type: [String]},
-        answer: {type: [String]},
-        lampiran: [{ type: ObjectId , default: [], _id: false}],
-        type: {type: String, required: true}
-    }],
-    posted: { type: Boolean, required: true, default: false},
+    questions: [
+      {
+        name: { type: String, default: "" },
+        options: { type: [String] },
+        answer: { type: [String] },
+        lampiran: [{ type: ObjectId, default: [], _id: false }],
+        type: { type: String, required: true },
+      },
+    ],
+    posted: { type: Boolean, required: true, default: false },
     grades: {
       type: Map,
       // of: Object
     },
     // isi grades adalah pasangan <id murid> - <value>.
     // <value> adalah Object yang memiliki 2 pasangan key-value:
-    // 1) "total_grade" - <nilai dengan range 0-100> 
-    // 2) "longtext_grades" - < Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<nilai dengan range 0-bobot soal> > 
+    // 1) "total_grade" - <nilai dengan range 0-100>
+    // 2) "longtext_grades" - < Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<nilai dengan range 0-bobot soal> >
 
     // contoh value grades:
     // Map {
@@ -69,8 +74,7 @@ const AssessmentSchema = new Schema({
     //   },
     // }
 
-    
-   /* NOTE
+    /* NOTE
     - jika suatu soal uraian sudah dinilai, pasangan <idx soal uraian>-<nilai dengan range 0-bobot soal> > ditambahkan ke dalam longtext_grades.
       jika belum dinilai, pasangan tidak ditambahkan.
     - ketika assessment pertama kali dibuat, atribut grades tidak ada. 
@@ -84,20 +88,20 @@ const AssessmentSchema = new Schema({
       di atribut grades.
     */
 
-    submissions:{
+    submissions: {
       type: Map,
     },
     type: {
       type: String,
-      required: true
+      required: true,
     },
     suspects: [ObjectId],
     question_weight: {
       radio: Number,
       checkbox: Number,
       shorttext: Number,
-      longtext: Object
-    }
+      longtext: Object,
+    },
     // value longtext adalah Object yg memiliki pasangan-pasangan key-value = <idx soal uraian>-<bobot>
     // contoh value question_weight:
     // {
@@ -113,8 +117,9 @@ const AssessmentSchema = new Schema({
 
     // NOTE
     // (di CreateAssessment.js, di fungsi onSubmit) jika assessment tidak punya suatu tipe soal, value untuk key tipe soal tersebut = null
-    // (di CreateAssessment.js, di fungsi onSubmit) bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai 0 
-
-})
+    // (di CreateAssessment.js, di fungsi onSubmit) bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai 0
+  },
+  { timestamps: true }
+);
 
 module.exports = Assessment = mongoose.model("assessments", AssessmentSchema);

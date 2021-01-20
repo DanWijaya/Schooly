@@ -7,16 +7,15 @@ function Policy(props) {
   useEffect(() => {
     handleMarginTopValue(0);
     return () => {
-      handleMarginTopValue(20)
-    }
+      handleMarginTopValue(20);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  }, []);
 
   document.title = "Schooly | Kebijakan Penggunaan";
+  document.body.style = "background: #FFFFFF";
 
-  return (
-    <PolicyContent />
-  )
-};
+  return <PolicyContent />;
+}
 
 export default Policy;

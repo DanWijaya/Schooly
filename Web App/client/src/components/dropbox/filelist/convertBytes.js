@@ -1,4 +1,4 @@
-export const convertBytes =(bytes)=> {
+export const convertBytes = (bytes) => {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 
   if (bytes) {

@@ -9,13 +9,38 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
-   ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, Snackbar, TextField, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Select,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -99,48 +124,43 @@ function LampiranFile(props) {
       <Paper variant="outlined">
         <ListItem disableRipple>
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={name} placement="top">
                 <Typography>
-                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                  {name.length < 21
+                    ? name
+                    : `${name.slice(0, 15)}..${path.extname(name)}`}
                 </Typography>
               </LightTooltip>
             }
@@ -149,14 +169,16 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.deleteIconButton}
-            onClick={(e) => {handleLampiranDelete(e, i)}}
+            onClick={(e) => {
+              handleLampiranDelete(e, i);
+            }}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 class CreateAnnouncement extends Component {
@@ -174,64 +196,62 @@ class CreateAnnouncement extends Component {
     };
   }
 
-  lampiranUploader = React.createRef(null)
+  lampiranUploader = React.createRef(null);
 
-  componentDidUpdate(prevProps, prevState){
-    if(!this.props.errors && this.props.errors !== prevProps.errors){
-      this.handleOpenUploadDialog()
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.props.errors && this.props.errors !== prevProps.errors) {
+      this.handleOpenUploadDialog();
     }
   }
 
   componentDidMount() {
     const { user } = this.props.auth;
-    const { getAllClass, setCurrentClass} = this.props;
-    getAllClass()
-    if (user.role === "Student")
-      setCurrentClass(user.kelas)
+    const { getAllClass, setCurrentClass } = this.props;
+    getAllClass();
+    if (user.role === "Student") setCurrentClass(user.kelas);
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
   handleClickMenu = (event) => {
     // Needed so it will not be run when filetugas = null or filetugas array is empty
     if (this.state.fileLampiran.length > 0 && !Boolean(this.state.anchorEl))
-      this.setState({ anchorEl: event.currentTarget})
-  }
+      this.setState({ anchorEl: event.currentTarget });
+  };
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null})
-  }
+    this.setState({ anchorEl: null });
+  };
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true})
+    this.setState({ openUploadDialog: true });
   };
 
   handleCloseUploadDialog = () => {
     this.setState({ openUploadDialog: false });
   };
 
-
-  onChange = (e, otherfield=null) => {
+  onChange = (e, otherfield = null) => {
     if (otherfield) {
-      this.setState({ [otherfield]: e.target.value})
+      this.setState({ [otherfield]: e.target.value });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
     }
-    else {
-      this.setState({ [e.target.id] : e.target.value })
-    }
-    console.log(this.props.errors)
-  }
+    console.log(this.props.errors);
+  };
 
   handleLampiranDelete = (e, i) => {
-    e.preventDefault()
-    console.log("Index is: ", i)
+    e.preventDefault();
+    console.log("Index is: ", i);
     let temp = Array.from(this.state.fileLampiran);
-    temp.splice(i,1);
-    if (temp.length === 0) //If it is empty.
-      this.handleCloseMenu()
-    this.setState({ fileLampiran: temp})
-  }
+    temp.splice(i, 1);
+    if (temp.length === 0)
+      //If it is empty.
+      this.handleCloseMenu();
+    this.setState({ fileLampiran: temp });
+  };
 
   handleCloseErrorSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -250,8 +270,8 @@ class CreateAnnouncement extends Component {
   }
 
   onSubmit = (e, id) => {
-    e.preventDefault()
-    let formData = new FormData()
+    e.preventDefault();
+    let formData = new FormData();
     const { user } = this.props.auth;
     const { kelas } = this.props.classesCollection;
 
@@ -265,15 +285,22 @@ class CreateAnnouncement extends Component {
 
     if (this.state.fileLampiran)
       for (var i = 0; i < this.state.fileLampiran.length; i++) {
-        console.log(this.state.fileLampiran[i])
-        formData.append("lampiran_announcement", this.state.fileLampiran[i])
+        console.log(this.state.fileLampiran[i]);
+        formData.append("lampiran_announcement", this.state.fileLampiran[i]);
       }
-      console.log(formData.getAll("lampiran_announcement"), this.state.fileLampiran)
-      this.props.createAnnouncement(formData, announcementData, this.props.history)
-  }
+    console.log(
+      formData.getAll("lampiran_announcement"),
+      this.state.fileLampiran
+    );
+    this.props.createAnnouncement(
+      formData,
+      announcementData,
+      this.props.history
+    );
+  };
 
   render() {
-    document.title = "Schooly | Buat Pengumuman"
+    document.title = "Schooly | Buat Pengumuman";
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -286,40 +313,47 @@ class CreateAnnouncement extends Component {
       },
     };
 
-    const { classes, success} = this.props;
-    const { all_classes, kelas } = this.props.classesCollection
-    const { class_assigned, fileLampiran} = this.state;
+    const { classes, success } = this.props;
+    const { all_classes, kelas } = this.props.classesCollection;
+    const { class_assigned, fileLampiran } = this.state;
     const { errors } = this.props;
-    const { user } = this.props.auth
+    const { user } = this.props.auth;
 
     const fileType = (filename) => {
-      let ext_file = path.extname(filename)
-      switch(ext_file) {
-        case ".docx" : return "Word"
-        case ".xlsx" :
-        case ".csv"  : return "Excel"
+      let ext_file = path.extname(filename);
+      switch (ext_file) {
+        case ".docx":
+          return "Word";
+        case ".xlsx":
+        case ".csv":
+          return "Excel";
 
-        case ".png" :
-        case ".jpg" :
-        case ".jpeg" : return "Gambar"
+        case ".png":
+        case ".jpg":
+        case ".jpeg":
+          return "Gambar";
 
-        case ".pdf" : return "PDF"
+        case ".pdf":
+          return "PDF";
 
-        case ".txt" :
-        case ".rtf" : return "Teks"
+        case ".txt":
+        case ".rtf":
+          return "Teks";
 
-        case ".ppt" :
-        case ".pptx" : return "Presentasi"
+        case ".ppt":
+        case ".pptx":
+          return "Presentasi";
 
-        default: return "File Lainnya"
+        default:
+          return "File Lainnya";
       }
-    }
+    };
 
     const listFileChosen = () => {
-      let temp = []
+      let temp = [];
       if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
-          console.log(i)
+          console.log(i);
           temp.push(
             <LampiranFile
               classes={classes}
@@ -328,13 +362,13 @@ class CreateAnnouncement extends Component {
               handleLampiranDelete={this.handleLampiranDelete}
               i={i}
             />
-          )
+          );
         }
       }
       return temp;
-    }
+    };
 
-    console.log(Object.keys(errors).length)
+    console.log(Object.keys(errors).length);
     // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja.
     if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user._id) {
       console.log(kelas.ketua_kelas, user._id)
@@ -348,7 +382,7 @@ class CreateAnnouncement extends Component {
           success={success}
           messageUploading="Pengumuman sedang dibuat"
           messageSuccess="Pengumuman telah dibuat"
-          redirectLink="/daftar-pengumuman"
+          redirectLink={`/pengumuman/${success}`}
         />
         <Paper>
           <div className={classes.content}>
@@ -378,12 +412,16 @@ class CreateAnnouncement extends Component {
                       type="text"
                       helperText={errors.title}
                       className={classnames("", {
-                        invalid: errors.title
+                        invalid: errors.title,
                       })}
                     />
                   </Grid>
                   <Grid item>
-                    <Typography component="label" for="description" color="primary">
+                    <Typography
+                      component="label"
+                      for="description"
+                      color="primary"
+                    >
                       Deskripsi
                     </Typography>
                     <TextField
@@ -399,52 +437,82 @@ class CreateAnnouncement extends Component {
                       type="text"
                       helperText={errors.description}
                       className={classnames("", {
-                        invalid: errors.description
+                        invalid: errors.description,
                       })}
                     />
                   </Grid>
                 </Grid>
               </Grid>
-              <Divider flexItem orientation="vertical" className={classes.divider} />
+              <Divider
+                flexItem
+                orientation="vertical"
+                className={classes.divider}
+              />
               <Grid item xs={12} md className={classes.content}>
                 <Grid container direction="column" spacing={4}>
-                  {user.role === "Student" ?
-                    null
-                  :
+                  {user.role === "Student" ? null : (
                     <Grid item>
-                      <Typography component="label" for="class_assigned" color="primary">
+                      <Typography
+                        component="label"
+                        for="class_assigned"
+                        color="primary"
+                      >
                         Kelas yang Diumumkan
                       </Typography>
-                      <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned) && class_assigned.length === 0}>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        error={
+                          Boolean(errors.class_assigned) &&
+                          class_assigned.length === 0
+                        }
+                      >
                         <Select
                           multiple
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "class_assigned")}}
+                          onChange={(event) => {
+                            this.onChange(event, "class_assigned");
+                          }}
                           renderValue={(selected) => (
                             <div className={classes.chips}>
                               {selected.map((kelas) => {
-                                console.log(selected)
-                                console.log(kelas, class_assigned)
+                                console.log(selected);
+                                console.log(kelas, class_assigned);
                                 return (
-                                  <Chip key={kelas} label={kelas.name} className={classes.chip} />
-                                )
+                                  <Chip
+                                    key={kelas}
+                                    label={kelas.name}
+                                    className={classes.chip}
+                                  />
+                                );
                               })}
                             </div>
                           )}
                         >
-                          {all_classes.map((kelas) => { console.log(kelas, class_assigned)
+                          {all_classes.map((kelas) => {
+                            console.log(kelas, class_assigned);
                             return (
-                              <MenuItem key={kelas} selected={true} value={kelas}>{kelas.name}</MenuItem>
-                          )})}
+                              <MenuItem
+                                key={kelas}
+                                selected={true}
+                                value={kelas}
+                              >
+                                {kelas.name}
+                              </MenuItem>
+                            );
+                          })}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) && class_assigned.length === 0 ? errors.class_assigned : null}
+                          {Boolean(errors.class_assigned) &&
+                          class_assigned.length === 0
+                            ? errors.class_assigned
+                            : null}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
-                  }
+                  )}
                   <Grid item>
                     <input
                       type="file"
@@ -454,7 +522,7 @@ class CreateAnnouncement extends Component {
                       onChange={this.handleLampiranUpload}
                       ref={this.lampiranUploader}
                       accept="file/*"
-                      style={{display: "none"}}
+                      style={{ display: "none" }}
                     />
                     <Button
                       variant="contained"
@@ -463,16 +531,19 @@ class CreateAnnouncement extends Component {
                       className={classes.addFileButton}
                     >
                       Tambah Lampiran Berkas
-                     </Button>
-                     <Grid container spacing={1} style={{marginTop: "10px"}}>
-                       {listFileChosen()}
-                     </Grid>
+                    </Button>
+                    <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                      {listFileChosen()}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
             <Divider />
-            <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+            <div
+              style={{ display: "flex", justifyContent: "flex-end" }}
+              className={classes.content}
+            >
               <div>
                 <Button
                   variant="contained"
@@ -495,9 +566,9 @@ class CreateAnnouncement extends Component {
               </MuiAlert>
           </Snackbar>  
       </div>
-    )
-  };
-};
+    );
+  }
+}
 
 CreateAnnouncement.propTypes = {
   errors: PropTypes.object.isRequired,
@@ -505,13 +576,13 @@ CreateAnnouncement.propTypes = {
   success: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
   success: state.success,
   subjectsCollection: state.subjectsCollection,
   classesCollection: state.classesCollection,
-})
+});
 
 export default connect(
   mapStateToProps, { createAnnouncement, getAllClass , setCurrentClass, clearErrors,clearSuccess }

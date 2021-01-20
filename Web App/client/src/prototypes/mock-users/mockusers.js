@@ -24,123 +24,139 @@ const { ObjectId } = require("mongodb");
 
 // tugas 3 -------------------------------------------------------------------------------------------
 router.post("/importUsers", (req, res) => {
-	const newUsers = req.body;
+  const newUsers = req.body;
 
-	MockUser.find().then((users) => {
-		new Promise ((resolve) => {
-			resolve(users.map((user) => {
-				return(user.email);
-			}));
-		}).then((usedEmails) => {
-			let validUsers = [];
-			let invalidUsers = [];
-			
-			newUsers.forEach((user) => {
-				if ( !validateUserImport(user).isValid ) {
-					invalidUsers.push(user);
-				} else {
-					if (usedEmails.includes(user.email)) {
-						invalidUsers.push(user);
-					} else {
-						let newUser;
-						// let userCopy = {...user};
-						if (user.role === "MockStudent") {
-							// delete userCopy.subject_teached;
-							newUser = new MockStudent(user);
-						} else if (user.role === "MockTeacher") {
-							// delete userCopy.kelas;
-							newUser = new MockTeacher(user);
-						} 
-						// else {
-						// 	delete userCopy.subject_teached;
-						// 	delete userCopy.kelas;
-						// 	newUser = new MockAdmin(userCopy);
-						// }
-		
-						validUsers.push(newUser);
-					}
-				}
-			})
+  MockUser.find()
+    .then((users) => {
+      new Promise((resolve) => {
+        resolve(
+          users.map((user) => {
+            return user.email;
+          })
+        );
+      }).then((usedEmails) => {
+        let validUsers = [];
+        let invalidUsers = [];
 
-			MockUser.insertMany(validUsers).then((result) => {
-				return res.status(200).json(`${result.insertedCount} documents were inserted`);
-			}).catch((err) => {
-				return res.status(400).json(err);
-			});
-		});
-	}).catch((err) => {
-		console.log(err);
-	});
-});
+        newUsers.forEach((user) => {
+          if (!validateUserImport(user).isValid) {
+            invalidUsers.push(user);
+          } else {
+            if (usedEmails.includes(user.email)) {
+              invalidUsers.push(user);
+            } else {
+              let newUser;
+              // let userCopy = {...user};
+              if (user.role === "MockStudent") {
+                // delete userCopy.subject_teached;
+                newUser = new MockStudent(user);
+              } else if (user.role === "MockTeacher") {
+                // delete userCopy.kelas;
+                newUser = new MockTeacher(user);
+              }
+              // else {
+              // 	delete userCopy.subject_teached;
+              // 	delete userCopy.kelas;
+              // 	newUser = new MockAdmin(userCopy);
+              // }
 
-// untuk keperluan testing, endpoint ini tidak dipakai dalam action apapun 
-router.get("/getMockUsers", (req, res) => {
-	MockUser.find().then((users, err) => {
-		if (!users) {
-			return res.status(404).json("No students yet in Schooly system");
-		} else {
-			return res.status(200).json(users);
-		}
-	}).catch((err) => {
-		return res.status(400).json(err);
-	});
+              validUsers.push(newUser);
+            }
+          }
+        });
+
+        MockUser.insertMany(validUsers)
+          .then((result) => {
+            return res
+              .status(200)
+              .json(`${result.insertedCount} documents were inserted`);
+          })
+          .catch((err) => {
+            return res.status(400).json(err);
+          });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 // untuk keperluan testing, endpoint ini tidak dipakai dalam action apapun
-router.delete("/deleteAllMockUsers", (req,res) => {
-	MockUser.deleteMany().then((result) => {		
-		return res.status(200).json(`Deleted all mockuser. ${result.deletedCount} documents were deleted`);
-	}).catch((err) => {
-		return res.status(400).json(err);
-	});
+router.get("/getMockUsers", (req, res) => {
+  MockUser.find()
+    .then((users, err) => {
+      if (!users) {
+        return res.status(404).json("No students yet in Schooly system");
+      } else {
+        return res.status(200).json(users);
+      }
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
+});
+
+// untuk keperluan testing, endpoint ini tidak dipakai dalam action apapun
+router.delete("/deleteAllMockUsers", (req, res) => {
+  MockUser.deleteMany()
+    .then((result) => {
+      return res
+        .status(200)
+        .json(
+          `Deleted all mockuser. ${result.deletedCount} documents were deleted`
+        );
+    })
+    .catch((err) => {
+      return res.status(400).json(err);
+    });
 });
 
 //
 router.get("/getMockTeachers", (req, res) => {
-	MockUser.find({ role: "MockTeacher", active: true }).then((users, err) => {
-		if (!users) {
-			console.log("No teachers yet in Schooly System");
-		} else {
-			return res.json(users);
-		}
-	});
-})
-
-//
-router.get("/getMockStudents", (req,res) => {
-	MockUser.find({ role: "MockStudent", active: true}).then((users, err) => {
-		if (!users) {
-			console.log("No students yet in Schooly System");
-		} else {
-			return res.json(users);
-		}
-	});
+  MockUser.find({ role: "MockTeacher", active: true }).then((users, err) => {
+    if (!users) {
+      console.log("No teachers yet in Schooly System");
+    } else {
+      return res.json(users);
+    }
+  });
 });
 
 //
-router.post("/setUserDisabled/:id", (req,res) => {
-	let id = req.params.id;
-	MockUser.findById(id, (err, user) => {
-		if (!user) {
-			return res.status(404).json("User to be disabled is not found");
-		}
-		
-		user.active = false;
-		user
-			.save()
-			.then(res.json(user))
-			.catch(err => console.log(err))
-	});
+router.get("/getMockStudents", (req, res) => {
+  MockUser.find({ role: "MockStudent", active: true }).then((users, err) => {
+    if (!users) {
+      console.log("No students yet in Schooly System");
+    } else {
+      return res.json(users);
+    }
+  });
 });
 
-router.delete("/delete/:id", (req,res) => {
-	let userId = req.params.id;
-	MockUser.findByIdAndDelete(userId, (err,user) => {
-		if (!user) {
-			return res.status(404).json("User to delete is not found");
-		} else {
-			return res.status(200).json(user);
-		}
-	});
+//
+router.post("/setUserDisabled/:id", (req, res) => {
+  let id = req.params.id;
+  MockUser.findById(id, (err, user) => {
+    if (!user) {
+      return res.status(404).json("User to be disabled is not found");
+    }
+
+    user.active = false;
+    user
+      .save()
+      .then(res.json(user))
+      .catch((err) => console.log(err));
+  });
 });
-module.exports = router;  
+
+router.delete("/delete/:id", (req, res) => {
+  let userId = req.params.id;
+  MockUser.findByIdAndDelete(userId, (err, user) => {
+    if (!user) {
+      return res.status(404).json("User to delete is not found");
+    } else {
+      return res.status(200).json(user);
+    }
+  });
+});
+module.exports = router;

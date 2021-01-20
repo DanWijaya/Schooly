@@ -1,28 +1,70 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getPendingStudents, getPendingTeachers, deleteUser, setUserActive } from "../../../actions/UserActions";
+import {
+  getPendingStudents,
+  getPendingTeachers,
+  deleteUser,
+  setUserActive,
+} from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import {Avatar, Button, IconButton, Dialog, Divider, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-  Grid, Hidden, ListItemAvatar, Menu, MenuItem, TableSortLabel, Toolbar, Typography, 
-  FormGroup, FormControlLabel, Checkbox } from "@material-ui/core/";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Dialog,
+  Divider,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  Grid,
+  Hidden,
+  ListItemAvatar,
+  Menu,
+  MenuItem,
+  TableSortLabel,
+  Toolbar,
+  Typography,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-import CancelIcon from '@material-ui/icons/Cancel';
+import CancelIcon from "@material-ui/icons/Cancel";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SortIcon from "@material-ui/icons/Sort";
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
-import { set } from "date-fns/esm";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
-function createData(_id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action) {
-  return { _id, avatar, name, email, phone, emergency_phone, tanggal_lahir, address, action };
+function createData(
+  _id,
+  avatar,
+  name,
+  email,
+  phone,
+  emergency_phone,
+  tanggal_lahir,
+  address,
+  action
+) {
+  return {
+    _id,
+    avatar,
+    name,
+    email,
+    phone,
+    emergency_phone,
+    tanggal_lahir,
+    address,
+    action,
+  };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -52,17 +94,37 @@ function stableSort(array, comparator) {
 }
 
 const ManageUsersToolbar = (props) => {
-  const { classes, order, orderBy, onRequestSort, role, heading, 
-    activateCheckboxMode, deactivateCheckboxMode, currentCheckboxMode, OpenDialogCheckboxDelete, OpenDialogCheckboxApprove,
-    CloseDialogCheckboxDelete, CloseDialogCheckboxApprove, CheckboxDialog, listCheckbox, 
-    lengthListCheckbox, reloader, rowCount, listBooleanCheckbox, listBooleanCheckboxState, 
-    setListBooleanCheckboxState, selectAllData, deSelectAllData} = props;
+  const {
+    classes,
+    order,
+    orderBy,
+    onRequestSort,
+    role,
+    heading,
+    activateCheckboxMode,
+    deactivateCheckboxMode,
+    currentCheckboxMode,
+    OpenDialogCheckboxDelete,
+    OpenDialogCheckboxApprove,
+    // CloseDialogCheckboxDelete,
+    // CloseDialogCheckboxApprove,
+    CheckboxDialog,
+    listCheckbox,
+    lengthListCheckbox,
+    // reloader,
+    rowCount,
+    // listBooleanCheckbox,
+    // listBooleanCheckboxState,
+    // setListBooleanCheckboxState,
+    selectAllData,
+    deSelectAllData,
+  } = props;
 
-  console.log(listCheckbox)
-  console.log(currentCheckboxMode)
+  console.log(listCheckbox);
+  console.log(currentCheckboxMode);
 
-  if(props.lengthListCheckbox !== lengthListCheckbox){
-    console.log("Berubah")
+  if (props.lengthListCheckbox !== lengthListCheckbox) {
+    console.log("Berubah");
   }
 
   const createSortHandler = (property) => (event) => {
@@ -72,10 +134,25 @@ const ManageUsersToolbar = (props) => {
   const headCells = [
     { id: "name", numeric: false, disablePadding: true, label: "Nama" },
     { id: "email", numeric: false, disablePadding: false, label: "Email" },
-    { id: "phone", numeric: true, disablePadding: false, label: "Nomor Telepon" },
-    { id: "tanggal_lahir", numeric: false, disablePadding: false, label: "Tanggal Lahir" },
+    {
+      id: "phone",
+      numeric: true,
+      disablePadding: false,
+      label: "Nomor Telepon",
+    },
+    {
+      id: "tanggal_lahir",
+      numeric: false,
+      disablePadding: false,
+      label: "Tanggal Lahir",
+    },
     { id: "address", numeric: false, disablePadding: false, label: "Alamat" },
-    { id: "emergency_phone", numeric: false, disablePadding: false, label: "Nomor Telepon Darurat"}
+    {
+      id: "emergency_phone",
+      numeric: false,
+      disablePadding: false,
+      label: "Nomor Telepon Darurat",
+    },
   ];
 
   // Sort Menu
@@ -88,48 +165,66 @@ const ManageUsersToolbar = (props) => {
   };
 
   React.useEffect(() => {
-    console.log(lengthListCheckbox)
+    console.log(lengthListCheckbox);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },)
+  });
 
-  console.log(rowCount)
-
-  const [coba, setCoba] = React.useState(null)
+  console.log(rowCount);
 
   return (
     <Toolbar className={classes.toolbar}>
-      <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-        <Typography variant="h5">
-          {heading}
-        </Typography>
-        {(currentCheckboxMode && rowCount !== 0) ?
-          (listCheckbox.length === 0) ?
+      <div
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
+        <Typography variant="h5">{heading}</Typography>
+        {currentCheckboxMode && rowCount !== 0 ? (
+          listCheckbox.length === 0 ? (
             <IconButton onClick={() => selectAllData(role)}>
-              <CheckBoxOutlineBlankIcon className={classes.checkboxIconPrimary}/>
+              <CheckBoxOutlineBlankIcon
+                className={classes.checkboxIconPrimary}
+              />
             </IconButton>
-          : (listCheckbox.length === rowCount) ?
+          ) : listCheckbox.length === rowCount ? (
             <IconButton onClick={() => deSelectAllData(role)}>
-              <CheckBoxIcon className={classes.checkboxIconPrimary}/>
+              <CheckBoxIcon className={classes.checkboxIconPrimary} />
             </IconButton>
-          :
+          ) : (
             <IconButton onClick={() => deSelectAllData(role)}>
-              <IndeterminateCheckBoxIcon className={classes.checkboxIconPrimary}/>
+              <IndeterminateCheckBoxIcon
+                className={classes.checkboxIconPrimary}
+              />
             </IconButton>
-        : null}
+          )
+        ) : null}
       </div>
       <div>
-        {(role === "Student") ?
+        {role === "Student" ? (
           <>
-            {(lengthListCheckbox === 0) ?
-              <>  
-                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Checkbox" : "Matikan Mode Checkbox"}>
-                  <IconButton className={classes.checkboxModeButton}
-                  onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Student") : () => deactivateCheckboxMode("Student")}>
+            {lengthListCheckbox === 0 ? (
+              <>
+                <LightTooltip
+                  title={
+                    !currentCheckboxMode
+                      ? "Aktifkan Mode Kotak Centang"
+                      : "Matikan Mode Kotak Centang"
+                  }
+                >
+                  <IconButton
+                    className={classes.checkboxModeButton}
+                    onClick={
+                      !currentCheckboxMode
+                        ? () => activateCheckboxMode("Student")
+                        : () => deactivateCheckboxMode("Student")
+                    }
+                  >
                     <CheckBoxIcon />
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
-                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                  <IconButton
+                    onClick={handleOpenSortMenu}
+                    className={classes.sortButton}
+                  >
                     <SortIcon />
                   </IconButton>
                 </LightTooltip>
@@ -159,23 +254,24 @@ const ManageUsersToolbar = (props) => {
                         onClick={createSortHandler(headCell.id)}
                       >
                         {headCell.label}
-                        {orderBy === headCell.id ?
+                        {orderBy === headCell.id ? (
                           <span className={classes.visuallyHidden}>
-                            {order === "desc" ? "sorted descending" : "sorted ascending"}
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
                           </span>
-                          : null
-                        }
+                        ) : null}
                       </TableSortLabel>
                     </MenuItem>
                   ))}
                 </Menu>
               </>
-            :
+            ) : (
               <>
                 {CheckboxDialog("Approve", "Student")}
                 <LightTooltip title="Aktifkan User Tercentang">
                   <IconButton
-                    style={{marginRight: "3px"}}
+                    style={{ marginRight: "3px" }}
                     className={classes.profileApproveButton}
                     onClick={(e) => OpenDialogCheckboxApprove(e, "Student")}
                   >
@@ -192,20 +288,35 @@ const ManageUsersToolbar = (props) => {
                   </IconButton>
                 </LightTooltip>
               </>
-            }
-          </>    
-        : 
+            )}
+          </>
+        ) : (
           <>
-            {(lengthListCheckbox === 0) ? 
+            {lengthListCheckbox === 0 ? (
               <>
-                <LightTooltip title={(!currentCheckboxMode) ? "Aktifkan Mode Checkbox" : "Matikan Mode Checkbox"}>
-                  <IconButton className={classes.checkboxModeButton} 
-                  onClick={(!currentCheckboxMode) ? () => activateCheckboxMode("Teacher") : () => deactivateCheckboxMode("Teacher")}>
+                <LightTooltip
+                  title={
+                    !currentCheckboxMode
+                      ? "Aktifkan Mode Kotak Centang"
+                      : "Matikan Mode Kotak Centang"
+                  }
+                >
+                  <IconButton
+                    className={classes.checkboxModeButton}
+                    onClick={
+                      !currentCheckboxMode
+                        ? () => activateCheckboxMode("Teacher")
+                        : () => deactivateCheckboxMode("Teacher")
+                    }
+                  >
                     <CheckBoxIcon />
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
-                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
+                  <IconButton
+                    onClick={handleOpenSortMenu}
+                    className={classes.sortButton}
+                  >
                     <SortIcon />
                   </IconButton>
                 </LightTooltip>
@@ -235,27 +346,28 @@ const ManageUsersToolbar = (props) => {
                         onClick={createSortHandler(headCell.id)}
                       >
                         {headCell.label}
-                        {orderBy === headCell.id ?
+                        {orderBy === headCell.id ? (
                           <span className={classes.visuallyHidden}>
-                            {order === "desc" ? "sorted descending" : "sorted ascending"}
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
                           </span>
-                          : null
-                        }
+                        ) : null}
                       </TableSortLabel>
                     </MenuItem>
                   ))}
                 </Menu>
               </>
-            :
+            ) : (
               <>
                 {CheckboxDialog("Approve", "Teacher")}
                 <LightTooltip title="Aktifkan User Tercentang">
                   <IconButton
                     className={classes.profileApproveButton}
                     onClick={(e) => OpenDialogCheckboxApprove(e, "Teacher")}
-                    style={{marginRight: "3px"}}
+                    style={{ marginRight: "3px" }}
                   >
-                    <CheckCircleIcon/>
+                    <CheckCircleIcon />
                   </IconButton>
                 </LightTooltip>
                 {CheckboxDialog("Delete", "Teacher")}
@@ -264,13 +376,13 @@ const ManageUsersToolbar = (props) => {
                     className={classes.profileDeleteButton}
                     onClick={(e) => OpenDialogCheckboxDelete(e, "Teacher")}
                   >
-                    <DeleteIcon/>
+                    <DeleteIcon />
                   </IconButton>
                 </LightTooltip>
               </>
-            }
+            )}
           </>
-        }
+        )}
       </div>
     </Toolbar>
   );
@@ -279,7 +391,7 @@ const ManageUsersToolbar = (props) => {
 ManageUsersToolbar.propTypes = {
   listCheckbox: PropTypes.object.isRequired,
   lengthListCheckbox: PropTypes.number.isRequired,
-}
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -369,15 +481,15 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.divider,
       color: "black",
     },
-    marginRight: "3px"
+    marginRight: "3px",
   },
   checkboxIconPrimary: {
-    color: theme.palette.primary.main
-  }
+    color: theme.palette.primary.main,
+  },
 }));
 
 function ManageUsers(props) {
-  document.title = "Schooly | Daftar Pengguna"
+  document.title = "Schooly | Daftar Pengguna";
 
   const classes = useStyles();
 
@@ -389,224 +501,240 @@ function ManageUsers(props) {
 
   const [openApproveDialog, setOpenApproveDialog] = React.useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [selectedUserId, setSelectedUserId] = React.useState(null)
+  const [selectedUserId, setSelectedUserId] = React.useState(null);
   const [selectedUserName, setSelectedUserName] = React.useState(null);
 
-  const { deleteUser, setUserActive, getPendingTeachers, getPendingStudents } = props;
+  const {
+    deleteUser,
+    setUserActive,
+    getPendingTeachers,
+    getPendingStudents,
+  } = props;
   const { pending_students, pending_teachers, pending_users } = props.auth;
 
-  let student_rows = []
-  let teacher_rows = []
+  let student_rows = [];
+  let teacher_rows = [];
 
   // Checkbox Dialog
-  const [openApproveCheckboxDialogStudent, setOpenApproveCheckboxDialogStudent] = React.useState(null);
-  const [openApproveCheckboxDialogTeacher, setOpenApproveCheckboxDialogTeacher] = React.useState(null);
-  const [openDeleteCheckboxDialogStudent, setOpenDeleteCheckboxDialogStudent] = React.useState(null);
-  const [openDeleteCheckboxDialogTeacher, setOpenDeleteCheckboxDialogTeacher] = React.useState(null);
+  const [
+    openApproveCheckboxDialogStudent,
+    setOpenApproveCheckboxDialogStudent,
+  ] = React.useState(null);
+  const [
+    openApproveCheckboxDialogTeacher,
+    setOpenApproveCheckboxDialogTeacher,
+  ] = React.useState(null);
+  const [
+    openDeleteCheckboxDialogStudent,
+    setOpenDeleteCheckboxDialogStudent,
+  ] = React.useState(null);
+  const [
+    openDeleteCheckboxDialogTeacher,
+    setOpenDeleteCheckboxDialogTeacher,
+  ] = React.useState(null);
 
   // Checkbox Approve or Delete
-  const [checkboxModeStudent, setCheckboxModeStudent] = React.useState(false)
-  const [checkboxModeTeacher, setCheckboxModeTeacher] = React.useState(false)
+  const [checkboxModeStudent, setCheckboxModeStudent] = React.useState(false);
+  const [checkboxModeTeacher, setCheckboxModeTeacher] = React.useState(false);
 
   // List Checkbox
-  const [listCheckboxStudent, setListCheckboxStudent] = React.useState([])
-  const [listCheckboxTeacher, setListCheckboxTeacher] = React.useState([])
+  const [listCheckboxStudent, setListCheckboxStudent] = React.useState([]);
+  const [listCheckboxTeacher, setListCheckboxTeacher] = React.useState([]);
 
-  const [booleanCheckboxStudent, setBooleanCheckboxStudent] = React.useState([])
-  const [booleanCheckboxTeacher, setBooleanCheckboxTeacher] = React.useState([])
+  const [booleanCheckboxStudent, setBooleanCheckboxStudent] = React.useState(
+    []
+  );
+  const [booleanCheckboxTeacher, setBooleanCheckboxTeacher] = React.useState(
+    []
+  );
 
-  const [test, setTest] = React.useState(false)
+  const [test, setTest] = React.useState(false);
 
-  let currentListBooleanStudent
-  let currentListBooleanTeacher
+  let currentListBooleanStudent;
+  let currentListBooleanTeacher;
 
-  console.log(listCheckboxTeacher)
-  console.log(booleanCheckboxTeacher)
-  console.log(student_rows)
-  console.log(teacher_rows)
+  console.log(listCheckboxTeacher);
+  console.log(booleanCheckboxTeacher);
+  console.log(student_rows);
+  console.log(teacher_rows);
 
   React.useEffect(() => {
-    console.log(listCheckboxStudent.length)
-    console.log(listCheckboxTeacher.length)
-    autoReloader()
-  },[listCheckboxTeacher,listCheckboxStudent])
+    console.log(listCheckboxStudent.length);
+    console.log(listCheckboxTeacher.length);
+    autoReloader();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listCheckboxTeacher, listCheckboxStudent]);
 
   const handleActivateCheckboxMode = (type) => {
-    if(type === "Student"){
-      setCheckboxModeStudent(true)
-      if(currentListBooleanStudent.length === student_rows.length){
-        setBooleanCheckboxStudent(currentListBooleanStudent)
+    if (type === "Student") {
+      setCheckboxModeStudent(true);
+      if (currentListBooleanStudent.length === student_rows.length) {
+        setBooleanCheckboxStudent(currentListBooleanStudent);
+      }
+    } else if (type === "Teacher") {
+      setCheckboxModeTeacher(true);
+      if (currentListBooleanTeacher.length === teacher_rows.length) {
+        setBooleanCheckboxTeacher(currentListBooleanTeacher);
       }
     }
-    else if(type === "Teacher"){
-      setCheckboxModeTeacher(true)
-      if(currentListBooleanTeacher.length === teacher_rows.length){
-        setBooleanCheckboxTeacher(currentListBooleanTeacher)
-      }
-    }
-  }
+  };
 
   const handleDeactivateCheckboxMode = (type) => {
-    if(type === "Student"){
-      setCheckboxModeStudent(false)
+    if (type === "Student") {
+      setCheckboxModeStudent(false);
+    } else if (type === "Teacher") {
+      setCheckboxModeTeacher(false);
     }
-    else if(type === "Teacher"){
-      setCheckboxModeTeacher(false)
-    }
-  }
+  };
 
   const handleChangeListStudent = (e, index, row) => {
-    let currentBooleanList = booleanCheckboxStudent
-    currentBooleanList[index] = !currentBooleanList[index]
-    setBooleanCheckboxStudent(currentBooleanList)
-    let status = true
+    let currentBooleanList = booleanCheckboxStudent;
+    currentBooleanList[index] = !currentBooleanList[index];
+    setBooleanCheckboxStudent(currentBooleanList);
+    let status = true;
     let result = [];
-    let temp = {checkboxEvent: e, index: index, row: row};
-    for(let i=0;i<listCheckboxStudent.length;i++){
-      if(listCheckboxStudent[i].row._id === row._id){
-        result = listCheckboxStudent
-        result.splice(i,i+1)
-        status = false
+    let temp = { checkboxEvent: e, index: index, row: row };
+    for (let i = 0; i < listCheckboxStudent.length; i++) {
+      if (listCheckboxStudent[i].row._id === row._id) {
+        result = listCheckboxStudent;
+        // result.splice(i,i+1)
+        result.splice(i, 1);
+        status = false;
         break;
       }
     }
-    if(status){
-      result = listCheckboxStudent
-      result.push(temp)
+    if (status) {
+      result = listCheckboxStudent;
+      result.push(temp);
     }
-    setListCheckboxStudent(result)
-  }
+    setListCheckboxStudent(result);
+  };
 
   const handleChangeListTeacher = (e, index, row) => {
-    let currentBooleanList = booleanCheckboxTeacher
-    currentBooleanList[index] = !currentBooleanList[index]
-    setBooleanCheckboxTeacher(currentBooleanList)
-    let status = true
+    let currentBooleanList = booleanCheckboxTeacher;
+    currentBooleanList[index] = !currentBooleanList[index];
+    setBooleanCheckboxTeacher(currentBooleanList);
+    let status = true;
     let result = [];
-    let temp = {checkboxEvent: e, index: index, row: row};
-    for(let i=0;i<listCheckboxTeacher.length;i++){
-      if(listCheckboxTeacher[i].row._id === row._id){
-        result = listCheckboxTeacher
-        result.splice(i,i+1)
-        status = false
+    let temp = { checkboxEvent: e, index: index, row: row };
+    for (let i = 0; i < listCheckboxTeacher.length; i++) {
+      if (listCheckboxTeacher[i].row._id === row._id) {
+        result = listCheckboxTeacher;
+        // result.splice(i,i+1)
+        result.splice(i, 1);
+        status = false;
         break;
       }
     }
-    if(status){
-      result = listCheckboxTeacher
-      result.push(temp)
+    if (status) {
+      result = listCheckboxTeacher;
+      result.push(temp);
     }
-    setListCheckboxTeacher(result)
-  }
+    setListCheckboxTeacher(result);
+  };
 
   const handleApproveListStudent = () => {
-    for(let i=0;i<listCheckboxStudent.length;i++){
-      onApproveUser(listCheckboxStudent[i].row._id)
+    for (let i = 0; i < listCheckboxStudent.length; i++) {
+      onApproveUser(listCheckboxStudent[i].row._id);
     }
-    setListCheckboxStudent([])
-  }
+    setListCheckboxStudent([]);
+  };
 
   const handleApproveListTeacher = () => {
-    for(let i=0;i<listCheckboxTeacher.length;i++){
-      onApproveUser(listCheckboxTeacher[i].row._id)
+    for (let i = 0; i < listCheckboxTeacher.length; i++) {
+      onApproveUser(listCheckboxTeacher[i].row._id);
     }
-    setListCheckboxTeacher([])
-  }
+    setListCheckboxTeacher([]);
+  };
 
   const handleDeleteListStudent = () => {
-    for(let i=0;i<listCheckboxStudent.length;i++){
-      onDeleteUser(listCheckboxStudent[i].row._id)
+    for (let i = 0; i < listCheckboxStudent.length; i++) {
+      onDeleteUser(listCheckboxStudent[i].row._id);
     }
-    setListCheckboxStudent([])
-  }
+    setListCheckboxStudent([]);
+  };
 
   const handleDeleteListTeacher = () => {
-    for(let i=0;i<listCheckboxTeacher.length;i++){
-      onDeleteUser(listCheckboxTeacher[i].row._id)
+    for (let i = 0; i < listCheckboxTeacher.length; i++) {
+      onDeleteUser(listCheckboxTeacher[i].row._id);
     }
-    setListCheckboxTeacher([])
-  }
+    setListCheckboxTeacher([]);
+  };
 
   const selectAllData = (type) => {
-    if(type === "Student"){
-      let allDataStudent = []
-      let booleanAllDataStudent = []
-      for(let i=0;i<student_rows.length;i++){
-        let temp = {e: null, index: i, row: student_rows[i]}
-        allDataStudent.push(temp)
-        booleanAllDataStudent.push(true)
+    if (type === "Student") {
+      let allDataStudent = [];
+      let booleanAllDataStudent = [];
+      for (let i = 0; i < student_rows.length; i++) {
+        let temp = { e: null, index: i, row: student_rows[i] };
+        allDataStudent.push(temp);
+        booleanAllDataStudent.push(true);
       }
-      setListCheckboxStudent(allDataStudent)
-      setBooleanCheckboxStudent(booleanAllDataStudent)
-    }
-    else{
-      let allDataTeacher = []
-      let booleanAllDataTeacher = []
-      for(let i=0;i<teacher_rows.length;i++){
-        let temp = {e: null, index: i, row: teacher_rows[i]}
-        allDataTeacher.push(temp)
-        booleanAllDataTeacher.push(true)
+      setListCheckboxStudent(allDataStudent);
+      setBooleanCheckboxStudent(booleanAllDataStudent);
+    } else {
+      let allDataTeacher = [];
+      let booleanAllDataTeacher = [];
+      for (let i = 0; i < teacher_rows.length; i++) {
+        let temp = { e: null, index: i, row: teacher_rows[i] };
+        allDataTeacher.push(temp);
+        booleanAllDataTeacher.push(true);
       }
-      setListCheckboxTeacher(allDataTeacher)
-      setBooleanCheckboxTeacher(booleanAllDataTeacher)
+      setListCheckboxTeacher(allDataTeacher);
+      setBooleanCheckboxTeacher(booleanAllDataTeacher);
     }
-  }
+  };
 
   const deSelectAllData = (type) => {
-    if(type === "Student"){
-      let booleanAllDataStudent = []
-      for(let i=0;i<student_rows.length;i++){
-        booleanAllDataStudent.push(false)
+    if (type === "Student") {
+      let booleanAllDataStudent = [];
+      for (let i = 0; i < student_rows.length; i++) {
+        booleanAllDataStudent.push(false);
       }
-      setListCheckboxStudent([])
-      setBooleanCheckboxStudent(booleanAllDataStudent)
-    }
-    else{
-      let booleanAllDataTeacher = []
-      for(let i=0;i<teacher_rows.length;i++){
-        booleanAllDataTeacher.push(false)
+      setListCheckboxStudent([]);
+      setBooleanCheckboxStudent(booleanAllDataStudent);
+    } else {
+      let booleanAllDataTeacher = [];
+      for (let i = 0; i < teacher_rows.length; i++) {
+        booleanAllDataTeacher.push(false);
       }
-      setListCheckboxTeacher([])
-      setBooleanCheckboxTeacher(booleanAllDataTeacher)
+      setListCheckboxTeacher([]);
+      setBooleanCheckboxTeacher(booleanAllDataTeacher);
     }
-  }
+  };
 
   // Checkbox Dialog Box
   const handleOpenCheckboxDeleteDialog = (e, user) => {
     e.stopPropagation();
-    if(user === "Student"){
-      setOpenDeleteCheckboxDialogStudent(true)
-    }
-    else{
-      setOpenDeleteCheckboxDialogTeacher(true)
+    if (user === "Student") {
+      setOpenDeleteCheckboxDialogStudent(true);
+    } else {
+      setOpenDeleteCheckboxDialogTeacher(true);
     }
   };
 
   const handleOpenCheckboxApproveDialog = (e, user) => {
     e.stopPropagation();
-    if(user === "Student"){
-      setOpenApproveCheckboxDialogStudent(true)
-    }
-    else{
-      setOpenApproveCheckboxDialogTeacher(true)
+    if (user === "Student") {
+      setOpenApproveCheckboxDialogStudent(true);
+    } else {
+      setOpenApproveCheckboxDialogTeacher(true);
     }
   };
 
   const handleCloseCheckboxDeleteDialog = (user) => {
-    if(user === "Student"){
-      setOpenDeleteCheckboxDialogStudent(false)
-    }
-    else{
-      setOpenDeleteCheckboxDialogTeacher(false)
+    if (user === "Student") {
+      setOpenDeleteCheckboxDialogStudent(false);
+    } else {
+      setOpenDeleteCheckboxDialogTeacher(false);
     }
   };
 
   const handleCloseCheckboxApproveDialog = (user) => {
-    if(user === "Student"){
-      setOpenApproveCheckboxDialogStudent(false)
-    }
-    else{
-      setOpenApproveCheckboxDialogTeacher(false)
+    if (user === "Student") {
+      setOpenApproveCheckboxDialogStudent(false);
+    } else {
+      setOpenApproveCheckboxDialogTeacher(false);
     }
   };
 
@@ -620,59 +748,59 @@ function ManageUsers(props) {
       data.emergency_phone,
       data.tanggal_lahir,
       data.address
-    )
+    );
     if (data.role === "Student") {
-      student_rows.push(temp)
+      student_rows.push(temp);
+    } else if (data.role === "Teacher") {
+      teacher_rows.push(temp);
     }
-    else if (data.role === "Teacher") {
-      teacher_rows.push(temp)
-    }
-  }
+  };
 
   const retrieveUsers = () => {
-    student_rows = []
-    teacher_rows = []
-    currentListBooleanStudent = []
-    currentListBooleanTeacher = []
-    console.log("retrieve users")
-    if(Array.isArray(pending_students)){
-      pending_students.map((data) => {
-        userRowItem(data, "Student")
-        currentListBooleanStudent.push(false)
-      })
+    student_rows = [];
+    teacher_rows = [];
+    currentListBooleanStudent = [];
+    currentListBooleanTeacher = [];
+    console.log("retrieve users");
+    if (Array.isArray(pending_students)) {
+      // pending_students.map((data) => {
+      pending_students.forEach((data) => {
+        userRowItem(data, "Student");
+        currentListBooleanStudent.push(false);
+      });
     }
-    if(Array.isArray(pending_teachers)){
-      pending_teachers.map((data) => {
-        userRowItem(data, "Teacher")
-        currentListBooleanTeacher.push(false)
-      })
+    if (Array.isArray(pending_teachers)) {
+      // pending_teachers.map((data) => {
+      pending_teachers.forEach((data) => {
+        userRowItem(data, "Teacher");
+        currentListBooleanTeacher.push(false);
+      });
     }
-  }
+  };
 
   React.useEffect(() => {
-    getPendingStudents()
-    getPendingTeachers()
+    getPendingStudents();
+    getPendingTeachers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const autoReloader = () => {
-    setTest(!test)
-  }
+    setTest(!test);
+  };
 
   const handleRequestSort = (event, property, role) => {
     if (role === "Student") {
       const isAsc = orderBy_student === property && order_student === "asc";
       setOrderStudent(isAsc ? "desc" : "asc");
       setOrderByStudent(property);
-    }
-    else if (role === "Teacher") {
+    } else if (role === "Teacher") {
       const isAsc = orderBy_teacher === property && order_teacher === "asc";
       setOrderTeacher(isAsc ? "desc" : "asc");
       setOrderByTeacher(property);
     }
   };
   // Belum dipakai sih.
-/*
+  /*
   const handleSelectAllClick = (event, checked) => {
     if (checked) {
       const newSelected = student_rows.map((n) => n._id);
@@ -705,28 +833,28 @@ function ManageUsers(props) {
 
   // Call the function to get the classes from DB
   // this function is defined above
-  retrieveUsers()
+  retrieveUsers();
 
   const onDeleteUser = (id) => {
-    deleteUser(id)
-  }
+    deleteUser(id);
+  };
   const onApproveUser = (id) => {
-      setUserActive(id)
-  }
+    setUserActive(id);
+  };
 
   // Delete Dialog box
   const handleOpenDeleteDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenDeleteDialog(true);
-    setSelectedUserId(id)
-    setSelectedUserName(name)
+    setSelectedUserId(id);
+    setSelectedUserName(name);
   };
 
   const handleOpenApproveDialog = (e, id, name) => {
     e.stopPropagation();
     setOpenApproveDialog(true);
-    setSelectedUserId(id)
-    setSelectedUserName(name)
+    setSelectedUserId(id);
+    setSelectedUserName(name);
   };
 
   const handleCloseDeleteDialog = () => {
@@ -739,23 +867,34 @@ function ManageUsers(props) {
 
   function ApproveDialog() {
     return (
-      <Dialog
-        open={openApproveDialog}
-        onClose={handleCloseApproveDialog}>
-        <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+      <Dialog open={openApproveDialog} onClose={handleCloseApproveDialog}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          className={classes.dialogBox}
+        >
           <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton
-              size="small"
-              onClick={handleCloseApproveDialog}>
+            <IconButton size="small" onClick={handleCloseApproveDialog}>
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
             <Typography variant="h5" gutterBottom>
               Aktifkan pengguna berikut?
             </Typography>
           </Grid>
-          <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          <Grid
+            item
+            container
+            justify="center"
+            style={{ marginBottom: "20px" }}
+          >
             <Typography variant="h6" align="center" gutterBottom>
               <b>{selectedUserName}</b>
             </Typography>
@@ -766,11 +905,13 @@ function ManageUsers(props) {
             justify="center"
             alignItems="center"
             spacing={2}
-            style={{marginBottom: "10px"}}
+            style={{ marginBottom: "10px" }}
           >
             <Grid item>
               <Button
-                onClick={() => { onApproveUser(selectedUserId) }}
+                onClick={() => {
+                  onApproveUser(selectedUserId);
+                }}
                 startIcon={<CheckCircleIcon />}
                 className={classes.dialogApproveButton}
               >
@@ -780,7 +921,7 @@ function ManageUsers(props) {
             <Grid item>
               <Button
                 onClick={handleCloseApproveDialog}
-                startIcon={< CancelIcon/>}
+                startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
               >
                 Batal
@@ -789,26 +930,38 @@ function ManageUsers(props) {
           </Grid>
         </Grid>
       </Dialog>
-    )
+    );
   }
 
   function CheckboxDialog(type, user) {
     return (
       <>
-        {(type === "Approve") ?
-          (user === "Student") ?
+        {type === "Approve" ? (
+          user === "Student" ? (
             <Dialog
               open={openApproveCheckboxDialogStudent}
-              onClose={() => handleCloseCheckboxApproveDialog("Student")}>
-              <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+              onClose={() => handleCloseCheckboxApproveDialog("Student")}
+            >
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                className={classes.dialogBox}
+              >
                 <Grid item container justify="flex-end" alignItems="flex-start">
                   <IconButton
                     size="small"
-                    onClick={() => handleCloseCheckboxApproveDialog("Student")}>
+                    onClick={() => handleCloseCheckboxApproveDialog("Student")}
+                  >
                     <CloseIcon />
                   </IconButton>
                 </Grid>
-                <Grid item container justify="center" style={{marginBottom: "20px"}}>
+                <Grid
+                  item
+                  container
+                  justify="center"
+                  style={{ marginBottom: "20px" }}
+                >
                   <Typography variant="h5" gutterBottom align="center">
                     Aktifkan semua pengguna Berikut?
                   </Typography>
@@ -824,11 +977,13 @@ function ManageUsers(props) {
                   justify="center"
                   alignItems="center"
                   spacing={2}
-                  style={{marginBottom: "10px"}}
+                  style={{ marginBottom: "10px" }}
                 >
                   <Grid item>
                     <Button
-                      onClick={() => { handleApproveListStudent() }}
+                      onClick={() => {
+                        handleApproveListStudent();
+                      }}
                       startIcon={<CheckCircleIcon />}
                       className={classes.dialogApproveButton}
                     >
@@ -837,8 +992,10 @@ function ManageUsers(props) {
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={() => handleCloseCheckboxApproveDialog("Student")}
-                      startIcon={< CancelIcon/>}
+                      onClick={() =>
+                        handleCloseCheckboxApproveDialog("Student")
+                      }
+                      startIcon={<CancelIcon />}
                       className={classes.dialogCancelButton}
                     >
                       Batal
@@ -847,19 +1004,31 @@ function ManageUsers(props) {
                 </Grid>
               </Grid>
             </Dialog>
-          :
+          ) : (
             <Dialog
               open={openApproveCheckboxDialogTeacher}
-              onClose={() => handleCloseCheckboxApproveDialog("Teacher")}>
-              <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
+              onClose={() => handleCloseCheckboxApproveDialog("Teacher")}
+            >
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                className={classes.dialogBox}
+              >
                 <Grid item container justify="flex-end" alignItems="flex-start">
                   <IconButton
                     size="small"
-                    onClick={() => handleCloseCheckboxApproveDialog("Teacher")}>
+                    onClick={() => handleCloseCheckboxApproveDialog("Teacher")}
+                  >
                     <CloseIcon />
                   </IconButton>
                 </Grid>
-                <Grid item container justify="center" style={{marginBottom: "20px"}}>
+                <Grid
+                  item
+                  container
+                  justify="center"
+                  style={{ marginBottom: "20px" }}
+                >
                   <Typography variant="h5" gutterBottom align="center">
                     Aktifkan semua pengguna Berikut?
                   </Typography>
@@ -875,11 +1044,13 @@ function ManageUsers(props) {
                   justify="center"
                   alignItems="center"
                   spacing={2}
-                  style={{marginBottom: "10px"}}
+                  style={{ marginBottom: "10px" }}
                 >
                   <Grid item>
                     <Button
-                      onClick={() => { handleApproveListTeacher() }}
+                      onClick={() => {
+                        handleApproveListTeacher();
+                      }}
                       startIcon={<CheckCircleIcon />}
                       className={classes.dialogApproveButton}
                     >
@@ -888,8 +1059,10 @@ function ManageUsers(props) {
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={() => handleCloseCheckboxApproveDialog("Teacher")}
-                      startIcon={< CancelIcon/>}
+                      onClick={() =>
+                        handleCloseCheckboxApproveDialog("Teacher")
+                      }
+                      startIcon={<CancelIcon />}
                       className={classes.dialogCancelButton}
                     >
                       Batal
@@ -898,115 +1071,143 @@ function ManageUsers(props) {
                 </Grid>
               </Grid>
             </Dialog>
-        :
-          (user === "Student") ?
-            <Dialog
-              open={openDeleteCheckboxDialogStudent}
-              onClose={() => handleCloseCheckboxDeleteDialog("Student")}>
-              <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-                <Grid item container justify="flex-end" alignItems="flex-start">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleCloseCheckboxDeleteDialog("Student")}>
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h5" gutterBottom align="center">
-                    Hapus semua pengguna Berikut?
-                  </Typography>
-                </Grid>
-                {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
+          )
+        ) : user === "Student" ? (
+          <Dialog
+            open={openDeleteCheckboxDialogStudent}
+            onClose={() => handleCloseCheckboxDeleteDialog("Student")}
+          >
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              className={classes.dialogBox}
+            >
+              <Grid item container justify="flex-end" alignItems="flex-start">
+                <IconButton
+                  size="small"
+                  onClick={() => handleCloseCheckboxDeleteDialog("Student")}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Grid>
+              <Grid
+                item
+                container
+                justify="center"
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="h5" gutterBottom align="center">
+                  Hapus semua pengguna Berikut?
+                </Typography>
+              </Grid>
+              {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
                   <Typography variant="h6" align="center" gutterBottom>
                     <b>{selectedUserName}</b>
                   </Typography>
                 </Grid> */}
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={2}
-                  style={{marginBottom: "10px"}}
-                >
-                  <Grid item>
-                    <Button
-                      onClick={() => { handleDeleteListStudent() }}
-                      startIcon={<CheckCircleIcon />}
-                      className={classes.dialogApproveButton}
-                    >
-                      Hapus
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() => handleCloseCheckboxDeleteDialog("Student")}
-                      startIcon={< CancelIcon/>}
-                      className={classes.dialogCancelButton}
-                    >
-                      Batal
-                    </Button>
-                  </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={2}
+                style={{ marginBottom: "10px" }}
+              >
+                <Grid item>
+                  <Button
+                    onClick={() => {
+                      handleDeleteListStudent();
+                    }}
+                    startIcon={<CheckCircleIcon />}
+                    className={classes.dialogApproveButton}
+                  >
+                    Hapus
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    onClick={() => handleCloseCheckboxDeleteDialog("Student")}
+                    startIcon={<CancelIcon />}
+                    className={classes.dialogCancelButton}
+                  >
+                    Batal
+                  </Button>
                 </Grid>
               </Grid>
-            </Dialog>
-          :
-            <Dialog
-              open={openDeleteCheckboxDialogTeacher}
-              onClose={() => handleCloseCheckboxDeleteDialog("Teacher")}>
-              <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-                <Grid item container justify="flex-end" alignItems="flex-start">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}>
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h5" gutterBottom align="center">
-                    Hapus semua pengguna Berikut?
-                  </Typography>
-                </Grid>
-                {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
+            </Grid>
+          </Dialog>
+        ) : (
+          <Dialog
+            open={openDeleteCheckboxDialogTeacher}
+            onClose={() => handleCloseCheckboxDeleteDialog("Teacher")}
+          >
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              className={classes.dialogBox}
+            >
+              <Grid item container justify="flex-end" alignItems="flex-start">
+                <IconButton
+                  size="small"
+                  onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Grid>
+              <Grid
+                item
+                container
+                justify="center"
+                style={{ marginBottom: "20px" }}
+              >
+                <Typography variant="h5" gutterBottom align="center">
+                  Hapus semua pengguna Berikut?
+                </Typography>
+              </Grid>
+              {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
                   <Typography variant="h6" align="center" gutterBottom>
                     <b>{selectedUserName}</b>
                   </Typography>
                 </Grid> */}
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                  spacing={2}
-                  style={{marginBottom: "10px"}}
-                >
-                  <Grid item>
-                    <Button
-                      onClick={() => { handleDeleteListTeacher() }}
-                      startIcon={<CheckCircleIcon />}
-                      className={classes.dialogApproveButton}
-                    >
-                      Hapus
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}
-                      startIcon={< CancelIcon/>}
-                      className={classes.dialogCancelButton}
-                    >
-                      Batal
-                    </Button>
-                  </Grid>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                spacing={2}
+                style={{ marginBottom: "10px" }}
+              >
+                <Grid item>
+                  <Button
+                    onClick={() => {
+                      handleDeleteListTeacher();
+                    }}
+                    startIcon={<CheckCircleIcon />}
+                    className={classes.dialogApproveButton}
+                  >
+                    Hapus
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}
+                    startIcon={<CancelIcon />}
+                    className={classes.dialogCancelButton}
+                  >
+                    Batal
+                  </Button>
                 </Grid>
               </Grid>
-            </Dialog>
-        }
+            </Grid>
+          </Dialog>
+        )}
       </>
-    )
+    );
   }
 
-  console.log(pending_users)
+  console.log(pending_users);
   return (
     <div className={classes.root}>
       {ApproveDialog()}
@@ -1015,7 +1216,9 @@ function ManageUsers(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Pengguna"
         itemName={selectedUserName}
-        deleteItem={() => { onDeleteUser(selectedUserId) }}
+        deleteItem={() => {
+          onDeleteUser(selectedUserId);
+        }}
       />
       <Typography variant="h4" align="center" gutterBottom>
         Daftar Pengguna Tertunda
@@ -1035,41 +1238,57 @@ function ManageUsers(props) {
         currentCheckboxMode={checkboxModeStudent}
         OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
         OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-        CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-        CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
+        // CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
+        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
         lengthListCheckbox={listCheckboxStudent.length}
         listCheckbox={listCheckboxStudent}
-        reloader={() => autoReloader}
-        listBooleanCheckbox={currentListBooleanStudent}
-        listBooleanCheckboxState={booleanCheckboxStudent}
-        setListBooleanCheckboxState={setBooleanCheckboxStudent}
+        // reloader={() => autoReloader}
+        // listBooleanCheckbox={currentListBooleanStudent}
+        // listBooleanCheckboxState={booleanCheckboxStudent}
+        // setListBooleanCheckboxState={setBooleanCheckboxStudent}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
       <Divider variant="inset" />
-      <Grid container direction="column" spacing={2} style={{marginTop: "10px", marginBottom: "75px"}}>
-        {stableSort(student_rows, getComparator(order_student, orderBy_student))
-          .map((row, index) => {
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        style={{ marginTop: "10px", marginBottom: "75px" }}
+      >
+        {student_rows.length === 0 ? (
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        ) : (
+          stableSort(
+            student_rows,
+            getComparator(order_student, orderBy_student)
+          ).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <Grid item>
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                >
-                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
+                <ExpansionPanel button variant="outlined">
+                  <ExpansionPanelSummary
+                    className={classes.profilePanelSummary}
+                  >
+                    <Grid
+                      container
+                      spacing={1}
+                      justify="space-between"
+                      alignItems="center"
+                    >
                       <Grid item>
-                        {!row.avatar ?
+                        {!row.avatar ? (
                           <ListItemAvatar>
                             <Avatar />
                           </ListItemAvatar>
-                        :
+                        ) : (
                           <ListItemAvatar>
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
                           </ListItemAvatar>
-                        }
+                        )}
                       </Grid>
                       <Grid item>
                         <Hidden smUp implementation="css">
@@ -1089,14 +1308,16 @@ function ManageUsers(props) {
                           </Typography>
                         </Hidden>
                       </Grid>
-                      {(!checkboxModeStudent) ?
+                      {!checkboxModeStudent ? (
                         <Grid item xs container spacing={1} justify="flex-end">
                           <Grid item>
                             <LightTooltip title="Aktifkan">
                               <IconButton
                                 size="small"
                                 className={classes.profileApproveButton}
-                                onClick={(e) =>{handleOpenApproveDialog(e, row._id, row.name)}}
+                                onClick={(e) => {
+                                  handleOpenApproveDialog(e, row._id, row.name);
+                                }}
                               >
                                 <CheckCircleIcon fontSize="small" />
                               </IconButton>
@@ -1107,28 +1328,37 @@ function ManageUsers(props) {
                               <IconButton
                                 size="small"
                                 className={classes.profileDeleteButton}
-                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                                onClick={(e) => {
+                                  handleOpenDeleteDialog(e, row._id, row.name);
+                                }}
                               >
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
                           </Grid>
                         </Grid>
-                      :
+                      ) : (
                         <Grid item xs container spacing={1} justify="flex-end">
                           <Grid item>
                             <LightTooltip title="Aktifkan">
-                            <FormGroup>
-                              <FormControlLabel
-                                control={<Checkbox onChange={(e) => {
-                                  handleChangeListStudent(e, index, row)
-                                  autoReloader()}} color="primary" checked={booleanCheckboxStudent[index]}/>}
-                              />
-                            </FormGroup>
+                              <FormGroup>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      onChange={(e) => {
+                                        handleChangeListStudent(e, index, row);
+                                        autoReloader();
+                                      }}
+                                      color="primary"
+                                      checked={booleanCheckboxStudent[index]}
+                                    />
+                                  }
+                                />
+                              </FormGroup>
                             </LightTooltip>
                           </Grid>
                         </Grid>
-                      }
+                      )}
                     </Grid>
                   </ExpansionPanelSummary>
                   <Divider className={classes.profilePanelDivider} />
@@ -1151,15 +1381,19 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item>
                         <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
+                          <b>Tanggal lahir:</b>{" "}
+                          {moment(row.tanggal_lahir)
+                            .locale("id")
+                            .format("DD MMMM YYYY")}
                         </Typography>
                       </Grid>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               </Grid>
-            )
-          })}
+            );
+          })
+        )}
       </Grid>
       <ManageUsersToolbar
         heading="Daftar Guru"
@@ -1175,41 +1409,57 @@ function ManageUsers(props) {
         currentCheckboxMode={checkboxModeTeacher}
         OpenDialogCheckboxDelete={handleOpenCheckboxDeleteDialog}
         OpenDialogCheckboxApprove={handleOpenCheckboxApproveDialog}
-        CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
-        CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
+        // CloseDialogCheckboxDelete={handleCloseCheckboxDeleteDialog}
+        // CloseDialogCheckboxApprove={handleCloseCheckboxApproveDialog}
         CheckboxDialog={CheckboxDialog}
         lengthListCheckbox={listCheckboxTeacher.length}
         listCheckbox={listCheckboxTeacher}
-        reloader={() => autoReloader}
-        listBooleanCheckbox={currentListBooleanTeacher}
-        listBooleanCheckboxState={booleanCheckboxTeacher}
-        setListBooleanCheckboxState={setBooleanCheckboxTeacher}
+        // reloader={() => autoReloader}
+        // listBooleanCheckbox={currentListBooleanTeacher}
+        // listBooleanCheckboxState={booleanCheckboxTeacher}
+        // setListBooleanCheckboxState={setBooleanCheckboxTeacher}
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
       <Divider variant="inset" />
-      <Grid container direction="column" spacing={2} style={{marginTop: "10px"}}>
-        {stableSort(teacher_rows, getComparator(order_teacher, orderBy_teacher))
-          .map((row, index) => {
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        style={{ marginTop: "10px" }}
+      >
+        {teacher_rows.length === 0 ? (
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        ) : (
+          stableSort(
+            teacher_rows,
+            getComparator(order_teacher, orderBy_teacher)
+          ).map((row, index) => {
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <Grid item>
-                <ExpansionPanel
-                  button
-                  variant="outlined"
-                >
-                  <ExpansionPanelSummary className={classes.profilePanelSummary}>
-                    <Grid container spacing={1} justify="space-between" alignItems="center">
+                <ExpansionPanel button variant="outlined">
+                  <ExpansionPanelSummary
+                    className={classes.profilePanelSummary}
+                  >
+                    <Grid
+                      container
+                      spacing={1}
+                      justify="space-between"
+                      alignItems="center"
+                    >
                       <Grid item>
-                        {!row.avatar ?
+                        {!row.avatar ? (
                           <ListItemAvatar>
                             <Avatar />
                           </ListItemAvatar>
-                        :
+                        ) : (
                           <ListItemAvatar>
-                            <Avatar src={`/api/upload/avatar/${row.avatar}`}/>
+                            <Avatar src={`/api/upload/avatar/${row.avatar}`} />
                           </ListItemAvatar>
-                        }
+                        )}
                       </Grid>
                       <Grid item>
                         <Hidden smUp implementation="css">
@@ -1229,14 +1479,16 @@ function ManageUsers(props) {
                           </Typography>
                         </Hidden>
                       </Grid>
-                      {(!checkboxModeTeacher) ?
+                      {!checkboxModeTeacher ? (
                         <Grid item xs container spacing={1} justify="flex-end">
                           <Grid item>
                             <LightTooltip title="Aktifkan">
                               <IconButton
                                 size="small"
                                 className={classes.profileApproveButton}
-                                onClick={(e) =>{handleOpenApproveDialog(e, row._id, row.name)}}
+                                onClick={(e) => {
+                                  handleOpenApproveDialog(e, row._id, row.name);
+                                }}
                               >
                                 <CheckCircleIcon fontSize="small" />
                               </IconButton>
@@ -1247,29 +1499,37 @@ function ManageUsers(props) {
                               <IconButton
                                 size="small"
                                 className={classes.profileDeleteButton}
-                                onClick={(e) =>{handleOpenDeleteDialog(e, row._id, row.name)}}
+                                onClick={(e) => {
+                                  handleOpenDeleteDialog(e, row._id, row.name);
+                                }}
                               >
                                 <DeleteIcon fontSize="small" />
                               </IconButton>
                             </LightTooltip>
                           </Grid>
                         </Grid>
-                      :
+                      ) : (
                         <Grid item xs container spacing={1} justify="flex-end">
                           <Grid item>
                             <LightTooltip title="Aktifkan">
-                            <FormGroup>
-                              <FormControlLabel
-                                control={<Checkbox onChange={(e) => {
-                                  handleChangeListTeacher(e, index, row)
-                                  autoReloader()
-                                }} color="primary" checked={booleanCheckboxTeacher[index]}/>}
-                              />
-                            </FormGroup>
+                              <FormGroup>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      onChange={(e) => {
+                                        handleChangeListTeacher(e, index, row);
+                                        autoReloader();
+                                      }}
+                                      color="primary"
+                                      checked={booleanCheckboxTeacher[index]}
+                                    />
+                                  }
+                                />
+                              </FormGroup>
                             </LightTooltip>
                           </Grid>
                         </Grid>
-                      }
+                      )}
                     </Grid>
                   </ExpansionPanelSummary>
                   <Divider className={classes.profilePanelDivider} />
@@ -1292,20 +1552,23 @@ function ManageUsers(props) {
                       </Grid>
                       <Grid item>
                         <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b> {moment(row.tanggal_lahir).locale("id").format("DD MMMM YYYY")}
+                          <b>Tanggal lahir:</b>{" "}
+                          {moment(row.tanggal_lahir)
+                            .locale("id")
+                            .format("DD MMMM YYYY")}
                         </Typography>
                       </Grid>
                     </Grid>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               </Grid>
-            )
-          })}
+            );
+          })
+        )}
       </Grid>
     </div>
   );
 }
-
 
 ManageUsers.propTypes = {
   classesCollection: PropTypes.object.isRequired,
@@ -1315,14 +1578,17 @@ ManageUsers.propTypes = {
   deleteUser: PropTypes.func.isRequired,
   setUserActive: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
-})
+});
 
-export default connect(
-  mapStateToProps, { getPendingStudents, getPendingTeachers, deleteUser, setUserActive }
-) (ManageUsers);
+export default connect(mapStateToProps, {
+  getPendingStudents,
+  getPendingTeachers,
+  deleteUser,
+  setUserActive,
+})(ManageUsers);

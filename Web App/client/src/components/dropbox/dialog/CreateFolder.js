@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Dropbox } from 'dropbox';
-import { FaFolder } from 'react-icons/fa';
+import React, { useState } from "react";
+import { Dropbox } from "dropbox";
+import { FaFolder } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button, Dialog, Grid, TextField, Typography } from "@material-ui/core";
@@ -50,59 +50,74 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogTitle: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   folderIcon: {
     marginRight: "10px",
-    color: "#2196f3"
-  }
+    color: "#2196f3",
+  },
 }));
 
-function CreateFolder(props){
+function CreateFolder(props) {
   const classes = useStyles();
-  const [folderName, updateFolderName] = useState('');
-  const { errors, open, handleOpen, path, renderToUpdate, handleOpenLoadingAlert, setLoadingMessage, setSuccessMessage } = props;
+  const [folderName, updateFolderName] = useState("");
+  const {
+    errors,
+    open,
+    handleOpen,
+    path,
+    renderToUpdate,
+    handleOpenLoadingAlert,
+    setLoadingMessage,
+    setSuccessMessage,
+  } = props;
   const { dropbox_token } = props.auth;
 
   const onChange = (e) => {
-    updateFolderName(e.target.value)
-  }
+    updateFolderName(e.target.value);
+  };
 
   const handleCloseDialog = () => {
-    handleOpen(false)
-    updateFolderName("")
-  }
+    handleOpen(false);
+    updateFolderName("");
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setLoadingMessage("Folder baru sedang dibuat, mohon tetap menunggu")
-    handleOpenLoadingAlert()
-		//console.log(pathName);
+    setLoadingMessage("Folder baru sedang dibuat, mohon tetap menunggu");
+    handleOpenLoadingAlert();
+    //console.log(pathName);
 
-		let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
-		dropbox
-			.filesCreateFolderV2({ path: path + `/${folderName}`, autorename: true })
-			.then(function (response) {
-        console.log(response.metadata)
+    let dropbox = new Dropbox({ fetch: fetch, accessToken: dropbox_token });
+    dropbox
+      .filesCreateFolderV2({ path: path + `/${folderName}`, autorename: true })
+      .then(function (response) {
+        console.log(response.metadata);
         // renderToUpdate(response.metadata.path_display)
-        setSuccessMessage("Folder baru berhasil dibuat")
-        renderToUpdate("Folder Created")
-			})
-			.catch(function (error) {
-				console.error(error);
-			});
-    handleCloseDialog()
-  }
+        setSuccessMessage("Folder baru berhasil dibuat");
+        renderToUpdate("Folder Created");
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+    handleCloseDialog();
+  };
 
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
-      <Grid container direction="column" alignItems="center" className={classes.dialogBox}>
-        <form onSubmit={onSubmit} style={{paddingTop: "20px"}}>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        className={classes.dialogBox}
+      >
+        <form onSubmit={onSubmit} style={{ paddingTop: "20px" }}>
           <Typography variant="h6" className={classes.dialogTitle} gutterBottom>
-            <FaFolder className={classes.folderIcon}/>Folder Baru
+            <FaFolder className={classes.folderIcon} />
+            Folder Baru
           </Typography>
           <TextField
-            style={{margin: "20px 10px"}}
+            style={{ margin: "20px 10px" }}
             fullWidth
             variant="outlined"
             placeholder="Nama Folder"
@@ -113,7 +128,7 @@ function CreateFolder(props){
             type="text"
             helperText={errors.name}
             className={classnames("", {
-                invalid: errors.name
+              invalid: errors.name,
             })}
           />
           <Grid container justify="center" spacing={2}>
@@ -129,7 +144,7 @@ function CreateFolder(props){
             <Grid item>
               <Button
                 onClick={handleCloseDialog}
-                startIcon={< CancelIcon/>}
+                startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
               >
                 Batal
@@ -139,19 +154,17 @@ function CreateFolder(props){
         </form>
       </Grid>
     </Dialog>
-  )
+  );
 }
 
 CreateFolder.propTypes = {
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-})
+});
 
-export default connect(
-  mapStateToProps
-)(CreateFolder);
+export default connect(mapStateToProps)(CreateFolder);

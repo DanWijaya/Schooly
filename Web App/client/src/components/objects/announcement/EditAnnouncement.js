@@ -16,7 +16,15 @@ import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { FaFile, FaFileAlt, FaFileExcel, FaFileImage, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa";
+import {
+  FaFile,
+  FaFileAlt,
+  FaFileExcel,
+  FaFileImage,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
+} from "react-icons/fa";
 
 const path = require("path");
 
@@ -100,48 +108,43 @@ function LampiranFile(props) {
       <Paper variant="outlined">
         <ListItem disableRipple>
           <ListItemAvatar>
-            {filetype === "Word" ?
-                <Avatar className={classes.wordFileTypeIcon}>
-                  <FaFileWord />
-                </Avatar>
-              :
-              filetype === "Excel" ?
-                <Avatar className={classes.excelFileTypeIcon}>
-                  <FaFileExcel />
-                </Avatar>
-              :
-              filetype === "Gambar" ?
-                <Avatar className={classes.imageFileTypeIcon}>
-                  <FaFileImage />
-                </Avatar>
-              :
-              filetype === "PDF" ?
-                <Avatar className={classes.pdfFileTypeIcon}>
-                  <FaFilePdf />
-                </Avatar>
-              :
-              filetype === "Teks" ?
-                <Avatar className={classes.textFileTypeIcon}>
-                  <FaFileAlt />
-                </Avatar>
-              :
-              filetype === "Presentasi" ?
-                <Avatar className={classes.presentationFileTypeIcon}>
-                  <FaFilePowerpoint />
-                </Avatar>
-              :
-              filetype === "File Lainnya" ?
-                <Avatar className={classes.otherFileTypeIcon}>
-                  <FaFile />
-                </Avatar>
-              : null
-            }
+            {filetype === "Word" ? (
+              <Avatar className={classes.wordFileTypeIcon}>
+                <FaFileWord />
+              </Avatar>
+            ) : filetype === "Excel" ? (
+              <Avatar className={classes.excelFileTypeIcon}>
+                <FaFileExcel />
+              </Avatar>
+            ) : filetype === "Gambar" ? (
+              <Avatar className={classes.imageFileTypeIcon}>
+                <FaFileImage />
+              </Avatar>
+            ) : filetype === "PDF" ? (
+              <Avatar className={classes.pdfFileTypeIcon}>
+                <FaFilePdf />
+              </Avatar>
+            ) : filetype === "Teks" ? (
+              <Avatar className={classes.textFileTypeIcon}>
+                <FaFileAlt />
+              </Avatar>
+            ) : filetype === "Presentasi" ? (
+              <Avatar className={classes.presentationFileTypeIcon}>
+                <FaFilePowerpoint />
+              </Avatar>
+            ) : filetype === "File Lainnya" ? (
+              <Avatar className={classes.otherFileTypeIcon}>
+                <FaFile />
+              </Avatar>
+            ) : null}
           </ListItemAvatar>
           <ListItemText
             primary={
               <LightTooltip title={name} placement="top">
                 <Typography>
-                  {name.length < 21 ? name : `${name.slice(0,15)}..${path.extname(name)}`}
+                  {name.length < 21
+                    ? name
+                    : `${name.slice(0, 15)}..${path.extname(name)}`}
                 </Typography>
               </LightTooltip>
             }
@@ -150,14 +153,16 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.deleteIconButton}
-            onClick={(e) => {handleLampiranDelete(e, i)}}
+            onClick={(e) => {
+              handleLampiranDelete(e, i);
+            }}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
         </ListItem>
       </Paper>
     </Grid>
-  )
+  );
 }
 
 class EditAnnouncement extends Component {
@@ -174,12 +179,12 @@ class EditAnnouncement extends Component {
       class_assigned: [],
       anchorEl: null,
       openUploadDialog: null,
-      errors: {}
+      errors: {},
     };
   }
 
-  lampiranUploader = React.createRef(null)
-  uploadedLampiran = React.createRef(null)
+  lampiranUploader = React.createRef(null);
+  uploadedLampiran = React.createRef(null);
 
   componentDidMount() {
     const { user } = this.props.auth;
@@ -202,16 +207,16 @@ class EditAnnouncement extends Component {
 
   // kurang tau gimana cara ubah.
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log("Tasks props is received");
     const { selectedAnnouncements } = nextProps.announcements;
 
     // console.log(nextProps.tasksCollection.deadline);
 
     if (!nextProps.errors) {
-      this.handleOpenUploadDialog()
+      this.handleOpenUploadDialog();
     }
 
-    if (nextProps.errors) { // if edited, nextProps.errors is false, supaya ndak run ini..
+    if (nextProps.errors) {
+      // if edited, nextProps.errors is false, supaya ndak run ini..
       this.setState({
           title: selectedAnnouncements.title,
           description: selectedAnnouncements.description,
@@ -221,8 +226,6 @@ class EditAnnouncement extends Component {
       })
     }
   }
-
-
 
   handleLampiranUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -242,12 +245,11 @@ class EditAnnouncement extends Component {
         this.setState({ fileLampiran: allowed_file, fileLampiranToAdd: file_to_upload, over_limit: over_limit, fileLimitSnackbar: over_limit.length > 0})
       }
     }
-    document.getElementById("file_control").value = null
-  }
+    document.getElementById("file_control").value = null;
+  };
 
   handleLampiranDelete = (e, i, name) => {
     e.preventDefault()
-    console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
     let tempToAdd = this.state.fileLampiranToAdd;
@@ -255,35 +257,36 @@ class EditAnnouncement extends Component {
     //Untuk yang udah di DB.
     if (this.state.fileLampiran[i].filename !== undefined) {
       //Remove the file in fileLampiranToDelete
-      tempToDelete.push(temp[i])
-    }
-    else { //Untuk yang belum di DB
+      tempToDelete.push(temp[i]);
+    } else {
+      //Untuk yang belum di DB
       //Remove the file in fileLampiranToAdd
       for (var j = 0; j < tempToAdd.length; j++) {
-        console.log(temp[i].name, tempToAdd[j].name)
         if (tempToAdd[j].name === temp[i].name) {
-          tempToAdd.splice(j,1)
+          tempToAdd.splice(j, 1);
         }
       }
     }
     temp.splice(i, 1);
-    if (temp.length === 0)
-      this.handleCloseMenu()
-    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd,
-      fileLampiranToDelete: tempToDelete})
-  }
+    if (temp.length === 0) this.handleCloseMenu();
+    this.setState({
+      fileLampiran: temp,
+      fileLampiranToAdd: tempToAdd,
+      fileLampiranToDelete: tempToDelete,
+    });
+  };
 
   handleClickMenu = (event) => {
     if (!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
-      this.setState({ anchorEl: event.currentTarget})
-  }
+      this.setState({ anchorEl: event.currentTarget });
+  };
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null})
-  }
+    this.setState({ anchorEl: null });
+  };
 
   handleOpenUploadDialog = () => {
-    this.setState({ openUploadDialog: true})
+    this.setState({ openUploadDialog: true });
   };
 
   handleCloseErrorSnackbar = (event, reason) => {
@@ -295,42 +298,51 @@ class EditAnnouncement extends Component {
 
   onChange = (e, otherfield=null) => {
     if (otherfield) {
-      this.setState({ [otherfield] : e.target.value})
+      this.setState({ [otherfield]: e.target.value });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
     }
-    else{
-      this.setState({ [e.target.id]: e.target.value});
-    }
-  }
+  };
 
   onSubmit = (e) => {
     e.preventDefault();
 
     const { id } = this.props.match.params;
-    const { fileLampiranToAdd, fileLampiranToDelete, fileLampiran } = this.state;
+    const {
+      fileLampiranToAdd,
+      fileLampiranToDelete,
+      fileLampiran,
+    } = this.state;
     const { user } = this.props.auth;
-    const { kelas } = this.props.classesCollection
+    const { kelas } = this.props.classesCollection;
     const { selectedAnnouncements } = this.props.announcements;
 
     const announcementObject = {
       title: this.state.title,
       description: this.state.description,
-      class_assigned: user.role === "Student" ? [kelas] : this.state.class_assigned,
-      errors: {}
-    }
+      class_assigned:
+        user.role === "Student" ? [kelas] : this.state.class_assigned,
+      errors: {},
+    };
 
     let formData = new FormData()
     for (var i = 0; i< fileLampiranToAdd.length; i++) {
-      console.log(fileLampiran[i])
       formData.append("lampiran_announcement", fileLampiranToAdd[i])
     }
 
-    this.props.updateAnnouncement(formData, fileLampiranToDelete,
-      selectedAnnouncements.lampiran, announcementObject, id, this.props.history);
-    this.setState({ fileLampiranToDelete: []})
-  }
+    this.props.updateAnnouncement(
+      formData,
+      fileLampiranToDelete,
+      selectedAnnouncements.lampiran,
+      announcementObject,
+      id,
+      this.props.history
+    );
+    this.setState({ fileLampiranToDelete: [] });
+  };
 
   render() {
-    document.title = "Schooly | Sunting Pengumuman"
+    document.title = "Schooly | Sunting Pengumuman";
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -344,57 +356,65 @@ class EditAnnouncement extends Component {
     };
 
     const { classes } = this.props;
-    const{ fileLampiran, class_assigned} = this.state
+    const { fileLampiran, class_assigned } = this.state;
     const { errors, success } = this.props;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
 
     const fileType = (filename) => {
-      let ext_file = path.extname(filename)
-      switch(ext_file) {
-        case ".docx" : return "Word"
-        case ".xlsx" :
-        case ".csv"  : return "Excel"
+      let ext_file = path.extname(filename);
+      switch (ext_file) {
+        case ".docx":
+          return "Word";
+        case ".xlsx":
+        case ".csv":
+          return "Excel";
 
-        case ".png" :
-        case ".jpg" :
-        case ".jpeg" : return "Gambar"
+        case ".png":
+        case ".jpg":
+        case ".jpeg":
+          return "Gambar";
 
-        case ".pdf" : return "PDF"
+        case ".pdf":
+          return "PDF";
 
-        case ".txt" :
-        case ".rtf" : return "Teks"
+        case ".txt":
+        case ".rtf":
+          return "Teks";
 
-        case ".ppt" :
-        case ".pptx" : return "Presentasi"
+        case ".ppt":
+        case ".pptx":
+          return "Presentasi";
 
-        default: return "File Lainnya"
+        default:
+          return "File Lainnya";
       }
     }
-
     const listFileChosen = () => {
       let temp = []
-      if (fileLampiran.length > 0) {
+      // if (fileLampiran.length > 0) {
         for (var i = 0; i < fileLampiran.length; i++) {
           temp.push(
             <LampiranFile //Yang di displaykan ada di DB (filename) sama yang baru diadd (name)
               classes={classes}
-              name={!fileLampiran[i].filename  ?
-                fileLampiran[i].name :
-                fileLampiran[i].filename
+              name={
+                !fileLampiran[i].filename
+                  ? fileLampiran[i].name
+                  : fileLampiran[i].filename
               }
-              filetype={!fileLampiran[i].filename  ?
-                fileType(fileLampiran[i].name) :
-                fileType(fileLampiran[i].filename)
+              filetype={
+                !fileLampiran[i].filename
+                  ? fileType(fileLampiran[i].name)
+                  : fileType(fileLampiran[i].filename)
               }
               handleLampiranDelete={this.handleLampiranDelete}
               i={i}
             />
-          )
+          );
         }
-      }
+      // }
       return temp;
-    }
+    };
 
     if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user._id) {
       console.log(kelas.ketua_kelas, user._id)
@@ -437,12 +457,16 @@ class EditAnnouncement extends Component {
                       type="text"
                       helperText={errors.title}
                       className={classnames("", {
-                        invalid: errors.title
+                        invalid: errors.title,
                       })}
                     />
                   </Grid>
                   <Grid item>
-                    <Typography component="label" for="description" color="primary">
+                    <Typography
+                      component="label"
+                      for="description"
+                      color="primary"
+                    >
                       Deskripsi
                     </Typography>
                     <TextField
@@ -458,62 +482,83 @@ class EditAnnouncement extends Component {
                       type="text"
                       helperText={errors.description}
                       className={classnames("", {
-                        invalid: errors.description
+                        invalid: errors.description,
                       })}
                     />
                   </Grid>
                 </Grid>
               </Grid>
-              <Divider flexItem orientation="vertical" className={classes.divider} />
+              <Divider
+                flexItem
+                orientation="vertical"
+                className={classes.divider}
+              />
               <Grid item xs={12} md className={classes.content}>
                 <Grid container direction="column" spacing={4}>
-                  {user.role === "Student" ?
-                    null
-                  :
+                  {user.role === "Student" ? null : (
                     <Grid item>
-                      <Typography component="label" for="class_assigned" color="primary">
+                      <Typography
+                        component="label"
+                        for="class_assigned"
+                        color="primary"
+                      >
                         Kelas yang Diumumkan
                       </Typography>
-                      <FormControl variant="outlined" fullWidth error={Boolean(errors.class_assigned)}>
+                      <FormControl
+                        variant="outlined"
+                        fullWidth
+                        error={Boolean(errors.class_assigned)}
+                      >
                         <Select
                           multiple
                           id="class_assigned"
                           MenuProps={MenuProps}
                           value={class_assigned}
-                          onChange={(event) => {this.onChange(event, "class_assigned")}}
+                          onChange={(event) => {
+                            this.onChange(event, "class_assigned");
+                          }}
                           renderValue={(selected) => {
                             return (
                               <div className={classes.chips}>
                                 {selected.map((id) => {
-                                  let name
-                                  if (all_classes.length === 0)
-                                    return null;
+                                  let name;
+                                  if (all_classes.length === 0) return null;
                                   else {
                                     for (var i in all_classes) {
                                       if (all_classes[i]._id === id) {
-                                        name = all_classes[i].name
+                                        name = all_classes[i].name;
                                         break;
                                       }
                                     }
                                     return (
-                                      <Chip key={id} label={name} className={classes.chip} />
-                                    )
+                                      <Chip
+                                        key={id}
+                                        label={name}
+                                        className={classes.chip}
+                                      />
+                                    );
                                   }
                                 })}
                               </div>
-                          )}}
+                            );
+                          }}
                         >
                           {all_classes.map((kelas) => {
                             return (
-                              <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-                          )})}
+                              <MenuItem value={kelas._id}>
+                                {kelas.name}
+                              </MenuItem>
+                            );
+                          })}
                         </Select>
                         <FormHelperText>
-                          {Boolean(errors.class_assigned) ? errors.class_assigned : null}
+                          {Boolean(errors.class_assigned)
+                            ? errors.class_assigned
+                            : null}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
-                  }
+                  )}
                   <Grid item>
                     <input
                       type="file"
@@ -523,7 +568,7 @@ class EditAnnouncement extends Component {
                       ref={this.lampiranUploader}
                       id="file_control"
                       accept="file/*"
-                      style={{display: "none"}}
+                      style={{ display: "none" }}
                     />
                     <input
                       type="file"
@@ -531,25 +576,30 @@ class EditAnnouncement extends Component {
                       name="file"
                       id="file"
                       ref={this.uploadedLampiran}
-                      style={{display: "none"}}
+                      style={{ display: "none" }}
                     />
                     <Button
                       variant="contained"
                       startIcon={<AttachFileIcon />}
-                      onClick={() => {this.lampiranUploader.current.click()}}
+                      onClick={() => {
+                        this.lampiranUploader.current.click();
+                      }}
                       className={classes.addFileButton}
                     >
                       Tambah Lampiran Berkas
-                     </Button>
-                     <Grid container spacing={1} style={{marginTop: "10px"}}>
-                       {listFileChosen()}
-                     </Grid>
+                    </Button>
+                    <Grid container spacing={1} style={{ marginTop: "10px" }}>
+                      {listFileChosen()}
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
             <Divider />
-            <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+            <div
+              style={{ display: "flex", justifyContent: "flex-end" }}
+              className={classes.content}
+            >
               <div>
                 <Button
                   variant="contained"
@@ -572,9 +622,9 @@ class EditAnnouncement extends Component {
             </MuiAlert>
         </Snackbar> 
       </div>
-    )
-  };
-};
+    );
+  }
+}
 
 EditAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
@@ -583,13 +633,13 @@ EditAnnouncement.propTypes = {
   announcements: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
   success: state.success,
   announcements: state.announcementsCollection,
   classesCollection: state.classesCollection,
-})
+});
 
 export default connect(
   mapStateToProps, { getOneAnnouncement, updateAnnouncement,setCurrentClass, getAllClass, clearErrors, clearSuccess, getFileAnnouncements}

@@ -307,7 +307,8 @@ function ViewMaterial(props) {
               {selectedMaterials.description}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+            {!selectedMaterials.lampiran ? null : (
+              <Grid item xs={12}>
             <Typography color="primary" gutterBottom>
               Lampiran Materi:
             </Typography>
@@ -320,18 +321,9 @@ function ViewMaterial(props) {
                 filename={lampiran.filename}
                 filetype={fileType(lampiran.filename)}
             /> ))}
-            {/* {!selectedMaterials.lampiran ? null :
-              selectedMaterials.lampiran.map((lampiran) => (
-                <LampiranFile
-                  file_id={lampiran.id}
-                  onPreviewFile ={onPreviewFile}
-                  onDownloadFile ={onDownloadFile}
-                  filename={lampiran.filename}
-                  filetype={fileType(lampiran.filename)}
-                />
-              ))} */}
-            </Grid>
+            </Grid>  
         </Grid>
+        )}
         </Grid>
       </Paper>
       {user.role === "Teacher" ?

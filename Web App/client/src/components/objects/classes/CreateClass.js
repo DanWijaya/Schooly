@@ -2,10 +2,21 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
 import { createClass } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
-import { Button, Divider, FormControl, FormHelperText, Grid, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -29,7 +40,6 @@ const styles = (theme) => ({
   },
 });
 
-
 class CreateClass extends Component {
   constructor() {
     super();
@@ -42,16 +52,15 @@ class CreateClass extends Component {
     };
   }
 
-  onChange = (e, otherfield=null) => {
-    if (otherfield)
-      this.setState({ [otherfield]: e.target.value});
+  onChange = (e, otherfield = null) => {
+    if (otherfield) this.setState({ [otherfield]: e.target.value });
     else {
-      this.setState({ [e.target.id]: e.target.value});
+      this.setState({ [e.target.id]: e.target.value });
     }
-  }
+  };
 
   onSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const classObject = {
       name: this.state.name,
       nihil: this.state.nihil,
@@ -60,40 +69,39 @@ class CreateClass extends Component {
       ketua_kelas: this.state.ketua_kelas,
       sekretaris: this.state.sekretaris,
       bendahara: this.state.bendahara,
-      errors: {}
+      errors: {},
     };
     this.props.createClass(classObject, this.props.history);
-  }
+  };
 
   onSelect = (selectedList, selectedItem) => {
-    if (selectedList.length > 1)
-      selectedList.shift()
-      this.setState({ walikelas: selectedList[0]})
-  }
+    if (selectedList.length > 1) selectedList.shift();
+    this.setState({ walikelas: selectedList[0] });
+  };
 
   onRemove = (selectedList, selectedItem) => {
-    this.setState({ class_assigned: selectedList[0]})
-  }
+    this.setState({ class_assigned: selectedList[0] });
+  };
 
   // UNSAFE_componentWillReceiveProps(nextProps) {
   //   if (nextProps.errors) {this.setState({errors: nextProps.errors});}
   // }
 
   componentDidMount() {
-    this.props.getTeachers()
+    this.props.getTeachers();
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
-  
+
   render() {
     const { classes } = this.props;
 
-    const { all_teachers, user } = this.props.auth
+    const { all_teachers, user } = this.props.auth;
     const { errors } = this.props;
-    console.log(errors)
-    console.log(all_teachers)
+    console.log(errors);
+    console.log(all_teachers);
     document.title = "Schooly | Buat Kelas";
 
     if (user.role === "Teacher" || user.role === "Admin") {
@@ -105,12 +113,18 @@ class CreateClass extends Component {
                 <b>Buat Kelas</b>
               </Typography>
               <Typography color="textSecondary">
-                Setelah semua murid masuk, jangan lupa untuk menyunting kelas dan menentukan ketua kelas, sekretaris, dan bendahara kelas.
+                Setelah semua murid masuk, jangan lupa untuk menyunting kelas
+                dan menentukan ketua kelas, sekretaris, dan bendahara kelas.
               </Typography>
             </div>
             <Divider />
             <form noValidate onSubmit={this.onSubmit}>
-              <Grid container direction="column" spacing={4} className={classes.content}>
+              <Grid
+                container
+                direction="column"
+                spacing={4}
+                className={classes.content}
+              >
                 <Grid item>
                   <Typography component="label" for="name" color="primary">
                     Nama Kelas
@@ -125,7 +139,7 @@ class CreateClass extends Component {
                     type="text"
                     helperText={errors.name}
                     className={classnames("", {
-                      invalid: errors.name
+                      invalid: errors.name,
                     })}
                   />
                 </Grid>
@@ -133,14 +147,26 @@ class CreateClass extends Component {
                   <Typography component="label" for="walikelas" color="primary">
                     Wali Kelas
                   </Typography>
-                  <FormControl id="walikelas" variant="outlined" color="primary" fullWidth error={Boolean(errors.walikelas)}>
+                  <FormControl
+                    id="walikelas"
+                    variant="outlined"
+                    color="primary"
+                    fullWidth
+                    error={Boolean(errors.walikelas)}
+                  >
                     <Select
                       value={this.state.walikelas}
-                      onChange={(event) => {this.onChange(event, "walikelas")}}
+                      onChange={(event) => {
+                        this.onChange(event, "walikelas");
+                      }}
                     >
-                      {Array.isArray(all_teachers) ? all_teachers.map((walikelas) => (
-                        <MenuItem value={walikelas}>{walikelas.name}</MenuItem>
-                      )) : null}
+                      {Array.isArray(all_teachers)
+                        ? all_teachers.map((walikelas) => (
+                            <MenuItem value={walikelas}>
+                              {walikelas.name}
+                            </MenuItem>
+                          ))
+                        : null}
                     </Select>
                     <FormHelperText error>
                       {Boolean(errors.walikelas) ? errors.walikelas : null}
@@ -167,7 +193,10 @@ class CreateClass extends Component {
                 </Grid> */}
               </Grid>
               <Divider />
-              <div style={{display: "flex", justifyContent: "flex-end"}} className={classes.content}>
+              <div
+                style={{ display: "flex", justifyContent: "flex-end" }}
+                className={classes.content}
+              >
                 <div>
                   <Button
                     variant="contained"
@@ -181,19 +210,18 @@ class CreateClass extends Component {
             </form>
           </Paper>
         </div>
-      )
-    }
-    else {
+      );
+    } else {
       return (
         <div className={classes.root}>
           <Typography variant="h5" align="center">
             <b>Anda tidak mempunyai izin akses halaman ini.</b>
           </Typography>
         </div>
-      )
-    };
-  };
-};
+      );
+    }
+  }
+}
 
 CreateClass.propTypes = {
   createClass: PropTypes.func.isRequired,
@@ -202,11 +230,13 @@ CreateClass.propTypes = {
   clearErrors: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
-})
+});
 
-export default connect(
-  mapStateToProps, { createClass, getTeachers, clearErrors }
-) (withStyles(styles)(CreateClass));
+export default connect(mapStateToProps, {
+  createClass,
+  getTeachers,
+  clearErrors,
+})(withStyles(styles)(CreateClass));

@@ -19,13 +19,11 @@ const useRegisterStepIconStyles = makeStyles({
     alignItems: "center",
   },
   active: {
-    backgroundImage:
-      "linear-gradient(136deg, #2196F3 30%, #21CBF3 90%)",
+    backgroundImage: "linear-gradient(136deg, #2196F3 30%, #21CBF3 90%)",
     boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
   },
   completed: {
-    backgroundImage:
-      "linear-gradient(136deg, #2196F3 30%, #21CBF3 90%)",
+    backgroundImage: "linear-gradient(136deg, #2196F3 30%, #21CBF3 90%)",
   },
 });
 

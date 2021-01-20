@@ -15,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
 function Timer() {
   const classes = useStyles();
 
-  let startTime = new Date("Sep 5, 2020 21:00:00")
+  let startTime = new Date("Sep 5, 2020 21:00:00");
   let finishTime = new Date("Sep 5, 2020 23:00:00");
 
-  let workTime = Math.floor((finishTime - startTime)/1000)
-  let res = Math.floor((finishTime - new Date())/1000)
+  let workTime = Math.floor((finishTime - startTime) / 1000);
+  let res = Math.floor((finishTime - new Date()) / 1000);
   // var hours = Math.floor(res / 3600) % 24;
   // var minutes = Math.floor(res / 60) % 60;
   // var seconds = res % 60;
@@ -28,7 +28,7 @@ function Timer() {
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setTime((prevTime) => (prevTime - 1));
+      setTime((prevTime) => prevTime - 1);
     }, 1000);
     return () => {
       clearInterval(timer);
@@ -37,11 +37,20 @@ function Timer() {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h5" component="div" color="textSecondary" style={{marginBottom: "20px"}}>
+      <Typography
+        variant="h5"
+        component="div"
+        color="textSecondary"
+        style={{ marginBottom: "20px" }}
+      >
         Waktu Selesai: {finishTime.toLocaleTimeString("id-ID")}
       </Typography>
       <Box position="relative" display="inline-flex">
-        <CircularProgress variant="static" value={(res/workTime)*100} size={200} />
+        <CircularProgress
+          variant="static"
+          value={(res / workTime) * 100}
+          size={200}
+        />
         <Box
           top={0}
           left={0}
@@ -53,12 +62,14 @@ function Timer() {
           justifyContent="center"
         >
           <Typography variant="h5" component="div" color="textSecondary">
-            {`${Math.floor(time/3600) % 24} ${Math.floor(time/60) % 60} : ${time % 60}`}
+            {`${Math.floor(time / 3600) % 24} ${Math.floor(time / 60) % 60} : ${
+              time % 60
+            }`}
           </Typography>
         </Box>
       </Box>
     </div>
-  )
+  );
 }
 
 export default Timer;

@@ -1,5 +1,5 @@
 import Tooltip from "@material-ui/core/Tooltip";
-import { withStyles } from "@material-ui/core/styles"
+import { withStyles } from "@material-ui/core/styles";
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -10,4 +10,4 @@ const LightTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-export default LightTooltip
+export default LightTooltip;

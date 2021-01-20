@@ -29,17 +29,17 @@ const file_avatar = require("./routes/api/files/file_avatar");
 const tasks = require("./routes/api/tasks");
 const classes = require("./routes/api/classes");
 const subjects = require("./routes/api/subjects");
-const authentication = require('./routes/api/authentication');
+const authentication = require("./routes/api/authentication");
 const announcements = require("./routes/api/announcements");
-const materials = require('./routes/api/materials');
-const assessments = require('./routes/api/assessments');
+const materials = require("./routes/api/materials");
+const assessments = require("./routes/api/assessments");
 
 const app = express();
 
 // Bodyparser middleware
 app.use(
   bodyParser.urlencoded({
-    extended: true
+    extended: true,
   })
 );
 
@@ -52,22 +52,17 @@ app.use(bodyParser.json());
 const db = require("./config/keys").mongoURI;
 
 // Connect to MongoDB
-mongoose.set('useUnifiedTopology', true);
-mongoose.set('useNewUrlParser', true)
+mongoose.set("useUnifiedTopology", true);
+mongoose.set("useNewUrlParser", true);
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
+  .connect(db, { useNewUrlParser: true })
   .then(() => {
-    console.log("MongoDB successfully connected")
-  }
-    )
-  .catch(err => console.log(err));
+    console.log("MongoDB successfully connected");
+  })
+  .catch((err) => console.log(err));
 
 // Mutler Middleware
-app.use(express.static("public"))
-
+app.use(express.static("public"));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -85,12 +80,12 @@ app.use("/api/classes", classes);
 app.use("/api/mockusers", mockusers);
 
 // Handle upload routing..
-app.use("/api/upload/att_announcement", att_announcement)
-app.use("/api/upload/att_assessment", att_assessment)
-app.use("/api/upload/att_material", att_material)
+app.use("/api/upload/att_announcement", att_announcement);
+app.use("/api/upload/att_assessment", att_assessment);
+app.use("/api/upload/att_material", att_material);
 app.use("/api/upload/att_task", att_task);
 app.use("/api/upload/file_tugas", file_tugas);
-app.use("/api/upload/avatar", avatar.router)
+app.use("/api/upload/avatar", avatar.router);
 
 //Handle files routing
 app.use("/api/files/material", file_materials)
@@ -102,11 +97,10 @@ app.use("/api/files/avatar", file_avatar);
 
 //Handle object routing
 app.use("/api/subjects", subjects);
-app.use("/api/authentication", authentication)
-app.use("/api/announcements", announcements)
-app.use("/api/materials", materials)
-app.use("/api/assessments", assessments)
-
+app.use("/api/authentication", authentication);
+app.use("/api/announcements", announcements);
+app.use("/api/materials", materials);
+app.use("/api/assessments", assessments);
 
 // Always put this in the end
 const port = process.env.PORT || 5000;

@@ -7,7 +7,7 @@ import UploadReducer from "./UploadReducer";
 import MaterialReducer from "./MaterialReducer";
 import UserReducer from "./UserReducer";
 import AuthReducer from "./AuthReducer";
-import AnnouncementReducer from "./AnnouncementReducer"
+import AnnouncementReducer from "./AnnouncementReducer";
 import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
 import MockReducer from "../prototypes/mock-users/MockReducer";
@@ -15,8 +15,8 @@ import MockReducer from "../prototypes/mock-users/MockReducer";
 
 export default combineReducers({
   auth: UserReducer,
-  mockUserCollection : MockReducer,
-  announcementsCollection : AnnouncementReducer,
+  mockUserCollection: MockReducer,
+  announcementsCollection: AnnouncementReducer,
   assessmentsCollection: AssessmentReducer,
   classesCollection: ClassReducer,
   errors: ErrorReducer, // dari null jd false

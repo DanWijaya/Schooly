@@ -1,16 +1,20 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { savePassword } from "../../../actions/AuthActions";
-import { clearErrors } from "../../../actions/ErrorActions"
+import { clearErrors } from "../../../actions/ErrorActions";
 import authBackground from "../AuthBackground.png";
+import schoolyLogo from "../../../images/SchoolyLogo.png";
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     margin: "auto",
     maxWidth: "1000px",
     minHeight: "500px",
@@ -23,7 +27,12 @@ const styles = (theme) => ({
       backgroundSize: "contain",
     },
   },
-  mainPaper: {
+  schoolyLogo: {
+    width: "250px",
+    height: "125px",
+    marginBottom: "25px",
+  },
+  resetPasswordPaper: {
     margin: "auto",
     maxWidth: "350px",
     padding: "40px",
@@ -46,44 +55,52 @@ class ResetPassword extends Component {
     this.state = {
       errors: {},
       password: "",
-      password2: ""
+      password2: "",
     };
   }
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value})
+    this.setState({ [e.target.id]: e.target.value });
+  };
+
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-  }
-
-//Dispatch is used as a callback which gets invoked once some async action is complete.
-//In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
+  //Dispatch is used as a callback which gets invoked once some async action is complete.
+  //In redux-thunk dispatch is simply a function which dispatches an action to the Redux store after, let's say, you fetch data from an api (which is asynchronous).
 
   render() {
     const { password, password2 } = this.state;
     const { errors } = this.props;
-    const { classes, savePassword} = this.props;
+    const { classes, savePassword } = this.props;
     const { hash } = this.props.match.params;
 
     const onSubmit = (e) => {
       e.preventDefault();
-      console.log("Submitted")
+      console.log("Submitted");
 
       let passwordReset = {
-          password : password,
-          password2: password2,
-          hash: hash
-      }
-      savePassword(passwordReset)
-    }
+        password: password,
+        password2: password2,
+        hash: hash,
+      };
+      savePassword(passwordReset);
+    };
 
-    document.title = "Schooly | Lupa Akun"
-    document.body.style = "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
+    document.title = "Schooly | Lupa Akun";
+    document.body.style =
+      "background: linear-gradient(#6A8CF6, #FFFFFF); background-repeat: no-repeat";
 
     return (
       <div className={classes.root}>
-        <Paper elevation={11} className={classes.mainPaper}>
+        <Link to="/">
+          <img
+            alt="Schooly Introduction"
+            src={schoolyLogo}
+            className={classes.schoolyLogo}
+          />
+        </Link>
+        <Paper elevation={11} className={classes.resetPasswordPaper}>
           <Grid container direction="column" spacing={5}>
             <Grid item>
               <Typography variant="h6" align="center" gutterBottom>
@@ -97,34 +114,34 @@ class ResetPassword extends Component {
               <form noValidate onSubmit={onSubmit}>
                 <Grid container direction="column" spacing={4}>
                   <Grid item>
-                    <label for="password">Kata Sandi</label>
                     <TextField
                       fullWidth
                       variant="outlined"
                       id="password"
+                      label="Kata Sandi"
                       onChange={this.onChange}
                       value={password}
                       error={Boolean(errors.password_entry)}
                       type="password"
                       helperText={errors.password_entry}
                       classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
+                        invalid: errors.email || errors.emailnotfound,
                       })}
                     />
                   </Grid>
                   <Grid item>
-                    <label for="password2">Konfirmasi Kata Sandi</label>
                     <TextField
                       fullWidth
                       variant="outlined"
                       id="password2"
+                      label="Konfirmasi Kata Sandi"
                       onChange={this.onChange}
                       value={password2}
                       error={Boolean(errors.password_match)}
                       type="password"
                       helperText={errors.password_match}
                       classname={classnames("", {
-                        invalid: errors.email || errors.emailnotfound
+                        invalid: errors.email || errors.emailnotfound,
                       })}
                     />
                   </Grid>
@@ -143,7 +160,7 @@ class ResetPassword extends Component {
           </Grid>
         </Paper>
       </div>
-    )
+    );
   }
 }
 
@@ -151,15 +168,17 @@ ResetPassword.propTypes = {
   savePassword: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  passwordMatters: PropTypes.object.isRequired
-}
+  passwordMatters: PropTypes.object.isRequired,
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth, // Get Redux State and map it to props so it can be used inside the component.
   errors: state.errors,
-  passwordMatters: state.passwordMatters
+  passwordMatters: state.passwordMatters,
 });
 
 export default withRouter(
-  connect(mapStateToProps, { savePassword, clearErrors })
-  (withStyles(styles)(ResetPassword)));
+  connect(mapStateToProps, { savePassword, clearErrors })(
+    withStyles(styles)(ResetPassword)
+  )
+);

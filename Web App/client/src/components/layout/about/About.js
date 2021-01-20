@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
-  }
+  },
 }));
 
 function About(props) {
@@ -60,12 +60,13 @@ function About(props) {
   useEffect(() => {
     handleMarginTopValue(0);
     return () => {
-      handleMarginTopValue(20)
-    }
+      handleMarginTopValue(20);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   document.title = "Schooly | Tentang Schooly";
+  document.body.style = "background: #FFFFFF";
 
   return (
     <div className={classes.root}>
@@ -74,16 +75,23 @@ function About(props) {
           <img
             alt="What is Schooly"
             src={whatIsSchooly}
-            style={{maxWidth: "100%", maxHeight: "100%", marginBottom: "20px"}}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "100%",
+              marginBottom: "20px",
+            }}
           />
-          <Typography variant="h3" align="center" gutterBottom className={classes.whatIsSchoolyTitle}>
+          <Typography variant="h3" align="center" gutterBottom>
             Apa itu Schooly?
           </Typography>
           <Typography variant="h6" align="center" paragraph>
-            Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang terjadi di sekolah.
+            Schooly adalah sebuah sistem persekolahan berbasis aplikasi web yang
+            dibuat untuk memudahkan dan membantu kegiatan belajar-mengajar yang
+            ada di sekolah.
           </Typography>
-          <Typography align="center" style={{marginBottom: "40px"}}>
-            "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk kegiatan persekolahan akan menjadi lebih efektif dan efisien."
+          <Typography align="center" style={{ marginBottom: "40px" }}>
+            "Kami percaya dengan bantuan teknologi pekerjaan apapun termasuk
+            kegiatan persekolahan akan menjadi lebih efektif dan efisien."
           </Typography>
         </div>
       </div>
@@ -94,33 +102,37 @@ function About(props) {
               <img
                 alt="Schooly Feature 1"
                 src={schoolyFeature1}
-                style={{maxWidth: "100%", maxHeight: "100%"}}
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
               />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
-               Semua kegiatan persekolahanmu ada di tanganmu
+                Semua kegiatan persekolahanmu ada di tanganmu
               </Typography>
               <Typography variant="h6">
-               Schooly didesain dengan banyak fitur yang dapat menunjang kegiatan persekolahan yang lebih efektif dan efisien seperti materi pembelajaran, tugas, hingga pengumuman.
+                Fitur Schooly yang bermacam-macam membuat kegiatan persekolahan
+                lebih efektif dan efisien. Contohnya pengecekkan pekerjaan
+                sekolah secara otomatis, pemberian materi tanpa harus mencetak,
+                dan masih banyak lagi.
               </Typography>
             </Grid>
           </Grid>
           <Grid item container spacing={5} justify="center" alignItems="center">
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
-               Akses dengan mudah
+                Akses dengan mudah
               </Typography>
               <Typography variant="h6">
-               Akses merupakan salah satu hal yang paling penting dalam sebuah aplikasi.
-               Schooly dibuat sebagai aplikasi web sehingga bisa diakses perangkat apa saja dengan mudah.
+                Akses merupakan salah satu hal yang paling penting dalam sebuah
+                aplikasi. Schooly dibuat sebagai aplikasi web sehingga bisa
+                diakses perangkat apa saja dengan mudah.
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <img
                 alt="Schooly Feature 2"
                 src={schoolyFeature2}
-                style={{maxWidth: "100%", maxHeight: "100%"}}
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
               />
             </Grid>
           </Grid>
@@ -129,16 +141,17 @@ function About(props) {
               <img
                 alt="Schooly Feature 3"
                 src={schoolyFeature3}
-                style={{maxWidth: "100%", maxHeight: "100%"}}
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
               />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h4" color="primary" gutterBottom>
-               Media sosial persekolahan
+                Media sosial persekolahan
               </Typography>
               <Typography variant="h6">
-               Temukan kontak orang-orang sepersekolahan dengan mudah di Schooly.
-               Anda juga tidak akan pernah lupa lagi akan tugas sekolah Anda dengan fitur pengingat baik untuk guru dan murid.
+                Temukan kontak orang-orang sepersekolahan dengan mudah di
+                Schooly. Sebarkan informasi mengenai kegiatan sekolah hanya
+                dengan beberapa ketuk.
               </Typography>
             </Grid>
           </Grid>
@@ -146,11 +159,12 @@ function About(props) {
       </div>
       <div className={classes.supportSchoolyBackground}>
         <div className={classes.supportSchooly}>
-          <Typography variant="h4" align="center" color="primary" gutterBottom >
+          <Typography variant="h4" align="center" color="primary" gutterBottom>
             Sudah menggunakan Schooly tetapi masih belum puas?
           </Typography>
           <Typography align="center" paragraph>
-            Bantu Schooly berkembang dengan pendapat Anda. Saran maupun kritik Anda sangat berarti bagi kami.
+            Bantu Schooly berkembang dengan pendapat Anda. Saran maupun kritik
+            Anda sangat berarti bagi kami.
           </Typography>
           <Button
             variant="contained"
@@ -163,7 +177,7 @@ function About(props) {
         </div>
       </div>
     </div>
-  )
-};
+  );
+}
 
 export default About;

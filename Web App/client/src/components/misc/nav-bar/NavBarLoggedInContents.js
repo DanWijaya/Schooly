@@ -6,7 +6,15 @@ import { logoutUser } from "../../../actions/UserActions";
 import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 
 import LightTooltip from "../light-tooltip/LightTooltip";
-import { Avatar, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@material-ui/core";
+import {
+  Avatar,
+  Grid,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import HelpIcon from "@material-ui/icons/Help";
@@ -73,7 +81,7 @@ function NavBarLoggedInContents(props) {
   // Logout Click
   const onLogoutClick = (e) => {
     e.preventDefault();
-    handleProfileMenuClose()
+    handleProfileMenuClose();
     logoutUser();
   };
 
@@ -92,12 +100,12 @@ function NavBarLoggedInContents(props) {
         onClose={handleProfileMenuClose}
         getContentAnchorEl={null}
         anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
+          vertical: "bottom",
+          horizontal: "center",
         }}
         transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
+          vertical: "top",
+          horizontal: "center",
         }}
       >
         <Link to="/profil" onClick={handleProfileMenuClose}>
@@ -117,22 +125,18 @@ function NavBarLoggedInContents(props) {
       </Menu>
       <LightTooltip title="Bantuan">
         <Link to="/bantuan">
-          <IconButton color="white" style={{color: "white"}}>
+          <IconButton color="white" style={{ color: "white" }}>
             <HelpIcon />
           </IconButton>
         </Link>
       </LightTooltip>
     </Grid>
-  )
+  );
 
   // Mobile menu (will rendered when in mobile mode / width < 600px)
   const renderMobileMenu = (
     <Grid container className={classes.navbarContents}>
-      <IconButton
-        edge="end"
-        color="inherit"
-        onClick={handleMobileMenuOpen}
-      >
+      <IconButton edge="end" color="inherit" onClick={handleMobileMenuOpen}>
         <MoreIcon />
       </IconButton>
       <Menu
@@ -140,8 +144,8 @@ function NavBarLoggedInContents(props) {
         anchorEl={mobileAnchorEl}
         open={Boolean(mobileAnchorEl)}
         onClose={handleMobileMenuClose}
-        anchorOrigin={{vertical: "top", horizontal: "right"}}
-        transformOrigin={{vertical: "top", horizontal: "right"}}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Link to="/profil" onClick={handleMobileMenuClose}>
           <MenuItem className={classes.menuItem}>
@@ -167,13 +171,12 @@ function NavBarLoggedInContents(props) {
         </MenuItem>
       </Menu>
     </Grid>
-  )
+  );
 
   if (isMobileView) {
-      return renderMobileMenu
-  }
-  else {
-      return renderDesktopMenu
+    return renderMobileMenu;
+  } else {
+    return renderDesktopMenu;
   }
 }
 
