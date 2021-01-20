@@ -1,5 +1,4 @@
 import _5dc692 from "./_5dc692.png";
-import _5dc692_2 from "./_5dc692_2.png";
 import _70d0db from "./_70d0db.png";
 import _151e34 from "./_151e34.png";
 import _868acd from "./_868acd.png";
@@ -11,10 +10,10 @@ import _f25624 from "./_f25624.png";
 import _71d0e1 from "./_71d0e1.png";
 import _f6836b from "./_f6836b.png";
 import _53c9cc from "./_53c9cc.png";
+import _fab328 from "./_fab328.png";
 
-const background_images = [
+const subjectBackground = [
     {"#5dc692" : _5dc692},
-    {"#5dc692" : _5dc692_2},
     {"#70d0db" : _70d0db},
     {"#151e34" : _151e34},
     {"#868acd" : _868acd},
@@ -25,9 +24,8 @@ const background_images = [
     {"#f25624" : _f25624},
     {"#71d0e1" : _71d0e1},
     {"#f6836b" : _f6836b},
-    {"#53c9cc" : _53c9cc}
+    {"#53c9cc" : _53c9cc},
+    {"#fab328" : _fab328},
 ]
 
-export default background_images
-
-
+export default subjectBackground

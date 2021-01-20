@@ -10,6 +10,7 @@ import { getAllTask } from "../../../actions/TaskActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
+import subjectBackground from "./subject-background/SubjectBackground";
 import {
   Avatar,
   Divider,
@@ -35,7 +36,6 @@ import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
-import background_images from "./images_list/ImportedImages";
 
 const useStyles =
     makeStyles((theme) => ({
@@ -470,13 +470,13 @@ function ViewSubject(props) {
   const classId = user.kelas;
 
   let subjects_list = Array.from(all_subjects_map.keys());
-  let background_idx = subjects_list.indexOf(id) % background_images.length;
-  
+  let background_idx = subjects_list.indexOf(id) % subjectBackground.length;
+
   let background_image, background_color
 
   if(background_idx !== -1){
-    background_image = Object.values(background_images[background_idx])[0]
-    background_color = Object.keys(background_images[background_idx])[0]
+    background_image = Object.values(subjectBackground[background_idx])[0]
+    background_color = Object.keys(subjectBackground[background_idx])[0]
   }
   const classes = useStyles({
     backgroundColor: background_color,
