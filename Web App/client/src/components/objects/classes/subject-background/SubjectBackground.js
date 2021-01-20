@@ -1,5 +1,4 @@
 import _5dc692 from "./_5dc692.png";
-import _5dc692_2 from "./_5dc692_2.png";
 import _70d0db from "./_70d0db.png";
 import _151e34 from "./_151e34.png";
 import _868acd from "./_868acd.png";
@@ -14,7 +13,6 @@ import _53c9cc from "./_53c9cc.png";
 
 const subjectBackground = [
     {"#5dc692" : _5dc692},
-    {"#5dc692" : _5dc692_2},
     {"#70d0db" : _70d0db},
     {"#151e34" : _151e34},
     {"#868acd" : _868acd},
