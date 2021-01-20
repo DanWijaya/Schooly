@@ -562,7 +562,7 @@ function TaskList(props) {
             item.name.toLowerCase().includes(searchFilter.toLowerCase())
           )
           .map((data) => {
-            if (data.person_in_charge_id === user.id) {
+            if (data.person_in_charge_id === user._id) {
               return taskRowItem(data);
             }
             return null;

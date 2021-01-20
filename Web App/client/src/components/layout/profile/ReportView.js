@@ -335,7 +335,7 @@ function ReportView(props) {
           let keysArray = Object.keys(tasksCollection[i].grades);
           let valuesArray = Object.values(tasksCollection[i].grades);
           for (let j = 0; j < keysArray.length; j++) {
-            if (keysArray[j] === user.id) {
+            if (keysArray[j] === user._id) {
               subjectScores.push(valuesArray[j]);
               subjectNames.push(tasksCollection[i].name);
               break;
@@ -370,7 +370,7 @@ function ReportView(props) {
             let keysArray = Object.keys(all_assessments[i].grades);
             let valuesArray = Object.values(all_assessments[i].grades);
             for (let j = 0; j < keysArray.length; j++) {
-              if (keysArray[j] === user.id) {
+              if (keysArray[j] === user._id) {
                 subjectScores.push(valuesArray[j].total_grade);
                 subjectNames.push(all_assessments[i].name);
                 break;
@@ -388,7 +388,7 @@ function ReportView(props) {
             let keysArray = Object.keys(all_assessments[i].grades);
             let valuesArray = Object.values(all_assessments[i].grades);
             for (let j = 0; j < keysArray.length; j++) {
-              if (keysArray[j] === user.id) {
+              if (keysArray[j] === user._id) {
                 subjectScores.push(valuesArray[j].total_grade);
                 subjectNames.push(all_assessments[i].name);
                 break;
