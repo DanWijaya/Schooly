@@ -172,6 +172,7 @@ function Profile(props) {
   const { user } = props.auth;
   const { updateAvatar, setCurrentClass, classesCollection, uploadFileAvatar, getFileAvatar } = props;
   const [avatar, setAvatar] = React.useState(null);
+  const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
   console.log(user)
   React.useEffect(() => {
@@ -222,6 +223,13 @@ function Profile(props) {
     setOpenPasswordEditorAlert(false);
     window.location.reload();
   };
+
+  const handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setFileLimitSnackbar(false);
+  }
 
   // Initially classesCollection.kelas.name === undefined
   if (user.role === "Student" && !classesCollection.kelas.name) {
@@ -279,6 +287,16 @@ function Profile(props) {
           Kata sandi berhasil diganti!
         </MuiAlert>
       </Snackbar>
+      {/* Profile Pict Size Limit Snackbar */}
+      <Snackbar
+          open={fileLimitSnackbar}
+          autoHideDuration={2000}
+          onClose={handleCloseErrorSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+            <MuiAlert elevation={6} variant="filled" severity="error">
+              Foto profil melebihi batas 5MB!
+            </MuiAlert>
+        </Snackbar>
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
           {user.avatar ?
@@ -288,6 +306,8 @@ function Profile(props) {
                 user={user}
                 avatar={avatar}
                 // updateAvatar={uploadFileAvatar}
+                setFileLimitSnackbar={setFileLimitSnackbar}
+                fileLimitSnackbar={fileLimitSnackbar}
                 handleOpenAlert={handleOpenAlert}
               />
             }
@@ -303,6 +323,8 @@ function Profile(props) {
               <ProfilePictureEditorDialog
                 user={user}
                 // updateAvatar={uploadFileAvatar}
+                setFileLimitSnackbar={setFileLimitSnackbar}
+                fileLimitSnackbar={fileLimitSnackbar}
                 handleOpenAlert={handleOpenAlert}
               />
             }

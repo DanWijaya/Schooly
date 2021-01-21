@@ -617,7 +617,7 @@ class EditAnnouncement extends Component {
           autoHideDuration={4000}
           onClose={this.handleCloseErrorSnackbar}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-            <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
+            <MuiAlert elevation={6} variant="filled" severity="error">
               {this.state.over_limit.length} file melebihi batas 10MB!
             </MuiAlert>
         </Snackbar> 

@@ -8,6 +8,7 @@ import {
   Grid,
   IconButton,
   Typography,
+  Snackbar
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
@@ -16,6 +17,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { uploadFileAvatar, getFileAvatar  } from "../../../actions/files/FileAvatarActions"
 import { connect } from "react-redux";
+import MuiAlert from "@material-ui/lab/Alert";
 const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(25),
@@ -88,19 +90,27 @@ function ProfilePictureEditorDialog(props) {
     setProfileImg(null);
   };
 
-  const { user, updateAvatar, uploadFileAvatar, avatar } = props;
+  const { user, updateAvatar, uploadFileAvatar, avatar, setFileLimitSnackbar } = props;
 
   const handleImageUpload = (e) => {
+    console.log(e.target.files)
     const [file] = e.target.files;
-    setProfileImg(e.target.files[0]);
-    if (file) {
-      const reader = new FileReader();
-      const { current } = uploadedImage;
-      current.file = file;
-      reader.onload = (e) => {
-        current.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+    if(file){
+      if(file.size/Math.pow(10,6) > 5){
+        console.log("file size is over 5MB")
+        imageUploader.current.value = null
+        setFileLimitSnackbar(true)
+      }
+      else{
+        const reader = new FileReader();
+        const { current } = uploadedImage;
+        current.file = file;
+        reader.onload = (e) => {
+          current.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        setProfileImg(file);
+      }
     }
   };
 
@@ -268,7 +278,7 @@ function ProfilePictureEditorDialog(props) {
             </Typography>
           </Grid>
         </Grid>
-      </Dialog>
+      </Dialog> 
     </div>
   );
 }
