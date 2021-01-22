@@ -85,6 +85,7 @@ function ProfilePictureEditorDialog(props) {
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
+  
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setProfileImg(null);
