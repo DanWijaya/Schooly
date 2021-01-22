@@ -23,7 +23,6 @@ export const getFileAvatar = (id) => dispatch => {
 export const downloadFileAvatar = (id) => dispatch => {
     return axios.get(`/api/files/avatar/download/${id}`)
     .then((res) => {
-        
         window.open(res.data)
         return res.data
         // let { file, filename} = res.data
