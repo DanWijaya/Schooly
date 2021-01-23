@@ -30,13 +30,9 @@ export const createAssessment = (formData, assessment, history) => (
         });
         formData.append("num_lampiran", num_lampiran);
         console.log(num_lampiran);
-        
+
         return axios.post(
           `/api/files/assessments/upload/${res.data._id}`,
-          formData
-        )
-        return axios.post(
-          `/api/upload/att_assessment/lampiran/${res.data._id}`,
           formData
         );
       } else {

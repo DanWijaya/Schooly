@@ -181,7 +181,10 @@ export const updateMaterial = (
       );
       if (formData.has("lampiran_materi")) {
         console.log("Lampiran material going to be uploaded");
-        return axios.post(`/api/files/materials/upload/${materialId}`, formData);
+        return axios.post(
+          `/api/files/materials/upload/${materialId}`,
+          formData
+        );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
       else return "Successfully updated task with no lampiran";
     })

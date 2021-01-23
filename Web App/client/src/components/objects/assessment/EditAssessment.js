@@ -10,6 +10,7 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
@@ -273,6 +274,7 @@ class EditAssessment extends Component {
       // sejak pertama kali soal tersebut ditambahkan
       longtextWeight: [null],
       ready: false,
+      lampiranUrls: new Map()
     };
   }
 
@@ -284,11 +286,16 @@ class EditAssessment extends Component {
       getAllClass,
       getAllSubjects,
       handleSideDrawerExist,
+      getFileAssessment
     } = this.props;
+    const assessment_id = this.props.match.params.id;
     handleSideDrawerExist(false);
     getAllClass();
-    getOneAssessment(this.props.match.params.id);
+    getOneAssessment(assessment_id);
     getAllSubjects();
+    getFileAssessment(assessment_id).then((result) => {
+      console.log(result)
+      this.setState({lampiranUrls: result})})
   }
 
   componentWillUnmount() {
@@ -599,8 +606,7 @@ class EditAssessment extends Component {
       value.push(option === "longtext" ? undefined : null);
       return { longtextWeight: value };
     });
-    this.setState({ questions: questions });
-    this.setState({ currentQuestionOption: null });
+    this.setState({ questions: questions, currentQuestionOption: null });
   };
 
   handleChangeQuestion = (
@@ -883,6 +889,8 @@ class EditAssessment extends Component {
   };
 
   listQuestion = () => {
+    console.log(this.state.lampiranUrls)
+    console.log("List quesiton is runned")
     let { questions } = this.state;
     const { page, rowsPerPage } = this.state;
     let questionList = [];
@@ -936,10 +944,11 @@ class EditAssessment extends Component {
             check_data={booleanArray}
             handleLongtextWeight={this.handleLongtextWeight}
             longtextWeight={this.state.longtextWeight[i + page * rowsPerPage]}
+            lampiranUrls={JSON.stringify(Array.from(this.state.lampiranUrls.entries()))}
           />
         );
       });
-
+      
     return questionList;
   };
 
@@ -1453,7 +1462,7 @@ class EditAssessment extends Component {
           // itemType="Kuis"
           // itemName={this.state.name}
           customMessage="Hapus perubahan"
-          redirectLink="/daftar-kuis"
+          redirectLink={this.state.type == "Kuis" ? "/daftar-kuis" : "/daftar-ujian"}
           // customConfirm="Ya"
           customDecline="Tidak"
           deleteItem=""
@@ -2081,4 +2090,6 @@ export default connect(mapStateToProps, {
   getAllSubjects,
   updateAssessment,
   clearErrors,
+  getFileAssessment,
+
 })(withStyles(styles)(React.memo(EditAssessment)));

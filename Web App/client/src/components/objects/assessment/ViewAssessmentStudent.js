@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions"
 import {
   getOneAssessment,
   submitAssessment,
@@ -365,6 +366,7 @@ function ViewAssessmentStudent(props) {
     getAllSubjects,
     getAllClass,
     submitAssessment,
+    getFileAssessment
   } = props;
   const { user } = props.auth;
 
@@ -379,11 +381,14 @@ function ViewAssessmentStudent(props) {
   const [finish, setFinish] = React.useState(null);
   const [openSubmitDialog, setOpenSubmitDialog] = React.useState(null);
   const [openTimeoutDialog, setOpenTimeoutDialog] = React.useState(null);
+  const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
     getAllSubjects("map");
     getAllClass("map");
+    getFileAssessment(id).then((result) => setLampiranUrls(result))
+    
     new Promise((resolve, reject) => {
       getOneAssessment(id, resolve);
     }).then((res) => {
@@ -397,7 +402,6 @@ function ViewAssessmentStudent(props) {
 
   let questions = selectedAssessments.questions;
   let questions_length = !questions ? 0 : questions.length;
-  // console.log(submissions)
   React.useEffect(() => {
     if (questions_length) {
       let arr = [];
@@ -678,7 +682,8 @@ function ViewAssessmentStudent(props) {
                             <GridListTile key={image} cols={1}>
                               <img
                                 alt="current img"
-                                src={`/api/upload/att_assessment/${image}`}
+                                // src={`/api/upload/att_assessment/${image}`}
+                                src={lampiranUrls.get(image)}
                               />
                               <GridListTileBar
                                 title={`Gambar ${i + 1}`}
@@ -922,4 +927,5 @@ export default connect(mapStateToProps, {
   getOneAssessment,
   getAllClass,
   getAllSubjects,
+  getFileAssessment,
 })(ViewAssessmentStudent);

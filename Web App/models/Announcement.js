@@ -32,10 +32,6 @@ const AnnoucementSchema = new Schema(
       type: ObjectId,
       required: true,
     },
-    // date_announced: {
-    //     type: Date,
-    //     required: true
-    // }
   },
   { timestamps: true }
 );

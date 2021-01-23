@@ -9,6 +9,7 @@ import {
 } from "../../../actions/AssessmentActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
+import { getFileAssessment } from "../../../actions/files/FileAssessmentActions";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Fab,
@@ -31,6 +32,7 @@ import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LinkIcon from "@material-ui/icons/Link";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import MuiAlert from "@material-ui/lab/Alert";
+import SwitchBase from "@material-ui/core/internal/SwitchBase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -124,6 +126,7 @@ function ViewAssessmentTeacher(props) {
     getAllClass,
     getAllSubjects,
     deleteAssessment,
+    getFileAssessment
   } = props;
   const { all_classes_map } = props.classesCollection;
   const { all_subjects_map } = props.subjectsCollection;
@@ -136,15 +139,19 @@ function ViewAssessmentTeacher(props) {
   const [selectedAssessmentName, setSelectedAssessmentName] = React.useState(
     null
   );
+  const [lampiranUrls, setLampiranUrls] = React.useState(new Map());
 
   console.log(selectedAssessments);
   React.useEffect(() => {
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");
+    getFileAssessment(assessment_id).then((result) => setLampiranUrls(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(lampiranUrls);
+  
   const onDeleteAssessment = (id) => {
     deleteAssessment(id);
   };
@@ -361,11 +368,13 @@ function ViewAssessmentTeacher(props) {
                         cellHeight={300}
                         style={{ margin: "10px 0px 10px 0px" }}
                       >
-                        {question.lampiran.map((image, i) => (
+                        {question.lampiran.map((image, i) => 
+                        (
                           <GridListTile key={image} cols={1}>
                             <img
                               alt="current img"
-                              src={`/api/upload/att_assessment/${image}`}
+                              // src={`/api/upload/att_assessment/${image}`}
+                              src={lampiranUrls.get(image.toString())}
                             />
                             <GridListTileBar
                               title={`Gambar ${i + 1}`}
@@ -514,4 +523,5 @@ export default connect(mapStateToProps, {
   deleteAssessment,
   getAllClass,
   getAllSubjects,
+  getFileAssessment
 })(ViewAssessmentTeacher);

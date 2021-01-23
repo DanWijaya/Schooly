@@ -46,7 +46,8 @@ router.post(
         ContentType: file.mimetype,
         ContentDisposition: `inline;filename=${file.originalname}`,
       };
-      s3bucket.upload(params, function (err, data) {
+      s3bucket
+        .upload(params, function (err, data) {
           if (err) {
             return res.status(500).json({ error: true, Message: err });
           } else {

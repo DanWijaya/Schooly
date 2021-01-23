@@ -90,6 +90,7 @@ function QuestionItem(props) {
     parseAnswer,
     handleLongtextWeight,
     longtextWeight,
+    lampiranUrls
   } = props;
   const classes = useStyles();
 
@@ -101,7 +102,6 @@ function QuestionItem(props) {
   const [longtextAnswer, setLongtextAnswer] = React.useState("");
 
   const [lampiranToPreview, setLampiranToPreview] = React.useState([]);
-
   // dipakai untuk edit assessment
   // const [currentLampiran, setCurrentLampiran] = React.useState([])
 
@@ -203,6 +203,8 @@ function QuestionItem(props) {
 
   console.log("Current lampiran : ", currentLampiran);
   console.log("Lampiran to preview: ", lampiranToPreview);
+
+  const lampiranToUrl = new Map(JSON.parse(lampiranUrls));
   return (
     <Grid item>
       <Paper>
@@ -231,7 +233,8 @@ function QuestionItem(props) {
                       <GridListTile key={image} cols={1}>
                         <img
                           alt="current img"
-                          src={`/api/upload/att_assessment/${image}`}
+                          // src={`/api/upload/att_assessment/${image}`}
+                          src={lampiranToUrl.get(image.toString())}
                         />
                         <GridListTileBar
                           titlePosition="top"
@@ -581,7 +584,8 @@ export default React.memo(
       prevProps.options === nextProps.options &&
       prevProps.answer === nextProps.answer &&
       prevProps.lampiran_length === nextProps.lampiran_length &&
-      prevProps.longtextWeight === nextProps.longtextWeight
+      prevProps.longtextWeight === nextProps.longtextWeight &&
+      prevProps.lampiranUrls === nextProps.lampiranUrls
     );
   }
 );
