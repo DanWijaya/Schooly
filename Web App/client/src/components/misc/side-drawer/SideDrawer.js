@@ -107,8 +107,7 @@ function DrawerContent(props) {
     if (user.role === "Student") {
       directedTo = `/kelas/${user.kelas}`;
       // directedTo = "/daftar-kelas";
-    }
-    else {
+    } else {
       directedTo = "/daftar-kelas";
     }
   }

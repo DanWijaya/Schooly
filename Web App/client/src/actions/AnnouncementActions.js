@@ -23,7 +23,10 @@ export const createAnnouncement = (formData, announcementData, history) => (
       });
       if (formData.has("lampiran_announcement")) {
         console.log("Post lampiran announcement is running");
-        return axios.post(`/api/files/announcement/upload/${res.data._id}`, formData);
+        return axios.post(
+          `/api/files/announcements/upload/${res.data._id}`,
+          formData
+        );
       } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
       else
         return {
@@ -88,30 +91,33 @@ export const getAnnouncement = (Id, category) => (dispatch) => {
   }
 };
 
-export const deleteAnnouncement = (announcementId, lampiran_to_delete=null) => dispatch => {
-    axios
-        .delete(`/api/announcements/delete/${announcementId}`)
-        .then((res) => {
-            console.log("Deleted: ", res.data)
-            // let lampiran_to_delete = Array.from(res.data.lampiran)
-            return axios.delete(`/api/files/announcement/${announcementId}`)
-            // if (lampiran_to_delete.length > 0){
-            //   return axios.delete(`/api/upload/att_announcement/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
-            // }
-            // return "Announcement deleted has no lampiran"
-        })
-        .then((res) => {
-            console.log(res)
-            window.location.href="/daftar-pengumuman"
-        })
-        .catch(err => {
-            console.log(err);
-            dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data
-            })
-        })
-}
+export const deleteAnnouncement = (
+  announcementId,
+  lampiran_to_delete = null
+) => (dispatch) => {
+  axios
+    .delete(`/api/announcements/delete/${announcementId}`)
+    .then((res) => {
+      console.log("Deleted: ", res.data);
+      // let lampiran_to_delete = Array.from(res.data.lampiran)
+      return axios.delete(`/api/files/announcements/${announcementId}`);
+      // if (lampiran_to_delete.length > 0){
+      //   return axios.delete(`/api/upload/att_announcement/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete}})
+      // }
+      // return "Announcement deleted has no lampiran"
+    })
+    .then((res) => {
+      console.log(res);
+      window.location.href = "/daftar-pengumuman";
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 export const getOneAnnouncement = (annId) => (dispatch) => {
   console.log("run getOneAnnoucnement");
   axios
@@ -153,20 +159,24 @@ export const updateAnnouncement = (
       console.log("From actions: ", lampiran_to_delete);
       if (lampiran_to_delete.length > 0) {
         // axios.delete put the data is quite different..
-        return axios.delete(`/api/files/announcement/${annId}`, {data: {file_to_delete: lampiran_to_delete }})
+        return axios.delete(`/api/files/announcements/${annId}`, {
+          data: { file_to_delete: lampiran_to_delete },
+        });
       } else {
         return "No lampiran file is going to be deleted";
       }
     })
-    .then(res => {
-        console.log("Update the lampiran files, upload some new lampiran files")
-        console.log(formData.has("lampiran_announcement"), formData.getAll("lampiran_announcement"))
-        if (formData.has('lampiran_announcement')) {
-            console.log("Lampiran announcement going to be uploaded")
-            return axios.post(`/api/files/announcement/upload/${annId}`, formData);
-        }
-        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-            return "Successfully updated task with no lampiran"
+    .then((res) => {
+      console.log("Update the lampiran files, upload some new lampiran files");
+      console.log(
+        formData.has("lampiran_announcement"),
+        formData.getAll("lampiran_announcement")
+      );
+      if (formData.has("lampiran_announcement")) {
+        console.log("Lampiran announcement going to be uploaded");
+        return axios.post(`/api/files/announcements/upload/${annId}`, formData);
+      } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+      else return "Successfully updated task with no lampiran";
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");

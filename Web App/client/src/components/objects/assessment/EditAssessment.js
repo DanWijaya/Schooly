@@ -276,14 +276,19 @@ class EditAssessment extends Component {
     };
   }
 
-  imageUploader = React.createRef(null) // untuk ngerefer html object yang lain
+  imageUploader = React.createRef(null); // untuk ngerefer html object yang lain
 
-  componentDidMount(){
-    const { getOneAssessment, getAllClass, getAllSubjects, handleSideDrawerExist} = this.props;
-    handleSideDrawerExist(false)
-    getAllClass()
-    getOneAssessment(this.props.match.params.id)
-    getAllSubjects()
+  componentDidMount() {
+    const {
+      getOneAssessment,
+      getAllClass,
+      getAllSubjects,
+      handleSideDrawerExist,
+    } = this.props;
+    handleSideDrawerExist(false);
+    getAllClass();
+    getOneAssessment(this.props.match.params.id);
+    getAllSubjects();
   }
 
   componentWillUnmount() {

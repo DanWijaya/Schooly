@@ -364,10 +364,10 @@ function ListTester(props) {
     getAllClass("map");
     getTeachers("map");
     if (user.role === "Teacher") {
-      getMaterial(user._id, "by_author")
-    }
-    else { // for student
-      getMaterial(user.kelas, "by_class")
+      getMaterial(user._id, "by_author");
+    } else {
+      // for student
+      getMaterial(user.kelas, "by_class");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

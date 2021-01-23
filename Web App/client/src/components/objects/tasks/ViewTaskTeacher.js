@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 
-//Actions 
+//Actions
 import { getOneTask, deleteTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
@@ -15,7 +15,11 @@ import {
 } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
-import { getFileTasks, viewFileTasks, downloadFileTasks } from "../../../actions/files/FileTaskActions";
+import {
+  getFileTasks,
+  viewFileTasks,
+  downloadFileTasks,
+} from "../../../actions/files/FileTaskActions";
 
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -145,7 +149,9 @@ function LampiranFile(props) {
           button
           disableRipple
           className={classes.listItem}
-          onClick={() => {onPreviewFile(file_id)}}
+          onClick={() => {
+            onPreviewFile(file_id);
+          }}
         >
           <ListItemAvatar>
             {filetype === "Word" ? (
@@ -189,7 +195,10 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.downloadIconButton}
-            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id) }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDownloadFile(file_id);
+            }}
           >
             <CloudDownloadIcon fontSize="small" />
           </IconButton>
@@ -204,20 +213,31 @@ function ViewTaskTeacher(props) {
   const classes = useStyles();
 
   const { user } = props.auth;
-  const { deleteTask, tasksCollection, downloadLampiran, previewLampiran, getOneTask, getAllClass, getAllSubjects, getFileTasks, viewFileTasks, downloadFileTasks } = props;
+  const {
+    deleteTask,
+    tasksCollection,
+    downloadLampiran,
+    previewLampiran,
+    getOneTask,
+    getAllClass,
+    getAllSubjects,
+    getFileTasks,
+    viewFileTasks,
+    downloadFileTasks,
+  } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
   const { all_subjects_map } = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
-  const [fileLampiran, setFileLampiran] = React.useState([])
+  const [fileLampiran, setFileLampiran] = React.useState([]);
 
   React.useEffect(() => {
-    getOneTask(task_id)
-    getAllClass("map")
-    getAllSubjects("map")
+    getOneTask(task_id);
+    getAllClass("map");
+    getAllSubjects("map");
     getFileTasks(task_id).then((res) => {
-      setFileLampiran(res)
-    })
+      setFileLampiran(res);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
@@ -252,13 +272,12 @@ function ViewTaskTeacher(props) {
     }
   };
 
-console.log(all_classes_map)
+  console.log(all_classes_map);
 
   const onDeleteTask = (id) => {
     deleteTask(id);
     // setFileTugas(null)
   };
-
 
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
@@ -375,25 +394,24 @@ console.log(all_classes_map)
               <Typography>{tasksCollection.description}</Typography>
             </Grid>
           )}
-          {(fileLampiran.length === 0) ? null :
-            <Grid item xs={12} style={{marginTop: "30px"}}>
+          {fileLampiran.length === 0 ? null : (
+            <Grid item xs={12} style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Lampiran Berkas:
               </Typography>
               <Grid container spacing={1}>
-              {
-                fileLampiran.map((lampiran) => (
+                {fileLampiran.map((lampiran) => (
                   <LampiranFile
                     file_id={lampiran._id}
-                    onPreviewFile ={viewFileTasks}
-                    onDownloadFile ={downloadFileTasks}
+                    onPreviewFile={viewFileTasks}
+                    onDownloadFile={downloadFileTasks}
                     filename={lampiran.filename}
                     filetype={fileType(lampiran.filename)}
                   />
                 ))}
               </Grid>
             </Grid>
-          }
+          )}
         </Grid>
       </Paper>
       <Grid container spacing={2} justify="flex-end" alignItems="center">
@@ -430,11 +448,11 @@ console.log(all_classes_map)
 }
 
 ViewTaskTeacher.propTypes = {
-   auth: PropTypes.object.isRequired,
-   tasksCollection: PropTypes.object.isRequired,
-   classesCollection: PropTypes.object.isRequired,
-   subjectsCollection: PropTypes.object.isRequired,
- }
+  auth: PropTypes.object.isRequired,
+  tasksCollection: PropTypes.object.isRequired,
+  classesCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
@@ -443,8 +461,16 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
 });
 
-export default connect(
-   mapStateToProps,  {uploadTugas, deleteTask, downloadLampiran,
-    previewLampiran, getOneTask, getOneUser, getAllClass, getAllSubjects,
-    getFileTasks, downloadFileTasks, viewFileTasks }
- ) (ViewTaskTeacher);
+export default connect(mapStateToProps, {
+  uploadTugas,
+  deleteTask,
+  downloadLampiran,
+  previewLampiran,
+  getOneTask,
+  getOneUser,
+  getAllClass,
+  getAllSubjects,
+  getFileTasks,
+  downloadFileTasks,
+  viewFileTasks,
+})(ViewTaskTeacher);

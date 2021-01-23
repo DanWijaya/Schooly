@@ -192,7 +192,7 @@ class CreateAnnouncement extends Component {
       errors: {},
       openUploadDialog: null,
       fileLimitSnackbar: false,
-      over_limit: []
+      over_limit: [],
     };
   }
 
@@ -257,17 +257,23 @@ class CreateAnnouncement extends Component {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({fileLimitSnackbar: false});
-  }
+    this.setState({ fileLimitSnackbar: false });
+  };
 
   handleLampiranUpload = (e) => {
-   const files = e.target.files;
-    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
-    let over_limit = temp.filter((file) => file.size/Math.pow(10,6) > 10)
-    let file_to_upload = temp.filter((file) => file.size/Math.pow(10,6) <= 10)
-    this.setState({ fileLampiran: file_to_upload, over_limit: over_limit, fileLimitSnackbar: over_limit.length > 0})
-    document.getElementById("file_control").value = null
-  }
+    const files = e.target.files;
+    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
+    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let file_to_upload = temp.filter(
+      (file) => file.size / Math.pow(10, 6) <= 10
+    );
+    this.setState({
+      fileLampiran: file_to_upload,
+      over_limit: over_limit,
+      fileLimitSnackbar: over_limit.length > 0,
+    });
+    document.getElementById("file_control").value = null;
+  };
 
   onSubmit = (e, id) => {
     e.preventDefault();
@@ -278,9 +284,10 @@ class CreateAnnouncement extends Component {
     const announcementData = {
       title: this.state.title,
       description: this.state.description,
-      class_assigned: user.role === "Student" ? [kelas] : this.state.class_assigned,
+      class_assigned:
+        user.role === "Student" ? [kelas] : this.state.class_assigned,
       author_id: user._id,
-      errors: {}
+      errors: {},
     };
 
     if (this.state.fileLampiran)
@@ -370,9 +377,13 @@ class CreateAnnouncement extends Component {
 
     console.log(Object.keys(errors).length);
     // Ini kedepannya juga perlu diubah kalau misalnya kerua_kelasnya cuma taruh id aja.
-    if (user.role === "Student" && Boolean(kelas.ketua_kelas) && kelas.ketua_kelas !== user._id) {
-      console.log(kelas.ketua_kelas, user._id)
-      return (<Redirect to="/tidak-ditemukan"/>)
+    if (
+      user.role === "Student" &&
+      Boolean(kelas.ketua_kelas) &&
+      kelas.ketua_kelas !== user._id
+    ) {
+      console.log(kelas.ketua_kelas, user._id);
+      return <Redirect to="/tidak-ditemukan" />;
     }
 
     return (
@@ -557,14 +568,20 @@ class CreateAnnouncement extends Component {
           </form>
         </Paper>
         <Snackbar
-            open={this.state.fileLimitSnackbar}
-            autoHideDuration={4000}
-            onClose={this.handleCloseErrorSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-              <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-                {this.state.over_limit.length} file melebihi batas 10MB!
-              </MuiAlert>
-          </Snackbar>  
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleCloseErrorSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={this.handleCloseSnackbar}
+            severity="error"
+          >
+            {this.state.over_limit.length} file melebihi batas 10MB!
+          </MuiAlert>
+        </Snackbar>
       </div>
     );
   }
@@ -584,6 +601,10 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { createAnnouncement, getAllClass , setCurrentClass, clearErrors,clearSuccess }
- ) (withStyles(styles)(CreateAnnouncement))
+export default connect(mapStateToProps, {
+  createAnnouncement,
+  getAllClass,
+  setCurrentClass,
+  clearErrors,
+  clearSuccess,
+})(withStyles(styles)(CreateAnnouncement));

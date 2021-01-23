@@ -48,18 +48,18 @@ function NavBarLoggedInContents(props) {
 
   const { isMobileView, logoutUser, getFileAvatar } = props;
   const { user } = props.auth;
-  const [avatar, setAvatar] = React.useState(avatar)
+  const [avatar, setAvatar] = React.useState(avatar);
 
-  console.log(user)
+  console.log(user);
   React.useEffect(() => {
-    let id = user._id ? user._id : user._id
+    let id = user._id ? user._id : user._id;
     getFileAvatar(id)
       .then((result) => {
-        console.log(result)
-        setAvatar(result)
+        console.log(result);
+        setAvatar(result);
       })
-      .catch((err) => console.log(err))
-  },[user.avatar] )
+      .catch((err) => console.log(err));
+  }, [user.avatar]);
   // Menu items in Mobile
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
   const handleMobileMenuClose = () => {
@@ -189,6 +189,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(
-  mapStateToProps, { logoutUser, getFileAvatar }
-) (NavBarLoggedInContents);
+export default connect(mapStateToProps, { logoutUser, getFileAvatar })(
+  NavBarLoggedInContents
+);

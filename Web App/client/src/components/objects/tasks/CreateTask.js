@@ -13,9 +13,29 @@ import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, Divider, FormControl, FormHelperText, Grid, IconButton,
-   ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, TextField, Typography, Snackbar } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+  Snackbar,
+} from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
+} from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -183,8 +203,8 @@ class CreateTask extends Component {
       openUploadDialog: null,
       anchorEl: null,
       over_limit: [],
-      fileLimitSnackbar: false
-    }
+      fileLimitSnackbar: false,
+    };
   }
 
   // ref itu untuk ngerefer html yang ada di render.
@@ -250,9 +270,9 @@ class CreateTask extends Component {
     getAllSubjects();
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   // akan selalu dirun kalau ada terima state atau props yang berubah.
@@ -271,18 +291,23 @@ class CreateTask extends Component {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({fileLimitSnackbar: false});
-  }
+    this.setState({ fileLimitSnackbar: false });
+  };
 
   handleLampiranUpload = (e) => {
     const files = e.target.files;
-    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)]
-    let over_limit = temp.filter((file) => file.size/Math.pow(10,6) > 10)
-    let file_to_upload = temp.filter((file) => file.size/Math.pow(10,6) <= 10)
-    this.setState({ fileLampiran: file_to_upload, over_limit: over_limit, fileLimitSnackbar: over_limit.length > 0})
-    document.getElementById("file_control").value = null
-  }
-
+    let temp = [...Array.from(this.state.fileLampiran), ...Array.from(files)];
+    let over_limit = temp.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let file_to_upload = temp.filter(
+      (file) => file.size / Math.pow(10, 6) <= 10
+    );
+    this.setState({
+      fileLampiran: file_to_upload,
+      over_limit: over_limit,
+      fileLimitSnackbar: over_limit.length > 0,
+    });
+    document.getElementById("file_control").value = null;
+  };
 
   handleLampiranDelete = (e, i) => {
     e.preventDefault();
@@ -385,7 +410,7 @@ class CreateTask extends Component {
               </Typography>
             </div>
             <Divider />
-            <form noValidate onSubmit={(e) =>this.onSubmit(e,user._id)}>
+            <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)}>
               <Grid container>
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
@@ -615,11 +640,17 @@ class CreateTask extends Component {
             open={this.state.fileLimitSnackbar}
             autoHideDuration={4000}
             onClose={this.handleCloseErrorSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-              <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-                {this.state.over_limit.length} file melebihi batas 10MB!
-              </MuiAlert>
-          </Snackbar>  
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
+              {this.state.over_limit.length} file melebihi batas 10MB!
+            </MuiAlert>
+          </Snackbar>
         </div>
       );
     } else {
@@ -648,6 +679,11 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { createTask, getAllClass, getAllSubjects, getOneUser, clearErrors, clearSuccess }
-) (withStyles(styles)(CreateTask))
+export default connect(mapStateToProps, {
+  createTask,
+  getAllClass,
+  getAllSubjects,
+  getOneUser,
+  clearErrors,
+  clearSuccess,
+})(withStyles(styles)(CreateTask));

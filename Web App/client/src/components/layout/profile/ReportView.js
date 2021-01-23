@@ -849,18 +849,24 @@ function ReportView(props) {
     countAllClassUpdate.current++;
     if (countAllClassUpdate.current === 2) {
       new Promise((resolve) => {
-        resolve(all_classes.find((kelas) => {return (kelas.walikelas === user._id)}));
-      }).then((kelasWali) => {
-        let infoKelasWali = new Map();
-        // jika guru adalah kelas wali, mengisi infoKelasWali dengan id dan nama kelas yang diwalikannya
-        if (kelasWali) {
-          infoKelasWali.set("id", kelasWali._id);
-          infoKelasWali.set("name", kelasWali.name);
-        }
-        return (infoKelasWali);
-      }).then((info) => {
-        setKelasWali(info);
-      });
+        resolve(
+          all_classes.find((kelas) => {
+            return kelas.walikelas === user._id;
+          })
+        );
+      })
+        .then((kelasWali) => {
+          let infoKelasWali = new Map();
+          // jika guru adalah kelas wali, mengisi infoKelasWali dengan id dan nama kelas yang diwalikannya
+          if (kelasWali) {
+            infoKelasWali.set("id", kelasWali._id);
+            infoKelasWali.set("name", kelasWali.name);
+          }
+          return infoKelasWali;
+        })
+        .then((info) => {
+          setKelasWali(info);
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_classes]);
@@ -1095,13 +1101,16 @@ function ReportView(props) {
             </Typography>
             <Divider className={classes.profileDivider} />
           </Grid>
-          <Grid
-            container
-            justify="center"
-            spacing={4}
-            alignItems="center"
-          >
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+          <Grid container justify="center" spacing={4} alignItems="center">
+            <Grid
+              item
+              container
+              direction="column"
+              spacing={1}
+              xs={12}
+              sm={4}
+              alignItems="center"
+            >
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Tugas Anda
@@ -1135,11 +1144,7 @@ function ReportView(props) {
                   {showSubject(taskGraphCurrentSubject)}
                   <IconButton
                     onClick={() =>
-                      changeGraphSubject(
-                        "Tugas",
-                        "Right",
-                        all_subjects.length
-                      )
+                      changeGraphSubject("Tugas", "Right", all_subjects.length)
                     }
                   >
                     <ArrowForwardIosIcon />
@@ -1147,7 +1152,15 @@ function ReportView(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+            <Grid
+              item
+              container
+              direction="column"
+              spacing={1}
+              xs={12}
+              sm={4}
+              alignItems="center"
+            >
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Kuis Anda
@@ -1166,9 +1179,7 @@ function ReportView(props) {
                     </Typography>
                   </div>
                 ) : (
-                  <div>
-                    {graphAssessment(quizGraphCurrentSubject, "Kuis")}
-                  </div>
+                  <div>{graphAssessment(quizGraphCurrentSubject, "Kuis")}</div>
                 )}
               </Grid>
               <Grid item>
@@ -1191,7 +1202,15 @@ function ReportView(props) {
                 </div>
               </Grid>
             </Grid>
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+            <Grid
+              item
+              container
+              direction="column"
+              spacing={1}
+              xs={12}
+              sm={4}
+              alignItems="center"
+            >
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Ujian Anda
@@ -1210,9 +1229,7 @@ function ReportView(props) {
                     </Typography>
                   </div>
                 ) : (
-                  <div>
-                    {graphAssessment(examGraphCurrentSubject, "Ujian")}
-                  </div>
+                  <div>{graphAssessment(examGraphCurrentSubject, "Ujian")}</div>
                 )}
               </Grid>
               <Grid item>
@@ -1227,11 +1244,7 @@ function ReportView(props) {
                   {showSubject(examGraphCurrentSubject)}
                   <IconButton
                     onClick={() =>
-                      changeGraphSubject(
-                        "Ujian",
-                        "Right",
-                        all_subjects.length
-                      )
+                      changeGraphSubject("Ujian", "Right", all_subjects.length)
                     }
                   >
                     <ArrowForwardIosIcon />
@@ -1240,12 +1253,7 @@ function ReportView(props) {
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            item
-            container
-            direction="column"
-            style={{ margin: "auto" }}
-          >
+          <Grid item container direction="column" style={{ margin: "auto" }}>
             <Grid item>
               <TableContainer component={Paper}>
                 <Table

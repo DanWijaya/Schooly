@@ -220,10 +220,7 @@ function ProfileView(props) {
         <Grid item>
           {avatar ? (
             <StyledBadge>
-              <Avatar
-                src={avatar}
-                className={classes.avatar}
-              />
+              <Avatar src={avatar} className={classes.avatar} />
             </StyledBadge>
           ) : (
             <StyledBadge>

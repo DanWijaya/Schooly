@@ -65,19 +65,19 @@ router.post("/update/:id", (req, res) => {
 });
 
 //Define View one announcement
-router.get("/viewOne/:id", (req,res) => {
-    console.log("Link: ", process.env.HELLO);
-    console.log("view one is runned")
-    let id = req.params.id;
-    Announcement.findById(id, (err, announcementData) => {
-        if (!announcementData)
-            return res.status(404).send("Announcement data is not found");
-        else {
-            console.log("Announcementnya yang ini: ", announcementData)
-            return res.json(announcementData)
-        }
-    })
-})
+router.get("/viewOne/:id", (req, res) => {
+  console.log("Link: ", process.env.HELLO);
+  console.log("view one is runned");
+  let id = req.params.id;
+  Announcement.findById(id, (err, announcementData) => {
+    if (!announcementData)
+      return res.status(404).send("Announcement data is not found");
+    else {
+      console.log("Announcementnya yang ini: ", announcementData);
+      return res.json(announcementData);
+    }
+  });
+});
 
 //Define View classes route
 router.get("/viewall", (req, res) => {

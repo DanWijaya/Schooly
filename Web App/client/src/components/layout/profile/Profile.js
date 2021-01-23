@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { uploadFileAvatar, getFileAvatar } from "../../../actions/files/FileAvatarActions"
+import {
+  uploadFileAvatar,
+  getFileAvatar,
+} from "../../../actions/files/FileAvatarActions";
 import { updateAvatar } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import informationContacts from "./InformationContacts.png";
@@ -170,19 +173,25 @@ function ProfileDataItem(props) {
 function Profile(props) {
   const classes = useStyles();
   const { user } = props.auth;
-  const { updateAvatar, setCurrentClass, classesCollection, uploadFileAvatar, getFileAvatar } = props;
+  const {
+    updateAvatar,
+    setCurrentClass,
+    classesCollection,
+    uploadFileAvatar,
+    getFileAvatar,
+  } = props;
   const [avatar, setAvatar] = React.useState(null);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
-  console.log(user)
+  console.log(user);
   React.useEffect(() => {
-    console.log("use effect")
+    console.log("use effect");
     // let id = user._id ? user._id : user._id
-    let id = user._id
+    let id = user._id;
     getFileAvatar(id)
-    .then((result) => setAvatar(result))
-    .catch((err) => console.log(err))
-  }, [user.avatar])
+      .then((result) => setAvatar(result))
+      .catch((err) => console.log(err));
+  }, [user.avatar]);
 
   // Alert control for ProfilePictureEditorDialog
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -194,8 +203,8 @@ function Profile(props) {
       return;
     }
     setOpenAlert(false);
-  }
-  console.log(avatar)
+  };
+  console.log(avatar);
   // Alert control for ProfileDataEditorDialog
   const [openDataEditorAlert, setOpenDataEditorAlert] = React.useState(false);
   const handleOpenDataEditorAlert = () => {
@@ -229,14 +238,14 @@ function Profile(props) {
       return;
     }
     setFileLimitSnackbar(false);
-  }
+  };
 
   // Initially classesCollection.kelas.name === undefined
   if (user.role === "Student" && !classesCollection.kelas.name) {
     setCurrentClass(user.kelas);
   }
 
-  document.title = "Schooly | Profil Saya"
+  document.title = "Schooly | Profil Saya";
   return (
     <div className={classes.root}>
       {/* ProfilePictureEditorDialog Snackbar */}
@@ -289,49 +298,47 @@ function Profile(props) {
       </Snackbar>
       {/* Profile Pict Size Limit Snackbar */}
       <Snackbar
-          open={fileLimitSnackbar}
-          autoHideDuration={2000}
-          onClose={handleCloseErrorSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-            <MuiAlert elevation={6} variant="filled" severity="error">
-              Foto profil melebihi batas 5MB!
-            </MuiAlert>
-        </Snackbar>
+        open={fileLimitSnackbar}
+        autoHideDuration={2000}
+        onClose={handleCloseErrorSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <MuiAlert elevation={6} variant="filled" severity="error">
+          Foto profil melebihi batas 5MB!
+        </MuiAlert>
+      </Snackbar>
       <Grid container direction="column" spacing={1} alignItems="center">
         <Grid item>
-          {user.avatar ?
-          <StyledBadge
-            badgeContent={
-              <ProfilePictureEditorDialog
-                user={user}
-                avatar={avatar}
-                // updateAvatar={uploadFileAvatar}
-                setFileLimitSnackbar={setFileLimitSnackbar}
-                fileLimitSnackbar={fileLimitSnackbar}
-                handleOpenAlert={handleOpenAlert}
-              />
-            }
-          >
-            <Avatar
-              src={avatar}
-              className={classes.avatar}
-            />
-          </StyledBadge>
-        :
-          <StyledBadge
-            badgeContent={
-              <ProfilePictureEditorDialog
-                user={user}
-                // updateAvatar={uploadFileAvatar}
-                setFileLimitSnackbar={setFileLimitSnackbar}
-                fileLimitSnackbar={fileLimitSnackbar}
-                handleOpenAlert={handleOpenAlert}
-              />
-            }
-          >
-            <Avatar className={classes.avatar}/>
-          </StyledBadge>
-        }
+          {user.avatar ? (
+            <StyledBadge
+              badgeContent={
+                <ProfilePictureEditorDialog
+                  user={user}
+                  avatar={avatar}
+                  // updateAvatar={uploadFileAvatar}
+                  setFileLimitSnackbar={setFileLimitSnackbar}
+                  fileLimitSnackbar={fileLimitSnackbar}
+                  handleOpenAlert={handleOpenAlert}
+                />
+              }
+            >
+              <Avatar src={avatar} className={classes.avatar} />
+            </StyledBadge>
+          ) : (
+            <StyledBadge
+              badgeContent={
+                <ProfilePictureEditorDialog
+                  user={user}
+                  // updateAvatar={uploadFileAvatar}
+                  setFileLimitSnackbar={setFileLimitSnackbar}
+                  fileLimitSnackbar={fileLimitSnackbar}
+                  handleOpenAlert={handleOpenAlert}
+                />
+              }
+            >
+              <Avatar className={classes.avatar} />
+            </StyledBadge>
+          )}
         </Grid>
         <Grid item>
           <Typography variant="h4" align="center">
@@ -366,20 +373,21 @@ function Profile(props) {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user._id
-                      }
-                    }}>
-                      <LightTooltip title="Klik Untuk Melihat Rapor">
-                        <Button variant="contained" className={classes.buttonRapor}>
-                          <AssessmentOutlinedIcon />
-                        </Button>
-                      </LightTooltip>
-                    </Link>
-                  </div>
-                ) : (
-                  null
-                )
-              }
+                        id: user._id,
+                      },
+                    }}
+                  >
+                    <LightTooltip title="Klik Untuk Melihat Rapor">
+                      <Button
+                        variant="contained"
+                        className={classes.buttonRapor}
+                      >
+                        <AssessmentOutlinedIcon />
+                      </Button>
+                    </LightTooltip>
+                  </Link>
+                </div>
+              ) : null}
             </Grid>
             <Grid item>
               <ProfileDataEditorDialog
@@ -405,20 +413,22 @@ function Profile(props) {
                         role: "Student",
                         nama: user.name,
                         kelas: classesCollection.kelas,
-                        id: user._id
-                      }
-                    }}>
-                      <LightTooltip title="Klik Untuk Melihat Rapor">
-                        <Button variant="contained" className={classes.buttonRapor} startIcon={<AssessmentOutlinedIcon />}>
-                          Lihat Rapor
-                        </Button>
-                      </LightTooltip>
-                    </Link>
-                  </div>
-                ) : (
-                  null
-                )
-              }
+                        id: user._id,
+                      },
+                    }}
+                  >
+                    <LightTooltip title="Klik Untuk Melihat Rapor">
+                      <Button
+                        variant="contained"
+                        className={classes.buttonRapor}
+                        startIcon={<AssessmentOutlinedIcon />}
+                      >
+                        Lihat Rapor
+                      </Button>
+                    </LightTooltip>
+                  </Link>
+                </div>
+              ) : null}
             </Grid>
             <Grid item>
               <ProfileDataEditorDialog
@@ -602,6 +612,9 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(
-  mapStateToProps, { updateAvatar, setCurrentClass, uploadFileAvatar, getFileAvatar }
-) (Profile);
+export default connect(mapStateToProps, {
+  updateAvatar,
+  setCurrentClass,
+  uploadFileAvatar,
+  getFileAvatar,
+})(Profile);

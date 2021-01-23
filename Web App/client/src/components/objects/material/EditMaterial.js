@@ -3,17 +3,39 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import "date-fns";
-import { getFileMaterials, downloadFileMaterial, viewFileMaterial, getAllS3} from "../../../actions/files/FileMaterialActions"
+import {
+  getFileMaterials,
+  downloadFileMaterial,
+  viewFileMaterial,
+  getAllS3,
+} from "../../../actions/files/FileMaterialActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getOneMaterial } from "../../../actions/MaterialActions";
-import { updateMaterial} from "../../../actions/MaterialActions"
-import { clearErrors } from "../../../actions/ErrorActions"
+import { updateMaterial } from "../../../actions/MaterialActions";
+import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,
-   Grid, IconButton, MenuItem, ListItem, ListItemAvatar, ListItemText, Paper, Select, Snackbar, TextField, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  MenuItem,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Select,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -182,27 +204,32 @@ class EditMaterial extends Component {
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
       over_limit: [],
-      fileLimitSnackbar: false
-    }
+      fileLimitSnackbar: false,
+    };
   }
 
   lampiranUploader = React.createRef(null);
 
   componentDidMount() {
-    const { getAllClass, getAllSubjects, getOneMaterial, getFileMaterials } = this.props;
-    const { id } = this.props.match.params
+    const {
+      getAllClass,
+      getAllSubjects,
+      getOneMaterial,
+      getFileMaterials,
+    } = this.props;
+    const { id } = this.props.match.params;
 
-    getAllClass()
-    getOneMaterial(id)
-    getAllSubjects()
+    getAllClass();
+    getOneMaterial(id);
+    getAllSubjects();
     getFileMaterials(id).then((result) => {
-      this.setState({ fileLampiran: result})
-    })
+      this.setState({ fileLampiran: result });
+    });
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -214,13 +241,15 @@ class EditMaterial extends Component {
     }
     if (Boolean(selectedMaterials) && nextProps.errors) {
       this.setState({
-          name: selectedMaterials.name,
-          subject: selectedMaterials.subject,
-          deadline: selectedMaterials.deadline,
-          class_assigned: Boolean(selectedMaterials.class_assigned) ? selectedMaterials.class_assigned : [],
-          description: selectedMaterials.description,
-          // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      })
+        name: selectedMaterials.name,
+        subject: selectedMaterials.subject,
+        deadline: selectedMaterials.deadline,
+        class_assigned: Boolean(selectedMaterials.class_assigned)
+          ? selectedMaterials.class_assigned
+          : [],
+        description: selectedMaterials.description,
+        // so need to check if selectedMaterials is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      });
     }
   }
 
@@ -228,7 +257,11 @@ class EditMaterial extends Component {
     e.preventDefault();
 
     const { id } = this.props.match.params;
-    const { class_assigned, fileLampiranToAdd, fileLampiranToDelete } = this.state;
+    const {
+      class_assigned,
+      fileLampiranToAdd,
+      fileLampiranToDelete,
+    } = this.state;
     const materialObject = {
       name: this.state.name,
       deadline: this.state.deadline,
@@ -250,27 +283,49 @@ class EditMaterial extends Component {
       formData.append("lampiran_materi", this.state.fileLampiranToAdd[i]);
     }
 
-    const {selectedMaterials} = this.props.materialsCollection;
-    this.props.updateMaterial(formData, fileLampiranToDelete,selectedMaterials.lampiran, materialObject, id, this.props.history);
-    this.setState({ fileLampiranToDelete: []})
-    }
+    const { selectedMaterials } = this.props.materialsCollection;
+    this.props.updateMaterial(
+      formData,
+      fileLampiranToDelete,
+      selectedMaterials.lampiran,
+      materialObject,
+      id,
+      this.props.history
+    );
+    this.setState({ fileLampiranToDelete: [] });
+  };
 
   handleLampiranUpload = (e) => {
     const files = Array.from(e.target.files);
-    if (this.state.fileLampiran.length === 0){
-      let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10)
-      let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10)
-      this.setState({fileLampiran: allowed_file, fileLampiranToAdd: allowed_file, over_limit: over_limit,fileLimitSnackbar: over_limit.length > 0})
-    }
-    else {
+    if (this.state.fileLampiran.length === 0) {
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let allowed_file = files.filter(
+        (file) => file.size / Math.pow(10, 6) <= 10
+      );
+      this.setState({
+        fileLampiran: allowed_file,
+        fileLampiranToAdd: allowed_file,
+        over_limit: over_limit,
+        fileLimitSnackbar: over_limit.length > 0,
+      });
+    } else {
       if (files.length !== 0) {
-        let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10);
-        let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10);
+        let allowed_file = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 10
+        );
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 10
+        );
 
         let temp = [...this.state.fileLampiran, ...allowed_file];
-        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file]
-        allowed_file = temp
-        this.setState({ fileLampiran: allowed_file, fileLampiranToAdd: file_to_upload, over_limit: over_limit, fileLimitSnackbar: over_limit.length > 0})
+        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file];
+        allowed_file = temp;
+        this.setState({
+          fileLampiran: allowed_file,
+          fileLampiranToAdd: file_to_upload,
+          over_limit: over_limit,
+          fileLimitSnackbar: over_limit.length > 0,
+        });
       }
     }
     document.getElementById("file_control").value = null;
@@ -297,10 +352,13 @@ class EditMaterial extends Component {
       }
     }
     temp.splice(i, 1);
-    if (temp.length === 0)
-      this.handleCloseMenu()
-    this.setState({ fileLampiran: temp, fileLampiranToAdd: tempToAdd, fileLampiranToDelete: tempToDelete})
-  }
+    if (temp.length === 0) this.handleCloseMenu();
+    this.setState({
+      fileLampiran: temp,
+      fileLampiranToAdd: tempToAdd,
+      fileLampiranToDelete: tempToDelete,
+    });
+  };
 
   handleClickMenu = (event) => {
     if (!Boolean(this.state.anchorEl) && this.state.fileLampiran.length > 0)
@@ -333,8 +391,8 @@ class EditMaterial extends Component {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({fileLimitSnackbar: false});
-  }
+    this.setState({ fileLimitSnackbar: false });
+  };
 
   render() {
     const { classes, errors, success } = this.props;
@@ -446,7 +504,7 @@ class EditMaterial extends Component {
               </Typography>
             </div>
             <Divider />
-            <form noValidate onSubmit={(e) =>this.onSubmit(e,user._id)}>
+            <form noValidate onSubmit={(e) => this.onSubmit(e, user._id)}>
               <Grid container>
                 <Grid item xs={12} md className={classes.content}>
                   <Grid container direction="column" spacing={4}>
@@ -650,11 +708,17 @@ class EditMaterial extends Component {
             open={this.state.fileLimitSnackbar}
             autoHideDuration={4000}
             onClose={this.handleCloseErrorSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-              <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
-                {this.state.over_limit.length} file melebihi batas 10MB!
-              </MuiAlert>
-          </Snackbar> 
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
+              {this.state.over_limit.length} file melebihi batas 10MB!
+            </MuiAlert>
+          </Snackbar>
         </div>
       );
     } else {
@@ -686,6 +750,12 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
 });
 
-export default connect(
-    mapStateToProps, { getAllClass, getAllSubjects, clearErrors, clearSuccess, getOneMaterial, updateMaterial,getFileMaterials }
-) (withStyles(styles)(EditMaterial))
+export default connect(mapStateToProps, {
+  getAllClass,
+  getAllSubjects,
+  clearErrors,
+  clearSuccess,
+  getOneMaterial,
+  updateMaterial,
+  getFileMaterials,
+})(withStyles(styles)(EditMaterial));

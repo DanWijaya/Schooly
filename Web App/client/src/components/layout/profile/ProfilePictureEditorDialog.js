@@ -8,14 +8,17 @@ import {
   Grid,
   IconButton,
   Typography,
-  Snackbar
+  Snackbar,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import CloseIcon from "@material-ui/icons/Close";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import { uploadFileAvatar, getFileAvatar  } from "../../../actions/files/FileAvatarActions"
+import {
+  uploadFileAvatar,
+  getFileAvatar,
+} from "../../../actions/files/FileAvatarActions";
 import { connect } from "react-redux";
 import MuiAlert from "@material-ui/lab/Alert";
 const useStyles = makeStyles((theme) => ({
@@ -85,24 +88,29 @@ function ProfilePictureEditorDialog(props) {
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
-  
+
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setProfileImg(null);
   };
 
-  const { user, updateAvatar, uploadFileAvatar, avatar, setFileLimitSnackbar } = props;
+  const {
+    user,
+    updateAvatar,
+    uploadFileAvatar,
+    avatar,
+    setFileLimitSnackbar,
+  } = props;
 
   const handleImageUpload = (e) => {
-    console.log(e.target.files)
+    console.log(e.target.files);
     const [file] = e.target.files;
-    if(file){
-      if(file.size/Math.pow(10,6) > 5){
-        console.log("file size is over 5MB")
-        imageUploader.current.value = null
-        setFileLimitSnackbar(true)
-      }
-      else{
+    if (file) {
+      if (file.size / Math.pow(10, 6) > 5) {
+        console.log("file size is over 5MB");
+        imageUploader.current.value = null;
+        setFileLimitSnackbar(true);
+      } else {
         const reader = new FileReader();
         const { current } = uploadedImage;
         current.file = file;
@@ -116,14 +124,14 @@ function ProfilePictureEditorDialog(props) {
   };
 
   const onSubmitForm = (e) => {
-    e.preventDefault()
-    let formData = new FormData()
-    formData.append("avatar", profileImg)
+    e.preventDefault();
+    let formData = new FormData();
+    formData.append("avatar", profileImg);
     // let userId = user._id ? user._id : user._id
-    let userId = user._id
+    let userId = user._id;
     // updateAvatar(userData, userId, formData)
-    uploadFileAvatar(userId, formData)
-    props.handleOpenAlert()
+    uploadFileAvatar(userId, formData);
+    props.handleOpenAlert();
 
     handleCloseDialog();
   };
@@ -279,7 +287,7 @@ function ProfilePictureEditorDialog(props) {
             </Typography>
           </Grid>
         </Grid>
-      </Dialog> 
+      </Dialog>
     </div>
   );
 }
@@ -289,6 +297,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect( 
-  mapStateToProps, { uploadFileAvatar, getFileAvatar }
-)( ProfilePictureEditorDialog)
+export default connect(mapStateToProps, { uploadFileAvatar, getFileAvatar })(
+  ProfilePictureEditorDialog
+);

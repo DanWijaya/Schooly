@@ -1312,8 +1312,13 @@ class CreateAssessment extends Component {
                         <CancelIcon />
                       </ListItemIcon>
                       <ListItemText primary="Batal" />
-                      </MenuItem>
-                    <MenuItem button type="submit" className={classes.menuSubmit} onClick={(e) => this.onSubmit(e, user._id)}>
+                    </MenuItem>
+                    <MenuItem
+                      button
+                      type="submit"
+                      className={classes.menuSubmit}
+                      onClick={(e) => this.onSubmit(e, user._id)}
+                    >
                       <ListItemIcon>
                         <SendIcon />
                       </ListItemIcon>

@@ -4,9 +4,19 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
 import { clearSuccess } from "../../../actions/SuccessActions";
-import { uploadTugas , deleteTugas } from "../../../actions/UploadActions";
-import { deleteFileSubmitTasks, uploadFileSubmitTasks, getFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks} from "../../../actions/files/FileSubmitTaskActions";
-import { downloadFileTasks, getFileTasks, viewFileTasks } from "../../../actions/files/FileTaskActions";
+import { uploadTugas, deleteTugas } from "../../../actions/UploadActions";
+import {
+  deleteFileSubmitTasks,
+  uploadFileSubmitTasks,
+  getFileSubmitTasks,
+  viewFileSubmitTasks,
+  downloadFileSubmitTasks,
+} from "../../../actions/files/FileSubmitTaskActions";
+import {
+  downloadFileTasks,
+  getFileTasks,
+  viewFileTasks,
+} from "../../../actions/files/FileTaskActions";
 import { getOneTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { getTaskFilesByUser } from "../../../actions/UploadActions";
@@ -14,11 +24,24 @@ import { getOneUser } from "../../../actions/UserActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Divider, Grid, Hidden, IconButton, ListItem, ListItemAvatar, ListItemText,
-   Paper, Typography, Badge, Snackbar } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Grid,
+  Hidden,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Typography,
+  Badge,
+  Snackbar,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload"
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import MuiAlert from "@material-ui/lab/Alert";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PublishIcon from "@material-ui/icons/Publish";
@@ -158,7 +181,9 @@ function LampiranFile(props) {
           button
           disableRipple
           className={classes.listItem}
-          onClick={() => {onPreviewFile(file_id)}}
+          onClick={() => {
+            onPreviewFile(file_id);
+          }}
         >
           <ListItemAvatar>
             {filetype === "Word" ? (
@@ -202,7 +227,10 @@ function LampiranFile(props) {
           <IconButton
             size="small"
             className={classes.downloadIconButton}
-            onClick={(e) => { e.stopPropagation(); onDownloadFile(file_id) }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDownloadFile(file_id);
+            }}
           >
             <CloudDownloadIcon fontSize="small" />
           </IconButton>
@@ -232,14 +260,11 @@ function WorkFile(props) {
 
   return (
     <>
-    {type === "chosen" ? 
-      <Paper variant="outlined" className={classes.listItemPaper}>
-        <ListItem
-          disableRipple
-          className={classes.listItem}
-        >
-          <ListItemAvatar>
-            {file_type === "Word" ? (
+      {type === "chosen" ? (
+        <Paper variant="outlined" className={classes.listItemPaper}>
+          <ListItem disableRipple className={classes.listItem}>
+            <ListItemAvatar>
+              {file_type === "Word" ? (
                 <Avatar className={classes.wordFileTypeIcon}>
                   <FaFileWord />
                 </Avatar>
@@ -267,29 +292,28 @@ function WorkFile(props) {
                 <Avatar className={classes.otherFileTypeIcon}>
                   <FaFile />
                 </Avatar>
-              ): null
-          }
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <LightTooltip title={file_name} placement="top">
-                <Typography variant="subtitle2">
-                  {displayedName}
-                </Typography>
-              </LightTooltip>
-            }
-            secondary={file_type}
-          />
-        </ListItem>
-      </Paper>
-    : 
-      <Paper variant="outlined" className={classes.listItemPaperSubmitted}>
-        <ListItem
-          button
-          disableRipple
-          className={classes.listItem}
-          onClick={() => {onPreviewFile(file_id, "tugas")}}
-        >
+              ) : null}
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <LightTooltip title={file_name} placement="top">
+                  <Typography variant="subtitle2">{displayedName}</Typography>
+                </LightTooltip>
+              }
+              secondary={file_type}
+            />
+          </ListItem>
+        </Paper>
+      ) : (
+        <Paper variant="outlined" className={classes.listItemPaperSubmitted}>
+          <ListItem
+            button
+            disableRipple
+            className={classes.listItem}
+            onClick={() => {
+              onPreviewFile(file_id, "tugas");
+            }}
+          >
             <ListItemAvatar>
               {file_type === "Word" ? (
                 <Badge
@@ -441,29 +465,45 @@ function WorkFile(props) {
               <DeleteIcon fontSize="small" />
             </IconButton>
           </ListItem>
-        </Paper>}
+        </Paper>
+      )}
     </>
-  )
+  );
 }
 
 function ViewTaskStudent(props) {
   const classes = useStyles();
 
   const { user, selectedUser } = props.auth;
-  const { uploadFileSubmitTasks, viewFileSubmitTasks, downloadFileSubmitTasks , getFileSubmitTasks, deleteFileSubmitTasks, deleteTugas, success, tasksCollection,
-    filesCollection, clearSuccess,
-    getOneTask, getOneUser, getAllSubjects, getFileTasks, viewFileTasks, downloadFileTasks } = props;
-  const { all_subjects_map} = props.subjectsCollection;
+  const {
+    uploadFileSubmitTasks,
+    viewFileSubmitTasks,
+    downloadFileSubmitTasks,
+    getFileSubmitTasks,
+    deleteFileSubmitTasks,
+    deleteTugas,
+    success,
+    tasksCollection,
+    filesCollection,
+    clearSuccess,
+    getOneTask,
+    getOneUser,
+    getAllSubjects,
+    getFileTasks,
+    viewFileTasks,
+    downloadFileTasks,
+  } = props;
+  const { all_subjects_map } = props.subjectsCollection;
 
   // ref itu untuk ngerefer html yang ada di render.
 
   const tugasUploader = React.useRef(null);
   const uploadedTugas = React.useRef(null);
   const [fileTugas, setFileTugas] = React.useState([]);
-  const [fileToSubmit, setFileToSubmit] = React.useState([])
+  const [fileToSubmit, setFileToSubmit] = React.useState([]);
   // const [tasksContents, setTaskContents] = React.useState([]);
   const [fileLampiran, setFileLampiran] = React.useState([]);
-  const [over_limit, setOverLimit] = React.useState([])
+  const [over_limit, setOverLimit] = React.useState([]);
   const [fileLimitSnackbar, setFileLimitSnackbar] = React.useState(false);
 
   // setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
@@ -481,15 +521,17 @@ function ViewTaskStudent(props) {
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
     // getTaskFilesByUser(user._id, tugasId)
-    getFileSubmitTasks(tugasId, user._id).then((results) => setFileTugas(results))
-    getOneTask(tugasId)
-    getAllSubjects("map")
+    getFileSubmitTasks(tugasId, user._id).then((results) =>
+      setFileTugas(results)
+    );
+    getOneTask(tugasId);
+    getAllSubjects("map");
     // Will run getOneUser again once the tasksCollection is retrieved
-    getFileTasks(tugasId).then((results) => setFileLampiran(results))
-    if(tasksCollection.person_in_charge_id){
-      getOneUser(tasksCollection.person_in_charge_id)
+    getFileTasks(tugasId).then((results) => setFileLampiran(results));
+    if (tasksCollection.person_in_charge_id) {
+      getOneUser(tasksCollection.person_in_charge_id);
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success, tasksCollection.person_in_charge_id]);
 
@@ -525,8 +567,8 @@ function ViewTaskStudent(props) {
 
   const listWorkFile = () => {
     return fileTugas.map((item) => (
-      <WorkFile 
-        handleOpenDeleteDialog = {handleOpenDeleteDialog}
+      <WorkFile
+        handleOpenDeleteDialog={handleOpenDeleteDialog}
         onDownloadFile={downloadFileSubmitTasks}
         onPreviewFile={viewFileSubmitTasks}
         file_name={item.filename}
@@ -534,27 +576,23 @@ function ViewTaskStudent(props) {
         file_type={fileType(item.filename)}
         type="work"
       />
-    ))
-
-  }
+    ));
+  };
 
   // For upload, showing file names before submitting
   const listFileChosen = () => {
-    if(fileTugas.length === 0 && fileToSubmit.length === 0){
-      return ( 
+    if (fileTugas.length === 0 && fileToSubmit.length === 0) {
+      return (
         <Paper className={classes.submittedButton}>
-          <Typography variant="button">
-            KOSONG
-          </Typography>
-      </Paper>
-      )
-    }
-    else{
-      let temp = []
+          <Typography variant="button">KOSONG</Typography>
+        </Paper>
+      );
+    } else {
+      let temp = [];
       for (var i = 0; i < fileToSubmit.length; i++) {
         temp.push(
           <WorkFile
-            handleOpenDeleteDialog = {handleOpenDeleteDialog}
+            handleOpenDeleteDialog={handleOpenDeleteDialog}
             file_name={fileToSubmit[i].name}
             file_id={fileToSubmit[i].id}
             file_type={fileType(fileToSubmit[i].name)}
@@ -562,47 +600,48 @@ function ViewTaskStudent(props) {
           />
         );
       }
-      return temp
+      return temp;
     }
-  }
+  };
 
   const handleTugasUpload = (e) => {
     const files = Array.from(e.target.files);
 
-    let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10)
-    let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10)
+    let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+    let allowed_file = files.filter(
+      (file) => file.size / Math.pow(10, 6) <= 10
+    );
 
-    let temp = [...fileToSubmit, ...allowed_file]
-    setFileToSubmit(temp)
-    setOverLimit(over_limit)
-    setFileLimitSnackbar(over_limit.length > 0)
-  }
-
+    let temp = [...fileToSubmit, ...allowed_file];
+    setFileToSubmit(temp);
+    setOverLimit(over_limit);
+    setFileLimitSnackbar(over_limit.length > 0);
+  };
 
   const onSubmitTugas = (e) => {
     e.preventDefault();
-    let formData = new FormData()
-    // fileToSubmit ini bukan array biasa, itu FileList object. 
+    let formData = new FormData();
+    // fileToSubmit ini bukan array biasa, itu FileList object.
     for (var i = 0; i < fileToSubmit.length; i++) {
-      formData.append("tugas", fileToSubmit[i])
+      formData.append("tugas", fileToSubmit[i]);
     }
-    handleOpenUploadDialog()
+    handleOpenUploadDialog();
     // uploadTugas(formData, tugasId, user._id, new Date() < new Date(tasksCollection.deadline))
-    uploadFileSubmitTasks(formData, tugasId, user._id)
-    setFileToSubmit([])
-  }
+    uploadFileSubmitTasks(formData, tugasId, user._id);
+    setFileToSubmit([]);
+  };
 
   const handleCloseErrorSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setFileLimitSnackbar(false);
-  }
+  };
   // Delete Dialog
   const handleOpenDeleteDialog = (fileid, filename) => {
     setOpenDeleteDialog(true); // state openDeleteDialog akan berubah jadi true.
-    setSelectedFileId(fileid)
-    setSelectedFileName(filename)
+    setSelectedFileId(fileid);
+    setSelectedFileName(filename);
     // getFileSubmitTasks(tugasId, user._id).then((items) => setTaskContents(items))
   };
 
@@ -624,8 +663,8 @@ function ViewTaskStudent(props) {
     ? "Schooly | Lihat Tugas"
     : `Schooly | ${tasksCollection.name}`;
 
-  console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline))
-  console.log(success, filesCollection.files)
+  console.log("Ontime : ", new Date() < new Date(tasksCollection.deadline));
+  console.log(success, filesCollection.files);
 
   return (
     <div className={classes.root}>
@@ -634,7 +673,9 @@ function ViewTaskStudent(props) {
         handleCloseDeleteDialog={handleCloseDeleteDialog}
         itemType="Berkas"
         itemName={selectedFileName}
-        deleteItem={() => { deleteFileSubmitTasks(selectedFileId)}}
+        deleteItem={() => {
+          deleteFileSubmitTasks(selectedFileId);
+        }}
       />
       <UploadDialog
         openUploadDialog={openUploadDialog}
@@ -711,24 +752,22 @@ function ViewTaskStudent(props) {
                 </Hidden>
               </Grid>
             </Grid>
-            <div style={{marginTop: "30px"}}>
+            <div style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Deskripsi Tugas:
               </Typography>
-              <Typography>
-                {tasksCollection.description}
-              </Typography>
+              <Typography>{tasksCollection.description}</Typography>
             </div>
-            <div style={{marginTop: "30px"}}>
+            <div style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Lampiran Berkas:
               </Typography>
               <Grid container spacing={1}>
                 {fileLampiran.map((lampiran) => (
-                    <LampiranFile
+                  <LampiranFile
                     file_id={lampiran._id}
-                    onPreviewFile ={viewFileTasks}
-                    onDownloadFile ={downloadFileTasks}
+                    onPreviewFile={viewFileTasks}
+                    onDownloadFile={downloadFileTasks}
                     filename={lampiran.filename}
                     filetype={fileType(lampiran.filename)}
                   />
@@ -748,17 +787,33 @@ function ViewTaskStudent(props) {
                 Hasil Pekerjaan
               </Typography>
             </Grid>
-            <Divider/>
-            {fileTugas.length === 0 ? 
-              <Grid item style={{padding: "10px", display: "flex", flexDirection: "row", justifyContent: "center"}}>
-                {listWorkFile() }
+            <Divider />
+            {fileTugas.length === 0 ? (
+              <Grid
+                item
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                {listWorkFile()}
               </Grid>
-            :
-              <Grid item style={{padding: "10px", display: "flex", flexDirection: "column", justifyContent: "center"}}>
+            ) : (
+              <Grid
+                item
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
                 {listWorkFile()}
                 {listFileChosen()}
               </Grid>
-            }
+            )}
             <Divider />
             <Grid
               item
@@ -817,21 +872,32 @@ function ViewTaskStudent(props) {
       </Grid>
       <Grid container direction="column" alignItems="center">
         <Typography variant="h6">
-          Status: {!tasksCollection.grades ? "Belum Diperiksa" : !tasksCollection.grades[user._id] ? "Belum Diperiksa" :  "Telah Diperiksa"}
+          Status:{" "}
+          {!tasksCollection.grades
+            ? "Belum Diperiksa"
+            : !tasksCollection.grades[user._id]
+            ? "Belum Diperiksa"
+            : "Telah Diperiksa"}
         </Typography>
         <Typography variant="h4" gutterBottom>
-          Nilai: {!tasksCollection.grades ? "N/A" : !tasksCollection.grades[user._id] ? "N/A" :  `${tasksCollection.grades[user._id]}/100`}
+          Nilai:{" "}
+          {!tasksCollection.grades
+            ? "N/A"
+            : !tasksCollection.grades[user._id]
+            ? "N/A"
+            : `${tasksCollection.grades[user._id]}/100`}
         </Typography>
       </Grid>
       <Snackbar
         open={fileLimitSnackbar}
         autoHideDuration={4000}
         onClose={handleCloseErrorSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-          <MuiAlert elevation={6} variant="filled" severity="error">
-            {over_limit.length} file melebihi batas 10MB!
-          </MuiAlert>
-      </Snackbar> 
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <MuiAlert elevation={6} variant="filled" severity="error">
+          {over_limit.length} file melebihi batas 10MB!
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
@@ -842,7 +908,7 @@ ViewTaskStudent.propTypes = {
   tasksCollection: PropTypes.object.isRequired,
   filesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
@@ -852,10 +918,20 @@ const mapStateToProps = (state) => ({
   filesCollection: state.filesCollection,
 });
 
-export default connect(
-   mapStateToProps, { uploadTugas, clearSuccess, deleteTugas,
-      getFileTasks,downloadFileTasks, viewFileTasks, getTaskFilesByUser, getOneUser,
-      getOneTask, getAllSubjects, 
-     uploadFileSubmitTasks, getFileSubmitTasks,viewFileSubmitTasks, downloadFileSubmitTasks, deleteFileSubmitTasks
-     }
- ) (ViewTaskStudent);
+export default connect(mapStateToProps, {
+  uploadTugas,
+  clearSuccess,
+  deleteTugas,
+  getFileTasks,
+  downloadFileTasks,
+  viewFileTasks,
+  getTaskFilesByUser,
+  getOneUser,
+  getOneTask,
+  getAllSubjects,
+  uploadFileSubmitTasks,
+  getFileSubmitTasks,
+  viewFileSubmitTasks,
+  downloadFileSubmitTasks,
+  deleteFileSubmitTasks,
+})(ViewTaskStudent);

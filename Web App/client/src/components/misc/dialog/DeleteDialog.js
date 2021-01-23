@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DeleteDialog(props) {
-
   // const {
   //   openDeleteDialog,
   //   handleCloseDeleteDialog,
@@ -64,8 +63,18 @@ function DeleteDialog(props) {
   //   isWarning,
   // } = props;
   const classes = useStyles();
-  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, 
-    redirectLink, customMessage, customConfirm, customDecline, isWarning } = props;
+  const {
+    openDeleteDialog,
+    handleCloseDeleteDialog,
+    itemType,
+    itemName,
+    deleteItem,
+    redirectLink,
+    customMessage,
+    customConfirm,
+    customDecline,
+    isWarning,
+  } = props;
 
   return (
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
@@ -80,7 +89,9 @@ function DeleteDialog(props) {
           {/* <Typography variant="h5" align="center">
             Hapus {itemType} berikut? */}
           <Typography variant="h5" align="center" gutterBottom>
-            {customMessage ? `${customMessage} ${itemType}` : `Hapus ${itemType} berikut`}
+            {customMessage
+              ? `${customMessage} ${itemType}`
+              : `Hapus ${itemType} berikut`}
           </Typography>
         </Grid>
         {itemName ? (
@@ -111,36 +122,36 @@ function DeleteDialog(props) {
         ) : null}
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item>
-          {!redirectLink ?
-            <Button
-              onClick={deleteItem}
-              startIcon={<DeleteOutlineIcon />}
-              className={classes.dialogDeleteButton}
-            >
-              Hapus
-            </Button>
-          : 
-          <Link to={redirectLink}>
+            {!redirectLink ? (
               <Button
-              onClick={deleteItem}
-              startIcon={<DeleteOutlineIcon />}
-              className={classes.dialogDeleteButton}
-            >
-              Hapus
-            </Button>
-          </Link>
-          }
+                onClick={deleteItem}
+                startIcon={<DeleteOutlineIcon />}
+                className={classes.dialogDeleteButton}
+              >
+                Hapus
+              </Button>
+            ) : (
+              <Link to={redirectLink}>
+                <Button
+                  onClick={deleteItem}
+                  startIcon={<DeleteOutlineIcon />}
+                  className={classes.dialogDeleteButton}
+                >
+                  Hapus
+                </Button>
+              </Link>
+            )}
           </Grid>
           <Grid item>
             {/* {!isLink ? ( */}
             {/* {!redirectLink ? */}
-              <Button
-                onClick={handleCloseDeleteDialog}
-                startIcon={<CancelIcon />}
-                className={classes.dialogCancelButton}
-              >
-                {customDecline ? customDecline : "Batal"}
-              </Button>
+            <Button
+              onClick={handleCloseDeleteDialog}
+              startIcon={<CancelIcon />}
+              className={classes.dialogCancelButton}
+            >
+              {customDecline ? customDecline : "Batal"}
+            </Button>
             {/* ) : ( */}
             {/* :
               <Link to={redirectLink}>

@@ -12,7 +12,6 @@ import SuccessReducer from "./SuccessReducer";
 import AssessmentReducer from "./AssessmentReducer";
 import MockReducer from "../prototypes/mock-users/MockReducer";
 
-
 export default combineReducers({
   auth: UserReducer,
   mockUserCollection: MockReducer,

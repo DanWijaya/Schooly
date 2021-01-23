@@ -37,8 +37,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { BsClipboardData } from "react-icons/bs";
 import background_images from "./images_list/ImportedImages";
 
-const useStyles =
-    makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
     maxWidth: "1000px",
@@ -57,8 +56,8 @@ const useStyles =
     flexDirection: "column",
     justifyContent: "center",
     padding: "40px 0px 40px 30px",
-    backgroundColor: props => props.backgroundColor,
-    backgroundImage: props => `url(${props.backgroundImage})`,
+    backgroundColor: (props) => props.backgroundColor,
+    backgroundImage: (props) => `url(${props.backgroundImage})`,
     backgroundPosition: "right bottom",
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
@@ -449,7 +448,6 @@ function AssessmentListItem(props) {
 }
 
 function ViewSubject(props) {
-
   const { user } = props.auth;
   const id = props.match.params.id;
   const {
@@ -471,12 +469,12 @@ function ViewSubject(props) {
 
   let subjects_list = Array.from(all_subjects_map.keys());
   let background_idx = subjects_list.indexOf(id) % background_images.length;
-  
-  let background_image, background_color
 
-  if(background_idx !== -1){
-    background_image = Object.values(background_images[background_idx])[0]
-    background_color = Object.keys(background_images[background_idx])[0]
+  let background_image, background_color;
+
+  if (background_idx !== -1) {
+    background_image = Object.values(background_images[background_idx])[0];
+    background_color = Object.keys(background_images[background_idx])[0];
   }
   const classes = useStyles({
     backgroundColor: background_color,
@@ -487,9 +485,9 @@ function ViewSubject(props) {
     if (user.role === "Student") {
       getMaterial(user.kelas, "by_class");
     }
-    setCurrentClass(user.kelas)
-    getAllTask()
-    getAllTaskFilesByUser(user._id)
+    setCurrentClass(user.kelas);
+    getAllTask();
+    getAllTaskFilesByUser(user._id);
     getAllSubjects("map");
     getAllAssessments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -878,7 +876,9 @@ function ViewSubject(props) {
     return result;
   }
 
-  document.title = all_subjects_map.get(id) ? `Schooly | ${all_subjects_map.get(id)}` : "Schooly";
+  document.title = all_subjects_map.get(id)
+    ? `Schooly | ${all_subjects_map.get(id)}`
+    : "Schooly";
 
   return (
     <div className={classes.root}>

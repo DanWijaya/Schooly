@@ -14,9 +14,9 @@ module.exports = {
   },
   dropboxKey: "r9btl0edvqqjqo3",
   awsKey: {
-    "AWS_ACCESS_KEY_ID":"AKIAIQ4KXNLOANF5FNYQ",
-    "AWS_SECRET_ACCESS_KEY":"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",
-    "AWS_REGION":"ap-southeast-1",
-    "AWS_BUCKET_NAME":"test-storage1",
-  }
+    AWS_ACCESS_KEY_ID: "AKIAIQ4KXNLOANF5FNYQ",
+    AWS_SECRET_ACCESS_KEY: "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",
+    AWS_REGION: "ap-southeast-1",
+    AWS_BUCKET_NAME: "test-storage1",
+  },
 };

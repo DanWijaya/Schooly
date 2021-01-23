@@ -23,7 +23,6 @@ export const createAssessment = (formData, assessment, history) => (
       });
       let { questions } = assessment;
 
-      console.log(res._id);
       if (formData.has("lampiran_assessment")) {
         let num_lampiran = [];
         questions.forEach((qns) => {
@@ -31,6 +30,11 @@ export const createAssessment = (formData, assessment, history) => (
         });
         formData.append("num_lampiran", num_lampiran);
         console.log(num_lampiran);
+        
+        return axios.post(
+          `/api/files/assessments/upload/${res.data._id}`,
+          formData
+        )
         return axios.post(
           `/api/upload/att_assessment/lampiran/${res.data._id}`,
           formData

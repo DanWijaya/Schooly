@@ -98,12 +98,6 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  // startDateText: {
-  //   color: theme.palette.primary.main
-  // },
-  // endDateText: {
-  //   color: theme.palette.warning.main
-  // },
   answerText: {
     color: theme.palette.success.dark,
   },
@@ -143,7 +137,7 @@ function ViewAssessmentTeacher(props) {
     null
   );
 
-  console.log(selectedAssessmentName);
+  console.log(selectedAssessments);
   React.useEffect(() => {
     getOneAssessment(assessment_id);
     getAllClass("map");

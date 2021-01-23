@@ -111,7 +111,7 @@ function ProfileDataItemEdit(props) {
   const { errors } = props;
   console.log(errors);
   return (
-    <ListItem style={{margin: "5px 0px 5px 0px"}}>
+    <ListItem style={{ margin: "5px 0px 5px 0px" }}>
       <Grid container alignItems="center">
         <Grid item sm={2}>
           <Hidden xsDown implementation="css">
@@ -195,7 +195,7 @@ function ProfileDataEditorDialog(props) {
 
   //pas submit formnya
   const onSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     let userId = user._id;
     if (!isEmpty(dataProfil.email) && Validator.isEmail(dataProfil.email))
       props.handleOpenAlert();

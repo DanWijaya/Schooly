@@ -526,10 +526,10 @@ function ViewAssessmentStudent(props) {
     setStart(false);
     // console.log(localStorage.getItem(`status`))
     let data = {
-      "answers" : answer,
-      "classId" : user.kelas,
-      "userId" : user._id
-    }
+      answers: answer,
+      classId: user.kelas,
+      userId: user._id,
+    };
     submitAssessment(id, data)
       .then(() => handleCloseSubmitDialog())
       .catch((err) => console.log(err));
@@ -538,9 +538,9 @@ function ViewAssessmentStudent(props) {
   console.log(localStorage.getItem(`remainingTime_${id}`));
   const showSubmitButton = () => {
     console.log(localStorage.getItem(`remainingTime_${id}`));
-    if(submissions){
-      if(submissions[user._id]){
-        return null
+    if (submissions) {
+      if (submissions[user._id]) {
+        return null;
       }
     }
     if (start) {
@@ -560,9 +560,9 @@ function ViewAssessmentStudent(props) {
   };
 
   const showTestStatus = () => {
-    if(submissions){
-      if(submissions[user._id]){
-        return(
+    if (submissions) {
+      if (submissions[user._id]) {
+        return (
           <Paper className={classes.submittedPaper}>
             <CheckCircleOutlineIcon />
             <Typography variant="button" style={{ marginLeft: "5px" }}>
@@ -608,9 +608,9 @@ function ViewAssessmentStudent(props) {
   };
 
   const showQuestions = () => {
-    if(submissions){
-      if(submissions[user._id]){
-        return null
+    if (submissions) {
+      if (submissions[user._id]) {
+        return null;
       }
     }
     if (start) {

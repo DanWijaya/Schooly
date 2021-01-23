@@ -9,12 +9,35 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
-import { deleteFileTasks, getFileTasks} from "../../../actions/files/FileTaskActions"
+import {
+  deleteFileTasks,
+  getFileTasks,
+} from "../../../actions/files/FileTaskActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import { Avatar, Button, Chip, Divider, FormControl, FormHelperText,
-  Grid, IconButton, ListItem, ListItemAvatar, ListItemText, MenuItem, Paper, Select, Snackbar, TextField, Typography } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from "@material-ui/pickers";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Paper,
+  Select,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
+} from "@material-ui/pickers";
 import { withStyles } from "@material-ui/core/styles";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -196,19 +219,19 @@ class EditTask extends Component {
 
   componentDidMount() {
     const { id } = this.props.match.params;
-    this.props.getOneTask(id)
-    this.props.getAllClass()
-    this.props.getAllSubjects()
+    this.props.getOneTask(id);
+    this.props.getAllClass();
+    this.props.getAllSubjects();
     this.props.getFileTasks(id).then((res) => {
       this.setState({
-        fileLampiran: res
-      }) 
-    })
+        fileLampiran: res,
+      });
+    });
   }
 
-  componentWillUnmount(){
-    this.props.clearErrors()
-    this.props.clearSuccess()
+  componentWillUnmount() {
+    this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -221,15 +244,17 @@ class EditTask extends Component {
 
     if (Boolean(tasksCollection) && errors) {
       this.setState({
-          name: tasksCollection.name,
-          subject: tasksCollection.subject,
-          deadline: tasksCollection.deadline,
-          class_assigned: Boolean(tasksCollection.class_assigned) ? tasksCollection.class_assigned : [],
-          description: tasksCollection.description,
-          // fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
-          // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
-          // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
-      })
+        name: tasksCollection.name,
+        subject: tasksCollection.subject,
+        deadline: tasksCollection.deadline,
+        class_assigned: Boolean(tasksCollection.class_assigned)
+          ? tasksCollection.class_assigned
+          : [],
+        description: tasksCollection.description,
+        // fileLampiran: Boolean(tasksCollection.lampiran) ? tasksCollection.lampiran : []
+        // fileLampiran must made like above soalnya because maybe nextProps.tasksCollection is still a plain object.
+        // so need to check if nextProps.tasksCollection is undefined or not because when calling fileLAmpiran.length, there will be an error.
+      });
     }
   }
 
@@ -264,41 +289,62 @@ class EditTask extends Component {
       errors: {},
     };
 
-  let formData = new FormData()
-  for (var i = 0; i< fileLampiranToAdd.length; i++) {
-    console.log(this.state.fileLampiran[i])
-    formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i])
-  }
-  console.log(this.props.tasksCollection)
-  this.props.updateTask(formData, fileLampiranToDelete,
-    this.props.tasksCollection.lampiran, taskObject, id, this.props.history);
+    let formData = new FormData();
+    for (var i = 0; i < fileLampiranToAdd.length; i++) {
+      console.log(this.state.fileLampiran[i]);
+      formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
+    }
+    console.log(this.props.tasksCollection);
+    this.props.updateTask(
+      formData,
+      fileLampiranToDelete,
+      this.props.tasksCollection.lampiran,
+      taskObject,
+      id,
+      this.props.history
+    );
 
     this.setState({ fileLampiranToDelete: [] });
   };
 
   handleLampiranUpload = (e) => {
     const files = Array.from(e.target.files);
-    if (this.state.fileLampiran.length === 0){
-      let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10)
-      let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10)
-      this.setState({fileLampiran: allowed_file, fileLampiranToAdd: allowed_file, over_limit: over_limit,fileLimitSnackbar: over_limit.length > 0})
-    }
-    else {
+    if (this.state.fileLampiran.length === 0) {
+      let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+      let allowed_file = files.filter(
+        (file) => file.size / Math.pow(10, 6) <= 10
+      );
+      this.setState({
+        fileLampiran: allowed_file,
+        fileLampiranToAdd: allowed_file,
+        over_limit: over_limit,
+        fileLimitSnackbar: over_limit.length > 0,
+      });
+    } else {
       if (files.length !== 0) {
-        let allowed_file = files.filter((file) => file.size/Math.pow(10,6) <= 10);
-        let over_limit = files.filter((file) => file.size/Math.pow(10,6) > 10);
+        let allowed_file = files.filter(
+          (file) => file.size / Math.pow(10, 6) <= 10
+        );
+        let over_limit = files.filter(
+          (file) => file.size / Math.pow(10, 6) > 10
+        );
 
         let temp = [...this.state.fileLampiran, ...allowed_file];
-        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file]
-        allowed_file = temp
-        this.setState({ fileLampiran: allowed_file, fileLampiranToAdd: file_to_upload, over_limit: over_limit, fileLimitSnackbar: over_limit.length > 0})
+        let file_to_upload = [...this.state.fileLampiranToAdd, ...allowed_file];
+        allowed_file = temp;
+        this.setState({
+          fileLampiran: allowed_file,
+          fileLampiranToAdd: file_to_upload,
+          over_limit: over_limit,
+          fileLimitSnackbar: over_limit.length > 0,
+        });
       }
     }
     document.getElementById("file_control").value = null;
   };
 
   handleLampiranDelete = (e, i, name) => {
-    e.preventDefault()
+    e.preventDefault();
     // console.log("Index is: ", i)
     let temp = Array.from(this.state.fileLampiran);
     let tempToDelete = this.state.fileLampiranToDelete;
@@ -340,25 +386,24 @@ class EditTask extends Component {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({fileLimitSnackbar: false});
-  }
+    this.setState({ fileLimitSnackbar: false });
+  };
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
   };
 
-  onChange = (e, otherfield=null) => {
-    console.log(this.state.class_assigned)
-    if(otherfield){
-      if(otherfield == "deadline"){
-        this.setState({ [otherfield] : e})
-      }else{
-      // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
-      this.setState({ [otherfield] : e.target.value})
+  onChange = (e, otherfield = null) => {
+    console.log(this.state.class_assigned);
+    if (otherfield) {
+      if (otherfield == "deadline") {
+        this.setState({ [otherfield]: e });
+      } else {
+        // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
+        this.setState({ [otherfield]: e.target.value });
       }
-    }
-    else{
-      this.setState({ [e.target.id]: e.target.value});
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
     }
   };
 
@@ -371,7 +416,7 @@ class EditTask extends Component {
 
     const task_id = this.props.match.params.id;
 
-    let classIds = []
+    let classIds = [];
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
     const MenuProps = {
@@ -693,14 +738,20 @@ class EditTask extends Component {
             </form>
           </Paper>
           <Snackbar
-          open={this.state.fileLimitSnackbar}
-          autoHideDuration={4000}
-          onClose={this.handleCloseErrorSnackbar}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-            <MuiAlert elevation={6} variant="filled" onClose={this.handleCloseSnackbar} severity="error">
+            open={this.state.fileLimitSnackbar}
+            autoHideDuration={4000}
+            onClose={this.handleCloseErrorSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={this.handleCloseSnackbar}
+              severity="error"
+            >
               {this.state.over_limit.length} file melebihi batas 10MB!
             </MuiAlert>
-        </Snackbar>
+          </Snackbar>
         </div>
       );
     } else {
@@ -733,6 +784,11 @@ const mapStateToProps = (state) => ({
   subjectsCollection: state.subjectsCollection,
 });
 
-export default connect(
-    mapStateToProps, { getOneTask, updateTask, getAllClass, getAllSubjects, clearErrors, getFileTasks }
-) (withStyles(styles)(EditTask))
+export default connect(mapStateToProps, {
+  getOneTask,
+  updateTask,
+  getAllClass,
+  getAllSubjects,
+  clearErrors,
+  getFileTasks,
+})(withStyles(styles)(EditTask));

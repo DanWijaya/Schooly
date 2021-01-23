@@ -39,20 +39,20 @@ export const globalStyles = responsiveFontSizes(
         main: "#0d2481",
       },
       radio: {
-        main: "#02AFF8" 
+        main: "#02AFF8",
       },
       checkbox: {
-        main: "#049F90"
+        main: "#049F90",
       },
       shorttext: {
-        main: "#FD7D2E"
+        main: "#FD7D2E",
       },
       longtext: {
-        main: "#B2417C"
+        main: "#B2417C",
       },
       copylink: {
-        main: "#974994"
-      }
+        main: "#974994",
+      },
     },
     overrides: {
       MuiButton: {

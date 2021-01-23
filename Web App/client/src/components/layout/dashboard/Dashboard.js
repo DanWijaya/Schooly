@@ -577,9 +577,9 @@ class Dashboard extends Component {
       // getKuisBySC
       // getUjianBySC
     }
-      getAllAssessments()
-      getAllTaskFilesByUser(user._id) // yang dapatin takfiles cuma berlaku untuk student soalnya
-      getStudents()
+    getAllAssessments();
+    getAllTaskFilesByUser(user._id); // yang dapatin takfiles cuma berlaku untuk student soalnya
+    getStudents();
   }
 
   componentWillUnmount() {
@@ -698,24 +698,23 @@ class Dashboard extends Component {
               workType="Tugas"
             />
           );
-        } else{
-            return (
-              <Typography
-                align="center"
-                color="textSecondary"
-                variant="subtitle-1"
-              >
-                Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-              </Typography>
-            );
-        }
-      }
-       else{
+        } else {
           return (
-            <Typography align="center" color="textSecondary" variant="subtitle-1">
+            <Typography
+              align="center"
+              color="textSecondary"
+              variant="subtitle-1"
+            >
               Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
             </Typography>
           );
+        }
+      } else {
+        return (
+          <Typography align="center" color="textSecondary" variant="subtitle-1">
+            Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+          </Typography>
+        );
       }
     }
 
@@ -769,7 +768,7 @@ class Dashboard extends Component {
               workType={type}
             />
           );
-        } else{
+        } else {
           return (
             <Typography
               align="center"
@@ -780,12 +779,12 @@ class Dashboard extends Component {
             </Typography>
           );
         }
-      } else{
-          return (
-            <Typography align="center" color="textSecondary" variant="subtitle-1">
-              Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-            </Typography>
-          );
+      } else {
+        return (
+          <Typography align="center" color="textSecondary" variant="subtitle-1">
+            Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+          </Typography>
+        );
       }
     }
 
@@ -831,15 +830,17 @@ class Dashboard extends Component {
       return result;
     }
 
-    function listTasksTeacher(){
-      let result = []
-      console.log(user)
-      for(let i=0;i<tasksCollection.length;i++){
-        if(tasksCollection[i].person_in_charge_id === user._id){
-          let number_students_assigned = 0
-          for(let j=0;j<all_students.length;j++){
-            if(tasksCollection[i].class_assigned.includes(all_students[j].kelas)){
-              number_students_assigned = number_students_assigned + 1
+    function listTasksTeacher() {
+      let result = [];
+      console.log(user);
+      for (let i = 0; i < tasksCollection.length; i++) {
+        if (tasksCollection[i].person_in_charge_id === user._id) {
+          let number_students_assigned = 0;
+          for (let j = 0; j < all_students.length; j++) {
+            if (
+              tasksCollection[i].class_assigned.includes(all_students[j].kelas)
+            ) {
+              number_students_assigned = number_students_assigned + 1;
             }
           }
           if (

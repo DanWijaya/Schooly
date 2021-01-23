@@ -127,54 +127,63 @@ export const getOneMaterial = (materialId) => (dispatch) => {
     });
 };
 
-export const deleteMaterial = (materialId, history) => dispatch => {
-    axios
-        .delete(`/api/materials/delete/${materialId}`)
-        .then((res) => {
-            // let lampiran_to_delete = Array.from(res.data.lampiran)
-            // return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
-            return axios.delete(`/api/files/material/${materialId}`)
-        })
-        .then((res) => {
-            console.log(res)
-            window.location.href="/daftar-materi"
-        })
-        .catch(err => {
-            console.log(err);
-            dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data
-            })
-        })
-}
+export const deleteMaterial = (materialId, history) => (dispatch) => {
+  axios
+    .delete(`/api/materials/delete/${materialId}`)
+    .then((res) => {
+      // let lampiran_to_delete = Array.from(res.data.lampiran)
+      // return axios.delete(`/api/upload/att_material/lampiran/${"deleteall"}`, {data: {lampiran_to_delete: lampiran_to_delete} })
+      return axios.delete(`/api/files/materials/${materialId}`);
+    })
+    .then((res) => {
+      console.log(res);
+      window.location.href = "/daftar-materi";
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 
-export const updateMaterial = (formData, lampiran_to_delete, current_lampiran, materialData, materialId, history) => dispatch => {
-    // formData is the lampiran files
+export const updateMaterial = (
+  formData,
+  lampiran_to_delete,
+  current_lampiran,
+  materialData,
+  materialId,
+  history
+) => (dispatch) => {
+  // formData is the lampiran files
   axios
     .post(`/api/materials/update/${materialId}`, materialData)
-    .then(res => {
-        console.log("Material updated to be :", res.data);
-        console.log("Has lampiran? :", formData.has('lampiran_materi'))
-        dispatch({
-            type: GET_ERRORS,
-            payload: false
-        })
-        if (lampiran_to_delete.length > 0) {// axios.delete put the data is quite different..
-            return axios.delete(`/api/files/material/${materialId}`, {data: {file_to_delete: lampiran_to_delete} })
-        }
-        else
-            return "No lampiran file is going to be deleted"
-
+    .then((res) => {
+      console.log("Material updated to be :", res.data);
+      console.log("Has lampiran? :", formData.has("lampiran_materi"));
+      dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
+      if (lampiran_to_delete.length > 0) {
+        // axios.delete put the data is quite different..
+        return axios.delete(`/api/files/materials/${materialId}`, {
+          data: { file_to_delete: lampiran_to_delete },
+        });
+      } else return "No lampiran file is going to be deleted";
     })
-    .then(res => {
-        console.log("Update the lampiran files, upload some new lampiran files")
-        console.log(formData.has("lampiran_materi"), formData.getAll("lampiran_materi"))
-        if (formData.has('lampiran_materi')) {
-            console.log("Lampiran material going to be uploaded")
-            return axios.post(`/api/files/material/upload/${materialId}`, formData);
-        }
-        else // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-            return "Successfully updated task with no lampiran"
+    .then((res) => {
+      console.log("Update the lampiran files, upload some new lampiran files");
+      console.log(
+        formData.has("lampiran_materi"),
+        formData.getAll("lampiran_materi")
+      );
+      if (formData.has("lampiran_materi")) {
+        console.log("Lampiran material going to be uploaded");
+        return axios.post(`/api/files/materials/upload/${materialId}`, formData);
+      } // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+      else return "Successfully updated task with no lampiran";
     })
     .then((res) => {
       console.log("Lampiran file is uploaded");

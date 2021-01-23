@@ -11,7 +11,11 @@ import {
   getTeachers,
 } from "../../../actions/UserActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
-import { getAllTask, getTaskAtmpt, getTaskByClass } from "../../../actions/TaskActions";
+import {
+  getAllTask,
+  getTaskAtmpt,
+  getTaskByClass,
+} from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
@@ -531,8 +535,19 @@ function PersonListItem(props) {
 function ViewClass(props) {
   const classes = useStyles();
 
-  const { setCurrentClass, getStudentsByClass, getAllSubjects,
-     tasksCollection, getTeachers, getMaterial, getAllTaskFilesByUser, getAllTask, getTaskAtmpt,getAllAssessments, assessmentsCollection } = props;
+  const {
+    setCurrentClass,
+    getStudentsByClass,
+    getAllSubjects,
+    tasksCollection,
+    getTeachers,
+    getMaterial,
+    getAllTaskFilesByUser,
+    getAllTask,
+    getTaskAtmpt,
+    getAllAssessments,
+    assessmentsCollection,
+  } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
   const { selectedMaterials } = props.materialsCollection;
@@ -556,10 +571,10 @@ function ViewClass(props) {
     let result = [];
     if (Boolean(tasksCollection.length)) {
       var i;
-      for (i = tasksCollection.length-1; i >= 0; i--){
-        if(taskAtmpt.indexOf(tasksCollection[i]._id) === -1){
+      for (i = tasksCollection.length - 1; i >= 0; i--) {
+        if (taskAtmpt.indexOf(tasksCollection[i]._id) === -1) {
           // get the not attempted task.
-          tasksList.push(tasksCollection[i])
+          tasksList.push(tasksCollection[i]);
         }
         // if(i === tasksCollection.length - 5){ // item terakhir harus pas index ke 4.
         //   break;
@@ -880,8 +895,8 @@ function ViewClass(props) {
     getTeachers("map"); // get the all_teachers
     getStudents();
 
-    getAllTaskFilesByUser(user._id) // get the all_user_files
-    getAllAssessments()
+    getAllTaskFilesByUser(user._id); // get the all_user_files
+    getAllAssessments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -916,11 +931,11 @@ function ViewClass(props) {
   }, [students_by_class, user]);
 
   React.useEffect(() => {
-    console.log("ID User" , user._id, user._id)
+    console.log("ID User", user._id, user._id);
     getTaskAtmpt(user._id).then((data) => {
-      setTaskAtmpt(data)
-    })
-  }, [user._id])
+      setTaskAtmpt(data);
+    });
+  }, [user._id]);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -956,7 +971,7 @@ function ViewClass(props) {
       return true;
     }
   }
-  
+
   return (
     <div className={classes.root}>
       {allow === "empty" ? null : allow === "content" ? (
@@ -1559,7 +1574,15 @@ const mapStateToProps = (state) => ({
   assessmentsCollection: state.assessmentsCollection,
 });
 
-export default connect(
-  mapStateToProps, { setCurrentClass, getStudentsByClass,
-    getAllSubjects, getAllTask, getTeachers, getMaterial, getAllTaskFilesByUser, getAllAssessments, getStudents, getTaskAtmpt }
-) (ViewClass);
+export default connect(mapStateToProps, {
+  setCurrentClass,
+  getStudentsByClass,
+  getAllSubjects,
+  getAllTask,
+  getTeachers,
+  getMaterial,
+  getAllTaskFilesByUser,
+  getAllAssessments,
+  getStudents,
+  getTaskAtmpt,
+})(ViewClass);

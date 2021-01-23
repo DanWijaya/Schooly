@@ -49,12 +49,6 @@ router.post(
             questionsArray[i].lampiran.push(file.id);
           }
         });
-        // let temp = [];
-        // console.log("Files are here: ", req.files)
-        // for (var i = 0; i< req.files.length; i++) {
-        //   console.log(req.files[i])
-        //   temp.push(ObjectId(req.files[i].id))
-        // }
 
         // kalau udah ada lampiran, push aja.
         assessment.questions = questionsArray;

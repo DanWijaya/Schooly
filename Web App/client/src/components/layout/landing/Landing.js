@@ -12,13 +12,7 @@ import schoolyFeatureBackground5 from "./SchoolyFeatureBackground5.png";
 import schoolyFeatureBackground6 from "./SchoolyFeatureBackground6.png";
 import schoolyFeatureBackground7 from "./SchoolyFeatureBackground7.png";
 import schoolyFeatureBackground8 from "./SchoolyFeatureBackground8.png";
-import {
-  Avatar,
-  Button,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Avatar, Button, Grid, Paper, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AnnouncementIcon from "@material-ui/icons/Announcement";

@@ -4,9 +4,16 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { getFileAnnouncements, downloadFileAnnouncements, viewFileAnnouncement} from "../../../actions/files/FileAnnouncementActions"
-import { getOneAnnouncement, deleteAnnouncement} from "../../../actions/AnnouncementActions"
-import { getSelectedClasses } from "../../../actions/ClassActions"
+import {
+  getFileAnnouncements,
+  downloadFileAnnouncements,
+  viewFileAnnouncement,
+} from "../../../actions/files/FileAnnouncementActions";
+import {
+  getOneAnnouncement,
+  deleteAnnouncement,
+} from "../../../actions/AnnouncementActions";
+import { getSelectedClasses } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
 import {
   downloadLampiranAnnouncement,
@@ -201,7 +208,18 @@ function ViewAnnouncement(props) {
 
   const classes = useStyles();
   const { selectedAnnouncements } = props.announcements;
-  const { getUsers, classesCollection, getOneAnnouncement,downloadLampiranAnnouncement,previewLampiranAnnouncement, deleteAnnouncement, getSelectedClasses, getFileAnnouncements,viewFileAnnouncement, downloadFileAnnouncements } = props;
+  const {
+    getUsers,
+    classesCollection,
+    getOneAnnouncement,
+    downloadLampiranAnnouncement,
+    previewLampiranAnnouncement,
+    deleteAnnouncement,
+    getSelectedClasses,
+    getFileAnnouncements,
+    viewFileAnnouncement,
+    downloadFileAnnouncements,
+  } = props;
   const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [fileLampiran, setFileLampiran] = React.useState([]);
@@ -212,11 +230,11 @@ function ViewAnnouncement(props) {
     getOneAnnouncement(announcement_id);
     getSelectedClasses(selectedAnnouncements.class_assigned);
     if (selectedAnnouncements._id) {
-      getUsers([selectedAnnouncements.author_id])
+      getUsers([selectedAnnouncements.author_id]);
     }
     getFileAnnouncements(announcement_id).then((result) => {
-      setFileLampiran(result)
-    })
+      setFileLampiran(result);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAnnouncements._id]); // beacause only receive one announcement.
 
@@ -265,20 +283,16 @@ function ViewAnnouncement(props) {
   };
 
   const onDownloadFile = (id, fileCategory = "none") => {
-    if (fileCategory === "lampiran_announcement")
-      console.log(":Download")
-      // downloadLampiranAnnouncement(id)
-    else
-      console.log("File Category is not specified")
-  }
+    if (fileCategory === "lampiran_announcement") console.log(":Download");
+    // downloadLampiranAnnouncement(id)
+    else console.log("File Category is not specified");
+  };
 
-  const onPreviewFile = (id, fileCategory="none") => {
-   if (fileCategory === "lampiran_announcement")
-      console.log("Download")
-      // previewLampiranAnnouncement(id)
-    else
-      console.log("File Category is not specified")
-  }
+  const onPreviewFile = (id, fileCategory = "none") => {
+    if (fileCategory === "lampiran_announcement") console.log("Download");
+    // previewLampiranAnnouncement(id)
+    else console.log("File Category is not specified");
+  };
 
   return (
     <div className={classes.root}>
@@ -369,31 +383,28 @@ function ViewAnnouncement(props) {
               Lampiran Berkas:
             </Typography>
             <Grid item container spacing={1}>
-              {
-                fileLampiran.map((lampiran) => 
-                (
-                  <LampiranFile
-                    file_id={lampiran._id}
-                    onPreviewFile ={viewFileAnnouncement}
-                    onDownloadFile={downloadFileAnnouncements}
-                    filename={lampiran.filename}
-                    filetype={fileType(lampiran.filename)}
-                    />
-                    ))
-                }
+              {fileLampiran.map((lampiran) => (
+                <LampiranFile
+                  file_id={lampiran._id}
+                  onPreviewFile={viewFileAnnouncement}
+                  onDownloadFile={downloadFileAnnouncements}
+                  filename={lampiran.filename}
+                  filetype={fileType(lampiran.filename)}
+                />
+              ))}
             </Grid>
           </Grid>
         </Grid>
       </Paper>
-      { user.role === "Admin" || user._id === selectedAnnouncements.author_id? // kalau studentnya ketua kelas yang buat pengumumannya
-          <div className={classes.teacherButtonContainer}>
-            <Link to={`/sunting-pengumuman/${announcement_id}`}>
-              <LightTooltip title="Sunting Pengumuman" placement="bottom">
-                <Fab className={classes.editAnnouncementButton}>
-                  <EditIcon />
-                </Fab>
-              </LightTooltip>
-            </Link>
+      {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
+        <div className={classes.teacherButtonContainer}>
+          <Link to={`/sunting-pengumuman/${announcement_id}`}>
+            <LightTooltip title="Sunting Pengumuman" placement="bottom">
+              <Fab className={classes.editAnnouncementButton}>
+                <EditIcon />
+              </Fab>
+            </LightTooltip>
+          </Link>
           <LightTooltip title="Hapus Pengumuman" placement="bottom">
             <Fab
               className={classes.deleteAnnouncementButton}
@@ -401,19 +412,18 @@ function ViewAnnouncement(props) {
             >
               <DeleteIcon />
             </Fab>
-          </LightTooltip> 
-          </div> : null
-      }
+          </LightTooltip>
+        </div>
+      ) : null}
     </div>
-    );
-  }
-
+  );
+}
 
 ViewAnnouncement.propTypes = {
   auth: PropTypes.object.isRequired,
   announcements: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
@@ -421,8 +431,14 @@ const mapStateToProps = (state) => ({
   announcements: state.announcementsCollection,
 });
 
-export default connect(
-  mapStateToProps, { getOneAnnouncement, getUsers, deleteAnnouncement,
-    previewLampiranAnnouncement, downloadLampiranAnnouncement, getSelectedClasses, 
-    getFileAnnouncements, viewFileAnnouncement, downloadFileAnnouncements}
-) (ViewAnnouncement);
+export default connect(mapStateToProps, {
+  getOneAnnouncement,
+  getUsers,
+  deleteAnnouncement,
+  previewLampiranAnnouncement,
+  downloadLampiranAnnouncement,
+  getSelectedClasses,
+  getFileAnnouncements,
+  viewFileAnnouncement,
+  downloadFileAnnouncements,
+})(ViewAnnouncement);

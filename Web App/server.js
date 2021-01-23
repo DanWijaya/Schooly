@@ -1,5 +1,4 @@
-
-require("dotenv").config({path: `${__dirname}/.env`}); // set the path inside the parameter. 
+require("dotenv").config({ path: `${__dirname}/.env` }); // set the path inside the parameter.
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -24,6 +23,7 @@ const file_announcements = require("./routes/api/files/file_announcements");
 const file_tasks = require("./routes/api/files/file_tasks");
 const file_submit_tasks = require("./routes/api/files/file_submit_tasks");
 const file_avatar = require("./routes/api/files/file_avatar");
+const file_assessments = require("./routes/api/files/file_assessments");
 
 // untuk objects punya
 const tasks = require("./routes/api/tasks");
@@ -88,12 +88,12 @@ app.use("/api/upload/file_tugas", file_tugas);
 app.use("/api/upload/avatar", avatar.router);
 
 //Handle files routing
-app.use("/api/files/material", file_materials)
-app.use("/api/files/announcement", file_announcements)
+app.use("/api/files/materials", file_materials);
+app.use("/api/files/announcements", file_announcements);
 app.use("/api/files/tasks", file_tasks);
 app.use("/api/files/submit_tasks", file_submit_tasks);
-console.log("Debugging for Avatar");
 app.use("/api/files/avatar", file_avatar);
+app.use("/api/files/assessments", file_assessments);
 
 //Handle object routing
 app.use("/api/subjects", subjects);

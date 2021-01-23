@@ -228,7 +228,7 @@ function MaterialListToolbar(props) {
                         id="searchFilterMobile"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onClear(e, "searchFilterMobile");
+                          onClear(e);
                         }}
                         style={{
                           opacity: 0.5,
@@ -291,7 +291,7 @@ function MaterialListToolbar(props) {
                     size="small"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onClear(e, "searchFilterDesktop");
+                      onClear(e);
                     }}
                     style={{
                       opacity: 0.5,
