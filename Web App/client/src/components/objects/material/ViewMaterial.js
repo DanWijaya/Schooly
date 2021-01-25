@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import moment from "moment";
+import "moment/locale/id";
 import {
   downloadLampiranMateri,
   previewLampiranMateri,
@@ -25,6 +27,7 @@ import {
   ListItemText,
   Paper,
   Typography,
+  Divider
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
@@ -124,6 +127,9 @@ const useStyles = makeStyles((theme) => ({
   },
   otherFileTypeIcon: {
     backgroundColor: "#808080",
+  },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -301,20 +307,28 @@ function ViewMaterial(props) {
       />
       <Paper className={classes.paperBox}>
         <Grid container spacing={2}>
-          <Grid item xs={12} style={{ marginBottom: "30px" }}>
+          <Grid item xs={12}>
             <Typography variant="h4">{selectedMaterials.name}</Typography>
-            <Typography variant="caption" color="textSecondary">
-              <h6>
-                Mata Pelajaran:{" "}
-                {all_subjects_map.get(selectedMaterials.subject)}
-              </h6>
+            <Typography variant="caption" color="textSecondary" gutterBottom>
+              <h6>{all_subjects_map.get(selectedMaterials.subject)}</h6>
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Oleh: <b>{selectedUser.name}</b>
             </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat:{" "}
+              {moment(selectedMaterials.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
           </Grid>
+
+          <Grid item xs={12}>
+            <Divider className={classes.dividerColor} />
+          </Grid>
+
           {user.role === "Teacher" ? (
-            <Grid item xs={12} style={{ marginBottom: "30px" }}>
+            <Grid item xs={12} style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Kelas yang Diberikan:
               </Typography>
@@ -332,14 +346,14 @@ function ViewMaterial(props) {
               </Typography>
             </Grid>
           ) : null}
-          <Grid item xs={12} style={{ marginBottom: "30px" }}>
+          <Grid item xs={12} style={{ marginTop: "30px" }}>
             <Typography color="primary" gutterBottom>
               Deskripsi Materi:
             </Typography>
             <Typography>{selectedMaterials.description}</Typography>
           </Grid>
           {!selectedMaterials.lampiran ? null : (
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Lampiran Materi:
               </Typography>

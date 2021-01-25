@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-// NOTE changehere 1 import
 import {
   getTeachers,
   getStudents,
@@ -32,6 +31,11 @@ import {
   TableSortLabel,
   Typography,
   Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
@@ -78,7 +82,6 @@ function stableSort(array, comparator) {
 function ClassListToolbar(props) {
   const { classes, user, order, orderBy, onRequestSort } = props;
   const { all_students, all_teachers } = props;
-  // NOTE changehere 2 ClassListToolbar props
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
   // const all_classes = Array.from(all_classes_map.values());
@@ -109,6 +112,8 @@ function ClassListToolbar(props) {
   };
 
   // Export Import CSV Menu
+  const dummyClassId = "no_class";
+  const dummyClassName = "belum ditempatkan";
   const [csvAnchor, setCSVAnchor] = React.useState(null);
   const handleOpenCSVMenu = (event) => {
     setCSVAnchor(event.currentTarget);
@@ -123,33 +128,50 @@ function ClassListToolbar(props) {
     }
 
     let classData = {
-      /* contoh isi:
+      [dummyClassId]: {
+        studentsEmail: [], // semua murid di kelas dummy ini merupakan murid yang belum ditempatkan ke kelas manapun 
+        classNames: dummyClassName,
+      }
+    };
+    /* contoh isi:
+      {
         classId_1: {
-          studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ],
+          studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ], -> semua murid anggota kelas ini
           classNames: className_1
         }, 
         classId_2: {
           studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ],
           classNames: className_2
         }, 
-        ...
-        */
-    };
+        ... 
+      } key -> id semua kelas yang ada di db
+    */
 
     let blobData = "";
     // matrix ini digunakan untuk menghasilkan string isi file csv yang akan didownload.
     let tempMatrix = [];
-    // if (role === "Student") {
+    /* contoh isi:
+      [
+        [nama_kelas_1, nama_kelas_2, nama_kelas_3, ...]
+        [email_murid_1_anggota_kelas_1, email_murid_1_anggota_kelas_2, email_murid_1_anggota_kelas_3, ...]
+        [email_murid_2_anggota_kelas_1, undefined                    , email_murid_2_anggota_kelas_3, ...]
+        [email_murid_3_anggota_kelas_1, undefined                    , undefined                    , ...]
+      ]
+    */
     for (let classInfo of all_classes) {
       classData[classInfo._id] = {
-        studentsEmail: [], // *
+        studentsEmail: [],
         classNames: classInfo.name,
       };
     }
 
     // menyimpan email-email murid suatu kelas
     for (let student of all_students) {
-      classData[student.kelas].studentsEmail.push(student.email);
+      if (student.kelas) {
+        classData[student.kelas].studentsEmail.push(student.email);
+      } else {
+        classData[dummyClassId].studentsEmail.push(student.email);
+      }
     }
 
     let classDataEntries = Object.entries(classData);
@@ -171,35 +193,24 @@ function ClassListToolbar(props) {
 
     // mengisi matrix
     for (let entry of classDataEntries) {
+      // menyimpan nama kelas di baris pertama
       tempMatrix[0].push(entry[1].classNames);
 
+      // dari "atas ke bawah" kolom, masukan email semua murid anggota kelas ini
       for (let i = 0; i <= entry[1].studentsEmail.length - 1; i++) {
+        // i itu index baris. pengisian mulai dari i + 1 karena baris pertama sudah diisi nama kelas.
         tempMatrix[i + 1].push(entry[1].studentsEmail[i]);
       }
 
+      // jika semua email murid untuk kelas ini sudah dimasukan ke kolom, isi sisa baris kolom ini dengan undefined 
       for (
-        let i = entry[1].studentsEmail.length;
-        i <= maxStudentCount - 1;
+        let i = entry[1].studentsEmail.length + 1;
+        i <= maxStudentCount;
         i++
       ) {
-        tempMatrix[i + 1].push(undefined);
+        tempMatrix[i].push(undefined);
       }
     }
-    // } else if (role === "Teacher") {
-    //   for (let classInfo of all_classes) {
-    //     tempMatrix[0].push(classInfo.name);
-
-    //     // semua kelas pasti punya walikelas
-    //     let teacherEmail;
-    //     for (let teacher of all_teachers) {
-    //       if (teacher._id === classInfo.walikelas) {
-    //         teacherEmail = teacher.email;
-    //         break;
-    //       }
-    //     }
-    //     tempMatrix[1].push(teacherEmail);
-    //   }
-    // }
 
     for (let rowArray of tempMatrix) {
       blobData += rowArray.join(",") + "\r\n";
@@ -221,8 +232,10 @@ function ClassListToolbar(props) {
     fileInput.current.click();
   };
 
+  const invalidEmails = React.useRef([]);
   const handleImportCSV = (event) => {
     event.preventDefault();
+    invalidEmails.current = []; // digunakan untuk menampilkan semua email murid yang tidak ditemukan di database
     // if (!all_students || !all_teachers || !all_classes_map || !tasksCollection || !all_assessments) {
     if (!all_students || !all_teachers || !all_classes_map) {
       return;
@@ -245,9 +258,9 @@ function ClassListToolbar(props) {
         let classNames = dataMatrix[0];
         if (classNames.includes("")) {
           throw new Error(
-            `Nama kelas tidak boleh kosong. Nama kelas yang kosong ditemukan pada kolom ${
+            `Masih ada nama kelas yang kosong pada kolom ${
               classNames.findIndex((name) => name === "") + 1
-            }.`
+            }, mohon periksa kembali`
           );
         }
         let classId = [];
@@ -261,81 +274,109 @@ function ClassListToolbar(props) {
               break;
             }
           }
+          // jika kelas ini ada di db,
           if (id) {
-            classId.push(id);
+            if (classId.includes(id)) {
+              throw new Error(
+                `Terdapat duplikasi nama kelas "${className}", mohon periksa kembali`
+              );
+            } else {
+              classId.push(id);
+            }
           } else {
             // jika kelas ini tidak ada di db,
-            throw new Error(
-              `Kelas bernama "${className}" tidak terdaftar di basisdata`
-            );
+
+            if (className === dummyClassName) {
+              classId.push(dummyClassId);
+            } else {
+              throw new Error(
+                `Kelas bernama "${className}" tidak terdaftar di basisdata, mohon periksa kembali`
+              );
+            }
           }
         }
 
-        let classesToUpdate = {};
-        let newClassParticipant = {};
+        let classesToUpdate = {}; // digunakan untuk menghapus id murid pengurus kelas pada kelas-kelas tertentu 
+        let newClassParticipant = {}; // digunakan untuk mengubah kelas murid-murid yang pindah kelas
+        let allStudentEmail = new Set(); // digunakan untuk mengecek duplikasi email
         // traverse dari kiri ke kanan, atas ke bawah
-        // for (let row of dataMatrix) {
         for (let row = 1; row <= dataMatrix.length - 1; row++) {
           for (let column = 0; column <= classNames.length - 1; column++) {
             // jika sel tidak ada atau berisi string kosong, tidak lakukan apa-apa
             // jika sel berisi email murid,
-            // if ((row[i] !== "") && (row[i] !== undefined)) {
+            let currentEmail = dataMatrix[row][column];
             if (
-              dataMatrix[row][column] !== "" &&
-              dataMatrix[row][column] !== undefined
+              currentEmail !== "" &&
+              currentEmail !== undefined
             ) {
+              // cek duplikasi email 
+              if (allStudentEmail.has(currentEmail)) {
+                throw new Error(
+                  `Terdapat duplikasi email "${currentEmail}", mohon periksa kembali`
+                );
+              }
+              allStudentEmail.add(currentEmail);
+
               // mencari id kelas lama, id kelas baru, dan id murid dengan menggunakan kriteria pencarian berupa email murid
               let newClassId = classId[column];
               let oldClassId;
               let studentId;
               for (let storedStudent of all_students) {
-                if (dataMatrix[row][column] === storedStudent.email) {
+                if (currentEmail === storedStudent.email) {
                   oldClassId = storedStudent.kelas;
                   studentId = storedStudent._id;
                   break;
                 }
               }
-              if (!studentId) {
+              if (studentId) {
+                // jika murid ini tidak dipindahkan ke kelas lain, tidak lakukan apa-apa
+                // jika murid ini dipindahkan ke kelas lain,
+                if (newClassId !== oldClassId) {
+                  //  jika murid ini merupakan ketua kelas/bendahara/sekretaris pada kelas sebelumnya, ubah info kelas sebelumnya
+                  let oldClassInfo;
+                  let fieldToDelete = [];
+
+                  // jika murid ini dipindahkan dari suatu kelas,
+                  if (oldClassId) {
+                    oldClassInfo = all_classes_map.get(oldClassId);
+
+                    if (oldClassInfo.ketua_kelas === studentId) {
+                      fieldToDelete.push("ketua_kelas");
+                    }
+                    if (oldClassInfo.bendahara === studentId) {
+                      fieldToDelete.push("bendahara");
+                    }
+                    if (oldClassInfo.sekretaris === studentId) {
+                      fieldToDelete.push("sekretaris");
+                    }
+  
+                    if (fieldToDelete.length > 0) {
+                      classesToUpdate[oldClassId] = fieldToDelete;
+                    }
+                  } else {
+                    // jika sebelumnya, murid ini belum ditempatkan di kelas manapun,
+
+                    // jika murid ini tidak ditempatkan di kelas manapun lagi
+                    if (newClassId === dummyClassId) {
+                      // do nothing (skip langkah di bawah)
+                      continue;
+                    }
+                  }
+                  
+                  // catat id murid yang akan dipindahkan ke kelas ini
+                  if (newClassParticipant[newClassId]) {
+                    newClassParticipant[newClassId].push(studentId);
+                  } else {
+                    newClassParticipant[newClassId] = [studentId];
+                  }
+                }
+              } else {
                 // jika murid ini tidak ada di database,
+                invalidEmails.current.push(currentEmail);
                 // throw new Error(`Murid yang memiliki email "${row[i].email}" tidak terdaftar di basisdata`);
-                console.log(
-                  `Murid yang memiliki email "${dataMatrix[row][column]}" tidak terdaftar di basisdata`
-                );
-                break;
-              }
-
-              // jika murid ini tidak dipindahkan ke kelas lain, tidak lakukan apa-apa
-              // jika murid ini dipindahkan ke kelas lain,
-              if (newClassId !== oldClassId) {
-                //  jika murid ini merupakan ketua kelas/bendahara/sekretaris pada kelas sebelumnya, ubah info kelas sebelumnya
-                let oldClassInfo = all_classes_map.get(oldClassId);
-                // let newclassData = {
-                //   ...oldClassInfo,
-                // }
-                let fieldToDelete = [];
-                if (oldClassInfo.ketua_kelas === studentId) {
-                  // newclassData.ketua_kelas = undefined;
-                  fieldToDelete.push("ketua_kelas");
-                }
-                if (oldClassInfo.bendahara === studentId) {
-                  // newclassData.bendahara = undefined;
-                  fieldToDelete.push("bendahara");
-                }
-                if (oldClassInfo.sekretaris === studentId) {
-                  // newclassData.sekretaris = undefined;
-                  fieldToDelete.push("sekretaris");
-                }
-
-                if (fieldToDelete.length > 0) {
-                  classesToUpdate[oldClassId] = fieldToDelete;
-                }
-
-                // untuk update kelas user
-                if (newClassParticipant[newClassId]) {
-                  newClassParticipant[newClassId].push(studentId);
-                } else {
-                  newClassParticipant[newClassId] = [studentId];
-                }
+                // console.log(
+                //   `Murid yang memiliki email "${currentEmail}" tidak terdaftar di basisdata`
+                // );
               }
             }
           }
@@ -352,10 +393,13 @@ function ClassListToolbar(props) {
         }
 
         if (Object.keys(newClassParticipant).length !== 0) {
-          updateStudentsClass(newClassParticipant)
+          updateStudentsClass(newClassParticipant, dummyClassId)
             .then(() => {
-              // agar jumlah murid diperbarui, panggil ulang getStudents
+              // agar text jumlah murid di halaman ini diperbarui, panggil ulang getStudents
               getStudents();
+              if (invalidEmails.current.length !== 0) {
+                handleOpenEmailDialog()
+              }
               handleOpenSnackbar(
                 "success",
                 "Pemindahan murid berhasil dilakukan"
@@ -378,6 +422,16 @@ function ClassListToolbar(props) {
     fileInput.current.value = "";
   };
 
+  // Dialog Email
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleOpenEmailDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseEmailDialog = () => {
+    setOpenDialog(false);
+  };
   return (
     <div className={classes.toolbar}>
       <Typography variant="h4">Daftar Kelas</Typography>
@@ -505,6 +559,25 @@ function ClassListToolbar(props) {
           </div>
         ) : null}
       </div>
+      
+      <Dialog
+        classes={{ paper: classes.dialogPaper }}
+        maxWidth="xs"
+        fullWidth
+        open={openDialog}
+      >
+        <DialogTitle>Email berikut tidak ditemukan di basis data</DialogTitle>
+        <DialogContent dividers>
+          {invalidEmails.current.map((email, idx) => (
+            <Typography variant="body1" style={{marginBottom: (idx === invalidEmails.current.length - 1 ? "0" : "16px")}}>{email}</Typography>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEmailDialog} color="primary">
+            Tutup
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
@@ -599,6 +672,11 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  dialogPaper: {
+    maxHeight: '70vh',
+    // width: "300px",
+    // maxWidth: "100%",
+  }
 }));
 
 function ClassList(props) {
@@ -610,7 +688,6 @@ function ClassList(props) {
   const [selectedClassId, setSelectedClassId] = React.useState(null);
   const [selectedClassName, setSelectedClassName] = React.useState(null);
 
-  // NOTE changehere 3 classlist props
   const { classesCollection, tasksCollection } = props;
   const {
     clearErrors,
@@ -653,7 +730,6 @@ function ClassList(props) {
       )
     );
   };
-  // NOTE changehere 4 useeffect
   React.useEffect(() => {
     getAllClass();
     getAllClass("map");
@@ -758,7 +834,6 @@ function ClassList(props) {
         user={user}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
-        // NOTE changehere 5 elemen ClassListToolbar
         classesCollection={classesCollection}
         all_teachers={all_teachers}
         all_students={all_students}
@@ -776,7 +851,6 @@ function ClassList(props) {
           : stableSort(rows, getComparator(order, orderBy)).map(
               (row, index) => {
                 const labelId = `enhanced-table-checkbox-${index}`;
-                console.log(row);
                 let viewpage = `/kelas/${row._id}`;
                 return (
                   <Grid item xs={12} sm={6} md={4}>
@@ -922,7 +996,7 @@ function ClassList(props) {
       </Grid>
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={(event, reason) => {
           handleCloseSnackbar(event, reason);
         }}
@@ -950,7 +1024,6 @@ ClassList.propTypes = {
   deleteClass: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 
-  // NOTE changehere 6
   assessmentsCollection: PropTypes.object.isRequired,
   getStudents: PropTypes.func.isRequired,
   getAllTask: PropTypes.func.isRequired,
@@ -968,7 +1041,6 @@ const mapStateToProps = (state) => ({
   tasksCollection: state.tasksCollection,
 });
 
-// NOTE changehere 7
 export default connect(
   // mapStateToProps, { clearErrors, getTeachers, getStudents, getAllClass, deleteClass, updateClassAdmin, updateStudentsClass, getAllTask, getAllAssessments}
   mapStateToProps,

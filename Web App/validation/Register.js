@@ -34,9 +34,9 @@ module.exports = function validateRegisterInput(data) {
   }
 
   // Check for student class field
-  if (data.role === "Student" && Validator.isEmpty(data.kelas)) {
-    errors.kelas = "Kelas belum dipilih";
-  }
+  // if (data.role === "Student" && Validator.isEmpty(data.kelas)) {
+  //   errors.kelas = "Kelas belum dipilih";
+  // }
   if (data.role === "Teacher" && Validator.isEmpty(data.subject_teached)) {
     errors.subject_teached = "Mata pelajaran belum dipilih";
   }

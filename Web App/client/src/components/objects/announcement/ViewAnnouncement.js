@@ -8,7 +8,7 @@ import {
   getOneAnnouncement,
   deleteAnnouncement,
 } from "../../../actions/AnnouncementActions";
-import { getSelectedClasses } from "../../../actions/ClassActions";
+import { getSelectedClasses, getAllClass } from "../../../actions/ClassActions";
 import { getUsers } from "../../../actions/UserActions";
 import {
   downloadLampiranAnnouncement,
@@ -27,6 +27,7 @@ import {
   ListItemText,
   Paper,
   Typography,
+  Divider
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: "10px",
   },
-  paper: {
+  paperBox: {
     padding: "20px",
     marginBottom: "10px",
   },
@@ -119,6 +120,9 @@ const useStyles = makeStyles((theme) => ({
   },
   deadlineWarningText: {
     color: theme.palette.warning.main,
+  },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main,
   },
 }));
 
@@ -211,13 +215,16 @@ function ViewAnnouncement(props) {
     previewLampiranAnnouncement,
     deleteAnnouncement,
     getSelectedClasses,
+    getAllClass
   } = props;
+  const { all_classes_map } = props.classesCollection;
   const { user, retrieved_users } = props.auth;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
     getOneAnnouncement(announcement_id);
+    getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
     if (selectedAnnouncements._id) {
       console.log("getusers is runned");
@@ -296,10 +303,44 @@ function ViewAnnouncement(props) {
           onDeleteAnnouncement(announcement_id);
         }}
       />
-      <Paper className={classes.paper}>
-        <Grid container direction="column" spacing={6}>
-          <Grid item container direction="row">
-            <Grid item xs={12} md={6}>
+      <Paper className={classes.paperBox}>
+        {/* <Grid container direction="column" spacing={6}> */}
+        <Grid container spacing={2}>
+          {/* <Grid item xs={12} style={{ paddingBottom: "0" }}> */}
+          {/* <Grid item container direction="row"> */}
+            <Grid item xs={12} style={{paddingBottom: "0"}}>
+              <Typography variant="h4">{selectedAnnouncements.title}</Typography>
+            </Grid>
+
+            <Grid item xs={12} style={{ paddingTop: "0" }}>
+              <h6 style={{ marginBottom: "0" }}>
+
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  // style={{ marginTop: "10px" }}
+                >
+                  Oleh:{" "}
+                  <b>
+                    {!retrieved_users.size ||
+                      !selectedAnnouncements.author_id ||
+                      !retrieved_users.get(selectedAnnouncements.author_id)
+                      ? ""
+                      : retrieved_users.get(selectedAnnouncements.author_id)
+                        .name}
+                  </b>
+                </Typography>
+              </h6>
+
+              <Typography variant="body2" color="textSecondary">
+                Waktu Dibuat:{" "}
+                {moment(selectedAnnouncements.createdAt)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH:mm")}
+              </Typography>
+            </Grid>
+
+            {/* <Grid item xs={12} md={6}>
               <ListItemText
                 primary={
                   <Typography variant="h4">
@@ -325,6 +366,7 @@ function ViewAnnouncement(props) {
                 }
               />
             </Grid>
+
             <Grid item xs={12} md={6}>
               <Hidden mdUp implementation="css">
                 <ListItemText
@@ -333,7 +375,6 @@ function ViewAnnouncement(props) {
                       variant="body2"
                       className={classes.deadlineWarningText}
                     >
-                      {/* Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")} */}
                       Tanggal diumumkan:{" "}
                       {moment(selectedAnnouncements.createdAt)
                         .locale("id")
@@ -350,7 +391,6 @@ function ViewAnnouncement(props) {
                       variant="body2"
                       className={classes.deadlineWarningText}
                     >
-                      {/* Tanggal diumumkan: {moment(selectedAnnouncements.date_announced).locale("id").format("DD MMM YYYY, HH:mm")} */}
                       Tanggal diumumkan:{" "}
                       {moment(selectedAnnouncements.createdAt)
                         .locale("id")
@@ -359,11 +399,39 @@ function ViewAnnouncement(props) {
                   }
                 />
               </Hidden>
-            </Grid>
+            </Grid> */}
+
+            
+          {/* </Grid> */}
+
+          <Grid item xs={12}>
+            <Divider className={classes.dividerColor} />
           </Grid>
-          <Grid item>
+
+          {user.role === "Teacher" ? (
+            <Grid item xs={12} style={{ marginTop: "30px" }}>
+              <Typography color="primary" gutterBottom>
+                Kelas yang Diberikan:
+              </Typography>
+              <Typography>
+                {!selectedAnnouncements.class_assigned || !all_classes_map.size
+                  ? null
+                  : selectedAnnouncements.class_assigned.map((kelas, i) => {
+                      if (all_classes_map.get(kelas)) {
+                        if (i === selectedAnnouncements.class_assigned.length - 1)
+                          return `${all_classes_map.get(kelas).name}`;
+                        return `${all_classes_map.get(kelas).name}, `;
+                      }
+                      return null;
+                    })}
+              </Typography>
+            </Grid>
+          ) : null}
+
+          <Grid item xs={12} style={{ marginTop: "30px" }}>
+          {/* <Grid item> */}
             <Typography color="primary" gutterBottom>
-              Deskripsi:
+              Deskripsi Pengumuman:
             </Typography>
             <Typography variant="body1">
               {selectedAnnouncements.description}
@@ -371,7 +439,8 @@ function ViewAnnouncement(props) {
           </Grid>
           {!selectedAnnouncements.lampiran ||
           selectedAnnouncements.lampiran.length === 0 ? null : (
-            <Grid item>
+            <Grid item xs={12} style={{ marginTop: "30px" }}>
+            {/* <Grid item> */}
               <Typography color="primary" gutterBottom>
                 Lampiran Berkas:
               </Typography>
@@ -422,6 +491,7 @@ ViewAnnouncement.propTypes = {
   downloadLampiranAnnouncement: PropTypes.func.isRequired,
   previewLampiranAnnouncement: PropTypes.func.isRequired,
   getSelectedClasses: PropTypes.func.isRequired,
+  getAllClass: PropTypes.func.isRequired,
   getUsers: PropTypes.func.isRequired,
 };
 
@@ -438,4 +508,5 @@ export default connect(mapStateToProps, {
   previewLampiranAnnouncement,
   downloadLampiranAnnouncement,
   getSelectedClasses,
+  getAllClass,
 })(ViewAnnouncement);

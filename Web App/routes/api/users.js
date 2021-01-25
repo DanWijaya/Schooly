@@ -97,7 +97,7 @@ router.post("/login", (req, res) => {
         // Create JWT Payload
 
         var payload = {
-          id: user._id,
+          _id: user._id,
           role: user.role,
           avatar: user.avatar,
 
@@ -193,7 +193,7 @@ router.post("/update/data/:id", (req, res) => {
         .catch((err) => console.log(err));
 
       var payload = {
-        id: user._id,
+        _id: user._id,
         role: user.role,
         avatar: user.avatar,
 
@@ -295,7 +295,7 @@ router.post(
           .catch((err) => console.log(err));
 
         var payload = {
-          id: user._id,
+          _id: user._id,
           role: user.role,
           avatar: user.avatar,
 
@@ -453,25 +453,19 @@ router.delete("/delete/:id", (req, res) => {
   });
 });
 
-router.post("/bulkupdateclass", (req, res) => {
+router.post("/bulkupdateclass/:dummyClassId", (req, res) => {
   let operations = [];
+  let dummyClassId = req.params.dummyClassId;
 
-  let allStudentId = [];
   for (let entries of Object.entries(req.body)) {
-    // let classId = ObjectId(entries[0]);
-    // let studentIdArray = entries[1].map((id) => {return ObjectId(id)});
 
     let classId = entries[0];
     let studentIdArray = entries[1];
 
-    for (let studentId of studentIdArray) {
-      allStudentId.push(studentId);
-    }
-
     operations.push({
       updateMany: {
         filter: { _id: { $in: studentIdArray } },
-        update: { kelas: classId },
+        update: (classId === dummyClassId) ? { $unset: { kelas: "" } } : { kelas: classId }
       },
     });
   }

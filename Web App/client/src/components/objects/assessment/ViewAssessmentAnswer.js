@@ -671,7 +671,7 @@ function ViewAssessmentTeacher(props) {
               </Grid>
             </Grid>
           </Grid>
-        </Hidden>,
+        </Hidden>
       ];
     }
 

@@ -121,7 +121,7 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
-      kelas: "", // Student Data
+      // kelas: "", // Student Data
       subject_teached: "", // Teacher Data
       tanggal_lahir: new Date(),
       activeStep: 0,
@@ -161,13 +161,17 @@ class Register extends Component {
   };
 
   onChange = (e, otherfield) => {
-    if (otherfield === "kelas") {
-      console.log(e.target.value);
-      this.setState({ kelas: e.target.value });
-    } else if (otherfield === "role") this.setState({ role: e.target.value });
-    else if (otherfield === "subject")
+    // if (otherfield === "kelas") {
+    //   console.log(e.target.value);
+    //   this.setState({ kelas: e.target.value });
+    // } else if (otherfield === "role") {
+    if (otherfield === "role") {
+      this.setState({ role: e.target.value });
+    } else if (otherfield === "subject") {
       this.setState({ subject_teached: e.target.value });
-    else this.setState({ [e.target.id]: e.target.value });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
+    }
   };
 
   onSubmit = (e) => {
@@ -186,9 +190,10 @@ class Register extends Component {
 
     const role = this.state.role;
 
-    if (role === "Student") {
-      newUser.kelas = this.state.kelas;
-    } else if (role === "Teacher") {
+    // if (role === "Student") {
+    //   newUser.kelas = this.state.kelas;
+    // } else if (role === "Teacher") {
+    if (role === "Teacher") {
       newUser.subject_teached = this.state.subject_teached;
     }
 
@@ -309,34 +314,36 @@ class Register extends Component {
                   })}
                 />
               </Grid>
-              {this.state.role === "Student" ? (
-                <Grid item>
-                  <FormControl
-                    id="kelas"
-                    variant="outlined"
-                    color="primary"
-                    fullWidth
-                    error={Boolean(errors.kelas)}
-                  >
-                    <InputLabel id="kelas-label">Kelas</InputLabel>
-                    <Select
-                      labelId="kelas-label"
-                      label="Kelas"
-                      value={this.state.kelas}
-                      onChange={(event) => {
-                        this.onChange(event, "kelas");
-                      }}
-                    >
-                      {all_classes.map((kelas) => (
-                        <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>
-                      {Boolean(errors.kelas) ? errors.kelas : null}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-              ) : this.state.role === "Teacher" ? (
+              {
+              // this.state.role === "Student" ? (
+              //   <Grid item>
+              //     <FormControl
+              //       id="kelas"
+              //       variant="outlined"
+              //       color="primary"
+              //       fullWidth
+              //       error={Boolean(errors.kelas)}
+              //     >
+              //       <InputLabel id="kelas-label">Kelas</InputLabel>
+              //       <Select
+              //         labelId="kelas-label"
+              //         label="Kelas"
+              //         value={this.state.kelas}
+              //         onChange={(event) => {
+              //           this.onChange(event, "kelas");
+              //         }}
+              //       >
+              //         {all_classes.map((kelas) => (
+              //           <MenuItem value={kelas._id}>{kelas.name}</MenuItem>
+              //         ))}
+              //       </Select>
+              //       <FormHelperText>
+              //         {Boolean(errors.kelas) ? errors.kelas : null}
+              //       </FormHelperText>
+              //     </FormControl>
+              //   </Grid>
+              // ) : 
+              this.state.role === "Teacher" ? (
                 <Grid item>
                   <FormControl
                     id="subject"

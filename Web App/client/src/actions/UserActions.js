@@ -320,9 +320,9 @@ export const setDropboxToken = (token) => (dispatch) => {
   }
 };
 
-export const updateStudentsClass = (data) => {
+export const updateStudentsClass = (data, dummyClassId) => {
   return axios
-    .post("/api/users/bulkupdateclass", data)
+    .post(`/api/users/bulkupdateclass/${dummyClassId}`, data)
     .then(() => {
       console.log("updateStudentsClass completed");
     })

@@ -39,6 +39,8 @@ import { globalStyles } from "./components/misc/global-styles/GlobalStyles";
 import NavBar from "./components/misc/nav-bar/NavBar";
 import SideDrawer from "./components/misc/side-drawer/SideDrawer";
 import Footer from "./components/misc/footer/Footer";
+import ProgressIndicator from "./components/misc/progress-indicator/ProgressIndicator";
+
 //Class
 import CreateClass from "./components/objects/classes/CreateClass";
 import EditClass from "./components/objects/classes/EditClass";
@@ -120,6 +122,11 @@ class App extends Component {
     marginTopValue: 20,
     posts: [],
     sideDrawerExist: true,
+    showProgressIndicator: false
+  };
+
+  handleLoading = (value) => {
+    this.setState({ showProgressIndicator: value });
   };
 
   //Drawer at Mobile View Hooks
@@ -156,6 +163,9 @@ class App extends Component {
           <ThemeProvider theme={globalStyles}>
             <Router>
               <div style={{ display: "flex" }}>
+                {this.state.showProgressIndicator ? (
+                  <ProgressIndicator/>
+                ) : null}
                 {this.state.showNavBar ? (
                   <NavBar
                     handleDrawerDesktop={this.handleDrawerDesktop}
@@ -251,6 +261,7 @@ class App extends Component {
                       render={(props) => (
                         <Login
                           {...props}
+                          handleLoading={this.handleLoading}
                           handleNavbar={(data) => this.handleNavbar(data)}
                         />
                       )}

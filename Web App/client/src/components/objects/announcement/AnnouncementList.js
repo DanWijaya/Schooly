@@ -28,6 +28,9 @@ import {
   MenuItem,
   TableSortLabel,
   Avatar,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -470,7 +473,13 @@ const useStyles = makeStyles((theme) => ({
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
   },
+  panelSummary: {
+    "&:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+  },
 }));
+// ANCHOR theme
 
 function AnnouncementList(props) {
   const classes = useStyles();
@@ -581,12 +590,16 @@ function AnnouncementList(props) {
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
             return (
               <Grid item>
+                  {/* ANCHOR elemen expansionpanel */}
+                
+
                 <Paper variant="outlined">
                   <Link to={row.notification_link}>
                     <ListItem
                       button
                       component="a"
                       className={classes.announcementListItem}
+                      style={{padding: "6px 24px"}}
                     >
                       <Hidden smUp implementation="css">
                         <ListItemText
@@ -630,15 +643,6 @@ function AnnouncementList(props) {
                           />
                         </div>
                       </Hidden>
-                      {/* <ListItemText
-                          align="right"
-                          primary={
-                            <Typography variant="subtitle" color="textSecondary">
-                              {row.date}
-                            </Typography>
-                          }
-                          secondary={row.time}
-                        /> */}
                       <ListItemText
                         align="right"
                         primary={
