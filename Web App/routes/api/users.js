@@ -193,7 +193,7 @@ router.post("/update/data/:id", (req, res) => {
         .catch((err) => console.log(err));
 
       var payload = {
-        id: user._id,
+        _id: user._id,
         role: user.role,
         avatar: user.avatar,
 

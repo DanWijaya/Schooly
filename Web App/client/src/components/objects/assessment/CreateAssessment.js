@@ -227,6 +227,7 @@ class CreateAssessment extends Component {
       anchorEl: null,
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
+      fileLimitSnackbar: false,
       weights: {
         radio: null,
         checkbox: null,
@@ -238,6 +239,7 @@ class CreateAssessment extends Component {
       // longtextWeight[2] = undefined -> berarti pertanyaan nomor 3 adalah soal uraian yang bobotnya belum diubah
       // sejak pertama kali soal tersebut ditambahkan
       longtextWeight: [null],
+      over_limit: []
     };
   }
 
@@ -255,6 +257,13 @@ class CreateAssessment extends Component {
       return;
     }
     this.setState({ snackbarOpen: false });
+  };
+
+  handleFileLimitSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ fileLimitSnackbar: false });
   };
 
   handleOpenErrorSnackbar = () => {
@@ -690,15 +699,19 @@ class CreateAssessment extends Component {
   handleQuestionImage = (e, qnsIndex, indexToDelete = null) => {
     let questions = this.state.questions;
     if (Number.isInteger(indexToDelete)) {
+      // Untuk kasus pas mau nge delete foto
       questions[qnsIndex].lampiran.splice(indexToDelete, 1);
       console.log(questions);
       this.setState({ questions: questions });
     } else {
       if (e.target.files) {
+        // Untuk kasus pas mau upload foto
         const files = Array.from(e.target.files);
-        let temp = questions[qnsIndex].lampiran.concat(files);
+        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
+        let file_to_upload = files.filter((file) => file.size / Math.pow(10, 6) <= 10);
+        let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
-        this.setState({ questions: questions });
+        this.setState({ questions: questions, fileLimitSnackbar: over_limit.length > 0 , over_limit: over_limit});
       }
     }
   };
@@ -1835,6 +1848,20 @@ class CreateAssessment extends Component {
           >
             Masih ada bagian yang belum diisi atau salah, silahkan diperiksa
             kembali!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleFileLimitSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            severity="error"
+          >
+            {this.state.over_limit.length} file melebihi batas 10MB!
           </MuiAlert>
         </Snackbar>
       </div>
