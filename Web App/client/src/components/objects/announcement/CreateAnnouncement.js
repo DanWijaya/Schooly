@@ -576,7 +576,6 @@ class CreateAnnouncement extends Component {
           <MuiAlert
             elevation={6}
             variant="filled"
-            onClose={this.handleCloseSnackbar}
             severity="error"
           >
             {this.state.over_limit.length} file melebihi batas 10MB!
