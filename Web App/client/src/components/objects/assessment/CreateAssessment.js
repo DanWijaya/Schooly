@@ -744,6 +744,7 @@ class CreateAssessment extends Component {
         }
         // console.log(booleanArray)
 
+        // return <div> Hello </div>
         return (
           <QuestionItem
             isEdit={false}
@@ -764,6 +765,7 @@ class CreateAssessment extends Component {
             type={question.type}
             check_data={booleanArray}
             handleLongtextWeight={this.handleLongtextWeight}
+            lampiranUrl
             longtextWeight={this.state.longtextWeight[i + page * rowsPerPage]}
           />
         );

@@ -204,7 +204,8 @@ function QuestionItem(props) {
   console.log("Current lampiran : ", currentLampiran);
   console.log("Lampiran to preview: ", lampiranToPreview);
 
-  const lampiranToUrl = new Map(JSON.parse(lampiranUrls));
+  let lampiranToUrl = isEdit ? new Map(JSON.parse(lampiranUrls)) : null;
+  
   return (
     <Grid item>
       <Paper>
