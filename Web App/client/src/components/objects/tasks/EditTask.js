@@ -9,6 +9,7 @@ import { getAllClass } from "../../../actions/ClassActions";
 import { getOneTask, updateTask } from "../../../actions/TaskActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions"
 import {
   deleteFileTasks,
   getFileTasks,
@@ -286,6 +287,8 @@ class EditTask extends Component {
       deadline: this.state.deadline,
       subject: this.state.subject,
       description: this.state.description,
+      class_assigned: this.state.class_assigned,
+      lampiran: Array.from(this.state.fileLampiran),
       errors: {},
     };
 
@@ -294,7 +297,7 @@ class EditTask extends Component {
       console.log(this.state.fileLampiran[i]);
       formData.append("lampiran_tugas", this.state.fileLampiranToAdd[i]);
     }
-    console.log(this.props.tasksCollection);
+    console.log(taskObject);
     this.props.updateTask(
       formData,
       fileLampiranToDelete,
@@ -790,5 +793,6 @@ export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   clearErrors,
+  clearSuccess,
   getFileTasks,
 })(withStyles(styles)(EditTask));

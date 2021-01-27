@@ -83,6 +83,7 @@ router.post("/upload/:task_id", upload.array("lampiran_tugas"), (req, res) => {
           numsFileUploaded++;
           if (numsFileUploaded == files.length) {
             return res.json({
+              _id: task_id,
               success: "Successfully uploaded the lampiran file",
             });
           }

@@ -888,87 +888,6 @@ class CreateAssessment extends Component {
           (isNaN(Number(weight)) || Number(weight) <= 0) && weight !== null;
 
         gridItemMobileView.push(
-          // <Grid container item xs={6} spacing="1" direction="column" justify="space-between" alignItems="center">
-          //   <Grid item>
-          //     {columnTemplate[type].icon}
-          //   </Grid>
-          //   <Grid item>
-          //     <Hidden xsDown>
-          //       <Typography align="center">
-          //         {columnTemplate[type].text}
-          //       </Typography>
-          //     </Hidden>
-          //     <Hidden smUp>
-          //       <Typography align="center" style={{ fontSize: "0.8rem" }}>
-          //         {columnTemplate[type].text}
-          //       </Typography>
-          //     </Hidden>
-          //   </Grid>
-          //   <Grid item>
-          //     <Hidden xsDown>
-          //       <Typography component="label" for="weight" color="primary">
-          //         Bobot Per Soal:
-          //       </Typography>
-          //     </Hidden>
-          //     <Hidden smUp>
-          //       <Typography component="label" for="weight" color="primary" style={{ fontSize: "0.8rem" }}>
-          //         Bobot Per Soal:
-          //       </Typography>
-          //     </Hidden>
-          //   </Grid>
-          //   {(type !== "longtext") ? (
-          //     <Grid item style={{ height: "65px" }}>
-          //       <Hidden xsDown>
-          //         <TextField
-          //           defaultValue={this.state.weights[type]}
-          //           variant="outlined"
-          //           id="weight"
-          //           fullWidth
-          //           onChange={(e) => { this.handleWeight(e, type) }}
-          //           error={showError}
-          //           helperText={showError ? "Periksa Kembali!" : null}
-          //           InputProps={{
-          //             style: {
-          //               width: "150px"
-          //             },
-          //             endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
-          //           }}
-          //         />
-          //       </Hidden>
-          //       <Hidden smUp>
-          //         <TextField
-          //           defaultValue={this.state.weights[type]}
-          //           variant="outlined"
-          //           id="weight"
-          //           fullWidth
-          //           onChange={(e) => { this.handleWeight(e, type) }}
-          //           error={showError}
-          //           helperText={showError ? "Periksa Kembali!" : null}
-          //           FormHelperTextProps={{
-          //             style: {
-          //               margin: "0px"
-          //             }
-          //           }}
-          //           InputProps={{
-          //             style: {
-          //               width: "110px"
-          //             },
-          //             endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
-          //           }}
-          //         />
-          //       </Hidden>
-
-          //     </Grid>
-          //   ) : (
-          //     <Grid item style={{ height: "65px" }}>
-          //       <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-          //         <IconButton>
-          //           <InfoIcon />
-          //         </IconButton>
-          //       </LightTooltip>
-          //     </Grid>
-          //   )}
-          // </Grid>
           <Grid container>
             <Grid
               item
@@ -1112,30 +1031,6 @@ class CreateAssessment extends Component {
             )}
           </Grid>
         );
-
-        // gridMobileView = (
-        //   <Grid container style={{ padding: "20px 10px" }} justify="center">
-        //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-        //       {gridItemMobileView[0]}
-        //       <Divider orientation="vertical" flexItem />
-        //       {gridItemMobileView[1]}
-        //     </Grid>
-        //     <Grid item xs={12} style={{ margin: "10px 0px" }}>
-        //       <Divider />
-        //     </Grid>
-        //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-        //       {gridItemMobileView[2]}
-        //       <Divider orientation="vertical" flexItem />
-        //       {gridItemMobileView[3]}
-        //     </Grid>
-        //   </Grid>
-        // );
-
-        // desktop view
-        // for (let pair of filteredtypeCount) {
-        //   let type = pair[0];
-        //   let weight = this.state.weights[type];
-        //   let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
         columnsDesktopView.push(
           <Grid
             container

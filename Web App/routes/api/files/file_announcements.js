@@ -72,6 +72,7 @@ router.post(
             numsFileUploaded++;
             if (numsFileUploaded == files.length) {
               return res.json({
+                _id: req.params.id,
                 success: "Successfully uploaded the lampiran file",
               });
             }
