@@ -359,25 +359,25 @@ class App extends Component {
                     {/* Route Announcement */}
                     <PrivateRoute
                       exact
-                      access={["Student", "Teacher"]}
+                      access={["Student", "Teacher", "Admin"]}
                       path="/buat-pengumuman"
                       component={CreateAnnouncement}
                     />
                     <PrivateRoute
                       exact
-                      access={["Student", "Teacher"]}
+                      access={["Student", "Teacher", "Admin"]}
                       path="/sunting-pengumuman/:id"
                       component={EditAnnouncement}
                     />
                     <PrivateRoute
                       exact
-                      access={["Student", "Teacher"]}
+                      access={["Student", "Teacher", "Admin"]}
                       path="/pengumuman/:id"
                       component={ViewAnnouncement}
                     />
                     <PrivateRoute
                       exact
-                      access={["Student", "Teacher"]}
+                      access={["Student", "Teacher", "Admin"]}
                       path="/daftar-pengumuman"
                       component={AnnouncementList}
                     />

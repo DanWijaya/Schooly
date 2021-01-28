@@ -6,6 +6,7 @@ const keys = require("../../config/keys");
 const validateAnnouncementInput = require("../../validation/AnnouncementData");
 
 const Announcement = require("../../models/Announcement");
+const User = require("../../models/user_model/User");
 
 router.post("/create", (req, res) => {
   // Form Validation
@@ -18,14 +19,20 @@ router.post("/create", (req, res) => {
   let class_assigned = req.body.class_assigned;
   let class_assigned_ids = [];
   if (class_assigned.length > 0) {
-    class_assigned.map((kelas) => class_assigned_ids.push(kelas._id));
+    if (class_assigned[0] === null) {
+      class_assigned_ids.push(null);
+    } else {
+      class_assigned.map((kelas) => class_assigned_ids.push(kelas._id));
+    }
   }
+  console.log(class_assigned_ids);
 
   const newAnnouncement = new Announcement({
     title: req.body.title,
     description: req.body.description,
     class_assigned: class_assigned_ids,
     author_id: req.body.author_id,
+    to: req.body.to
     // date_announced: new Date()
   });
   newAnnouncement
@@ -56,6 +63,7 @@ router.post("/update/:id", (req, res) => {
       announcementData.title = req.body.title;
       announcementData.description = req.body.description;
       announcementData.class_assigned = req.body.class_assigned;
+      announcementData.to = req.body.to;
 
       announcementData
         .save()
@@ -88,6 +96,25 @@ router.get("/viewall", (req, res) => {
   });
 });
 
+router.get("/viewAdmin", (req, res) => {
+  Announcement.aggregate([
+    {
+      $lookup: {
+        from: User.collection.name,
+        localField: "author_id",
+        foreignField: "_id",
+        as: "author_info"
+      }
+    },
+  ]).then((result) => {
+    res.json(result.filter((ann) => {
+      return (ann.author_info[0].role === "Admin");
+    }));
+  }).catch(() => {
+    res.status(500).json(err);
+  });
+});
+
 // Search announcement by author.
 router.get("/view/:id", (req, res) => {
   console.log("View announcement is runned");
@@ -97,7 +124,7 @@ router.get("/view/:id", (req, res) => {
       console.log("announcement is not found");
       return res.status(400).json("Announcements are not found");
     } else {
-      console.log(announcements);
+      // console.log(announcements);
       return res.json(announcements);
     }
   });

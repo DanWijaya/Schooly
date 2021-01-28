@@ -4,6 +4,7 @@ import {
   GET_ALL_ANNOUNCEMENTS,
   GET_ANNOUNCEMENT,
   GET_SUCCESS_RESPONSE,
+  GET_ADMIN_ANNOUNCEMENTS
 } from "./Types";
 
 // Add Announcement
@@ -89,6 +90,25 @@ export const getAnnouncement = (Id, category) => (dispatch) => {
       });
     });
   }
+};
+
+export const getAdminAnnouncements = () => (dispatch) => {
+  axios
+    .get(`/api/announcements/viewAdmin`)
+    .then((res) => {
+      console.log("getAdminAnnouncements completed");
+      dispatch({
+        type: GET_ADMIN_ANNOUNCEMENTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
 };
 
 export const getOneAnnouncement = (annId) => (dispatch) => {

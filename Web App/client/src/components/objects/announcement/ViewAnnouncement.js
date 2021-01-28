@@ -408,7 +408,9 @@ function ViewAnnouncement(props) {
             <Divider className={classes.dividerColor} />
           </Grid>
 
-          {user.role === "Teacher" ? (
+          {
+            (user.role === "Teacher") && retrieved_users.size && 
+            selectedAnnouncements.author_id && (retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher") ? (
             <Grid item xs={12} style={{ marginTop: "30px" }}>
               <Typography color="primary" gutterBottom>
                 Kelas yang Diberikan:

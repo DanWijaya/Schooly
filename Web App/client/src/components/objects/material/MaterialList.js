@@ -257,7 +257,7 @@ function MaterialListToolbar(props) {
           )}
         </Hidden>
       </div>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <Hidden xsDown implementation="css">
           <TextField
             variant="outlined"

@@ -195,6 +195,7 @@ class EditAnnouncement extends Component {
       anchorEl: null,
       openUploadDialog: null,
       errors: {},
+      target_role: ""
     };
   }
 
@@ -234,6 +235,7 @@ class EditAnnouncement extends Component {
         class_assigned: Boolean(selectedAnnouncements.class_assigned)
           ? selectedAnnouncements.class_assigned
           : [],
+        target_role: selectedAnnouncements.to
         // yg fileLampiran perlu gitu soalnya awal" mungkin nextProps.tasksCollection nya masih plain object.
         // jadi mau dicek kalau nextProps.tasksCollection itu undefined ato ga soalnya nnti pas call fileLAmpiran.length bakal ada error.
       });
@@ -322,9 +324,9 @@ class EditAnnouncement extends Component {
     const announcementObject = {
       title: this.state.title,
       description: this.state.description,
-      class_assigned:
-        user.role === "Student" ? [kelas] : this.state.class_assigned,
+      class_assigned: user.role === "Student" ? [kelas] : user.role === "Admin" ? [null] : this.state.class_assigned,      
       errors: {},
+      to: user.role === "Admin" ? this.state.target_role : "Student"
     };
 
     let formData = new FormData()
@@ -358,7 +360,7 @@ class EditAnnouncement extends Component {
     };
 
     const { classes } = this.props;
-    const { fileLampiran, class_assigned } = this.state;
+    const { fileLampiran, class_assigned, target_role } = this.state;
     const { errors, success } = this.props;
     const { user } = this.props.auth;
     const { all_classes, kelas } = this.props.classesCollection;
@@ -496,7 +498,52 @@ class EditAnnouncement extends Component {
               />
               <Grid item xs={12} md className={classes.content}>
                 <Grid container direction="column" spacing={4}>
-                  {user.role === "Student" ? null : (
+                  {user.role === "Student" ? null :
+                    user.role === "Admin" ? (
+                      <Grid item>
+                        <Typography
+                          component="label"
+                          for="target_role"
+                          color="primary"
+                        >
+                          Ditujukan Kepada
+                        </Typography>
+                        <FormControl
+                          variant="outlined"
+                          fullWidth
+                          error={
+                            Boolean(errors.to) &&
+                            target_role.length === 0
+                          }
+                        >
+                          <Select
+                            id="target_role"
+                            MenuProps={MenuProps}
+                            value={target_role}
+                            onChange={(event) => {
+                              this.onChange(event, "target_role");
+                            }}
+                          >
+                            {[["Student", "Murid"], ["Teacher", "Guru"], ["Teacher_Student", "Keduanya"]].map((peran) => {
+                              return (
+                                <MenuItem
+                                  key={peran[0]}
+                                  value={peran[0]}
+                                >
+                                  {peran[1]}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                          <FormHelperText>
+                            {Boolean(errors.to) &&
+                              target_role.length === 0
+                              ? errors.to
+                              : null}
+                          </FormHelperText>
+                        </FormControl>
+                      </Grid>
+                    ) : (
                     <Grid item>
                       <Typography
                         component="label"

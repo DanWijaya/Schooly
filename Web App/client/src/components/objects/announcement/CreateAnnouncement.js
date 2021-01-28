@@ -188,6 +188,7 @@ class CreateAnnouncement extends Component {
       class_assigned: [],
       errors: {},
       openUploadDialog: null,
+      target_role: ""
     };
   }
 
@@ -264,10 +265,10 @@ class CreateAnnouncement extends Component {
     const announcementData = {
       title: this.state.title,
       description: this.state.description,
-      class_assigned:
-        user.role === "Student" ? [kelas] : this.state.class_assigned,
+      class_assigned: user.role === "Student" ? [kelas] : user.role === "Admin" ? [null] : this.state.class_assigned,
       author_id: user._id,
       errors: {},
+      to: user.role === "Admin" ? this.state.target_role : "Student"
     };
 
     if (this.state.fileLampiran)
@@ -302,7 +303,7 @@ class CreateAnnouncement extends Component {
 
     const { classes, success } = this.props;
     const { all_classes, kelas } = this.props.classesCollection;
-    const { class_assigned, fileLampiran } = this.state;
+    const { class_assigned, fileLampiran, target_role } = this.state;
     const { errors } = this.props;
     const { user } = this.props.auth;
 
@@ -441,7 +442,47 @@ class CreateAnnouncement extends Component {
               />
               <Grid item xs={12} md className={classes.content}>
                 <Grid container direction="column" spacing={4}>
-                  {user.role === "Student" ? null : (
+                  {user.role === "Student" ? null :
+                    user.role === "Admin" ? (
+                      <Grid item>
+                        <Typography
+                          component="label"
+                          for="target_role"
+                          color="primary"
+                        >
+                          Ditujukan Kepada
+                        </Typography>
+                        <FormControl
+                          variant="outlined"
+                          fullWidth
+                          error={
+                            Boolean(errors.to) &&
+                            target_role.length === 0
+                          }
+                        >
+                          <Select
+                            id="target_role"
+                            MenuProps={MenuProps}
+                            value={target_role}
+                            onChange={(event) => {
+                              this.onChange(event, "target_role");
+                            }}
+                          >
+                            {[["Student", "Murid"], ["Teacher", "Guru"], ["Teacher_Student", "Keduanya"]].map((peran) => {
+                              return (
+                                <MenuItem key={peran[0]} value={peran[0]}>{peran[1]}</MenuItem>
+                              );
+                            })}
+                          </Select>
+                          <FormHelperText>
+                            {Boolean(errors.to) &&
+                              target_role.length === 0
+                              ? errors.to
+                              : null}
+                          </FormHelperText>
+                        </FormControl>
+                      </Grid>
+                    ) : (
                     <Grid item>
                       <Typography
                         component="label"

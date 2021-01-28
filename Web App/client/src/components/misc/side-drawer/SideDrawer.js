@@ -132,6 +132,11 @@ function DrawerContent(props) {
         "Kelas",
       ],
       [
+        "/daftar-pengumuman",
+        <AnnouncementIcon className={classes.drawerListItemIcon} />,
+        "Pengumuman",
+      ],
+      [
         "/daftar-mata-pelajaran",
         <LibraryBooksIcon className={classes.drawerListItemIcon} />,
         "Mata Pelajaran",
