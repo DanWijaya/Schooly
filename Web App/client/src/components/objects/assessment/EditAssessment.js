@@ -262,6 +262,7 @@ class EditAssessment extends Component {
       checkboxSnackbarOpen: false,
       radioSnackbarOpen: false,
       copySnackbarOpen: false,
+      fileLimitSnackbar: false,
       weights: {
         radio: null,
         checkbox: null,
@@ -274,7 +275,8 @@ class EditAssessment extends Component {
       // sejak pertama kali soal tersebut ditambahkan
       longtextWeight: [null],
       ready: false,
-      lampiranUrls: new Map()
+      lampiranUrls: new Map(),
+      over_limit: []
     };
   }
 
@@ -293,9 +295,9 @@ class EditAssessment extends Component {
     getAllClass();
     getOneAssessment(assessment_id);
     getAllSubjects();
-    getFileAssessment(assessment_id).then((result) => {
-      console.log(result)
-      this.setState({lampiranUrls: result})})
+    getFileAssessment(assessment_id)
+      .then((result) => {this.setState({lampiranUrls: result})})
+      .catch((err) => this.setState({lampiranUrls: new Map()}))
   }
 
   componentWillUnmount() {
@@ -507,18 +509,18 @@ class EditAssessment extends Component {
       };
       const assessmentId = this.props.match.params.id;
       console.log(assessmentData);
-
-      updateAssessment(
-        formData,
-        assessmentData,
-        assessmentId,
-        lampiranToDelete,
-        history
-      )
-        .then((res) => {
-          console.log("Assessment is updated successfully");
-        })
-        .catch(() => this.handleOpenErrorSnackbar());
+      
+      // updateAssessment(
+      //   formData,
+      //   assessmentData,
+      //   assessmentId,
+      //   lampiranToDelete,
+      //   history
+      // )
+      //   .then((res) => {
+      //     console.log("Assessment is updated successfully");
+      //   })
+      //   .catch(() => this.handleOpenErrorSnackbar());
     } else {
       this.handleOpenErrorSnackbar();
     }
@@ -787,6 +789,7 @@ class EditAssessment extends Component {
   };
 
   handleDuplicateQuestion = (i) => {
+    console.log(i);
     let questions = this.state.questions;
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
@@ -867,9 +870,11 @@ class EditAssessment extends Component {
     } else {
       if (e.target.files) {
         const files = Array.from(e.target.files);
-        let temp = questions[qnsIndex].lampiran.concat(files);
+        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 5);
+        let file_to_upload = files.filter((file) => file.size / Math.pow(10, 6) <= 5);
+        let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
-        this.setState({ questions: questions });
+        this.setState({ questions: questions, fileLimitSnackbar: over_limit.length > 0 , over_limit: over_limit });
       }
     }
   };
@@ -1447,6 +1452,7 @@ class EditAssessment extends Component {
 
     console.log("QUESTIONS : ", this.state.questions);
     document.title = "Schooly | Sunting Kuis/Ujian";
+    const assessment_id = this.props.match.params.id;
 
     return (
       <div className={classes.root}>
@@ -1467,7 +1473,7 @@ class EditAssessment extends Component {
           customDecline="Tidak"
           deleteItem=""
           isLink={true}
-          redirectLink="/daftar-kuis"
+          redirectLink={this.state.type == "Kuis" ? "/daftar-kuis" : "/daftar-ujian"}
           isWarning={false}
         />
         <UploadDialog
@@ -1477,8 +1483,7 @@ class EditAssessment extends Component {
           messageUploading={`${this.state.type} sedang disunting`}
           // messageSuccess="Kuis/Ujian telah disunting"
           messageSuccess={`${this.state.type} telah disunting`}
-          redirectLink="/daftar-kuis"
-          // redirectLink={(this.state.type === "Kuis") ? `/daftar-kuis` : `/daftar-ujian`}
+          redirectLink={this.state.type == "Kuis" ? `/kuis-guru/${assessment_id}` : `/ujian-guru/${assessment_id}`}
         />
         <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>
@@ -2057,6 +2062,20 @@ class EditAssessment extends Component {
           >
             Masih ada bagian yang belum diisi atau salah, silahkan diperiksa
             kembali!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={this.state.fileLimitSnackbar}
+          autoHideDuration={4000}
+          onClose={this.handleFileLimitSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            severity="error"
+          >
+            {this.state.over_limit.length} file melebihi batas 5MB!
           </MuiAlert>
         </Snackbar>
       </div>

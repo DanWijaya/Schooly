@@ -78,9 +78,11 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
               if (numFileToUpload == 0) {
                 FileAssessment.insertMany(newFileList)
                   .then((result) => {
+                    console.log(result)
                     return result.map((r) => r._id);
                   })
                   .then((file_ids) => {
+                    console.log(file_ids)
                     let temp = questionsArray[question_idx].lampiran.concat(
                       file_ids
                     );
@@ -89,6 +91,7 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
                   })
                   .then(() => {
                     assessment.questions = questionsArray;
+                    console.log(assessment.questions)
                     assessment
                       .save() // kadang" kalau masukkin res.json di Error, bisa ada error cannot set headers after they are sent to the client.
                       .then(() => {
@@ -152,54 +155,65 @@ router.delete("/:id", (req, res) => {
             //Now Delete the file from AWS-S3
             // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#deleteObject-property
             let s3bucket = new AWS.S3();
+            let fileUploaded = 0;
             file_to_delete.forEach((file) => {
               let params = {
                 Bucket: process.env.AWS_BUCKET_NAME,
                 Key: file.s3_key,
               };
               s3bucket.deleteObject(params, (err, data) => {
-                if (!data) return res.status(404).json(err);
+                fileUploaded++;
+                if(fileUploaded == file_to_delete.length){
+                  return res.status(200).send("Success");
+                }
               });
             });
-            return res.status(200).send("Success");
           }
         );
       }
     );
   } else {
-    let id_list = file_to_delete.map((m) => Object(m._id));
-    FileAssessment.deleteMany(
-      {
-        _id: {
-          $in: id_list,
+    FileAssessment.find({ _id: { $in: file_to_delete }}).then((file_assessments) => {
+      FileAssessment.deleteMany(
+        {
+          _id: {
+            $in: file_to_delete,
+          },
         },
-      },
-      function (err, results) {
-        if (!results) {
-          return res.status(404).json(err);
-        }
-
-        let s3bucket = new AWS.S3();
-        file_to_delete.forEach((file) => {
-          let params = {
-            Bucket: process.env.AWS_BUCKET_NAME,
-            Key: file.s3_key,
-          };
-          s3bucket.deleteObject(params, (err, data) => {
-            if (!data) return res.status(404).json(err);
+        function (err, results) {
+          if (!results) {
+            return res.status(404).json(err);
+          }
+  
+          let s3bucket = new AWS.S3();
+          let fileUploaded = 0;
+          file_assessments.forEach((file) => {
+            console.log(file)
+            let params = {
+              Bucket: process.env.AWS_BUCKET_NAME,
+              Key: file.s3_key,
+            };
+            s3bucket.deleteObject(params, (err, data) => {
+              if (err) {
+                return res.status(404).json(err);
+              }
+              fileUploaded++;
+              if(fileUploaded == file_to_delete.length){
+                return res.status(200).send("Success");
+              }
+            })
           });
-        });
-        return res.status(200).send("Success");
-      }
-    );
-  }
+        })
+    })
+   
+    }
 });
 
 router.get("/by_assessment/:id", (req, res) => {
   FileAssessment.find({ assessment_id: req.params.id }).then((results, err) => {
     if (!results) return res.status(400).json(err);
     else {
-      console.log(results)
+      console.log("Assessment: ", results)
       results.sort((a, b) => (a.filename > b.filename ? 1 : -1));
       return res.status(200).json(results);
     }

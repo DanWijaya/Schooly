@@ -653,7 +653,7 @@ class CreateAssessment extends Component {
   };
 
   handleDuplicateQuestion = (i) => {
-    console.log(i);
+    console.log(i)
     let questions = this.state.questions;
     // kalau masukkin question langsung gitu, somehow dia akan ikut berubah kalo yang duplicated yg lain berubah nilainya.
     // Mungkin karena kalau assign question langsung itu object jadi sama persis? kalau aku destructure masing" lalu buat new object, jadi beda beda?
@@ -707,8 +707,8 @@ class CreateAssessment extends Component {
       if (e.target.files) {
         // Untuk kasus pas mau upload foto
         const files = Array.from(e.target.files);
-        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 10);
-        let file_to_upload = files.filter((file) => file.size / Math.pow(10, 6) <= 10);
+        let over_limit = files.filter((file) => file.size / Math.pow(10, 6) > 5);
+        let file_to_upload = files.filter((file) => file.size / Math.pow(10, 6) <= 5);
         let temp = questions[qnsIndex].lampiran.concat(file_to_upload);
         questions[qnsIndex].lampiran = temp;
         this.setState({ questions: questions, fileLimitSnackbar: over_limit.length > 0 , over_limit: over_limit});
@@ -1758,7 +1758,7 @@ class CreateAssessment extends Component {
             variant="filled"
             severity="error"
           >
-            {this.state.over_limit.length} file melebihi batas 10MB!
+            {this.state.over_limit.length} file melebihi batas 5MB!
           </MuiAlert>
         </Snackbar>
       </div>

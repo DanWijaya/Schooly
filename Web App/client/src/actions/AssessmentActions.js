@@ -29,7 +29,7 @@ export const createAssessment = (formData, assessment, history) => (
           num_lampiran.push(qns.lampiran.length);
         });
         formData.append("num_lampiran", num_lampiran);
-        console.log(num_lampiran);
+        console.log("num_lampiran:", num_lampiran);
 
         return axios.post(
           `/api/files/assessments/upload/${res.data._id}`,
@@ -95,20 +95,23 @@ export const updateAssessment = (
   return (
     axios
       .post(`/api/assessments/update/${assessmentId}`, assessmentData)
-      // .then(res => {
-      //     if(res){
-      //       return updateAssessmentGrades;
-      //     }
-      //     else{
-      //       return "Assessment answers are still the same";
-      //     }
-      // })
       .then((res) => {
-        console.log("Has lampiran? :", formData.has("lampiran_assessment"));
+        console.log(lampiran_to_delete);
         dispatch({
           type: GET_ERRORS,
           payload: false,
         });
+        if (lampiran_to_delete.length > 0) {
+          return axios.delete(`/api/files/assessments/${assessmentId}`, {
+            data: { file_to_delete: lampiran_to_delete },
+          });
+        } else {
+          // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
+          return "Successfully updated task with no lampiran";
+        }
+      })
+      .then((res) => {
+        console.log("Has lampiran? :", formData.has("lampiran_assessment"));
         let { questions } = assessmentData;
         if (formData.has("lampiran_assessment")) {
           let num_lampiran = [];
@@ -119,22 +122,11 @@ export const updateAssessment = (
           formData.append("num_lampiran", num_lampiran);
           console.log("Lampiran number ", num_lampiran);
           return axios.post(
-            `/api/upload/att_assessment/lampiran/${assessmentId}`,
+            `/api/files/assessments/upload/${assessmentId}`,
             formData
           );
         } else {
           return "Successfully updated assessment with no lampiran";
-        }
-      })
-      .then((res) => {
-        console.log(lampiran_to_delete);
-        if (lampiran_to_delete.length) {
-          return axios.delete(`/api/upload/att_assessment/lampiran/${"some"}`, {
-            data: { lampiran_to_delete: lampiran_to_delete },
-          });
-        } else {
-          // harus return sesuatu, kalo ndak ndak bakal lanjut ke then yg selanjutnya..
-          return "Successfully updated task with no lampiran";
         }
       })
       .then((res) => {
@@ -220,11 +212,13 @@ export const deleteAssessment = (id, type = "Kuis") => (dispatch) => {
         lampiran_to_delete = temp;
       });
       console.log("Lampiran to delete: ", lampiran_to_delete);
-      if (lampiran_to_delete.length > 0)
-        return axios.delete(
-          `/api/upload/att_assessment/lampiran/${"deleteall"}`,
-          { data: { lampiran_to_delete: lampiran_to_delete } }
-        );
+      if (lampiran_to_delete.length > 0){
+        return axios.delete(`/api/files/assessments/${id}`);
+      }
+        // return axios.delete(
+        //   `/api/upload/att_assessment/lampiran/${"deleteall"}`,
+        //   { data: { lampiran_to_delete: lampiran_to_delete } }
+        // );
       return "Assessment deleted has no lampiran";
     })
     .then((res) => {

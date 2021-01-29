@@ -96,7 +96,7 @@ router.delete("/:id", (req, res) => {
   // if file_to_delete is undefined,means that the object is deleted and hence all files should be deleted.
   if (!file_to_delete) {
     FileMaterial.find({ material_id: req.params.id }).then((materials) => {
-      let id_list = materials.map((m) => Object(m._id));
+      let id_list = materials.map((m) => ObjectId(m._id));
       let file_to_delete = materials;
 
       FileMaterial.deleteMany(
@@ -126,7 +126,7 @@ router.delete("/:id", (req, res) => {
       );
     });
   } else {
-    let id_list = file_to_delete.map((m) => Object(m._id));
+    let id_list = file_to_delete.map((m) => ObjectId(m._id));
     FileMaterial.deleteMany(
       {
         _id: {
@@ -145,7 +145,8 @@ router.delete("/:id", (req, res) => {
             Key: file.s3_key,
           };
           s3bucket.deleteObject(params, (err, data) => {
-            if (!data) return res.status(404).json(err);
+            console.log("Data materi: ", data)
+            if (err) return res.status(404).json(err);
           });
         });
         return res.status(200).send("Success");
