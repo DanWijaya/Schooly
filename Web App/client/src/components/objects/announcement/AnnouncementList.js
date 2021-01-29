@@ -665,7 +665,7 @@ function AnnouncementSubList(props) {
     );
   };
 
-  const retrieveAnnouncements = () => {
+  React.useEffect(() => {
     /* 
       admin: 
       - pengumuman yg saya buat
@@ -743,10 +743,7 @@ function AnnouncementSubList(props) {
       }
       setRows(newRows);
     }
-  };
-
-  React.useEffect(() => {
-    retrieveAnnouncements();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adminAnnouncements, retrieved_users, selectedAnnouncements, searchFilter]);
 
   return (
@@ -935,7 +932,8 @@ function AnnouncementList(props) {
           ? null
           : retrieved_users.get(data.author_id).name,
         data.title,
-        `/pengumuman/${data._id}`,
+        // `/pengumuman/${data._id}`,
+        data._id,
         // (moment(data.date_announced).locale("id").format("DD MMM YYYY")),
         // (moment(data.date_announced).locale("id").format("HH.mm")),
         // (moment(data.date_announced).locale("id")),
@@ -947,25 +945,28 @@ function AnnouncementList(props) {
     );
   };
 
-  const retrieveAnnouncements = () => {
-    // If all_assessments is not undefined or an empty array
-    // if (selectedAnnouncements.length) {
-    //   rows = [];
-    //   selectedAnnouncements
-    //     .filter((item) =>
-    //       item.title.toLowerCase().includes(searchFilter.toLowerCase())
-    //     )
-    //     .forEach((data) => {
-    //       if (data) {
-    //         console.log(data);
-    //       }
-    //       announcementRowItem(data);
-    //     });
-    // }
+  // const retrieveAnnouncements = () => {
+  //   // If all_assessments is not undefined or an empty array
+  //   if (selectedAnnouncements.length) {
+  //     rows = [];
+  //     selectedAnnouncements
+  //       .filter((item) =>
+  //         item.title.toLowerCase().includes(searchFilter.toLowerCase())
+  //       )
+  //       .forEach((data) => {
+  //         if (data) {
+  //           console.log(data);
+  //         }
+  //         announcementRowItem(data);
+  //       });
+  //   }
+  // };
 
-    // ANCHOR retrieveAnnouncements
+  // ANCHOR retrieveAnnouncements
+  React.useEffect(() => {
+    // retrieveAnnouncements();
     if (selectedAnnouncements.length && retrieved_users.size) {
-      let newRows = []; 
+      let newRows = [];
       selectedAnnouncements
         .filter((item) =>
           item.title.toLowerCase().includes(searchFilter.toLowerCase())
@@ -973,12 +974,9 @@ function AnnouncementList(props) {
         .forEach((data) => {
           announcementRowItem(newRows, data);
         });
-        setRows(newRows);
+      setRows(newRows);
     }
-  };
-
-  React.useEffect(() => {
-    retrieveAnnouncements();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrieved_users, selectedAnnouncements, searchFilter]);
 
   // ANCHOR getAnnouncement

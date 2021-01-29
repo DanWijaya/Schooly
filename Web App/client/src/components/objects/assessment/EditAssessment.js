@@ -1453,7 +1453,6 @@ class EditAssessment extends Component {
           customDecline="Tidak"
           deleteItem=""
           isLink={true}
-          redirectLink="/daftar-kuis"
           isWarning={false}
         />
         <UploadDialog

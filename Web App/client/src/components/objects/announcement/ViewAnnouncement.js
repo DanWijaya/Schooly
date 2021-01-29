@@ -20,7 +20,6 @@ import {
   Avatar,
   Fab,
   Grid,
-  Hidden,
   IconButton,
   ListItem,
   ListItemAvatar,

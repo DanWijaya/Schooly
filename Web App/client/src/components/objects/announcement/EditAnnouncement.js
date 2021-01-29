@@ -315,7 +315,7 @@ class EditAnnouncement extends Component {
     const {
       fileLampiranToAdd,
       fileLampiranToDelete,
-      fileLampiran,
+      // fileLampiran,
     } = this.state;
     const { user } = this.props.auth;
     const { kelas } = this.props.classesCollection;

@@ -379,7 +379,7 @@ class EditTask extends Component {
     const { all_subjects } = this.props.subjectsCollection;
     const { user } = this.props.auth;
 
-    const task_id = this.props.match.params.id;
+    // const task_id = this.props.match.params.id;
 
     let classIds = []
     const ITEM_HEIGHT = 48;

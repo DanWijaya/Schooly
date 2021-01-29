@@ -64,8 +64,18 @@ function DeleteDialog(props) {
   //   isWarning,
   // } = props;
   const classes = useStyles();
-  const { openDeleteDialog, handleCloseDeleteDialog, itemType, itemName, deleteItem, 
-    redirectLink, customMessage, customConfirm, customDecline, isWarning } = props;
+  const { 
+    openDeleteDialog,
+    handleCloseDeleteDialog,
+    itemType,
+    itemName,
+    deleteItem,
+    redirectLink,
+    customMessage,
+    // customConfirm, 
+    customDecline,
+    isWarning
+  } = props;
 
   return (
     <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
