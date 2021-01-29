@@ -44,6 +44,7 @@ import {
 import SortIcon from "@material-ui/icons/Sort";
 import EditIcon from "@material-ui/icons/Edit";
 import { BsFlagFill, BsFlag } from "react-icons/bs";
+import GetAppIcon from '@material-ui/icons/GetApp';
 // const path = require("path");
 
 const useStyles = makeStyles((theme) => ({
@@ -436,6 +437,70 @@ function SubmittedAssessmentList(props) {
       setSuspects(newSuspects);
     });
   };
+
+  const handleExportAssessment = () => {
+    console.log(selectedAssessments)
+    let result = ""
+    let classArray = []
+    selectedAssessments.class_assigned.map((kelas, i) => {
+      let className = all_classes.find((cls) => cls._id === kelas).name;
+      if(i !== 0){
+        result = result + ','
+      }
+      result = result + className;
+      if(i !== selectedAssessments.class_assigned.length - 1){
+        result = result + ','
+      }
+      classArray.push([kelas])
+    })
+    console.log(Object.keys(selectedAssessments.grades))
+
+    let gradeKeys = Object.keys(selectedAssessments.grades)
+    let gradeValues = Object.values(selectedAssessments.grades)
+    console.log(gradeValues)
+    gradeKeys.map((student_id, i) => {
+      let studentData = all_students.find((std) => std._id === student_id)
+      let studentName = studentData.name
+      let studentClass = studentData.kelas
+      for(let j=0;j<classArray.length;j++){
+        if(classArray[j][0] === studentClass){
+          classArray[j].push({studentName: studentName, studentScore: gradeValues[i].total_grade})
+          break;
+        }
+      }
+    })
+
+    let classLength = []
+    for(let i=0;i<classArray.length;i++){
+      classLength.push(classArray[i].length)
+    }
+    let maxClassLength = Math.max(...classLength)-1
+
+    for(let i=0;i<maxClassLength;i++){
+      result = result + '\n'
+      for(let j=0;j<classArray.length;j++){
+        if(j !== 0){
+          result = result + ',';
+        }
+        if(i+1 < classArray[j].length){
+          result = result + classArray[j][i+1].studentName
+          result = result + ',';
+          result = result + classArray[j][i+1].studentScore
+        }
+        if(i+1 >= classArray[j].length){
+          result = result + ',';
+        }
+      }
+    }
+    console.log(result)
+    const blob = new Blob([result], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.setAttribute("hidden", "");
+    a.setAttribute("href", url);
+    a.setAttribute("download", `Hasil ${selectedAssessments.name}.csv`);
+    a.click();
+  }
 
   const listClassTabPanel = () => {
     let TabPanelList = [];
@@ -1230,7 +1295,7 @@ function SubmittedAssessmentList(props) {
               </Fab>
             </Link>
 
-            <LightTooltip title="Urutkan Kuis">
+            <LightTooltip title="Urutkan Kuis/Ujian">
               <IconButton
                 onClick={handleOpenSortMenu}
                 className={classes.sortButton}
@@ -1276,6 +1341,14 @@ function SubmittedAssessmentList(props) {
                 </MenuItem>
               ))}
             </Menu>
+            <LightTooltip title="Export Hasil Kuis/Ujian">
+              <IconButton
+                onClick={handleExportAssessment}
+                className={classes.sortButton}
+              >
+                <GetAppIcon />
+              </IconButton>
+            </LightTooltip>
           </Grid>
         </Grid>
         {listClassTab()}
