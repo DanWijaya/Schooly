@@ -126,18 +126,15 @@ function AnnouncementListToolbar(props) {
           title = "Pengumuman dari Pengelola";
         } else if (author_role === "Teacher") {
           title = "Pengumuman dari Guru";
-        } else if (author_role === "Student") {
+        } else if ((author_role === "Student")) {
           if ((Object.keys(kelas).length > 0)) {
-            if (user._id === kelas.ketua_kelas) {
-              title = "Pengumuman dari Saya";
-            } else {
-              title = "Pengumuman dari Ketua Kelas";
-            }
+            title = "Pengumuman dari Ketua Kelas";
           }
         }
       }
     }
-  } 
+  }
+
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -189,13 +186,13 @@ function AnnouncementListToolbar(props) {
     document.getElementById(id).focus();
   };
 
-  const canAnnounce = () => {
-    // console.log(user.role);
-    if (Object.keys(kelas).length > 0) {
-      return user._id === kelas.ketua_kelas;
-    }
-    return user.role === "Teacher" || isAdmin;
-  };
+  // const canAnnounce = () => {
+  //   console.log(user.role);
+  //   if (Object.keys(kelas).length > 0) {
+  //     return user._id === kelas.ketua_kelas;
+  //   }
+  //   return user.role === "Teacher" || isAdmin;
+  // };
 
   return (
     <div className={classes.toolbar}>
@@ -371,13 +368,16 @@ function AnnouncementListToolbar(props) {
           />
         </Hidden>
         )}
-        {showCreateButton && canAnnounce() ? (
-          <div style={{ display: "flex", alignItems: "center", height: "46.5px" }}>
+        {showSortAndSearchButton && showCreateButton ? (
+          <div style={{ display: "flex", alignItems: "center" }}>
             {/* mobile view */}
             <Hidden smUp implementation="css">
               <LightTooltip title="Buat Pengumuman">
                 <Link to="/buat-pengumuman">
-                  <Fab size="small" className={classes.newAnnouncementButton} style={{ marginRight: isAdmin ? "10px" : "0" }}>
+                  <Fab
+                    size="small"
+                    className={classes.newAnnouncementButton}
+                  >
                     <AnnouncementIcon
                       className={classes.newAnnouncementIconMobile}
                     />
@@ -392,7 +392,6 @@ function AnnouncementListToolbar(props) {
                   variant="extended"
                   size="medium"
                   className={classes.newAnnouncementButton}
-                  style={{marginRight: isAdmin ? "10px" : "0"}}
                 >
                   <AnnouncementIcon
                     className={classes.newAnnouncementIconDesktop}
@@ -760,7 +759,7 @@ function AnnouncementSubList(props) {
         updateSearchFilter={updateSearchFilter}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        showCreateButton={false}
+        showCreateButton={mine}
         showSortAndSearchButton={true}
         mine={mine}
         author_role={author_role}
@@ -797,7 +796,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   newAnnouncementButton: {
-    // marginRight: "10px",
+    marginRight: "10px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
@@ -1050,7 +1049,7 @@ function AnnouncementList(props) {
         updateSearchFilter={updateSearchFilter}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        showCreateButton={true}
+        showCreateButton={user.role === "Admin"}
         showSortAndSearchButton={user.role === "Admin"}
       />
       <Divider variant="inset"className={classes.titleDivider} />
@@ -1086,7 +1085,8 @@ function AnnouncementList(props) {
               <>
                 <AnnouncementSubList
                   {...propsToPass}
-                  mine={null}
+                  // mine={null}
+                  mine={(user._id === kelas.ketua_kelas)}
                   author_role="Student"
                   showButtons={(user._id === kelas.ketua_kelas)}
                   handleOpenDeleteDialog={handleOpenDeleteDialog}
@@ -1101,7 +1101,7 @@ function AnnouncementList(props) {
                   />
                 <AnnouncementSubList
                   {...propsToPass}
-                  mine={null}
+                  mine={false}
                   author_role="Admin"
                   showButtons={false}
                 />
