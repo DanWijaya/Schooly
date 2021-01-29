@@ -127,7 +127,7 @@ class LoginForgot extends Component {
                   align="center"
                   color="textSecondary"
                 >
-                  Masukkan email Anda untuk melanjutkan.
+                  Masukkan email akun Anda untuk melanjutkan.
                 </Typography>
               </Grid>
             ) : (
