@@ -30,6 +30,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -116,6 +117,15 @@ const useStyles = makeStyles((theme) => ({
   },
   otherFileTypeIcon: {
     backgroundColor: "#808080",
+  },
+  exportButton: {
+    marginRight: "10px",
+    backgroundColor: theme.palette.action.selected,
+    color: "black",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.divider,
+      color: "black",
+    },
   },
 }));
 
@@ -404,6 +414,70 @@ function SubmittedTaskList(props) {
     all_classes.map((kelas) => temp.set(kelas._id, kelas));
   }
 
+  const handleExportTask = () => {
+    console.log(tasksCollection)
+    let result = ""
+    let classArray = []
+    tasksCollection.class_assigned.map((kelas, i) => {
+      let className = all_classes.find((cls) => cls._id === kelas).name;
+      if(i !== 0){
+        result = result + ','
+      }
+      result = result + className;
+      if(i !== tasksCollection.class_assigned.length - 1){
+        result = result + ','
+      }
+      classArray.push([kelas])
+    })
+    console.log(Object.keys(tasksCollection.grades))
+
+    let gradeKeys = Object.keys(tasksCollection.grades)
+    let gradeValues = Object.values(tasksCollection.grades)
+    console.log(gradeValues)
+    gradeKeys.map((student_id, i) => {
+      let studentData = all_students.find((std) => std._id === student_id)
+      let studentName = studentData.name
+      let studentClass = studentData.kelas
+      for(let j=0;j<classArray.length;j++){
+        if(classArray[j][0] === studentClass){
+          classArray[j].push({studentName: studentName, studentScore: gradeValues[i]})
+          break;
+        }
+      }
+    })
+
+    let classLength = []
+    for(let i=0;i<classArray.length;i++){
+      classLength.push(classArray[i].length)
+    }
+    let maxClassLength = Math.max(...classLength)-1
+
+    for(let i=0;i<maxClassLength;i++){
+      result = result + '\n'
+      for(let j=0;j<classArray.length;j++){
+        if(j !== 0){
+          result = result + ',';
+        }
+        if(i+1 < classArray[j].length){
+          result = result + classArray[j][i+1].studentName
+          result = result + ',';
+          result = result + classArray[j][i+1].studentScore
+        }
+        if(i+1 >= classArray[j].length){
+          result = result + ',';
+        }
+      }
+    }
+    console.log(result)
+    const blob = new Blob([result], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.setAttribute("hidden", "");
+    a.setAttribute("href", url);
+    a.setAttribute("download", `Hasil ${tasksCollection.name}.csv`);
+    a.click();
+  }
+
   const listClassTab = () => {
     let class_assigned = [];
     if (!tasksCollection.class_assigned) {
@@ -618,6 +692,16 @@ function SubmittedTaskList(props) {
         <Typography variant="h4" style={{ textAlign: "center" }} gutterBottom>
           <b>{tasksCollection.name}</b>
         </Typography>
+        <div style={{display: "flex", justifyContent: "flex-end"}}>
+          <LightTooltip title="Export Hasil Tugas">
+            <IconButton
+              onClick={handleExportTask}
+              className={classes.exportButton}
+            >
+              <GetAppIcon />
+            </IconButton>
+          </LightTooltip>
+        </div>
         {listClassTab()}
       </Paper>
       {listClassTabPanel()}
