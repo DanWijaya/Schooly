@@ -1170,12 +1170,6 @@ function ViewAssessmentTeacher(props) {
             </Hidden> */}
 
             <Grid container spacing={2}>
-              <Grid item xs={12} style={{ marginTop: "18px" }}>
-                <Divider className={classes.dividerColor} />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2}>
               <Hidden xsDown>
                 <Grid
                   item

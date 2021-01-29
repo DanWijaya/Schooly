@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getOneTask, gradeTask } from "../../../actions/TaskActions";
+import moment from "moment";
 import {
   getTaskFilesByUser,
   moveToDropbox,
@@ -10,6 +11,7 @@ import {
 } from "../../../actions/UploadActions";
 import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
+import { getAllSubjects } from "../../../actions/SubjectActions";
 import {
   Avatar,
   Box,
@@ -29,6 +31,8 @@ import {
   Tab,
   TextField,
   Typography,
+  Grid,
+  Hidden
 } from "@material-ui/core";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import { makeStyles } from "@material-ui/core/styles";
@@ -119,13 +123,21 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
   exportButton: {
-    marginRight: "10px",
+    marginTop: "15px",
     backgroundColor: theme.palette.action.selected,
     color: "black",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.divider,
       color: "black",
     },
+  },
+  paperBox: {
+    padding: "20px",
+    marginBottom: "10px",
+  },
+  dividerColor: {
+    backgroundColor: theme.palette.primary.main,
+    marginBottom: "5px"
   },
 }));
 
@@ -283,7 +295,6 @@ function UnduhSemuaButton(props) {
 
 function SubmittedTaskList(props) {
   const classes = useStyles();
-
   const {
     getOneTask,
     getAllClass,
@@ -296,7 +307,8 @@ function SubmittedTaskList(props) {
     success,
   } = props;
   const { all_classes } = props.classesCollection;
-  const { all_students, dropbox_token } = props.auth;
+  const { all_students, dropbox_token, user } = props.auth;
+  const { all_subjects_map } = props.subjectsCollection;
   const task_id = props.match.params.id;
 
   const [grade, setGrade] = React.useState(new Map());
@@ -688,11 +700,73 @@ function SubmittedTaskList(props) {
           {!success ? null : success[1]}
         </Alert>
       </Snackbar>
-      <Paper>
-        <Typography variant="h4" style={{ textAlign: "center" }} gutterBottom>
-          <b>{tasksCollection.name}</b>
-        </Typography>
-        <div style={{display: "flex", justifyContent: "flex-end"}}>
+      <Paper className={classes.paperBox}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} style={{paddingBottom: "0"}}>
+            <Typography variant="h4">{tasksCollection.name}</Typography>
+            <Typography variant="caption" color="textSecondary" gutterBottom>
+              <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} md={7} style={{paddingTop: "0"}}>
+            <Typography variant="body2" color="textSecondary">
+              Penanggung Jawab: <b>{user.name}</b>
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Waktu Dibuat:{" "}
+              {moment(tasksCollection.createdAt)
+                .locale("id")
+                .format("DD MMM YYYY, HH.mm")}
+            </Typography>
+            <Hidden mdUp>
+              <Typography variant="body2" color="textSecondary">
+                Tenggat:{" "}
+                {moment(tasksCollection.deadline)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH.mm")}
+              </Typography>
+            </Hidden>
+          </Grid>
+
+          {/* <Grid item xs={12} md={5} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end"}} > */}
+          {/* <Hidden mdUp>
+              <Typography variant="body2" color="textSecondary">
+                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Nilai Maksimum: 100
+              </Typography>
+            </Hidden> */}
+          <Hidden smDown style={{ display: "flex" }}>
+            <Grid
+              item
+              xs={12}
+              md={5}
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+              }}
+            >
+              <Typography variant="body2" align="right" color="textSecondary">
+                Tenggat:{" "}
+                {moment(tasksCollection.deadline)
+                  .locale("id")
+                  .format("DD MMM YYYY, HH.mm")}
+              </Typography>
+              {/* <Typography variant="body2" align="right" color="textSecondary">
+                Nilai Maksimum: 100
+              </Typography> */}
+            </Grid>
+          </Hidden>
+          {/* </Grid> */}
+
+          <Grid item xs={12}>
+            <Divider className={classes.dividerColor} />
+          </Grid>
+        </Grid>
+        <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row"}}>
           <LightTooltip title="Export Hasil Tugas">
             <IconButton
               onClick={handleExportTask}
@@ -712,6 +786,7 @@ function SubmittedTaskList(props) {
 SubmittedTaskList.propTypes = {
   classesCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.object.isRequired,
+  subjectsCollection: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   success: PropTypes.object.isRequired,
   getTaskFilesByUser: PropTypes.func.isRequired,
@@ -728,6 +803,7 @@ const mapStateToProps = (state) => ({
   tasksCollection: state.tasksCollection,
   success: state.success,
   classesCollection: state.classesCollection,
+  subjectsCollection: state.subjectsCollection
 });
 
 export default connect(mapStateToProps, {
@@ -739,4 +815,5 @@ export default connect(mapStateToProps, {
   gradeTask,
   getAllClass,
   moveToDropbox,
+  getAllSubjects,
 })(SubmittedTaskList);

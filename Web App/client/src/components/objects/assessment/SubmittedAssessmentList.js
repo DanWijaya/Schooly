@@ -137,6 +137,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.divider,
       color: "black",
     },
+    marginLeft: "5px"
   },
   RadioQst: {
     "&$disabled": {
@@ -181,10 +182,11 @@ const useStyles = makeStyles((theme) => ({
   editIconFab: {
     width: theme.spacing(3),
     height: theme.spacing(3),
-    marginRight: "7.5px",
+    marginRight: 0
   },
   editIconButton: {
     // marginRight: "10px",
+    marginRight: "0px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -1254,34 +1256,7 @@ function SubmittedAssessmentList(props) {
             <Divider className={classes.dividerColor} />
           </Grid>
 
-          <Grid item xs={12} style={{ marginTop: "30px" }}>
-            <Typography color="primary" gutterBottom>
-              Kelas yang Diberikan:
-            </Typography>
-            <Typography>
-              {!selectedAssessments.class_assigned || !all_classes.length
-                ? null
-                : selectedAssessments.class_assigned.map((kelas, i) => {
-                    let className = all_classes.find((cls) => cls._id === kelas)
-                      .name;
-                    if (className) {
-                      if (i === selectedAssessments.class_assigned.length - 1)
-                        return `${className}`;
-                      return `${className}, `;
-                    }
-                    return null;
-                  })}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} style={{ marginTop: "30px" }}>
-            <Typography color="primary" gutterBottom>
-              Deskripsi Kuis/Ujian:
-            </Typography>
-            <Typography>{selectedAssessments.description}</Typography>
-          </Grid>
-
-          <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
+          <Grid container item justify="flex-end" style={{ marginTop: "5px" }}>
             <Link
               to={
                 selectedAssessments.type === "Kuis"
@@ -1289,7 +1264,7 @@ function SubmittedAssessmentList(props) {
                   : `/lihat-jawaban-ujian/${selectedAssessments._id}`
               }
             >
-              <Fab size="medium" variant="extended" className={classes.editFab}>
+              <Fab size="medium" variant="extended" className={classes.editFab} style={{marginRight: "2px"}}>
                 <EditIcon className={classes.editIconFab} />
                 Periksa
               </Fab>
