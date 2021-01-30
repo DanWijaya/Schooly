@@ -25,7 +25,7 @@ AWS.config.update({
 // In upload.single("file") - the name inside the single-quote is the name of the field that is going to be uploaded.
 router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
   var filesArray = req.files;
-  console.log("ASASAS");
+  console.log(req.files)
   let s3bucket = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -35,7 +35,7 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
   var lampiranCountArray = req.body.num_lampiran
     .split(",")
     .map((n) => Number(n));
-
+  console.log(lampiranCountArray);
   Assessment.findById(req.params.id, (err, assessment) => {
     var questionsArray = assessment.questions;
     var newFileList = [];
@@ -83,10 +83,24 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
                   })
                   .then((file_ids) => {
                     console.log(file_ids)
-                    let temp = questionsArray[question_idx].lampiran.concat(
-                      file_ids
-                    );
-                    questionsArray[question_idx].lampiran = temp;
+                    let nums_lampiran_added = 0;
+                    // nilainya itu array, tiap elemen di index itu tunjukkan ada berapa lampiran yang ada di soal di index itu. 
+                    lampiranCountArray.forEach((l,idx) => {
+                      if(l > 0){
+                        let temp = file_ids.slice(nums_lampiran_added, nums_lampiran_added+l)
+                        temp = questionsArray[idx].lampiran.concat(temp)
+                        questionsArray[idx].lampiran = temp;
+                        nums_lampiran_added = nums_lampiran_added + l;
+                      }
+                    })
+                    // let temp = questionsArray[question_idx].lampiran.concat(
+                    //   file_ids
+                    // );
+                    // console.log("question_idx : ", question_idx);
+                    // for(var i=0; i < lampiranCountArray; i++){
+                    //   questionsArray[i].lampiran = temp;
+                    // }
+                    // questionsArray[question_idx].lampiran = temp;
                     return questionsArray;
                   })
                   .then(() => {

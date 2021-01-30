@@ -119,6 +119,7 @@ export const updateAssessment = (
             let lampiran = qns.lampiran.filter((x) => typeof x !== "string");
             num_lampiran.push(lampiran.length);
           });
+          console.log(formData.get("lampiran_assessment"))
           formData.append("num_lampiran", num_lampiran);
           console.log("Lampiran number ", num_lampiran);
           return axios.post(

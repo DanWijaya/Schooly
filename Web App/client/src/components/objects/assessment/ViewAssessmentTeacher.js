@@ -215,7 +215,7 @@ function ViewAssessmentTeacher(props) {
     selectedAssessments.type === "Kuis"
       ? `http://${window.location.host}/kuis-murid/${assessment_id}`
       : `http://${window.location.host}/ujian-murid/${assessment_id}`;
-
+  console.log(questions);
   return (
     <div className={classes.root}>
       {/* Ini Delete Dialog yang untuk delete Item yang udah ada */}
@@ -368,21 +368,26 @@ function ViewAssessmentTeacher(props) {
                         cellHeight={300}
                         style={{ margin: "10px 0px 10px 0px" }}
                       >
-                        {question.lampiran.map((image, i) => 
-                        (
-                          <GridListTile key={image} cols={1}>
-                            <img
-                              alt="current img"
-                              // src={`/api/upload/att_assessment/${image}`}
-                              src={lampiranUrls.get(image.toString())}
-                            />
-                            <GridListTileBar
-                              title={`Gambar ${i + 1}`}
-                              titlePosition="top"
-                              actionPosition="right"
-                            />
-                          </GridListTile>
-                        ))}
+                        {question.lampiran.map((img, i) => {
+                        let image = img;
+                        if(lampiranUrls.has(image.toString())){
+                          return (
+                            <GridListTile key={image} cols={1}>
+                              <img
+                                alt="current img"
+                                // src={`/api/upload/att_assessment/${image}`}
+                                src={lampiranUrls.get(image.toString())}
+                              />
+                              <GridListTileBar
+                                title={`Gambar ${i + 1}`}
+                                titlePosition="top"
+                                actionPosition="right"
+                              />
+                            </GridListTile>
+                          )}
+                          return null
+                        }
+                        )}
                       </GridList>
                       <Typography variant="h6">
                         {question.type === "shorttext" ? (

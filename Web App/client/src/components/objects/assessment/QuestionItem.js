@@ -261,7 +261,7 @@ function QuestionItem(props) {
                       actionIcon={
                         <IconButton
                           style={{ color: "white" }}
-                          onClick={(e) => handleQuestionImage(e, index, i)}
+                          onClick={(e) => handleQuestionImage(e, index, i + currentLampiran.length)}
                         >
                           <CloseIcon />
                         </IconButton>

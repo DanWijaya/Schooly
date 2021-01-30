@@ -509,18 +509,18 @@ class EditAssessment extends Component {
       };
       const assessmentId = this.props.match.params.id;
       console.log(assessmentData);
-      
-      // updateAssessment(
-      //   formData,
-      //   assessmentData,
-      //   assessmentId,
-      //   lampiranToDelete,
-      //   history
-      // )
-      //   .then((res) => {
-      //     console.log("Assessment is updated successfully");
-      //   })
-      //   .catch(() => this.handleOpenErrorSnackbar());
+
+      updateAssessment(
+        formData,
+        assessmentData,
+        assessmentId,
+        lampiranToDelete,
+        history
+      )
+        .then((res) => {
+          console.log("Assessment is updated successfully");
+        })
+        .catch(() => this.handleOpenErrorSnackbar());
     } else {
       this.handleOpenErrorSnackbar();
     }
