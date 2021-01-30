@@ -630,110 +630,115 @@ function MaterialList(props) {
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
-        {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-          const labelId = `enhanced-table-checkbox-${index}`;
-          let viewpage = `/materi/${row._id}`;
-          return (
-            <Grid item>
-              {user.role === "Teacher" ? (
-                <ExpansionPanel button variant="outlined">
-                  <ExpansionPanelSummary
-                    className={classes.materialPanelSummary}
-                  >
-                    <Grid
-                      container
-                      spacing={1}
-                      justify="space-between"
-                      alignItems="center"
+        {rows.length === 0 ? (
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        ) : (
+          stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+            const labelId = `enhanced-table-checkbox-${index}`;
+            let viewpage = `/materi/${row._id}`;
+            return (
+              <Grid item>
+                {user.role === "Teacher" ? (
+                  <ExpansionPanel button variant="outlined">
+                    <ExpansionPanelSummary
+                      className={classes.materialPanelSummary}
                     >
-                      <Grid item>
-                        <Hidden smUp implementation="css">
-                          <Typography variant="subtitle1" id={labelId}>
-                            {row.materialtitle}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {all_subjects_map.get(row.subject)}
-                          </Typography>
-                        </Hidden>
-                        <Hidden xsDown implementation="css">
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <ListItemAvatar>
-                              <Avatar className={classes.assignmentLateTeacher}>
-                                <MenuBookIcon />
-                              </Avatar>
-                            </ListItemAvatar>
-                            <div>
-                              <Typography variant="h6" color="textPrimary">
-                                {row.materialtitle}
-                              </Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                {all_subjects_map.get(row.subject)}
-                              </Typography>
-                            </div>
-                          </div>
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs container spacing={1} justify="flex-end">
+                      <Grid
+                        container
+                        spacing={1}
+                        justify="space-between"
+                        alignItems="center"
+                      >
                         <Grid item>
-                          <LightTooltip title="Lihat Lebih Lanjut">
-                            <Link to={viewpage}>
-                              <IconButton
-                                size="small"
-                                className={classes.viewMaterialButton}
-                              >
-                                <PageviewIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Sunting">
-                            <Link to={`/sunting-materi/${row._id}`}>
-                              <IconButton
-                                size="small"
-                                className={classes.editMaterialButton}
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                          </LightTooltip>
-                        </Grid>
-                        <Grid item>
-                          <LightTooltip title="Hapus">
-                            <IconButton
-                              size="small"
-                              className={classes.deleteMaterialButton}
-                              onClick={(e) => {
-                                handleOpenDeleteDialog(
-                                  e,
-                                  row._id,
-                                  row.materialtitle
-                                );
+                          <Hidden smUp implementation="css">
+                            <Typography variant="subtitle1" id={labelId}>
+                              {row.materialtitle}
+                            </Typography>
+                            <Typography variant="caption" color="textSecondary">
+                              {all_subjects_map.get(row.subject)}
+                            </Typography>
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
                             >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </LightTooltip>
+                              <ListItemAvatar>
+                                <Avatar className={classes.assignmentLateTeacher}>
+                                  <MenuBookIcon />
+                                </Avatar>
+                              </ListItemAvatar>
+                              <div>
+                                <Typography variant="h6" color="textPrimary">
+                                  {row.materialtitle}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              </div>
+                            </div>
+                          </Hidden>
+                        </Grid>
+                        <Grid item xs container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Lihat Lebih Lanjut">
+                              <Link to={viewpage}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.viewMaterialButton}
+                                >
+                                  <PageviewIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <Link to={`/sunting-materi/${row._id}`}>
+                                <IconButton
+                                  size="small"
+                                  className={classes.editMaterialButton}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Link>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.deleteMaterialButton}
+                                onClick={(e) => {
+                                  handleOpenDeleteDialog(
+                                    e,
+                                    row._id,
+                                    row.materialtitle
+                                  );
+                                }}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </ExpansionPanelSummary>
-                  <Divider />
-                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Typography variant="body1">
-                          Kelas yang Diberikan:{" "}
-                          {!all_classes_map.size
-                            ? null
-                            : row.class_assigned.map((kelas, i) => {
+                    </ExpansionPanelSummary>
+                    <Divider />
+                    <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <Typography variant="body1">
+                            Kelas yang Diberikan:{" "}
+                            {!all_classes_map.size
+                              ? null
+                              : row.class_assigned.map((kelas, i) => {
                                 if (all_classes_map.get(kelas)) {
                                   if (i === row.class_assigned.length - 1)
                                     return `${all_classes_map.get(kelas).name}`;
@@ -741,103 +746,90 @@ function MaterialList(props) {
                                 }
                                 return null;
                               })}
-                        </Typography>
-                      </Grid>
-                      {/* <Grid item xs={12}>
-                        <Typography variant="body1" color="textSecondary">
-                          Pemberi Materi: {!row.author ? null : row.author.name}
-                        </Typography>
-                      </Grid> */}
-                      <Grid item xs={12}>
-                        <Typography variant="body1" color="textSecondary">
-                          Waktu Dibuat:{" "}
-                          {moment(row.createdAt)
-                            .locale("id")
-                            .format("DD MMM YYYY, HH.mm")}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              ) : (
-                <Link to={viewpage}>
-                  <Paper variant="outlined">
-                    <ListItem
-                      button
-                      component="a"
-                      className={classes.announcementListItem}
-                    >
-                      <Hidden smUp implementation="css">
-                        <ListItemText
-                          primary={
-                            <Typography variant="subtitle1" color="textPrimary">
-                              {row.materialtitle}
-                            </Typography>
-                          }
-                          secondary={
-                            <Typography variant="caption" color="textSecondary">
-                              {all_subjects_map.get(row.subject)}
-                            </Typography>
-                          }
-                        />
-                      </Hidden>
-                      <Hidden xsDown implementation="css">
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <ListItemAvatar>
-                            <Avatar className={classes.assignmentLate}>
-                              <MenuBookIcon />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={
-                              <Typography variant="h6" color="textPrimary">
-                                {row.materialtitle}
-                              </Typography>
-                            }
-                            secondary={
-                              <Typography variant="body2" color="textSecondary">
-                                {all_subjects_map.get(row.subject)}
-                              </Typography>
-                            }
-                          />
-                        </div>
-                      </Hidden>
-                      {/* <ListItemText
-                        align="right"
-                        primary={
-                          <Typography variant="subtitle" color="textSecondary">
-                            {row.date}
                           </Typography>
-                        }
-                        secondary={row.time}
-                      /> */}
-                      <ListItemText
-                        align="right"
-                        primary={
-                          <Typography variant="body2" color="textSecondary">
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="body1" color="textSecondary">
+                            Waktu Dibuat:{" "}
                             {moment(row.createdAt)
                               .locale("id")
-                              .format("DD MMM YYYY")}
+                              .format("DD MMM YYYY, HH.mm")}
                           </Typography>
-                        }
-                        secondary={moment(row.createdAt)
-                          .locale("id")
-                          .format("HH.mm")}
-                      />
-                    </ListItem>
-                  </Paper>
-                </Link>
-              )}
-            </Grid>
-          );
-        })}
+                        </Grid>
+                      </Grid>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
+                ) : (
+                    <Link to={viewpage}>
+                      <Paper variant="outlined">
+                        <ListItem
+                          button
+                          component="a"
+                          className={classes.announcementListItem}
+                        >
+                          <Hidden smUp implementation="css">
+                            <ListItemText
+                              primary={
+                                <Typography variant="subtitle1" color="textPrimary">
+                                  {row.materialtitle}
+                                </Typography>
+                              }
+                              secondary={
+                                <Typography variant="caption" color="textSecondary">
+                                  {all_subjects_map.get(row.subject)}
+                                </Typography>
+                              }
+                            />
+                          </Hidden>
+                          <Hidden xsDown implementation="css">
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <ListItemAvatar>
+                                <Avatar className={classes.assignmentLate}>
+                                  <MenuBookIcon />
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText
+                                primary={
+                                  <Typography variant="h6" color="textPrimary">
+                                    {row.materialtitle}
+                                  </Typography>
+                                }
+                                secondary={
+                                  <Typography variant="body2" color="textSecondary">
+                                    {all_subjects_map.get(row.subject)}
+                                  </Typography>
+                                }
+                              />
+                            </div>
+                          </Hidden>
+                          <ListItemText
+                            align="right"
+                            primary={
+                              <Typography variant="body2" color="textSecondary">
+                                {moment(row.createdAt)
+                                  .locale("id")
+                                  .format("DD MMM YYYY")}
+                              </Typography>
+                            }
+                            secondary={moment(row.createdAt)
+                              .locale("id")
+                              .format("HH.mm")}
+                          />
+                        </ListItem>
+                      </Paper>
+                    </Link>
+                  )}
+              </Grid>
+            );
+          })
+        )}
       </Grid>
     </div>
   );

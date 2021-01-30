@@ -127,9 +127,12 @@ function AnnouncementListToolbar(props) {
         } else if (author_role === "Teacher") {
           title = "Pengumuman dari Guru";
         } else if ((author_role === "Student")) {
-          if ((Object.keys(kelas).length > 0)) {
+          if ((Object.keys(kelas).length > 0) || (user.kelas === undefined)) {
             title = "Pengumuman dari Ketua Kelas";
           }
+          // Object.keys(kelas).length === 0 berarti kelas belum selesai dimuat. jika kelas belum ada, mine akan bernilai false. 
+          // agar judul tidak berganti dari "ketua kelas" (saat kelas belum dimuat) menjadi "saya" (setelah kelas dimuat),
+          // judul saat kelas belum dimuat dibuat kosong.
         }
       }
     }
@@ -462,6 +465,10 @@ AnnouncementListToolbar.propTypes = {
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
+  showCreateButton: PropTypes.bool.isRequired,
+  showSortAndSearchButton: PropTypes.bool.isRequired,
+  mine: PropTypes.bool,
+  author_role: PropTypes.string
 };
 
 // ANCHOR f ListItems
@@ -618,7 +625,17 @@ function AnnouncementListItems(props) {
   );
 }
 
-// ANCHOR f SubList
+AnnouncementListItems.propTypes = {
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rows: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  showButtons: PropTypes.bool.isRequired,
+  handleOpenDeleteDialog: PropTypes.func.isRequired,
+  addBottomMargin: PropTypes.bool.isRequired
+};
+
+// FIXME f SubList
 function AnnouncementSubList(props) {
   const { 
     retrieved_users, 
@@ -1027,7 +1044,6 @@ function AnnouncementList(props) {
   // ANCHOR elemen AnnouncementList
   return (
     <div className={classes.root}>
-      {selectedAnnouncementName}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog}

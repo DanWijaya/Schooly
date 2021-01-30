@@ -877,13 +877,16 @@ function ViewClass(props) {
     return materialList;
   }
 
-  React.useEffect(() => {
-    setCurrentClass(classId);
-
+  React.useEffect(() => {    
     if (user.role === "Student") {
-      getMaterial(user.kelas, "by_class");
-      getAllTask(); // get the tasksCollection
+      if (user.kelas) {
+        getMaterial(user.kelas, "by_class");
+        getAllTask(); // get the tasksCollection
+      } else {
+        return;
+      }
     }
+    setCurrentClass(classId);
     getAllSubjects("map"); // get the all_subjects_map in map
     getAllSubjects(); // get the all_subjects
     getStudentsByClass(props.match.params.id); // get the students_by_class
@@ -960,7 +963,15 @@ function ViewClass(props) {
     }
   }
 
-  console.log(all_subjects);
+  if ((user.role === "Student") && !user.kelas) {
+    return (
+      <div className={classes.root} style={{display: "flex", alignItems: "center", justifyContent: "center", height: "48vh"}}>
+        <Typography variant="h5" color="textSecondary">
+          Anda belum ditempatkan di kelas manapun
+        </Typography>
+      </div>
+    );
+  } 
 
   return (
     <div className={classes.root}>

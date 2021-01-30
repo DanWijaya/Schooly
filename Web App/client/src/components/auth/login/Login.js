@@ -102,15 +102,16 @@ class Login extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.isAuthenticated) {
+    if (this.state.isAuthenticated && (this.props.auth.isAuthenticated !== prevProps.auth.isAuthenticated)) {
       // jika murid yang belum login membuka link assessment (/kuis-murid/:id),
       // setelah login, murid akan diarahkan ke halaman assessment tersebut
-      if (this.props.location.state) {
+      if (this.props.location.state && this.props.location.state.url) {
         window.location.href = `.${this.props.location.state.url}`;
       } else {
         // untuk redirect ke page lain.
         window.location.href = "./beranda";
       }
+      this.props.handleLoading(true);
     }
   }
 
@@ -125,7 +126,6 @@ class Login extends Component {
       password: this.state.password,
     };
     this.props.loginUser(userData);
-    this.props.handleLoading(true);
   };
 
   togglePasswordVisibility = () => {
