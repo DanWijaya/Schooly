@@ -121,7 +121,7 @@ function ViewAssessmentTeacher(props) {
 
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
-  const isMobileView = useMediaQuery("(max-width:600px)");
+  const isMobileView = useMediaQuery("(max-width:780px)");
   const {
     getOneAssessment,
     getAllClass,
