@@ -23,6 +23,7 @@ import {
   Input,
   Snackbar,
   Divider,
+  useMediaQuery
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -120,7 +121,7 @@ function ViewAssessmentTeacher(props) {
 
   document.title = "Schooly | Buat Kuis";
   const assessment_id = props.match.params.id;
-
+  const isMobileView = useMediaQuery("(max-width:600px)");
   const {
     getOneAssessment,
     getAllClass,
@@ -364,8 +365,8 @@ function ViewAssessmentTeacher(props) {
                         Soal {i + 1}
                       </Typography>
                       <GridList
-                        cols={3}
-                        cellHeight={300}
+                        cols={isMobileView ? 2 : 3}
+                        cellHeight={isMobileView ? 250 : 300}
                         style={{ margin: "10px 0px 10px 0px" }}
                       >
                         {question.lampiran.map((img, i) => {
