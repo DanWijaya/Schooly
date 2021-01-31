@@ -860,7 +860,7 @@ function AssessmentList(props) {
                             </LightTooltip>
                           </Grid>
                           <Grid item>
-                            <LightTooltip title="Copy Link">
+                            <LightTooltip title="Salin Tautan">
                               <IconButton
                                 size="small"
                                 className={classes.copyToClipboardButton}

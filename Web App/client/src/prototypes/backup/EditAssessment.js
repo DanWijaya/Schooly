@@ -1078,7 +1078,7 @@ class EditAssessment extends Component {
                               id="workTime"
                               value={this.state.end_date}
                               minDate={this.state.start_date}
-                              minDateMessage="Batas waktu harus setelah Mulai waktu pengerjaan"
+                              minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }
@@ -1424,7 +1424,7 @@ class EditAssessment extends Component {
                       <ListItemIcon>
                         <LinkIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Copy Link Kuis" />
+                      <ListItemText primary={`Salin Tautan ${this.state.type}`} />
                     </MenuItem>
                     <MenuItem
                       button

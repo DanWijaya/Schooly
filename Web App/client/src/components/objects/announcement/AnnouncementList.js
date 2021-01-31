@@ -130,7 +130,7 @@ function AnnouncementListToolbar(props) {
           if ((Object.keys(kelas).length > 0) || (user.kelas === undefined)) {
             title = "Pengumuman dari Ketua Kelas";
           }
-          // Object.keys(kelas).length === 0 berarti kelas belum selesai dimuat. jika kelas belum ada, mine akan bernilai false. 
+          // Object.keys(kelas).length === 0 berarti kelas belum selesai dimuat. jika kelas belum ada, mine akan bernilai false.
           // agar judul tidak berganti dari "ketua kelas" (saat kelas belum dimuat) menjadi "saya" (setelah kelas dimuat),
           // judul saat kelas belum dimuat dibuat kosong.
         }
@@ -255,7 +255,7 @@ function AnnouncementListToolbar(props) {
                   onChange={onChange}
                   autoFocus
                   onClick={(e) => setSearchBarFocus(true)}
-                  placeholder="Search Pengumuman"
+                  placeholder="Cari Pengumuman"
                   // onBlur={() => setSearchBarFocus(false)}
                   style={{
                     maxWidth: "200px",
@@ -327,7 +327,7 @@ function AnnouncementListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Pengumuman"
+            placeholder="Cari Pengumuman"
             // onBlur={() => setSearchBarFocus(false)}
             style={{
               maxWidth: "250px",
@@ -473,11 +473,11 @@ AnnouncementListToolbar.propTypes = {
 
 // ANCHOR f ListItems
 function AnnouncementListItems(props) {
-  const { 
-    rows, 
-    classes, 
-    order, 
-    orderBy, 
+  const {
+    rows,
+    classes,
+    order,
+    orderBy,
     showButtons,
     handleOpenDeleteDialog,
     addBottomMargin
@@ -491,7 +491,7 @@ function AnnouncementListItems(props) {
         </Typography>
       ) : (
           stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-            //agar bisa menambahkan elemen <Link> berdasarkan kondisi  
+            //agar bisa menambahkan elemen <Link> berdasarkan kondisi
             let content = (
               <ListItem
                 button={!showButtons}
@@ -637,15 +637,15 @@ AnnouncementListItems.propTypes = {
 
 // FIXME f SubList
 function AnnouncementSubList(props) {
-  const { 
-    retrieved_users, 
-    selectedAnnouncements, 
-    adminAnnouncements, 
-    kelas, 
-    classes, 
-    user, 
-    mine, 
-    author_role, 
+  const {
+    retrieved_users,
+    selectedAnnouncements,
+    adminAnnouncements,
+    kelas,
+    classes,
+    user,
+    mine,
+    author_role,
     showButtons,
     handleOpenDeleteDialog,
     addBottomMargin
@@ -682,10 +682,10 @@ function AnnouncementSubList(props) {
   };
 
   React.useEffect(() => {
-    /* 
-      admin: 
+    /*
+      admin:
       - pengumuman yg saya buat
-      guru: 
+      guru:
       - pengumuman yg saya buat
       - pengumuman yg diberi oleh admin
       murid:
@@ -699,10 +699,10 @@ function AnnouncementSubList(props) {
       let newRows = [];
 
       if (mine) {
-        /* 
+        /*
         untuk pengumuman yg dibuat oleh:
         - saya sebagai admin
-        - saya sebagai guru 
+        - saya sebagai guru
         - saya sebagai ketua kelas
         */
         selectedAnnouncements
@@ -714,8 +714,8 @@ function AnnouncementSubList(props) {
           });
       } else {
         if (author_role === "Student") {
-          /* 
-          untuk pengumuman yg dibuat oleh ketua kelas 
+          /*
+          untuk pengumuman yg dibuat oleh ketua kelas
           */
           selectedAnnouncements
             .filter((item) =>
@@ -725,7 +725,7 @@ function AnnouncementSubList(props) {
               announcementRowItem(newRows, data);
             });
         } else if (author_role === "Teacher") {
-          /* 
+          /*
           untuk pengumuman yg diberikan oleh guru kepada saya sebagai murid
           */
           selectedAnnouncements
@@ -736,10 +736,10 @@ function AnnouncementSubList(props) {
               announcementRowItem(newRows, data);
             });
         } else if (author_role === "Admin") {
-          /* 
+          /*
           untuk pengumuman yg:
-          - diberikan oleh admin kepada saya sebagai guru 
-          - diberikan oleh admin kepada saya sebagai murid 
+          - diberikan oleh admin kepada saya sebagai guru
+          - diberikan oleh admin kepada saya sebagai murid
           */
          let isTargeted;
          if (user.role === "Student") {
@@ -749,13 +749,13 @@ function AnnouncementSubList(props) {
          }
           // atribut to announcement memiliki 3 range value: Student, Teacher, atau Teacher_Student
           adminAnnouncements
-            .filter((item) => 
+            .filter((item) =>
               isTargeted(item.to) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
             )
             .forEach((data) => {
               announcementRowItem(newRows, data);
             });
-        } 
+        }
       }
       setRows(newRows);
     }
@@ -937,7 +937,7 @@ function AnnouncementList(props) {
     deleteAnnouncement(id);
     console.log(id);
   };
-    
+
   const [rows, setRows] = React.useState([]);
   // var rows = [];
   const announcementRowItem = (rows, data) => {
@@ -1073,7 +1073,7 @@ function AnnouncementList(props) {
         (user.role === "Admin") ?
           <AnnouncementListItems
             order={order}
-            orderBy={orderBy}  
+            orderBy={orderBy}
             rows={rows}
             classes={classes}
             showButtons={true}
@@ -1082,7 +1082,7 @@ function AnnouncementList(props) {
           />
           : (user.role === "Teacher") ?
             <>
-              <AnnouncementSubList 
+              <AnnouncementSubList
                 {...propsToPass}
                 mine={true}
                 author_role={null}
@@ -1090,7 +1090,7 @@ function AnnouncementList(props) {
                 handleOpenDeleteDialog={handleOpenDeleteDialog}
                 addBottomMargin={true}
                 />
-              <AnnouncementSubList 
+              <AnnouncementSubList
                 {...propsToPass}
                 mine={false}
                 author_role="Admin"

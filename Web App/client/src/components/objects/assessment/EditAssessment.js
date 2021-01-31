@@ -138,12 +138,12 @@ const styles = (theme) => ({
       justifyContent: "center",
     },
   },
-  createAssessmentButton: {
-    backgroundColor: theme.palette.success.main,
+  editAssessmentButton: {
+    backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: "white",
-      color: theme.palette.success.main,
+      color: theme.palette.primary.main,
     },
   },
   cancelButton: {
@@ -1029,87 +1029,6 @@ class EditAssessment extends Component {
           (isNaN(Number(weight)) || Number(weight) <= 0) && weight !== null;
 
         gridItemMobileView.push(
-          //   <Grid container item xs={6} spacing="1" direction="column" justify="space-between" alignItems="center">
-          //     <Grid item>
-          //       {columnTemplate[type].icon}
-          //     </Grid>
-          //     <Grid item>
-          //       <Hidden xsDown>
-          //         <Typography align="center">
-          //           {columnTemplate[type].text}
-          //         </Typography>
-          //       </Hidden>
-          //       <Hidden smUp>
-          //         <Typography align="center" style={{ fontSize: "0.8rem" }}>
-          //           {columnTemplate[type].text}
-          //         </Typography>
-          //       </Hidden>
-          //     </Grid>
-          //     <Grid item>
-          //       <Hidden xsDown>
-          //         <Typography component="label" for="weight" color="primary">
-          //           Bobot Per Soal:
-          //         </Typography>
-          //       </Hidden>
-          //       <Hidden smUp>
-          //         <Typography component="label" for="weight" color="primary" style={{ fontSize: "0.8rem" }}>
-          //           Bobot Per Soal:
-          //         </Typography>
-          //       </Hidden>
-          //     </Grid>
-          //     {(type !== "longtext") ? (
-          //       <Grid item style={{ height: "65px" }}>
-          //         <Hidden xsDown>
-          //           <TextField
-          //             defaultValue={this.state.weights[type]}
-          //             variant="outlined"
-          //             id="weight"
-          //             fullWidth
-          //             onChange={(e) => { this.handleWeight(e, type) }}
-          //             error={showError}
-          //             helperText={showError ? "Periksa Kembali!" : null}
-          //             InputProps={{
-          //               style: {
-          //                 width: "150px"
-          //               },
-          //               endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
-          //             }}
-          //           />
-          //         </Hidden>
-          //         <Hidden smUp>
-          //           <TextField
-          //             defaultValue={this.state.weights[type]}
-          //             variant="outlined"
-          //             id="weight"
-          //             fullWidth
-          //             onChange={(e) => { this.handleWeight(e, type) }}
-          //             error={showError}
-          //             helperText={showError ? "Periksa Kembali!" : null}
-          //             FormHelperTextProps={{
-          //               style: {
-          //                 margin: "0px"
-          //               }
-          //             }}
-          //             InputProps={{
-          //               style: {
-          //                 width: "110px"
-          //               },
-          //               endAdornment: <Typography color="textSecondary">{` Poin`}</Typography>
-          //             }}
-          //           />
-          //         </Hidden>
-
-          //       </Grid>
-          //     ) : (
-          //       <Grid item style={{ height: "65px" }}>
-          //         <LightTooltip title="Bobot soal jenis uraian dapat ditentukan pada masing-masing soal">
-          //           <IconButton>
-          //             <InfoIcon />
-          //           </IconButton>
-          //         </LightTooltip>
-          //       </Grid>
-          //     )}
-          //   </Grid>
           <Grid container>
             <Grid
               item
@@ -1612,7 +1531,7 @@ class EditAssessment extends Component {
                               id="workTime"
                               value={this.state.end_date}
                               minDate={this.state.start_date}
-                              minDateMessage="Batas waktu harus setelah Mulai waktu pengerjaan"
+                              minDateMessage="Batas waktu harus setelah Waktu Mulai Pengerjaan"
                               onChange={(date) =>
                                 this.onChange(date, "end_date")
                               }
@@ -1858,9 +1777,9 @@ class EditAssessment extends Component {
                         <Button
                           variant="contained"
                           type="submit"
-                          className={classes.createAssessmentButton}
+                          className={classes.editAssessmentButton}
                         >
-                          Sunting
+                          Sunting Kuis/Ujian
                         </Button>
                       </Grid>
                     </Grid>
@@ -1963,7 +1882,7 @@ class EditAssessment extends Component {
                       <ListItemIcon>
                         <LinkIcon />
                       </ListItemIcon>
-                      <ListItemText primary={`Copy Link ${this.state.type}`} />
+                      <ListItemText primary={`Salin Tautan ${this.state.type}`} />
                     </MenuItem>
                     <MenuItem
                       button

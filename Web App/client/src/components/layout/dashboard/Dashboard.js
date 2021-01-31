@@ -1319,7 +1319,7 @@ class Dashboard extends Component {
                           style={{ marginRight: "10px", fontSize: "20px" }}
                         />
                         <Typography variant="h5" color="primary">
-                          Tugas Yang Belum Diperiksa
+                          Tugas yang Belum Diperiksa
                         </Typography>
                       </Grid>
                     </Grid>

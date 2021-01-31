@@ -289,9 +289,7 @@ function QuestionItem(props) {
                     endAdornment: (
                       <InputAdornment position="end">
                         <LightTooltip title="Gunakan karakter backtick (`) untuk menandai posisi kotak isian pada soal. Karakter-karakter yang diapit oleh pasangan backtick akan disimpan sebagai kunci jawaban untuk sebuah kotak isian.">
-                          <IconButton>
-                            <HelpIcon />
-                          </IconButton>
+                          <HelpIcon fontSize="small" style={{cursor: "default", color: "grey" }} />
                         </LightTooltip>
                       </InputAdornment>
                     ),

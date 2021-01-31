@@ -453,7 +453,7 @@ function ViewAssessmentTeacher(props) {
             </Link>
           </Grid>
           <Grid item>
-            <LightTooltip title="Copy Link">
+            <LightTooltip title="Salin Tautan">
               <Fab
                 className={classes.copyToClipboardButton}
                 onClick={(e) => copyToClipboardButton(e, linkToShare, type)}

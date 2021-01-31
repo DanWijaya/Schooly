@@ -39,7 +39,7 @@ export const globalStyles = responsiveFontSizes(
         main: "#0d2481",
       },
       radio: {
-        main: "#02AFF8" 
+        main: "#02AFF8"
       },
       checkbox: {
         main: "#049F90"
@@ -143,7 +143,7 @@ export const globalStyles = responsiveFontSizes(
           style: {
             borderBottom: "none",
             boxShadow: "none",
-            margin: "0px 15px 0px 15px",
+            margin: "0px 15px 5px 15px",
           },
         },
       },

@@ -129,7 +129,7 @@ function ClassListToolbar(props) {
 
     let classData = {
       [dummyClassId]: {
-        studentsEmail: [], // semua murid di kelas dummy ini merupakan murid yang belum ditempatkan ke kelas manapun 
+        studentsEmail: [], // semua murid di kelas dummy ini merupakan murid yang belum ditempatkan ke kelas manapun
         classNames: dummyClassName,
       }
     };
@@ -138,12 +138,12 @@ function ClassListToolbar(props) {
         classId_1: {
           studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ], -> semua murid anggota kelas ini
           classNames: className_1
-        }, 
+        },
         classId_2: {
           studentsEmail: [ studentEmail_1, studentEmail_2, studentEmail_3, ... ],
           classNames: className_2
-        }, 
-        ... 
+        },
+        ...
       } key -> id semua kelas yang ada di db
     */
 
@@ -202,7 +202,7 @@ function ClassListToolbar(props) {
         tempMatrix[i + 1].push(entry[1].studentsEmail[i]);
       }
 
-      // jika semua email murid untuk kelas ini sudah dimasukan ke kolom, isi sisa baris kolom ini dengan undefined 
+      // jika semua email murid untuk kelas ini sudah dimasukan ke kolom, isi sisa baris kolom ini dengan undefined
       for (
         let i = entry[1].studentsEmail.length + 1;
         i <= maxStudentCount;
@@ -296,7 +296,7 @@ function ClassListToolbar(props) {
           }
         }
 
-        let classesToUpdate = {}; // digunakan untuk menghapus id murid pengurus kelas pada kelas-kelas tertentu 
+        let classesToUpdate = {}; // digunakan untuk menghapus id murid pengurus kelas pada kelas-kelas tertentu
         let newClassParticipant = {}; // digunakan untuk mengubah kelas murid-murid yang pindah kelas
         let allStudentEmail = new Set(); // digunakan untuk mengecek duplikasi email
         // traverse dari kiri ke kanan, atas ke bawah
@@ -309,7 +309,7 @@ function ClassListToolbar(props) {
               currentEmail !== "" &&
               currentEmail !== undefined
             ) {
-              // cek duplikasi email 
+              // cek duplikasi email
               if (allStudentEmail.has(currentEmail)) {
                 throw new Error(
                   `Terdapat duplikasi email "${currentEmail}", mohon periksa kembali`
@@ -349,7 +349,7 @@ function ClassListToolbar(props) {
                     if (oldClassInfo.sekretaris === studentId) {
                       fieldToDelete.push("sekretaris");
                     }
-  
+
                     if (fieldToDelete.length > 0) {
                       classesToUpdate[oldClassId] = fieldToDelete;
                     }
@@ -362,7 +362,7 @@ function ClassListToolbar(props) {
                       continue;
                     }
                   }
-                  
+
                   // catat id murid yang akan dipindahkan ke kelas ini
                   if (newClassParticipant[newClassId]) {
                     newClassParticipant[newClassId].push(studentId);
@@ -559,7 +559,7 @@ function ClassListToolbar(props) {
           </div>
         ) : null}
       </div>
-      
+
       <Dialog
         classes={{ paper: classes.dialogPaper }}
         maxWidth="xs"
@@ -886,7 +886,7 @@ function ClassList(props) {
                             color="textSecondary"
                             align="center"
                           >
-                            Wali Kelas: <b>{row.homeroomTeacher}</b>
+                            Wali Kelas: {row.homeroomTeacher}
                           </Typography>
                         </div>
                         <Divider />
@@ -907,7 +907,7 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                <LightTooltip title="Jumlah Peserta">
+                                <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}
                                     color="secondary"
@@ -966,7 +966,7 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                <LightTooltip title="Jumlah Peserta">
+                                <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}
                                     color="secondary"

@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     maxWidth: "1000px",
     padding: "10px",
+    color: "white",
   },
   schoolyFeatures: {
     margin: "auto",
@@ -169,6 +170,7 @@ function About(props) {
           <Button
             variant="contained"
             size="large"
+            href="mailto:schoolysystem@gmail.com"
             startIcon={<EmailIcon />}
             className={classes.supportSchoolyButton}
           >

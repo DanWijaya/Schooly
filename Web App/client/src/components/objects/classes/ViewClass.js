@@ -75,9 +75,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundSize: "contain",
   },
-  subjectDivider: {
-    backgroundColor: theme.palette.primary.main,
-  },
   expansionPanelList: {
     margin: "20px",
     display: "flex",
@@ -877,7 +874,7 @@ function ViewClass(props) {
     return materialList;
   }
 
-  React.useEffect(() => {    
+  React.useEffect(() => {
     if (user.role === "Student") {
       if (user.kelas) {
         getMaterial(user.kelas, "by_class");
@@ -971,7 +968,7 @@ function ViewClass(props) {
         </Typography>
       </div>
     );
-  } 
+  }
 
   return (
     <div className={classes.root}>
@@ -1353,7 +1350,7 @@ function ViewClass(props) {
                             </LightTooltip>
                           </Grid>
                         </ExpansionPanelSummary>
-                        <Divider className={classes.subjectDivider} />
+                        <Divider />
                         <List className={classes.expansionPanelList}>
                           {listMaterials("subject", subject, "mata_pelajaran")}
                           {listTasks("subject", subject, "mata_pelajaran")}
