@@ -683,15 +683,16 @@ function AnnouncementSubList(props) {
 
   React.useEffect(() => {
     /*
+    layout isi halaman announcementlist untuk akun:
       admin:
-      - pengumuman yg saya buat
+      1. pengumuman yg saya buat
       guru:
-      - pengumuman yg saya buat
-      - pengumuman yg diberi oleh admin
+      1. pengumuman yg saya buat
+      2. pengumuman yg diberi oleh admin
       murid:
-      - pengumuman yg ketua kelas buat
-      - pengumuman yg diberi oleh guru
-      - pengumuman yg diberi oleh admin
+      1. pengumuman yg ketua kelas buat
+      2. pengumuman yg diberi oleh guru
+      3. pengumuman yg diberi oleh admin
     */
 
     // If all_assessments is not undefined or an empty array
@@ -699,24 +700,8 @@ function AnnouncementSubList(props) {
       let newRows = [];
 
       if (mine) {
-        /*
-        untuk pengumuman yg dibuat oleh:
-        - saya sebagai admin
-        - saya sebagai guru
-        - saya sebagai ketua kelas
-        */
-        selectedAnnouncements
-          .filter((item) =>
-            item.title.toLowerCase().includes(searchFilter.toLowerCase())
-          )
-          .forEach((data) => {
-            announcementRowItem(newRows, data);
-          });
-      } else {
         if (author_role === "Student") {
-          /*
-          untuk pengumuman yg dibuat oleh ketua kelas
-          */
+          // untuk pengumuman yg dibuat oleh saya sebagai ketua kelas 
           selectedAnnouncements
             .filter((item) =>
               (item.author_id === kelas.ketua_kelas) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
@@ -725,9 +710,7 @@ function AnnouncementSubList(props) {
               announcementRowItem(newRows, data);
             });
         } else if (author_role === "Teacher") {
-          /*
-          untuk pengumuman yg diberikan oleh guru kepada saya sebagai murid
-          */
+          // untuk pengumuman yg dibuat oleh saya sebagai guru 
           selectedAnnouncements
             .filter((item) =>
               (item.author_id !== kelas.ketua_kelas) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
@@ -736,18 +719,44 @@ function AnnouncementSubList(props) {
               announcementRowItem(newRows, data);
             });
         } else if (author_role === "Admin") {
-          /*
-          untuk pengumuman yg:
-          - diberikan oleh admin kepada saya sebagai guru
-          - diberikan oleh admin kepada saya sebagai murid
-          */
+          // untuk pengumuman yg dibuat oleh saya sebagai admin 
+          selectedAnnouncements
+            .filter((item) =>
+              item.title.toLowerCase().includes(searchFilter.toLowerCase())
+            )
+            .forEach((data) => {
+              announcementRowItem(newRows, data);
+            });
+        }
+      } else {
+        if (author_role === "Student") {
+          // untuk pengumuman yg diberikan oleh ketua kelas kepada saya sebagai murid (saya bukan ketua kelas)
+          selectedAnnouncements
+            .filter((item) =>
+              (item.author_id === kelas.ketua_kelas) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
+            )
+            .forEach((data) => {
+              announcementRowItem(newRows, data);
+            });
+        } else if (author_role === "Teacher") {
+          // untuk pengumuman yg diberikan oleh guru kepada saya sebagai murid
+          selectedAnnouncements
+            .filter((item) =>
+              (item.author_id !== kelas.ketua_kelas) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
+            )
+            .forEach((data) => {
+              announcementRowItem(newRows, data);
+            });
+        } else if (author_role === "Admin") {
          let isTargeted;
          if (user.role === "Student") {
+          // untuk pengumuman yg diberikan oleh admin kepada saya sebagai murid
           isTargeted = (target) => (target !== "Teacher");
          } else if (user.role === "Teacher") {
+          // untuk pengumuman yg diberikan oleh admin kepada saya sebagai guru
           isTargeted = (target) => (target !== "Student");
          }
-          // atribut to announcement memiliki 3 range value: Student, Teacher, atau Teacher_Student
+          // atribut "to" pada model "Announcement" memiliki 3 range value: "Student", "Teacher", atau "Teacher_Student"
           adminAnnouncements
             .filter((item) =>
               isTargeted(item.to) && item.title.toLowerCase().includes(searchFilter.toLowerCase())
@@ -1085,7 +1094,7 @@ function AnnouncementList(props) {
               <AnnouncementSubList
                 {...propsToPass}
                 mine={true}
-                author_role={null}
+                author_role={"Teacher"}
                 showButtons={true}
                 handleOpenDeleteDialog={handleOpenDeleteDialog}
                 addBottomMargin={true}
