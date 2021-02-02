@@ -548,8 +548,9 @@ function ViewClass(props) {
   const classId = props.match.params.id;
 
   const [walikelas, setWalikelas] = React.useState({});
-  const [firstAssign, setFirstAssign] = React.useState(true);
-  const [allow, setAllow] = React.useState("empty");
+  // const [firstAssign, setFirstAssign] = React.useState(true);
+  const firstAssign = React.useRef(true);
+  // const [allow, setAllow] = React.useState("empty");
 
   const all_assessments = assessmentsCollection.all_assessments;
 
@@ -876,10 +877,14 @@ function ViewClass(props) {
 
   React.useEffect(() => {
     if (user.role === "Student") {
-      if (user.kelas) {
+      if (user.kelas && (user.kelas === classId)) {
+        // jika murid ini sudah ditempatkan ke suatu kelas dan 
+        // id kelas yang dimasukan sebagai parameter adalah id milik kelas yang ditempati murid ini,
         getMaterial(user.kelas, "by_class");
         getAllTask(); // get the tasksCollection
       } else {
+        // jika murid ini belum ditempatkan di kelas manapun atau mencoba membuka halaman untuk kelas lain, 
+        // tidak load data apa-apa dan langsung redirect ke halaman yang sesuai (di bawah)
         return;
       }
     }
@@ -902,28 +907,28 @@ function ViewClass(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_teachers]);
 
-  React.useEffect(() => {
-    // nilai students_by_class yang diperlukan adalah nilai yang diassign ketika fungsi getStudentsByClass telah selesai,
-    // bukan ketika komponen ini dimount
-    if (firstAssign) {
-      setFirstAssign(false);
-    } else {
-      // me-redirect murid yang memasukkan id kelas lain (bukan kelas murid tersebut) pada url
-      if (
-        user.role === "Student" &&
-        !students_by_class
-          .map((student) => {
-            return student._id;
-          })
-          .includes(user._id)
-      ) {
-        setAllow("redirect");
-      } else {
-        setAllow("content");
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [students_by_class, user]);
+  // React.useEffect(() => {
+  //   // nilai students_by_class yang diperlukan adalah nilai yang diassign ketika fungsi getStudentsByClass telah selesai,
+  //   // bukan ketika komponen ini dimount
+  //   if (firstAssign.current) {
+  //     firstAssign.current = false;
+  //   } else {
+  //     // me-redirect murid yang memasukkan id kelas lain (bukan kelas murid tersebut) pada url
+  //     if (
+  //       user.role === "Student" &&
+  //       !students_by_class
+  //         .map((student) => {
+  //           return student._id;
+  //         })
+  //         .includes(user._id)
+  //     ) {
+  //       setAllow("redirect");
+  //     } else {
+  //       setAllow("content");
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [students_by_class, user]);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -960,20 +965,31 @@ function ViewClass(props) {
     }
   }
 
-  if ((user.role === "Student") && !user.kelas) {
-    return (
-      <div className={classes.root} style={{display: "flex", alignItems: "center", justifyContent: "center", height: "48vh"}}>
-        <Typography variant="h5" color="textSecondary">
-          Anda belum ditempatkan di kelas manapun
-        </Typography>
-      </div>
-    );
+  if ((user.role === "Student")) {
+    if (user.kelas) {
+      if (classId !== user.kelas) {
+        // jika murid ini membuka halaman kelas lain,
+        return <Redirect to="/tidak-ditemukan" />;
+      }
+      // jika murid ini membuka kelas sendiri, muat halaman
+
+    } else {
+      // jika murid ini belum ditempatkan di kelas manapun,
+      return (
+        <div className={classes.root} style={{display: "flex", alignItems: "center", justifyContent: "center", height: "48vh"}}>
+          <Typography variant="h5" color="textSecondary">
+            Anda belum ditempatkan di kelas manapun
+          </Typography>
+        </div>
+      );
+    }
   }
 
   return (
     <div className={classes.root}>
-      {allow === "empty" ? null : allow === "content" ? (
-        user.role === "Admin" || user.role === "Teacher" ? ( // ---------- jika halaman kelas dibuka oleh admin atau guru ----------
+      {/* {allow === "empty" ? null : allow === "content" ? ( */}
+      {
+        (user.role === "Admin" || user.role === "Teacher") ? ( // ---------- jika halaman kelas dibuka oleh admin atau guru ----------
           <div>
             <Paper className={classes.classPaper}>
               <Typography variant="h3">{kelas.name}</Typography>
@@ -1001,8 +1017,7 @@ function ViewClass(props) {
                           }
                         />
                       </Grid>,
-                    ].concat(
-                      user.email === walikelas.email ? null : ( // menghilangkan tombol lihat profil di diri sendiri
+                      (user.email === walikelas.email) ? null : ( // menghilangkan tombol lihat profil di diri sendiri
                         <Grid item xs container justify="flex-end">
                           <Grid item>
                             <LightTooltip title="Lihat Profil">
@@ -1034,7 +1049,7 @@ function ViewClass(props) {
                           </Grid>
                         </Grid>
                       )
-                    )}
+                    ]}
                   </Grid>
                 ) : (
                   <Typography
@@ -1114,7 +1129,7 @@ function ViewClass(props) {
             </div>
           </div>
         ) : (
-          // ---------- jika halaman kelas dibuka oleh Murid ----------
+          // ---------- jika halaman kelas dibuka oleh murid ----------
           <div>
             <Paper square>
               <div className={classes.classPaper}>
@@ -1492,8 +1507,7 @@ function ViewClass(props) {
                                 person_role={student_role(student._id)}
                               />
                             </Grid>,
-                          ].concat(
-                            user.email === student.email ? null : (
+                            (user.email === student.email) ? null : (
                               <Grid item xs container justify="flex-end">
                                 <Grid item>
                                   <LightTooltip title="Lihat Profil">
@@ -1527,7 +1541,7 @@ function ViewClass(props) {
                                 </Grid>
                               </Grid>
                             )
-                          )}
+                          ]}
                         </Grid>
                       ))
                     )}
@@ -1537,9 +1551,10 @@ function ViewClass(props) {
             </TabPanel>
           </div>
         )
-      ) : (
+      }
+      {/* ) : (
         <Redirect to="/tidak-ditemukan" />
-      )}
+      )} */}
     </div>
   );
 }

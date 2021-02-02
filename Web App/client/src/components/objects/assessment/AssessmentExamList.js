@@ -551,6 +551,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     marginRight: "10px",
   },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+    padding: "6px 24px"
+  }
 }));
 
 function AssessmentList(props) {
@@ -987,8 +993,8 @@ function AssessmentList(props) {
                       }}
                     >
                       <ListItem
-                        button
-                        component="a"
+                        // button
+                        // component="a"
                         className={classes.listItem}
                       >
                         <Hidden smUp implementation="css">

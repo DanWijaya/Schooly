@@ -496,6 +496,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     marginRight: "10px",
   },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+    padding: "6px 24px"
+  }
 }));
 
 function MaterialList(props) {
@@ -763,9 +769,9 @@ function MaterialList(props) {
                     <Link to={viewpage}>
                       <Paper variant="outlined">
                         <ListItem
-                          button
-                          component="a"
-                          className={classes.announcementListItem}
+                          // button
+                          // component="a"
+                          className={classes.listItem}
                         >
                           <Hidden smUp implementation="css">
                             <ListItemText

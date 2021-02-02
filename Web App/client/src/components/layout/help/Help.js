@@ -1120,7 +1120,7 @@ function Help(props) {
                           </Typography>
                           <Typography>
                             Tidak. Guru hanya bisa melihat rapor dari mata
-                            pelajaran yang diajarnya saja saja.
+                            pelajaran yang diajarnya saja.
                           </Typography>
                         </Grid>
                         <Grid item>

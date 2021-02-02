@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBox: {
     padding: "20px",
-    marginBottom: "10px",
+    // marginBottom: "10px",
   },
   listItemPaper: {
     marginBottom: "10px",
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   teacherButtonContainer: {
     display: "flex",
     justifyContent: "flex-end",
-    marginTop: "20px",
+    // marginTop: "20px",
   },
   editAnnouncementButton: {
     marginRight: "10px",
@@ -302,183 +302,118 @@ function ViewAnnouncement(props) {
           onDeleteAnnouncement(announcement_id);
         }}
       />
-      <Paper className={classes.paperBox}>
-        {/* <Grid container direction="column" spacing={6}> */}
-        <Grid container spacing={2}>
-          {/* <Grid item xs={12} style={{ paddingBottom: "0" }}> */}
-          {/* <Grid item container direction="row"> */}
-            <Grid item xs={12} style={{paddingBottom: "0"}}>
-              <Typography variant="h4">{selectedAnnouncements.title}</Typography>
-            </Grid>
-
-            <Grid item xs={12} style={{ paddingTop: "0" }}>
-              <h6 style={{ marginBottom: "0" }}>
-
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  // style={{ marginTop: "10px" }}
-                >
-                  Oleh:{" "}
-                  <b>
-                    {!retrieved_users.size ||
-                      !selectedAnnouncements.author_id ||
-                      !retrieved_users.get(selectedAnnouncements.author_id)
-                      ? ""
-                      : retrieved_users.get(selectedAnnouncements.author_id)
-                        .name}
-                  </b>
-                </Typography>
-              </h6>
-
-              <Typography variant="body2" color="textSecondary">
-                Waktu Dibuat:{" "}
-                {moment(selectedAnnouncements.createdAt)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-              </Typography>
-            </Grid>
-
-            {/* <Grid item xs={12} md={6}>
-              <ListItemText
-                primary={
-                  <Typography variant="h4">
-                    {selectedAnnouncements.title}
-                  </Typography>
-                }
-                secondary={
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Paper className={classes.paperBox}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                <Typography variant="h4">{selectedAnnouncements.title}</Typography>
+              </Grid>
+              <Grid item xs={12} style={{ paddingTop: "0" }}>
+                <h6 style={{ marginBottom: "0" }}>
                   <Typography
                     variant="body2"
                     color="textSecondary"
-                    style={{ marginTop: "10px" }}
+                  // style={{ marginTop: "10px" }}
                   >
                     Oleh:{" "}
                     <b>
                       {!retrieved_users.size ||
-                      !selectedAnnouncements.author_id ||
-                      !retrieved_users.get(selectedAnnouncements.author_id)
+                        !selectedAnnouncements.author_id ||
+                        !retrieved_users.get(selectedAnnouncements.author_id)
                         ? ""
                         : retrieved_users.get(selectedAnnouncements.author_id)
-                            .name}
+                          .name}
                     </b>
                   </Typography>
-                }
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Hidden mdUp implementation="css">
-                <ListItemText
-                  primary={
-                    <Typography
-                      variant="body2"
-                      className={classes.deadlineWarningText}
-                    >
-                      Tanggal diumumkan:{" "}
-                      {moment(selectedAnnouncements.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  }
-                />
-              </Hidden>
-              <Hidden smDown implementation="css">
-                <ListItemText
-                  align="right"
-                  primary={
-                    <Typography
-                      variant="body2"
-                      className={classes.deadlineWarningText}
-                    >
-                      Tanggal diumumkan:{" "}
-                      {moment(selectedAnnouncements.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY, HH:mm")}
-                    </Typography>
-                  }
-                />
-              </Hidden>
-            </Grid> */}
-
-            
-          {/* </Grid> */}
-
-          <Grid item xs={12}>
-            <Divider className={classes.dividerColor} />
-          </Grid>
-
-          {
-            (user.role === "Teacher") && retrieved_users.size && 
-            selectedAnnouncements.author_id && (retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher") ? (
-            <Grid item xs={12} style={{ marginTop: "30px" }}>
-              <Typography color="primary" gutterBottom>
-                Kelas yang Diberikan:
-              </Typography>
-              <Typography>
-                {!selectedAnnouncements.class_assigned || !all_classes_map.size
-                  ? null
-                  : selectedAnnouncements.class_assigned.map((kelas, i) => {
-                      if (all_classes_map.get(kelas)) {
-                        if (i === selectedAnnouncements.class_assigned.length - 1)
-                          return `${all_classes_map.get(kelas).name}`;
-                        return `${all_classes_map.get(kelas).name}, `;
-                      }
-                      return null;
-                    })}
-              </Typography>
-            </Grid>
-          ) : null}
-
-          <Grid item xs={12} style={{ marginTop: "30px" }}>
-          {/* <Grid item> */}
-            <Typography color="primary" gutterBottom>
-              Deskripsi Pengumuman:
-            </Typography>
-            <Typography variant="body1">
-              {selectedAnnouncements.description}
-            </Typography>
-          </Grid>
-          {!selectedAnnouncements.lampiran ||
-          selectedAnnouncements.lampiran.length === 0 ? null : (
-            <Grid item xs={12} style={{ marginTop: "30px" }}>
-            {/* <Grid item> */}
-              <Typography color="primary" gutterBottom>
-                Lampiran Berkas:
-              </Typography>
-              <Grid item container spacing={1}>
-                {selectedAnnouncements.lampiran.map((lampiran) => (
-                  <LampiranFile
-                    file_id={lampiran.id}
-                    onPreviewFile={onPreviewFile}
-                    onDownloadFile={onDownloadFile}
-                    filename={lampiran.filename}
-                    filetype={fileType(lampiran.filename)}
-                  />
-                ))}
+                </h6>
+                <Typography variant="body2" color="textSecondary">
+                  Waktu Dibuat:{" "}
+                  {moment(selectedAnnouncements.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH:mm")}
+                </Typography>
               </Grid>
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+              {(user.role === "Teacher") && retrieved_users.size &&
+                  selectedAnnouncements.author_id && (retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher") ? (
+                    <Grid item xs={12} style={{ marginTop: "30px" }}>
+                      <Typography color="primary" gutterBottom>
+                        Kelas yang Diberikan:
+                      </Typography>
+                      <Typography>
+                        {!selectedAnnouncements.class_assigned || !all_classes_map.size
+                          ? null
+                          : selectedAnnouncements.class_assigned.map((kelas, i) => {
+                            if (all_classes_map.get(kelas)) {
+                              if (i === selectedAnnouncements.class_assigned.length - 1)
+                                return `${all_classes_map.get(kelas).name}`;
+                              return `${all_classes_map.get(kelas).name}, `;
+                            }
+                            return null;
+                          })}
+                      </Typography>
+                    </Grid>
+                  ) : null}
+
+              <Grid item xs={12} style={{ marginTop: "30px" }}>
+                <Typography color="primary" gutterBottom>
+                  Deskripsi Pengumuman:
+                </Typography>
+                <Typography variant="body1">
+                  {selectedAnnouncements.description}
+                </Typography>
+              </Grid>
+              {!selectedAnnouncements.lampiran ||
+                selectedAnnouncements.lampiran.length === 0 ? null : (
+                  <Grid item xs={12} style={{ marginTop: "30px" }}>
+                    <Typography color="primary" gutterBottom>
+                      Lampiran Berkas:
+                    </Typography>
+                    <Grid item container spacing={1}>
+                      {selectedAnnouncements.lampiran.map((lampiran) => (
+                        <LampiranFile
+                          file_id={lampiran.id}
+                          onPreviewFile={onPreviewFile}
+                          onDownloadFile={onDownloadFile}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                        />
+                      ))}
+                    </Grid>
+                  </Grid>
+                )}
             </Grid>
-          )}
+          </Paper>
         </Grid>
-      </Paper>
-      {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
-        <div className={classes.teacherButtonContainer}>
-          <Link to={`/sunting-pengumuman/${announcement_id}`}>
-            <LightTooltip title="Sunting Pengumuman" placement="bottom">
-              <Fab className={classes.editAnnouncementButton}>
-                <EditIcon />
-              </Fab>
-            </LightTooltip>
-          </Link>
-          <LightTooltip title="Hapus Pengumuman" placement="bottom">
-            <Fab
-              className={classes.deleteAnnouncementButton}
-              onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
-            >
-              <DeleteIcon />
-            </Fab>
-          </LightTooltip>
-        </div>
-      ) : null}
+        {user.role === "Admin" || user._id === selectedAnnouncements.author_id ? ( // kalau studentnya ketua kelas yang buat pengumumannya
+          <Grid item container justify="flex-end" alignItems="center">
+            <Grid item>
+              {/* <div className={classes.teacherButtonContainer}> */}
+              <Link to={`/sunting-pengumuman/${announcement_id}`}>
+                <LightTooltip title="Sunting Pengumuman" placement="bottom">
+                  <Fab className={classes.editAnnouncementButton}>
+                    <EditIcon />
+                  </Fab>
+                </LightTooltip>
+              </Link>
+            </Grid>
+            <Grid item>
+              <LightTooltip title="Hapus Pengumuman" placement="bottom">
+                <Fab
+                  className={classes.deleteAnnouncementButton}
+                  onClick={(e) => handleOpenDeleteDialog(e, announcement_id)}
+                >
+                  <DeleteIcon />
+                </Fab>
+              </LightTooltip>
+            </Grid>
+          </Grid>
+          // {/* </div> */}
+        ) : null}
+      </Grid>
     </div>
   );
 }

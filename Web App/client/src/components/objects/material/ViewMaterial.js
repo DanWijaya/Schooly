@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBox: {
     padding: "20px",
-    marginBottom: "10px",
+    // marginBottom: "10px",
   },
   deadlineWarningText: {
     color: theme.palette.warning.main,
@@ -70,6 +70,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   editButton: {
+    marginRight: "10px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
@@ -305,97 +306,100 @@ function ViewMaterial(props) {
           onDeleteTask(materi_id);
         }}
       />
-      <Paper className={classes.paperBox}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant="h4">{selectedMaterials.name}</Typography>
-            <Typography variant="caption" color="textSecondary" gutterBottom>
-              <h6>{all_subjects_map.get(selectedMaterials.subject)}</h6>
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Oleh: <b>{selectedUser.name}</b>
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Waktu Dibuat:{" "}
-              {moment(selectedMaterials.createdAt)
-                .locale("id")
-                .format("DD MMM YYYY, HH.mm")}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Divider className={classes.dividerColor} />
-          </Grid>
-
-          {user.role === "Teacher" ? (
-            <Grid item xs={12} style={{ marginTop: "30px" }}>
-              <Typography color="primary" gutterBottom>
-                Kelas yang Diberikan:
-              </Typography>
-              <Typography>
-                {!selectedMaterials.class_assigned || !all_classes_map.size
-                  ? null
-                  : selectedMaterials.class_assigned.map((kelas, i) => {
-                      if (all_classes_map.get(kelas)) {
-                        if (i === selectedMaterials.class_assigned.length - 1)
-                          return `${all_classes_map.get(kelas).name}`;
-                        return `${all_classes_map.get(kelas).name}, `;
-                      }
-                      return null;
-                    })}
-              </Typography>
-            </Grid>
-          ) : null}
-          <Grid item xs={12} style={{ marginTop: "30px" }}>
-            <Typography color="primary" gutterBottom>
-              Deskripsi Materi:
-            </Typography>
-            <Typography>{selectedMaterials.description}</Typography>
-          </Grid>
-          {!selectedMaterials.lampiran ? null : (
-            <Grid item xs={12} style={{ marginTop: "30px" }}>
-              <Typography color="primary" gutterBottom>
-                Lampiran Materi:
-              </Typography>
-              <Grid container spacing={1}>
-                {selectedMaterials.lampiran.map((lampiran) => (
-                  <LampiranFile
-                    file_id={lampiran.id}
-                    onPreviewFile={onPreviewFile}
-                    onDownloadFile={onDownloadFile}
-                    filename={lampiran.filename}
-                    filetype={fileType(lampiran.filename)}
-                  />
-                ))}
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Paper className={classes.paperBox}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="h4">{selectedMaterials.name}</Typography>
+                <Typography variant="caption" color="textSecondary" gutterBottom>
+                  <h6>{all_subjects_map.get(selectedMaterials.subject)}</h6>
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Oleh: <b>{selectedUser.name}</b>
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Waktu Dibuat:{" "}
+                  {moment(selectedMaterials.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH.mm")}
+                </Typography>
               </Grid>
+
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+
+              {user.role === "Teacher" ? (
+                <Grid item xs={12} style={{ marginTop: "30px" }}>
+                  <Typography color="primary" gutterBottom>
+                    Kelas yang Diberikan:
+                  </Typography>
+                  <Typography>
+                    {!selectedMaterials.class_assigned || !all_classes_map.size
+                      ? null
+                      : selectedMaterials.class_assigned.map((kelas, i) => {
+                          if (all_classes_map.get(kelas)) {
+                            if (i === selectedMaterials.class_assigned.length - 1)
+                              return `${all_classes_map.get(kelas).name}`;
+                            return `${all_classes_map.get(kelas).name}, `;
+                          }
+                          return null;
+                        })}
+                  </Typography>
+                </Grid>
+              ) : null}
+              <Grid item xs={12} style={{ marginTop: "30px" }}>
+                <Typography color="primary" gutterBottom>
+                  Deskripsi Materi:
+                </Typography>
+                <Typography>{selectedMaterials.description}</Typography>
+              </Grid>
+              {!selectedMaterials.lampiran ? null : (
+                <Grid item xs={12} style={{ marginTop: "30px" }}>
+                  <Typography color="primary" gutterBottom>
+                    Lampiran Materi:
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {selectedMaterials.lampiran.map((lampiran) => (
+                      <LampiranFile
+                        file_id={lampiran.id}
+                        onPreviewFile={onPreviewFile}
+                        onDownloadFile={onDownloadFile}
+                        filename={lampiran.filename}
+                        filetype={fileType(lampiran.filename)}
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
-          )}
+          </Paper>
         </Grid>
-      </Paper>
-      {user.role === "Teacher" ? (
-        <Grid container spacing={2} justify="flex-end" alignItems="center">
-          <Grid item></Grid>
-          <Grid item>
-            <Link to={`/sunting-materi/${materi_id}`}>
-              <LightTooltip title="Sunting" placement="bottom">
-                <Fab className={classes.editButton}>
-                  <EditIcon />
+        {user.role === "Teacher" ? (
+          <Grid item container justify="flex-end" alignItems="center">
+            <Grid item>
+              <Link to={`/sunting-materi/${materi_id}`}>
+                <LightTooltip title="Sunting" placement="bottom">
+                  <Fab className={classes.editButton}>
+                    <EditIcon />
+                  </Fab>
+                </LightTooltip>
+              </Link>
+            </Grid>
+            <Grid item>
+              <LightTooltip title="Hapus" placement="bottom">
+                <Fab
+                  className={classes.deleteButton}
+                  onClick={(e) => handleOpenDeleteDialog(e, materi_id)}
+                >
+                  <DeleteIcon />
                 </Fab>
               </LightTooltip>
-            </Link>
+            </Grid>
           </Grid>
-          <Grid item>
-            <LightTooltip title="Hapus" placement="bottom">
-              <Fab
-                className={classes.deleteButton}
-                onClick={(e) => handleOpenDeleteDialog(e, materi_id)}
-              >
-                <DeleteIcon />
-              </Fab>
-            </LightTooltip>
-          </Grid>
-        </Grid>
-      ) : null}
+        ) : null}
+      </Grid>
     </div>
   );
 }

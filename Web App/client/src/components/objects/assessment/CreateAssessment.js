@@ -1312,7 +1312,12 @@ class CreateAssessment extends Component {
           deleteItem=""
           // itemName={this.state.name}
           // isLink={true}
-          redirectLink="/daftar-kuis"
+          // redirectLink="/daftar-kuis"
+          redirectLink={
+            this.state.type === "Kuis"
+              ? `/daftar-kuis`
+              : `/daftar-ujian`
+          }
           isWarning={false}
         />
         <UploadDialog

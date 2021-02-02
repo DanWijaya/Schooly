@@ -494,9 +494,9 @@ function AnnouncementListItems(props) {
             //agar bisa menambahkan elemen <Link> berdasarkan kondisi
             let content = (
               <ListItem
-                button={!showButtons}
+                // button={!showButtons}
                 // component="a"
-                className={classes.announcementListItem}
+                className={classes.listItem}
               >
                 <Hidden smUp implementation="css">
                   <ListItemText
@@ -858,7 +858,7 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  announcementListItem: {
+  listItem: {
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },

@@ -41,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: "10px",
   },
-  content: {
-    padding: "20px",
-  },
+  // content: {
+  //   padding: "20px",
+  // },
   seeAllAssessmentButton: {
     backgroundColor: theme.palette.success.main,
     color: "white",
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBox: {
     padding: "20px",
-    marginBottom: "10px",
+    // marginBottom: "10px",
   },
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
@@ -232,8 +232,6 @@ function ViewAssessmentTeacher(props) {
       <Grid container direction="column" spacing={3}>
         <Grid item style={{ marginBottom: "20px" }}>
           <Paper className={classes.paperBox}>
-            {/* <Grid container spacing={6} className={classes.content}> */}
-            {/* <Grid container spacing={2} className={classes.content}> */}
             <Grid container spacing={2}>
               <Hidden smDown>
                 <Grid item xs={12} style={{ paddingBottom: "0" }}>
@@ -351,7 +349,7 @@ function ViewAssessmentTeacher(props) {
           ? null
           : questions.map((question, i) => (
               <Grid item>
-                <Paper>
+                <Paper className={classes.paperBox}>
                   <Grid
                     container
                     direction="column"
@@ -434,8 +432,8 @@ function ViewAssessmentTeacher(props) {
                 </Paper>
               </Grid>
             ))}
-        <Grid item container spacing={2} justify="flex-end" alignItems="center">
-          <Grid item>
+        <Grid item container justify="flex-end" alignItems="center" style={{ paddingTop: "4px" }}>
+          <Grid item style={{ paddingRight: "10px" }}>
             <Link
               to={
                 selectedAssessments.type === "Kuis"
@@ -448,11 +446,11 @@ function ViewAssessmentTeacher(props) {
                 className={classes.seeAllAssessmentButton}
               >
                 <AssignmentIcon style={{ marginRight: "10px" }} />
-                Lihat Hasil
-              </Fab>
+                  Lihat Hasil
+                </Fab>
             </Link>
           </Grid>
-          <Grid item>
+          <Grid item style={{ paddingRight: "10px" }}>
             <LightTooltip title="Salin Tautan">
               <Fab
                 className={classes.copyToClipboardButton}
@@ -462,7 +460,7 @@ function ViewAssessmentTeacher(props) {
               </Fab>
             </LightTooltip>
           </Grid>
-          <Grid item>
+          <Grid item style={{ paddingRight: "10px" }}>
             <Link to={`/sunting-kuis/${assessment_id}`}>
               <LightTooltip title="Sunting" placement="bottom">
                 <Fab className={classes.editAssessmentButton}>

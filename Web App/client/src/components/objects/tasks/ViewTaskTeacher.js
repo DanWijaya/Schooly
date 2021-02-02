@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBox: {
     padding: "20px",
-    marginBottom: "10px",
+    // marginBottom: "10px",
   },
   seeAllTaskButton: {
     backgroundColor: theme.palette.success.main,
@@ -297,145 +297,135 @@ function ViewTaskTeacher(props) {
           onDeleteTask(task_id);
         }}
       />
-      <Paper className={classes.paperBox}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} style={{paddingBottom: "0"}}>
-            <Typography variant="h4">{tasksCollection.name}</Typography>
-            <Typography variant="caption" color="textSecondary" gutterBottom>
-              <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={7} style={{paddingTop: "0"}}>
-            <Typography variant="body2" color="textSecondary">
-              Penanggung Jawab: <b>{user.name}</b>
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Waktu Dibuat:{" "}
-              {moment(tasksCollection.createdAt)
-                .locale("id")
-                .format("DD MMM YYYY, HH.mm")}
-            </Typography>
-            <Hidden mdUp>
-              <Typography variant="body2" color="textSecondary">
-                Tenggat:{" "}
-                {moment(tasksCollection.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH.mm")}
-              </Typography>
-            </Hidden>
-          </Grid>
-
-          {/* <Grid item xs={12} md={5} style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end"}} > */}
-          {/* <Hidden mdUp>
-              <Typography variant="body2" color="textSecondary">
-                Tenggat: {moment(tasksCollection.deadline).locale("id").format("DD MMM YYYY, HH.mm")}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Nilai Maksimum: 100
-              </Typography>
-            </Hidden> */}
-          <Hidden smDown style={{ display: "flex" }}>
-            <Grid
-              item
-              xs={12}
-              md={5}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-              }}
-            >
-              <Typography variant="body2" align="right" color="textSecondary">
-                Tenggat:{" "}
-                {moment(tasksCollection.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH.mm")}
-              </Typography>
-              {/* <Typography variant="body2" align="right" color="textSecondary">
-                Nilai Maksimum: 100
-              </Typography> */}
-            </Grid>
-          </Hidden>
-          {/* </Grid> */}
-
-          <Grid item xs={12}>
-            <Divider className={classes.dividerColor} />
-          </Grid>
-
-          <Grid item xs={12} style={{ marginTop: "30px" }}>
-            <Typography color="primary" gutterBottom>
-              Kelas yang Diberikan:
-            </Typography>
-            <Typography>
-              {!tasksCollection.class_assigned || !all_classes_map.size
-                ? null
-                : tasksCollection.class_assigned.map((kelas, i) => {
-                    if (all_classes_map.get(kelas)) {
-                      if (i === tasksCollection.class_assigned.length - 1)
-                        return `${all_classes_map.get(kelas).name}`;
-                      return `${all_classes_map.get(kelas).name}, `;
-                    }
-                    return null;
-                  })}
-            </Typography>
-          </Grid>
-          {!tasksCollection.description ? null : (
-            <Grid item xs={12} style={{ marginTop: "30px" }}>
-              <Typography color="primary" gutterBottom>
-                Deskripsi Tugas:
-              </Typography>
-              <Typography>{tasksCollection.description}</Typography>
-            </Grid>
-          )}
-          {!tasksCollection.lampiran ||
-          tasksCollection.lampiran.length === 0 ? null : (
-            <Grid item xs={12} style={{ marginTop: "30px" }}>
-              <Typography color="primary" gutterBottom>
-                Lampiran Berkas:
-              </Typography>
-              <Grid container spacing={1}>
-                {tasksCollection.lampiran.map((lampiran) => (
-                  <LampiranFile
-                    file_id={lampiran.id}
-                    onPreviewFile={onPreviewFile}
-                    onDownloadFile={onDownloadFile}
-                    filename={lampiran.filename}
-                    filetype={fileType(lampiran.filename)}
-                  />
-                ))}
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
-      </Paper>
-      <Grid container spacing={2} justify="flex-end" alignItems="center">
+      <Grid container direction="column" spacing={2}>
         <Grid item>
-          <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
-            <Fab variant="extended" className={classes.seeAllTaskButton}>
-              <AssignmentIcon style={{ marginRight: "10px" }} />
+          <Paper className={classes.paperBox}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                <Typography variant="h4">{tasksCollection.name}</Typography>
+                <Typography variant="caption" color="textSecondary" gutterBottom>
+                  <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
+                <Typography variant="body2" color="textSecondary">
+                  Penanggung Jawab: <b>{user.name}</b>
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Waktu Dibuat:{" "}
+                  {moment(tasksCollection.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH.mm")}
+                </Typography>
+                <Hidden mdUp>
+                  <Typography variant="body2" color="textSecondary">
+                    Tenggat:{" "}
+                    {moment(tasksCollection.deadline)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
+                  </Typography>
+                </Hidden>
+              </Grid>
+              <Hidden smDown style={{ display: "flex" }}>
+                <Grid
+                  item
+                  xs={12}
+                  md={5}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <Typography variant="body2" align="right" color="textSecondary">
+                    Tenggat:{" "}
+                    {moment(tasksCollection.deadline)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
+                  </Typography>
+                </Grid>
+              </Hidden>
+
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+
+              <Grid item xs={12} style={{ marginTop: "30px" }}>
+                <Typography color="primary" gutterBottom>
+                  Kelas yang Diberikan:
+                </Typography>
+                <Typography>
+                  {!tasksCollection.class_assigned || !all_classes_map.size
+                    ? null
+                    : tasksCollection.class_assigned.map((kelas, i) => {
+                      if (all_classes_map.get(kelas)) {
+                        if (i === tasksCollection.class_assigned.length - 1)
+                          return `${all_classes_map.get(kelas).name}`;
+                        return `${all_classes_map.get(kelas).name}, `;
+                      }
+                      return null;
+                    })}
+                </Typography>
+              </Grid>
+              {!tasksCollection.description ? null : (
+                <Grid item xs={12} style={{ marginTop: "30px" }}>
+                  <Typography color="primary" gutterBottom>
+                    Deskripsi Tugas:
+                  </Typography>
+                  <Typography>{tasksCollection.description}</Typography>
+                </Grid>
+              )}
+              {!tasksCollection.lampiran ||
+                tasksCollection.lampiran.length === 0 ? null : (
+                  <Grid item xs={12} style={{ marginTop: "30px" }}>
+                    <Typography color="primary" gutterBottom>
+                      Lampiran Berkas:
+                    </Typography>
+                    <Grid container spacing={1}>
+                      {tasksCollection.lampiran.map((lampiran) => (
+                        <LampiranFile
+                          file_id={lampiran.id}
+                          onPreviewFile={onPreviewFile}
+                          onDownloadFile={onDownloadFile}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                        />
+                      ))}
+                    </Grid>
+                  </Grid>
+                )}
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item container justify="flex-end" alignItems="center">
+          <Grid item style={{ paddingRight: "10px" }}>
+            <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
+              <Fab variant="extended" className={classes.seeAllTaskButton}>
+                <AssignmentIcon style={{ marginRight: "10px" }} />
               Lihat Hasil
             </Fab>
-          </Link>
-        </Grid>
-        <Grid item>
-          <Link to={`/sunting-tugas/${task_id}`}>
-            <LightTooltip title="Sunting Tugas" placement="bottom">
-              <Fab className={classes.editTaskButton}>
-                <EditIcon />
+            </Link>
+          </Grid>
+          <Grid item style={{ paddingRight: "10px" }}>
+            <Link to={`/sunting-tugas/${task_id}`}>
+              <LightTooltip title="Sunting Tugas" placement="bottom">
+                <Fab className={classes.editTaskButton}>
+                  <EditIcon />
+                </Fab>
+              </LightTooltip>
+            </Link>
+          </Grid>
+          <Grid item>
+            <LightTooltip title="Hapus" placement="bottom">
+              <Fab
+                className={classes.deleteTaskButton}
+                onClick={(e) => handleOpenDeleteDialog(e, task_id)}
+              >
+                <DeleteIcon />
               </Fab>
             </LightTooltip>
-          </Link>
-        </Grid>
-        <Grid item>
-          <LightTooltip title="Hapus" placement="bottom">
-            <Fab
-              className={classes.deleteTaskButton}
-              onClick={(e) => handleOpenDeleteDialog(e, task_id)}
-            >
-              <DeleteIcon />
-            </Fab>
-          </LightTooltip>
+          </Grid>
         </Grid>
       </Grid>
     </div>

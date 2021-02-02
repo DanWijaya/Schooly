@@ -497,6 +497,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.fade,
     },
+    padding: "6px 24px"
   },
   assignmentLate: {
     backgroundColor: theme.palette.primary.main,
@@ -823,8 +824,8 @@ function TaskList(props) {
                         }}
                       >
                         <ListItem
-                          button
-                          component="a"
+                          // button
+                          // component="a"
                           className={classes.listItem}
                         >
                           <Hidden smUp implementation="css">

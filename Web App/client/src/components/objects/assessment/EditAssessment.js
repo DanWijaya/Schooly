@@ -1367,7 +1367,12 @@ class EditAssessment extends Component {
           // itemType="Kuis"
           // itemName={this.state.name}
           customMessage="Hapus perubahan"
-          redirectLink="/daftar-kuis"
+          // redirectLink="/daftar-kuis"
+          redirectLink={
+            this.state.type === "Kuis"
+              ? `/daftar-kuis`
+              : `/daftar-ujian`
+          }
           // customConfirm="Ya"
           customDecline="Tidak"
           deleteItem=""
@@ -1381,8 +1386,13 @@ class EditAssessment extends Component {
           messageUploading={`${this.state.type} sedang disunting`}
           // messageSuccess="Kuis/Ujian telah disunting"
           messageSuccess={`${this.state.type} telah disunting`}
-          redirectLink="/daftar-kuis"
+          // redirectLink="/daftar-kuis"
           // redirectLink={(this.state.type === "Kuis") ? `/daftar-kuis` : `/daftar-ujian`}
+          redirectLink={
+            this.state.type === "Kuis"
+              ? `/kuis-guru/${success}`
+              : `/ujian-guru/${success}`
+          }
         />
         <form onSubmit={(e) => this.onSubmit(e)}>
           <Grid container direction="column" spacing={3}>
