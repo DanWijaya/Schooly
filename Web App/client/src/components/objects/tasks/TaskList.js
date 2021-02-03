@@ -153,7 +153,7 @@ function TaskListToolbar(props) {
   return (
     <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? null : (
             <div
               style={{
@@ -167,7 +167,7 @@ function TaskListToolbar(props) {
             </div>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <div
             style={{
               display: "flex",
@@ -179,7 +179,7 @@ function TaskListToolbar(props) {
             <Typography variant="h4">Daftar Tugas</Typography>
           </div>
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? (
             <div style={{ display: "flex" }}>
               <IconButton
@@ -254,7 +254,7 @@ function TaskListToolbar(props) {
         </Hidden>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
@@ -304,7 +304,7 @@ function TaskListToolbar(props) {
             }}
           />
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
             <LightTooltip title="Buat Tugas">
               <Link to="/buat-tugas">
@@ -315,9 +315,8 @@ function TaskListToolbar(props) {
             </LightTooltip>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            // ANCHOR contoh tombol round edge
             <Link to="/buat-tugas">
               <Fab
                 size="medium"

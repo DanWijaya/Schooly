@@ -94,7 +94,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// ANCHOR stablesort function
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -174,7 +173,7 @@ function AssessmentListToolbar(props) {
     // <div className={classes.toolbar}>
     <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? null : (
             <div
               style={{
@@ -188,7 +187,7 @@ function AssessmentListToolbar(props) {
             </div>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <div
             style={{
               display: "flex",
@@ -200,7 +199,7 @@ function AssessmentListToolbar(props) {
             <Typography variant="h4">Daftar Ujian</Typography>
           </div>
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {
             searchBarFocus ? (
               <div style={{ display: "flex" }}>
@@ -280,7 +279,7 @@ function AssessmentListToolbar(props) {
         </Hidden>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <TextField
             // fullWidth
             variant="outlined"
@@ -332,7 +331,7 @@ function AssessmentListToolbar(props) {
             }}
           />
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
             <LightTooltip title="Buat Kuis/Ujian">
               <Link to="/buat-kuis-ujian">
@@ -343,9 +342,8 @@ function AssessmentListToolbar(props) {
             </LightTooltip>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            // ANCHOR contoh tombol round edge
             <Link to="/buat-kuis-ujian">
               <Fab
                 size="medium"
@@ -597,7 +595,6 @@ function AssessmentList(props) {
     setOpenDialog(false);
   };
 
-  // ANCHOR rows
   var rows = [];
   const assessmentRowItem = (data) => {
     if (data.type === "Ujian") {

@@ -157,7 +157,7 @@ function MaterialListToolbar(props) {
   return (
     <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? null : (
             <div
               style={{
@@ -171,7 +171,7 @@ function MaterialListToolbar(props) {
             </div>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <div
             style={{
               display: "flex",
@@ -183,7 +183,7 @@ function MaterialListToolbar(props) {
             <Typography variant="h4">Daftar Materi</Typography>
           </div>
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {searchBarFocus ? (
             <div style={{ display: "flex" }}>
               <IconButton
@@ -258,7 +258,7 @@ function MaterialListToolbar(props) {
         </Hidden>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <TextField
             variant="outlined"
             id="searchFilterDesktop"
@@ -308,7 +308,7 @@ function MaterialListToolbar(props) {
             }}
           />
         </Hidden>
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {role === "Student" ? null : (
             <LightTooltip title="Buat Materi">
               <Link to="/buat-materi">
@@ -319,9 +319,8 @@ function MaterialListToolbar(props) {
             </LightTooltip>
           )}
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           {role === "Student" ? null : (
-            // ANCHOR contoh tombol round edge
             <Link to="/buat-materi">
               <Fab
                 size="medium"

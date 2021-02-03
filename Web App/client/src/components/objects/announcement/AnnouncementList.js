@@ -91,7 +91,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// ANCHOR f ListToolbar
 function AnnouncementListToolbar(props) {
   const {
     kelas,
@@ -201,7 +200,7 @@ function AnnouncementListToolbar(props) {
     <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
         {/* mobile view */}
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {(isAdmin && !searchBarFocus) || (!isAdmin && !showSortAndSearchButton) || (!isAdmin && showSortAndSearchButton && !searchBarFocus) ? (
             <div
               style={{
@@ -210,12 +209,19 @@ function AnnouncementListToolbar(props) {
                 alignItems: "center",
               }}
             >
-              <Typography variant="h4">{title}</Typography>
+              {showSortAndSearchButton && !isAdmin ?
+                <Typography variant="h5">{title}</Typography>
+                :
+                <>
+                  <AnnouncementIcon className={classes.titleIcon} fontSize="large" />
+                  <Typography variant="h4">{title}</Typography>
+                </>
+              }
             </div>
           ) : null}
         </Hidden>
         {/* desktop view */}
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <div
             style={{
               display: "flex",
@@ -235,7 +241,7 @@ function AnnouncementListToolbar(props) {
         </Hidden>
         {!showSortAndSearchButton && !isAdmin ? null : (
         // mobile view
-        <Hidden smUp implementation="css">
+        <Hidden mdUp implementation="css">
           {
             searchBarFocus ? (
               <div style={{ display: "flex" }}>
@@ -318,7 +324,7 @@ function AnnouncementListToolbar(props) {
       <div style={{ display: "flex" }}>
         {!showSortAndSearchButton && !isAdmin ? null : (
         // desktop view
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <TextField
             // fullWidth
             variant="outlined"
@@ -374,7 +380,7 @@ function AnnouncementListToolbar(props) {
         {showSortAndSearchButton && showCreateButton ? (
           <div style={{ display: "flex", alignItems: "center" }}>
             {/* mobile view */}
-            <Hidden smUp implementation="css">
+            <Hidden mdUp implementation="css">
               <LightTooltip title="Buat Pengumuman">
                 <Link to="/buat-pengumuman">
                   <Fab
@@ -389,7 +395,7 @@ function AnnouncementListToolbar(props) {
               </LightTooltip>
             </Hidden>
             {/* desktop view */}
-            <Hidden xsDown implementation="css">
+            <Hidden smDown implementation="css">
               <Link to="/buat-pengumuman">
                 <Fab
                   variant="extended"
@@ -471,7 +477,6 @@ AnnouncementListToolbar.propTypes = {
   author_role: PropTypes.string
 };
 
-// ANCHOR f ListItems
 function AnnouncementListItems(props) {
   const {
     rows,
@@ -540,7 +545,6 @@ function AnnouncementListItems(props) {
                     />
                   </div>
                 </Hidden>
-                {/* ANCHOR elemen button */}
                 <ListItemText
                   align="right"
                   primary={
@@ -903,9 +907,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-// ANCHOR theme
 
-// ANCHOR f AnnouncementList
 function AnnouncementList(props) {
   const classes = useStyles();
   const { selectedAnnouncements, adminAnnouncements } = props.announcements;
@@ -987,7 +989,6 @@ function AnnouncementList(props) {
   //   }
   // };
 
-  // ANCHOR retrieveAnnouncements
   React.useEffect(() => {
     // retrieveAnnouncements();
     if (selectedAnnouncements.length && retrieved_users.size) {
@@ -1004,7 +1005,6 @@ function AnnouncementList(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrieved_users, selectedAnnouncements, searchFilter]);
 
-  // ANCHOR getAnnouncement
   // retrieved users ini bulk request, dapat data user"nya satu"
   React.useEffect(() => {
     if (user.role === "Teacher" && !annIsRetrieved) {
@@ -1050,7 +1050,6 @@ function AnnouncementList(props) {
     classes,
     user
   }
-  // ANCHOR elemen AnnouncementList
   return (
     <div className={classes.root}>
       <DeleteDialog
