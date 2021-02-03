@@ -20,9 +20,15 @@ import {
 export const registerUser = (userData, history) => (dispatch) => {
   axios
     .post("/api/users/register", userData)
-    .then((res) => {
-      alert("Akun baru telah terdaftar");
-      history.push("/masuk");
+    // .then((res) => {
+      // alert("Akun baru telah terdaftar");
+      // history.push("/masuk");
+    // })
+    .then(() => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: false,
+      });
     })
     .catch((err) => {
       dispatch({

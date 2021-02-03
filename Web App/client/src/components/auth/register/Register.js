@@ -38,6 +38,7 @@ import {
 } from "@material-ui/pickers";
 import MuiAlert from "@material-ui/lab/Alert";
 import { withStyles } from "@material-ui/core/styles";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 
 const styles = (theme) => ({
   root: {
@@ -128,6 +129,7 @@ class Register extends Component {
       snackbarOpen: false,
       dialogOpen: false,
       submitButtonClicked: false,
+      openUploadDialog: false
     };
   }
 
@@ -147,6 +149,13 @@ class Register extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.errors === false) {
+      this.setState({
+        errors: nextProps.errors
+      });
+      return;
+    } 
+
     if (Object.keys(nextProps.errors).length > 0) {
       console.log(this.state.snackbarOpen);
       this.setState({
@@ -197,12 +206,20 @@ class Register extends Component {
       newUser.subject_teached = this.state.subject_teached;
     }
 
-    if (this.state.activeStep === 2)
+    if (this.state.activeStep === 2) {
       this.setState({ submitButtonClicked: true });
+    }
 
     console.log(newUser);
-    if (this.state.submitButtonClicked)
-      this.props.registerUser(newUser, this.props.history);
+    if (this.state.submitButtonClicked) {
+      // this.props.registerUser(newUser, this.props.history);
+      this.props.registerUser(newUser);
+      this.handleOpenUploadDialog();
+    }
+  };
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true });
   };
 
   render() {
@@ -533,6 +550,13 @@ class Register extends Component {
 
     return (
       <div className={classes.root}>
+        <UploadDialog
+          openUploadDialog={this.state.openUploadDialog}
+          success={!errors}
+          messageUploading="Akun baru sedang dibuat"
+          messageSuccess="Akun baru telah terdaftar"
+          redirectLink="/masuk"
+        />
         <Link to="/">
           <img
             alt="Schooly Introduction"

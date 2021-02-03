@@ -57,6 +57,9 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  primary: {
+    color: theme.palette.primary.main
+  }
 });
 
 class Login extends Component {
@@ -69,6 +72,7 @@ class Login extends Component {
       isAuthenticated: false,
       passwordIsMasked: true, // True = masked
       icon: true, // True = shown
+      passwordtextfieldFocus: false
     };
   }
 
@@ -135,9 +139,13 @@ class Login extends Component {
     }));
   };
 
+  setIsFocused = (bool) => {
+    this.setState({passwordtextfieldFocus: bool});
+  }
+
   render() {
     const { classes } = this.props;
-    const { passwordIsMasked, icon, errors } = this.state;
+    const { passwordIsMasked, icon, errors, passwordtextfieldFocus } = this.state;
 
     document.title = "Masuk ke Schooly";
     document.body.style =
@@ -198,6 +206,8 @@ class Login extends Component {
                       className={classnames("", {
                         invalid: errors.password || errors.passwordincorrect,
                       })}
+                      onFocus={() => {this.setIsFocused(true)}}
+                      onBlur={() => {this.setIsFocused(false)}}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
@@ -206,9 +216,9 @@ class Login extends Component {
                               onClick={this.togglePasswordVisibility}
                             >
                               {icon ? (
-                                <VisibilityIcon />
+                                <VisibilityIcon className={(passwordtextfieldFocus) ? classes.primary : null}/>
                               ) : (
-                                <VisibilityOffIcon />
+                                <VisibilityOffIcon className={(passwordtextfieldFocus) ? classes.primary : null}/>
                               )}
                             </IconButton>
                           </InputAdornment>
