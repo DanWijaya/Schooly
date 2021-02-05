@@ -365,8 +365,8 @@ function ViewAssessmentTeacher(props) {
                         Soal {i + 1}
                       </Typography>
                       <GridList
-                        cols={isMobileView ? 2 : 3}
-                        cellHeight={isMobileView ? 250 : 300}
+                        cols={3}
+                        cellHeight={300}
                         style={{ margin: "10px 0px 10px 0px" }}
                       >
                         {question.lampiran.map((img, i) => {

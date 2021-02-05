@@ -9,16 +9,16 @@ const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 const Assessment = require("../../../models/Assessment");
 const FileAnnouncement = require("../../../models/lampiran/File_Announcement");
-
+const keys = require("../../../config/keys");
 // Multer ships with storage engines DiskStorage and MemoryStorage
 // And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+  secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+  region: keys.awsKey.AWS_REGION,
 });
 
 // route to upload a pdf document file
@@ -27,9 +27,9 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
   var filesArray = req.files;
   console.log(req.files)
   let s3bucket = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION,
+    accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+    secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+    region: keys.awsKey.AWS_REGION,
   });
 
   var lampiranCountArray = req.body.num_lampiran
@@ -49,7 +49,7 @@ router.post("/upload/:id", upload.array("lampiran_assessment"), (req, res) => {
         var file = filesArray.shift();
         //params required for S3 objects
         var params = {
-          Bucket: process.env.AWS_BUCKET_NAME,
+          Bucket: keys.awsKey.AWS_BUCKET_NAME,
           Key: "assessment/" + uuidv4() + "_" + file.originalname,
           Body: file.buffer,
           ContentType: file.mimetype,
@@ -136,7 +136,7 @@ router.get("/download/:id", (req, res) => {
     if (!result) return res.status(400).json(err);
 
     let params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: keys.awsKey.AWS_BUCKET_NAME,
       Key: result.s3_key,
       Expires: 5 * 60,
       ResponseContentDisposition: `attachment;filename=${result.filename}`,
@@ -172,7 +172,7 @@ router.delete("/:id", (req, res) => {
             let fileUploaded = 0;
             file_to_delete.forEach((file) => {
               let params = {
-                Bucket: process.env.AWS_BUCKET_NAME,
+                Bucket: keys.awsKey.AWS_BUCKET_NAME,
                 Key: file.s3_key,
               };
               s3bucket.deleteObject(params, (err, data) => {
@@ -204,7 +204,7 @@ router.delete("/:id", (req, res) => {
           file_assessments.forEach((file) => {
             console.log(file)
             let params = {
-              Bucket: process.env.AWS_BUCKET_NAME,
+              Bucket: keys.awsKey.AWS_BUCKET_NAME,
               Key: file.s3_key,
             };
             s3bucket.deleteObject(params, (err, data) => {
@@ -247,7 +247,7 @@ router.post("/getS3Url", (req, res) => {
           reject(err)
         }
         let params = {
-          Bucket: process.env.AWS_BUCKET_NAME,
+          Bucket: keys.awsKey.AWS_BUCKET_NAME,
           Key: result.s3_key,
           Expires: 5 * 60,
           ResponseContentDisposition: `inline;filename=${result.filename}`,

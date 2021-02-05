@@ -10,14 +10,14 @@ var AWS = require("aws-sdk");
 var fs = require("fs");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
-
+const keys = require("../../../config/keys");
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+  secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+  region: keys.awsKey.AWS_REGION,
 });
 
 // Get all Documents Routes
@@ -44,13 +44,13 @@ router.post("/upload/:id", upload.single("avatar"), (req, res) => {
   const { id } = req.params;
 
   let s3bucket = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION,
+    accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+    secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+    region: keys.awsKey.AWS_REGION,
   });
   //Where you want to store your file
   var params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: keys.awsKey.AWS_BUCKET_NAME,
     Key: "avatar/" + uuidv4() + "_" + file.originalname,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -69,7 +69,7 @@ router.post("/upload/:id", upload.single("avatar"), (req, res) => {
           return "No avatar uplaoded";
         }
         let params = {
-          Bucket: process.env.AWS_BUCKET_NAME,
+          Bucket: keys.awsKey.AWS_BUCKET_NAME,
           Key: file.s3_key,
         };
         s3bucket.deleteObject(params, (error, data) => {
@@ -149,7 +149,7 @@ router.get("/download/:id", (req, res) => {
     if (!result) return res.status(400).json(err);
 
     let params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: keys.awsKey.AWS_BUCKET_NAME,
       Key: result.s3_key,
       Expires: 5 * 60,
       ResponseContentDisposition: `attachment;filename=${result.filename}`,
@@ -183,7 +183,7 @@ router.delete("/:id", (req, res) => {
           let s3bucket = new AWS.S3();
           file_to_delete.forEach((file) => {
             let params = {
-              Bucket: process.env.AWS_BUCKET_NAME,
+              Bucket: keys.awsKey.AWS_BUCKET_NAME,
               Key: file.s3_key,
             };
             s3bucket.deleteObject(params, (err, data) => {
@@ -210,7 +210,7 @@ router.delete("/:id", (req, res) => {
         let s3bucket = new AWS.S3();
         file_to_delete.forEach((file) => {
           let params = {
-            Bucket: process.env.AWS_BUCKET_NAME,
+            Bucket: keys.awsKey.AWS_BUCKET_NAME,
             Key: file.s3_key,
           };
           s3bucket.deleteObject(params, (err, data) => {
@@ -235,7 +235,7 @@ router.get("/by_user/:id", (req, res) => {
       return res.status(400).json(err);
     }
     let params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: keys.awsKey.AWS_BUCKET_NAME,
       Key: result.s3_key,
       Expires: 5 * 60,
       ResponseContentDisposition: `inline;filename=${result.filename}`,
@@ -244,7 +244,7 @@ router.get("/by_user/:id", (req, res) => {
     return res.status(200).json(url);
     s3bucket.getObject(
       {
-        Bucket: process.env.AWS_BUCKET_NAME,
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
         Key: result.s3_key,
       },
       (err, data) => {

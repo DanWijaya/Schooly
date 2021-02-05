@@ -5,6 +5,7 @@ const FileAnnouncement = require("../../../models/lampiran/File_Announcement");
 const multer = require("multer");
 var AWS = require("aws-sdk");
 var fs = require("fs");
+const keys = require("../../../config/keys");
 const { ObjectId } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 
@@ -14,9 +15,9 @@ var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  accessKeyId: keys.awsKey.AWS_ACCESS_KEY_ID,
+  secretAccessKey: keys.awsKey.AWS_SECRET_ACCESS_KEY,
+  region: keys.awsKey.AWS_REGION,
 });
 
 router.get("/", (req, res, next) => {
@@ -40,7 +41,7 @@ router.post(
     var numsFileUploaded = 0;
     files.map((file) => {
       var params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
+        Bucket: keys.awsKey.AWS_BUCKET_NAME,
         Key: "announcement/" + uuidv4() + "_" + file.originalname,
         Body: file.buffer,
         ContentType: file.mimetype,
@@ -89,7 +90,7 @@ router.get("/download/:id", (req, res) => {
     if (!result) return res.status(400).json(err);
 
     let params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: keys.awsKey.AWS_BUCKET_NAME,
       Key: result.s3_key,
       Expires: 5 * 60,
       ResponseContentDisposition: `attachment;filename=${result.filename}`,
@@ -124,7 +125,7 @@ router.delete("/:id", (req, res) => {
           let s3bucket = new AWS.S3();
           file_to_delete.forEach((file) => {
             let params = {
-              Bucket: process.env.AWS_BUCKET_NAME,
+              Bucket: keys.awsKey.AWS_BUCKET_NAME,
               Key: file.s3_key,
             };
             s3bucket.deleteObject(params, (err, data) => {
@@ -151,7 +152,7 @@ router.delete("/:id", (req, res) => {
         let s3bucket = new AWS.S3();
         file_to_delete.forEach((file) => {
           let params = {
-            Bucket: process.env.AWS_BUCKET_NAME,
+            Bucket: keys.awsKey.AWS_BUCKET_NAME,
             Key: file.s3_key,
           };
           s3bucket.deleteObject(params, (err, data) => {
@@ -183,7 +184,7 @@ router.get("/:id", (req, res) => {
     if (!result) return res.status(400).json(err);
 
     let params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: keys.awsKey.AWS_BUCKET_NAME,
       Key: result.s3_key,
       Expires: 5 * 60,
       ResponseContentDisposition: `inline;filename=${result.filename}`,
