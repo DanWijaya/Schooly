@@ -35,7 +35,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     textAlign: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     padding: "10px",
     height: "500px",
     color: "white",
@@ -45,7 +48,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
   },
   content: {
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     margin: "auto",
     marginTop: "50px",
     padding: "10px",
@@ -56,7 +62,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     height: "200px",
     marginBottom: "30px",
     backgroundImage: `url(${moreHelpBackground})`,

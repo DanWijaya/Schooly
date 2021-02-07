@@ -6,7 +6,10 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     margin: "auto",
     marginTop: "100px",
     padding: "10px",

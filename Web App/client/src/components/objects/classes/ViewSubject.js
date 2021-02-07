@@ -41,7 +41,10 @@ const useStyles =
     makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     padding: "20px",
   },
   workIconButton: {

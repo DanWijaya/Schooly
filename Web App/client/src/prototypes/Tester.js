@@ -37,7 +37,10 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     minHeight: "500px",
     padding: "10px",
     backgroundPosition: "center",

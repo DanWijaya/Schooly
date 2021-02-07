@@ -17,13 +17,19 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     color: "white",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     height: "100px",
     padding: "10px",
   },
   content: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     marginTop: "50px",
     padding: "20px",
   },

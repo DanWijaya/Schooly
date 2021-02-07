@@ -54,7 +54,10 @@ const styles = (theme) => ({
     display: "flex",
     justifyContent: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
   },
   content: {
     padding: "20px",

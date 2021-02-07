@@ -27,7 +27,10 @@ const styles = (theme) => ({
     flexDirection: "column",
     alignItems: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: "100%",
+    },
     minHeight: "500px",
     padding: "10px",
     backgroundImage: `url(${authBackground})`,

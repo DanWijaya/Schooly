@@ -187,6 +187,7 @@ class App extends Component {
                     flexGrow: "1",
                     overflowX: "hidden",
                     marginTop: `${this.state.marginTopValue}px`,
+
                   }}
                 >
                   {this.state.showNavBar ? <Toolbar /> : null}

@@ -47,7 +47,10 @@ const path = require("path");
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",

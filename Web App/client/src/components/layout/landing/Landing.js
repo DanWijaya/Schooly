@@ -45,14 +45,20 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "flex-end",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     padding: "20px",
     color: "white",
   },
   schoolyAccess: {
     textAlign: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     marginTop: "30px",
     marginBottom: "30px",
     padding: "10px",
@@ -63,7 +69,10 @@ const styles = (theme) => ({
   schoolyFeatures: {
     textAlign: "center",
     margin: "auto",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
     marginTop: "50px",
     marginBottom: "75px",
     padding: "20px",
@@ -104,7 +113,10 @@ const styles = (theme) => ({
     margin: "auto",
     marginTop: "30px",
     padding: "10px",
-    maxWidth: "1000px",
+    maxWidth: "80%",
+    [theme.breakpoints.down("md")]: {
+        maxWidth: "100%",
+    },
   },
   sendMessageButton: {
     width: "160px",
