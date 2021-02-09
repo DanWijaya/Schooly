@@ -183,13 +183,14 @@ router.get("/:id", (req, res) => {
   FileAnnouncement.findById(req.params.id).then((result, err) => {
     if (!result) return res.status(400).json(err);
 
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `inline;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
+    // let params = {
+    //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
+    //   Key: result.s3_key,
+    //   Expires: 5 * 60,
+    //   ResponseContentDisposition: `inline;filename=${result.filename}`,
+    // };
+    // const url = s3bucket.getSignedUrl("getObject", params);
+    const url = `${keys.cdn}/${result.s3_key}`
     return res.status(200).json(url);
   });
 });

@@ -234,30 +234,15 @@ router.get("/by_user/:id", (req, res) => {
       console.log("No avatar added");
       return res.status(400).json(err);
     }
-    let params = {
-      Bucket: keys.awsKey.AWS_BUCKET_NAME,
-      Key: result.s3_key,
-      Expires: 5 * 60,
-      ResponseContentDisposition: `inline;filename=${result.filename}`,
-    };
-    const url = s3bucket.getSignedUrl("getObject", params);
+    // let params = {
+    //   Bucket: keys.awsKey.AWS_BUCKET_NAME,
+    //   Key: result.s3_key,
+    //   Expires: 5 * 60,
+    //   ResponseContentDisposition: `inline;filename=${result.filename}`,
+    // };
+    // const url = s3bucket.getSignedUrl("getObject", params);
+    const url = `${keys.cdn}/${result.s3_key}`
     return res.status(200).json(url);
-    s3bucket.getObject(
-      {
-        Bucket: keys.awsKey.AWS_BUCKET_NAME,
-        Key: result.s3_key,
-      },
-      (err, data) => {
-        res.setHeader(
-          "Content-Disposition",
-          `inline;filename=${result.filename}`
-        );
-        res.setHeader("Content-length", data.ContentLength);
-        res.end(data.Body);
-        // return res.status(200).json(url);
-        // return res.status(200).json(url.split(/[?#]/)[0]);
-      }
-    ); // end of getObject
   });
 });
 
