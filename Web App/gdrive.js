@@ -44,7 +44,7 @@ function uploadFile(auth) {
   // sumber kode: https://developers.google.com/drive/api/v3/folder#create_a_file_in_a_folder
   const drive = google.drive({ version: 'v3', auth });
 
-  let folderId = "1J_sc4qpw3q-PEorBdaz-o00BNeUh0XlS"; // *** ganti dengan folder id yang diperoleh dengan menjalankan fungsi createFolder() ***
+  let folderId = "164XemTSx54-K99M8Y-fP9dyk8P85GKtB"; // *** ganti dengan folder id yang diperoleh dengan menjalankan fungsi createFolder() ***
 
   var metadata = {
     'name': 'test.txt', // *** (opsional, ga harus diganti) nama file ketika sudah diupload ***
@@ -53,7 +53,7 @@ function uploadFile(auth) {
 
   var media = {
     mimeType: 'text/plain', // *** ganti kalau file yang diupload itu bukan 'txt'. https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types ***
-    body: fs.createReadStream('C:/Users/Elbert/Desktop/test.txt') // *** ganti dengan file yang akan diupload ***
+    body: fs.createReadStream('C:/Schooly/test.txt') // *** ganti dengan file yang akan diupload ***
   };
 
   // drive.files.create() adalah promise.
@@ -94,6 +94,13 @@ rl.question('Jika token sudah disalin di gdrive.js, masukkan "t". \r\nJika belum
       //   token_type: '',
       //   expiry_date:
       // }
+      {
+        access_token: 'ya29.A0AfH6SMBhUe5uaBqbQBsSyXm8UM28jhUt_Mbh9CDJySOXIe9KwFmBC15j-hh0Lx1dbUSmGbXMjVxitZOeUzWt-CAwccIdBijAky8WwKq61wE4dsWPYxyjjHoBpzJ-bN1eLToL6InXNbC9rJ49SHkbH15jwq-8',
+        refresh_token: '1//0gz0cF7MkQuE1CgYIARAAGBASNwF-L9Irq9JWULHUHKz7JkT8ZtibbNEeurhmaBEU2JfDvmG8n3oRMjGkcgvHmNsDD3CFU0JZ7nA',
+        scope: 'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.file',
+        token_type: 'Bearer',
+        expiry_date: 1613222297202
+      }
     );
 
     // ini untuk membuat folder. biar ga berantakan, file-file yang diupload nanti dimasukan ke folder yang dibuat ini
@@ -101,23 +108,46 @@ rl.question('Jika token sudah disalin di gdrive.js, masukkan "t". \r\nJika belum
 
 
     // ------------------------ tes upload file dalam jumlah banyak ------------------------ 
-    let jumlahFile = 35;
+    let jumlahFile = 100;
     // var t0 = performance.now()
     // var t1;
 
     let arr =  [];
-    for (let i = 1; i <= jumlahFile; i++) {
-      arr.push(uploadFile(oAuth2Client))
-    }
-    Promise.all(arr).then(() => {
-      console.log("Semua upload sudah selesai!")
-      // t1 = performance.now()
-      // console.log("Waktu yang diperlukan: " + (t1 - t0) + " milliseconds.")
-    }).catch((err) => {
 
-      // klo lewat rate limit, nanti muncul error 403
-      console.log(err.response.data.error);
-    });
+    const pushFiles = () => {
+      arr.push(uploadFile(oAuth2Client).then(() => {
+      }).catch(() => {
+         pushFiles()
+      }))
+    }
+
+    for (let i = 1; i <= jumlahFile; i++) {
+      pushFiles()  
+    }
+
+    // for (let i = 1; i <= jumlahFile; i++) {
+    //   arr.push(new Promise((resolve) => {
+    //     let success = false;
+    //     while (!success) {
+    //       // lakuin upload dengan cara yg pake axios, bukan pake oauthclient
+    //       axios.post().then(() => {
+    //         success = true
+    //         resolve();
+    //       }).catch(() => {
+    //         //ga ngelakuin apa2, tapi catch ini tetep perlu ada biar Errornya ga kethrow ke parent}) ; 
+    //       });
+    //     }
+    //   }))
+    // }
+    // Promise.all(arr).then(() => {
+    //   console.log("Semua upload sudah selesai!")
+    //   // t1 = performance.now()
+    //   // console.log("Waktu yang diperlukan: " + (t1 - t0) + " milliseconds.")
+    // }).catch((err) => {
+
+    //   // klo lewat rate limit, nanti muncul error 403
+    //   console.log(err.response.data.error);
+    // });
     // ------------------------------------------------------------------------------------
 
   } else if (type === "c") {
