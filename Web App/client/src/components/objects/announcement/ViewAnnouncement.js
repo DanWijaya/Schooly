@@ -187,7 +187,7 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
+          {/* <IconButton
             size="small"
             className={classes.downloadIconButton}
             onClick={(e) => {
@@ -196,7 +196,7 @@ function LampiranFile(props) {
             }}
           >
             <CloudDownloadIcon fontSize="small" />
-          </IconButton>
+          </IconButton> */}
         </ListItem>
       </Paper>
     </Grid>

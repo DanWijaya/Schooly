@@ -41,7 +41,7 @@ export const viewFileAnnouncement = (id) => (dispatch) => {
   axios
     .get(`/api/files/announcements/${id}`)
     .then((res) => {
-      window.open(res.data);
+      window.location.assign(res.data);
       return res.data;
     })
     .catch((err) => new Error(err));

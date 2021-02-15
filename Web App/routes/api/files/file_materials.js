@@ -38,7 +38,7 @@ router.post("/upload/:id", upload.array("lampiran_materi"), (req, res) => {
       Key: "materi/" + uuidv4() + "_" + file.originalname,
       Body: file.buffer,
       ContentType: file.mimetype,
-      ContentDisposition: `inline;filename=${file.originalname}`,
+      ContentDisposition: `attachment;filename=${file.originalname}`,
     };
     s3bucket
       .upload(params, function (err, data) {
@@ -176,7 +176,6 @@ router.get("/:id", (req, res) => {
       Expires: 5 * 60,
       ResponseContentDisposition: `inline;filename=${result.filename}`,
     };
-    console.log(result)
     // const url = s3bucket.getSignedUrl("getObject", params);
     const url = `${keys.cdn}/${result.s3_key}`
     return res.status(200).json(url);

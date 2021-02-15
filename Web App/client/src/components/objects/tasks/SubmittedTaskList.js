@@ -209,7 +209,7 @@ function WorkFile(props) {
             </Typography>
           }
         />
-        <ListItemIcon>
+        {/* <ListItemIcon>
           <IconButton
             size="small"
             className={classes.downloadIconButton}
@@ -220,7 +220,7 @@ function WorkFile(props) {
           >
             <CloudDownloadIcon fontSize="small" />
           </IconButton>
-        </ListItemIcon>
+        </ListItemIcon> */}
       </ListItem>
     </Paper>
   );

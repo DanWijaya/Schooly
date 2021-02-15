@@ -39,7 +39,8 @@ export const viewFileMaterial = (id) => (dispatch) => {
   axios
     .get(`/api/files/materials/${id}`)
     .then((res) => {
-      window.open(res.data);
+      window.open(res.data); 
+      // window.location.assign(res.data);
       return res.data;
     })
     .catch((err) => new Error(err));

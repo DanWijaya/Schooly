@@ -190,7 +190,7 @@ function LampiranFile(props) {
             secondary={filetype}
           />
 
-          <IconButton
+          {/* <IconButton
             className={classes.downloadIconButton}
             onClick={(e) => {
               e.stopPropagation();
@@ -198,7 +198,7 @@ function LampiranFile(props) {
             }}
           >
             <CloudDownloadIcon className={classes.downloadIcon} />
-          </IconButton>
+          </IconButton> */}
         </ListItem>
         {/* <div id="myProgress" style="display:none;">      
             sds
