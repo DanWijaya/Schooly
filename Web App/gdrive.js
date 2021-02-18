@@ -3,6 +3,14 @@ const readline = require('readline');
 const { google } = require('googleapis');
 // const { performance } = require('perf_hooks'); // ---buat ngitung lama upload---
 
+const path = "env.json";
+let temp; 
+fs.readFile(path, (err, content) => {
+  if (err) return console.log('Error loading file:', err);
+  temp = JSON.parse(content);
+});
+const {clientId, clientSecret, folderId, testFileName, testFileType, testFilePath, storedTokens } = temp;
+
 // ditentuin di developer console
 const SCOPES = [
   'https://www.googleapis.com/auth/drive.metadata.readonly',
@@ -10,13 +18,11 @@ const SCOPES = [
 ];
 
 // didapat dari developer console
-let client_id = "453201823549-t53et7n888aaco942suqf304ihlp9mot.apps.googleusercontent.com";
-let client_secret = "qo7Yp7kf_WnVs04wrjqPgo2R";
-let redirect_uri = "http://localhost:3000";
+let redirectURI = "http://localhost:3000";
 const oAuth2Client = new google.auth.OAuth2(
-  client_id,
-  client_secret,
-  redirect_uri
+  clientId,
+  clientSecret,
+  redirectURI
 );
 
 function createFolder(auth) {
@@ -44,16 +50,14 @@ function uploadFile(auth) {
   // sumber kode: https://developers.google.com/drive/api/v3/folder#create_a_file_in_a_folder
   const drive = google.drive({ version: 'v3', auth });
 
-  let folderId = "164XemTSx54-K99M8Y-fP9dyk8P85GKtB"; // *** ganti dengan folder id yang diperoleh dengan menjalankan fungsi createFolder() ***
-
   var metadata = {
-    'name': 'test.txt', // *** (opsional, ga harus diganti) nama file ketika sudah diupload ***
-    parents: [folderId]
+    name: testFileName, // *** (opsional, ga harus diganti) nama file ketika sudah diupload ***
+    parents: [folderId] // *** ganti dengan folder id yang diperoleh dengan menjalankan fungsi createFolder() ***
   };
 
   var media = {
-    mimeType: 'text/plain', // *** ganti kalau file yang diupload itu bukan 'txt'. https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types ***
-    body: fs.createReadStream('C:/Schooly/test.txt') // *** ganti dengan file yang akan diupload ***
+    mimeType: testFileType, // *** ganti sesuai tipe file yang diupload ***
+    body: fs.createReadStream(testFilePath) // *** ganti dengan path file yang akan diupload ***
   };
 
   // drive.files.create() adalah promise.
@@ -62,7 +66,26 @@ function uploadFile(auth) {
     resource: metadata,
     media: media,
     fields: 'id'
-  });
+  })
+}
+
+function listFiles(auth) {
+  const drive = google.drive({version: 'v3', auth});
+  return drive.files.list({
+    pageSize: 10,
+    spaces: 'drive',
+    fields: 'nextPageToken, files(id, name), files/parents',
+  }).then((res) => {
+    const files = res.data.files;
+    if (files.length) {
+      console.log('Files:');
+      files.forEach((file) => {
+          console.log(`${file.name} : ${file.parents ? file.parents.length : 0}`);
+      });
+    } else {
+      console.log('No files found.');
+    }
+  })
 }
 
 const rl = readline.createInterface({
@@ -83,24 +106,9 @@ rl.question('Jika token sudah disalin di gdrive.js, masukkan "t". \r\nJika belum
   let type = code.split(" ")[0];
   let content = code.split(" ")[1];
 
-  if (type === "t") {
+  if (type === "") {
     oAuth2Client.setCredentials(
-      // *** buat sekarang, salin dulu aja token yang ditampilin di terminal abis masukin "c ..." di sini ***
-      // contoh:
-      // {
-      //   access_token: '',
-      //   refresh_token: '',
-      //   scope: '',
-      //   token_type: '',
-      //   expiry_date:
-      // }
-      {
-        access_token: 'ya29.A0AfH6SMBhUe5uaBqbQBsSyXm8UM28jhUt_Mbh9CDJySOXIe9KwFmBC15j-hh0Lx1dbUSmGbXMjVxitZOeUzWt-CAwccIdBijAky8WwKq61wE4dsWPYxyjjHoBpzJ-bN1eLToL6InXNbC9rJ49SHkbH15jwq-8',
-        refresh_token: '1//0gz0cF7MkQuE1CgYIARAAGBASNwF-L9Irq9JWULHUHKz7JkT8ZtibbNEeurhmaBEU2JfDvmG8n3oRMjGkcgvHmNsDD3CFU0JZ7nA',
-        scope: 'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.file',
-        token_type: 'Bearer',
-        expiry_date: 1613222297202
-      }
+      storedTokens
     );
 
     // ini untuk membuat folder. biar ga berantakan, file-file yang diupload nanti dimasukan ke folder yang dibuat ini
@@ -125,11 +133,11 @@ rl.question('Jika token sudah disalin di gdrive.js, masukkan "t". \r\nJika belum
       pushFiles()  
     }
 
-    // for (let i = 1; i <= jumlahFile; i++) {
+    // for (let i = 0; i <= jumlahmurid; i++) {
     //   arr.push(new Promise((resolve) => {
     //     let success = false;
     //     while (!success) {
-    //       // lakuin upload dengan cara yg pake axios, bukan pake oauthclient
+    //       // lakuin upload dengan cara yg pake axios, bukan pake oauthclient  
     //       axios.post().then(() => {
     //         success = true
     //         resolve();
@@ -139,31 +147,25 @@ rl.question('Jika token sudah disalin di gdrive.js, masukkan "t". \r\nJika belum
     //     }
     //   }))
     // }
-    // Promise.all(arr).then(() => {
-    //   console.log("Semua upload sudah selesai!")
-    //   // t1 = performance.now()
-    //   // console.log("Waktu yang diperlukan: " + (t1 - t0) + " milliseconds.")
-    // }).catch((err) => {
 
-    //   // klo lewat rate limit, nanti muncul error 403
-    //   console.log(err.response.data.error);
+
+    // Promise.all(work).then(() => {
+      // console.log("Semua upload sudah selesai!")
+      // t1 = performance.now()
+      // console.log("Waktu yang diperlukan: " + (t1 - t0) + " milliseconds.")
+    // }).catch((err) => {
+      // klo lewat rate limit, nanti muncul error 403
+      // console.log(err);
+      // console.log(err.response.data.error);
     // });
     // ------------------------------------------------------------------------------------
 
   } else if (type === "c") {
     oAuth2Client.getToken(content, (err, token) => {
-      if (err) return console.error('Error retrieving access token');
+      if (err) return console.error(err);
 
       // catat token yang didapet dari sini
       console.log(token);
-      // contoh token
-      // {
-      //   access_token: <string> ,
-      //   refresh_token: <string>,
-      //   scope: <string>,
-      //   token_type: 'Bearer',
-      //   expiry_date: <epoch>
-      // }
     });
   }
 });
