@@ -111,6 +111,12 @@ function listFiles(auth) {
     let jumlahFile = 100;
     let uploads =  [];
     let refreshTokenList = [storedTokens.refresh_token];
+
+    function getRandomIntInclusive(min, max) {
+      // mengembalikan bilangan acak x antara bilangan min dan max (min <= x <= max)
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
     const pushFiles = (auth, id, iterator, ms) => {
       // arr.push(uploadFile(oAuth2Client).then(() => {
 
@@ -122,7 +128,7 @@ function listFiles(auth) {
       //     }, ms);
       //   }).then(() => {
       //     console.log(`Upload id: ${id}, error:  ${err.response.data.error.message}, retry number: ${iterator}, waited: ${ms}`);
-      //     return pushFiles(auth, id, iterator + 1, ms * 2);
+      //     return pushFiles(auth, id, iterator + 1, ms*2);
       //   });
       // });
 
