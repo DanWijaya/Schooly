@@ -1,15 +1,11 @@
 const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
-// const { performance } = require('perf_hooks'); // ---buat ngitung lama upload---
+// const axios = require('axios').default;
+const { performance } = require('perf_hooks'); // ---buat ngitung lama upload---
 
 const path = "env.json";
-let temp; 
-fs.readFile(path, (err, content) => {
-  if (err) return console.log('Error loading file:', err);
-  temp = JSON.parse(content);
-});
-const {clientId, clientSecret, folderId, testFileName, testFileType, testFilePath, storedTokens } = temp;
+const {clientId, clientSecret, folderId, testFileName, testFileType, testFilePath, storedTokens } = JSON.parse(fs.readFileSync(path));
 
 // ditentuin di developer console
 const SCOPES = [
@@ -19,11 +15,11 @@ const SCOPES = [
 
 // didapat dari developer console
 let redirectURI = "http://localhost:3000";
-const oAuth2Client = new google.auth.OAuth2(
-  clientId,
-  clientSecret,
-  redirectURI
-);
+// const oAuth2Client = new google.auth.OAuth2(
+//   clientId,
+//   clientSecret,
+//   redirectURI
+// );
 
 function createFolder(auth) {
   // sumber kode: https://developers.google.com/drive/api/v3/folder#create_a_folder
@@ -46,16 +42,16 @@ function createFolder(auth) {
   });
 }
 
-function uploadFile(auth) {
+function clientUploadFile(auth) {
   // sumber kode: https://developers.google.com/drive/api/v3/folder#create_a_file_in_a_folder
   const drive = google.drive({ version: 'v3', auth });
 
-  var metadata = {
+  let metadata = {
     name: testFileName, // *** (opsional, ga harus diganti) nama file ketika sudah diupload ***
     parents: [folderId] // *** ganti dengan folder id yang diperoleh dengan menjalankan fungsi createFolder() ***
   };
 
-  var media = {
+  let media = {
     mimeType: testFileType, // *** ganti sesuai tipe file yang diupload ***
     body: fs.createReadStream(testFilePath) // *** ganti dengan path file yang akan diupload ***
   };
@@ -88,84 +84,87 @@ function listFiles(auth) {
   })
 }
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
 
 // mendapatkan URL halaman login
-const authUrl = oAuth2Client.generateAuthUrl({
-  access_type: 'offline',
-  scope: SCOPES,
-});
-console.log('Untuk mendapatkan auth code, buka URL ini di browser:\n\n' + authUrl + '\n\n');
+// const authUrl = oAuth2Client.generateAuthUrl({
+//   access_type: 'offline',
+//   scope: SCOPES,
+// });
+// console.log('Untuk mendapatkan auth code, buka URL ini di browser:\n\n' + authUrl + '\n\n');
 
-rl.question('Jika token sudah disalin di gdrive.js, masukkan "t". \r\nJika belum, masukkan "c <query param bagian \'code\' di url abis redirect>" untuk menampilkan token di terminal: ', (code) => {
-  rl.close();
-  
-  let type = code.split(" ")[0];
-  let content = code.split(" ")[1];
 
-  if (type === "") {
-    oAuth2Client.setCredentials(
-      storedTokens
-    );
+// rl.question('Jika token sudah disalin di gdrive.js, masukkan "t". \r\nJika belum, masukkan "c <query param bagian \'code\' di url abis redirect>" untuk menampilkan token di terminal: ', (code) => {
+//   rl.close();
+  // let type = code.split(" ")[0];
+  // let content = code.split(" ")[1];
+  let type = "t";
 
+  if (type === "t") {
     // ini untuk membuat folder. biar ga berantakan, file-file yang diupload nanti dimasukan ke folder yang dibuat ini
     // createFolder(oAuth2Client);
 
-
     // ------------------------ tes upload file dalam jumlah banyak ------------------------ 
     let jumlahFile = 100;
-    // var t0 = performance.now()
-    // var t1;
+    let uploads =  [];
+    let refreshTokenList = [storedTokens.refresh_token];
+    const pushFiles = (auth, id, iterator, ms) => {
+      // arr.push(uploadFile(oAuth2Client).then(() => {
 
-    let arr =  [];
+      // ----1. dengan waktu tunggu exponential----  
+      // return clientUploadFile(auth).catch((err) => {
+      //   return new Promise((resolve) => {
+      //     setTimeout(() => {
+      //       resolve()
+      //     }, ms);
+      //   }).then(() => {
+      //     console.log(`Upload id: ${id}, error:  ${err.response.data.error.message}, retry number: ${iterator}, waited: ${ms}`);
+      //     return pushFiles(auth, id, iterator + 1, ms * 2);
+      //   });
+      // });
 
-    const pushFiles = () => {
-      arr.push(uploadFile(oAuth2Client).then(() => {
-      }).catch(() => {
-         pushFiles()
-      }))
+      // ----2. tanpa tunggu (langsung request ulang ketika mendapat respons 403)----  
+      return clientUploadFile(auth).catch((err) => {
+        // klo lewat rate limit, errornya 403
+        if (err.code === 403) {
+          console.log(`Upload id: ${id}, error:  ${err.response.data.error.message}, retry number: ${iterator}`);
+          // note: perlu return agar promise clientUploadFile pertama (paling "atas" dari rekursif) resolve setelah semua rekursif di dalamnya selesai. 
+          // penambahan return hanya diperlukan supaya bisa ngecek waktu ketika semua upload selesai. 
+          return pushFiles(auth, id, iterator + 1, null);
+        }
+      });
     }
+
+    let t1;
+    let t0 = performance.now()
 
     for (let i = 1; i <= jumlahFile; i++) {
-      pushFiles()  
+      let oAuth2Client = new google.auth.OAuth2(
+        clientId,
+        clientSecret,
+        redirectURI
+      );      
+      oAuth2Client.setCredentials({refresh_token: refreshTokenList[0]});
+      uploads.push(pushFiles(oAuth2Client, i, 1, 1000));
+      // pushFiles(oAuth2Client);
     }
 
-    // for (let i = 0; i <= jumlahmurid; i++) {
-    //   arr.push(new Promise((resolve) => {
-    //     let success = false;
-    //     while (!success) {
-    //       // lakuin upload dengan cara yg pake axios, bukan pake oauthclient  
-    //       axios.post().then(() => {
-    //         success = true
-    //         resolve();
-    //       }).catch(() => {
-    //         //ga ngelakuin apa2, tapi catch ini tetep perlu ada biar Errornya ga kethrow ke parent}) ; 
-    //       });
-    //     }
-    //   }))
-    // }
-
-
-    // Promise.all(work).then(() => {
-      // console.log("Semua upload sudah selesai!")
-      // t1 = performance.now()
-      // console.log("Waktu yang diperlukan: " + (t1 - t0) + " milliseconds.")
-    // }).catch((err) => {
-      // klo lewat rate limit, nanti muncul error 403
-      // console.log(err);
-      // console.log(err.response.data.error);
-    // });
+    Promise.all(uploads).then(() => {
+      t1 = performance.now()
+      console.log("Semua upload sudah selesai! Waktu yang diperlukan: " + (t1 - t0) + " milliseconds.")
+    });
     // ------------------------------------------------------------------------------------
 
-  } else if (type === "c") {
-    oAuth2Client.getToken(content, (err, token) => {
-      if (err) return console.error(err);
+  } 
+// else if (type === "c") {
+//     oAuth2Client.getToken(content, (err, token) => {
+//       if (err) return console.error(err);
 
-      // catat token yang didapet dari sini
-      console.log(token);
-    });
-  }
-});
+//       // catat token yang didapet dari sini
+//       console.log(token);
+//     });
+//   }
+// });
