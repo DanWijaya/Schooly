@@ -469,9 +469,6 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  profilePanelDivider: {
-    backgroundColor: theme.palette.primary.main,
-  },
   profilePanelSummary: {
     "&:hover": {
       backgroundColor: theme.palette.primary.fade,
@@ -1364,27 +1361,27 @@ function ManageUsers(props) {
                       )}
                     </Grid>
                   </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
+                  <Divider />
+                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                    <Grid container direction="column">
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak:</b> {row.phone}
+                        <Typography variant="body1">
+                          Kontak: {row.phone}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak Darurat:</b> {row.emergency_phone}
+                        <Typography variant="body1">
+                          Kontak Darurat: {row.emergency_phone}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Alamat:</b> {row.address}
+                        <Typography variant="body1" color="textSecondary">
+                          Alamat: {row.address}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b>{" "}
+                        <Typography variant="body1" color="textSecondary">
+                          Tanggal lahir: {" "}
                           {moment(row.tanggal_lahir)
                             .locale("id")
                             .format("DD MMMM YYYY")}
@@ -1535,27 +1532,27 @@ function ManageUsers(props) {
                       )}
                     </Grid>
                   </ExpansionPanelSummary>
-                  <Divider className={classes.profilePanelDivider} />
-                  <ExpansionPanelDetails>
-                    <Grid conntainer direction="column">
+                  <Divider />
+                  <ExpansionPanelDetails style={{ paddingTop: "20px" }}>
+                    <Grid container direction="column">
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak:</b> {row.phone}
+                        <Typography variant="body1">
+                          Kontak: {row.phone}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Kontak Darurat:</b> {row.emergency_phone}
+                        <Typography variant="body1">
+                          Kontak Darurat: {row.emergency_phone}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Alamat:</b> {row.address}
+                        <Typography variant="body1" color="textSecondary">
+                          Alamat: {row.address}
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography variant="body1" gutterBottom>
-                          <b>Tanggal lahir:</b>{" "}
+                        <Typography variant="body1" color="textSecondary">
+                          Tanggal lahir:{" "}
                           {moment(row.tanggal_lahir)
                             .locale("id")
                             .format("DD MMMM YYYY")}
