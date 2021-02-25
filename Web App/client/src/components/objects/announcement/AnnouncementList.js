@@ -93,7 +93,6 @@ function stableSort(array, comparator) {
 
 function AnnouncementListToolbar(props) {
   const {
-    kelas,
     user,
     classes,
     order,
@@ -103,40 +102,10 @@ function AnnouncementListToolbar(props) {
     updateSearchFilter,
     setSearchBarFocus,
     searchBarFocus,
-    showCreateButton,
-    showSortAndSearchButton,
-    mine,
-    author_role
   } = props;
 
   const isAdmin = (user.role === "Admin");
-
-  let title;
-  if (isAdmin) {
-    title = "Daftar Pengumuman";
-  } else {
-    if (!showSortAndSearchButton) {
-      title = "Daftar Pengumuman";
-    } else {
-      if (mine) {
-        title = "Pengumuman dari Saya";
-      } else {
-        if (author_role === "Admin") {
-          title = "Pengumuman dari Pengelola";
-        } else if (author_role === "Teacher") {
-          title = "Pengumuman dari Guru";
-        } else if ((author_role === "Student")) {
-          if ((Object.keys(kelas).length > 0) || (user.kelas === undefined)) {
-            title = "Pengumuman dari Ketua Kelas";
-          }
-          // Object.keys(kelas).length === 0 berarti kelas belum selesai dimuat. jika kelas belum ada, mine akan bernilai false.
-          // agar judul tidak berganti dari "ketua kelas" (saat kelas belum dimuat) menjadi "saya" (setelah kelas dimuat),
-          // judul saat kelas belum dimuat dibuat kosong.
-        }
-      }
-    }
-  }
-
+  const title = "Daftar Pengumuman";
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -164,11 +133,6 @@ function AnnouncementListToolbar(props) {
     // { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
   ];
 
-  // if (role === "Student") {
-  // Don't include the class_assigned basically.
-  // headCells.pop()
-  // }
-
   // Sort Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleOpenSortMenu = (event) => {
@@ -188,20 +152,14 @@ function AnnouncementListToolbar(props) {
     document.getElementById(id).focus();
   };
 
-  // const canAnnounce = () => {
-  //   console.log(user.role);
-  //   if (Object.keys(kelas).length > 0) {
-  //     return user._id === kelas.ketua_kelas;
-  //   }
-  //   return user.role === "Teacher" || isAdmin;
-  // };
-
   return (
-    <div className={classes.toolbar}>
+    <div className={classes.toolbar} style={{minHeight: "46.5px"}}>
       <div style={{ display: "flex", alignItems: "center" }}>
         {/* mobile view */}
         <Hidden mdUp implementation="css">
-          {(isAdmin && !searchBarFocus) || (!isAdmin && !showSortAndSearchButton) || (!isAdmin && showSortAndSearchButton && !searchBarFocus) ? (
+          {(isAdmin && searchBarFocus) ?
+            null
+            :
             <div
               style={{
                 display: "flex",
@@ -209,16 +167,10 @@ function AnnouncementListToolbar(props) {
                 alignItems: "center",
               }}
             >
-              {showSortAndSearchButton && !isAdmin ?
-                <Typography variant="h5">{title}</Typography>
-                :
-                <>
-                  <AnnouncementIcon className={classes.titleIcon} fontSize="large" />
-                  <Typography variant="h4">{title}</Typography>
-                </>
-              }
+              <AnnouncementIcon className={classes.titleIcon} fontSize="large" />
+              <Typography variant="h4">{title}</Typography>
             </div>
-          ) : null}
+          }
         </Hidden>
         {/* desktop view */}
         <Hidden smDown implementation="css">
@@ -229,190 +181,180 @@ function AnnouncementListToolbar(props) {
               alignItems: "center",
             }}
           >
-            {showSortAndSearchButton && !isAdmin ?
-              <Typography variant="h5">{title}</Typography>
-              :
-              <>
-                <AnnouncementIcon className={classes.titleIcon} fontSize="large" />
-                <Typography variant="h4">{title}</Typography>
-              </>
-            }
+            <AnnouncementIcon className={classes.titleIcon} fontSize="large" />
+            <Typography variant="h4">{title}</Typography>
           </div>
         </Hidden>
-        {!showSortAndSearchButton && !isAdmin ? null : (
-        // mobile view
-        <Hidden mdUp implementation="css">
-          {
-            searchBarFocus ? (
-              <div style={{ display: "flex" }}>
-                <IconButton
-                  onClick={() => {
-                    setSearchBarFocus(false);
-                    updateSearchFilter("");
-                  }}
-                >
-                  <ArrowBackIcon />
-                </IconButton>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  id="searchFilterMobile"
-                  value={searchFilter}
-                  onChange={onChange}
-                  autoFocus
-                  onClick={(e) => setSearchBarFocus(true)}
-                  placeholder="Cari Pengumuman"
-                  // onBlur={() => setSearchBarFocus(false)}
-                  style={{
-                    maxWidth: "200px",
-                    marginLeft: "10px",
-                  }}
-                  InputProps={{
-                    startAdornment: searchBarFocus ? null : (
-                      <InputAdornment
-                        position="start"
-                        style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                      >
-                        <IconButton size="small">
-                          <GoSearch />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment
-                        position="end"
-                        style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                      >
-                        <IconButton
-                          size="small"
-                          id="searchFilterMobile"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onClear(e, "searchFilterMobile");
-                          }}
-                          style={{
-                            opacity: 0.5,
-                            visibility: !searchFilter ? "hidden" : "visible",
-                          }}
-                        >
-                          <ClearIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                    style: {
-                      borderRadius: "22.5px",
-                    },
-                  }}
-                />
-              </div>
-            ) : (
-              // <div style={{display: "flex"}}>
-              <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
-                <IconButton
-                  className={classes.goSearchButton}
-                  onClick={() => setSearchBarFocus(true)}
-                >
-                  <GoSearch className={classes.goSearchIconMobile} />
-                </IconButton>
-              </LightTooltip>
-            )
-            // </div>
-          }
-        </Hidden>
-        )}
-      </div>
-      <div style={{ display: "flex" }}>
-        {!showSortAndSearchButton && !isAdmin ? null : (
-        // desktop view
-        <Hidden smDown implementation="css">
-          <TextField
-            // fullWidth
-            variant="outlined"
-            id="searchFilterDesktop"
-            value={searchFilter}
-            onChange={onChange}
-            onClick={() => setSearchBarFocus(true)}
-            onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Pengumuman"
-            // onBlur={() => setSearchBarFocus(false)}
-            style={{
-              maxWidth: "250px",
-              marginRight: "10px",
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                >
-                  <IconButton size="small">
-                    <GoSearch />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment
-                  position="end"
-                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                >
+        {isAdmin ? (
+          // mobile view
+          <Hidden mdUp implementation="css">
+            {
+              searchBarFocus ? (
+                <div style={{ display: "flex" }}>
                   <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClear(e, "searchFilterDesktop");
-                    }}
-                    style={{
-                      opacity: 0.5,
-                      visibility: !searchFilter ? "hidden" : "visible",
+                    onClick={() => {
+                      setSearchBarFocus(false);
+                      updateSearchFilter("");
                     }}
                   >
-                    <ClearIcon />
+                    <ArrowBackIcon />
                   </IconButton>
-                </InputAdornment>
-              ),
-              style: {
-                borderRadius: "22.5px",
-              },
-            }}
-          />
-        </Hidden>
-        )}
-        {showSortAndSearchButton && showCreateButton ? (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {/* mobile view */}
-            <Hidden mdUp implementation="css">
-              <LightTooltip title="Buat Pengumuman">
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="searchFilterMobile"
+                    value={searchFilter}
+                    onChange={onChange}
+                    autoFocus
+                    onClick={(e) => setSearchBarFocus(true)}
+                    placeholder="Cari Pengumuman"
+                    // onBlur={() => setSearchBarFocus(false)}
+                    style={{
+                      maxWidth: "200px",
+                      marginLeft: "10px",
+                    }}
+                    InputProps={{
+                      startAdornment: searchBarFocus ? null : (
+                        <InputAdornment
+                          position="start"
+                          style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                        >
+                          <IconButton size="small">
+                            <GoSearch />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment
+                          position="end"
+                          style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                        >
+                          <IconButton
+                            size="small"
+                            // id="searchFilterMobile"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onClear(e, "searchFilterMobile");
+                            }}
+                            style={{
+                              opacity: 0.5,
+                              visibility: !searchFilter ? "hidden" : "visible",
+                            }}
+                          >
+                            <ClearIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      style: {
+                        borderRadius: "22.5px",
+                      },
+                    }}
+                  />
+                </div>
+              ) : (
+                  // <div style={{display: "flex"}}>
+                  <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+                    <IconButton
+                      className={classes.goSearchButton}
+                      onClick={() => setSearchBarFocus(true)}
+                    >
+                      <GoSearch className={classes.goSearchIconMobile} />
+                    </IconButton>
+                  </LightTooltip>
+                )
+              // </div>
+            }
+          </Hidden>
+        ) : null}
+      </div>
+      <div style={{ display: "flex" }}>
+        {isAdmin ? (
+          <>
+            <Hidden smDown implementation="css">
+              <TextField
+                // fullWidth
+                variant="outlined"
+                id="searchFilterDesktop"
+                value={searchFilter}
+                onChange={onChange}
+                onClick={() => setSearchBarFocus(true)}
+                onBlur={() => setSearchBarFocus(false)}
+                placeholder="Cari Pengumuman"
+                // onBlur={() => setSearchBarFocus(false)}
+                style={{
+                  maxWidth: "250px",
+                  marginRight: "10px",
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                    >
+                      <IconButton size="small">
+                        <GoSearch />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e, "searchFilterDesktop");
+                        }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    borderRadius: "22.5px",
+                  },
+                }}
+              />
+            </Hidden>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {/* mobile view */}
+              <Hidden mdUp implementation="css">
+                <LightTooltip title="Buat Pengumuman">
+                  <Link to="/buat-pengumuman">
+                    <Fab
+                      size="small"
+                      className={classes.newAnnouncementButton}
+                    >
+                      <AnnouncementIcon
+                        className={classes.newAnnouncementIconMobile}
+                      />
+                    </Fab>
+                  </Link>
+                </LightTooltip>
+              </Hidden>
+              {/* desktop view */}
+              <Hidden smDown implementation="css">
                 <Link to="/buat-pengumuman">
                   <Fab
-                    size="small"
+                    variant="extended"
+                    size="medium"
                     className={classes.newAnnouncementButton}
                   >
                     <AnnouncementIcon
-                      className={classes.newAnnouncementIconMobile}
+                      className={classes.newAnnouncementIconDesktop}
                     />
-                  </Fab>
-                </Link>
-              </LightTooltip>
-            </Hidden>
-            {/* desktop view */}
-            <Hidden smDown implementation="css">
-              <Link to="/buat-pengumuman">
-                <Fab
-                  variant="extended"
-                  size="medium"
-                  className={classes.newAnnouncementButton}
-                >
-                  <AnnouncementIcon
-                    className={classes.newAnnouncementIconDesktop}
-                  />
                   Buat Pengumuman
                 </Fab>
-              </Link>
-            </Hidden>
-          </div>
-        ) : null}
-        {!showSortAndSearchButton && !isAdmin ? null :
-          <>
+                </Link>
+              </Hidden>
+            </div>
+
             <LightTooltip title="Urutkan Pengumuman">
               <IconButton
                 onClick={handleOpenSortMenu}
@@ -458,7 +400,7 @@ function AnnouncementListToolbar(props) {
               ))}
             </Menu>
           </>
-        }
+        ) : null}
       </div>
     </div>
   );
@@ -466,15 +408,354 @@ function AnnouncementListToolbar(props) {
 
 AnnouncementListToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-  showCreateButton: PropTypes.bool.isRequired,
-  showSortAndSearchButton: PropTypes.bool.isRequired,
-  mine: PropTypes.bool,
-  author_role: PropTypes.string
+  onRequestSort: PropTypes.func.isRequired,
+  searchFilter: PropTypes.string,
+  updateSearchFilter: PropTypes.func,
+  setSearchBarFocus: PropTypes.func,
+  searchBarFocus: PropTypes.bool
+};
+
+function AnnouncementListSubToolbar(props) {
+  const {
+    kelas,
+    user,
+    classes,
+    order,
+    orderBy,
+    onRequestSort,
+    searchFilter,
+    updateSearchFilter,
+    setSearchBarFocus,
+    searchBarFocus,
+    mine,
+    author_role
+  } = props;
+
+  let title;
+  if (mine) {
+    title = "Pengumuman dari Saya";
+  } else {
+    if (author_role === "Admin") {
+      title = "Pengumuman dari Pengelola";
+    } else if (author_role === "Teacher") {
+      title = "Pengumuman dari Guru";
+    } else if (author_role === "Student") {
+      if ((Object.keys(kelas).length > 0) || (user.kelas === undefined)) {
+        title = "Pengumuman dari Ketua Kelas";
+      }
+      // Object.keys(kelas).length === 0 berarti kelas belum selesai dimuat.
+      // agar judul tidak berganti dari "ketua kelas" (saat kelas belum dimuat) menjadi "saya" (setelah kelas dimuat),
+      // judul saat kelas belum dimuat dibuat kosong.
+    }
+  }
+
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  const headCells = [
+    {
+      id: "author_name",
+      numeric: false,
+      disablePadding: true,
+      label: "Nama Pembuat",
+    },
+    {
+      id: "notification_title",
+      numeric: false,
+      disablePadding: false,
+      label: "Judul Pengumuman",
+    },
+    {
+      id: "createdAt",
+      numeric: false,
+      disablePadding: false,
+      label: "Waktu Dibuat",
+    },
+    // { id: "name_lowcased", numeric: false, disablePadding: false, label: "Waktu Ditugaskan" },
+  ];
+
+  // Sort Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleOpenSortMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSortMenu = () => {
+    setAnchorEl(null);
+  };
+
+  // FOR SEARCH FILTER.
+  const onChange = (e) => {
+    updateSearchFilter(e.target.value);
+  };
+
+  const onClear = (e, id) => {
+    updateSearchFilter("");
+    document.getElementById(id).focus();
+  };
+
+  // const canAnnounce = () => {
+  //   console.log(user.role);
+  //   if (Object.keys(kelas).length > 0) {
+  //     return user._id === kelas.ketua_kelas;
+  //   }
+  //   return user.role === "Teacher" || isAdmin;
+  // };
+
+  return (
+    <div className={classes.toolbar} style={{ minHeight: "64px" }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {/* mobile view */}
+        <Hidden mdUp implementation="css">
+          {!searchBarFocus ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h5">{title}</Typography>
+            </div>
+          ) : null}
+        </Hidden>
+        {/* desktop view */}
+        <Hidden smDown implementation="css">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h5">{title}</Typography>
+          </div>
+        </Hidden>
+        <Hidden mdUp implementation="css">
+          {
+            searchBarFocus ? (
+              <div style={{ display: "flex" }}>
+                <IconButton
+                  onClick={() => {
+                    setSearchBarFocus(false);
+                    updateSearchFilter("");
+                  }}
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  id={author_role}
+                  value={searchFilter}
+                  onChange={onChange}
+                  autoFocus
+                  onClick={(e) => setSearchBarFocus(true)}
+                  placeholder="Cari Pengumuman"
+                  style={{
+                    maxWidth: "200px",
+                    marginLeft: "10px",
+                  }}
+                  InputProps={{
+                    startAdornment: searchBarFocus ? null : (
+                      <InputAdornment
+                        position="start"
+                        style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                      >
+                        <IconButton size="small">
+                          <GoSearch />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                      >
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onClear(e, author_role);
+                          }}
+                          style={{
+                            opacity: 0.5,
+                            visibility: !searchFilter ? "hidden" : "visible",
+                          }}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    style: {
+                      borderRadius: "22.5px",
+                    },
+                  }}
+                />
+              </div>
+            ) : (
+                <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+                  <IconButton
+                    className={classes.goSearchButton}
+                    onClick={() => setSearchBarFocus(true)}
+                  >
+                    <GoSearch className={classes.goSearchIconMobile} />
+                  </IconButton>
+                </LightTooltip>
+              )
+          }
+        </Hidden>
+      </div>
+      <div style={{ display: "flex" }}>
+        <Hidden smDown implementation="css">
+          <TextField
+            variant="outlined"
+            id={author_role}
+            value={searchFilter}
+            onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder="Cari Pengumuman"
+            // onBlur={() => setSearchBarFocus(false)}
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                >
+                  <IconButton size="small">
+                    <GoSearch />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e, author_role);
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
+            }}
+          />
+        </Hidden>
+        {mine ? (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {/* mobile view */}
+            <Hidden mdUp implementation="css">
+              <LightTooltip title="Buat Pengumuman">
+                <Link to="/buat-pengumuman">
+                  <Fab
+                    size="small"
+                    className={classes.newAnnouncementButton}
+                  >
+                    <AnnouncementIcon
+                      className={classes.newAnnouncementIconMobile}
+                    />
+                  </Fab>
+                </Link>
+              </LightTooltip>
+            </Hidden>
+            {/* desktop view */}
+            <Hidden smDown implementation="css">
+              <Link to="/buat-pengumuman">
+                <Fab
+                  variant="extended"
+                  size="medium"
+                  className={classes.newAnnouncementButton}
+                >
+                  <AnnouncementIcon
+                    className={classes.newAnnouncementIconDesktop}
+                  />
+                  Buat Pengumuman
+                </Fab>
+              </Link>
+            </Hidden>
+          </div>
+        ) : null}
+        <LightTooltip title="Urutkan Pengumuman">
+          <IconButton
+            onClick={handleOpenSortMenu}
+            className={classes.sortButton}
+          >
+            <SortIcon />
+          </IconButton>
+        </LightTooltip>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseSortMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {headCells.map((headCell, i) => (
+            <MenuItem
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    </div>
+  );
+}
+
+AnnouncementListSubToolbar.propTypes = {
+  classes: PropTypes.object.isRequired,
+  kelas: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  searchFilter: PropTypes.string.isRequired,
+  updateSearchFilter: PropTypes.func.isRequired,
+  setSearchBarFocus: PropTypes.func.isRequired,
+  searchBarFocus: PropTypes.bool.isRequired,
+  mine: PropTypes.bool.isRequired,
+  author_role: PropTypes.string.isRequired
 };
 
 function AnnouncementListItems(props) {
@@ -483,13 +764,13 @@ function AnnouncementListItems(props) {
     classes,
     order,
     orderBy,
-    showButtons,
+    mine,
     handleOpenDeleteDialog,
     addBottomMargin
   } = props;
 
   return (
-    <Grid container direction="column" spacing={2} style={{ marginBottom: addBottomMargin ? "75px" : "0" }}>
+    <Grid container direction="column" spacing={2} style={{ marginTop: "10px", marginBottom: addBottomMargin ? "32px" : "0" }}>
       {rows.length === 0 ? (
         <Typography variant="subtitle1" align="center" color="textSecondary">
           Kosong
@@ -499,8 +780,6 @@ function AnnouncementListItems(props) {
             //agar bisa menambahkan elemen <Link> berdasarkan kondisi
             let content = (
               <ListItem
-                // button={!showButtons}
-                // component="a"
                 className={classes.listItem}
               >
                 <Hidden smUp implementation="css">
@@ -548,7 +827,7 @@ function AnnouncementListItems(props) {
                 <ListItemText
                   align="right"
                   primary={
-                    showButtons?
+                    mine ?
                       <Grid container spacing={1} justify="flex-end">
                         <Grid item>
                           <LightTooltip title="Lihat Lebih Lanjut">
@@ -594,14 +873,14 @@ function AnnouncementListItems(props) {
                         </Grid>
                       </Grid>
                       :
-                    <Typography variant="body2" color="textSecondary">
-                      {moment(row.createdAt)
-                        .locale("id")
-                        .format("DD MMM YYYY")}
-                    </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {moment(row.createdAt)
+                          .locale("id")
+                          .format("DD MMM YYYY")}
+                      </Typography>
                   }
                   secondary={
-                    showButtons ?
+                    mine ?
                       null
                       :
                       moment(row.createdAt)
@@ -614,7 +893,7 @@ function AnnouncementListItems(props) {
             return (
               <Grid key={row.createdAt} item>
                 <Paper variant="outlined">
-                  {showButtons ? content
+                  {mine ? content
                     :
                     <Link to={`/pengumuman/${row.notification_id}`}>
                       {content}
@@ -630,16 +909,15 @@ function AnnouncementListItems(props) {
 }
 
 AnnouncementListItems.propTypes = {
+  classes: PropTypes.object.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rows: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-  showButtons: PropTypes.bool.isRequired,
-  handleOpenDeleteDialog: PropTypes.func.isRequired,
+  mine: PropTypes.bool.isRequired,
+  handleOpenDeleteDialog: PropTypes.func,
   addBottomMargin: PropTypes.bool.isRequired
 };
 
-// FIXME f SubList
 function AnnouncementSubList(props) {
   const {
     retrieved_users,
@@ -650,7 +928,6 @@ function AnnouncementSubList(props) {
     user,
     mine,
     author_role,
-    showButtons,
     handleOpenDeleteDialog,
     addBottomMargin
   } = props;
@@ -777,30 +1054,27 @@ function AnnouncementSubList(props) {
 
   return (
     <>
-      <AnnouncementListToolbar
+      <AnnouncementListSubToolbar
         kelas={kelas}
         user={user}
         classes={classes}
         order={order}
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
-        rowCount={rows ? rows.length : 0}
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        showCreateButton={mine}
-        showSortAndSearchButton={true}
         mine={mine}
         author_role={author_role}
       />
-      <Divider variant="inset" style={{marginTop: "15px", marginBottom: "15px"}} />
+      <Divider variant="inset" />
       <AnnouncementListItems
         order={order}
         orderBy={orderBy}
         rows={rows}
         classes={classes}
-        showButtons={showButtons}
+        mine={mine}
         handleOpenDeleteDialog={handleOpenDeleteDialog}
         addBottomMargin={addBottomMargin}
       />
@@ -808,6 +1082,15 @@ function AnnouncementSubList(props) {
   );
 }
 
+AnnouncementSubList.propTypes = {
+  classes: PropTypes.object.isRequired,
+  kelas: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  mine: PropTypes.bool.isRequired,
+  author_role: PropTypes.string.isRequired,
+  handleOpenDeleteDialog: PropTypes.func,
+  addBottomMargin: PropTypes.bool.isRequired
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -824,6 +1107,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   titleDivider: {
+    backgroundColor: theme.palette.primary.main,
+    marginTop: "15px",
+    marginBottom: "32px",
+  },
+  adminTitleDivider: {
     backgroundColor: theme.palette.primary.main,
     marginTop: "15px",
     marginBottom: "15px",
@@ -975,25 +1263,7 @@ function AnnouncementList(props) {
     );
   };
 
-  // const retrieveAnnouncements = () => {
-  //   // If all_assessments is not undefined or an empty array
-  //   if (selectedAnnouncements.length) {
-  //     rows = [];
-  //     selectedAnnouncements
-  //       .filter((item) =>
-  //         item.title.toLowerCase().includes(searchFilter.toLowerCase())
-  //       )
-  //       .forEach((data) => {
-  //         if (data) {
-  //           console.log(data);
-  //         }
-  //         announcementRowItem(data);
-  //       });
-  //   }
-  // };
-
   React.useEffect(() => {
-    // retrieveAnnouncements();
     if (selectedAnnouncements.length && retrieved_users.size) {
       let newRows = [];
       selectedAnnouncements
@@ -1065,21 +1335,17 @@ function AnnouncementList(props) {
         }}
       />
       <AnnouncementListToolbar
-        kelas={kelas}
         user={user}
         classes={classes}
         order={order}
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
-        rowCount={rows ? rows.length : 0}
         searchFilter={searchFilter}
         updateSearchFilter={updateSearchFilter}
         setSearchBarFocus={setSearchBarFocus}
         searchBarFocus={searchBarFocus}
-        showCreateButton={user.role === "Admin"}
-        showSortAndSearchButton={user.role === "Admin"}
       />
-      <Divider variant="inset"className={classes.titleDivider} />
+      <Divider variant="inset" className={(user.role === "Admin") ? classes.adminTitleDivider: classes.titleDivider} />
       {
         (user.role === "Admin") ?
           <AnnouncementListItems
@@ -1087,7 +1353,7 @@ function AnnouncementList(props) {
             orderBy={orderBy}
             rows={rows}
             classes={classes}
-            showButtons={true}
+            mine={true}
             handleOpenDeleteDialog={handleOpenDeleteDialog}
             addBottomMargin={true}
           />
@@ -1097,40 +1363,36 @@ function AnnouncementList(props) {
                 {...propsToPass}
                 mine={true}
                 author_role={"Teacher"}
-                showButtons={true}
-                handleOpenDeleteDialog={handleOpenDeleteDialog}
                 addBottomMargin={true}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
                 />
               <AnnouncementSubList
                 {...propsToPass}
                 mine={false}
                 author_role="Admin"
-                showButtons={false}
+                addBottomMargin={false}
               />
             </>
             : (user.role === "Student") ?
               <>
                 <AnnouncementSubList
                   {...propsToPass}
-                  // mine={null}
                   mine={(user._id === kelas.ketua_kelas)}
                   author_role="Student"
-                  showButtons={(user._id === kelas.ketua_kelas)}
-                  handleOpenDeleteDialog={handleOpenDeleteDialog}
                   addBottomMargin={true}
+                  handleOpenDeleteDialog={handleOpenDeleteDialog}
                 />
                 <AnnouncementSubList
                   {...propsToPass}
                   mine={false}
                   author_role="Teacher"
-                  showButtons={false}
                   addBottomMargin={true}
                   />
                 <AnnouncementSubList
                   {...propsToPass}
                   mine={false}
                   author_role="Admin"
-                  showButtons={false}
+                  addBottomMargin={false}
                 />
               </>
               : null

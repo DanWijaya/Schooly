@@ -404,7 +404,8 @@ const useStyles = makeStyles((theme) => ({
   },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
-    marginBottom: "20px",
+    marginTop: "15px",
+    marginBottom: "32px",
   },
   toolbar: {
     display: "flex",
@@ -1220,7 +1221,7 @@ function ManageUsers(props) {
           onDeleteUser(selectedUserId);
         }}
       />
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center">
         Daftar Pengguna Tertunda
       </Typography>
       <Divider className={classes.titleDivider} />
@@ -1255,7 +1256,7 @@ function ManageUsers(props) {
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px", marginBottom: "75px" }}
+        style={{ marginTop: "10px", marginBottom: "32px" }}
       >
         {student_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">

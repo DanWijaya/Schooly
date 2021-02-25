@@ -551,9 +551,6 @@ function ViewClass(props) {
   const classId = props.match.params.id;
 
   const [walikelas, setWalikelas] = React.useState({});
-  // const [firstAssign, setFirstAssign] = React.useState(true);
-  const firstAssign = React.useRef(true);
-  // const [allow, setAllow] = React.useState("empty");
 
   const all_assessments = assessmentsCollection.all_assessments;
 
@@ -910,29 +907,6 @@ function ViewClass(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [all_teachers]);
 
-  // React.useEffect(() => {
-  //   // nilai students_by_class yang diperlukan adalah nilai yang diassign ketika fungsi getStudentsByClass telah selesai,
-  //   // bukan ketika komponen ini dimount
-  //   if (firstAssign.current) {
-  //     firstAssign.current = false;
-  //   } else {
-  //     // me-redirect murid yang memasukkan id kelas lain (bukan kelas murid tersebut) pada url
-  //     if (
-  //       user.role === "Student" &&
-  //       !students_by_class
-  //         .map((student) => {
-  //           return student._id;
-  //         })
-  //         .includes(user._id)
-  //     ) {
-  //       setAllow("redirect");
-  //     } else {
-  //       setAllow("content");
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [students_by_class, user]);
-
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -990,71 +964,69 @@ function ViewClass(props) {
 
   return (
     <div className={classes.root}>
-      {/* {allow === "empty" ? null : allow === "content" ? ( */}
-      {
-        (user.role === "Admin" || user.role === "Teacher") ? ( // ---------- jika halaman kelas dibuka oleh admin atau guru ----------
-          <div>
-            <Paper className={classes.classPaper}>
-              <Typography variant="h3">{kelas.name}</Typography>
-              <Typography variant="h6">
-                {isObjEmpty(walikelas) ? null : walikelas.name}
+      {(user.role === "Admin" || user.role === "Teacher") ? (
+        <div>
+          <Paper className={classes.classPaper}>
+            <Typography variant="h3">{kelas.name}</Typography>
+            <Typography variant="h6">
+              {isObjEmpty(walikelas) ? null : walikelas.name}
+            </Typography>
+          </Paper>
+          <div style={{ padding: "20px", marginBottom: "40px" }}>
+            <Typography variant="h4" gutterBottom>
+              Wali Kelas
               </Typography>
-            </Paper>
-            <div style={{ padding: "20px", marginBottom: "40px" }}>
-              <Typography variant="h4" gutterBottom>
-                Wali Kelas
-              </Typography>
-              <Divider className={classes.personListDivider} />
-              <List className={classes.listContainer}>
-                {!isObjEmpty(walikelas) ? (
-                  <Grid container justify="space-between" alignItems="center">
-                    {[
-                      <Grid item>
-                        <PersonListItem
-                          person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
-                          person_name={walikelas.name}
-                          person_role={
-                            all_subjects_map
-                              ? all_subjects_map.get(walikelas.subject_teached)
-                              : null
-                          }
-                        />
-                      </Grid>,
-                      (user.email === walikelas.email) ? null : ( // menghilangkan tombol lihat profil di diri sendiri
-                        <Grid item xs container justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Profil">
-                              <Link
-                                to={{
-                                  pathname: "/lihat-profil",
-                                  state: {
-                                    avatar: walikelas.avatar,
-                                    nama: walikelas.name,
-                                    viewable_section: "no_karir",
-                                    role: walikelas.role,
-                                    jenis_kelamin: walikelas.jenis_kelamin,
-                                    email: walikelas.email,
-                                    phone: walikelas.phone,
-                                    emergency_phone: walikelas.emergency_phone,
-                                    admin: false,
-                                    tanggal_lahir: walikelas.tanggal_lahir,
-                                  },
-                                }}
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
+              {!isObjEmpty(walikelas) ? (
+                <Grid container justify="space-between" alignItems="center">
+                  {[
+                    <Grid item>
+                      <PersonListItem
+                        person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                        person_name={walikelas.name}
+                        person_role={
+                          all_subjects_map
+                            ? all_subjects_map.get(walikelas.subject_teached)
+                            : null
+                        }
+                      />
+                    </Grid>,
+                    (user.email === walikelas.email) ? null : ( // menghilangkan tombol lihat profil di diri sendiri
+                      <Grid item xs container justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Profil">
+                            <Link
+                              to={{
+                                pathname: "/lihat-profil",
+                                state: {
+                                  avatar: walikelas.avatar,
+                                  nama: walikelas.name,
+                                  viewable_section: "no_karir",
+                                  role: walikelas.role,
+                                  jenis_kelamin: walikelas.jenis_kelamin,
+                                  email: walikelas.email,
+                                  phone: walikelas.phone,
+                                  emergency_phone: walikelas.emergency_phone,
+                                  admin: false,
+                                  tanggal_lahir: walikelas.tanggal_lahir,
+                                },
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
                               >
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
                         </Grid>
-                      )
-                    ]}
-                  </Grid>
-                ) : (
+                      </Grid>
+                    )
+                  ]}
+                </Grid>
+              ) : (
                   <Typography
                     variant="subtitle1"
                     align="center"
@@ -1063,23 +1035,23 @@ function ViewClass(props) {
                     Kosong
                   </Typography>
                 )}
-              </List>
-            </div>
-            <div style={{ padding: "20px" }}>
-              <Typography variant="h4" gutterBottom>
-                Murid
+            </List>
+          </div>
+          <div style={{ padding: "20px" }}>
+            <Typography variant="h4" gutterBottom>
+              Murid
               </Typography>
-              <Divider className={classes.personListDivider} />
-              <List className={classes.listContainer}>
-                {students_by_class.length === 0 ? (
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    color="textSecondary"
-                  >
-                    Kosong
-                  </Typography>
-                ) : (
+            <Divider className={classes.personListDivider} />
+            <List className={classes.listContainer}>
+              {students_by_class.length === 0 ? (
+                <Typography
+                  variant="subtitle1"
+                  align="center"
+                  color="textSecondary"
+                >
+                  Kosong
+                </Typography>
+              ) : (
                   students_by_class.map((student) => (
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
@@ -1128,436 +1100,431 @@ function ViewClass(props) {
                     </Grid>
                   ))
                 )}
-              </List>
-            </div>
+            </List>
           </div>
-        ) : (
-          // ---------- jika halaman kelas dibuka oleh murid ----------
-          <div>
-            <Paper square>
-              <div className={classes.classPaper}>
-                <Typography variant="h3">{kelas.name}</Typography>
-                <Typography variant="h6">
-                  {isObjEmpty(walikelas) ? null : walikelas.name}
-                </Typography>
-              </div>
-              <Tabs
-                variant="fullWidth"
-                indicatorColor="primary"
-                textColor="primary"
-                value={value}
-                onChange={handleChange}
-              >
-                <Tab
-                  icon={<DesktopWindowsIcon />}
-                  label="Pekerjaan Kelas"
-                  {...TabIndex(0)}
-                />
-                <Tab
-                  icon={<BallotIcon />}
-                  label="Mata Pelajaran"
-                  {...TabIndex(1)}
-                />
-                <Tab
-                  icon={<SupervisorAccountIcon />}
-                  label="Peserta"
-                  {...TabIndex(2)}
-                />
-              </Tabs>
-            </Paper>
-            <TabPanel value={value} index={0}>
-              <ExpansionPanel defaultExpanded>
-                <ExpansionPanelSummary>
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid
-                      item
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <MenuBookIcon className={classes.itemIcon} />
-                      <Typography variant="h6">Materi</Typography>
-                    </Grid>
-                    <Grid item>
-                      <LightTooltip title="Lihat Semua" placement="right">
-                        <Link to="/daftar-materi">
-                          <IconButton
-                            size="small"
-                            className={classes.viewSubjectButton}
-                          >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </LightTooltip>
-                    </Grid>
+        </div>
+      ) : (
+        <div>
+          <Paper square>
+            <div className={classes.classPaper}>
+              <Typography variant="h3">{kelas.name}</Typography>
+              <Typography variant="h6">
+                {isObjEmpty(walikelas) ? null : walikelas.name}
+              </Typography>
+            </div>
+            <Tabs
+              variant="fullWidth"
+              indicatorColor="primary"
+              textColor="primary"
+              value={value}
+              onChange={handleChange}
+            >
+              <Tab
+                icon={<DesktopWindowsIcon />}
+                label="Pekerjaan Kelas"
+                {...TabIndex(0)}
+              />
+              <Tab
+                icon={<BallotIcon />}
+                label="Mata Pelajaran"
+                {...TabIndex(1)}
+              />
+              <Tab
+                icon={<SupervisorAccountIcon />}
+                label="Peserta"
+                {...TabIndex(2)}
+              />
+            </Tabs>
+          </Paper>
+          <TabPanel value={value} index={0}>
+            <ExpansionPanel defaultExpanded>
+              <ExpansionPanelSummary>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid
+                    item
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MenuBookIcon className={classes.itemIcon} />
+                    <Typography variant="h6">Materi</Typography>
                   </Grid>
-                </ExpansionPanelSummary>
-                <Divider />
-                <List className={classes.expansionPanelList}>
-                  {listMaterials().length === 0 ? (
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
-                      color="textSecondary"
-                    >
-                      Kosong
-                    </Typography>
-                  ) : (
-                    <>{listMaterials()}</>
-                  )}
-                </List>
-              </ExpansionPanel>
-              <ExpansionPanel defaultExpanded>
-                <ExpansionPanelSummary>
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid
-                      item
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AssignmentIcon className={classes.itemIcon} />
-                      <Typography variant="h6">Tugas</Typography>
-                    </Grid>
-                    <Grid item>
-                      <LightTooltip title="Lihat Semua" placement="right">
-                        <Link to="/daftar-tugas">
-                          <IconButton
-                            size="small"
-                            className={classes.viewSubjectButton}
-                          >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </LightTooltip>
-                    </Grid>
+                  <Grid item>
+                    <LightTooltip title="Lihat Semua" placement="right">
+                      <Link to="/daftar-materi">
+                        <IconButton
+                          size="small"
+                          className={classes.viewSubjectButton}
+                        >
+                          <PageviewIcon fontSize="small" />
+                        </IconButton>
+                      </Link>
+                    </LightTooltip>
                   </Grid>
-                </ExpansionPanelSummary>
-                <Divider />
-                <List className={classes.expansionPanelList}>
-                  {listTasks().length === 0 ? (
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
-                      color="textSecondary"
-                    >
-                      Kosong
-                    </Typography>
-                  ) : (
-                    <>{listTasks()}</>
-                  )}
-                </List>
-              </ExpansionPanel>
-              <ExpansionPanel defaultExpanded>
-                <ExpansionPanelSummary>
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid
-                      item
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <FaClipboardList className={classes.itemIcon} />
-                      <Typography variant="h6">Kuis</Typography>
-                    </Grid>
-                    <Grid item>
-                      <LightTooltip title="Lihat Semua" placement="right">
-                        <Link to="/daftar-kuis">
-                          <IconButton
-                            size="small"
-                            className={classes.viewSubjectButton}
-                          >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </LightTooltip>
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelSummary>
-                <Divider />
-                <List className={classes.expansionPanelList}>
-                  {listAssessments(null, {}, "Kuis").length === 0 ? (
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
-                      color="textSecondary"
-                    >
-                      Kosong
-                    </Typography>
-                  ) : (
-                    <>{listAssessments(null, {}, "Kuis")}</>
-                  )}
-                </List>
-              </ExpansionPanel>
-              <ExpansionPanel defaultExpanded>
-                <ExpansionPanelSummary>
-                  <Grid container justify="space-between" alignItems="center">
-                    <Grid
-                      item
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <BsClipboardData className={classes.itemIcon} />
-                      <Typography variant="h6">Ujian</Typography>
-                    </Grid>
-                    <Grid item>
-                      <LightTooltip title="Lihat Semua" placement="right">
-                        <Link to="/daftar-ujian">
-                          <IconButton
-                            size="small"
-                            className={classes.viewSubjectButton}
-                          >
-                            <PageviewIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </LightTooltip>
-                    </Grid>
-                  </Grid>
-                </ExpansionPanelSummary>
-                <Divider />
-                <List className={classes.expansionPanelList}>
-                  {listAssessments(null, {}, "Ujian").length === 0 ? (
-                    <Typography
-                      variant="subtitle1"
-                      align="center"
-                      color="textSecondary"
-                    >
-                      Kosong
-                    </Typography>
-                  ) : (
-                    <>{listAssessments(null, {}, "Ujian")}</>
-                  )}
-                </List>
-              </ExpansionPanel>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              {all_subjects.length === 0
-                ? null
-                : all_subjects.map((subject) => {
-                    // let isEmpty = true
-                    return (
-                      <ExpansionPanel>
-                        <ExpansionPanelSummary>
-                          <Grid
-                            container
-                            justify="space-between"
-                            alignItems="center"
-                          >
-                            <Typography variant="h6">{subject.name}</Typography>
-                            <LightTooltip
-                              title="Lihat Profil"
-                              placement="right"
-                            >
-                              <Link to={`/mata-pelajaran/${subject._id}`}>
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewSubjectButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                        </ExpansionPanelSummary>
-                        <Divider />
-                        <List className={classes.expansionPanelList}>
-                          {listMaterials("subject", subject, "mata_pelajaran")}
-                          {listTasks("subject", subject, "mata_pelajaran")}
-                          {listAssessments(
-                            "subject",
-                            subject,
-                            "Kuis",
-                            "mata_pelajaran"
-                          )}
-                          {listAssessments(
-                            "subject",
-                            subject,
-                            "Ujian",
-                            "mata_pelajaran"
-                          )}
-                          {listMaterials("subject", subject, "mata_pelajaran")
-                            .length === 0 &&
-                          listTasks("subject", subject, "mata_pelajaran")
-                            .length === 0 &&
-                          listAssessments(
-                            "subject",
-                            subject,
-                            "Kuis",
-                            "mata_pelajaran"
-                          ).length === 0 &&
-                          listAssessments(
-                            "subject",
-                            subject,
-                            "Ujian",
-                            "mata_pelajaran"
-                          ).length === 0 ? (
-                            <Typography
-                              color="textSecondary"
-                              align="center"
-                              variant="subtitle1"
-                            >
-                              Kosong
-                            </Typography>
-                          ) : null}
-                        </List>
-                      </ExpansionPanel>
-                    );
-                  })}
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-              <Paper>
-                <div style={{ padding: "20px", marginBottom: "40px" }}>
-                  <Typography variant="h4" gutterBottom>
-                    Wali Kelas
+                </Grid>
+              </ExpansionPanelSummary>
+              <Divider />
+              <List className={classes.expansionPanelList}>
+                {listMaterials().length === 0 ? (
+                  <Typography
+                    variant="subtitle1"
+                    align="center"
+                    color="textSecondary"
+                  >
+                    Kosong
                   </Typography>
-                  <Divider className={classes.personListDivider} />
-                  <List className={classes.listContainer}>
-                    {isObjEmpty(walikelas) ? (
-                      <Typography
-                        variant="subtitle1"
-                        align="center"
-                        color="textSecondary"
-                      >
-                        Kosong
-                      </Typography>
-                    ) : (
-                      <Grid
-                        container
-                        justify="space-between"
-                        alignItems="center"
-                      >
-                        <Grid item>
-                          <PersonListItem
-                            person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
-                            person_name={walikelas.name}
-                            person_role={
-                              all_subjects_map
-                                ? all_subjects_map.get(
-                                    walikelas.subject_teached
-                                  )
-                                : null
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs container justify="flex-end">
-                          <Grid item>
-                            <LightTooltip title="Lihat Profil">
-                              <Link
-                                to={{
-                                  pathname: "/lihat-profil",
-                                  state: {
-                                    avatar: walikelas.avatar,
-                                    nama: walikelas.name,
-                                    viewable_section: "no_karir",
-                                    role: walikelas.role,
-                                    jenis_kelamin: walikelas.jenis_kelamin,
-                                    email: walikelas.email,
-                                    phone: walikelas.phone,
-                                    emergency_phone: walikelas.emergency_phone,
-                                    tanggal_lahir: walikelas.tanggal_lahir,
-                                  },
-                                }}
-                              >
-                                <IconButton
-                                  size="small"
-                                  className={classes.viewMaterialButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton>
-                              </Link>
-                            </LightTooltip>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    )}
-                  </List>
-                </div>
-                <div style={{ padding: "20px" }}>
-                  <Typography variant="h4" gutterBottom>
-                    Murid
+                ) : (
+                  <>{listMaterials()}</>
+                )}
+              </List>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded>
+              <ExpansionPanelSummary>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid
+                    item
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AssignmentIcon className={classes.itemIcon} />
+                    <Typography variant="h6">Tugas</Typography>
+                  </Grid>
+                  <Grid item>
+                    <LightTooltip title="Lihat Semua" placement="right">
+                      <Link to="/daftar-tugas">
+                        <IconButton
+                          size="small"
+                          className={classes.viewSubjectButton}
+                        >
+                          <PageviewIcon fontSize="small" />
+                        </IconButton>
+                      </Link>
+                    </LightTooltip>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <Divider />
+              <List className={classes.expansionPanelList}>
+                {listTasks().length === 0 ? (
+                  <Typography
+                    variant="subtitle1"
+                    align="center"
+                    color="textSecondary"
+                  >
+                    Kosong
                   </Typography>
-                  <Divider className={classes.personListDivider} />
-                  <List className={classes.listContainer}>
-                    {students_by_class.length === 0 ? (
-                      <Typography
-                        variant="subtitle1"
-                        align="center"
-                        color="textSecondary"
-                      >
-                        Kosong
-                      </Typography>
-                    ) : (
-                      students_by_class.map((student) => (
+                ) : (
+                  <>{listTasks()}</>
+                )}
+              </List>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded>
+              <ExpansionPanelSummary>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid
+                    item
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FaClipboardList className={classes.itemIcon} />
+                    <Typography variant="h6">Kuis</Typography>
+                  </Grid>
+                  <Grid item>
+                    <LightTooltip title="Lihat Semua" placement="right">
+                      <Link to="/daftar-kuis">
+                        <IconButton
+                          size="small"
+                          className={classes.viewSubjectButton}
+                        >
+                          <PageviewIcon fontSize="small" />
+                        </IconButton>
+                      </Link>
+                    </LightTooltip>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <Divider />
+              <List className={classes.expansionPanelList}>
+                {listAssessments(null, {}, "Kuis").length === 0 ? (
+                  <Typography
+                    variant="subtitle1"
+                    align="center"
+                    color="textSecondary"
+                  >
+                    Kosong
+                  </Typography>
+                ) : (
+                  <>{listAssessments(null, {}, "Kuis")}</>
+                )}
+              </List>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded>
+              <ExpansionPanelSummary>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid
+                    item
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <BsClipboardData className={classes.itemIcon} />
+                    <Typography variant="h6">Ujian</Typography>
+                  </Grid>
+                  <Grid item>
+                    <LightTooltip title="Lihat Semua" placement="right">
+                      <Link to="/daftar-ujian">
+                        <IconButton
+                          size="small"
+                          className={classes.viewSubjectButton}
+                        >
+                          <PageviewIcon fontSize="small" />
+                        </IconButton>
+                      </Link>
+                    </LightTooltip>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              <Divider />
+              <List className={classes.expansionPanelList}>
+                {listAssessments(null, {}, "Ujian").length === 0 ? (
+                  <Typography
+                    variant="subtitle1"
+                    align="center"
+                    color="textSecondary"
+                  >
+                    Kosong
+                  </Typography>
+                ) : (
+                  <>{listAssessments(null, {}, "Ujian")}</>
+                )}
+              </List>
+            </ExpansionPanel>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            {all_subjects.length === 0
+              ? null
+              : all_subjects.map((subject) => {
+                  // let isEmpty = true
+                  return (
+                    <ExpansionPanel>
+                      <ExpansionPanelSummary>
                         <Grid
                           container
                           justify="space-between"
                           alignItems="center"
                         >
-                          {[
-                            <Grid item>
-                              <PersonListItem
-                                person_avatar={`/api/upload/avatar/${student.avatar}`}
-                                person_name={student.name}
-                                person_role={student_role(student._id)}
-                              />
-                            </Grid>,
-                            (user.email === student.email) ? null : (
-                              <Grid item xs container justify="flex-end">
-                                <Grid item>
-                                  <LightTooltip title="Lihat Profil">
-                                    <Link
-                                      to={{
-                                        pathname: "/lihat-profil",
-                                        state: {
-                                          kelas: student.kelas,
-                                          avatar: student.avatar,
-                                          nama: student.name,
-                                          viewable_section: "no_karir",
-                                          role: student.role,
-                                          jenis_kelamin: student.jenis_kelamin,
-                                          email: student.email,
-                                          phone: student.phone,
-                                          emergency_phone:
-                                            student.emergency_phone,
-                                          id: student._id,
-                                          tanggal_lahir: student.tanggal_lahir,
-                                        },
-                                      }}
-                                    >
-                                      <IconButton
-                                        size="small"
-                                        className={classes.viewMaterialButton}
-                                      >
-                                        <PageviewIcon fontSize="small" />
-                                      </IconButton>
-                                    </Link>
-                                  </LightTooltip>
-                                </Grid>
-                              </Grid>
-                            )
-                          ]}
+                          <Typography variant="h6">{subject.name}</Typography>
+                          <LightTooltip
+                            title="Lihat Profil"
+                            placement="right"
+                          >
+                            <Link to={`/mata-pelajaran/${subject._id}`}>
+                              <IconButton
+                                size="small"
+                                className={classes.viewSubjectButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
                         </Grid>
-                      ))
-                    )}
-                  </List>
-                </div>
-              </Paper>
-            </TabPanel>
-          </div>
-        )
-      }
-      {/* ) : (
-        <Redirect to="/tidak-ditemukan" />
-      )} */}
+                      </ExpansionPanelSummary>
+                      <Divider />
+                      <List className={classes.expansionPanelList}>
+                        {listMaterials("subject", subject, "mata_pelajaran")}
+                        {listTasks("subject", subject, "mata_pelajaran")}
+                        {listAssessments(
+                          "subject",
+                          subject,
+                          "Kuis",
+                          "mata_pelajaran"
+                        )}
+                        {listAssessments(
+                          "subject",
+                          subject,
+                          "Ujian",
+                          "mata_pelajaran"
+                        )}
+                        {listMaterials("subject", subject, "mata_pelajaran")
+                          .length === 0 &&
+                        listTasks("subject", subject, "mata_pelajaran")
+                          .length === 0 &&
+                        listAssessments(
+                          "subject",
+                          subject,
+                          "Kuis",
+                          "mata_pelajaran"
+                        ).length === 0 &&
+                        listAssessments(
+                          "subject",
+                          subject,
+                          "Ujian",
+                          "mata_pelajaran"
+                        ).length === 0 ? (
+                          <Typography
+                            color="textSecondary"
+                            align="center"
+                            variant="subtitle1"
+                          >
+                            Kosong
+                          </Typography>
+                        ) : null}
+                      </List>
+                    </ExpansionPanel>
+                  );
+                })}
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <Paper>
+              <div style={{ padding: "20px", marginBottom: "40px" }}>
+                <Typography variant="h4" gutterBottom>
+                  Wali Kelas
+                </Typography>
+                <Divider className={classes.personListDivider} />
+                <List className={classes.listContainer}>
+                  {isObjEmpty(walikelas) ? (
+                    <Typography
+                      variant="subtitle1"
+                      align="center"
+                      color="textSecondary"
+                    >
+                      Kosong
+                    </Typography>
+                  ) : (
+                    <Grid
+                      container
+                      justify="space-between"
+                      alignItems="center"
+                    >
+                      <Grid item>
+                        <PersonListItem
+                          person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                          person_name={walikelas.name}
+                          person_role={
+                            all_subjects_map
+                              ? all_subjects_map.get(
+                                  walikelas.subject_teached
+                                )
+                              : null
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs container justify="flex-end">
+                        <Grid item>
+                          <LightTooltip title="Lihat Profil">
+                            <Link
+                              to={{
+                                pathname: "/lihat-profil",
+                                state: {
+                                  avatar: walikelas.avatar,
+                                  nama: walikelas.name,
+                                  viewable_section: "no_karir",
+                                  role: walikelas.role,
+                                  jenis_kelamin: walikelas.jenis_kelamin,
+                                  email: walikelas.email,
+                                  phone: walikelas.phone,
+                                  emergency_phone: walikelas.emergency_phone,
+                                  tanggal_lahir: walikelas.tanggal_lahir,
+                                },
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                className={classes.viewMaterialButton}
+                              >
+                                <PageviewIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
+                          </LightTooltip>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  )}
+                </List>
+              </div>
+              <div style={{ padding: "20px" }}>
+                <Typography variant="h4" gutterBottom>
+                  Murid
+                </Typography>
+                <Divider className={classes.personListDivider} />
+                <List className={classes.listContainer}>
+                  {students_by_class.length === 0 ? (
+                    <Typography
+                      variant="subtitle1"
+                      align="center"
+                      color="textSecondary"
+                    >
+                      Kosong
+                    </Typography>
+                  ) : (
+                    students_by_class.map((student) => (
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                      >
+                        {[
+                          <Grid item>
+                            <PersonListItem
+                              person_avatar={`/api/upload/avatar/${student.avatar}`}
+                              person_name={student.name}
+                              person_role={student_role(student._id)}
+                            />
+                          </Grid>,
+                          (user.email === student.email) ? null : (
+                            <Grid item xs container justify="flex-end">
+                              <Grid item>
+                                <LightTooltip title="Lihat Profil">
+                                  <Link
+                                    to={{
+                                      pathname: "/lihat-profil",
+                                      state: {
+                                        kelas: student.kelas,
+                                        avatar: student.avatar,
+                                        nama: student.name,
+                                        viewable_section: "no_karir",
+                                        role: student.role,
+                                        jenis_kelamin: student.jenis_kelamin,
+                                        email: student.email,
+                                        phone: student.phone,
+                                        emergency_phone:
+                                          student.emergency_phone,
+                                        id: student._id,
+                                        tanggal_lahir: student.tanggal_lahir,
+                                      },
+                                    }}
+                                  >
+                                    <IconButton
+                                      size="small"
+                                      className={classes.viewMaterialButton}
+                                    >
+                                      <PageviewIcon fontSize="small" />
+                                    </IconButton>
+                                  </Link>
+                                </LightTooltip>
+                              </Grid>
+                            </Grid>
+                          )
+                        ]}
+                      </Grid>
+                    ))
+                  )}
+                </List>
+              </div>
+            </Paper>
+          </TabPanel>
+        </div>
+      )}
     </div>
   );
 }

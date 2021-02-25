@@ -447,7 +447,7 @@ function SubmittedAssessmentList(props) {
     console.log(selectedAssessments)
     let result = ""
     let classArray = []
-    selectedAssessments.class_assigned.map((kelas, i) => {
+    selectedAssessments.class_assigned.forEach((kelas, i) => {
       let className = all_classes.find((cls) => cls._id === kelas).name;
       if(i !== 0){
         result = result + ','
@@ -463,7 +463,7 @@ function SubmittedAssessmentList(props) {
     let gradeKeys = Object.keys(selectedAssessments.grades)
     let gradeValues = Object.values(selectedAssessments.grades)
     console.log(gradeValues)
-    gradeKeys.map((student_id, i) => {
+    gradeKeys.forEach((student_id, i) => {
       let studentData = all_students.find((std) => std._id === student_id)
       let studentName = studentData.name
       let studentClass = studentData.kelas

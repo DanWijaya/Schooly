@@ -29,10 +29,11 @@ import {
   TableSortLabel,
   Toolbar,
   Typography,
-  Paper,
   FormGroup,
   FormControlLabel,
   Checkbox,
+  ExpansionPanel,
+  ExpansionPanelSummary,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -416,7 +417,8 @@ const useStyles = makeStyles((theme) => ({
   },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
-    marginBottom: "20px",
+    marginTop: "15px",
+    marginBottom: "32px",
   },
   toolbar: {
     display: "flex",
@@ -515,11 +517,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
       boxShadow: "0.2px 0.2px 0.6px 0.07px #d8d8d8",
     },
-  },
-  summary: {
-    padding: "8px",
-    paddingLeft: "20px",
-    paddingRight: "20px",
   },
   checkboxModeButton: {
     backgroundColor: theme.palette.action.selected,
@@ -1088,7 +1085,7 @@ function ManageUsers(props) {
           onDeleteUser(selectedUserId);
         }}
       />
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center">
         Daftar Pengguna Aktif
       </Typography>
       <Divider className={classes.titleDivider} />
@@ -1123,7 +1120,7 @@ function ManageUsers(props) {
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px", marginBottom: "75px" }}
+        style={{ marginTop: "10px", marginBottom: "32px" }}
       >
         {student_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -1137,13 +1134,15 @@ function ManageUsers(props) {
             const labelId = `enhanced-table-checkbox-${index}`;
 
             let content = (
-              <Paper variant="outlined" className={classes.profilePanelSummary}>
+              <ExpansionPanel button variant="outlined">
+                <ExpansionPanelSummary
+                  className={classes.profilePanelSummary}
+                >
                 <Grid
                   container
-                  spacing={0}
+                  spacing={1}
                   justify="space-between"
                   alignItems="center"
-                  className={classes.summary}
                 >
                   <Grid item>
                     {!row.avatar ? (
@@ -1227,7 +1226,8 @@ function ManageUsers(props) {
                     </Grid>
                   )}
                 </Grid>
-              </Paper>
+                </ExpansionPanelSummary>
+              </ExpansionPanel>
             );
 
             return (
@@ -1300,7 +1300,7 @@ function ManageUsers(props) {
       <Grid
         container
         direction="column"
-        spacing={1}
+        spacing={2}
         style={{ marginTop: "10px" }}
       >
         {teacher_rows.length === 0 ? (
@@ -1316,13 +1316,15 @@ function ManageUsers(props) {
             console.log(all_teachers[index]);
 
             let content = (
-              <Paper variant="outlined" className={classes.profilePanelSummary}>
+              <ExpansionPanel button variant="outlined">
+                <ExpansionPanelSummary
+                  className={classes.profilePanelSummary}
+                >
                 <Grid
                   container
-                  spacing={0}
+                  spacing={1}
                   justify="space-between"
                   alignItems="center"
-                  className={classes.summary}
                 >
                   <Grid item>
                     {!row.avatar ? (
@@ -1443,7 +1445,8 @@ function ManageUsers(props) {
                     </Grid>
                   )}
                 </Grid>
-              </Paper>
+                </ExpansionPanelSummary>
+              </ExpansionPanel>
             );
 
             return (

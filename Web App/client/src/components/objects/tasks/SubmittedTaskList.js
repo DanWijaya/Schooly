@@ -433,7 +433,7 @@ function SubmittedTaskList(props) {
     console.log(tasksCollection)
     let result = ""
     let classArray = []
-    tasksCollection.class_assigned.map((kelas, i) => {
+    tasksCollection.class_assigned.forEach((kelas, i) => {
       let className = all_classes.find((cls) => cls._id === kelas).name;
       if(i !== 0){
         result = result + ','
@@ -449,7 +449,7 @@ function SubmittedTaskList(props) {
     let gradeKeys = Object.keys(tasksCollection.grades)
     let gradeValues = Object.values(tasksCollection.grades)
     console.log(gradeValues)
-    gradeKeys.map((student_id, i) => {
+    gradeKeys.forEach((student_id, i) => {
       let studentData = all_students.find((std) => std._id === student_id)
       let studentName = studentData.name
       let studentClass = studentData.kelas
