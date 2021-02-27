@@ -253,7 +253,8 @@ function DashboardGraph(props) {
           title: {
             display: true,
             text: `Nilai ${workType} Anda`,
-            fontSize: 20,
+            fontSize: 16,
+            fontStyle: "normal"
           },
           legend: {
             display: false,
@@ -493,8 +494,6 @@ function ListAssessments(props) {
           );
         }
       }
-      if (!category && result.length === 5) break;
-      if (category === "subject" && result.length === 3) break;
     }
   }
   if (result.length === 0) {
