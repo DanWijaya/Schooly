@@ -246,4 +246,24 @@ router.get("/by_user/:id", (req, res) => {
   });
 });
 
+router.get("/multi_user", (req,res) => {
+  // req.body is in list. 
+  let { id_list } = req.query;
+  id_list = id_list.map((id) => ObjectId(id))
+  FileAvatar.find({ user_id: {$in: id_list}}, (err, users) => {
+    if(!users) {
+      return res.status(400).json("Users not found");
+    }
+    console.log(users)
+    var urls = {}
+    users.forEach((u) => {
+      urls[u._id] = `${keys.cdn}/${u.s3_key}`
+      // urls.set(u._id, `${keys.cdn}/${u.s3_key}`)
+    })
+    console.log("URL:", urls)
+
+    return res.status(200).json(urls);
+  })
+})
+
 module.exports = router;

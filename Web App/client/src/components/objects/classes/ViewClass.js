@@ -17,10 +17,12 @@ import {
   getTaskByClass,
 } from "../../../actions/TaskActions";
 import { getAllTaskFilesByUser } from "../../../actions/UploadActions";
+import { getFileAvatar, getMultipleFileAvatar } from "../../../actions/files/FileAvatarActions";
 import { getMaterial } from "../../../actions/MaterialActions";
 import { getAllAssessments } from "../../../actions/AssessmentActions";
 import viewClassPicture from "./ViewClassPicture.png";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
+
 import {
   Avatar,
   Box,
@@ -279,6 +281,7 @@ function AssessmentListItem(props) {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
 
   return (
     <div>
@@ -547,6 +550,8 @@ function ViewClass(props) {
     getTaskAtmpt,
     getAllAssessments,
     assessmentsCollection,
+    getFileAvatar,
+    getMultipleFileAvatar
   } = props;
   // const { all_user_files } = props.filesCollection;
   const { all_subjects, all_subjects_map } = props.subjectsCollection;
@@ -559,10 +564,9 @@ function ViewClass(props) {
   const [firstAssign, setFirstAssign] = React.useState(true);
   const [allow, setAllow] = React.useState("empty");
   const [taskAtmpt, setTaskAtmpt] = React.useState([]);
+  const [avatar, setAvatar] = React.useState({});
 
   const all_assessments = assessmentsCollection.all_assessments;
-
-  console.log(user.tugas);
 
   // All actions to retrive datas from Database
 
@@ -774,7 +778,6 @@ function ViewClass(props) {
             ? "Belum Ditempuh"
             : "Sudah Ditempuh";
           if (type === "Kuis") {
-            console.log(assessment.type);
             if (
               (!category ||
                 (category === "subject" &&
@@ -804,7 +807,6 @@ function ViewClass(props) {
             }
           }
           if (type === "Ujian") {
-            console.log(assessment.type);
             if (
               (!category ||
                 (category === "subject" &&
@@ -854,7 +856,6 @@ function ViewClass(props) {
       );
       for (var i = selectedMaterials.length - 1; i >= 0; i--) {
         let material = selectedMaterials[i];
-        console.log(material);
         if (
           !category ||
           (category === "subject" && material.subject === subject._id)
@@ -935,7 +936,21 @@ function ViewClass(props) {
     getTaskAtmpt(user._id).then((data) => {
       setTaskAtmpt(data);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user._id]);
+
+  React.useEffect(() => {
+    // getFileAvatar(user._id).then((result) => {
+    //   setAvatar(result)
+    // })
+    var id_list = [kelas.walikelas]
+    students_by_class.forEach((s) => id_list.push(s._id))
+    console.log("ID LIST: ", id_list)
+    getMultipleFileAvatar(id_list).then((results) => {
+      console.log(results)
+      setAvatar(results)
+    })
+  }, [students_by_class.length, kelas.walikelas]);
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
@@ -943,6 +958,7 @@ function ViewClass(props) {
   };
 
   // console.log(selectedMaterials)
+  console.log("Avatars: ", avatar, user._id)
   document.title = !kelas.name
     ? "Schooly | Lihat Kelas"
     : `Schooly | ${kelas.name}`;
@@ -995,6 +1011,7 @@ function ViewClass(props) {
                       <Grid item>
                         <PersonListItem
                           person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                          person_avatar={avatar[walikelas._id]}
                           person_name={walikelas.name}
                           person_role={
                             all_subjects_map
@@ -1068,7 +1085,8 @@ function ViewClass(props) {
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
                         <PersonListItem
-                          person_avatar={`/api/upload/avatar/${student.avatar}`}
+                          // person_avatar={`/api/upload/avatar/${student.avatar}`}
+                          person_avatar={avatar[user._id]}
                           person_name={student.name}
                           person_id={student._id}
                           person_role={student_role(student._id)}
@@ -1421,7 +1439,8 @@ function ViewClass(props) {
                       >
                         <Grid item>
                           <PersonListItem
-                            person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                            // person_avatar={`/api/upload/avatar/${walikelas.avatar}`}
+                            person_avatar={avatar[walikelas._id]}
                             person_name={walikelas.name}
                             person_role={
                               all_subjects_map
@@ -1489,7 +1508,8 @@ function ViewClass(props) {
                           {[
                             <Grid item>
                               <PersonListItem
-                                person_avatar={`/api/upload/avatar/${student.avatar}`}
+                                // person_avatar={`/api/upload/avatar/${student.avatar}`}
+                                person_avatar={avatar[user._id]}
                                 person_name={student.name}
                                 person_role={student_role(student._id)}
                               />
@@ -1585,4 +1605,6 @@ export default connect(mapStateToProps, {
   getAllAssessments,
   getStudents,
   getTaskAtmpt,
+  getFileAvatar,
+  getMultipleFileAvatar
 })(ViewClass);
