@@ -29,6 +29,7 @@ export const getMultipleFileAvatar = (id_list) => (dispatch) => {
         console.log("Multiple avatars:", res.data)
         return res.data
       })
+      .catch((err) => new Error(err));
 }
 
 export const downloadFileAvatar = (id) => (dispatch) => {
