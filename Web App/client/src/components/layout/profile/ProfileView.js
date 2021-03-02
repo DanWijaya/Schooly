@@ -35,6 +35,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import WcIcon from "@material-ui/icons/Wc";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
+import { getFileAvatar } from "../../../actions/files/FileAvatarActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -168,7 +169,7 @@ function ProfileView(props) {
   const location = useLocation();
 
   const { user } = props.auth;
-  const { setCurrentClass, classesCollection } = props;
+  const { setCurrentClass, classesCollection, getFileAvatar } = props;
 
   const [namakelas, setNamaKelas] = React.useState("");
   const [firstAssign, setFirstAssign] = React.useState(true);
@@ -423,6 +424,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { updateAvatar, setCurrentClass })(
+export default connect(mapStateToProps, { updateAvatar, setCurrentClass, getFileAvatar })(
   ProfileView
 );

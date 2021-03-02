@@ -34,6 +34,7 @@ import {
 import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CakeIcon from "@material-ui/icons/Cake";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
 import ContactPhoneIcon from "@material-ui/icons/ContactPhone";
@@ -46,7 +47,6 @@ import SchoolIcon from "@material-ui/icons/School";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import WorkIcon from "@material-ui/icons/Work";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
-import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {

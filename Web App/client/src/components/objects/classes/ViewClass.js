@@ -569,7 +569,7 @@ function ViewClass(props) {
   const all_assessments = assessmentsCollection.all_assessments;
 
   // All actions to retrive datas from Database
-
+  console.log("Avatar retrieved: ", avatar);
   function listTasks(category = null, subject = {}, tab = "pekerjaan_kelas") {
     let tasksList = [];
     let result = [];
@@ -1086,7 +1086,7 @@ function ViewClass(props) {
                       <Grid item>
                         <PersonListItem
                           // person_avatar={`/api/upload/avatar/${student.avatar}`}
-                          person_avatar={avatar[user._id]}
+                          person_avatar={avatar[student._id]}
                           person_name={student.name}
                           person_id={student._id}
                           person_role={student_role(student._id)}
@@ -1509,7 +1509,7 @@ function ViewClass(props) {
                             <Grid item>
                               <PersonListItem
                                 // person_avatar={`/api/upload/avatar/${student.avatar}`}
-                                person_avatar={avatar[user._id]}
+                                person_avatar={avatar[student._id]}
                                 person_name={student.name}
                                 person_role={student_role(student._id)}
                               />
@@ -1524,7 +1524,7 @@ function ViewClass(props) {
                                         pathname: "/lihat-profil",
                                         state: {
                                           kelas: student.kelas,
-                                          avatar: student.avatar,
+                                          avatar: avatar[student._id],
                                           nama: student.name,
                                           viewable_section: "no_karir",
                                           role: student.role,

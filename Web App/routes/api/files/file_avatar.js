@@ -250,14 +250,14 @@ router.get("/multi_user", (req,res) => {
   // req.body is in list. 
   let { id_list } = req.query;
   id_list = id_list.map((id) => ObjectId(id))
-  FileAvatar.find({ user_id: {$in: id_list}}, (err, users) => {
-    if(!users) {
+  FileAvatar.find({ user_id: {$in: id_list}}, (err, avatars) => {
+    if(!avatars) {
       return res.status(400).json("Users not found");
     }
-    console.log(users)
+    console.log(avatars)
     var urls = {}
-    users.forEach((u) => {
-      urls[u._id] = `${keys.cdn}/${u.s3_key}`
+    avatars.forEach((a) => {
+      urls[a.user_id] = `${keys.cdn}/${a.s3_key}`
       // urls.set(u._id, `${keys.cdn}/${u.s3_key}`)
     })
     console.log("URL:", urls)
