@@ -2031,15 +2031,15 @@ function QuestionAnswerPerStudent(props) {
             <b>{`Soal ${questionNumber}`}</b>
           </Typography>
           <Typography align="justify">{`${questionName}`}</Typography>
-          <Typography
-            align="center"
-            color="primary"
-            style={{ marginTop: "15px" }}
-          >
-            Kunci Jawaban : {questionAnswer.join(", ")}
-          </Typography>
 
           <Hidden mdUp>
+            <Typography
+              align="center"
+              color="primary"
+              style={{ marginTop: "15px" }}
+            >
+              Kunci Jawaban : {questionAnswer[0]}
+            </Typography>
             <Divider style={{ marginBottom: "15px", marginTop: "15px" }} />
           </Hidden>
 
