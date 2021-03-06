@@ -153,7 +153,7 @@ function AnnouncementListToolbar(props) {
   };
 
   return (
-    <div className={classes.toolbar} style={{minHeight: "46.5px"}}>
+    <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
         {/* mobile view */}
         <Hidden mdUp implementation="css">
@@ -207,7 +207,7 @@ function AnnouncementListToolbar(props) {
                     onChange={onChange}
                     autoFocus
                     onClick={(e) => setSearchBarFocus(true)}
-                    placeholder="Cari Pengumuman"
+                    placeholder="Search Pengumuman"
                     // onBlur={() => setSearchBarFocus(false)}
                     style={{
                       maxWidth: "200px",
@@ -267,140 +267,138 @@ function AnnouncementListToolbar(props) {
           </Hidden>
         ) : null}
       </div>
-      <div style={{ display: "flex" }}>
-        {isAdmin ? (
-          <>
-            <Hidden smDown implementation="css">
-              <TextField
-                // fullWidth
-                variant="outlined"
-                id="searchFilterDesktop"
-                value={searchFilter}
-                onChange={onChange}
-                onClick={() => setSearchBarFocus(true)}
-                onBlur={() => setSearchBarFocus(false)}
-                placeholder="Cari Pengumuman"
-                // onBlur={() => setSearchBarFocus(false)}
-                style={{
-                  maxWidth: "250px",
-                  marginRight: "10px",
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment
-                      position="start"
-                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
-                    >
-                      <IconButton size="small">
-                        <GoSearch />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
-                    >
-                      <IconButton
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClear(e, "searchFilterDesktop");
-                        }}
-                        style={{
-                          opacity: 0.5,
-                          visibility: !searchFilter ? "hidden" : "visible",
-                        }}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  style: {
-                    borderRadius: "22.5px",
-                  },
-                }}
-              />
-            </Hidden>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {/* mobile view */}
-              <Hidden mdUp implementation="css">
-                <LightTooltip title="Buat Pengumuman">
-                  <Link to="/buat-pengumuman">
-                    <Fab
+      <div style={{ display: "flex", visibility: isAdmin ? null : "hidden" }}>
+        <>
+          <Hidden smDown implementation="css">
+            <TextField
+              // fullWidth
+              variant="outlined"
+              id="searchFilterDesktop"
+              value={searchFilter}
+              onChange={onChange}
+              onClick={() => setSearchBarFocus(true)}
+              onBlur={() => setSearchBarFocus(false)}
+              placeholder="Search Pengumuman"
+              // onBlur={() => setSearchBarFocus(false)}
+              style={{
+                maxWidth: "250px",
+                marginRight: "10px",
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment
+                    position="start"
+                    style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                  >
+                    <IconButton size="small">
+                      <GoSearch />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                  >
+                    <IconButton
                       size="small"
-                      className={classes.newAnnouncementButton}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClear(e, "searchFilterDesktop");
+                      }}
+                      style={{
+                        opacity: 0.5,
+                        visibility: !searchFilter ? "hidden" : "visible",
+                      }}
                     >
-                      <AnnouncementIcon
-                        className={classes.newAnnouncementIconMobile}
-                      />
-                    </Fab>
-                  </Link>
-                </LightTooltip>
-              </Hidden>
-              {/* desktop view */}
-              <Hidden smDown implementation="css">
+                      <ClearIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                style: {
+                  borderRadius: "22.5px",
+                },
+              }}
+            />
+          </Hidden>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {/* mobile view */}
+            <Hidden mdUp implementation="css">
+              <LightTooltip title="Buat Pengumuman">
                 <Link to="/buat-pengumuman">
                   <Fab
-                    variant="extended"
-                    size="medium"
+                    size="small"
                     className={classes.newAnnouncementButton}
                   >
                     <AnnouncementIcon
-                      className={classes.newAnnouncementIconDesktop}
+                      className={classes.newAnnouncementIconMobile}
                     />
-                  Buat Pengumuman
-                </Fab>
+                  </Fab>
                 </Link>
-              </Hidden>
-            </div>
-
-            <LightTooltip title="Urutkan Pengumuman">
-              <IconButton
-                onClick={handleOpenSortMenu}
-                className={classes.sortButton}
-              >
-                <SortIcon />
-              </IconButton>
-            </LightTooltip>
-            <Menu
-              keepMounted
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleCloseSortMenu}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              {headCells.map((headCell, i) => (
-                <MenuItem
-                  key={headCell.id}
-                  sortDirection={orderBy === headCell.id ? order : false}
+              </LightTooltip>
+            </Hidden>
+            {/* desktop view */}
+            <Hidden smDown implementation="css">
+              <Link to="/buat-pengumuman">
+                <Fab
+                  variant="extended"
+                  size="medium"
+                  className={classes.newAnnouncementButton}
                 >
-                  <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : "asc"}
-                    onClick={createSortHandler(headCell.id)}
-                  >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                      <span className={classes.visuallyHidden}>
-                        {order === "desc"
-                          ? "sorted descending"
-                          : "sorted ascending"}
-                      </span>
-                    ) : null}
-                  </TableSortLabel>
-                </MenuItem>
-              ))}
-            </Menu>
-          </>
-        ) : null}
+                  <AnnouncementIcon
+                    className={classes.newAnnouncementIconDesktop}
+                  />
+                Buat Pengumuman
+              </Fab>
+              </Link>
+            </Hidden>
+          </div>
+
+          <LightTooltip title="Urutkan Pengumuman">
+            <IconButton
+              onClick={handleOpenSortMenu}
+              className={classes.sortButton}
+            >
+              <SortIcon />
+            </IconButton>
+          </LightTooltip>
+          <Menu
+            keepMounted
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseSortMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            {headCells.map((headCell, i) => (
+              <MenuItem
+                key={headCell.id}
+                sortDirection={orderBy === headCell.id ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <span className={classes.visuallyHidden}>
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
+                    </span>
+                  ) : null}
+                </TableSortLabel>
+              </MenuItem>
+            ))}
+          </Menu>
+        </>
       </div>
     </div>
   );
@@ -505,7 +503,7 @@ function AnnouncementListSubToolbar(props) {
   // };
 
   return (
-    <div className={classes.toolbar} style={{ minHeight: "64px" }}>
+    <div className={classes.toolbar}>
       <div style={{ display: "flex", alignItems: "center" }}>
         {/* mobile view */}
         <Hidden mdUp implementation="css">
@@ -553,7 +551,7 @@ function AnnouncementListSubToolbar(props) {
                   onChange={onChange}
                   autoFocus
                   onClick={(e) => setSearchBarFocus(true)}
-                  placeholder="Cari Pengumuman"
+                  placeholder="Search Pengumuman"
                   style={{
                     maxWidth: "200px",
                     marginLeft: "10px",
@@ -617,7 +615,7 @@ function AnnouncementListSubToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Cari Pengumuman"
+            placeholder="Search Pengumuman"
             // onBlur={() => setSearchBarFocus(false)}
             style={{
               maxWidth: "250px",
@@ -770,7 +768,7 @@ function AnnouncementListItems(props) {
   } = props;
 
   return (
-    <Grid container direction="column" spacing={2} style={{ marginTop: "10px", marginBottom: addBottomMargin ? "32px" : "0" }}>
+    <Grid container direction="column" spacing={2} style={{ marginBottom: addBottomMargin ? "32px" : "0" }}>
       {rows.length === 0 ? (
         <Typography variant="subtitle1" align="center" color="textSecondary">
           Kosong
@@ -1068,7 +1066,7 @@ function AnnouncementSubList(props) {
         mine={mine}
         author_role={author_role}
       />
-      <Divider variant="inset" />
+      <Divider variant="inset" className={classes.subTitleDivider} />
       <AnnouncementListItems
         order={order}
         orderBy={orderBy}
@@ -1105,6 +1103,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  subTitleDivider: {
+    marginTop: "15px",
+    marginBottom: "15px",
   },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
@@ -1154,9 +1156,6 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   listItem: {
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.fade,
-    },
     padding: "6px 24px"
   },
   titleIcon: {

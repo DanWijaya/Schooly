@@ -499,7 +499,7 @@ function ViewTaskStudent(props) {
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
 
-  const theme = useTheme();
+  // const theme = useTheme();
   // ref itu untuk ngerefer html yang ada di render.
 
   const tugasUploader = React.useRef(null);

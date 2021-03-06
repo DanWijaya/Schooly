@@ -402,6 +402,10 @@ const useStyles = makeStyles((theme) => ({
     },
     padding: "10px",
   },
+  subTitleDivider: {
+    marginTop: "15px",
+    marginBottom: "15px",
+  },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
     marginTop: "15px",
@@ -412,6 +416,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
+    minHeight: "unset"
   },
   profileApproveButton: {
     backgroundColor: theme.palette.success.main,
@@ -471,8 +476,8 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   profilePanelSummary: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.fade,
+    "&:hover:not(.Mui-disabled)": {
+      cursor: "default",
     },
   },
   checkboxModeButton: {
@@ -1221,9 +1226,11 @@ function ManageUsers(props) {
           onDeleteUser(selectedUserId);
         }}
       />
-      <Typography variant="h4" align="center">
-        Daftar Pengguna Tertunda
-      </Typography>
+      <div style={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "46.5px"}}>
+        <Typography variant="h4" align="center">
+          Daftar Pengguna Tertunda
+        </Typography>
+      </div>
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
@@ -1251,12 +1258,12 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" />
+      <Divider variant="inset" className={classes.subTitleDivider}/>
       <Grid
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px", marginBottom: "32px" }}
+        style={{ marginBottom: "32px" }}
       >
         {student_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -1422,12 +1429,11 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" />
+      <Divider variant="inset" className={classes.subTitleDivider}/>
       <Grid
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px" }}
       >
         {teacher_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -1441,7 +1447,11 @@ function ManageUsers(props) {
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <Grid item>
-                <ExpansionPanel button variant="outlined">
+                <ExpansionPanel
+                  button
+                  variant="outlined"
+                  expanded={false}
+                >
                   <ExpansionPanelSummary
                     className={classes.profilePanelSummary}
                   >

@@ -45,6 +45,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
@@ -415,6 +416,10 @@ const useStyles = makeStyles((theme) => ({
     },
     padding: "10px",
   },
+  subTitleDivider: {
+    marginTop: "15px",
+    marginBottom: "15px",
+  },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
     marginTop: "15px",
@@ -425,6 +430,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
+    minHeight: "unset"
   },
   viewMaterialButton: {
     backgroundColor: theme.palette.warning.main,
@@ -513,9 +519,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   profilePanelSummary: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.fade,
-      boxShadow: "0.2px 0.2px 0.6px 0.07px #d8d8d8",
+    "&:hover:not(.Mui-disabled)": {
+      cursor: "default",
     },
   },
   checkboxModeButton: {
@@ -1085,9 +1090,11 @@ function ManageUsers(props) {
           onDeleteUser(selectedUserId);
         }}
       />
-      <Typography variant="h4" align="center">
-        Daftar Pengguna Aktif
-      </Typography>
+      <div style={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "46.5px"}}>
+        <Typography variant="h4" align="center">
+          Daftar Pengguna Aktif
+        </Typography>
+      </div>
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
@@ -1115,12 +1122,12 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" />
+      <Divider variant="inset" className={classes.subTitleDivider}/>
       <Grid
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px", marginBottom: "32px" }}
+        style={{ marginBottom: "32px" }}
       >
         {student_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -1134,7 +1141,11 @@ function ManageUsers(props) {
             const labelId = `enhanced-table-checkbox-${index}`;
 
             let content = (
-              <ExpansionPanel button variant="outlined">
+              <ExpansionPanel
+                button
+                variant="outlined"
+                expanded={false}
+              >
                 <ExpansionPanelSummary
                   className={classes.profilePanelSummary}
                 >
@@ -1190,6 +1201,43 @@ function ManageUsers(props) {
                         </LightTooltip>
                       </Grid>
                       <Grid item>
+                        <LightTooltip title="Lihat Lebih Lanjut">
+                          <Link
+                              to={{
+                                pathname: "/lihat-profil",
+                                state: {
+                                  avatar: row.avatar,
+                                  nama: row.name,
+                                  kelas: all_students[index].kelas,
+                                  viewable_section: "with_karir",
+                                  tanggal_lahir: moment(row.tanggal_lahir)
+                                    .locale("id")
+                                    .format("DD MMMM YYYY"),
+                                  jenis_kelamin: all_students[index].jenis_kelamin,
+                                  role: "Student",
+                                  sekolah: row.sekolah,
+                                  email: row.email,
+                                  phone: row.phone,
+                                  emergency_phone: row.emergency_phone,
+                                  alamat: row.address,
+                                  hobi: all_students[index].hobi_minat,
+                                  ket: all_students[index].ket_non_teknis,
+                                  cita: all_students[index].cita_cita,
+                                  uni: all_students[index].uni_impian,
+                                  admin: true,
+                                },
+                              }}
+                          >
+                            <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                            >
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
+                          </Link>
+                        </LightTooltip>
+                      </Grid>
+                      <Grid item>
                         <LightTooltip title="Hapus">
                           <IconButton
                             size="small"
@@ -1232,38 +1280,7 @@ function ManageUsers(props) {
 
             return (
               <Grid item>
-                {!checkboxModeStudent ? (
-                  <Link
-                    to={{
-                      pathname: "/lihat-profil",
-                      state: {
-                        avatar: row.avatar,
-                        nama: row.name,
-                        kelas: all_students[index].kelas,
-                        viewable_section: "with_karir",
-                        tanggal_lahir: moment(row.tanggal_lahir)
-                          .locale("id")
-                          .format("DD MMMM YYYY"),
-                        jenis_kelamin: all_students[index].jenis_kelamin,
-                        role: "Student",
-                        sekolah: row.sekolah,
-                        email: row.email,
-                        phone: row.phone,
-                        emergency_phone: row.emergency_phone,
-                        alamat: row.address,
-                        hobi: all_students[index].hobi_minat,
-                        ket: all_students[index].ket_non_teknis,
-                        cita: all_students[index].cita_cita,
-                        uni: all_students[index].uni_impian,
-                        admin: true,
-                      },
-                    }}
-                  >
-                    {content}
-                  </Link>
-                ) : (
-                  content
-                )}
+                {content}
               </Grid>
             );
           })
@@ -1296,12 +1313,11 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" />
+      <Divider variant="inset" className={classes.subTitleDivider}/>
       <Grid
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px" }}
       >
         {teacher_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -1316,7 +1332,11 @@ function ManageUsers(props) {
             console.log(all_teachers[index]);
 
             let content = (
-              <ExpansionPanel button variant="outlined">
+              <ExpansionPanel
+                button
+                variant="outlined"
+                expanded={false}
+              >
                 <ExpansionPanelSummary
                   className={classes.profilePanelSummary}
                 >
@@ -1358,7 +1378,7 @@ function ManageUsers(props) {
                   {!checkboxModeTeacher ? (
                     <Grid item xs container spacing={1} justify="flex-end">
                       <Grid item>
-                        <LightTooltip title="Lihat Profil">
+                        <LightTooltip title="Lihat Lebih Lanjut">
                           <Link
                             to={{
                               pathname: "/lihat-profil",
@@ -1387,12 +1407,12 @@ function ManageUsers(props) {
                               },
                             }}
                           >
-                            {/* <IconButton
-                                    size="small"
-                                    className={classes.viewMaterialButton}
-                                >
-                                  <PageviewIcon fontSize="small" />
-                                </IconButton> */}
+                            <IconButton
+                              size="small"
+                              className={classes.viewMaterialButton}
+                            >
+                              <PageviewIcon fontSize="small" />
+                            </IconButton>
                           </Link>
                         </LightTooltip>
                         <LightTooltip title="Nonaktifkan">
