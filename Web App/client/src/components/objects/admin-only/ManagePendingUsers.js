@@ -41,6 +41,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -176,20 +177,20 @@ const ManageUsersToolbar = (props) => {
       <div
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        <Typography variant="h5">{heading}</Typography>
+        <Typography variant="h5" style={{marginRight: "8px"}}>{heading}</Typography>
         {currentCheckboxMode && rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
-            <IconButton onClick={() => selectAllData(role)}>
+            <IconButton size="small" onClick={() => selectAllData(role)}>
               <CheckBoxOutlineBlankIcon
                 className={classes.checkboxIconPrimary}
               />
             </IconButton>
           ) : listCheckbox.length === rowCount ? (
-            <IconButton onClick={() => deSelectAllData(role)}>
+            <IconButton size="small" onClick={() => deSelectAllData(role)}>
               <CheckBoxIcon className={classes.checkboxIconPrimary} />
             </IconButton>
           ) : (
-            <IconButton onClick={() => deSelectAllData(role)}>
+            <IconButton size="small" onClick={() => deSelectAllData(role)}>
               <IndeterminateCheckBoxIcon
                 className={classes.checkboxIconPrimary}
               />
@@ -205,8 +206,8 @@ const ManageUsersToolbar = (props) => {
                 <LightTooltip
                   title={
                     !currentCheckboxMode
-                      ? "Aktifkan Mode Kotak Centang"
-                      : "Matikan Mode Kotak Centang"
+                      ? "Mode Kotak Centang"
+                      : "Mode Individu"
                   }
                 >
                   <IconButton
@@ -217,7 +218,7 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Student")
                     }
                   >
-                    <CheckBoxIcon />
+                    <RecentActorsIcon />
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -297,8 +298,8 @@ const ManageUsersToolbar = (props) => {
                 <LightTooltip
                   title={
                     !currentCheckboxMode
-                      ? "Aktifkan Mode Kotak Centang"
-                      : "Matikan Mode Kotak Centang"
+                      ? "Mode Kotak Centang"
+                      : "Mode Individu"
                   }
                 >
                   <IconButton
@@ -309,7 +310,7 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Teacher")
                     }
                   >
-                    <CheckBoxIcon />
+                    <RecentActorsIcon />
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
