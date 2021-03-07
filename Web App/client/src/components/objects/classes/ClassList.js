@@ -675,6 +675,16 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.error.dark,
     },
   },
+  emptyClass: {
+    display: "flex",
+    justifyContent: "center",
+    maxWidth: "150px",
+    padding: "5px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+  },
   dialogPaper: {
     maxHeight: '70vh',
     // width: "300px",
@@ -910,7 +920,30 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                <LightTooltip title="Jumlah Murid">
+                                {(row.size === 0) ? (
+                                  <Paper className={classes.emptyClass}>
+                                    <Typography variant="button">Kosong</Typography>
+                                  </Paper>
+                                ) : (
+                                  <LightTooltip title="Jumlah Murid">
+                                    <Badge
+                                      badgeContent={row.size}
+                                      color="secondary"
+                                      anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                      }}
+                                      showZero
+                                    >
+                                      <IconButton size="small" disabled>
+                                        <SupervisorAccountIcon
+                                          className={classes.classPersonIcon}
+                                        />
+                                      </IconButton>
+                                    </Badge>
+                                  </LightTooltip>
+                                )}
+                                {/* <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}
                                     color="secondary"
@@ -926,7 +959,7 @@ function ClassList(props) {
                                       />
                                     </IconButton>
                                   </Badge>
-                                </LightTooltip>
+                                </LightTooltip> */}
                               </Grid>
                               <Grid item>
                                 <LightTooltip title="Sunting">
@@ -969,7 +1002,30 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                <LightTooltip title="Jumlah Murid">
+                                {(row.size === 0) ? (
+                                  <Paper className={classes.emptyClass}>
+                                    <Typography variant="button">Kosong</Typography>
+                                  </Paper>
+                                ) : (
+                                  <LightTooltip title="Jumlah Murid">
+                                    <Badge
+                                      badgeContent={row.size}
+                                      color="secondary"
+                                      anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                      }}
+                                      showZero
+                                    >
+                                      <IconButton size="small" disabled>
+                                        <SupervisorAccountIcon
+                                          className={classes.classPersonIcon}
+                                        />
+                                      </IconButton>
+                                    </Badge>
+                                  </LightTooltip>
+                                )}
+                                {/* <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}
                                     color="secondary"
@@ -985,7 +1041,7 @@ function ClassList(props) {
                                       />
                                     </IconButton>
                                   </Badge>
-                                </LightTooltip>
+                                </LightTooltip> */}
                               </Grid>
                             </Grid>
                           )}

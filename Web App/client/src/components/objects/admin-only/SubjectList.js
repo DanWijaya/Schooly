@@ -266,43 +266,45 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogBox: {
-    maxWidth: "350px",
+    width: "300px",
+    maxWidth: "100%",
+    minHeight: "175px",
     padding: "15px",
+
+    // maxWidth: "350px",
+    // padding: "15px",
   },
   dialogCreateButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.success.main,
     color: "white",
+    border: `1px solid ${theme.palette.success.main}`,
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
+      border: `1px solid ${theme.palette.success.dark}`,
     },
   },
   dialogEditButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
+    border: `1px solid ${theme.palette.primary.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.dark,
       color: "white",
+      border: `1px solid ${theme.palette.primary.dark}`,  
     },
   },
   dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
+    width: "125px",
+    backgroundColor: "white",
+    color: theme.palette.error.main,
+    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
-    },
-  },
-  dialogCancelEdit: {
-    width: "150px",
-    backgroundColor: theme.palette.warning.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.warning.main,
-      color: "white",
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
   subjectPanelDivider: {
@@ -431,73 +433,65 @@ function SubjectList(props) {
         <Grid
           container
           direction="column"
+          justify="space-between"
           alignItems="center"
           className={classes.dialogBox}
         >
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton size="small" onClick={handleCloseFormDialog}>
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-          <form onSubmit={onSubmit} style={{ paddingTop: "20px" }}>
-            <Grid item container justify="center" spacing={2}>
+          {action === "Edit" ? (
+            <Typography variant="h5" align="center" gutterBottom>
+              Sunting Mata Pelajaran
+            </Typography>
+          ) : action === "Create" ? (
+            <Typography variant="h5" align="center" gutterBottom>
+              Isi Nama Mata Pelajaran
+            </Typography>
+          ) : null}
+          <TextField
+            style={{ margin: "10px 0px" }}
+            fullWidth
+            variant="outlined"
+            id="name"
+            onChange={onChange}
+            value={subject.name}
+            error={errors.name}
+            type="text"
+            helperText={errors.name}
+            className={classnames("", {
+              invalid: errors.name,
+            })}
+          />
+          <Grid item container justify="center" spacing={2}>
+            <Grid item>
               {action === "Edit" ? (
-                <Typography variant="h6" gutterBottom>
-                  <b>Sunting Mata Pelajaran</b>
-                </Typography>
-              ) : action === "Create" ? (
-                <Typography variant="h6" gutterBottom>
-                  <b>Isi Nama Mata Pelajaran</b>
-                </Typography>
-              ) : null}
-              <TextField
-                style={{ margin: "20px 10px" }}
-                fullWidth
-                variant="outlined"
-                id="name"
-                onChange={onChange}
-                value={subject.name}
-                error={errors.name}
-                type="text"
-                helperText={errors.name}
-                className={classnames("", {
-                  invalid: errors.name,
-                })}
-              />
-              <Grid item>
-                {action === "Edit" ? (
-                  <Button
-                    type="submit"
-                    startIcon={<LibraryBooksIcon />}
-                    className={classes.dialogEditButton}
-                  >
-                    Sunting
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    startIcon={<LibraryBooksIcon />}
-                    className={classes.dialogCreateButton}
-                  >
-                    Buat
-                  </Button>
-                )}
-              </Grid>
-              <Grid item>
                 <Button
-                  onClick={handleCloseFormDialog}
-                  startIcon={<CancelIcon />}
-                  className={
-                    action === "Edit"
-                      ? classes.dialogCancelEdit
-                      : classes.dialogCancelButton
-                  }
+                  // type="submit"
+                  onClick={onSubmit}
+                  startIcon={<EditIcon />}
+                  className={classes.dialogEditButton}
                 >
-                  Batal
+                  Sunting
                 </Button>
-              </Grid>
+              ) : (
+                <Button
+                  // type="submit"
+                  onClick={onSubmit}
+                  startIcon={<LibraryBooksIcon />}
+                  className={classes.dialogCreateButton}
+                >
+                  Buat
+                </Button>
+              )}
             </Grid>
-          </form>
+            <Grid item>
+              <Button
+                onClick={handleCloseFormDialog}
+                startIcon={<CancelIcon />}
+                className={ classes.dialogCancelButton}
+              >
+                Batal
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Dialog>
     );

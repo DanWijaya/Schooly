@@ -33,7 +33,7 @@ import {
   Typography,
   Badge,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -158,6 +158,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "5px",
     marginBottom: "5px",
   },
+  fileNameTrim: {
+    textOverflow: "ellipsis", 
+    overflow: "hidden", 
+    whiteSpace: "nowrap", 
+    marginRight: "13px"
+  }
 }));
 
 function LampiranFile(props) {
@@ -215,7 +221,7 @@ function LampiranFile(props) {
           <ListItemText
             primary={
               <LightTooltip title={filename} placement="top">
-                <Typography>{displayedName}</Typography>
+                <Typography className={classes.fileNameTrim}>{displayedName}</Typography>
               </LightTooltip>
             }
             secondary={filetype}
@@ -249,10 +255,7 @@ function WorkFile(props) {
     type,
   } = props;
 
-  let displayedName = "";
-  file_name.length >= 10
-    ? (displayedName = `${file_name.slice(0, 7)}..${path.extname(file_name)}`)
-    : (displayedName = file_name);
+  let displayedName = file_name;
 
   return (
     <>
@@ -300,7 +303,7 @@ function WorkFile(props) {
             <ListItemText
               primary={
                 <LightTooltip title={file_name} placement="top">
-                  <Typography variant="subtitle2">{displayedName}</Typography>
+                  <Typography variant="subtitle2" className={classes.fileNameTrim}>{displayedName}</Typography>
                 </LightTooltip>
               }
               secondary={file_type}
@@ -442,7 +445,7 @@ function WorkFile(props) {
             <ListItemText
               primary={
                 <LightTooltip title={file_name} placement="top">
-                  <Typography variant="subtitle2">{displayedName}</Typography>
+                  <Typography variant="subtitle2" className={classes.fileNameTrim}>{displayedName}</Typography>
                 </LightTooltip>
               }
               secondary={file_type}
@@ -496,6 +499,7 @@ function ViewTaskStudent(props) {
   } = props;
   const { all_subjects_map } = props.subjectsCollection;
 
+  // const theme = useTheme();
   // ref itu untuk ngerefer html yang ada di render.
 
   const tugasUploader = React.useRef(null);
@@ -511,8 +515,6 @@ function ViewTaskStudent(props) {
   const [selectedFileId, setSelectedFileId] = React.useState(null);
 
   let tugasId = props.match.params.id;
-  console.log(filesCollection);
-
   // kalau misalnya parameter keduanya masukkin aja array kosong, dia acts like compomnentDidMount()
   // useEffect(() => {getAllSubjects("map")}, [])
 
@@ -563,12 +565,17 @@ function ViewTaskStudent(props) {
     let temp = [];
     for (let i = 0; i < filesCollection.files.length; i++) {
       console.log(filesCollection.files[i], i);
+      let displayedName = "";
+      // filesCollection.files[i].filename.length >= 10
+      //   ? (displayedName = `${filesCollection.files[i].filename.slice(0, 7)}..${path.extname(filesCollection.files[i].filename)}`)
+      //   : (displayedName = filesCollection.files[i].filename);
+      displayedName = filesCollection.files[i].filename;
       temp.push(
         <WorkFile
           handleOpenDeleteDialog={handleOpenDeleteDialog}
           onDownloadFile={onDownloadFile}
           onPreviewFile={onPreviewFile}
-          file_name={filesCollection.files[i].filename}
+          file_name={displayedName}
           file_id={filesCollection.files[i].id}
           file_type={fileType(filesCollection.files[i].filename)}
           type="work"
@@ -579,15 +586,19 @@ function ViewTaskStudent(props) {
       console.log("tasks added");
       setTaskContents(temp);
     }
-    console.log(tasksContents);
     return tasksContents;
   };
 
   // For upload, showing file names before submitting
   const listFileChosen = () => {
-    let temp = [];
     if (fileTugas) {
+      let temp = [];
       for (var i = 0; i < fileTugas.length; i++) {
+        let displayedName = "";
+        // fileTugas[i].name.length >= 10
+        //   ? (displayedName = `${fileTugas[i].name.slice(0, 7)}..${path.extname(fileTugas[i].name)}`)
+        //   : (displayedName = fileTugas[i].name);
+        displayedName = fileTugas[i].name;
         temp.push(
           // <Typography className={classes.workChosenFile}>
           //   {fileTugas[i].name.length < 27 ? fileTugas[i].name : `${fileTugas[i].name.slice(0,21)}..${path.extname(fileTugas[i].name)}`}
@@ -596,21 +607,24 @@ function ViewTaskStudent(props) {
             handleOpenDeleteDialog={handleOpenDeleteDialog}
             onDownloadFile={onDownloadFile}
             onPreviewFile={onPreviewFile}
-            file_name={fileTugas[i].name}
+            file_name={displayedName}
             file_id={fileTugas[i].id}
             file_type={fileType(fileTugas[i].name)}
             type="chosen"
           />
         );
+        
       }
+      return temp;
     } else if (!fileTugas && filesCollection.files.length === 0) {
+      let temp = [];
       temp.push(
         <Paper className={classes.submittedButton}>
           <Typography variant="button">KOSONG</Typography>
         </Paper>
       );
+      return temp;
     }
-    return temp;
   };
 
   const handleTugasUpload = (e) => {
@@ -713,7 +727,110 @@ function ViewTaskStudent(props) {
         style={{ marginBottom: "30px" }}
       >
         <Grid item xs={12} md={8}>
-          <Paper className={classes.paperBox}>
+        <Paper className={classes.paperBox}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} style={{ paddingBottom: "0" }}>
+                <Typography variant="h4">{tasksCollection.name}</Typography>
+                <Typography variant="caption" color="textSecondary" gutterBottom>
+                  <h6>{all_subjects_map.get(tasksCollection.subject)}</h6>
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={7} style={{ paddingTop: "0" }}>
+                <Typography variant="body2" color="textSecondary">
+                  Penanggung Jawab:   &nbsp;                 
+                  <b>
+                    {selectedUser._id !== tasksCollection.person_in_charge_id
+                      ? null
+                      : selectedUser.name}
+                  </b>
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Waktu Dibuat:{" "}
+                  {moment(tasksCollection.createdAt)
+                    .locale("id")
+                    .format("DD MMM YYYY, HH.mm")}
+                </Typography>
+                <Hidden mdUp>
+                  <Typography variant="body2" color="textSecondary">
+                    Tenggat:{" "}
+                    {moment(tasksCollection.deadline)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
+                  </Typography>
+                </Hidden>
+              </Grid>
+              <Hidden smDown style={{ display: "flex" }}>
+                <Grid
+                  item
+                  xs={12}
+                  md={5}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <Typography variant="body2" align="right" color="textSecondary">
+                    Tenggat:{" "}
+                    {moment(tasksCollection.deadline)
+                      .locale("id")
+                      .format("DD MMM YYYY, HH.mm")}
+                  </Typography>
+                </Grid>
+              </Hidden>
+
+              <Grid item xs={12}>
+                <Divider className={classes.dividerColor} />
+              </Grid>
+
+              {/* <Grid item xs={12} style={{ marginTop: "30px" }}>
+                <Typography color="primary" gutterBottom>
+                  Kelas yang Diberikan:
+                </Typography>
+                <Typography>
+                  {!tasksCollection.class_assigned || !all_classes_map.size
+                    ? null
+                    : tasksCollection.class_assigned.map((kelas, i) => {
+                      if (all_classes_map.get(kelas)) {
+                        if (i === tasksCollection.class_assigned.length - 1)
+                          return `${all_classes_map.get(kelas).name}`;
+                        return `${all_classes_map.get(kelas).name}, `;
+                      }
+                      return null;
+                    })}
+                </Typography>
+              </Grid> */}
+              {!tasksCollection.description ? null : (
+                <Grid item xs={12} style={{ marginTop: "30px" }}>
+                  <Typography color="primary" gutterBottom>
+                    Deskripsi Tugas:
+                  </Typography>
+                  <Typography>{tasksCollection.description}</Typography>
+                </Grid>
+              )}
+              {!tasksCollection.lampiran ||
+                tasksCollection.lampiran.length === 0 ? null : (
+                  <Grid item xs={12} style={{ marginTop: "30px" }}>
+                    <Typography color="primary" gutterBottom>
+                      Lampiran Berkas:
+                    </Typography>
+                    <Grid container spacing={1}>
+                      {tasksCollection.lampiran.map((lampiran) => (
+                        <LampiranFile
+                          file_id={lampiran.id}
+                          onPreviewFile={onPreviewFile}
+                          onDownloadFile={onDownloadFile}
+                          filename={lampiran.filename}
+                          filetype={fileType(lampiran.filename)}
+                        />
+                      ))}
+                    </Grid>
+                  </Grid>
+                )}
+            </Grid>
+          </Paper>
+          {/* <Paper className={classes.paperBox}>
             <Grid container spacing={6}>
               <Grid item xs={12} md={7}>
                 <Typography variant="h4">{tasksCollection.name}</Typography>
@@ -801,7 +918,7 @@ function ViewTaskStudent(props) {
                 </Grid>
               </div>
             )}
-          </Paper>
+          </Paper> */}
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper className={classes.paperBox}>
@@ -825,8 +942,8 @@ function ViewTaskStudent(props) {
                   justifyContent: "center",
                 }}
               >
-                {/* Kasus Kosong */}
-                {listFileChosen()}
+                {/* Kasus Kosong */}         
+                  {listFileChosen()}
               </Grid>
             ) : (
               <Grid
@@ -837,8 +954,8 @@ function ViewTaskStudent(props) {
                   flexDirection: "column",
                 }}
               >
-                {listWorkFile()}
-                {listFileChosen()}
+                  {listWorkFile()}
+                  {listFileChosen()}
               </Grid>
             )}
             <Divider />

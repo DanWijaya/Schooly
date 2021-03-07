@@ -41,6 +41,7 @@ import SortIcon from "@material-ui/icons/Sort";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 
 // Source of the tables codes are from here : https://material-ui.com/components/tables/
 function createData(
@@ -176,20 +177,20 @@ const ManageUsersToolbar = (props) => {
       <div
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        <Typography variant="h5">{heading}</Typography>
+        <Typography variant="h5" style={{marginRight: "8px"}}>{heading}</Typography>
         {currentCheckboxMode && rowCount !== 0 ? (
           listCheckbox.length === 0 ? (
-            <IconButton onClick={() => selectAllData(role)}>
+            <IconButton size="small" onClick={() => selectAllData(role)}>
               <CheckBoxOutlineBlankIcon
                 className={classes.checkboxIconPrimary}
               />
             </IconButton>
           ) : listCheckbox.length === rowCount ? (
-            <IconButton onClick={() => deSelectAllData(role)}>
+            <IconButton size="small" onClick={() => deSelectAllData(role)}>
               <CheckBoxIcon className={classes.checkboxIconPrimary} />
             </IconButton>
           ) : (
-            <IconButton onClick={() => deSelectAllData(role)}>
+            <IconButton size="small" onClick={() => deSelectAllData(role)}>
               <IndeterminateCheckBoxIcon
                 className={classes.checkboxIconPrimary}
               />
@@ -205,8 +206,8 @@ const ManageUsersToolbar = (props) => {
                 <LightTooltip
                   title={
                     !currentCheckboxMode
-                      ? "Aktifkan Mode Kotak Centang"
-                      : "Matikan Mode Kotak Centang"
+                      ? "Mode Kotak Centang"
+                      : "Mode Individu"
                   }
                 >
                   <IconButton
@@ -217,7 +218,7 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Student")
                     }
                   >
-                    <CheckBoxIcon />
+                    <RecentActorsIcon />
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -297,8 +298,8 @@ const ManageUsersToolbar = (props) => {
                 <LightTooltip
                   title={
                     !currentCheckboxMode
-                      ? "Aktifkan Mode Kotak Centang"
-                      : "Matikan Mode Kotak Centang"
+                      ? "Mode Kotak Centang"
+                      : "Mode Individu"
                   }
                 >
                   <IconButton
@@ -309,7 +310,7 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Teacher")
                     }
                   >
-                    <CheckBoxIcon />
+                    <RecentActorsIcon />
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -402,6 +403,10 @@ const useStyles = makeStyles((theme) => ({
     },
     padding: "10px",
   },
+  subTitleDivider: {
+    marginTop: "15px",
+    marginBottom: "15px",
+  },
   titleDivider: {
     backgroundColor: theme.palette.primary.main,
     marginTop: "15px",
@@ -412,6 +417,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0px",
+    minHeight: "unset"
   },
   profileApproveButton: {
     backgroundColor: theme.palette.success.main,
@@ -471,8 +477,8 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   profilePanelSummary: {
-    "&:hover": {
-      backgroundColor: theme.palette.primary.fade,
+    "&:hover:not(.Mui-disabled)": {
+      cursor: "default",
     },
   },
   checkboxModeButton: {
@@ -1221,9 +1227,11 @@ function ManageUsers(props) {
           onDeleteUser(selectedUserId);
         }}
       />
-      <Typography variant="h4" align="center">
-        Daftar Pengguna Tertunda
-      </Typography>
+      <div style={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "46.5px"}}>
+        <Typography variant="h4" align="center">
+          Daftar Pengguna Tertunda
+        </Typography>
+      </div>
       <Divider className={classes.titleDivider} />
       <ManageUsersToolbar
         heading="Daftar Murid"
@@ -1251,12 +1259,12 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" />
+      <Divider variant="inset" className={classes.subTitleDivider}/>
       <Grid
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px", marginBottom: "32px" }}
+        style={{ marginBottom: "32px" }}
       >
         {student_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -1422,12 +1430,11 @@ function ManageUsers(props) {
         selectAllData={selectAllData}
         deSelectAllData={deSelectAllData}
       />
-      <Divider variant="inset" />
+      <Divider variant="inset" className={classes.subTitleDivider}/>
       <Grid
         container
         direction="column"
         spacing={2}
-        style={{ marginTop: "10px" }}
       >
         {teacher_rows.length === 0 ? (
           <Typography variant="subtitle1" align="center" color="textSecondary">
@@ -1441,7 +1448,11 @@ function ManageUsers(props) {
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <Grid item>
-                <ExpansionPanel button variant="outlined">
+                <ExpansionPanel
+                  button
+                  variant="outlined"
+                  expanded={false}
+                >
                   <ExpansionPanelSummary
                     className={classes.profilePanelSummary}
                   >
