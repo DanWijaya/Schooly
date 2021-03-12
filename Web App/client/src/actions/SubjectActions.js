@@ -3,6 +3,7 @@ import {
   GET_ALL_SUBJECTS,
   GET_ERRORS,
   GET_ALL_SUBJECTS_MAP,
+  GET_SUCCESS_RESPONSE
 } from "./Types";
 import axios from "axios";
 
@@ -53,7 +54,11 @@ export const createSubject = (subjectData) => (dispatch) => {
     .post("/api/subjects/create", subjectData)
     .then((res) => {
       console.log("Run create subject");
-      window.location.reload();
+      // window.location.reload();
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: res.data,
+      });
     })
     .catch((err) => {
       dispatch({
@@ -79,7 +84,11 @@ export const editSubject = (subjectData) => (dispatch) => {
     .post(`/api/subjects/edit/${subjectData.id}`, subjectData)
     .then((res) => {
       console.log("Edited subject", res.data);
-      window.location.reload();
+      // window.location.reload();
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: res.data,
+      });
     })
     .catch((err) => {
       console.log(err, "Error in editing the subject");

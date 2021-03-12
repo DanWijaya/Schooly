@@ -11,7 +11,9 @@ import {
   deleteSubject,
 } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions"
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Button,
@@ -330,6 +332,9 @@ function SubjectList(props) {
   const [orderBy, setOrderBy] = React.useState("subject");
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
+  const [openCreateDialog, setOpenCreateDialog] = React.useState(null);
+  const [openEditDialog, setOpenEditDialog] = React.useState(null);
+
   const [openFormDialog, setOpenFormDialog] = React.useState(null);
   const [selectedSubjectId, setSelectedSubjectId] = React.useState(null);
   const [selectedSubjectName, setSelectedSubjectName] = React.useState(null);
@@ -343,6 +348,7 @@ function SubjectList(props) {
     createSubject,
     deleteSubject,
     errors,
+    success
   } = props;
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
@@ -356,6 +362,34 @@ function SubjectList(props) {
     getAllSubjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    if (success) {
+      if (action === "Edit") {
+        handleOpenEditDialog();
+      } else {
+        handleOpenCreateDialog();
+      }
+      clearSuccess();
+    } 
+    // jika clearSuccess sudah dijalankan, success akan bernilai null
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success]);
+
+  React.useEffect(() => {
+    if (openCreateDialog === false) {
+      getAllSubjects();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCreateDialog]);
+
+  React.useEffect(() => {
+    if (openEditDialog === false) {
+      getAllSubjects();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openEditDialog]);
 
   const retrieveSubjects = () => {
     console.log(retrieved_users);
@@ -376,6 +410,23 @@ function SubjectList(props) {
 
   const onDeleteSubject = (id) => {
     deleteSubject(id);
+  };
+
+  // Upload Dialogs
+  const handleOpenCreateDialog = () => {
+    setOpenCreateDialog(true);
+  };
+
+  const handleCloseCreateDialog = () => {
+    setOpenCreateDialog(false);
+  };
+
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
   };
 
   // Delete Dialog
@@ -423,8 +474,12 @@ function SubjectList(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (action === "Edit") editSubject(subject);
-    else createSubject(subject);
+    if (action === "Edit") {
+      editSubject(subject);
+    } else {
+      createSubject(subject);
+    }
+    handleCloseFormDialog();
   };
 
   function FormDialog() {
@@ -501,6 +556,20 @@ function SubjectList(props) {
 
   return (
     <div className={classes.root}>
+       <UploadDialog
+        openUploadDialog={openCreateDialog}
+        handleCloseUploadDialog={handleCloseCreateDialog}
+        success={success}
+        messageUploading="Mata pelajaran sedang dibuat"
+        messageSuccess="Mata pelajaran telah dibuat"
+      />
+      <UploadDialog
+        openUploadDialog={openEditDialog}
+        handleCloseUploadDialog={handleCloseEditDialog}
+        success={success}
+        messageUploading="Mata pelajaran sedang disunting"
+        messageSuccess="Mata pelajaran telah disunting"
+      />
       {FormDialog()}
       <DeleteDialog
         openDeleteDialog={openDeleteDialog}
@@ -580,11 +649,13 @@ SubjectList.propTypes = {
   clearErrors: PropTypes.func.isRequired,
   editSubject: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
+  success: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
+  success: state.success,
   auth: state.auth,
   classesCollection: state.classesCollection,
   subjectsCollection: state.subjectsCollection,
@@ -597,4 +668,5 @@ export default connect(mapStateToProps, {
   getSubject,
   createSubject,
   clearErrors,
+  clearSuccess
 })(SubjectList);

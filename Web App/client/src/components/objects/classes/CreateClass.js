@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import { createClass } from "../../../actions/ClassActions";
 import { getTeachers } from "../../../actions/UserActions";
 import {
@@ -17,6 +18,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -51,9 +53,24 @@ class CreateClass extends Component {
       nihil: true,
       walikelas: {},
       ukuran: 0,
+      openUploadDialog: null,
       // errors: {},
     };
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.success && !prevProps.success) {
+      this.handleOpenUploadDialog();
+    }
+  }
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true });
+  };
+
+  // handleCloseUploadDialog = () => {
+  //   this.setState({ openUploadDialog: false });
+  // };
 
   onChange = (e, otherfield = null) => {
     if (otherfield) this.setState({ [otherfield]: e.target.value });
@@ -96,10 +113,11 @@ class CreateClass extends Component {
 
   componentWillUnmount() {
     this.props.clearErrors();
+    this.props.clearSuccess();
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, success } = this.props;
 
     const { all_teachers, user } = this.props.auth;
     const { errors } = this.props;
@@ -110,6 +128,13 @@ class CreateClass extends Component {
     if (user.role === "Teacher" || user.role === "Admin") {
       return (
         <div className={classes.root}>
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Kelas sedang dibuat"
+            messageSuccess="Kelas telah dibuat"
+            redirectLink={`/kelas/${success}`}
+          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
@@ -231,15 +256,18 @@ CreateClass.propTypes = {
   errors: PropTypes.object.isRequired,
   getTeachers: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
+  success: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
+  success: state.success,
 });
 
 export default connect(mapStateToProps, {
   createClass,
   getTeachers,
   clearErrors,
+  clearSuccess
 })(withStyles(styles)(CreateClass));

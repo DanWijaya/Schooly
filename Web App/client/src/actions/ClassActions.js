@@ -5,7 +5,7 @@ import {
   GET_ALL_CLASSES_MAP,
   GET_CLASSES,
   SET_CURRENT_CLASS,
-  // GET_SUCCESS_RESPONSE,
+  GET_SUCCESS_RESPONSE,
 } from "./Types";
 
 // Add Class
@@ -15,8 +15,12 @@ export const createClass = (classData, history) => (dispatch) => {
     .post("/api/classes/create", classData)
     .then((res) => {
       console.log(res.data);
-      alert("Kelas telah dibuat");
-      history.push("/daftar-kelas");
+      // alert("Kelas telah dibuat");
+      // history.push("/daftar-kelas");
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: res.data._id,
+      });
     })
     .catch((err) =>
       dispatch({
