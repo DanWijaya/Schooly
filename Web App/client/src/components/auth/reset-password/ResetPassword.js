@@ -65,6 +65,10 @@ class ResetPassword extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+  
   componentWillUnmount() {
     this.props.clearErrors();
   }

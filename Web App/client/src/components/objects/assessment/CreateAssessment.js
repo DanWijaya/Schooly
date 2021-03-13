@@ -769,6 +769,7 @@ class CreateAssessment extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     const { getAllClass, getAllSubjects, handleSideDrawerExist } = this.props;
     handleSideDrawerExist(false);
     getAllClass();

@@ -11,6 +11,7 @@ import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -109,14 +110,21 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   editAnnouncementButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
+  },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px"
   },
 });
 
@@ -197,6 +205,7 @@ class EditAnnouncement extends Component {
       class_assigned: [],
       anchorEl: null,
       openUploadDialog: null,
+      openDeleteDialog: null,
       errors: {},
       target_role: ""
     };
@@ -206,6 +215,7 @@ class EditAnnouncement extends Component {
   uploadedLampiran = React.createRef(null);
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     const { user } = this.props.auth;
     const { setCurrentClass, getOneAnnouncement, getAllClass } = this.props;
 
@@ -301,6 +311,14 @@ class EditAnnouncement extends Component {
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
+  };
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
   };
 
   onChange = (e, otherfield = null) => {
@@ -437,6 +455,19 @@ class EditAnnouncement extends Component {
           messageUploading="Pengumuman sedang disunting"
           messageSuccess="Pengumuman telah disunting"
           redirectLink={`/pengumuman/${this.props.match.params.id}`}
+        />
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType={"Sunting"}
+          itemName={this.state.title}
+          // itemName={this.state.name}
+          // isLink={true}
+          // redirectLink="/daftar-kuis"
+          redirectLink={
+            `/daftar-pengumuman`
+          }
+          isWarning={false}
         />
         <Paper>
           <div className={classes.content}>
@@ -651,7 +682,14 @@ class EditAnnouncement extends Component {
               style={{ display: "flex", justifyContent: "flex-end" }}
               className={classes.content}
             >
-              <div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Button
+                  variant="contained"
+                  className={classes.cancelButton}
+                  onClick={this.handleOpenDeleteDialog}
+                >
+                  Batal
+                </Button>
                 <Button
                   variant="contained"
                   type="submit"

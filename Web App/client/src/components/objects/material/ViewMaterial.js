@@ -233,6 +233,7 @@ function ViewMaterial(props) {
 
   console.log(selectedMaterials);
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     getAllSubjects("map"); // this will get the selectedMaterials.
     getOneMaterial(materi_id);
     getAllClass("map");
@@ -334,8 +335,8 @@ function ViewMaterial(props) {
               </Grid>
 
               {user.role === "Teacher" ? (
-                <Grid item xs={12} style={{ marginTop: "30px" }}>
-                  <Typography color="primary" gutterBottom>
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
                     Kelas yang Diberikan:
                   </Typography>
                   <Typography>
@@ -352,15 +353,15 @@ function ViewMaterial(props) {
                   </Typography>
                 </Grid>
               ) : null}
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
                   Deskripsi Materi:
                 </Typography>
                 <Typography>{selectedMaterials.description}</Typography>
               </Grid>
               {!selectedMaterials.lampiran ? null : (
-                <Grid item xs={12} style={{ marginTop: "30px" }}>
-                  <Typography color="primary" gutterBottom>
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
                     Lampiran Materi:
                   </Typography>
                   <Grid container spacing={1}>

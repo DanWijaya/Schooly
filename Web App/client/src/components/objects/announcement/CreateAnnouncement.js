@@ -7,6 +7,7 @@ import { createAnnouncement } from "../../../actions/AnnouncementActions";
 import { getAllClass, setCurrentClass } from "../../../actions/ClassActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -105,14 +106,21 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   createAnnouncementButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.main,
       color: "white",
     },
+  },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px"
   },
 });
 
@@ -191,6 +199,7 @@ class CreateAnnouncement extends Component {
       class_assigned: [],
       errors: {},
       openUploadDialog: null,
+      openDeleteDialog: null,
       target_role: ""
     };
   }
@@ -204,6 +213,7 @@ class CreateAnnouncement extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     const { user } = this.props.auth;
     const { getAllClass, setCurrentClass } = this.props;
     getAllClass();
@@ -230,6 +240,14 @@ class CreateAnnouncement extends Component {
 
   handleCloseUploadDialog = () => {
     this.setState({ openUploadDialog: false });
+  };
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
   };
 
   onChange = (e, otherfield = null) => {
@@ -378,6 +396,19 @@ class CreateAnnouncement extends Component {
           messageUploading="Pengumuman sedang dibuat"
           messageSuccess="Pengumuman telah dibuat"
           redirectLink={`/pengumuman/${success}`}
+        />
+        <DeleteDialog
+          openDeleteDialog={this.state.openDeleteDialog}
+          handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+          itemType={"Pengumuman"}
+          itemName={this.state.title}
+          // itemName={this.state.name}
+          // isLink={true}
+          // redirectLink="/daftar-kuis"
+          redirectLink={
+            `/daftar-pengumuman`
+          }
+          isWarning={false}
         />
         <Paper>
           <div className={classes.content}>
@@ -579,7 +610,14 @@ class CreateAnnouncement extends Component {
               style={{ display: "flex", justifyContent: "flex-end" }}
               className={classes.content}
             >
-              <div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Button
+                  variant="contained"
+                  className={classes.cancelButton}
+                  onClick={this.handleOpenDeleteDialog}
+                >
+                  Batal
+                </Button>
                 <Button
                   variant="contained"
                   type="submit"

@@ -11,6 +11,7 @@ import { getAllSubjects } from "../../../actions/SubjectActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -115,13 +116,21 @@ const styles = (theme) => ({
   },
   editTaskButton: {
     width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
+  },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px"
   },
 });
 
@@ -207,6 +216,7 @@ class EditTask extends Component {
       fileLampiranToDelete: [],
       anchorEl: null,
       openUploadDialog: null,
+      openDeleteDialog: null,
       errors: {},
     };
   }
@@ -214,6 +224,7 @@ class EditTask extends Component {
   tugasUploader = React.createRef(null);
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     this.props.getOneTask(this.props.match.params.id);
     this.props.getAllClass();
     this.props.getAllSubjects();
@@ -362,6 +373,14 @@ class EditTask extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
+  };
+
   onChange = (e, otherfield) => {
     if(otherfield){
       // karena e.target.id tidak menerima idnya pas kita define di Select atau KeybaordDatePicker
@@ -470,6 +489,18 @@ class EditTask extends Component {
             messageUploading="Tugas sedang disunting"
             messageSuccess="Tugas telah disunting"
             redirectLink="/daftar-tugas"
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={"Sunting"}
+            itemName={this.state.name}
+            // isLink={true}
+            // redirectLink="/daftar-kuis"
+            redirectLink={
+              `/daftar-tugas`
+            }
+            isWarning={false}
           />
           <Paper>
             <div className={classes.content}>
@@ -693,7 +724,14 @@ class EditTask extends Component {
                 style={{ display: "flex", justifyContent: "flex-end" }}
                 className={classes.content}
               >
-                <div>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <Button
+                    variant="contained"
+                    className={classes.cancelButton}
+                    onClick={this.handleOpenDeleteDialog}
+                  >
+                    Batal
+                  </Button>
                   <Button
                     variant="contained"
                     type="submit"

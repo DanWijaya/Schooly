@@ -8,6 +8,7 @@ import { clearSuccess } from "../../../actions/SuccessActions";
 import { getAllSubjects } from "../../../actions/SubjectActions";
 import { createMaterial } from "../../../actions/MaterialActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -113,6 +114,15 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px"
+  },
 });
 
 function LampiranFile(props) {
@@ -192,6 +202,7 @@ class CreateMaterial extends Component {
       errors: {},
       fileLampiran: [],
       openUploadDialog: null,
+      openDeleteDialog: null,
       anchorEl: null,
       // sortFlag: false
     };
@@ -215,6 +226,14 @@ class CreateMaterial extends Component {
 
   handleCloseUploadDialog = () => {
     this.setState({ openUploadDialog: false });
+  };
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
   };
 
   onChange = (e, otherfield) => {
@@ -260,6 +279,7 @@ class CreateMaterial extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     this.props.getAllClass();
     this.props.getAllSubjects();
   }
@@ -370,6 +390,18 @@ class CreateMaterial extends Component {
             messageUploading="Materi sedang dibuat"
             messageSuccess="Materi telah dibuat"
             redirectLink={`/materi/${success}`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={"Materi"}
+            itemName={this.state.name}
+            // isLink={true}
+            // redirectLink="/daftar-kuis"
+            redirectLink={
+              `/daftar-materi`
+            }
+            isWarning={false}
           />
           <Paper>
             <div className={classes.content}>
@@ -562,13 +594,22 @@ class CreateMaterial extends Component {
                 style={{ display: "flex", justifyContent: "flex-end" }}
                 className={classes.content}
               >
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.createMaterialButton}
-                >
-                  Buat Materi
-                </Button>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <Button
+                    variant="contained"
+                    className={classes.cancelButton}
+                    onClick={this.handleOpenDeleteDialog}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.createMaterialButton}
+                  >
+                    Buat Materi
+                  </Button>
+                </div>
               </div>
             </form>
           </Paper>

@@ -139,6 +139,7 @@ class Register extends Component {
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
     // this.props.getAllClass();
+    window.scrollTo(0, 0);
     this.props.getAllSubjects();
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/beranda");

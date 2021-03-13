@@ -830,6 +830,7 @@ function ReportView(props) {
   // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman lihat-rapor untuk suatu murid
   // mengklik tombol rapor di side drawer.
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     if (role === "Teacher") {
       getAllClass();
       getAllTask();

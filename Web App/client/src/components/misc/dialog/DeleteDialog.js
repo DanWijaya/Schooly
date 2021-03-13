@@ -49,6 +49,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     marginBottom: "5px",
   },
+  titleName: {
+    marginTop: "10px",
+    textOverflow: "ellipsis", 
+    overflow: "hidden", 
+    whiteSpace: "nowrap", 
+  }
 }));
 
 function DeleteDialog(props) {
@@ -89,16 +95,16 @@ function DeleteDialog(props) {
         <Grid item>
           {/* <Typography variant="h5" align="center">
             Hapus {itemType} berikut? */}
-          <Typography variant="h5" align="center" gutterBottom>
-            {customMessage ? `${customMessage} ${itemType}` : `Hapus ${itemType} berikut`}
+          <Typography variant="h6" align="center" gutterBottom>
+            {customMessage ? `${customMessage} ${itemType}` : `Hapus ${itemType} berikut?`}
           </Typography>
         </Grid>
         {itemName ? (
-          <Grid item>
+          <Grid item xs={10}>
             <Typography
               align="center"
               gutterBottom
-              style={{ marginTop: "10px" }}
+              className={classes.titleName}
             >
               <b>{itemName}</b>
             </Typography>

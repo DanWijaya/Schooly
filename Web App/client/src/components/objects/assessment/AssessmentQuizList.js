@@ -605,6 +605,7 @@ function AssessmentList(props) {
 
   React.useEffect(
     () => {
+      window.scrollTo(0, 0);
       getAllAssessments();
       getAllClass("map");
       getAllSubjects("map");

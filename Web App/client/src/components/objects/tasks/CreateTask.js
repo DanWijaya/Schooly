@@ -12,6 +12,7 @@ import { getOneUser } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
 import { clearSuccess } from "../../../actions/SuccessActions";
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -121,6 +122,15 @@ const styles = (theme) => ({
       color: "white",
     },
   },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px"
+  },
 });
 
 // name = fileLampiran[i].name
@@ -202,6 +212,7 @@ class CreateTask extends Component {
       errors: {},
       fileLampiran: [],
       openUploadDialog: null,
+      openDeleteDialog: null,
       anchorEl: null,
     };
   }
@@ -221,6 +232,14 @@ class CreateTask extends Component {
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
+  };
+
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
   };
 
   onChange = (e, otherfield = null) => {
@@ -264,6 +283,7 @@ class CreateTask extends Component {
   };
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     const { getAllClass, getAllSubjects } = this.props;
     getAllClass();
     getAllSubjects();
@@ -383,6 +403,18 @@ class CreateTask extends Component {
             messageUploading="Tugas sedang dibuat"
             messageSuccess="Tugas telah dibuat"
             redirectLink={`/tugas-guru/${success}`}
+          />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={"Tugas"}
+            itemName={this.state.name}
+            // isLink={true}
+            // redirectLink="/daftar-kuis"
+            redirectLink={
+              `/daftar-tugas`
+            }
+            isWarning={false}
           />
           <Paper>
             <div className={classes.content}>
@@ -610,13 +642,22 @@ class CreateTask extends Component {
                 style={{ display: "flex", justifyContent: "flex-end" }}
                 className={classes.content}
               >
-                <Button
-                  variant="contained"
-                  type="submit"
-                  className={classes.createTaskButton}
-                >
-                  Buat Tugas
-                </Button>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <Button
+                    variant="contained"
+                    className={classes.cancelButton}
+                    onClick={this.handleOpenDeleteDialog}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    className={classes.createTaskButton}
+                  >
+                    Buat Tugas
+                  </Button>
+                </div>
               </div>
             </form>
           </Paper>

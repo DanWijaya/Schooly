@@ -115,10 +115,15 @@ export const globalStyles = responsiveFontSizes(
             paddingTop: "14px",
             paddingBottom: "14px",
             paddingLeft: "15px",
+            backgroundColor: "white",
+            "&:focus, &:hover, &:active": {
+              backgroundColor: "white",
+              opacity: 1
+            },
           },
         },
       },
-      MuiTextField: {
+      TextField: {
         InputLabelProps: {
           shrink: true,
         },

@@ -177,6 +177,7 @@ function ProfileView(props) {
   const [firstAssign, setFirstAssign] = React.useState(true);
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     if (role === "Student") {
       setCurrentClass(kelas);
     }

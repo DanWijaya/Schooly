@@ -10,6 +10,7 @@ import { updateMaterial} from "../../../actions/MaterialActions"
 import { clearErrors } from "../../../actions/ErrorActions"
 import { clearSuccess } from "../../../actions/SuccessActions"
 import UploadDialog from "../../misc/dialog/UploadDialog";
+import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
 import {
   Avatar,
@@ -108,14 +109,21 @@ const styles = (theme) => ({
     backgroundColor: "#808080",
   },
   editMaterialButton: {
-    width: "100%",
-    marginTop: "20px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
     },
+  },
+  cancelButton: {
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.main,
+      color: "white",
+    },
+    marginRight: "7.5px"
   },
 });
 
@@ -199,12 +207,14 @@ class EditMaterial extends Component {
       fileLampiran: [],
       fileLampiranToAdd: [],
       fileLampiranToDelete: [],
+      openDeleteDialog: null,
     };
   }
 
   lampiranUploader = React.createRef(null);
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     const { getAllClass, getAllSubjects, getOneMaterial } = this.props;
 
     getAllClass();
@@ -343,6 +353,14 @@ class EditMaterial extends Component {
     this.setState({ openUploadDialog: true });
   };
 
+  handleOpenDeleteDialog = () => {
+    this.setState({ openDeleteDialog: true });
+  };
+
+  handleCloseDeleteDialog = () => {
+    this.setState({ openDeleteDialog: false });
+  };
+
   onChange = (e, otherfield) => {
     console.log(this.state.fileLampiran);
     if (otherfield) {
@@ -459,10 +477,22 @@ class EditMaterial extends Component {
             messageSuccess="Materi telah disunting"
             redirectLink="/daftar-materi"
           />
+          <DeleteDialog
+            openDeleteDialog={this.state.openDeleteDialog}
+            handleCloseDeleteDialog={this.handleCloseDeleteDialog}
+            itemType={"Sunting"}
+            itemName={this.state.name}
+            // isLink={true}
+            // redirectLink="/daftar-kuis"
+            redirectLink={
+              `/daftar-materi`
+            }
+            isWarning={false}
+          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
-                <b>Suntung Materi</b>
+                <b>Sunting Materi</b>
               </Typography>
             </div>
             <Divider />
@@ -654,7 +684,14 @@ class EditMaterial extends Component {
                 style={{ display: "flex", justifyContent: "flex-end" }}
                 className={classes.content}
               >
-                <div>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <Button
+                    variant="contained"
+                    className={classes.cancelButton}
+                    onClick={this.handleOpenDeleteDialog}
+                  >
+                    Batal
+                  </Button>
                   <Button
                     variant="contained"
                     type="submit"

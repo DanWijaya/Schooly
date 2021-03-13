@@ -1263,6 +1263,10 @@ function AnnouncementList(props) {
   };
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+  
+  React.useEffect(() => {
     if (selectedAnnouncements.length && retrieved_users.size) {
       let newRows = [];
       selectedAnnouncements

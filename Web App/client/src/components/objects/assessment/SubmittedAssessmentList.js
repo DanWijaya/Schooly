@@ -322,6 +322,7 @@ function SubmittedAssessmentList(props) {
   const [suspects, setSuspects] = React.useState(null);
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     getOneAssessment(assessment_id);
     getStudents();
     getAllClass();

@@ -385,6 +385,7 @@ function ViewAssessmentStudent(props) {
 
   // nanti pas onSubmit, akan ngeclear localStorage.removeItem("remainingTime");
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     getAllSubjects("map");
     getAllClass("map");
     new Promise((resolve, reject) => {

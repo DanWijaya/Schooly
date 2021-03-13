@@ -440,20 +440,20 @@ const useStyles = makeStyles((theme) => ({
     padding: "15px",
   },
   dialogApproveButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
+      backgroundColor: theme.palette.success.dark,
       color: "white",
     },
   },
   dialogCancelButton: {
-    width: "150px",
+    width: "125px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.dark,
       color: "white",
     },
   },
@@ -493,6 +493,12 @@ const useStyles = makeStyles((theme) => ({
   checkboxIconPrimary: {
     color: theme.palette.primary.main,
   },
+  titleName: {
+    marginTop: "10px",
+    textOverflow: "ellipsis", 
+    overflow: "hidden", 
+    whiteSpace: "nowrap", 
+  }
 }));
 
 function ManageUsers(props) {
@@ -786,6 +792,7 @@ function ManageUsers(props) {
   };
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     getPendingStudents();
     getPendingTeachers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -878,21 +885,22 @@ function ManageUsers(props) {
         <Grid
           container
           direction="column"
+          justify="space-between"
           alignItems="center"
           className={classes.dialogBox}
         >
-          <Grid item container justify="flex-end" alignItems="flex-start">
+          {/* <Grid item container justify="flex-end" alignItems="flex-start">
             <IconButton size="small" onClick={handleCloseApproveDialog}>
               <CloseIcon />
             </IconButton>
-          </Grid>
+          </Grid> */}
           <Grid
             item
             container
             justify="center"
             style={{ marginBottom: "20px" }}
           >
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h6" gutterBottom>
               Aktifkan pengguna berikut?
             </Typography>
           </Grid>
@@ -900,9 +908,13 @@ function ManageUsers(props) {
             item
             container
             justify="center"
-            style={{ marginBottom: "20px" }}
+            xs={10}
           >
-            <Typography variant="h6" align="center" gutterBottom>
+            <Typography 
+              align="center" 
+              gutterBottom
+              className={classes.titleName}
+            >
               <b>{selectedUserName}</b>
             </Typography>
           </Grid>
@@ -912,7 +924,7 @@ function ManageUsers(props) {
             justify="center"
             alignItems="center"
             spacing={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginTop: "10px" }}
           >
             <Grid item>
               <Button

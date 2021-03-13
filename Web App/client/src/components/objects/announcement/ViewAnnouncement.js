@@ -225,6 +225,10 @@ function ViewAnnouncement(props) {
   const announcement_id = props.match.params.id;
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+  
+  React.useEffect(() => {
     getOneAnnouncement(announcement_id);
     getAllClass("map");
     getSelectedClasses(selectedAnnouncements.class_assigned);
@@ -342,8 +346,8 @@ function ViewAnnouncement(props) {
               </Grid>
               {(user.role === "Teacher") && retrieved_users.size &&
                   selectedAnnouncements.author_id && (retrieved_users.get(selectedAnnouncements.author_id).role === "Teacher") ? (
-                    <Grid item xs={12} style={{ marginTop: "30px" }}>
-                      <Typography color="primary" gutterBottom>
+                    <Grid item xs={12}>
+                      <Typography color="textSecondary" gutterBottom>
                         Kelas yang Diberikan:
                       </Typography>
                       <Typography>
@@ -361,8 +365,8 @@ function ViewAnnouncement(props) {
                     </Grid>
                   ) : null}
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
                   Deskripsi Pengumuman:
                 </Typography>
                 <Typography variant="body1">
@@ -371,8 +375,8 @@ function ViewAnnouncement(props) {
               </Grid>
               {!selectedAnnouncements.lampiran ||
                 selectedAnnouncements.lampiran.length === 0 ? null : (
-                  <Grid item xs={12} style={{ marginTop: "30px" }}>
-                    <Typography color="primary" gutterBottom>
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
                     </Typography>
                     <Grid item container spacing={1}>

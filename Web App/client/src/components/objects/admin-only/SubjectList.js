@@ -359,6 +359,7 @@ function SubjectList(props) {
   };
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     getAllSubjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

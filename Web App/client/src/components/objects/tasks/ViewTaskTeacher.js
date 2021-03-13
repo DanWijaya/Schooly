@@ -223,6 +223,7 @@ function ViewTaskTeacher(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     getOneTask(task_id);
     getAllClass("map");
     getAllSubjects("map");
@@ -354,8 +355,8 @@ function ViewTaskTeacher(props) {
                 <Divider className={classes.dividerColor} />
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
                   Kelas yang Diberikan:
                 </Typography>
                 <Typography>
@@ -372,8 +373,8 @@ function ViewTaskTeacher(props) {
                 </Typography>
               </Grid>
               {!tasksCollection.description ? null : (
-                <Grid item xs={12} style={{ marginTop: "30px" }}>
-                  <Typography color="primary" gutterBottom>
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
                   <Typography>{tasksCollection.description}</Typography>
@@ -381,8 +382,8 @@ function ViewTaskTeacher(props) {
               )}
               {!tasksCollection.lampiran ||
                 tasksCollection.lampiran.length === 0 ? null : (
-                  <Grid item xs={12} style={{ marginTop: "30px" }}>
-                    <Typography color="primary" gutterBottom>
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
                     </Typography>
                     <Grid container spacing={1}>

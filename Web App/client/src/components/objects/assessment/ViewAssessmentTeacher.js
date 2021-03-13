@@ -148,6 +148,7 @@ function ViewAssessmentTeacher(props) {
 
   console.log(selectedAssessmentName);
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     getOneAssessment(assessment_id);
     getAllClass("map");
     getAllSubjects("map");
@@ -317,8 +318,8 @@ function ViewAssessmentTeacher(props) {
                 <Divider className={classes.dividerColor} />
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
                   Kelas yang Diberikan:
                 </Typography>
                 <Typography>
@@ -338,8 +339,8 @@ function ViewAssessmentTeacher(props) {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "30px" }}>
-                <Typography color="primary" gutterBottom>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" gutterBottom>
                   Deskripsi Kuis/Ujian:
                 </Typography>
                 <Typography>{selectedAssessments.description}</Typography>

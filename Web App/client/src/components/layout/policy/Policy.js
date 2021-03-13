@@ -5,6 +5,7 @@ function Policy(props) {
   const { handleMarginTopValue } = props;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     handleMarginTopValue(0);
     return () => {
       handleMarginTopValue(20);

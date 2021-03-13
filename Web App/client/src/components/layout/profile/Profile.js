@@ -219,6 +219,11 @@ function Profile(props) {
     setCurrentClass(user.kelas);
   }
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+  
+
   document.title = "Schooly | Profil Saya";
 
   return (

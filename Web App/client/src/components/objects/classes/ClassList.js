@@ -611,7 +611,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   },
   newClassButton: {
-    marginRight: "10px",
+    marginRight: "6px",
     backgroundColor: theme.palette.success.main,
     color: "white",
     "&:focus, &:hover": {

@@ -119,6 +119,7 @@ function Help(props) {
   const { handleMarginTopValue } = props;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     handleMarginTopValue(0);
     return () => {
       handleMarginTopValue(20);
@@ -421,6 +422,50 @@ function Help(props) {
                             menekan tombol "Atur Wali Kelas". Kedua tombol
                             tersebut dapat ditemukan di samping tombol "Buat
                             Kelas".
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="h6" gutterBottom>
+                            <b>
+                              Bagaimana mekanisme sistem pergantian alokasi murid antar kelas?
+                            </b>
+                          </Typography>
+                          <Typography>
+                            <ol>
+                              <li>
+                                Buka halaman daftar kelas dengan menekan tombol “Kelas” yang dapat 
+                                ditemukan pada bagian kiri aplikasi.
+                              </li>
+                              <li>
+                                Tekan tombol “Atur Kelas Murid”.
+                              </li>
+                              <li>
+                                Pilih opsi “Export Data Kelas” untuk mengunduh file data kelas dalam format comma-separated values (CSV). 
+                                Untuk memudahkan pembacaan dan pengubahan isi file, kami menyarankan Anda menggunakan aplikasi 
+                                spreadsheet yang dapat menampilkan isi file CSV dalam bentuk tabular.
+                              </li>
+                              <li>
+                                Buka file data kelas yang telah diunduh.
+                              </li>
+                              <li>
+                                Baris pertama file data kelas berisi semua nama kelas, sedangkan baris dua dan seterusnya berisi username email murid. 
+                                Username email milik murid yang ditempatkan pada suatu kelas akan berada pada kolom kelas tersebut, 
+                                sedangkan username email murid yang belum ditempatkan ke kelas manapun akan berada pada kolom “belum ditempatkan”. 
+                                Untuk memindahkan murid, pindahkan username email setiap murid yang ingin dipindahkan ke kolom kelas yang sesuai. 
+                              </li>
+                              <li>
+                                Simpan file data kelas yang telah selesai diubah.
+                              </li>
+                              <li>
+                                Kembali ke halaman daftar kelas. Tekan tombol “Atur Kelas Murid”.
+                              </li>
+                              <li>
+                                Pilih opsi “Import Data Kelas”.
+                              </li>
+                              <li>
+                                Pada kotak dialog yang terbuka, pilih file data kelas dari langkah sebelumnya, lalu tekan tombol “Open”.
+                              </li>
+                            </ol>
                           </Typography>
                         </Grid>
                       </Grid>

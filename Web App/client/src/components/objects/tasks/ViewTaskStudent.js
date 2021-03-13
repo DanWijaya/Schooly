@@ -521,6 +521,7 @@ function ViewTaskStudent(props) {
   // This page is only for student later on, so for now put the user.role logic condition
   // Ini seperti componentDidUpdate(). yang didalam array itu kalau berubah, akan dirun lagi.
   useEffect(() => {
+    window.scrollTo(0, 0);
     getTaskFilesByUser(user._id, tugasId);
     getOneTask(tugasId);
     getAllSubjects("map");
@@ -802,8 +803,8 @@ function ViewTaskStudent(props) {
                 </Typography>
               </Grid> */}
               {!tasksCollection.description ? null : (
-                <Grid item xs={12} style={{ marginTop: "30px" }}>
-                  <Typography color="primary" gutterBottom>
+                <Grid item xs={12}>
+                  <Typography color="textSecondary" gutterBottom>
                     Deskripsi Tugas:
                   </Typography>
                   <Typography>{tasksCollection.description}</Typography>
@@ -811,8 +812,8 @@ function ViewTaskStudent(props) {
               )}
               {!tasksCollection.lampiran ||
                 tasksCollection.lampiran.length === 0 ? null : (
-                  <Grid item xs={12} style={{ marginTop: "30px" }}>
-                    <Typography color="primary" gutterBottom>
+                  <Grid item xs={12}>
+                    <Typography color="textSecondary" gutterBottom>
                       Lampiran Berkas:
                     </Typography>
                     <Grid container spacing={1}>
