@@ -222,7 +222,7 @@ function ClassListToolbar(props) {
     const a = document.createElement("a");
     a.setAttribute("hidden", "");
     a.setAttribute("href", url);
-    a.setAttribute("download", "file.csv");
+    a.setAttribute("download", "data_kelas.csv");
     a.click();
   };
 

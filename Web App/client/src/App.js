@@ -195,15 +195,15 @@ class App extends Component {
                     <Route
                       exact
                       path="/"
-                      // render={(props) => (
-                      //   <Landing
-                      //     {...props}
-                      //     handleMarginTopValue={(data) =>
-                      //       this.handleMarginTopValue(data)
-                      //     }
-                      //   />
-                      // )}
-                      component={Tester}
+                      render={(props) => (
+                        <Landing
+                          {...props}
+                          handleMarginTopValue={(data) =>
+                            this.handleMarginTopValue(data)
+                          }
+                        />
+                      )}
+                      // component={Tester}
                     />
                     <Route
                       exact
