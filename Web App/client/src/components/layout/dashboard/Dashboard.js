@@ -222,6 +222,56 @@ function TaskListItem(props) {
   );
 }
 
+function AssessmentListItemTeacher(props) {
+  const { classes } = props;
+
+  return (
+    <Grid item>
+      <Link to={props.link}>
+        <Paper variant="outlined" button className={classes.listItemPaper}>
+          <Badge
+            style={{ display: "flex", flexDirection: "row" }}
+            badgeContent={<WarningIcon className={classes.warningIcon} />}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <ListItem button className={classes.listItem}>
+              <Hidden xsDown>
+                <ListItemAvatar>
+                  <Avatar className={classes.assignmentLate}>
+                    {props.type === "Kuis" ? <FaClipboardList /> : <BsClipboardData />}
+                  </Avatar>
+                </ListItemAvatar>
+              </Hidden>
+              <ListItemText
+                primary={props.title}
+                secondary={props.subject}
+              />
+              <ListItemText
+                align="right"
+                primary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.createdAt)
+                      .locale("id")
+                      .format("DD MMM YYYY")}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="textSecondary">
+                    {moment(props.createdAt).locale("id").format("HH.mm")}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Badge>
+        </Paper>
+      </Link>
+    </Grid>
+  );
+}
+
 function DashboardGraph(props) {
   const { scores, workType, names } = props;
 
@@ -877,6 +927,93 @@ class Dashboard extends Component {
       return result;
     }
 
+    function listAssessmentsTeacher(assessmentType) {
+      // menampilkan assessment jika ada submission yang belum selesai dinilai
+
+      let result = [];
+      let lowerCaseType = (assessmentType === "Kuis") ? "kuis" : "ujian";
+
+      for (let i = 0; i < all_assessments.length; i++) {
+        let assessment = all_assessments[i]; 
+        if (assessment.type === assessmentType) {
+          
+          // jika terdapat soal uraian pada kuis ini dan sudah ada 1 atau lebih murid yg mengumpulkan jawaban
+          if ((assessment.question_weight.longtext !== null) && (assessment.submissions) && (Object.keys(assessment.submissions).length > 0)) {
+
+            // jika ada murid yang jawaban uraiannya sudah dinilai
+            if ((assessment.grades) && (Object.keys(assessment.grades).length > 0)) {
+              
+              // untuk setiap murid yang sudah mengumpulkan jawaban
+              for (const studentId of Object.keys(assessment.submissions)) {
+                
+                // jika ada jawaban uraian yang belum dinilai
+                if (!(Object.keys(assessment.grades).includes(studentId) && (assessment.grades[studentId].total_grade !== null))) {
+                  
+                  // tampilkan di list
+                  result.push({
+                    _id: assessment._id,
+                    title: assessment.name,
+                    subject: assessment.subject,
+                    createdAt: assessment.createdAt,
+                    type: assessment.type
+                  });
+                  break;
+                }
+              }
+            } else {
+              // jika belum ada satupun murid yang jawaban uraiannya sudah dinilai, tampilkan di list
+              result.push({
+                _id: assessment._id,
+                title: assessment.name,
+                subject: assessment.subject,
+                createdAt: assessment.createdAt,
+                type: assessment.type
+              });
+            }
+          }
+        }
+      }
+
+      if (result.length === 0) {
+        return result.push(
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Kosong
+          </Typography>
+        );
+      } else {
+        // sorting: assessment yang paling awal dibuat akan ditampilkan paling atas, yang paling terakhir dibuat akan ditampilkan paling bawah
+        const stabilizedThis = result.map((el, index) => [el, index]);
+        const descendingComparator = (a, b, orderBy) => {
+          if (b[orderBy] < a[orderBy]) {
+            return -1;
+          }
+          if (b[orderBy] > a[orderBy]) {
+            return 1;
+          }
+          return 0;
+        }
+        const comparator =  (a, b) => -descendingComparator(a, b, "createdAt");
+        stabilizedThis.sort((a, b) => {
+          const order = comparator(a[0], b[0]);
+          if (order !== 0) return order;
+          return a[1] - b[1];
+        });
+
+        return stabilizedThis.map((el) => el[0]).map((row) => {
+          return (
+            <AssessmentListItemTeacher
+              classes={classes}
+              title={row.title}
+              subject={all_subjects_map.get(row.subject)}
+              link={`/daftar-${lowerCaseType}-terkumpul/${row._id}`}
+              createdAt={row.createdAt}
+              type={row.type}
+            />
+          )
+        });
+      }
+    }
+
     function showSubject(subjectIndex) {
       if (all_subjects[subjectIndex]) {
         return (
@@ -1219,7 +1356,7 @@ class Dashboard extends Component {
                 justify="flex-end"
                 alignItems="center"
               >
-                <Grid item>
+                {/* <Grid item>
                   <Link to="/daftar-tugas">
                     <Fab
                       variant="extended"
@@ -1229,7 +1366,7 @@ class Dashboard extends Component {
                       Lihat Tugas
                     </Fab>
                   </Link>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                   <Fab
                     className={classes.createButton}
@@ -1302,43 +1439,112 @@ class Dashboard extends Component {
               </Grid>
               <Grid
                 item
-                direction="row"
-                spacing={2}
                 xs={12}
-                style={{ marginTop: "10px" }}
+                style={{ marginTop: "20px" }}
               >
-                <Paper style={{ padding: "20px" }}>
-                  <Grid
-                    container
-                    justify="space-between"
-                    alignItems="center"
-                    style={{ marginBottom: "15px" }}
-                  >
-                    <Grid item>
-                      <Grid container alignItems="center">
-                        <AssignmentIcon
-                          color="action"
-                          style={{ marginRight: "10px", fontSize: "20px" }}
-                        />
-                        <Typography variant="h5" color="primary">
-                          Tugas yang Belum Diperiksa
-                        </Typography>
+                <Grid container direction="column" spacing={2}>
+                  <Grid item> 
+                    <Paper style={{ padding: "20px" }}>
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ marginBottom: "15px" }}
+                      >
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <AssignmentIcon
+                              color="action"
+                              style={{ marginRight: "10px", fontSize: "20px" }}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Tugas yang Belum Diperiksa
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-tugas">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Link to="/daftar-tugas">
-                        <LightTooltip title="Lihat Semua" placement="top">
-                          <IconButton>
-                            <ChevronRightIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Link>
-                    </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {listTasksTeacher()}
+                      </Grid>
+                    </Paper>
                   </Grid>
-                  <Grid container direction="column" spacing={1}>
-                    {listTasksTeacher()}
+                  <Grid item>
+                    <Paper style={{ padding: "20px" }}>
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ marginBottom: "15px" }}
+                      >
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <FaClipboardList
+                              style={{ marginRight: "10px", fontSize: "20px", color: "grey"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Kuis yang Belum Diperiksa
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-kuis">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {listAssessmentsTeacher("Kuis")}
+                      </Grid>
+                    </Paper>
                   </Grid>
-                </Paper>
+                  <Grid item>
+                    <Paper style={{ padding: "20px" }}>
+                      <Grid
+                        container
+                        justify="space-between"
+                        alignItems="center"
+                        style={{ marginBottom: "15px" }}
+                      >
+                        <Grid item>
+                          <Grid container alignItems="center">
+                            <BsClipboardData
+                              color="action"
+                              style={{ marginRight: "10px", fontSize: "20px", color: "grey"}}
+                            />
+                            <Typography variant="h5" color="primary">
+                              Ujian yang Belum Diperiksa
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Link to="/daftar-ujian">
+                            <LightTooltip title="Lihat Semua" placement="top">
+                              <IconButton>
+                                <ChevronRightIcon />
+                              </IconButton>
+                            </LightTooltip>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="column" spacing={1}>
+                        {listAssessmentsTeacher("Ujian")}
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                </Grid>
               </Grid>
             </>
           ) : (

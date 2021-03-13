@@ -79,23 +79,27 @@ const AssessmentSchema = new Schema(
       jika belum dinilai, pasangan tidak ditambahkan.
     - ketika assessment pertama kali dibuat, atribut grades tidak ada. 
       atribut grades hanya ada jika:
-      - guru sudah menilai minimal 1 jawaban uraian dari 1 murid; atau 
-      - ada minimal 1 murid yang sudah mengumpulkan jawaban assessment yang tidak memiliki soal uraian; 
+      - assessment memiliki soal uraian dan guru sudah menilai minimal 1 jawaban uraian dari 1 murid
+      (jika jawaban uraian seorang murid belum dinilai sama sekali, key id murid tersebut tidak akan ada di atribut grades); atau
+      - assessment tidak memiliki soal uraian dan minimal ada 1 murid yang sudah mengumpulkan jawaban; 
     - jika murid mengumpulkan assessment yang tidak memiliki soal uraian, total_grades akan dihitung dengan longtext_grades diset menjadi null
     - (assessments.js, endpoint update grade uraian) 
       ketika guru selesai menentukan nilai jawaban uraian terakhir dan menyimpannya (longtext_grades sudah lengkap), total_grade akan dihitung.
-      jika longtext_grades belum lengkap, total_grade bernilai null. jika soal uraian belum dinilai sama sekali, key id murid tidak akan ada 
-      di atribut grades.
+      jika longtext_grades belum lengkap, total_grade bernilai null. 
     */
 
     submissions: {
       type: Map,
     },
+
+    
     type: {
       type: String,
       required: true,
     },
-    suspects: [ObjectId],
+    // value atribut ini: "Kuis" atau Ujian"
+
+    suspects: [ObjectId], // id murid
     question_weight: {
       radio: Number,
       checkbox: Number,
@@ -116,8 +120,9 @@ const AssessmentSchema = new Schema(
     // }
 
     // NOTE
-    // (di CreateAssessment.js, di fungsi onSubmit) jika assessment tidak punya suatu tipe soal, value untuk key tipe soal tersebut = null
-    // (di CreateAssessment.js, di fungsi onSubmit) bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai 0
+    // (di CreateAssessment.js, di fungsi onSubmit) 
+    // - assessment tidak punya suatu tipe soal jika dan hanya jika value untuk key tipe soal tersebut = null
+    // - bobot semua soal yang ada pada suatu assessment dipastikan diisi dan tidak bernilai <= 0
   },
   { timestamps: true }
 );
