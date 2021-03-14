@@ -104,7 +104,22 @@ const styles = (theme) => ({
     padding: "20px 20px 30px 20px",
   },
   pageNavigatorContent: {
-    padding: "20px 20px 30px 5px",
+    padding: "20px 20px 30px",
+    [theme.breakpoints.down("xs")]: {
+      padding: "20px 10px 30px",
+    }
+  },
+  settingsButton: {
+    backgroundColor: "white",
+    color: theme.palette.text.secondary,
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.text.secondary,
+      color: "white",
+    },
+    [theme.breakpoints.down("xs")]: {
+      paddingRight: "0", 
+      paddingLeft: "0"
+    }
   },
   divider: {
     [theme.breakpoints.down("md")]: {
@@ -164,15 +179,15 @@ const styles = (theme) => ({
   chip: {
     marginRight: 2,
   },
-  settingsButton: {
-    backgroundColor: "grey",
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: "#555555",
-      color: "white",
-    },
-    marginInlineEnd: "2em",
-  },
+  // settingsButton: {
+  //   backgroundColor: "grey",
+  //   color: "white",
+  //   "&:focus, &:hover": {
+  //     backgroundColor: "#555555",
+  //     color: "white",
+  //   },
+  //   marginInlineEnd: "2em",
+  // },
   menuVisible: {
     "& .MuiListItemIcon-root": {
       color: theme.palette.warning.main,
@@ -1720,82 +1735,103 @@ class EditAssessment extends Component {
                 </LightTooltip>
               </Grid>
             </Grid>
-            <Hidden smDown implementation="css">
+            <Grid item container justify="center">
               <Grid item>
-                <Paper>
+                <TablePagination
+                  labelRowsPerPage="Soal Per Halaman"
+                  rowsPerPageOptions={[5, 10]}
+                  component="div"
+                  count={this.state.questions.length}
+                  rowsPerPage={this.state.rowsPerPage}
+                  page={this.state.page}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Paper>
+                <Grid
+                  container
+                  // spacing={2}
+                  justify="space-between"
+                  alignItems="center"
+                  className={classes.pageNavigatorContent}
+                >
                   <Grid
-                    container
-                    spacing={2}
-                    justify="space-between"
-                    alignItems="center"
-                    className={classes.pageNavigatorContent}
+                    item
+                    className={classes.pageNavigator}
                   >
-                    <Grid
-                      item
-                      container
-                      md={9}
-                      alignItems="center"
-                      className={classes.pageNavigator}
-                    >
-                      <Grid item>
-                        <TablePagination
-                          labelRowsPerPage="Soal Per Halaman"
-                          rowsPerPageOptions={[5, 10]}
-                          component="div"
-                          count={this.state.questions.length}
-                          rowsPerPage={this.state.rowsPerPage}
-                          page={this.state.page}
-                          onChangePage={this.handleChangePage}
-                          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip
-                          title={
-                            !this.state.posted
-                              ? `Murid dapat melihat deskripsi ${this.state.type} (Muncul Pada Layar Murid)`
-                              : `Murid tidak dapat melihat deskripsi ${this.state.type} (Tidak Muncul Pada Layar Murid)`
-                          }
+                    <Grid item>
+                      <LightTooltip title={`Pengaturan`}>
+                        <IconButton
+                          className={classes.settingsButton}
+                          onClick={(event) => this.handleMenuOpen(event)}
                         >
-                          <FormControlLabel
-                            label={
+                          <SettingsIcon />
+                        </IconButton>
+                      </LightTooltip>
+                      <Menu
+                        keepMounted
+                        anchorEl={this.state.anchorEl}
+                        open={Boolean(this.state.anchorEl)}
+                        onClose={this.handleMenuClose}
+                        getContentAnchorEl={null}
+                        style={{ marginTop: "10px" }}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "center",
+                        }}
+                        transformOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center",
+                        }}
+                      >
+                        <MenuItem
+                          button
+                          component="a"
+                          className={classes.menuVisible}
+                          onClick={this.handlePostToggle}
+                        >
+                          <ListItemIcon>
+                            {!this.state.posted ? (
+                              <VisibilityIcon />
+                            ) : (
+                              <VisibilityOffIcon />
+                            )}
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
                               !this.state.posted
                                 ? "Tampilkan ke Murid"
                                 : "Sembunyikan dari Murid"
                             }
-                            labelPlacement="start"
-                            control={
-                              <ToggleViewQuiz
-                                checked={this.state.posted}
-                                onChange={this.handlePostToggle}
-                                checkedIcon={<FiberManualRecordIcon />}
-                                icon={<FiberManualRecordIcon />}
-                              />
-                            }
                           />
-                        </LightTooltip>
-                      </Grid>
-                      <Grid item>
-                        <LightTooltip
-                          title={`Salin tautan ${this.state.type} ke Clipboard`}
+                        </MenuItem>
+                        <MenuItem
+                          button
+                          component="a"
+                          className={classes.menuCopy}
+                          onClick={() => {
+                            navigator.clipboard.writeText(linkToShare);
+                            this.handleOpenCopySnackBar();
+                          }}
                         >
-                          <IconButton
-                            onClick={(e) => {
-                              this.copyToClipboard(e, linkToShare);
-                            }}
-                            className={classes.copyToClipboardButton}
-                          >
+                          <ListItemIcon>
                             <LinkIcon />
-                          </IconButton>
-                        </LightTooltip>
-                      </Grid>
+                          </ListItemIcon>
+                          <ListItemText primary={`Salin Tautan ${this.state.type}`} />
+                        </MenuItem>
+                      </Menu>
                     </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    className={classes.assessmentSettings}
+                  >
                     <Grid
-                      item
                       container
-                      md={3}
                       spacing={1}
-                      className={classes.assessmentSettings}
                     >
                       <Grid item>
                         <Button
@@ -1817,134 +1853,9 @@ class EditAssessment extends Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                </Paper>
-              </Grid>
-            </Hidden>
-            <Hidden mdUp implementation="css">
-              <Grid item>
-                <Paper>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="space-between"
-                    alignItems="center"
-                    className={classes.pageNavigatorContent}
-                  >
-                    <Grid
-                      item
-                      container
-                      md={9}
-                      alignItems="center"
-                      className={classes.pageNavigator}
-                    >
-                      <Grid item>
-                        <TablePagination
-                          labelRowsPerPage="Soal Per Halaman"
-                          rowsPerPageOptions={[5, 10]}
-                          component="div"
-                          count={this.state.questions.length}
-                          rowsPerPage={this.state.rowsPerPage}
-                          page={this.state.page}
-                          onChangePage={this.handleChangePage}
-                          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-              <Grid
-                container
-                justify="flex-end"
-                style={{ marginTop: "20px" }}
-                spacing={5}
-              >
-                <Grid item>
-                  <Fab
-                    className={classes.settingsButton}
-                    onClick={(event) => this.handleMenuOpen(event)}
-                  >
-                    <SettingsIcon />
-                  </Fab>
-                  <Menu
-                    keepMounted
-                    anchorEl={this.state.anchorEl}
-                    open={Boolean(this.state.anchorEl)}
-                    onClose={this.handleMenuClose}
-                    getContentAnchorEl={null}
-                    style={{ marginTop: "10px" }}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "center",
-                    }}
-                    transformOrigin={{
-                      vertical: "bottom",
-                      horizontal: "center",
-                    }}
-                  >
-                    <MenuItem
-                      button
-                      component="a"
-                      className={classes.menuVisible}
-                      onClick={this.handlePostToggle}
-                    >
-                      <ListItemIcon>
-                        {!this.state.posted ? (
-                          <VisibilityIcon />
-                        ) : (
-                          <VisibilityOffIcon />
-                        )}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          !this.state.posted
-                            ? "Tampilkan ke Murid"
-                            : "Sembunyikan dari Murid"
-                        }
-                      />
-                    </MenuItem>
-                    <MenuItem
-                      button
-                      component="a"
-                      className={classes.menuCopy}
-                      onClick={() => {
-                        navigator.clipboard.writeText(linkToShare);
-                        this.handleOpenCopySnackBar();
-                      }}
-                    >
-                      <ListItemIcon>
-                        <LinkIcon />
-                      </ListItemIcon>
-                      <ListItemText primary={`Salin Tautan ${this.state.type}`} />
-                    </MenuItem>
-                    <MenuItem
-                      button
-                      component="a"
-                      className={classes.menuCancel}
-                      onClick={this.handleOpenDeleteDialog}
-                    >
-                      <ListItemIcon>
-                        <CancelIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Batal" />
-                    </MenuItem>
-                    <MenuItem
-                      button
-                      type="submit"
-                      className={classes.menuSubmit}
-                      onClick={(e) => {
-                        this.onSubmit(e);
-                      }}
-                    >
-                      <ListItemIcon>
-                        <SendIcon />
-                      </ListItemIcon>
-                      <ListItemText primary={`Sunting ${this.state.type}`} />
-                    </MenuItem>
-                  </Menu>
                 </Grid>
-              </Grid>
-            </Hidden>
+              </Paper>
+            </Grid>              
           </Grid>
         </form>
         <Snackbar
