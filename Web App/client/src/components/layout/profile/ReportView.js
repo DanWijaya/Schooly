@@ -626,16 +626,20 @@ function ReportView(props) {
     let message = [];
     if (emptyCondition.includes("noStudent")) {
       message.push(
-        <Typography variant="h5" color="textSecondary" align="center">
-          Kelas ini tidak memiliki murid
-        </Typography>
+        <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+          <Typography variant="h5" color="textSecondary" align="center">
+            Kelas ini tidak memiliki murid
+          </Typography>
+        </Grid>
       );
     }
     if (emptyCondition.includes("noGrade")) {
       message.push(
-        <Typography variant="h5" color="textSecondary" align="center">
-          Belum ada tugas, kuis, atau ujian
-        </Typography>
+        <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+          <Typography variant="h5" color="textSecondary" align="center">
+            Belum ada tugas, kuis, atau ujian
+          </Typography>
+        </Grid>
       );
     }
     return message;

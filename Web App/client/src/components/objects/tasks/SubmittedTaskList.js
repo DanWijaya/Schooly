@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#808080",
   },
   exportButton: {
-    marginTop: "15px",
+    // marginTop: "15px",
     backgroundColor: theme.palette.action.selected,
     color: "black",
     "&:focus, &:hover": {
@@ -135,12 +135,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   paperBox: {
-    padding: "20px",
-    marginBottom: "10px",
+    padding: "20px 20px 0 20px",
+    // marginBottom: "10px",
   },
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
-    marginBottom: "5px"
+    // marginBottom: "5px"
   },
 }));
 
@@ -537,20 +537,32 @@ function SubmittedTaskList(props) {
       return null;
     } else {
       let student_task_files_id; // to handle the download all, this is needed.
+      
+      // untuk setiap kelas yang diberikan task ini,
       for (var i = 0; i < tasksCollection.class_assigned.length; i++) {
         let students_in_class = [];
+        let isClassSubmissionEmpty = true;
+
+        // untuk setiap murid yang ada,
         for (var j = 0; j < all_students.length; j++) {
-          // check if the id of the class is the same or not (means student is inside)
           student_task_files_id = [];
+          
+          // check if the id of the class is the same or not (means student is inside)
           if (all_students[j].kelas === tasksCollection.class_assigned[i]) {
             let student = all_students[j];
             let student_task = all_students[j].tugas;
             console.log(student_task);
-            let task_list_on_panel = [];
+            let task_list_on_panel = []; // berisi semua file yang diunggah murid ini untuk task ini
+
+            // untuk setiap file yang pernah dikumpulkan murid ini,
             for (var k = 0; k < student_task.length; k++) {
               let task = student_task[k];
+
+              // jika file ditujukan untuk tugas ini,
               if (student_task[k].for_task_object === task_id) {
                 student_task_files_id.push(task.id);
+
+                // tampilkan file ini sebagai item di expansion panel murid ini
                 task_list_on_panel.push(
                   <WorkFile
                     file_id={task.id}
@@ -575,6 +587,7 @@ function SubmittedTaskList(props) {
                 );
               }
             }
+
             if (task_list_on_panel.length === 0) {
               task_list_on_panel.push(
                 <Typography
@@ -585,7 +598,10 @@ function SubmittedTaskList(props) {
                   Kosong
                 </Typography>
               );
+            } else {
+              isClassSubmissionEmpty = false;
             }
+
             students_in_class.push(
               <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -678,9 +694,16 @@ function SubmittedTaskList(props) {
             );
           }
         }
+
         TabPanelList.push(
           <TabPanel value={value} index={i}>
-            {students_in_class}
+            {isClassSubmissionEmpty ?
+              <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+                <Typography variant="h5" color="textSecondary" align="center">
+                  Belum ada murid yang mengumpulkan tugas
+                </Typography>
+              </Grid>
+              : students_in_class}
           </TabPanel>
         );
       }
@@ -769,18 +792,22 @@ function SubmittedTaskList(props) {
           <Grid item xs={12}>
             <Divider className={classes.dividerColor} />
           </Grid>
+
+          <Grid item container justify="flex-end">
+            <LightTooltip title="Export Hasil Tugas">
+              <IconButton
+                onClick={handleExportTask}
+                className={classes.exportButton}
+              >
+                <GetAppIcon />
+              </IconButton>
+            </LightTooltip>
+          </Grid>
+
+          <Grid item style={{paddingBottom: "0"}}>
+            {listClassTab()}
+          </Grid>
         </Grid>
-        <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row"}}>
-          <LightTooltip title="Export Hasil Tugas">
-            <IconButton
-              onClick={handleExportTask}
-              className={classes.exportButton}
-            >
-              <GetAppIcon />
-            </IconButton>
-          </LightTooltip>
-        </div>
-        {listClassTab()}
       </Paper>
       {listClassTabPanel()}
     </div>

@@ -90,6 +90,8 @@ function QuestionItem(props) {
     parseAnswer,
     handleLongtextWeight,
     longtextWeight,
+    backtickError,
+    renderbtErrors
   } = props;
   const classes = useStyles();
 
@@ -99,7 +101,7 @@ function QuestionItem(props) {
   const textRef = React.useRef(null);
   const [longtextValue, setLongtextValue] = React.useState("");
   const [longtextAnswer, setLongtextAnswer] = React.useState("");
-
+  const [localBtError, setLocalBtError] = React.useState(false);
   const [lampiranToPreview, setLampiranToPreview] = React.useState([]);
 
   // dipakai untuk edit assessment
@@ -157,6 +159,7 @@ function QuestionItem(props) {
       //agar setelah mengetikan karakter, error "belum diisi" langsung hilang
       handleChangeQuestion(e, index);
     }
+    setLocalBtError(false);
     setValue(e.target.value);
   };
 
@@ -168,10 +171,12 @@ function QuestionItem(props) {
       handleChangeQuestion(e, index, textRef.current.value); // e.target.id berisi id elemen pemanggil handleBlur ini
     }
   };
-
   React.useEffect(() => {
     setValue(name);
   }, [name]);
+  React.useEffect(() => {
+    setLocalBtError(backtickError);
+  }, [renderbtErrors]);
   React.useEffect(() => {
     if (type === "longtext") {
       if (answer && answer.length !== 0) {
@@ -270,8 +275,8 @@ function QuestionItem(props) {
               </GridList>
               {type === "shorttext" ? (
                 <TextField
-                  helperText={!name.length ? "Belum diisi" : null}
-                  error={!name.length}
+                  helperText={!name.length ? "Belum diisi" : localBtError ? "Periksa kembali" : null}
+                  error={!name.length || localBtError}
                   multiline
                   rowsMax={10}
                   id="name"
@@ -579,7 +584,8 @@ export default React.memo(
       prevProps.options === nextProps.options &&
       prevProps.answer === nextProps.answer &&
       prevProps.lampiran_length === nextProps.lampiran_length &&
-      prevProps.longtextWeight === nextProps.longtextWeight
+      prevProps.longtextWeight === nextProps.longtextWeight && 
+      prevProps.renderbtErrors === nextProps.renderbtErrors
     );
   }
 );

@@ -119,8 +119,8 @@ const useStyles = makeStyles((theme) => ({
   // otherFileTypeIcon: {
   //   backgroundColor: "#808080",
   // },
-  content: {
-    padding: "20px",
+  paperbox: {
+    padding: "20px 20px 0 20px",
   },
   visuallyHidden: {
     border: 0,
@@ -1053,156 +1053,11 @@ function SubmittedAssessmentList(props) {
     return selectedAssessments.class_assigned.length > 0 ? TabPanelList : null;
   };
 
-  document.title = "Schooly | Daftar Tugas Terkumpul";
+  document.title = `Schooly | Daftar ${(selectedAssessments.type === "Kuis") ? "Kuis" : "Ujian"} Terkumpul`;
   return (
     <div className={classes.root}>
-      <Paper>
-        <Grid container spacing={2} className={classes.content}>
-          {/* <Grid item xs={12} md={7}>
-            <Typography variant="h4" gutterBottom>
-              {selectedAssessments.name}
-            </Typography>
-            <Typography variant="caption" color="textSecondary">
-              <h6>Mata Pelajaran: {all_subjects_map.get(selectedAssessments.subject)}</h6>
-            </Typography>
-            <Hidden smDown implementation="css">
-              <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                Deskripsi Kuis/Ujian:
-            </Typography>
-            </Hidden>
-          </Grid>
-          <Grid item xs={12} md={5} spacing={2}>
-            <Hidden mdUp implementation="css">
-              <Typography variant="body2" color="textSecondary">
-                Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-              <Typography color="primary" gutterBottom style={{ marginTop: "30px" }}>
-                Deskripsi Kuis/Ujian:
-              </Typography>
-              <Typography align="justify">
-                {selectedAssessments.description}
-              </Typography>
-
-              <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
-                <Link to={(selectedAssessments.type === "Kuis") ? `/lihat-jawaban-kuis/${selectedAssessments._id}` : `/lihat-jawaban-ujian/${selectedAssessments._id}`}>
-                  <Fab size="medium" variant="extended" className={classes.editFab}>
-                    <EditIcon className={classes.editIconFab} />
-                    Periksa
-                  </Fab>
-                </Link>
-
-                <LightTooltip title="Urutkan Kuis">
-                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-                    <SortIcon />
-                  </IconButton>
-                </LightTooltip>
-                <Menu
-                  keepMounted
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleCloseSortMenu}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  {headCells.map((headCell, i) => (
-                    <MenuItem
-                      key={headCell.id}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={() => { handleRequestSort(headCell.id) }}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ?
-                          <span className={classes.visuallyHidden}>
-                            {order === "desc" ? "sorted descending" : "sorted ascending"}
-                          </span>
-                          : null
-                        }
-                      </TableSortLabel>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Grid>
-            </Hidden>
-            <Hidden smDown implementation="css">
-              <Typography align="right" variant="body2" color="textSecondary">
-                Mulai: {moment(selectedAssessments.start_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-              <Typography align="right" variant="body2" color="textSecondary">
-                Selesai: {moment(selectedAssessments.end_date).locale("id").format("DD MMM YYYY, HH:mm")}
-              </Typography>
-
-              <Grid container item justify="flex-end" style={{ marginTop: "20px" }}>
-                <Link to={(selectedAssessments.type === "Kuis") ? `/lihat-jawaban-kuis/${selectedAssessments._id}` : `/lihat-jawaban-ujian/${selectedAssessments._id}`}>
-                  <Fab size="medium" variant="extended" className={classes.editFab}>
-                    <EditIcon className={classes.editIconFab} />
-                    Periksa
-                  </Fab>
-                </Link>
-
-                <LightTooltip title="Urutkan Kuis">
-                  <IconButton onClick={handleOpenSortMenu} className={classes.sortButton}>
-                    <SortIcon />
-                  </IconButton>
-                </LightTooltip>
-                <Menu
-                  keepMounted
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleCloseSortMenu}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  {headCells.map((headCell, i) => (
-                    <MenuItem
-                      key={headCell.id}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={() => { handleRequestSort(headCell.id) }}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ?
-                          <span className={classes.visuallyHidden}>
-                            {order === "desc" ? "sorted descending" : "sorted ascending"}
-                          </span>
-                          : null
-                        }
-                      </TableSortLabel>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Grid>
-            </Hidden>
-          </Grid>
-          <Hidden smDown>
-            <Grid item xs={12}>
-              <Typography align="justify">
-                {selectedAssessments.description}
-              </Typography>
-            </Grid>
-          </Hidden> */}
-
+      <Paper className={classes.paperbox}>
+        <Grid container spacing={2}>
           <Hidden smDown>
             <Grid item xs={12} style={{ paddingBottom: "0" }}>
               <Typography variant="h4">{selectedAssessments.name}</Typography>
@@ -1260,7 +1115,7 @@ function SubmittedAssessmentList(props) {
             <Divider className={classes.dividerColor} />
           </Grid>
 
-          <Grid container item justify="flex-end" style={{ marginTop: "5px" }}>
+          <Grid container item justify="flex-end" alignItems="center">
             <Link
               to={
                 selectedAssessments.type === "Kuis"
@@ -1329,8 +1184,10 @@ function SubmittedAssessmentList(props) {
               </IconButton>
             </LightTooltip>
           </Grid>
+          <Grid item style={{paddingBottom: "0"}}>
+            {listClassTab()}
+          </Grid>
         </Grid>
-        {listClassTab()}
       </Paper>
       {/* jika selectedAssessment belum selesai diload, suspects akan bernilai null. Array kosong bernilai true*/}
       {suspects ? listClassTabPanel() : null}

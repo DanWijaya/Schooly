@@ -265,16 +265,23 @@ class EditAssessment extends Component {
       radioSnackbarOpen: false,
       copySnackbarOpen: false,
       weights: {
-        radio: null,
-        checkbox: null,
-        shorttext: null,
-      },
+        radio: undefined,
+        checkbox: undefined,
+        shorttext: undefined,
+      }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan 
+      longtextWeight: [null],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
-      // longtextWeight[1] = null -> berarti pertanyaan nomor 2 adalah soal non uraian
+      // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
       // longtextWeight[2] = undefined -> berarti pertanyaan nomor 3 adalah soal uraian yang bobotnya belum diubah
       // sejak pertama kali soal tersebut ditambahkan
-      longtextWeight: [null],
+      // longtextWeight[2] = null -> berarti bobot soal uraian ini masih undefined saat tombol create assessment ditekan 
+      backtickErrors: [],
+      // array backtickErrors akan memiliki elemen sebanyak pertanyaan di assessment
+      // backtickErrors[0] = false -> berarti pertanyaan nomor 1 sudah valid
+      // backtickErrors[1] = true -> berarti terdapat jawaban kosong (``) atau jumlah backtick ganjil pada pertanyaan nomor 2  
+      // backtickErrors[2] = -1 -> berarti pertanyaan nomor 2 adalah soal non isian. Nilai "-1" dapat diabaikan, ini dapat diganti dengan nilai lain selain true false
+      renderbtErrors: false, // abaikan nilainya, ini hanya dipakai agar QuestionItem dirender ulang saat submit dan ada soal yang dihapus
       ready: false,
     };
   }
@@ -387,17 +394,18 @@ class EditAssessment extends Component {
     let formData = new FormData();
     let invalidQuestionIndex = [];
     let completeWeight = true;
+    let newBtErrors = [];
 
     const { questions, lampiranToDelete } = this.state;
     const { updateAssessment, history } = this.props;
 
+    // mencatat jumlah soal untuk tiap jenis soal
     let typeCount = {
       radio: 0,
       checkbox: 0,
       shorttext: 0,
       longtext: 0,
     };
-
     for (let question of this.state.questions) {
       typeCount[question.type]++;
     }
@@ -412,9 +420,13 @@ class EditAssessment extends Component {
           if (qns.type === "shorttext") {
             if (qns.answer.length === 0) {
               invalidQuestionIndex.push(i);
+              newBtErrors[i] = true;
             } else {
               if (qns.answer.includes("")) {
                 invalidQuestionIndex.push(i);
+                newBtErrors[i] = true;
+              } else {
+                newBtErrors[i] = false;
               }
             }
           } else if (qns.type === "radio" || qns.type === "checkbox") {
@@ -424,34 +436,53 @@ class EditAssessment extends Component {
           }
         }
       }
+      this.setState({ backtickErrors: newBtErrors, renderbtErrors: !this.state.renderbtErrors });
 
-      //pengecekan bobot
+      // pengecekan bobot
       let filteredtypeCount = Object.entries(typeCount).filter(
         (pair) => pair[1] > 0
       );
       if (filteredtypeCount.length !== 0) {
+        let newWeights = {...this.state.weights};
+        let newLongtextWeight = [...this.state.longtextWeight];
+
         for (let pair of filteredtypeCount) {
           let type = pair[0];
 
           if (type === "longtext") {
-            for (let weight of this.state.longtextWeight.filter(
-              (value) => value !== null
-            )) {
+            // menghapus elemen bobot soal non uraian pada array bobot soal uraian
+            let longtextCount = this.state.longtextWeight.filter((value) => (value !== -1));
+
+            for (let i = 0; i <= longtextCount.length; i++) {
+              let weight = longtextCount[i];
+
+              // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
+              if (weight === undefined) {
+                newLongtextWeight[i] = null;
+              }
+
+              // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
               if (isNaN(Number(weight)) || Number(weight) <= 0) {
                 completeWeight = false;
-                break;
               }
             }
           } else {
+            // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
+            if (this.state.weights[type] === undefined) {
+              newWeights[type] = null;
+            }
+
+            // agar data assessment tidak disubmit ketika ada bobot yang tidak valid
             if (
               isNaN(Number(this.state.weights[type])) ||
               Number(this.state.weights[type]) <= 0
             ) {
               completeWeight = false;
-              break;
             }
           }
         }
+        // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
+        this.setState({ weights: newWeights, longtextWeight: newLongtextWeight });
       } else {
         completeWeight = false;
       }
@@ -463,6 +494,7 @@ class EditAssessment extends Component {
       if (typeCount.longtext === 0) {
         longtext = null;
       } else {
+        // mengonversi bobot soal uraian dari string menjadi bilangan
         longtext = {};
         this.state.longtextWeight.forEach((val, idx) => {
           if (val !== null) {
@@ -471,10 +503,10 @@ class EditAssessment extends Component {
         });
       }
       let question_weight = {
-        radio: typeCount.radio === 0 ? null : this.state.weights.radio,
-        checkbox: typeCount.checkbox === 0 ? null : this.state.weights.checkbox,
+        radio: typeCount.radio === 0 ? null : Number(this.state.weights.radio),
+        checkbox: typeCount.checkbox === 0 ? null : Number(this.state.weights.checkbox),
         shorttext:
-          typeCount.shorttext === 0 ? null : this.state.weights.shorttext,
+          typeCount.shorttext === 0 ? null : Number(this.state.weights.shorttext),
         longtext: longtext,
       };
 
@@ -595,8 +627,10 @@ class EditAssessment extends Component {
     }
     this.setState((state) => {
       let value = [...state.longtextWeight];
-      value.push(option === "longtext" ? undefined : null);
-      return { longtextWeight: value };
+      let btErrors = [...state.backtickErrors];
+      value.push(option === "longtext" ? undefined : -1);
+      btErrors.push(option === "shorttext" ? false : -1);
+      return { longtextWeight: value, backtickErrors: btErrors };
     });
     this.setState({ questions: questions });
     this.setState({ currentQuestionOption: null });
@@ -794,15 +828,6 @@ class EditAssessment extends Component {
         type: questions[i].type,
       });
     }
-    // else if (questions[i].type === "longtext") {
-    //   questions.splice(i+1, 0, {
-    //     name: questions[i].name,
-    //     options: null,
-    //     answer: null,
-    //     lampiran: [...questions[i].lampiran],
-    //     type: questions[i].type
-    //   })
-    // }
     else {
       questions.splice(i + 1, 0, {
         name: questions[i].name,
@@ -815,8 +840,10 @@ class EditAssessment extends Component {
     this.setState({ questions: questions });
     this.setState((state) => {
       let value = [...state.longtextWeight];
+      let btErrors = [...state.backtickErrors];
       value.splice(i + 1, 0, state.longtextWeight[i]);
-      return { longtextWeight: value };
+      btErrors.splice(i + 1, 0, state.backtickErrors[i]);
+      return { longtextWeight: value, backtickErrors: btErrors, renderbtErrors: !this.state.renderbtErrors };
     });
   };
 
@@ -825,10 +852,27 @@ class EditAssessment extends Component {
     let questions = this.state.questions;
     questions.splice(index, 1);
     this.setState({ questions: questions });
+
+    let newBtErrors = [];
+    for (var i = 0; i < questions.length; i++) {
+      let qns = questions[i];
+        if (qns.type === "shorttext") {
+          if (qns.answer.length === 0) {
+            newBtErrors[i] = true;
+          } else {
+            if (qns.answer.includes("")) {
+              newBtErrors[i] = true;
+            } else {
+              newBtErrors[i] = false;
+            }
+          }
+        }
+    }
+    
     this.setState((state) => {
       let value = [...state.longtextWeight];
       value.splice(index, 1);
-      return { longtextWeight: value };
+      return { longtextWeight: value, backtickErrors: newBtErrors, renderbtErrors: !this.state.renderbtErrors };
     });
   };
 
@@ -914,10 +958,11 @@ class EditAssessment extends Component {
           }
         }
 
+        let questionIdx = i + page * rowsPerPage;
         return (
           <QuestionItem
             isEdit={true}
-            index={i + page * rowsPerPage}
+            index={questionIdx}
             name={question.name}
             options={JSON.stringify(question.options)}
             answer={question.answer}
@@ -934,7 +979,9 @@ class EditAssessment extends Component {
             type={question.type}
             check_data={booleanArray}
             handleLongtextWeight={this.handleLongtextWeight}
-            longtextWeight={this.state.longtextWeight[i + page * rowsPerPage]}
+            longtextWeight={this.state.longtextWeight[questionIdx]}
+            backtickError={this.state.backtickErrors[questionIdx]}
+            renderbtErrors={this.state.renderbtErrors}
           />
         );
       });
@@ -1010,7 +1057,6 @@ class EditAssessment extends Component {
     }
 
     let columnsDesktopView = [];
-    // let gridMobileView;
     let gridItemMobileView = [];
     let c = 0;
     let filteredtypeCount = Object.entries(typeCount).filter(
@@ -1019,8 +1065,6 @@ class EditAssessment extends Component {
 
     if (filteredtypeCount.length !== 0) {
       // mobile view
-      // for (let type of Object.keys(typeCount)) {
-
       gridItemMobileView.push(
         <Typography variant="h6">Bobot Per Soal:</Typography>
       );
@@ -1029,8 +1073,7 @@ class EditAssessment extends Component {
       for (let pair of filteredtypeCount) {
         let type = pair[0];
         let weight = this.state.weights[type];
-        let showError =
-          (isNaN(Number(weight)) || Number(weight) <= 0) && weight !== null;
+        let showError = (weight !==  undefined && (Number(weight) <= 0 || weight === null));
 
         gridItemMobileView.push(
           <Grid container>
@@ -1078,7 +1121,7 @@ class EditAssessment extends Component {
                   <TextField
                     defaultValue={this.state.weights[type]}
                     variant="outlined"
-                    id="weight"
+                    key={type}
                     fullWidth
                     onChange={(e) => {
                       this.handleWeight(e, type);
@@ -1104,7 +1147,7 @@ class EditAssessment extends Component {
                   <TextField
                     defaultValue={this.state.weights[type]}
                     variant="outlined"
-                    id="weight"
+                    key={type}
                     fullWidth
                     onChange={(e) => {
                       this.handleWeight(e, type);
@@ -1177,31 +1220,7 @@ class EditAssessment extends Component {
           </Grid>
         );
 
-        // gridMobileView = (
-        //   <Grid container style={{ padding: "20px 10px" }} justify="center">
-        //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-        //       {gridItemMobileView[0]}
-        //       <Divider orientation="vertical" flexItem />
-        //       {gridItemMobileView[1]}
-        //     </Grid>
-        //     <Grid item xs={12} style={{ margin: "10px 0px" }}>
-        //       <Divider />
-        //     </Grid>
-        //     <Grid container item xs={12} spacing="1" justify="center" alignItems="center">
-        //       {gridItemMobileView[2]}
-        //       <Divider orientation="vertical" flexItem />
-        //       {gridItemMobileView[3]}
-        //     </Grid>
-        //   </Grid>
-        // );
-
-        // desktop view
-        // for (let pair of filteredtypeCount) {
-        //   let type = pair[0];
-        //   let weight = this.state.weights[type];
-        //   let showError = (isNaN(Number(weight)) || Number(weight) <= 0) && (weight !== null);
         columnsDesktopView.push(
-          //  item xs={12 / filteredtypeCount.length} -> mengatasi bug tampilan margin besar di bawah bagian ini
           <Grid
             container
             item
@@ -1227,7 +1246,7 @@ class EditAssessment extends Component {
                 <TextField
                   defaultValue={this.state.weights[type]}
                   variant="outlined"
-                  id="weight"
+                  key={type}
                   fullWidth
                   onChange={(e) => {
                     this.handleWeight(e, type);
