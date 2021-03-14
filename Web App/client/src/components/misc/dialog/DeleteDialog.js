@@ -133,7 +133,7 @@ function DeleteDialog(props) {
               startIcon={<DeleteOutlineIcon />}
               className={classes.dialogDeleteButton}
             >
-              Hapus
+              Iya
             </Button>
           : 
           <Link to={redirectLink}>
@@ -142,7 +142,7 @@ function DeleteDialog(props) {
               startIcon={<DeleteOutlineIcon />}
               className={classes.dialogDeleteButton}
             >
-              Hapus
+              Iya
             </Button>
           </Link>
           }
@@ -155,7 +155,7 @@ function DeleteDialog(props) {
                 startIcon={<CancelIcon />}
                 className={classes.dialogCancelButton}
               >
-                {customDecline ? customDecline : "Batal"}
+                {customDecline ? customDecline : "Tidak"}
               </Button>
             {/* ) : ( */}
             {/* :

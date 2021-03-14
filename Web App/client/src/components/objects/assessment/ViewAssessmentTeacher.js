@@ -30,6 +30,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LinkIcon from "@material-ui/icons/Link";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -112,6 +113,7 @@ const useStyles = makeStyles((theme) => ({
   },
   optionText: {
     color: "black",
+    marginLeft: "8px"
   },
   paperBox: {
     padding: "20px",
@@ -120,6 +122,24 @@ const useStyles = makeStyles((theme) => ({
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
   },
+  checkIcon: {
+    color: theme.palette.success.dark,
+    fontSize: "1rem",
+    verticalAlign: "middle"
+  },
+  fiberIcon: {
+    fontSize: "0.5rem",
+    verticalAlign: "middle"
+  },
+  bullets: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "1rem"
+  },
+  questionName: {
+    fontSize: "1.1rem"
+  }
 }));
 
 function ViewAssessmentTeacher(props) {
@@ -188,7 +208,7 @@ function ViewAssessmentTeacher(props) {
     }
 
     return (
-      <Typography variant="body1" gutterButtom>
+      <Typography className={classes.questionName}>
         <form>{splitResult}</form>
       </Typography>
     );
@@ -383,51 +403,67 @@ function ViewAssessmentTeacher(props) {
                           </GridListTile>
                         ))}
                       </GridList>
-                      <Typography variant="h6">
+                      {/* <Typography variant="h6"> */}
                         {question.type === "shorttext" ? (
                           generateSoalShortTextTeacher(question, i)
                         ) : question.type === "longtext" ? (
-                          <Typography gutterButtom>{question.name}</Typography>
+                          <>
+                            <Typography className={classes.questionName} style={{ paddingBottom: "16px" }}>
+                              {question.name}
+                            </Typography>
+                            <Typography className={classes.questionName} color="textSecondary">
+                              {question.answer}
+                            </Typography>
+                          </>
                         ) : (
-                          <Typography gutterButtom>{question.name}</Typography>
+                          <Typography className={classes.questionName}>{question.name}</Typography>
                         )}
-                      </Typography>
+                      {/* </Typography> */}
                     </Grid>
                     <Grid item>
                       {question.type === "radio"
-                        ? question.options.map((option, i) => (
-                            // <Typography className={question.answer[0] === String.fromCharCode(97 + i).toUpperCase() ? classes.answerText : classes.optionText}>
-                            <Typography className={classes.optionText}>
-                              {option + " "}
-                              {question.answer[0] ===
-                              String.fromCharCode(97 + i).toUpperCase() ? (
-                                <CheckCircleIcon
-                                  style={{
-                                    fontSize: "1rem",
-                                    verticalAlign: "middle",
-                                  }}
-                                  className={classes.answerText}
-                                />
-                              ) : null}
-                            </Typography>
+                        ? 
+                        
+                          question.options.map((option, i) => (
+                            <Grid container alignItems="center">
+                              <Grid item className={classes.bullets}>
+                                {question.answer[0] ===
+                                  String.fromCharCode(97 + i).toUpperCase() ? (
+                                  <CheckCircleIcon
+                                    className={classes.checkIcon}
+                                  />
+                                ) : (
+                                  <FiberManualRecordIcon
+                                    className={classes.fiberIcon}
+                                  />
+                                )}
+                              </Grid>
+                              <Typography className={classes.optionText}>
+                                {option}
+                              </Typography>
+                            </Grid>
                           ))
+                        
                         : question.type === "checkbox"
                         ? question.options.map((option, i) => (
-                            // <Typography className={question.answer.includes(String.fromCharCode(97 + i).toUpperCase()) ? classes.answerText : classes.optionText}>
-                            <Typography className={classes.optionText}>
-                              {option + " "}
+                          <Grid container alignItems="center">
+                            <Grid item className={classes.bullets}>
                               {question.answer.includes(
                                 String.fromCharCode(97 + i).toUpperCase()
                               ) ? (
                                 <CheckCircleIcon
-                                  style={{
-                                    fontSize: "1rem",
-                                    verticalAlign: "middle",
-                                  }}
-                                  className={classes.answerText}
+                                  className={classes.checkIcon}
                                 />
-                              ) : null}
+                              ) : (
+                                <FiberManualRecordIcon
+                                  className={classes.fiberIcon}
+                                />
+                              )}
+                            </Grid>
+                            <Typography className={classes.optionText}>
+                              {option}
                             </Typography>
+                          </Grid>
                           ))
                         : // question.type === "shorttext" || question.type === "shorttext"
                           null}
