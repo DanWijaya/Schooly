@@ -75,12 +75,12 @@ const styles = (theme) => ({
     }
   },
   settingsButton: {
-    backgroundColor: "white",
-    color: theme.palette.text.secondary,
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.text.secondary,
-      color: "white",
-    },
+    // backgroundColor: "white",
+    // color: theme.palette.text.secondary,
+    // "&:focus, &:hover": {
+    //   backgroundColor: theme.palette.text.secondary,
+    //   color: "white",
+    // },
     [theme.breakpoints.down("xs")]: {
       paddingRight: "0", 
       paddingLeft: "0"
@@ -1627,6 +1627,7 @@ class CreateAssessment extends Component {
                     <Grid item>
                       <LightTooltip title={`Pengaturan`}>
                         <IconButton
+                          disableRipple
                           className={classes.settingsButton}
                           onClick={(event) => this.handleMenuOpen(event)}
                         >
