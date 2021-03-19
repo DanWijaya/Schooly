@@ -12,6 +12,7 @@ import {
   previewLampiran,
 } from "../../../actions/UploadActions";
 import { getOneUser } from "../../../actions/UserActions";
+import { getStudents } from "../../../actions/UserActions";
 import { getAllClass } from "../../../actions/ClassActions";
 import DeleteDialog from "../../misc/dialog/DeleteDialog";
 import LightTooltip from "../../misc/light-tooltip/LightTooltip";
@@ -207,7 +208,7 @@ function LampiranFile(props) {
 function ViewTaskTeacher(props) {
   const classes = useStyles();
 
-  const { user } = props.auth;
+  const { user, all_students } = props.auth;
   const {
     deleteTask,
     tasksCollection,
@@ -216,20 +217,45 @@ function ViewTaskTeacher(props) {
     getOneTask,
     getAllClass,
     getAllSubjects,
+    getStudents
   } = props;
   const { all_classes_map } = props.classesCollection;
   const task_id = props.match.params.id;
   const { all_subjects_map } = props.subjectsCollection;
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
 
+  // untuk men-disable tombol yang mengarahkan pengguna ke SubmittedTaskList ketika belum ada satupun murid yang mengumpulkan tugas
+  const [disableButton, setDisableButton] = React.useState(true); 
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
     getOneTask(task_id);
     getAllClass("map");
     getAllSubjects("map");
+    getStudents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // [tasksCollection._id, all_classes_map.size, all_subjects_map.size]
+
+  React.useEffect(() => {
+    if (tasksCollection && (Object.keys(tasksCollection).length !== 0) && all_students && (all_students.length !== 0)) {
+      // untuk setiap murid yang ada,
+      for (let j = 0; j < all_students.length; j++) {
+        // jika murid ini mendapatkan tugas ini
+        if (tasksCollection.class_assigned && tasksCollection.class_assigned.includes(all_students[j].kelas)) {
+          // untuk setiap file yang pernah dikumpulkan murid ini,
+          for (const studentTask of all_students[j].tugas) {
+            // jika file ditujukan untuk tugas ini,
+            if (studentTask.for_task_object === task_id) {
+              setDisableButton(false);
+              return;
+            }
+          }
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasksCollection, all_students]);
 
   const fileType = (filename) => {
     let ext_file = path.extname(filename);
@@ -261,7 +287,7 @@ function ViewTaskTeacher(props) {
     }
   };
 
-  console.log(all_classes_map);
+  // console.log(all_classes_map);
   const onDownloadFile = (id, fileCategory = "none") => {
     if (fileCategory === "lampiran") downloadLampiran(id);
     else console.log("File Category is not specified");
@@ -404,12 +430,19 @@ function ViewTaskTeacher(props) {
         </Grid>
         <Grid item container justify="flex-end" alignItems="center">
           <Grid item style={{ paddingRight: "10px" }}>
-            <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
-              <Fab variant="extended" className={classes.seeAllTaskButton}>
+            {disableButton ? 
+              <Fab variant="extended" className={classes.seeAllTaskButton} disabled>
                 <AssignmentIcon style={{ marginRight: "10px" }} />
-              Lihat Hasil
-            </Fab>
-            </Link>
+                Lihat Hasil
+              </Fab>
+              :
+              <Link to={`/daftar-tugas-terkumpul/${task_id}`}>
+                <Fab variant="extended" className={classes.seeAllTaskButton}>
+                  <AssignmentIcon style={{ marginRight: "10px" }} />
+                  Lihat Hasil
+                </Fab>
+              </Link>
+            }
           </Grid>
           <Grid item style={{ paddingRight: "10px" }}>
             <Link to={`/sunting-tugas/${task_id}`}>
@@ -450,6 +483,7 @@ ViewTaskTeacher.propTypes = {
   getOneUser: PropTypes.func.isRequired, // For the person in charge task
   getTaskFilesByUser: PropTypes.func.isRequired, // Get the task files.
   getOneTask: PropTypes.func.isRequired,
+  getStudents: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -468,4 +502,5 @@ export default connect(mapStateToProps, {
   getOneUser,
   getAllClass,
   getAllSubjects,
+  getStudents,
 })(ViewTaskTeacher);

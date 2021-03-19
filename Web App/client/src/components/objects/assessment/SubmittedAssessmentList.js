@@ -583,6 +583,7 @@ function SubmittedAssessmentList(props) {
 
       for (var i = 0; i < selectedAssessments.class_assigned.length; i++) {
         let students_in_class = [];
+        let isClassSubmissionEmpty = true;
 
         let all_student_object = {}; // akan menyimpan info semua murid yang mendapatkan assessment ini
         rows.current = []; // akan menyimpan object-object yang berisi id dan nama murid (1 object = 1 murid) untuk semua murid yang mendapatkan assessment ini
@@ -720,7 +721,7 @@ function SubmittedAssessmentList(props) {
           // layar mobile
           let columns2 = [];
 
-          if (scores) {
+          if (scores) { // jika murid mengerjakan assessment ini, scores akan berisi nilai murid
             let c = 0; // digunakan untuk menambahkan divider di antara elemen tipe soal
             for (let typeArray of types.entries()) {
               let type = typeArray[0]; //isi array ini ada 2, dua-duanya nilainya sama, yaitu tipe soal
@@ -822,9 +823,16 @@ function SubmittedAssessmentList(props) {
               }
               c++;
             }
+
+            isClassSubmissionEmpty = false;
           } else {
             columns1.push(
-              <Typography variant="h5" color="textSecondary">
+              <Typography variant="h5" color="textSecondary" align="center">
+                Belum mengerjakan
+              </Typography>
+            );
+            columns2.push(
+              <Typography variant="h5" color="textSecondary" align="center">
                 Belum mengerjakan
               </Typography>
             );
@@ -1042,10 +1050,16 @@ function SubmittedAssessmentList(props) {
             </ExpansionPanel>
           );
         }
-
+        
         TabPanelList.push(
           <TabPanel value={value} index={i}>
-            {students_in_class}
+            {isClassSubmissionEmpty ? 
+              <Grid container alignItems="center" justify="center" style={{ height: "20vh" }}>
+                <Typography variant="h5" color="textSecondary" align="center">
+                  {`Belum ada murid yang mengerjakan ${selectedAssessments.type.toLowerCase()}`}
+                </Typography>
+              </Grid>
+            : students_in_class}
           </TabPanel>
         );
       }

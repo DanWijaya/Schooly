@@ -975,7 +975,7 @@ class Dashboard extends Component {
       }
 
       if (result.length === 0) {
-        return result.push(
+        return (
           <Typography variant="subtitle1" align="center" color="textSecondary">
             Kosong
           </Typography>

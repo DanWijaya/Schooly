@@ -282,7 +282,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     border: `1px solid ${theme.palette.success.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
+      backgroundColor: theme.palette.success.dark,
       color: "white",
       border: `1px solid ${theme.palette.success.dark}`,
     },
@@ -494,11 +494,11 @@ function SubjectList(props) {
           className={classes.dialogBox}
         >
           {action === "Edit" ? (
-            <Typography variant="h5" align="center" gutterBottom>
+            <Typography variant="h6" align="center" gutterBottom>
               Sunting Mata Pelajaran
             </Typography>
           ) : action === "Create" ? (
-            <Typography variant="h5" align="center" gutterBottom>
+            <Typography variant="h6" align="center" gutterBottom>
               Isi Nama Mata Pelajaran
             </Typography>
           ) : null}

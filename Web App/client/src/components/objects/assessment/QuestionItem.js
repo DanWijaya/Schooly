@@ -218,8 +218,8 @@ function QuestionItem(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lampiranToAdd.length]);
 
-  console.log("Current lampiran : ", currentLampiran);
-  console.log("Lampiran to preview: ", lampiranToPreview);
+  // console.log("Current lampiran : ", currentLampiran);
+  // console.log("Lampiran to preview: ", lampiranToPreview);
   return (
     <Grid item>
       <Paper>

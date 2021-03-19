@@ -474,21 +474,36 @@ function ViewAssessmentTeacher(props) {
             ))}
         <Grid item container justify="flex-end" alignItems="center" style={{ paddingTop: "4px" }}>
           <Grid item style={{ paddingRight: "10px" }}>
-            <Link
-              to={
-                selectedAssessments.type === "Kuis"
-                  ? `/daftar-kuis-terkumpul/${assessment_id}`
-                  : `/daftar-ujian-terkumpul/${assessment_id}`
-              }
-            >
-              <Fab
-                variant="extended"
-                className={classes.seeAllAssessmentButton}
-              >
-                <AssignmentIcon style={{ marginRight: "10px" }} />
-                  Lihat Hasil
+            {
+              selectedAssessments && (selectedAssessments.submissions) && (Object.keys(selectedAssessments.submissions).length !== 0) ? (
+                <Link
+                  to={
+                    selectedAssessments.type === "Kuis"
+                      ? `/daftar-kuis-terkumpul/${assessment_id}`
+                      : `/daftar-ujian-terkumpul/${assessment_id}`
+                  }
+                >
+                  <Fab
+                    variant="extended"
+                    className={classes.seeAllAssessmentButton}
+                  >
+                    <AssignmentIcon style={{ marginRight: "10px" }} />
+                      Lihat Hasil
+                    </Fab>
+                </Link>
+              ) : (
+                <>
+                <Fab
+                    variant="extended"
+                    className={classes.seeAllAssessmentButton}
+                    disabled
+                  >
+                    <AssignmentIcon style={{ marginRight: "10px" }} />
+                      Lihat Hasil
                 </Fab>
-            </Link>
+                </>
+              )
+            }
           </Grid>
           <Grid item style={{ paddingRight: "10px" }}>
             <LightTooltip title="Salin Tautan">

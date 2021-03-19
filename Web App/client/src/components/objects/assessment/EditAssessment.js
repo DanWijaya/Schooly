@@ -333,7 +333,7 @@ class EditAssessment extends Component {
 
         let longtextWeight = [];
         for (let i = 0; i <= selectedAssessments.questions.length - 1; i++) {
-          longtextWeight.push(null);
+          longtextWeight.push(-1);
         }
 
         if (selectedAssessments.question_weight.longtext) {
@@ -468,7 +468,7 @@ class EditAssessment extends Component {
             // menghapus elemen bobot soal non uraian pada array bobot soal uraian
             let longtextCount = this.state.longtextWeight.filter((value) => (value !== -1));
 
-            for (let i = 0; i <= longtextCount.length; i++) {
+            for (let i = 0; i <= longtextCount.length - 1; i++) {
               let weight = longtextCount[i];
 
               // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment
@@ -493,6 +493,7 @@ class EditAssessment extends Component {
               Number(this.state.weights[type]) <= 0
             ) {
               completeWeight = false;
+              console.log("2")
             }
           }
         }
@@ -950,7 +951,7 @@ class EditAssessment extends Component {
         let lampiranToAdd = question.lampiran.filter(
           (l) => typeof l !== "string"
         );
-        console.log(lampiranToAdd);
+        // console.log(lampiranToAdd);
         let currentLampiran = question.lampiran.filter(
           (l) => typeof l === "string"
         );
@@ -1388,7 +1389,7 @@ class EditAssessment extends Component {
     //   checked: {},
     // }))(Switch);
 
-    console.log("QUESTIONS : ", this.state.questions);
+    // console.log("QUESTIONS : ", this.state.questions);
     document.title = "Schooly | Sunting Kuis/Ujian";
 
     return (

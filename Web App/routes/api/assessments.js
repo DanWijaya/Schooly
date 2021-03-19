@@ -315,7 +315,7 @@ router.post("/submit/:id", (req, res) => {
           grades = new Map(assessmentData.grades);
         }
 
-        if (!grades.has(userId)) {
+        // if (!grades.has(userId)) {
           let studentId = userId; //agar sebagian kode bisa direuse di updateGrade
 
           let weights = assessmentData.question_weight;
@@ -368,7 +368,7 @@ router.post("/submit/:id", (req, res) => {
             total_grade: parseFloat(score.toFixed(1)),
             longtext_grades: null,
           });
-        }
+        // }
 
         assessmentData.grades = grades;
       } // jika ada soal uraian, penghitungan nilai akan ditunda hingga semua jawaban uraian untuk suatu murid sudah dinilai

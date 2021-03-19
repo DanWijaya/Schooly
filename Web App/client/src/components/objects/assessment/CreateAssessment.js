@@ -366,7 +366,7 @@ class CreateAssessment extends Component {
             // menghapus elemen bobot soal non uraian pada array bobot soal uraian
             let longtextCount = this.state.longtextWeight.filter((value) => (value !== -1));
 
-            for (let i = 0; i <= longtextCount.length; i++) {
+            for (let i = 0; i <= longtextCount.length - 1; i++) {
               let weight = longtextCount[i];
 
               // agar error di textfield bobot muncul ketika textfield masih kosong saat create assessment

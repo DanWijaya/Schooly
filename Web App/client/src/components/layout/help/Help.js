@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    maxWidth: "80%",
+    // maxWidth: "80%",
     [theme.breakpoints.down("md")]: {
         maxWidth: "100%",
     },
