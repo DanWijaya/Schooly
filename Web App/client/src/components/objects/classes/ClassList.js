@@ -490,9 +490,9 @@ function ClassListToolbar(props) {
         >
           {headCells.map((headCell, i) => (
             <MenuItem
-              onClick={createSortHandler(headCell.id)}
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
+              onClick={createSortHandler(headCell.id)}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}

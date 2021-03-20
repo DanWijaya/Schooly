@@ -91,8 +91,12 @@ export const updateClass = (classData, classId, history) => (dispatch) => {
     .post("/api/classes/update/" + classId, classData)
     .then((res) => {
       console.log("Class updated to be : ", res.data);
-      alert("Kelas telah berhasil disunting");
-      history.push("/daftar-kelas");
+      // alert("Kelas telah berhasil disunting");
+      // history.push("/daftar-kelas");
+      dispatch({
+        type: GET_SUCCESS_RESPONSE,
+        payload: classId,
+      });
     })
     .catch((err) => {
       dispatch({

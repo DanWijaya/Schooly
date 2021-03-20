@@ -4,11 +4,13 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { getTeachers, getStudentsByClass } from "../../../actions/UserActions";
 import { clearErrors } from "../../../actions/ErrorActions";
+import { clearSuccess } from "../../../actions/SuccessActions";
 import {
   getAllClass,
   setCurrentClass,
   updateClass,
 } from "../../../actions/ClassActions";
+import UploadDialog from "../../misc/dialog/UploadDialog";
 import {
   Button,
   Divider,
@@ -67,10 +69,11 @@ class EditClass extends Component {
       sekretaris: null,
       bendahara: null,
       teacher_options: [],
+      openUploadDialog: null,
     };
     const { id } = this.props.match.params;
-    console.log(id);
-    console.log("Aduh");
+    // console.log(id);
+    // console.log("Aduh");
     this.props.setCurrentClass(id);
   }
 
@@ -81,6 +84,16 @@ class EditClass extends Component {
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.success && !prevProps.success) {
+      this.handleOpenUploadDialog();
+    }
+  };
+
+  handleOpenUploadDialog = () => {
+    this.setState({ openUploadDialog: true });
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -140,11 +153,11 @@ class EditClass extends Component {
   componentWillUnmount() {
     const { clearErrors } = this.props;
     clearErrors();
+    clearSuccess();
   }
 
   render() {
-    const { classes } = this.props;
-    const { errors } = this.props;
+    const { classes, errors, success } = this.props;
     const { user } = this.props.auth;
     // const { all_teachers} = this.props.auth;
     const { students_by_class } = this.props.auth;
@@ -195,6 +208,13 @@ class EditClass extends Component {
     if (user.role === "Teacher" || user.role === "Admin") {
       return (
         <div className={classes.root}>
+          <UploadDialog
+            openUploadDialog={this.state.openUploadDialog}
+            success={success}
+            messageUploading="Kelas sedang disunting"
+            messageSuccess="Kelas telah disunting"
+            redirectLink={`/kelas/${success}`}
+          />
           <Paper>
             <div className={classes.content}>
               <Typography variant="h5" gutterBottom>
@@ -383,12 +403,14 @@ EditClass.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   getAllClass: PropTypes.func.isRequired,
+  success: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   errors: state.errors,
   auth: state.auth,
   classesCollection: state.classesCollection,
+  success: state.success,
 });
 
 export default connect(mapStateToProps, {
@@ -398,4 +420,5 @@ export default connect(mapStateToProps, {
   getTeachers,
   clearErrors,
   getAllClass,
+  clearSuccess,
 })(withStyles(styles)(EditClass));

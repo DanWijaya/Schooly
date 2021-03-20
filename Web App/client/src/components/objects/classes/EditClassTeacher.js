@@ -111,7 +111,7 @@ function EditClassTeacher(props) {
     <id kelas>: [<id guru wali 1>, <id guru wali 2>, ...], -> array kosong jika kelas ini tidak memiliki wali kelas
     ...
   } key -> id semua kelas yang ada di db
-  teacherId akan berisi id semua guru yang di-assign ke kelas tersebut. akan digunakan untuk memberi tanda pada Select-Select yang memiliki value sama.   
+  <id guru wali> akan berisi id semua guru yang di-assign ke kelas tersebut. akan digunakan untuk memberi tanda pada Select-Select yang memiliki value sama.   
   */
   const [statusKelas, setStatusKelas] = React.useState(null);
 
@@ -213,11 +213,11 @@ function EditClassTeacher(props) {
         return;
       } else {
         let waliSebelum = all_classes_wali.current[classId];
-        let waliSesudah = teacherIdArray[0];
+        let waliSesudah = (teacherIdArray.length === 0) ? null : teacherIdArray[0];
         if (waliSebelum !== waliSesudah) {
           classToUpdate[classId] = waliSesudah;
-          // value bisa undefined
-          // jika undefined, field walikelas kelas ini akan dihapus
+          // value bisa null
+          // jika null, field walikelas kelas ini akan dihapus
         }
       }
     }

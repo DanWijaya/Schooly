@@ -250,12 +250,11 @@ const ManageUsersToolbar = (props) => {
                     <MenuItem
                       key={headCell.id}
                       sortDirection={orderBy === headCell.id ? order : false}
-                      onClick={props.handleClosePanel}
+                      onClick={createSortHandler(headCell.id)}
                     >
                       <TableSortLabel
                         active={orderBy === headCell.id}
                         direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={createSortHandler(headCell.id)}
                       >
                         {headCell.label}
                         {orderBy === headCell.id ? (
@@ -345,12 +344,11 @@ const ManageUsersToolbar = (props) => {
                     <MenuItem
                       key={headCell.id}
                       sortDirection={orderBy === headCell.id ? order : false}
-                      onClick={props.handleClosePanel}
+                      onClick={createSortHandler(headCell.id)}
                     >
                       <TableSortLabel
                         active={orderBy === headCell.id}
                         direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={createSortHandler(headCell.id)}
                       >
                         {headCell.label}
                         {orderBy === headCell.id ? (
@@ -442,16 +440,23 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogBox: {
-    maxWidth: "350px",
+    width: "300px",
+    maxWidth: "100%",
+    minHeight: "175px",
     padding: "15px",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   dialogApproveButton: {
     width: "125px",
     backgroundColor: theme.palette.success.main,
     color: "white",
+    border: `1px solid ${theme.palette.success.main}`,
     "&:focus, &:hover": {
       backgroundColor: theme.palette.success.dark,
       color: "white",
+      border: `1px solid ${theme.palette.success.dark}`,
     },
   },
   dialogDeleteButton: {
@@ -903,30 +908,13 @@ function ManageUsers(props) {
       <Dialog open={openApproveDialog} onClose={handleCloseApproveDialog}>
         <Grid
           container
-          direction="column"
-          justify="space-between"
-          alignItems="center"
           className={classes.dialogBox}
         >
-          {/* <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton size="small" onClick={handleCloseApproveDialog}>
-              <CloseIcon />
-            </IconButton>
-          </Grid> */}
+          <Typography variant="h6" gutterBottom>
+            Aktifkan pengguna berikut?
+          </Typography>
           <Grid
             item
-            container
-            justify="center"
-            style={{ marginBottom: "20px" }}
-          >
-            <Typography variant="h6" gutterBottom>
-              Aktifkan pengguna berikut?
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            container
-            justify="center"
             xs={10}
           >
             <Typography 
@@ -939,11 +927,9 @@ function ManageUsers(props) {
           </Grid>
           <Grid
             container
-            direction="row"
+            spacing={2}
             justify="center"
             alignItems="center"
-            spacing={2}
-            style={{ marginTop: "10px" }}
           >
             <Grid item>
               <Button
@@ -982,20 +968,11 @@ function ManageUsers(props) {
             >
               <Grid
                 container
-                direction="column"
-                alignItems="center"
                 className={classes.dialogBox}
               >
-                <Grid
-                  item
-                  container
-                  justify="center"
-                  style={{ marginBottom: "20px" }}
-                >
-                  <Typography variant="h6" gutterBottom align="center">
-                    Aktifkan semua pengguna berikut?
-                  </Typography>
-                </Grid>
+                <Typography variant="h6" gutterBottom align="center">
+                  Aktifkan semua pengguna Berikut?
+                </Typography>
                 {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
                   <Typography variant="h6" align="center" gutterBottom>
                     <b>{selectedUserName}</b>
@@ -1003,10 +980,9 @@ function ManageUsers(props) {
                 </Grid> */}
                 <Grid
                   container
-                  direction="row"
+                  spacing={2}
                   justify="center"
                   alignItems="center"
-                  spacing={2}
                 >
                   <Grid item>
                     <Button
@@ -1040,31 +1016,16 @@ function ManageUsers(props) {
             >
               <Grid
                 container
-                direction="column"
-                alignItems="center"
                 className={classes.dialogBox}
               >
-                <Grid
-                  item
-                  container
-                  justify="center"
-                  style={{ marginBottom: "20px" }}
-                >
-                  <Typography variant="h6" gutterBottom align="center">
-                    Aktifkan semua pengguna berikut?
-                  </Typography>
-                </Grid>
-                {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
+                <Typography variant="h6" gutterBottom align="center">
+                  Aktifkan semua pengguna Berikut?
+                </Typography>
                 <Grid
                   container
-                  direction="row"
+                  spacing={2}
                   justify="center"
                   alignItems="center"
-                  spacing={2}
                 >
                   <Grid item>
                     <Button
@@ -1099,31 +1060,16 @@ function ManageUsers(props) {
           >
             <Grid
               container
-              direction="column"
-              alignItems="center"
               className={classes.dialogBox}
             >
-              <Grid
-                item
-                container
-                justify="center"
-                style={{ marginBottom: "20px" }}
-              >
-                <Typography variant="h6" gutterBottom align="center">
-                  Hapus semua pengguna berikut?
-                </Typography>
-              </Grid>
-              {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
+              <Typography variant="h6" gutterBottom align="center">
+                Hapus semua pengguna Berikut?
+              </Typography>
               <Grid
                 container
-                direction="row"
+                spacing={2}
                 justify="center"
                 alignItems="center"
-                spacing={2}
               >
                 <Grid item>
                   <Button
@@ -1155,31 +1101,16 @@ function ManageUsers(props) {
           >
             <Grid
               container
-              direction="column"
-              alignItems="center"
               className={classes.dialogBox}
             >
-              <Grid
-                item
-                container
-                justify="center"
-                style={{ marginBottom: "20px" }}
-              >
-                <Typography variant="h6" gutterBottom align="center">
-                  Hapus semua pengguna berikut?
-                </Typography>
-              </Grid>
-              {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
-                  <Typography variant="h6" align="center" gutterBottom>
-                    <b>{selectedUserName}</b>
-                  </Typography>
-                </Grid> */}
+              <Typography variant="h6" gutterBottom align="center">
+                Hapus semua pengguna Berikut?
+              </Typography>
               <Grid
                 container
-                direction="row"
+                spacing={2}
                 justify="center"
                 alignItems="center"
-                spacing={2}
               >
                 <Grid item>
                   <Button

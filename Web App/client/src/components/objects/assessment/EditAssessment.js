@@ -493,7 +493,6 @@ class EditAssessment extends Component {
               Number(this.state.weights[type]) <= 0
             ) {
               completeWeight = false;
-              console.log("2")
             }
           }
         }

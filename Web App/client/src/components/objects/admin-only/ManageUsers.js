@@ -231,12 +231,11 @@ function ManageUsersToolbar(props) {
                     <MenuItem
                       key={headCell.id}
                       sortDirection={orderBy === headCell.id ? order : false}
-                      onClick={props.handleClosePanel}
-                    >
+                      onClick={createSortHandler(headCell.id)}
+                      >
                       <TableSortLabel
                         active={orderBy === headCell.id}
                         direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={createSortHandler(headCell.id)}
                       >
                         {headCell.label}
                         {orderBy === headCell.id ? (
@@ -316,12 +315,11 @@ function ManageUsersToolbar(props) {
                     <MenuItem
                       key={headCell.id}
                       sortDirection={orderBy === headCell.id ? order : false}
-                      onClick={props.handleClosePanel}
-                    >
+                      onClick={createSortHandler(headCell.id)}
+                      >
                       <TableSortLabel
                         active={orderBy === headCell.id}
                         direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={createSortHandler(headCell.id)}
                       >
                         {headCell.label}
                         {orderBy === headCell.id ? (
@@ -1479,38 +1477,7 @@ function ManageUsers(props) {
 
             return (
               <Grid item>
-                {!checkboxModeTeacher ? (
-                  <Link
-                    to={{
-                      pathname: "/lihat-profil",
-                      state: {
-                        avatar: row.avatar,
-                        nama: row.name,
-                        subject_teached: all_teachers[index].subject_teached,
-                        viewable_section: "with_karir",
-                        tanggal_lahir: moment(row.tanggal_lahir)
-                          .locale("id")
-                          .format("DD MMMM YYYY"),
-                        jenis_kelamin: all_teachers[index].jenis_kelamin,
-                        role: "Teacher",
-                        sekolah: row.sekolah,
-                        email: row.email,
-                        phone: row.phone,
-                        emergency_phone: row.emergency_phone,
-                        alamat: row.address,
-                        hobi: all_teachers[index].hobi_minat,
-                        ket: all_teachers[index].ket_non_teknis,
-                        cita: all_teachers[index].cita_cita,
-                        uni: all_teachers[index].uni_impian,
-                        admin: true,
-                      },
-                    }}
-                  >
-                    {content}
-                  </Link>
-                ) : (
-                  content
-                )}
+                {content}
               </Grid>
             );
           })

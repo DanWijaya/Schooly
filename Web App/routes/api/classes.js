@@ -218,6 +218,7 @@ router.post("/bulkupdatewali", (req, res) => {
     if (teacherId) {
       updateArgument = { walikelas: teacherId };
     } else {
+      // jika teacherId null, atribut walikelas kelas ini akan dihapus
       updateArgument = { $unset: { walikelas: "" } };
     }
 

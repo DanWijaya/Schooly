@@ -136,7 +136,7 @@ function DeleteDialog(props) {
             </Button>
           : 
           <Link to={redirectLink}>
-              <Button
+            <Button
               onClick={deleteItem}
               startIcon={<DeleteOutlineIcon />}
               className={classes.dialogDeleteButton}

@@ -62,7 +62,7 @@ class CreateClass extends Component {
     if (this.props.success && !prevProps.success) {
       this.handleOpenUploadDialog();
     }
-  }
+  };
 
   handleOpenUploadDialog = () => {
     this.setState({ openUploadDialog: true });
@@ -117,12 +117,11 @@ class CreateClass extends Component {
   }
 
   render() {
-    const { classes, success } = this.props;
+    const { classes, success, errors } = this.props;
 
     const { all_teachers, user } = this.props.auth;
-    const { errors } = this.props;
-    console.log(errors);
-    console.log(all_teachers);
+    // console.log(errors);
+    // console.log(all_teachers);
     document.title = "Schooly | Buat Kelas";
 
     if (user.role === "Teacher" || user.role === "Admin") {
