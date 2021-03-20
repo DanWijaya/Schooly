@@ -3,7 +3,7 @@ import whatIsSchooly from "./WhatIsSchooly.png";
 import schoolyFeature1 from "./SchoolyFeature1.png";
 import schoolyFeature2 from "./SchoolyFeature2.png";
 import schoolyFeature3 from "./SchoolyFeature3.png";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography, Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import EmailIcon from "@material-ui/icons/Email";
 
@@ -61,6 +61,20 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  centerImage: {
+    display: "flex", 
+    justifyContent: "center"
+  },
+  imageSize: {
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: "60%", 
+      maxHeight: "60%"
+    },
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: "100%", 
+      maxHeight: "100%"
+    },
+  }
 }));
 
 function About(props) {
@@ -109,14 +123,14 @@ function About(props) {
       <div className={classes.schoolyFeatures}>
         <Grid container spacing={5} direction="column">
           <Grid item container spacing={5} justify="center" alignItems="center">
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6} className={classes.centerImage}>
               <img
                 alt="Schooly Feature 1"
                 src={schoolyFeature1}
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
+                className={classes.imageSize}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Typography variant="h4" color="primary" gutterBottom>
                 Semua kegiatan persekolahanmu ada di tanganmu
               </Typography>
@@ -128,34 +142,57 @@ function About(props) {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item container spacing={5} justify="center" alignItems="center">
-            <Grid item xs={6}>
-              <Typography variant="h4" color="primary" gutterBottom>
-                Akses dengan mudah
-              </Typography>
-              <Typography variant="h6">
-                Akses merupakan salah satu hal yang paling penting dalam sebuah
-                aplikasi. Schooly dibuat sebagai aplikasi web sehingga bisa
-                diakses perangkat apa saja dengan mudah.
-              </Typography>
+          <Hidden xsDown>
+            <Grid item container spacing={5} justify="center" alignItems="center">
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h4" color="primary" gutterBottom>
+                  Akses dengan mudah
+                </Typography>
+                <Typography variant="h6">
+                  Akses merupakan salah satu hal yang paling penting dalam sebuah
+                  aplikasi. Schooly dibuat sebagai aplikasi web sehingga bisa
+                  diakses perangkat apa saja dengan mudah.
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6} className={classes.centerImage}>
+                <img
+                  alt="Schooly Feature 2"
+                  src={schoolyFeature2}
+                  className={classes.imageSize}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <img
-                alt="Schooly Feature 2"
-                src={schoolyFeature2}
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
-              />
+          </Hidden>
+          <Hidden smUp>
+            <Grid item container spacing={5} justify="center" alignItems="center">
+              <Grid item xs={12} sm={6} className={classes.centerImage}>
+                <img
+                  alt="Schooly Feature 2"
+                  src={schoolyFeature2}
+                  className={classes.imageSize}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h4" color="primary" gutterBottom>
+                  Akses dengan mudah
+                </Typography>
+                <Typography variant="h6">
+                  Akses merupakan salah satu hal yang paling penting dalam sebuah
+                  aplikasi. Schooly dibuat sebagai aplikasi web sehingga bisa
+                  diakses perangkat apa saja dengan mudah.
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
+          </Hidden>
           <Grid item container spacing={5} justify="center" alignItems="center">
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6} className={classes.centerImage}>
               <img
                 alt="Schooly Feature 3"
-                src={schoolyFeature3}
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
+                src={schoolyFeature3} 
+                className={classes.imageSize}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Typography variant="h4" color="primary" gutterBottom>
                 Media sosial persekolahan
               </Typography>

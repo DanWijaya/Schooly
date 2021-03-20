@@ -679,11 +679,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     maxWidth: "150px",
-    padding: "5px",
-    paddingLeft: "10px",
-    paddingRight: "10px",
+    padding: "2px",
+    paddingLeft: "6px",
+    paddingRight: "6px",
     backgroundColor: theme.palette.error.main,
     color: "white",
+    marginLeft: "5px"
   },
   dialogPaper: {
     maxHeight: '70vh',
@@ -894,13 +895,28 @@ function ClassList(props) {
                           <Typography id={labelId} variant="h5" align="center">
                             {row.name}
                           </Typography>
-                          <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            align="center"
-                          >
-                            Wali Kelas: {row.homeroomTeacher}
-                          </Typography>
+                          {(row.homeroomTeacher && row.homeroomTeacher !== "") ?
+                            <Typography
+                              variant="body1"
+                              color="textSecondary"
+                              align="center"
+                            >
+                              Wali Kelas: {row.homeroomTeacher}
+                            </Typography>
+                          :
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                              <Typography
+                                variant="body1"
+                                color="textSecondary"
+                                align="center"
+                              >
+                                Wali Kelas:
+                              </Typography>
+                              <Paper className={classes.emptyClass}>
+                                  <Typography variant="body2">KOSONG</Typography>
+                              </Paper>
+                            </div>
+                          }
                         </div>
                         <Divider />
                         <Grid
@@ -920,29 +936,23 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                {(row.size === 0) ? (
-                                  <Paper className={classes.emptyClass}>
-                                    <Typography variant="button">Kosong</Typography>
-                                  </Paper>
-                                ) : (
-                                  <LightTooltip title="Jumlah Murid">
-                                    <Badge
-                                      badgeContent={row.size}
-                                      color="secondary"
-                                      anchorOrigin={{
-                                        vertical: "bottom",
-                                        horizontal: "left",
-                                      }}
-                                      showZero
-                                    >
-                                      <IconButton size="small" disabled>
-                                        <SupervisorAccountIcon
-                                          className={classes.classPersonIcon}
-                                        />
-                                      </IconButton>
-                                    </Badge>
-                                  </LightTooltip>
-                                )}
+                                <LightTooltip title="Jumlah Murid">
+                                  <Badge
+                                    badgeContent={row.size}
+                                    color="secondary"
+                                    anchorOrigin={{
+                                      vertical: "bottom",
+                                      horizontal: "left",
+                                    }}
+                                    showZero
+                                  >
+                                    <IconButton size="small" disabled>
+                                      <SupervisorAccountIcon
+                                        className={classes.classPersonIcon}
+                                      />
+                                    </IconButton>
+                                  </Badge>
+                                </LightTooltip>
                                 {/* <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}
@@ -1002,29 +1012,23 @@ function ClassList(props) {
                               alignItems="center"
                             >
                               <Grid item>
-                                {(row.size === 0) ? (
-                                  <Paper className={classes.emptyClass}>
-                                    <Typography variant="button">Kosong</Typography>
-                                  </Paper>
-                                ) : (
-                                  <LightTooltip title="Jumlah Murid">
-                                    <Badge
-                                      badgeContent={row.size}
-                                      color="secondary"
-                                      anchorOrigin={{
-                                        vertical: "bottom",
-                                        horizontal: "left",
-                                      }}
-                                      showZero
-                                    >
-                                      <IconButton size="small" disabled>
-                                        <SupervisorAccountIcon
-                                          className={classes.classPersonIcon}
-                                        />
-                                      </IconButton>
-                                    </Badge>
-                                  </LightTooltip>
-                                )}
+                                <LightTooltip title="Jumlah Murid">
+                                  <Badge
+                                    badgeContent={row.size}
+                                    color="secondary"
+                                    anchorOrigin={{
+                                      vertical: "bottom",
+                                      horizontal: "left",
+                                    }}
+                                    showZero
+                                  >
+                                    <IconButton size="small" disabled>
+                                      <SupervisorAccountIcon
+                                        className={classes.classPersonIcon}
+                                      />
+                                    </IconButton>
+                                  </Badge>
+                                </LightTooltip>
                                 {/* <LightTooltip title="Jumlah Murid">
                                   <Badge
                                     badgeContent={row.size}

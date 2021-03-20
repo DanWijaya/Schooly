@@ -175,15 +175,17 @@ function LampiranFile(props) {
             }
             secondary={filetype}
           />
-          <IconButton
-            size="small"
-            className={classes.deleteIconButton}
-            onClick={(e) => {
-              handleLampiranDelete(e, i);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <LightTooltip title="Hapus Lampiran">
+            <IconButton
+              size="small"
+              className={classes.deleteIconButton}
+              onClick={(e) => {
+                handleLampiranDelete(e, i);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </LightTooltip>
         </ListItem>
       </Paper>
     </Grid>

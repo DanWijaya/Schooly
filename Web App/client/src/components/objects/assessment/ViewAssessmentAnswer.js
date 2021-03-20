@@ -1230,48 +1230,6 @@ function ViewAssessmentTeacher(props) {
                   </ToggleButtonGroup>
                 </Grid>
               </Hidden>
-              <Hidden smUp>
-                <Grid
-                  item
-                  xs={12}
-                  md={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginTop: "10px",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      handleChangeQuestion(qnsIndex - 1);
-                    }}
-                  >
-                    <div className={classes.mobileNav}>
-                      <NavigateBeforeIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">Sebelum</Typography>
-                    </div>
-                  </Button>
-                  <Button onClick={handleOpenNavDialog}>
-                    <div className={classes.mobileNav}>
-                      <ExploreIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">
-                        Navigasi Soal
-                      </Typography>
-                    </div>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleChangeQuestion(qnsIndex + 1);
-                    }}
-                  >
-                    <div className={classes.mobileNav}>
-                      <NavigateNextIcon className={classes.mobileNavButton} />
-                      <Typography variant="subtitle-2">Sesudah</Typography>
-                    </div>
-                  </Button>
-                </Grid>
-              </Hidden>
             </Grid>
 
             <Grid container spacing={2}>
@@ -1367,6 +1325,50 @@ function ViewAssessmentTeacher(props) {
 
           {/* Tab Panel Per Soal */}
           <div hidden={value === 1} style={{ padding: "24px" }}>
+            <Hidden smUp>
+              <Paper>
+                <Grid
+                  item
+                  xs={12}
+                  md={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginBottom: "20px",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      handleChangeQuestion(qnsIndex - 1);
+                    }}
+                  >
+                    <div className={classes.mobileNav}>
+                      <NavigateBeforeIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">Sebelum</Typography>
+                    </div>
+                  </Button>
+                  <Button onClick={handleOpenNavDialog}>
+                    <div className={classes.mobileNav}>
+                      <ExploreIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">
+                        Navigasi Soal
+                      </Typography>
+                    </div>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleChangeQuestion(qnsIndex + 1);
+                    }}
+                  >
+                    <div className={classes.mobileNav}>
+                      <NavigateNextIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">Sesudah</Typography>
+                    </div>
+                  </Button>
+                </Grid>
+              </Paper>
+            </Hidden>
             {isAssessmentLoaded()
               ? selectedAssessments.questions[qnsIndex].type === "longtext"
                 ? generateQuestion(
@@ -1401,6 +1403,50 @@ function ViewAssessmentTeacher(props) {
 
           {/* Tab Panel Per Murid */}
           <div hidden={value === 0} style={{ padding: "24px" }}>
+            <Hidden smUp>
+              <Paper>
+                <Grid
+                  item
+                  xs={12}
+                  md={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginBottom: "20px",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      handleChangeQuestion(qnsIndex - 1);
+                    }}
+                  >
+                    <div className={classes.mobileNav}>
+                      <NavigateBeforeIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">Sebelum</Typography>
+                    </div>
+                  </Button>
+                  <Button onClick={handleOpenNavDialog}>
+                    <div className={classes.mobileNav}>
+                      <ExploreIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">
+                        Navigasi Soal
+                      </Typography>
+                    </div>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleChangeQuestion(qnsIndex + 1);
+                    }}
+                  >
+                    <div className={classes.mobileNav}>
+                      <NavigateNextIcon className={classes.mobileNavButton} />
+                      <Typography variant="subtitle-2">Sesudah</Typography>
+                    </div>
+                  </Button>
+                </Grid>
+              </Paper>
+            </Hidden>
             <Paper className={classes.perStudentSelect}>
               <div className={classes.selectDiv}>
                 <Grid container>

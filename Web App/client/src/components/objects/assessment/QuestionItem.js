@@ -17,6 +17,7 @@ import {
   Typography,
   Checkbox,
   FormGroup,
+  Hidden,
   InputAdornment,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -238,53 +239,153 @@ function QuestionItem(props) {
               <Typography variant="h6" style={{ marginLeft: "5px" }}>
                 Soal {index + 1}
               </Typography>
-              <GridList
-                cols={3}
-                cellHeight={300}
-                style={{ margin: "10px 0px 10px 0px" }}
-              >
-                {isEdit
-                  ? currentLampiran.map((image, i) => (
-                      <GridListTile key={image} cols={1}>
-                        <img
-                          alt="current img"
-                          src={`/api/upload/att_assessment/${image}`}
-                        />
-                        <GridListTileBar
-                          titlePosition="top"
-                          actionIcon={
-                            <IconButton
-                              style={{ color: "white" }}
-                              onClick={(e) => handleQuestionImage(e, index, i)}
-                            >
-                              <CloseIcon />
-                            </IconButton>
-                          }
-                          title={`Gambar ${i + 1}`}
-                          actionPosition="right"
-                        />
-                      </GridListTile>
-                    ))
-                  : null}
-                {lampiranToPreview.map((image, i) => (
-                  <GridListTile key={image} cols={1}>
-                    <img alt="current img" src={image} />
-                    <GridListTileBar
-                      titlePosition="top"
-                      actionIcon={
-                        <IconButton
-                          style={{ color: "white" }}
-                          onClick={(e) => handleQuestionImage(e, index, i)}
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                      }
-                      title={`Gambar ${i + 1 + currentLampiran.length}`}
-                      actionPosition="right"
-                    />
-                  </GridListTile>
-                ))}
-              </GridList>
+              <Hidden smDown>
+                <GridList
+                  cols={3}
+                  cellHeight={300}
+                  style={{ margin: "10px 0px 10px 0px" }}
+                >
+                  {isEdit
+                    ? currentLampiran.map((image, i) => (
+                        <GridListTile key={image} cols={1}>
+                          <img
+                            alt="current img"
+                            src={`/api/upload/att_assessment/${image}`}
+                          />
+                          <GridListTileBar
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton
+                                style={{ color: "white" }}
+                                onClick={(e) => handleQuestionImage(e, index, i)}
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            title={`Gambar ${i + 1}`}
+                            actionPosition="right"
+                          />
+                        </GridListTile>
+                      ))
+                    : null}
+                  {lampiranToPreview.map((image, i) => (
+                    <GridListTile key={image} cols={1}>
+                      <img alt="current img" src={image} />
+                      <GridListTileBar
+                        titlePosition="top"
+                        actionIcon={
+                          <IconButton
+                            style={{ color: "white" }}
+                            onClick={(e) => handleQuestionImage(e, index, i)}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={`Gambar ${i + 1 + currentLampiran.length}`}
+                        actionPosition="right"
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </Hidden>
+              <Hidden mdUp xsDown>
+                <GridList
+                  cols={2}
+                  cellHeight={300}
+                  style={{ margin: "10px 0px 10px 0px" }}
+                >
+                  {isEdit
+                    ? currentLampiran.map((image, i) => (
+                        <GridListTile key={image} cols={1}>
+                          <img
+                            alt="current img"
+                            src={`/api/upload/att_assessment/${image}`}
+                          />
+                          <GridListTileBar
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton
+                                style={{ color: "white" }}
+                                onClick={(e) => handleQuestionImage(e, index, i)}
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            title={`Gambar ${i + 1}`}
+                            actionPosition="right"
+                          />
+                        </GridListTile>
+                      ))
+                    : null}
+                  {lampiranToPreview.map((image, i) => (
+                    <GridListTile key={image} cols={1}>
+                      <img alt="current img" src={image} />
+                      <GridListTileBar
+                        titlePosition="top"
+                        actionIcon={
+                          <IconButton
+                            style={{ color: "white" }}
+                            onClick={(e) => handleQuestionImage(e, index, i)}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={`Gambar ${i + 1 + currentLampiran.length}`}
+                        actionPosition="right"
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </Hidden>
+              <Hidden smUp>
+                <GridList
+                  cols={1}
+                  cellHeight={300}
+                  style={{ margin: "10px 0px 10px 0px" }}
+                >
+                  {isEdit
+                    ? currentLampiran.map((image, i) => (
+                        <GridListTile key={image} cols={1}>
+                          <img
+                            alt="current img"
+                            src={`/api/upload/att_assessment/${image}`}
+                          />
+                          <GridListTileBar
+                            titlePosition="top"
+                            actionIcon={
+                              <IconButton
+                                style={{ color: "white" }}
+                                onClick={(e) => handleQuestionImage(e, index, i)}
+                              >
+                                <CloseIcon />
+                              </IconButton>
+                            }
+                            title={`Gambar ${i + 1}`}
+                            actionPosition="right"
+                          />
+                        </GridListTile>
+                      ))
+                    : null}
+                  {lampiranToPreview.map((image, i) => (
+                    <GridListTile key={image} cols={1}>
+                      <img alt="current img" src={image} />
+                      <GridListTileBar
+                        titlePosition="top"
+                        actionIcon={
+                          <IconButton
+                            style={{ color: "white" }}
+                            onClick={(e) => handleQuestionImage(e, index, i)}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        }
+                        title={`Gambar ${i + 1 + currentLampiran.length}`}
+                        actionPosition="right"
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </Hidden>
               {type === "shorttext" ? (
                 <TextField
                   FormHelperTextProps={{

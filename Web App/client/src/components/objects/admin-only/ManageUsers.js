@@ -199,7 +199,10 @@ function ManageUsersToolbar(props) {
                         : () => deactivateCheckboxMode("Student")
                     }
                   >
-                    <RecentActorsIcon />
+                    {!currentCheckboxMode 
+                      ? <CheckBoxIcon />
+                      : <RecentActorsIcon />
+                    }
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -281,7 +284,10 @@ function ManageUsersToolbar(props) {
                         : () => deactivateCheckboxMode("Teacher")
                     }
                   >
-                    <RecentActorsIcon />
+                    {!currentCheckboxMode 
+                      ? <CheckBoxIcon />
+                      : <RecentActorsIcon />
+                    }
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -891,7 +897,7 @@ function ManageUsers(props) {
             justify="center"
             style={{ marginBottom: "20px" }}
           >
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h6" gutterBottom>
               Nonaktifkan pengguna berikut?
             </Typography>
           </Grid>
@@ -967,8 +973,8 @@ function ManageUsers(props) {
                 justify="center"
                 style={{ marginBottom: "20px" }}
               >
-                <Typography variant="h5" gutterBottom align="center">
-                  Hapus semua pengguna Berikut?
+                <Typography variant="h6" gutterBottom align="center">
+                  Hapus semua pengguna berikut?
                 </Typography>
               </Grid>
               {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -1032,8 +1038,8 @@ function ManageUsers(props) {
                 justify="center"
                 style={{ marginBottom: "20px" }}
               >
-                <Typography variant="h5" gutterBottom align="center">
-                  Hapus semua pengguna Berikut?
+                <Typography variant="h6" gutterBottom align="center">
+                  Hapus semua pengguna berikut?
                 </Typography>
               </Grid>
               {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>

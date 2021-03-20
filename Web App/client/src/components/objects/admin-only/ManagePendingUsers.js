@@ -218,7 +218,10 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Student")
                     }
                   >
-                    <RecentActorsIcon />
+                    {!currentCheckboxMode 
+                      ? <CheckBoxIcon />
+                      : <RecentActorsIcon />
+                    }
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -310,7 +313,10 @@ const ManageUsersToolbar = (props) => {
                         : () => deactivateCheckboxMode("Teacher")
                     }
                   >
-                    <RecentActorsIcon />
+                    {!currentCheckboxMode 
+                      ? <CheckBoxIcon />
+                      : <RecentActorsIcon />
+                    }
                   </IconButton>
                 </LightTooltip>
                 <LightTooltip title="Urutkan Akun">
@@ -448,13 +454,26 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
+  dialogDeleteButton: {
+    width: "125px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    border: `1px solid ${theme.palette.error.main}`,
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.error.dark,
+      color: "white",
+      border: `1px solid ${theme.palette.error.dark}`,
+    },
+  },
   dialogCancelButton: {
     width: "125px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
+    backgroundColor: "white",
+    color: theme.palette.error.main,
+    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.dark,
-      color: "white",
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
   sortButton: {
@@ -967,22 +986,14 @@ function ManageUsers(props) {
                 alignItems="center"
                 className={classes.dialogBox}
               >
-                <Grid item container justify="flex-end" alignItems="flex-start">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleCloseCheckboxApproveDialog("Student")}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
                 <Grid
                   item
                   container
                   justify="center"
                   style={{ marginBottom: "20px" }}
                 >
-                  <Typography variant="h5" gutterBottom align="center">
-                    Aktifkan semua pengguna Berikut?
+                  <Typography variant="h6" gutterBottom align="center">
+                    Aktifkan semua pengguna berikut?
                   </Typography>
                 </Grid>
                 {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -996,7 +1007,6 @@ function ManageUsers(props) {
                   justify="center"
                   alignItems="center"
                   spacing={2}
-                  style={{ marginBottom: "10px" }}
                 >
                   <Grid item>
                     <Button
@@ -1034,22 +1044,14 @@ function ManageUsers(props) {
                 alignItems="center"
                 className={classes.dialogBox}
               >
-                <Grid item container justify="flex-end" alignItems="flex-start">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleCloseCheckboxApproveDialog("Teacher")}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
                 <Grid
                   item
                   container
                   justify="center"
                   style={{ marginBottom: "20px" }}
                 >
-                  <Typography variant="h5" gutterBottom align="center">
-                    Aktifkan semua pengguna Berikut?
+                  <Typography variant="h6" gutterBottom align="center">
+                    Aktifkan semua pengguna berikut?
                   </Typography>
                 </Grid>
                 {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -1063,7 +1065,6 @@ function ManageUsers(props) {
                   justify="center"
                   alignItems="center"
                   spacing={2}
-                  style={{ marginBottom: "10px" }}
                 >
                   <Grid item>
                     <Button
@@ -1073,7 +1074,7 @@ function ManageUsers(props) {
                       startIcon={<CheckCircleIcon />}
                       className={classes.dialogApproveButton}
                     >
-                      Aktifkan
+                      Iya
                     </Button>
                   </Grid>
                   <Grid item>
@@ -1084,7 +1085,7 @@ function ManageUsers(props) {
                       startIcon={<CancelIcon />}
                       className={classes.dialogCancelButton}
                     >
-                      Batal
+                      Tidak
                     </Button>
                   </Grid>
                 </Grid>
@@ -1102,22 +1103,14 @@ function ManageUsers(props) {
               alignItems="center"
               className={classes.dialogBox}
             >
-              <Grid item container justify="flex-end" alignItems="flex-start">
-                <IconButton
-                  size="small"
-                  onClick={() => handleCloseCheckboxDeleteDialog("Student")}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
               <Grid
                 item
                 container
                 justify="center"
                 style={{ marginBottom: "20px" }}
               >
-                <Typography variant="h5" gutterBottom align="center">
-                  Hapus semua pengguna Berikut?
+                <Typography variant="h6" gutterBottom align="center">
+                  Hapus semua pengguna berikut?
                 </Typography>
               </Grid>
               {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -1131,7 +1124,6 @@ function ManageUsers(props) {
                 justify="center"
                 alignItems="center"
                 spacing={2}
-                style={{ marginBottom: "10px" }}
               >
                 <Grid item>
                   <Button
@@ -1139,9 +1131,9 @@ function ManageUsers(props) {
                       handleDeleteListStudent();
                     }}
                     startIcon={<CheckCircleIcon />}
-                    className={classes.dialogApproveButton}
+                    className={classes.dialogDeleteButton}
                   >
-                    Hapus
+                    Iya
                   </Button>
                 </Grid>
                 <Grid item>
@@ -1150,7 +1142,7 @@ function ManageUsers(props) {
                     startIcon={<CancelIcon />}
                     className={classes.dialogCancelButton}
                   >
-                    Batal
+                    Tidak
                   </Button>
                 </Grid>
               </Grid>
@@ -1167,22 +1159,14 @@ function ManageUsers(props) {
               alignItems="center"
               className={classes.dialogBox}
             >
-              <Grid item container justify="flex-end" alignItems="flex-start">
-                <IconButton
-                  size="small"
-                  onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
               <Grid
                 item
                 container
                 justify="center"
                 style={{ marginBottom: "20px" }}
               >
-                <Typography variant="h5" gutterBottom align="center">
-                  Hapus semua pengguna Berikut?
+                <Typography variant="h6" gutterBottom align="center">
+                  Hapus semua pengguna berikut?
                 </Typography>
               </Grid>
               {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
@@ -1196,7 +1180,6 @@ function ManageUsers(props) {
                 justify="center"
                 alignItems="center"
                 spacing={2}
-                style={{ marginBottom: "10px" }}
               >
                 <Grid item>
                   <Button
@@ -1204,9 +1187,9 @@ function ManageUsers(props) {
                       handleDeleteListTeacher();
                     }}
                     startIcon={<CheckCircleIcon />}
-                    className={classes.dialogApproveButton}
+                    className={classes.dialogDeleteButton}
                   >
-                    Hapus
+                    Iya
                   </Button>
                 </Grid>
                 <Grid item>
@@ -1215,7 +1198,7 @@ function ManageUsers(props) {
                     startIcon={<CancelIcon />}
                     className={classes.dialogCancelButton}
                   >
-                    Batal
+                    Tidak
                   </Button>
                 </Grid>
               </Grid>
