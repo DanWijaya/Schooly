@@ -335,13 +335,7 @@ function Profile(props) {
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Link
                     to={{
-                      pathname: "/lihat-rapor",
-                      state: {
-                        role: "Student",
-                        nama: user.name,
-                        kelas: classesCollection.kelas,
-                        id: user._id,
-                      },
+                      pathname: `/lihat-rapor/${user._id}`,
                     }}
                   >
                     <LightTooltip title="Lihat Rapor">
@@ -375,13 +369,7 @@ function Profile(props) {
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Link
                     to={{
-                      pathname: "/lihat-rapor",
-                      state: {
-                        role: "Student",
-                        nama: user.name,
-                        kelas: classesCollection.kelas,
-                        id: user._id,
-                      },
+                      pathname: `/lihat-rapor/${user._id}`,
                     }}
                   >
                     <LightTooltip title="Klik Untuk Melihat Rapor">

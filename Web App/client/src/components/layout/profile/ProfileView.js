@@ -5,7 +5,7 @@ import { useLocation, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "moment/locale/id";
-import { updateAvatar } from "../../../actions/UserActions";
+import { updateAvatar, getOneUser } from "../../../actions/UserActions";
 import { setCurrentClass } from "../../../actions/ClassActions";
 import {
   Avatar,
@@ -168,55 +168,55 @@ function ProfileDataItem(props) {
 
 function ProfileView(props) {
   const classes = useStyles();
-  const location = useLocation();
 
-  const { user } = props.auth;
-  const { setCurrentClass, classesCollection } = props;
+  const { user, selectedUser } = props.auth;
+  const { setCurrentClass, classesCollection, getOneUser } = props;
 
   const [namakelas, setNamaKelas] = React.useState("");
-  const [firstAssign, setFirstAssign] = React.useState(true);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
-    if (role === "Student") {
-      setCurrentClass(kelas);
-    }
+    getOneUser(props.match.params.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
-    if (firstAssign) {
-      setFirstAssign(false);
-    } else {
-      setNamaKelas(classesCollection.kelas.name);
+    if (selectedUser.role === "Student") {
+      setCurrentClass(selectedUser.kelas)
     }
+  }, [selectedUser]);
+
+  console.log(selectedUser)
+
+  React.useEffect(() => {
+    setNamaKelas(classesCollection.kelas.name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classesCollection]);
 
-  if (location.state === undefined) {
-    return <Redirect to="/tidak-ditemukan" />;
-  }
+  // if (location.state === undefined) {
+  //   return <Redirect to="/tidak-ditemukan" />;
+  // }
 
   const {
     avatar,
-    nama,
+    name,
     role,
     viewable_section,
     jenis_kelamin,
     email,
     phone,
     emergency_phone,
-    alamat,
-    hobi,
-    ket,
-    cita,
-    uni,
+    address,
+    hobi_minat,
+    ket_non_teknis,
+    cita_cita,
+    uni_impian,
     kelas,
     admin,
-    id,
+    _id,
     tanggal_lahir,
-  } = location.state;
-  document.title = `Schooly | ${nama}`;
+  } = selectedUser;
+  document.title = `Schooly | ${selectedUser.name}`;
 
   return (
     <div className={classes.root}>
@@ -237,7 +237,7 @@ function ProfileView(props) {
         </Grid>
         <Grid item>
           <Typography variant="h4" align="center">
-            {nama}
+            {name}
           </Typography>
           <Typography variant="h6" align="center">
             {role === "Student"
@@ -262,13 +262,7 @@ function ProfileView(props) {
         >
           <Link
             to={{
-              pathname: "/lihat-rapor",
-              state: {
-                role: user.role,
-                nama: nama,
-                kelas: classesCollection.kelas,
-                id: id,
-              },
+              pathname: `/lihat-rapor/${_id}`,
             }}
           >
             <LightTooltip title="Klik Untuk Melihat Rapor">
@@ -311,7 +305,7 @@ function ProfileView(props) {
                     <ProfileDataItem
                       profile_data_icon={<PersonIcon />}
                       profile_data_category="Nama"
-                      profile_data_info={nama}
+                      profile_data_info={name}
                     />
                     <Divider variant="inset" />
                     <ProfileDataItem
@@ -351,7 +345,7 @@ function ProfileView(props) {
                         <ProfileDataItem
                           profile_data_icon={<HomeIcon />}
                           profile_data_category="Alamat"
-                          profile_data_info={alamat}
+                          profile_data_info={address}
                         />
                       </div>
                     ) : null}
@@ -359,7 +353,7 @@ function ProfileView(props) {
                 </Paper>
               </Grid>,
             ].concat(
-              viewable_section === "no_karir" ? null : (
+              !(role === "Student") ? null : (
                 <Grid item>
                   <Paper className={classes.informationPaper}>
                     <div className={classes.backgroundGradient}>
@@ -384,25 +378,25 @@ function ProfileView(props) {
                       <ProfileDataItem
                         profile_data_icon={<SportsEsportsIcon />}
                         profile_data_category="Hobi dan Minat"
-                        profile_data_info={hobi}
+                        profile_data_info={hobi_minat}
                       />
                       <Divider variant="inset" />
                       <ProfileDataItem
                         profile_data_icon={<ColorLensIcon />}
                         profile_data_category="Keterampilan Non-Akademik"
-                        profile_data_info={ket}
+                        profile_data_info={ket_non_teknis}
                       />
                       <Divider variant="inset" />
                       <ProfileDataItem
                         profile_data_icon={<WorkIcon />}
                         profile_data_category="Cita-Cita"
-                        profile_data_info={cita}
+                        profile_data_info={cita_cita}
                       />
                       <Divider variant="inset" />
                       <ProfileDataItem
                         profile_data_icon={<AccountBalanceIcon />}
                         profile_data_category="Perguruan Tinggi Impian"
-                        profile_data_info={uni}
+                        profile_data_info={uni_impian}
                       />
                     </List>
                   </Paper>
@@ -419,6 +413,7 @@ ProfileView.propTypes = {
   auth: PropTypes.object.isRequired,
   classesCollection: PropTypes.object.isRequired,
   updateAvatar: PropTypes.func.isRequired,
+  getOneUser: PropTypes.func.isRequired,
   setCurrentClass: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
@@ -430,6 +425,6 @@ const mapStateToProps = (state) => ({
   classesCollection: state.classesCollection,
 });
 
-export default connect(mapStateToProps, { updateAvatar, setCurrentClass })(
+export default connect(mapStateToProps, { updateAvatar, setCurrentClass, getOneUser })(
   ProfileView
 );

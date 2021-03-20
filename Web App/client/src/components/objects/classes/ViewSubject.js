@@ -442,8 +442,8 @@ function AssessmentListItem(props) {
             color="textSecondary"
             style={{ marginTop: "10px", textAlign: "center" }}
           >
-            Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata
-            Pelajaran Terkait
+            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+            pelajaran terkait.
           </Typography>
         </div>
       </Dialog>

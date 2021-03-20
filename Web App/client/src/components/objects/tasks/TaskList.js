@@ -198,7 +198,7 @@ function TaskListToolbar(props) {
                 onChange={onChange}
                 autoFocus
                 onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Search Tugas"
+                placeholder="Cari Tugas"
                 style={{
                   maxWidth: "200px",
                   marginLeft: "10px",
@@ -262,7 +262,7 @@ function TaskListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Tugas"
+            placeholder="Cari Tugas"
             style={{
               maxWidth: "250px",
               marginRight: "10px",

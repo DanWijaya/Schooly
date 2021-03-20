@@ -202,7 +202,7 @@ function MaterialListToolbar(props) {
                 onChange={onChange}
                 autoFocus
                 onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Search Materi"
+                placeholder="Cari Materi"
                 style={{
                   maxWidth: "200px",
                   marginLeft: "10px",
@@ -266,7 +266,7 @@ function MaterialListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Materi"
+            placeholder="Cari Materi"
             style={{
               maxWidth: "250px",
               marginRight: "10px",

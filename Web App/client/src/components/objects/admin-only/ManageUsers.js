@@ -462,8 +462,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dialogBox: {
-    maxWidth: "350px",
+    width: "300px",
+    maxWidth: "100%",
+    minHeight: "175px",
     padding: "15px",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   dialogDisableButton: {
     width: "150px",
@@ -474,31 +479,37 @@ const useStyles = makeStyles((theme) => ({
       color: "white",
     },
   },
-  dialogDeleteButton: {
-    width: "150px",
-    backgroundColor: theme.palette.error.dark,
+  dialogApproveButton: {
+    width: "125px",
+    backgroundColor: theme.palette.success.main,
     color: "white",
+    border: `1px solid ${theme.palette.success.main}`,
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.success.dark,
+      color: "white",
+      border: `1px solid ${theme.palette.success.dark}`,
+    },
+  },
+  dialogDeleteButton: {
+    width: "125px",
+    backgroundColor: theme.palette.error.main,
+    color: "white",
+    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
       backgroundColor: theme.palette.error.dark,
       color: "white",
-    },
-  },
-  dialogApproveButton: {
-    width: "150px",
-    backgroundColor: theme.palette.success.main,
-    color: "white",
-    "&:focus, &:hover": {
-      backgroundColor: theme.palette.success.main,
-      color: "white",
+      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
   dialogCancelButton: {
-    width: "150px",
-    backgroundColor: theme.palette.primary.main,
-    color: "white",
+    width: "125px",
+    backgroundColor: "white",
+    color: theme.palette.error.main,
+    border: `1px solid ${theme.palette.error.main}`,
     "&:focus, &:hover": {
-      backgroundColor: theme.palette.primary.main,
-      color: "white",
+      backgroundColor: "white",
+      color: theme.palette.error.dark,
+      border: `1px solid ${theme.palette.error.dark}`,
     },
   },
   sortButton: {
@@ -884,11 +895,6 @@ function ManageUsers(props) {
           alignItems="center"
           className={classes.dialogBox}
         >
-          <Grid item container justify="flex-end" alignItems="flex-start">
-            <IconButton size="small" onClick={handleCloseDisableDialog}>
-              <CloseIcon />
-            </IconButton>
-          </Grid>
           <Grid
             item
             container
@@ -957,14 +963,6 @@ function ManageUsers(props) {
               alignItems="center"
               className={classes.dialogBox}
             >
-              <Grid item container justify="flex-end" alignItems="flex-start">
-                <IconButton
-                  size="small"
-                  onClick={() => handleCloseCheckboxDeleteDialog("Student")}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
               <Grid
                 item
                 container
@@ -986,7 +984,7 @@ function ManageUsers(props) {
                 justify="center"
                 alignItems="center"
                 spacing={2}
-                style={{ marginBottom: "10px" }}
+                style={{ marginTop: "10px" }}
               >
                 <Grid item>
                   <Button
@@ -994,9 +992,9 @@ function ManageUsers(props) {
                       handleDeleteListStudent();
                     }}
                     startIcon={<CheckCircleIcon />}
-                    className={classes.dialogApproveButton}
+                    className={classes.dialogDeleteButton}
                   >
-                    Hapus
+                    iya
                   </Button>
                 </Grid>
                 <Grid item>
@@ -1005,7 +1003,7 @@ function ManageUsers(props) {
                     startIcon={<CancelIcon />}
                     className={classes.dialogCancelButton}
                   >
-                    Batal
+                    Tidak
                   </Button>
                 </Grid>
               </Grid>
@@ -1022,14 +1020,6 @@ function ManageUsers(props) {
               alignItems="center"
               className={classes.dialogBox}
             >
-              <Grid item container justify="flex-end" alignItems="flex-start">
-                <IconButton
-                  size="small"
-                  onClick={() => handleCloseCheckboxDeleteDialog("Teacher")}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
               <Grid
                 item
                 container
@@ -1050,8 +1040,6 @@ function ManageUsers(props) {
                 direction="row"
                 justify="center"
                 alignItems="center"
-                spacing={2}
-                style={{ marginBottom: "10px" }}
               >
                 <Grid item>
                   <Button
@@ -1059,9 +1047,9 @@ function ManageUsers(props) {
                       handleDeleteListTeacher();
                     }}
                     startIcon={<CheckCircleIcon />}
-                    className={classes.dialogApproveButton}
+                    className={classes.dialogDeleteButton}
                   >
-                    Hapus
+                    Iya
                   </Button>
                 </Grid>
                 <Grid item>
@@ -1070,7 +1058,7 @@ function ManageUsers(props) {
                     startIcon={<CancelIcon />}
                     className={classes.dialogCancelButton}
                   >
-                    Batal
+                    Tidak
                   </Button>
                 </Grid>
               </Grid>

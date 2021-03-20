@@ -217,7 +217,7 @@ function AssessmentListToolbar(props) {
                 onChange={onChange}
                 autoFocus
                 onClick={(e) => setSearchBarFocus(true)}
-                placeholder="Search Kuis"
+                placeholder="Cari Kuis"
                 style={{
                   maxWidth: "200px",
                   marginLeft: "10px",
@@ -281,7 +281,7 @@ function AssessmentListToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Kuis"
+            placeholder="Cari Kuis"
             style={{
               maxWidth: "250px",
               marginRight: "10px",
@@ -754,8 +754,8 @@ function AssessmentList(props) {
               color="textSecondary"
               style={{ marginTop: "10px", textAlign: "center" }}
             >
-              Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata
-              Pelajaran Terkait
+              Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+              pelajaran terkait.
             </Typography>
           </div>
         </Dialog>

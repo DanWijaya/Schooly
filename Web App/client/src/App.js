@@ -291,15 +291,19 @@ class App extends Component {
                     <Route exact path="/graph" component={Graph} />{" "}
                     {/*prototype*/}
                     <PrivateRoute exact path="/beranda" component={Dashboard} />
-                    <PrivateRoute exact path="/profil" component={Profile} />
+                    <PrivateRoute 
+                      exact 
+                      path="/profil" 
+                      component={Profile} 
+                    />
                     <PrivateRoute
                       exact
-                      path="/lihat-profil"
+                      path="/lihat-profil/:id"
                       component={ProfileView}
                     />
                     <PrivateRoute
                       exact
-                      path="/lihat-rapor"
+                      path="/lihat-rapor/:id"
                       component={ReportView}
                     />
                     {/* Route Class */}

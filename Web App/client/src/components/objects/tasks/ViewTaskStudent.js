@@ -322,124 +322,138 @@ function WorkFile(props) {
           >
             <ListItemAvatar>
               {file_type === "Word" ? (
-                <Badge
-                  badgeContent={
-                    <PublishIcon
-                      className={classes.checkButton}
-                      fontSize="small"
-                    />
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <Avatar className={classes.wordFileTypeIcon}>
-                    <FaFileWord />
-                  </Avatar>
-                </Badge>
+                <LightTooltip title="Terkumpul">
+                  <Badge
+                    badgeContent={
+                      <PublishIcon
+                        className={classes.checkButton}
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.wordFileTypeIcon}>
+                      <FaFileWord />
+                    </Avatar>
+                  </Badge>
+                </LightTooltip>
               ) : file_type === "Excel" ? (
-                <Badge
-                  badgeContent={
-                    <PublishIcon
-                      className={classes.checkButton}
-                      fontSize="small"
-                    />
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <Avatar className={classes.excelFileTypeIcon}>
-                    <FaFileExcel />
-                  </Avatar>
-                </Badge>
+                <LightTooltip title="Terkumpul">
+                  <Badge
+                    badgeContent={
+                      <PublishIcon
+                        className={classes.checkButton}
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.excelFileTypeIcon}>
+                      <FaFileExcel />
+                    </Avatar>
+                  </Badge>
+                </LightTooltip>
               ) : file_type === "Gambar" ? (
-                <Badge
-                  badgeContent={
-                    <PublishIcon
-                      className={classes.checkButton}
-                      fontSize="small"
-                    />
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <Avatar className={classes.imageFileTypeIcon}>
-                    <FaFileImage />
-                  </Avatar>
-                </Badge>
+                <LightTooltip title="Terkumpul">
+                  <Badge
+                    badgeContent={
+                      <PublishIcon
+                        className={classes.checkButton}
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.imageFileTypeIcon}>
+                      <FaFileImage />
+                    </Avatar>
+                  </Badge>
+                </LightTooltip>
               ) : file_type === "PDF" ? (
-                <Badge
-                  badgeContent={
-                    <PublishIcon
-                      className={classes.checkButton}
-                      fontSize="small"
-                    />
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <Avatar className={classes.pdfFileTypeIcon}>
-                    <FaFilePdf />
-                  </Avatar>
-                </Badge>
+                <LightTooltip title="Terkumpul">
+                  <Badge
+                    badgeContent={
+                      <PublishIcon
+                        className={classes.checkButton}
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.pdfFileTypeIcon}>
+                      <FaFilePdf />
+                    </Avatar>
+                  </Badge>
+                </LightTooltip>
               ) : file_type === "Teks" ? (
-                <Badge
-                  badgeContent={
-                    <PublishIcon
-                      className={classes.checkButton}
-                      fontSize="small"
-                    />
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <Avatar className={classes.textFileTypeIcon}>
-                    <FaFileAlt />
-                  </Avatar>
-                </Badge>
+                <LightTooltip title="Terkumpul">
+                  <Badge
+                    badgeContent={
+                      <PublishIcon
+                        className={classes.checkButton}
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.textFileTypeIcon}>
+                      <FaFileAlt />
+                    </Avatar>
+                  </Badge>
+                </LightTooltip>
               ) : file_type === "Presentasi" ? (
-                <Badge
-                  badgeContent={
-                    <PublishIcon
-                      className={classes.checkButton}
-                      fontSize="small"
-                    />
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <Avatar className={classes.presentationFileTypeIcon}>
-                    <FaFilePowerpoint />
-                  </Avatar>
-                </Badge>
+                <LightTooltip title="Terkumpul">
+                  <Badge
+                    badgeContent={
+                      <PublishIcon
+                        className={classes.checkButton}
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.presentationFileTypeIcon}>
+                      <FaFilePowerpoint />
+                    </Avatar>
+                  </Badge>
+                </LightTooltip>
               ) : file_type === "File Lainnya" ? (
-                <Badge
-                  badgeContent={
-                    <PublishIcon
-                      className={classes.checkButton}
-                      fontSize="small"
-                    />
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <Avatar className={classes.otherFileTypeIcon}>
-                    <FaFile />
-                  </Avatar>
-                </Badge>
+                <LightTooltip title="Terkumpul">
+                  <Badge
+                    badgeContent={
+                      <PublishIcon
+                        className={classes.checkButton}
+                        fontSize="small"
+                      />
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                  >
+                    <Avatar className={classes.otherFileTypeIcon}>
+                      <FaFile />
+                    </Avatar>
+                  </Badge>
+                </LightTooltip>
               ) : null}
             </ListItemAvatar>
             <ListItemText

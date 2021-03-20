@@ -198,8 +198,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   redFlagIcon: {
-    color: theme.palette.error.main,
-    fontSize: "1.6em",
+    color: theme.palette.error.dark,
+    fontSize: "1.2em",
     [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
     },
@@ -209,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
   },
   flagIcon: {
     color: theme.palette.text.secondary,
-    fontSize: "1.6em",
+    fontSize: "1.2em",
     [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
     },
@@ -356,11 +356,16 @@ function SubmittedAssessmentList(props) {
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
-  const handleRequestSort = (property) => {
+
+  const createSortHandler = (property) => (event) => {
+    handleRequestSort(event, property);
+  };
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
   const headCells = [
     { id: "name", numeric: false, disablePadding: true, label: "Nama Murid" },
   ];
@@ -1169,7 +1174,7 @@ function SubmittedAssessmentList(props) {
                 <MenuItem
                   key={headCell.id}
                   sortDirection={orderBy === headCell.id ? order : false}
-                  onClick={handleRequestSort(headCell.id)}
+                  onClick={createSortHandler(headCell.id)}
                 >
                   <TableSortLabel
                     active={orderBy === headCell.id}

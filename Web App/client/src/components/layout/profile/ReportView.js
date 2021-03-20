@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useLocation, Redirect } from "react-router-dom";
+import {  Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import "moment/locale/id";
 import {
@@ -24,8 +24,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import FormControl from "@material-ui/core/FormControl";
 import { Bar } from "react-chartjs-2";
-import { getStudentsByClass } from "../../../actions/UserActions";
+import { getStudentsByClass, getOneUser } from "../../../actions/UserActions";
 import { getTasksBySC, getAllTask } from "../../../actions/TaskActions";
+import { setCurrentClass } from "../../../actions/ClassActions";
 import {
   getKuisBySC,
   getUjianBySC,
@@ -238,9 +239,6 @@ function ScoreGraph(props) {
 
 function ReportView(props) {
   const classes = useStyles();
-  const location = useLocation();
-
-  const { role, nama, kelas, id } = location.state;
   // role = "Teacher" / "Student" / "Other" ("Other" kalau guru mengklik icon lihat rapor di side drawer)
   // nama                                   (ini tidak ada kalau rolenya "Other". akan berisi nama murid)
   // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
@@ -259,13 +257,37 @@ function ReportView(props) {
     getStudentsByClass,
     getAllTask,
     tasksCollection,
+    getOneUser
   } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
 
-  const { user, students_by_class } = props.auth;
+  const { user, students_by_class, selectedUser } = props.auth;
   const { all_subjects_map, all_subjects } = props.subjectsCollection;
   const allTaskArray = props.tasksCollection; // mengambil data dari DB
   const { all_assessments } = props.assessmentsCollection;
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    getOneUser(props.match.params.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { name, _id } = selectedUser;
+  const id = _id
+
+  const [kelas, setKelas] = React.useState("");
+
+  console.log(selectedUser)
+
+  React.useEffect(() => {
+    console.log(selectedUser.kelas)
+    setCurrentClass(selectedUser.kelas)
+  }, [selectedUser]);
+
+  React.useEffect(() => {
+    setKelas(props.classesCollection.kelas.name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.classesCollection]);
 
   const countAllClassUpdate = React.useRef(0);
   const countMIDependencyUpdate = React.useRef(0);
@@ -834,7 +856,6 @@ function ReportView(props) {
   // ditambahkan dependency "role" untuk mengurus kasus ketika guru yang sedang berada di halaman lihat-rapor untuk suatu murid
   // mengklik tombol rapor di side drawer.
   React.useEffect(() => {
-    window.scrollTo(0, 0);
     if (role === "Teacher") {
       getAllClass();
       getAllTask();
@@ -1048,8 +1069,16 @@ function ReportView(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kelasWali, all_classes_map, all_subjects_map]);
 
-  if (!location.state) {
-    return <Redirect to="/tidak-ditemukan" />;
+  // Untuk view dari sidebar teacher, untuk sekarang reserve special code "semua"
+  let role;
+  if(props.match.params.id === "semua" && user.role === "Teacher") {
+    role = "Other"
+  } else if (props.match.params.id === "semua" && user.role !== "Teacher") {
+    return (
+      <Redirect to="/tidak-ditemukan" />
+    )
+  } else {
+    role = user.role
   }
 
   return (
@@ -1066,13 +1095,13 @@ function ReportView(props) {
             <Grid item>
               <Typography>
                 <b>Nama: </b>
-                {nama}
+                {name}
               </Typography>
             </Grid>
             <Grid item>
               <Typography>
                 <b>Kelas: </b>
-                {kelas.name}
+                {kelas}
               </Typography>
             </Grid>
           </Grid>
@@ -1467,10 +1496,12 @@ function ReportView(props) {
 
 ReportView.propTypes = {
   auth: PropTypes.object.isRequired,
+  getOneUser: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.array.isRequired,
   assessmentsCollection: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -1490,4 +1521,5 @@ export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   getAllTask,
+  getOneUser
 })(ReportView);

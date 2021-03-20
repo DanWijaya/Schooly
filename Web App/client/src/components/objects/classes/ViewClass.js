@@ -428,8 +428,8 @@ function AssessmentListItem(props) {
             color="textSecondary"
             style={{ marginTop: "10px", textAlign: "center" }}
           >
-            Link Untuk Kuis atau Ulangan Anda akan Diberikan Oleh Guru Mata
-            Pelajaran Terkait
+            Tautan untuk Kuis atau Ujian anda akan diberikan oleh guru mata
+            pelajaran terkait.
           </Typography>
         </div>
       </Dialog>
@@ -998,19 +998,7 @@ function ViewClass(props) {
                           <LightTooltip title="Lihat Profil">
                             <Link
                               to={{
-                                pathname: "/lihat-profil",
-                                state: {
-                                  avatar: walikelas.avatar,
-                                  nama: walikelas.name,
-                                  viewable_section: "no_karir",
-                                  role: walikelas.role,
-                                  jenis_kelamin: walikelas.jenis_kelamin,
-                                  email: walikelas.email,
-                                  phone: walikelas.phone,
-                                  emergency_phone: walikelas.emergency_phone,
-                                  admin: false,
-                                  tanggal_lahir: walikelas.tanggal_lahir,
-                                },
+                                pathname: `/lihat-profil/${walikelas._id}`,
                               }}
                             >
                               <IconButton
@@ -1067,24 +1055,7 @@ function ViewClass(props) {
                           <LightTooltip title="Lihat Profil">
                             <Link
                               to={{
-                                pathname: "/lihat-profil",
-                                state: {
-                                  kelas: student.kelas,
-                                  avatar: student.avatar,
-                                  nama: student.name,
-                                  viewable_section: "with_karir",
-                                  role: student.role,
-                                  jenis_kelamin: student.jenis_kelamin,
-                                  email: student.email,
-                                  phone: student.phone,
-                                  emergency_phone: student.emergency_phone,
-                                  hobi: student.hobi_minat,
-                                  ket: student.ket_non_teknis,
-                                  cita: student.cita_cita,
-                                  uni: student.uni_impian,
-                                  id: student._id,
-                                  tanggal_lahir: student.tanggal_lahir,
-                                },
+                                pathname: `/lihat-profil/${student._id}`,
                               }}
                             >
                               <IconButton
@@ -1424,18 +1395,7 @@ function ViewClass(props) {
                           <LightTooltip title="Lihat Profil">
                             <Link
                               to={{
-                                pathname: "/lihat-profil",
-                                state: {
-                                  avatar: walikelas.avatar,
-                                  nama: walikelas.name,
-                                  viewable_section: "no_karir",
-                                  role: walikelas.role,
-                                  jenis_kelamin: walikelas.jenis_kelamin,
-                                  email: walikelas.email,
-                                  phone: walikelas.phone,
-                                  emergency_phone: walikelas.emergency_phone,
-                                  tanggal_lahir: walikelas.tanggal_lahir,
-                                },
+                                pathname: `/lihat-profil/${walikelas._id}`,
                               }}
                             >
                               <IconButton
@@ -1487,21 +1447,7 @@ function ViewClass(props) {
                                 <LightTooltip title="Lihat Profil">
                                   <Link
                                     to={{
-                                      pathname: "/lihat-profil",
-                                      state: {
-                                        kelas: student.kelas,
-                                        avatar: student.avatar,
-                                        nama: student.name,
-                                        viewable_section: "no_karir",
-                                        role: student.role,
-                                        jenis_kelamin: student.jenis_kelamin,
-                                        email: student.email,
-                                        phone: student.phone,
-                                        emergency_phone:
-                                          student.emergency_phone,
-                                        id: student._id,
-                                        tanggal_lahir: student.tanggal_lahir,
-                                      },
+                                      pathname: `/lihat-profil/${student._id}`,
                                     }}
                                   >
                                     <IconButton

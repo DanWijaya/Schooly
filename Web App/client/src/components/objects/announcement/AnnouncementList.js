@@ -207,7 +207,7 @@ function AnnouncementListToolbar(props) {
                     onChange={onChange}
                     autoFocus
                     onClick={(e) => setSearchBarFocus(true)}
-                    placeholder="Search Pengumuman"
+                    placeholder="Cari Pengumuman"
                     // onBlur={() => setSearchBarFocus(false)}
                     style={{
                       maxWidth: "200px",
@@ -278,7 +278,7 @@ function AnnouncementListToolbar(props) {
               onChange={onChange}
               onClick={() => setSearchBarFocus(true)}
               onBlur={() => setSearchBarFocus(false)}
-              placeholder="Search Pengumuman"
+              placeholder="Cari Pengumuman"
               // onBlur={() => setSearchBarFocus(false)}
               style={{
                 maxWidth: "250px",
@@ -551,7 +551,7 @@ function AnnouncementListSubToolbar(props) {
                   onChange={onChange}
                   autoFocus
                   onClick={(e) => setSearchBarFocus(true)}
-                  placeholder="Search Pengumuman"
+                  placeholder="Cari Pengumuman"
                   style={{
                     maxWidth: "200px",
                     marginLeft: "10px",
@@ -615,7 +615,7 @@ function AnnouncementListSubToolbar(props) {
             onChange={onChange}
             onClick={() => setSearchBarFocus(true)}
             onBlur={() => setSearchBarFocus(false)}
-            placeholder="Search Pengumuman"
+            placeholder="Cari Pengumuman"
             // onBlur={() => setSearchBarFocus(false)}
             style={{
               maxWidth: "250px",

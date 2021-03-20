@@ -338,6 +338,7 @@ function SubjectList(props) {
   const [selectedSubjectId, setSelectedSubjectId] = React.useState(null);
   const [selectedSubjectName, setSelectedSubjectName] = React.useState(null);
   const [action, setAction] = React.useState("");
+  const [forceSuccess, setForceSuccess] = React.useState(false);
   const [subject, setSubject] = React.useState({});
   const {
     subjectsCollection,
@@ -352,7 +353,7 @@ function SubjectList(props) {
   const { all_subjects } = props.subjectsCollection;
   const { user, retrieved_users } = props.auth;
 
-  console.log(subjectsCollection);
+  console.log(action);
   const subjectRowItem = (data) => {
     rows.push(createData(data._id, data.name, data.all_class));
   };
@@ -364,18 +365,21 @@ function SubjectList(props) {
   }, []);
 
   React.useEffect(() => {
-    if (success) {
+    console.log(success)
+    if (success && forceSuccess) {
       if (action === "Edit") {
         handleOpenEditDialog();
-      } else {
+      } else if (action === "Create") {
         handleOpenCreateDialog();
       }
       clearSuccess();
+      setAction("")
+      setForceSuccess(false)
     } 
     // jika clearSuccess sudah dijalankan, success akan bernilai null
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
+  }, [forceSuccess, success]);
 
   React.useEffect(() => {
     if (openCreateDialog === false) {
@@ -476,10 +480,11 @@ function SubjectList(props) {
     e.preventDefault();
     if (action === "Edit") {
       editSubject(subject);
-    } else {
+    } else if (action === "Create") {
       createSubject(subject);
     }
     handleCloseFormDialog();
+    setForceSuccess(true);
   };
 
   function FormDialog() {

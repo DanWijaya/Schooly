@@ -417,11 +417,21 @@ function ViewAssessmentTeacher(props) {
   function handleCloseSortMenu() {
     setAnchorEl(null);
   }
-  function handleRequestSort(property) {
+  // function handleRequestSort(property) {
+  //   const isAsc = orderBy === property && order === "asc";
+  //   setOrder(isAsc ? "desc" : "asc");
+  //   setOrderBy(property);
+  // }
+
+  const createSortHandler = (property) => (event) => {
+    handleRequestSort(event, property);
+  };
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  }
+  };
+
   const headCells = [
     { id: "name", numeric: false, disablePadding: true, label: "Nama Murid" },
     {
@@ -1299,7 +1309,7 @@ function ViewAssessmentTeacher(props) {
                     <MenuItem
                       key={headCell.id}
                       sortDirection={orderBy === headCell.id ? order : false}
-                      onClick={handleRequestSort(headCell.id)}
+                      onClick={createSortHandler(headCell.id)}
                     >
                       <TableSortLabel
                         active={orderBy === headCell.id}
