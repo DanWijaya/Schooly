@@ -356,7 +356,6 @@ function SubmittedAssessmentList(props) {
   const handleCloseSortMenu = () => {
     setAnchorEl(null);
   };
-
   const createSortHandler = (property) => (event) => {
     handleRequestSort(event, property);
   };
