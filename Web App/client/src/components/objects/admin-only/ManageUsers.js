@@ -253,7 +253,7 @@ function ManageUsersToolbar(props) {
             ) : (
               <>
                 {CheckboxDialog("Delete", "Student")}
-                <LightTooltip title="Hapus User Tercentang">
+                <LightTooltip title="Hapus Pengguna Tercentang">
                   <IconButton
                     className={classes.profileDeleteButton}
                     onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
@@ -337,7 +337,7 @@ function ManageUsersToolbar(props) {
             ) : (
               <>
                 {/* {CheckboxDialog("Approve", "Teacher")}
-                <LightTooltip title="Aktifkan User Tercentang">
+                <LightTooltip title="Aktifkan Pengguna Tercentang">
                   <IconButton
                     className={classes.profileApproveButton}
                     onClick={(e) => OpenDialogCheckboxApprove(e, "Teacher")}
@@ -347,7 +347,7 @@ function ManageUsersToolbar(props) {
                   </IconButton>
                 </LightTooltip> */}
                 {CheckboxDialog("Delete", "Teacher")}
-                <LightTooltip title="Hapus User Tercentang">
+                <LightTooltip title="Hapus Pengguna Tercentang">
                   <IconButton
                     className={classes.profileDeleteButton}
                     onClick={(e) => OpenDialogCheckboxDelete(e, "Teacher")}

@@ -69,9 +69,9 @@ const styles = (theme) => ({
     padding: "20px 20px 30px 20px",
   },
   pageNavigatorContent: {
-    padding: "20px 20px 30px",
+    padding: "20px 20px 20px",
     [theme.breakpoints.down("xs")]: {
-      padding: "20px 10px 30px",
+      padding: "20px 10px 20px",
     }
   },
   settingsButton: {

@@ -992,7 +992,7 @@ class Dashboard extends Component {
           }
           return 0;
         }
-        const comparator =  (a, b) => -descendingComparator(a, b, "createdAt");
+        const comparator =  (a, b) => descendingComparator(a, b, "createdAt");
         stabilizedThis.sort((a, b) => {
           const order = comparator(a[0], b[0]);
           if (order !== 0) return order;

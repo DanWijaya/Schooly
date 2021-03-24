@@ -29,8 +29,14 @@ import {
   TableSortLabel,
   TextField,
   Typography,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  InputAdornment,
+  Avatar
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -38,6 +44,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import SortIcon from "@material-ui/icons/Sort";
+import ClearIcon from "@material-ui/icons/Clear";
+import { GoSearch } from "react-icons/go";
 
 function createData(_id, name, all_class) {
   return { _id, name, all_class };
@@ -78,6 +86,10 @@ function SubjectListToolbar(props) {
     orderBy,
     onRequestSort,
     handleOpenFormDialog,
+    searchFilter,
+    updateSearchFilter,
+    setSearchBarFocus,
+    searchBarFocus,
   } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -102,33 +114,191 @@ function SubjectListToolbar(props) {
     setAnchorEl(null);
   };
 
+  const onChange = (e) => {
+    updateSearchFilter(e.target.value);
+  };
+
+  const onClear = (e, id) => {
+    updateSearchFilter("");
+    document.getElementById(id).focus();
+  };
+
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">Daftar Mata Pelajaran</Typography>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Hidden smUp implementation="css">
-          <LightTooltip title="Buat Mata Pelajaran">
-            <Fab
-              size="small"
-              className={classes.newMaterialButton}
-              onClick={handleOpenFormDialog}
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? null : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
             >
-              <MenuBookIcon className={classes.newMaterialIconMobile} />
+              <LibraryBooksIcon className={classes.titleIcon} fontSize="large" />
+              <Typography variant="h4">Daftar Mata Pelajaran</Typography>
+            </div>
+          )}
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <LibraryBooksIcon className={classes.titleIcon} fontSize="large" />
+            <Typography variant="h4">Daftar Mata Pelajaran</Typography>
+          </div>
+        </Hidden>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? (
+            <div style={{ display: "flex" }}>
+              <IconButton
+                onClick={() => {
+                  setSearchBarFocus(false);
+                  updateSearchFilter("");
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) => setSearchBarFocus(true)}
+                placeholder="Cari Mata Pelajaran"
+                style={{
+                  maxWidth: "200px",
+                  marginLeft: "10px",
+                }}
+                InputProps={{
+                  startAdornment: searchBarFocus ? null : (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                    >
+                      <IconButton size="small">
+                        <GoSearch />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e, "searchFilterMobile");
+                        }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    borderRadius: "22.5px",
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <LightTooltip title="Search" style={{ marginLeft: "10px" }}>
+              <IconButton
+                className={classes.goSearchButton}
+                onClick={() => setSearchBarFocus(true)}
+              >
+                <GoSearch className={classes.goSearchIconMobile} />
+              </IconButton>
+            </LightTooltip>
+          )}
+        </Hidden>
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smDown implementation="css">
+          <TextField
+            variant="outlined"
+            id="searchFilterDesktop"
+            value={searchFilter}
+            onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder="Cari Mata Pelajaran"
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                >
+                  <IconButton size="small">
+                    <GoSearch />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e, "searchFilterDesktop");
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
+            }}
+          />
+        </Hidden>
+        <Hidden mdUp implementation="css">
+          <LightTooltip title="Buat Mata Pelajaran">
+            <Fab 
+              size="small" 
+              onClick={handleOpenFormDialog} 
+              className={classes.newMaterialButton}>
+              <LibraryBooksIcon className={classes.newMaterialIconMobile} /> 
             </Fab>
           </LightTooltip>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden smDown implementation="css">
           <Fab
             size="medium"
             variant="extended"
-            className={classes.newMaterialButton}
             onClick={handleOpenFormDialog}
+            className={classes.newMaterialButton}
           >
             <LibraryBooksIcon className={classes.newMaterialIconDesktop} />
             Buat Mata Pelajaran
           </Fab>
         </Hidden>
-        <LightTooltip title="Urutkan Materi">
+        <LightTooltip title="Urutkan Mata Pelajaran">
           <IconButton
             onClick={handleOpenSortMenu}
             className={classes.sortButton}
@@ -155,7 +325,7 @@ function SubjectListToolbar(props) {
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
               onClick={createSortHandler(headCell.id)}
-              >
+            >
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
@@ -184,6 +354,10 @@ SubjectListToolbar.propTypes = {
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
+  searchFilter: PropTypes.string,
+  updateSearchFilter: PropTypes.func,
+  setSearchBarFocus: PropTypes.func,
+  searchBarFocus: PropTypes.bool
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -316,12 +490,18 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.fade,
     },
   },
-  subjectPaper: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
+  listItem: {
+    padding: "6px 24px"
   },
+  listAvatar: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  titleIcon: {
+    fontSize: "28px",
+    backgroundColor: "white",
+    color: theme.palette.primary.main,
+    marginRight: "10px",
+  }
 }));
 
 function SubjectList(props) {
@@ -340,6 +520,8 @@ function SubjectList(props) {
   const [action, setAction] = React.useState("");
   const [forceSuccess, setForceSuccess] = React.useState(false);
   const [subject, setSubject] = React.useState({});
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
   const {
     subjectsCollection,
     getAllSubjects,
@@ -399,7 +581,9 @@ function SubjectList(props) {
     console.log(retrieved_users);
     // If all_subjects is not undefined or an empty array
     rows = [];
-    all_subjects.map((data) => subjectRowItem(data));
+    all_subjects.filter((item) => {
+      return item.name.toLowerCase().includes(searchFilter.toLowerCase()
+    )}).map((data) => subjectRowItem(data));
   };
 
   const handleRequestSort = (event, property) => {
@@ -594,6 +778,10 @@ function SubjectList(props) {
         orderBy={orderBy}
         onRequestSort={handleRequestSort}
         rowCount={rows ? rows.length : 0}
+        searchFilter={searchFilter}
+        updateSearchFilter={updateSearchFilter}
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container direction="column" spacing={2}>
@@ -606,36 +794,102 @@ function SubjectList(props) {
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <Grid item>
-                <Paper variant="outlined" className={classes.subjectPaper}>
-                  <Grid item>
-                    <Typography variant="h6" id={labelId}>
-                      {row.name}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs container spacing={1} justify="flex-end">
-                    <Grid item>
-                      <IconButton
-                        size="small"
-                        className={classes.editSubjectButton}
-                        onClick={(e) =>
-                          handleOpenFormDialog(e, row._id, row.name, true)
+                <Paper variant="outlined">
+                  <ListItem
+                    // button
+                    // component="a"
+                    className={classes.listItem}
+                  >
+                    <Hidden smUp implementation="css">
+                      <ListItemText
+                        style={{margin: "6px 0"}}
+                        primary={
+                          <Grid container alignItems="center">
+                            <Typography variant="subtitle1" color="textPrimary">
+                              {row.name}
+                            </Typography>
+                            <Grid item style={{visibility: "hidden"}}>
+                              <Typography variant="subtitle1">
+                                {"\u200B"}
+                              </Typography>
+                              <Typography variant="caption">
+                                {"\u200B"}
+                              </Typography>
+                            </Grid>
+                          </Grid>
                         }
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </Grid>
-                    <Grid item>
-                      <IconButton
-                        size="small"
-                        className={classes.deleteSubjectlButton}
-                        onClick={(e) => {
-                          handleOpenDeleteDialog(e, row._id, row.name);
+                      />
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
                       >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
+                        <ListItemAvatar>
+                          <Avatar className={classes.listAvatar}>
+                            <LibraryBooksIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          style={{margin: "6px 0"}}
+                          primary={                          
+                            <Grid container alignItems="center">
+                              <Typography variant="h6" color="textPrimary">
+                                {row.name}
+                              </Typography>
+                              <Grid item style={{ visibility: "hidden" }}>
+                                <Grid container direction="column">
+                                    <Typography variant="h6">
+                                      {"\u200B"}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                      {"\u200B"}
+                                    </Typography>
+                                </Grid>
+                              </Grid>
+                          </Grid>
+                          }
+                        />
+                      </div>
+                    </Hidden>
+                    <ListItemText
+                      align="right"
+                      primary={
+                        <Grid container spacing={1} justify="flex-end">
+                          <Grid item>
+                            <LightTooltip title="Sunting">
+                              <IconButton
+                                size="small"
+                                className={classes.editSubjectButton}
+                                onClick={(e) =>
+                                  handleOpenFormDialog(e, row._id, row.name, true)
+                                }          
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                          <Grid item>
+                            <LightTooltip title="Hapus">
+                              <IconButton
+                                size="small"
+                                className={classes.deleteSubjectlButton}
+                                onClick={(e) => {
+                                  handleOpenDeleteDialog(e, row._id, row.name);
+                                }}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </LightTooltip>
+                          </Grid>
+                        </Grid>
+                      }
+                    />
+                  </ListItem>
                 </Paper>
               </Grid>
             );

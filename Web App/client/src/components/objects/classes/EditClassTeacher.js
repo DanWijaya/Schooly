@@ -161,7 +161,9 @@ function EditClassTeacher(props) {
   function generateAllClassMenuItems() {
     let menuItems = [
       <MenuItem key="null" value={null}>
-        Kosong
+        <em>
+          Kosong
+        </em>
       </MenuItem>,
     ];
     for (let classInfo of all_classes) {

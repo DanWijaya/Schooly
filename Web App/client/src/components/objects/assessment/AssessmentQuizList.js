@@ -542,6 +542,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
     marginRight: "10px",
   },
+  listItem: {
+    "&:focus, &:hover": {
+      backgroundColor: theme.palette.primary.fade,
+    },
+    padding: "6px 24px"
+  }
 }));
 
 function AssessmentList(props) {

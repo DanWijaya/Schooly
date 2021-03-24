@@ -272,7 +272,7 @@ const ManageUsersToolbar = (props) => {
             ) : (
               <>
                 {CheckboxDialog("Approve", "Student")}
-                <LightTooltip title="Aktifkan User Tercentang">
+                <LightTooltip title="Aktifkan Pengguna Tercentang">
                   <IconButton
                     style={{ marginRight: "3px" }}
                     className={classes.profileApproveButton}
@@ -282,7 +282,7 @@ const ManageUsersToolbar = (props) => {
                   </IconButton>
                 </LightTooltip>
                 {CheckboxDialog("Delete", "Student")}
-                <LightTooltip title="Hapus User Tercentang">
+                <LightTooltip title="Hapus Pengguna Tercentang">
                   <IconButton
                     className={classes.profileDeleteButton}
                     onClick={(e) => OpenDialogCheckboxDelete(e, "Student")}
@@ -366,7 +366,7 @@ const ManageUsersToolbar = (props) => {
             ) : (
               <>
                 {CheckboxDialog("Approve", "Teacher")}
-                <LightTooltip title="Aktifkan User Tercentang">
+                <LightTooltip title="Aktifkan Pengguna Tercentang">
                   <IconButton
                     className={classes.profileApproveButton}
                     onClick={(e) => OpenDialogCheckboxApprove(e, "Teacher")}
@@ -376,7 +376,7 @@ const ManageUsersToolbar = (props) => {
                   </IconButton>
                 </LightTooltip>
                 {CheckboxDialog("Delete", "Teacher")}
-                <LightTooltip title="Hapus User Tercentang">
+                <LightTooltip title="Hapus Pengguna Tercentang">
                   <IconButton
                     className={classes.profileDeleteButton}
                     onClick={(e) => OpenDialogCheckboxDelete(e, "Teacher")}
@@ -971,7 +971,7 @@ function ManageUsers(props) {
                 className={classes.dialogBox}
               >
                 <Typography variant="h6" gutterBottom align="center">
-                  Aktifkan semua pengguna Berikut?
+                  Aktifkan semua pengguna berikut?
                 </Typography>
                 {/* <Grid item container justify="center" style={{marginBottom: "20px"}}>
                   <Typography variant="h6" align="center" gutterBottom>
@@ -1019,7 +1019,7 @@ function ManageUsers(props) {
                 className={classes.dialogBox}
               >
                 <Typography variant="h6" gutterBottom align="center">
-                  Aktifkan semua pengguna Berikut?
+                  Aktifkan semua pengguna berikut?
                 </Typography>
                 <Grid
                   container
@@ -1063,7 +1063,7 @@ function ManageUsers(props) {
               className={classes.dialogBox}
             >
               <Typography variant="h6" gutterBottom align="center">
-                Hapus semua pengguna Berikut?
+                Hapus semua pengguna berikut?
               </Typography>
               <Grid
                 container
@@ -1104,7 +1104,7 @@ function ManageUsers(props) {
               className={classes.dialogBox}
             >
               <Typography variant="h6" gutterBottom align="center">
-                Hapus semua pengguna Berikut?
+                Hapus semua pengguna berikut?
               </Typography>
               <Grid
                 container

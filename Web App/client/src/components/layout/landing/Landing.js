@@ -121,12 +121,14 @@ const styles = (theme) => ({
   },
   sendMessageButton: {
     width: "160px",
-    marginRight: "30px",
     backgroundColor: theme.palette.primary.main,
     color: "white",
     "&:focus, &:hover": {
       backgroundColor: theme.palette.primary.main,
       color: "white",
+    },
+    [theme.breakpoints.up("sm")]: {
+      marginRight: "30px",
     },
     [theme.breakpoints.down("xs")]: {
       marginBottom: "16px",
@@ -426,7 +428,7 @@ class Landing extends Component {
             </div>
           </Hidden>
           <Hidden smUp>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Button
                 variant="contained"
                 href="mailto:schoolysystem@gmail.com"
