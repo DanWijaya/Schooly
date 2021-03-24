@@ -310,7 +310,10 @@ function SubmittedTaskList(props) {
     success,
   } = props;
   const { all_classes } = props.classesCollection;
-  // const { all_students, dropbox_token, user } = props.auth;
+  const { 
+    all_students, 
+    // dropbox_token, 
+    user } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
   const task_id = props.match.params.id;
 

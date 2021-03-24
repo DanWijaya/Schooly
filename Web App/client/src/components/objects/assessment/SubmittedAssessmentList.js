@@ -238,6 +238,12 @@ const useStyles = makeStyles((theme) => ({
   dividerColor: {
     backgroundColor: theme.palette.primary.main,
   },
+  emptyDescription: {
+    padding: "8px 0", 
+    [theme.breakpoints.down("xs")]: {
+      margin: "20px"
+    }
+  }
 }));
 
 function TabPanel(props) {
@@ -830,16 +836,13 @@ function SubmittedAssessmentList(props) {
 
             isClassSubmissionEmpty = false;
           } else {
-            columns1.push(
-              <Typography variant="h5" color="textSecondary" align="center">
+            let content = (
+              <Typography variant="subtitle1" color="textSecondary" align="center" className={classes.emptyDescription}>
                 Belum mengerjakan
               </Typography>
-            );
-            columns2.push(
-              <Typography variant="h5" color="textSecondary" align="center">
-                Belum mengerjakan
-              </Typography>
-            );
+            )
+            columns1.push(content);
+            columns2.push(content);
           }
 
           students_in_class.push(
