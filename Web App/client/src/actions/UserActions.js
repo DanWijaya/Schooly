@@ -13,7 +13,7 @@ import {
   GET_STUDENTS_BY_CLASS,
   GET_PENDING_STUDENTS,
   GET_PENDING_TEACHERS,
-  SET_DROPBOX_TOKEN,
+  // SET_DROPBOX_TOKEN,
 } from "./Types";
 
 // Register User
@@ -127,13 +127,13 @@ export const loginUser = (userData) => (dispatch) => {
 export const logoutUser = () => (dispatch) => {
   // Remove token from local storage
   localStorage.removeItem("jwtToken");
-  localStorage.removeItem("dropbox_token");
+  // localStorage.removeItem("dropbox_token");
   // Remove auth header for future requests
   setAuthToken(false);
   console.log("test");
   // Set current user to empty object {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
-  setDropboxToken(false);
+  // setDropboxToken(false);
   // if (history !== undefined)
   //   history.push("/masuk")
   window.location.href = "/masuk";
@@ -309,22 +309,22 @@ export const deleteUser = (userId) => (dispatch) => {
     });
 };
 
-export const setDropboxToken = (token) => (dispatch) => {
-  console.log("SET Drop box lah");
-  if (token) {
-    localStorage.setItem("dropbox_token", token);
-    dispatch({
-      type: SET_DROPBOX_TOKEN,
-      payload: token,
-    });
-  } else {
-    localStorage.removeItem("dropbox_token");
-    dispatch({
-      type: SET_DROPBOX_TOKEN,
-      payload: null,
-    });
-  }
-};
+// export const setDropboxToken = (token) => (dispatch) => {
+//   console.log("SET Drop box lah");
+//   if (token) {
+//     localStorage.setItem("dropbox_token", token);
+//     dispatch({
+//       type: SET_DROPBOX_TOKEN,
+//       payload: token,
+//     });
+//   } else {
+//     localStorage.removeItem("dropbox_token");
+//     dispatch({
+//       type: SET_DROPBOX_TOKEN,
+//       payload: null,
+//     });
+//   }
+// };
 
 export const updateStudentsClass = (data, dummyClassId) => {
   return axios

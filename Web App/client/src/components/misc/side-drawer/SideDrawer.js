@@ -25,7 +25,7 @@ import { BsClipboardData } from "react-icons/bs";
 import {
   FaChalkboardTeacher,
   FaClipboardList,
-  FaDropbox,
+  // FaDropbox,
   FaUserCheck,
   FaUserClock,
 } from "react-icons/fa";
@@ -68,11 +68,11 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(2.7),
     height: theme.spacing(2.7),
   },
-  dropboxIcon: {
-    width: theme.spacing(2.7),
-    height: theme.spacing(2.7),
-    color: theme.palette.dropbox.main,
-  },
+  // dropboxIcon: {
+  //   width: theme.spacing(2.7),
+  //   height: theme.spacing(2.7),
+  //   color: theme.palette.dropbox.main,
+  // },
 }));
 
 const StyledListItem = withStyles((theme) => ({
@@ -236,14 +236,14 @@ function DrawerContent(props) {
           generateList(item[0], item[1], item[2], item[3])
         )}
       </List>
-      <Divider />
+      {/* <Divider />
       <List>
         {generateList(
           "/dropbox-connect",
           <FaDropbox className={classes.dropboxIcon} />,
           "Dropbox"
         )}
-      </List>
+      </List> */}
     </div>
   );
 }

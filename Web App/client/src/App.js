@@ -16,7 +16,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import {
   setCurrentUser,
   logoutUser,
-  setDropboxToken,
+  // setDropboxToken,
 } from "./actions/UserActions";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 //Auth
@@ -84,8 +84,8 @@ import CSV from "./prototypes/contoh-tugas/CSV";
 import Graph from "./prototypes/Graph";
 import Timer from "./prototypes/Timer";
 //Dropbox
-import DropboxConnect from "./components/dropbox/DropboxConnect";
-import DropboxAuth from "./components/dropbox/DropboxAuth";
+// import DropboxConnect from "./components/dropbox/DropboxConnect";
+// import DropboxAuth from "./components/dropbox/DropboxAuth";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -107,11 +107,11 @@ if (localStorage.jwtToken) {
   }
 }
 
-if (localStorage.dropbox_token) {
-  const dropbox_token = localStorage.dropbox_token;
-  console.log(dropbox_token);
-  store.dispatch(setDropboxToken(dropbox_token));
-}
+// if (localStorage.dropbox_token) {
+//   const dropbox_token = localStorage.dropbox_token;
+//   console.log(dropbox_token);
+//   store.dispatch(setDropboxToken(dropbox_token));
+// }
 
 class App extends Component {
   state = {
@@ -241,12 +241,12 @@ class App extends Component {
                         />
                       )}
                     />
-                    <Route exact path="/dropbox-auth" component={DropboxAuth} />
+                    {/* <Route exact path="/dropbox-auth" component={DropboxAuth} />
                     <Route
                       exact
                       path="/dropbox-connect"
                       component={DropboxConnect}
-                    />
+                    /> */}
                     <Route
                       exact
                       path="/daftar"

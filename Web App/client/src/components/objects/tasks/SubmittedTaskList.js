@@ -5,7 +5,7 @@ import { getOneTask, gradeTask } from "../../../actions/TaskActions";
 import moment from "moment";
 import {
   getTaskFilesByUser,
-  moveToDropbox,
+  // moveToDropbox,
   downloadTugas,
   previewTugas,
 } from "../../../actions/UploadActions";
@@ -305,12 +305,12 @@ function SubmittedTaskList(props) {
     getStudents,
     downloadTugas,
     previewTugas,
-    moveToDropbox,
+    // moveToDropbox,
     gradeTask,
     success,
   } = props;
   const { all_classes } = props.classesCollection;
-  const { all_students, dropbox_token, user } = props.auth;
+  // const { all_students, dropbox_token, user } = props.auth;
   const { all_subjects_map } = props.subjectsCollection;
   const task_id = props.match.params.id;
 
@@ -391,7 +391,7 @@ function SubmittedTaskList(props) {
       setGradeStatus(gradeStatusMap);
       getOneTask(task_id);
       gradeTask(taskId, gradingData, student_name);
-      moveToDropbox(dropbox_token, student_task_files_id);
+      // moveToDropbox(dropbox_token, student_task_files_id);
     }
   };
 
@@ -845,6 +845,6 @@ export default connect(mapStateToProps, {
   previewTugas,
   gradeTask,
   getAllClass,
-  moveToDropbox,
+  // moveToDropbox,
   getAllSubjects,
 })(SubmittedTaskList);
