@@ -267,7 +267,8 @@ function ReportView(props) {
     getStudentsByClass,
     getAllTask,
     tasksCollection,
-    getOneUser
+    getOneUser,
+    setCurrentClass
   } = props;
 
   React.useEffect(() => {
@@ -1606,6 +1607,7 @@ function ReportView(props) {
 ReportView.propTypes = {
   auth: PropTypes.object.isRequired,
   getOneUser: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.array.isRequired,
@@ -1630,5 +1632,6 @@ export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   getAllTask,
-  getOneUser
+  getOneUser,
+  setCurrentClass
 })(ReportView);
