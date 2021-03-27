@@ -157,6 +157,26 @@ function TabIndex(index) {
   };
 }
 
+function sortAscByCreatedAt(rows) {
+  const stabilizedThis = rows.map((el, index) => [el, index]);
+  const descendingComparator = (a, b, orderBy) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  const comparator =  (a, b) => descendingComparator(a, b, "createdAt");
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
 function AssignmentListItem(props) {
   const classes = useStyles();
 
@@ -558,6 +578,156 @@ function ViewClass(props) {
 
   // All actions to retrive datas from Database
 
+  function showTasks(data) {
+    if (data.length === 0) {
+      return (
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="textSecondary"
+        >
+          Kosong
+        </Typography>
+      );
+    } else {
+      return sortAscByCreatedAt(data).map((row) => (
+        <AssignmentListItem
+          work_title={row.name}
+          work_category_avatar={row.workCategoryAvatar}
+          work_subject={
+            row.category === "subject"
+              ? null
+              : all_subjects_map.get(row.subject)
+          }
+          work_status={row.workStatus}
+          work_dateposted={row.createdAt}
+          work_link={`/tugas-murid/${row._id}`}
+        />
+      ));
+    }
+  }
+
+  function showAssessments(data) {
+    if (data.length === 0) {
+      return (
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="textSecondary"
+        >
+          Kosong
+        </Typography>
+      );
+    } else {
+      return sortAscByCreatedAt(data).map((row) => (
+        <AssessmentListItem
+          work_title={row.name}
+          work_category_avatar={row.workCategoryAvatar}
+          work_subject={
+            row.category === "subject"
+              ? null
+              : all_subjects_map.get(row.subject)
+          }
+          work_status={row.workStatus}
+          work_starttime={moment(row.start_date)
+            .locale("id")
+            .format("DD MMM YYYY, HH:mm")}
+          work_endtime={moment(row.end_date)
+            .locale("id")
+            .format("DD MMM YYYY, HH:mm")}
+          work_dateposted={row.createdAt}
+        />
+      ));
+    }
+  }
+
+  function showMaterials(data) {
+    if (data.length === 0) {
+      return (
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="textSecondary"
+        >
+          Kosong
+        </Typography>
+      );
+    } else {
+      return sortAscByCreatedAt(data).map((row) => (
+        <MaterialListitem
+          work_title={row.name}
+          work_category_avatar={row.workCategoryAvatar}
+          work_subject={all_subjects_map.get(row.subject)}
+          work_link={`/materi/${row._id}`}
+          work_dateposted={row.createdAt}
+        />
+      ));
+    }
+  }
+
+  function showAllbySubject(data) {
+    if (data.length === 0) {
+      return (
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="textSecondary"
+        >
+          Kosong
+        </Typography>
+      );
+    } else {
+      return sortAscByCreatedAt(data).map((row) => {
+        if (row.objectType === "Tugas") {
+          return (
+            <AssignmentListItem
+              work_title={row.name}
+              work_category_avatar={row.workCategoryAvatar}
+              work_subject={
+                row.category === "subject"
+                  ? null
+                  : all_subjects_map.get(row.subject)
+              }
+              work_status={row.workStatus}
+              work_dateposted={row.createdAt}
+              work_link={`/tugas-murid/${row._id}`}
+            />
+          );
+        } else if (row.objectType === "Material") {
+          return (
+            <MaterialListitem
+              work_title={row.name}
+              work_category_avatar={row.workCategoryAvatar}
+              work_subject={all_subjects_map.get(row.subject)}
+              work_link={`/materi/${row._id}`}
+              work_dateposted={row.createdAt}
+            />
+          );
+        } else {
+          return (
+            <AssessmentListItem
+              work_title={row.name}
+              work_category_avatar={row.workCategoryAvatar}
+              work_subject={
+                row.category === "subject"
+                  ? null
+                  : all_subjects_map.get(row.subject)
+              }
+              work_status={row.workStatus}
+              work_starttime={moment(row.start_date)
+                .locale("id")
+                .format("DD MMM YYYY, HH:mm")}
+              work_endtime={moment(row.end_date)
+                .locale("id")
+                .format("DD MMM YYYY, HH:mm")}
+              work_dateposted={row.createdAt}
+            />
+          );
+        }
+      });
+    }
+  }
+
   function listTasks(category = null, subject = {}, tab = "pekerjaan_kelas") {
     let tasksList = [];
     let result = [];
@@ -608,21 +778,16 @@ function ViewClass(props) {
               (category === "subject" && task.subject === subject._id)) &&
             workStatus === "Belum Dikumpulkan"
           ) {
-            result.push(
-              <AssignmentListItem
-                work_title={task.name}
-                work_category_avatar={workCategoryAvatar}
-                work_subject={
-                  category === "subject"
-                    ? null
-                    : all_subjects_map.get(task.subject)
-                }
-                work_status={workStatus}
-                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                work_dateposted={task.createdAt}
-                work_link={`/tugas-murid/${task._id}`}
-              />
-            );
+            result.push({
+              _id: task._id,
+              name: task.name,
+              workCategoryAvatar: workCategoryAvatar,
+              subject: task.subject,
+              workStatus: workStatus,
+              createdAt: task.createdAt,
+              objectType: "Tugas",
+              category: category
+            });
             if (!category && result.length === 5) break;
 
             if (category === "subject" && result.length === 3) break;
@@ -632,21 +797,16 @@ function ViewClass(props) {
             !category ||
             (category === "subject" && task.subject === subject._id)
           ) {
-            result.push(
-              <AssignmentListItem
-                work_title={task.name}
-                work_category_avatar={workCategoryAvatar}
-                work_subject={
-                  category === "subject"
-                    ? null
-                    : all_subjects_map.get(task.subject)
-                }
-                work_status={workStatus}
-                // work_deadline={moment(task.deadline).locale("id").format("DD MMM YYYY, HH:mm")}
-                work_dateposted={task.createdAt}
-                work_link={`/tugas-murid/${task._id}`}
-              />
-            );
+            result.push({
+              _id: task._id,
+              name: task.name,
+              workCategoryAvatar: workCategoryAvatar,
+              subject: task.subject,
+              workStatus: workStatus,
+              createdAt: task.createdAt,
+              objectType: "Task",
+              category: category
+          });
           }
         }
       }
@@ -709,25 +869,36 @@ function ViewClass(props) {
               assessment.type === "Kuis" &&
               assessment.posted
             ) {
-              result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
-              );
+              result.push({
+                name: assessment.name,
+                workCategoryAvatar: workCategoryAvatar,
+                subject: assessment.subject,
+                workStatus: workStatus,
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                createdAt: assessment.createdAt,
+                objectType: "Kuis",
+                category: category
+              });
+              // result.push(
+              //   <AssessmentListItem
+              //     work_title={assessment.name}
+              //     work_category_avatar={workCategoryAvatar}
+              //     work_subject={
+              //       category === "subject"
+              //         ? null
+              //         : all_subjects_map.get(assessment.subject)
+              //     }
+              //     work_status={workStatus}
+              //     work_starttime={moment(assessment.start_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_endtime={moment(assessment.end_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_dateposted={assessment.createdAt}
+              //   />
+              // );
             }
           }
           if (type === "Ujian") {
@@ -739,25 +910,36 @@ function ViewClass(props) {
               assessment.type === "Ujian" &&
               assessment.posted
             ) {
-              result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
-              );
+              result.push({
+                name: assessment.name,
+                workCategoryAvatar: workCategoryAvatar,
+                subject: assessment.subject,
+                workStatus: workStatus,
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                createdAt: assessment.createdAt,
+                objectType: "Ujian",
+                category: category
+              });
+              // result.push(
+              //   <AssessmentListItem
+              //     work_title={assessment.name}
+              //     work_category_avatar={workCategoryAvatar}
+              //     work_subject={
+              //       category === "subject"
+              //         ? null
+              //         : all_subjects_map.get(assessment.subject)
+              //     }
+              //     work_status={workStatus}
+              //     work_starttime={moment(assessment.start_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_endtime={moment(assessment.end_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_dateposted={assessment.createdAt}
+              //   />
+              // );
             }
           }
           if (!category && result.length === 5) break;
@@ -775,25 +957,36 @@ function ViewClass(props) {
               assessment.type === "Kuis" &&
               assessment.posted
             ) {
-              result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
-              );
+              result.push({
+                name: assessment.name,
+                workCategoryAvatar: workCategoryAvatar,
+                subject: assessment.subject,
+                workStatus: workStatus,
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                createdAt: assessment.createdAt,
+                objectType: "Kuis",
+                category: category
+              });
+              // result.push(
+              //   <AssessmentListItem
+              //     work_title={assessment.name}
+              //     work_category_avatar={workCategoryAvatar}
+              //     work_subject={
+              //       category === "subject"
+              //         ? null
+              //         : all_subjects_map.get(assessment.subject)
+              //     }
+              //     work_status={workStatus}
+              //     work_starttime={moment(assessment.start_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_endtime={moment(assessment.end_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_dateposted={assessment.createdAt}
+              //   />
+              // );
             }
           }
           if (type === "Ujian") {
@@ -805,25 +998,36 @@ function ViewClass(props) {
               assessment.type === "Ujian" &&
               assessment.posted
             ) {
-              result.push(
-                <AssessmentListItem
-                  work_title={assessment.name}
-                  work_category_avatar={workCategoryAvatar}
-                  work_subject={
-                    category === "subject"
-                      ? null
-                      : all_subjects_map.get(assessment.subject)
-                  }
-                  work_status={workStatus}
-                  work_starttime={moment(assessment.start_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_endtime={moment(assessment.end_date)
-                    .locale("id")
-                    .format("DD MMM YYYY, HH:mm")}
-                  work_dateposted={assessment.createdAt}
-                />
-              );
+              result.push({
+                name: assessment.name,
+                workCategoryAvatar: workCategoryAvatar,
+                subject: assessment.subject,
+                workStatus: workStatus,
+                start_date: assessment.start_date,
+                end_date: assessment.end_date,
+                createdAt: assessment.createdAt,
+                objectType: "Ujian",
+                category: category
+              });
+              // result.push(
+              //   <AssessmentListItem
+              //     work_title={assessment.name}
+              //     work_category_avatar={workCategoryAvatar}
+              //     work_subject={
+              //       category === "subject"
+              //         ? null
+              //         : all_subjects_map.get(assessment.subject)
+              //     }
+              //     work_status={workStatus}
+              //     work_starttime={moment(assessment.start_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_endtime={moment(assessment.end_date)
+              //       .locale("id")
+              //       .format("DD MMM YYYY, HH:mm")}
+              //     work_dateposted={assessment.createdAt}
+              //   />
+              // );
             }
           }
         }
@@ -847,20 +1051,19 @@ function ViewClass(props) {
       );
       for (var i = selectedMaterials.length - 1; i >= 0; i--) {
         let material = selectedMaterials[i];
-        console.log(material);
+        // console.log(material);
         if (
           !category ||
           (category === "subject" && material.subject === subject._id)
         ) {
-          materialList.push(
-            <MaterialListitem
-              work_title={material.name}
-              work_category_avatar={workCategoryAvatar}
-              work_subject={all_subjects_map.get(material.subject)}
-              work_link={`/materi/${material._id}`}
-              work_dateposted={material.createdAt}
-            />
-          );
+          materialList.push({
+            _id: material._id,
+            name: material.name,
+            workCategoryAvatar: workCategoryAvatar,
+            subject: material.subject,
+            createdAt: material.createdAt,
+            objectType: "Material"
+          });
         }
         if (tab === "pekerjaan_kelas") {
           if (!category && materialList.length === 5)
@@ -1139,17 +1342,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <List className={classes.expansionPanelList}>
-                {listMaterials().length === 0 ? (
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    color="textSecondary"
-                  >
-                    Kosong
-                  </Typography>
-                ) : (
-                  <>{listMaterials()}</>
-                )}
+                {showMaterials(listMaterials())}
               </List>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1182,17 +1375,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <List className={classes.expansionPanelList}>
-                {listTasks().length === 0 ? (
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    color="textSecondary"
-                  >
-                    Kosong
-                  </Typography>
-                ) : (
-                  <>{listTasks()}</>
-                )}
+                {showTasks(listTasks())}
               </List>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1225,17 +1408,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <List className={classes.expansionPanelList}>
-                {listAssessments(null, {}, "Kuis").length === 0 ? (
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    color="textSecondary"
-                  >
-                    Kosong
-                  </Typography>
-                ) : (
-                  <>{listAssessments(null, {}, "Kuis")}</>
-                )}
+                {showAssessments(listAssessments(null, {}, "Kuis"))}
               </List>
             </ExpansionPanel>
             <ExpansionPanel defaultExpanded>
@@ -1268,17 +1441,7 @@ function ViewClass(props) {
               </ExpansionPanelSummary>
               <Divider />
               <List className={classes.expansionPanelList}>
-                {listAssessments(null, {}, "Ujian").length === 0 ? (
-                  <Typography
-                    variant="subtitle1"
-                    align="center"
-                    color="textSecondary"
-                  >
-                    Kosong
-                  </Typography>
-                ) : (
-                  <>{listAssessments(null, {}, "Ujian")}</>
-                )}
+                {showAssessments(listAssessments(null, {}, "Ujian"))}
               </List>
             </ExpansionPanel>
           </TabPanel>
@@ -1313,44 +1476,12 @@ function ViewClass(props) {
                       </ExpansionPanelSummary>
                       <Divider />
                       <List className={classes.expansionPanelList}>
-                        {listMaterials("subject", subject, "mata_pelajaran")}
-                        {listTasks("subject", subject, "mata_pelajaran")}
-                        {listAssessments(
-                          "subject",
-                          subject,
-                          "Kuis",
-                          "mata_pelajaran"
+                        {showAllbySubject(
+                          listMaterials("subject", subject, "mata_pelajaran").concat(
+                          listTasks("subject", subject, "mata_pelajaran")).concat(
+                          listAssessments("subject", subject, "Kuis", "mata_pelajaran")).concat(
+                          listAssessments("subject", subject, "Ujian", "mata_pelajaran"))
                         )}
-                        {listAssessments(
-                          "subject",
-                          subject,
-                          "Ujian",
-                          "mata_pelajaran"
-                        )}
-                        {listMaterials("subject", subject, "mata_pelajaran")
-                          .length === 0 &&
-                        listTasks("subject", subject, "mata_pelajaran")
-                          .length === 0 &&
-                        listAssessments(
-                          "subject",
-                          subject,
-                          "Kuis",
-                          "mata_pelajaran"
-                        ).length === 0 &&
-                        listAssessments(
-                          "subject",
-                          subject,
-                          "Ujian",
-                          "mata_pelajaran"
-                        ).length === 0 ? (
-                          <Typography
-                            color="textSecondary"
-                            align="center"
-                            variant="subtitle1"
-                          >
-                            Kosong
-                          </Typography>
-                        ) : null}
                       </List>
                     </ExpansionPanel>
                   );

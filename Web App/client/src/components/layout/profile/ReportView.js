@@ -142,9 +142,14 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     textAlign: "center",
-    height: "100%",
     padding: "15px",
     backgroundColor: "#e3e5e5",
+    height:"270px", 
+    width:"250px",
+    [theme.breakpoints.down("sm")]: {
+      height:"200px", 
+      width:"180px"
+    }    
   },
   customMargin: {
     [theme.breakpoints.down("sm")]: {
@@ -156,10 +161,19 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "0",
     textAlign: "center",
   },
+  graphParentContainer: {
+    position: "relative", 
+    height:"270px", 
+    width:"250px",
+    [theme.breakpoints.down("sm")]: {
+      height:"200px", 
+      width:"180px"
+    },
+  } 
 }));
 
 function ScoreGraph(props) {
-  const { scores, workType, names } = props;
+  const { scores, workType, names, classes } = props;
 
   let label = [];
   for (let i = 0; i < scores.length; i++) {
@@ -182,11 +196,12 @@ function ScoreGraph(props) {
   return (
     // A react-chart hyper-responsively and continuously fills the available
     // space of its parent element automatically
-    <div style={{ height: "100%", width: "100%" }}>
+    <div className={classes.graphParentContainer}>
       <Bar
         responsive
         data={state}
         options={{
+          maintainAspectRatio: false,
           title: {
             display: false,
             text: `Nilai ${workType} Anda`,
@@ -230,8 +245,6 @@ function ScoreGraph(props) {
             },
           },
         }}
-        width="100%"
-        height="100%"
       />
     </div>
   );
@@ -324,6 +337,7 @@ function ReportView(props) {
   const [emptyCondition, setEmptyCondition] = React.useState([]);
 
   // Graph
+  const [graphType, setGraphType] = React.useState(0);
   const [taskGraphCurrentSubject, setTaskGraphCurrentSubject] = React.useState(
     null
   );
@@ -371,6 +385,7 @@ function ReportView(props) {
       if (subjectScores.length !== 0) {
         return (
           <ScoreGraph
+            classes={classes}
             scores={subjectScores}
             names={subjectNames}
             workType="Tugas"
@@ -1069,6 +1084,91 @@ function ReportView(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kelasWali, all_classes_map, all_subjects_map]);
 
+  function createGraph() {
+    let graph;
+    let subject;
+    const types = ["Tugas", "Kuis", "Ujian"];
+
+    if (types[graphType] === "Tugas") {
+      graph = graphTask(taskGraphCurrentSubject);
+      subject = showSubject(taskGraphCurrentSubject)
+    } else if (types[graphType] === "Kuis") {
+      graph = graphAssessment(quizGraphCurrentSubject, "Kuis");
+      subject = showSubject(quizGraphCurrentSubject)
+
+    } else {
+      graph = graphAssessment(examGraphCurrentSubject, "Ujian");
+      subject = showSubject(examGraphCurrentSubject)
+    }
+
+    return (
+      <Grid item xs={12} sm={4} container direction="column" spacing={1} alignItems="center">
+        <Grid item>
+          <div className={classes.graphButtons}>
+            <IconButton
+              onClick={() => {
+                if (graphType - 1 < 0) {
+                  setGraphType(types.length - 1);
+                } else {
+                  setGraphType((graphType - 1) % 3);
+                }
+              }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+            <Typography align="center">
+              Nilai {types[graphType]} Anda
+            </Typography>
+            <IconButton
+              onClick={() => {setGraphType((graphType + 1) % 3)}}
+              >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </div>
+        </Grid>
+        <Grid item>
+          {graph === null ? (
+            <div className={classes.greyBackground}>
+              <Typography
+                align="center"
+                color="textSecondary"
+                variant="subtitle2"
+              >
+                Belum ada {types[graphType]} yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+            </div>
+          ) : (
+            graph
+          )}
+        </Grid>
+        <Grid item>
+          <div className={classes.graphButtons}>
+            <IconButton
+              onClick={() =>
+                changeGraphSubject(types[graphType], "Left", all_subjects.length)
+              }
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+            {subject}
+            <IconButton
+              onClick={() =>
+                changeGraphSubject(
+                  types[graphType],
+                  "Right",
+                  all_subjects.length
+                )
+              }
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </div>
+        </Grid>
+      </Grid>
+    )
+  }
+
+
   // Untuk view dari sidebar teacher, untuk sekarang reserve special code "semua"
   let role;
   if(props.match.params.id === "semua" && user.role === "Teacher") {
@@ -1143,8 +1243,11 @@ function ReportView(props) {
             justify="center"
             spacing={4}
             alignItems="center"
-          >
-            <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
+          >           
+            {createGraph()}
+
+            {/* ----------------- ini dipake kalau ingin menampilkan 3 graph bersampingan ----------------- */}
+            {/* <Grid item container direction="column" spacing={1} xs={12} sm={4} alignItems="center">
               <Grid item>
                 <Typography variant="h6" align="center">
                   Nilai Tugas Anda
@@ -1281,7 +1384,8 @@ function ReportView(props) {
                   </IconButton>
                 </div>
               </Grid>
-            </Grid>
+            </Grid> */}
+            {/* --------------------------------------------------- */}
           </Grid>
           <Grid
             item

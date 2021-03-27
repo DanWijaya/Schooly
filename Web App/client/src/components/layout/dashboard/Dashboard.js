@@ -170,6 +170,14 @@ const styles = (theme) => ({
     marginTop: "10px",
     alignItems: "center",
   },
+  greyBackground: {
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    height: "100%",
+    padding: "15px",
+    backgroundColor: "#e3e5e5",
+  },
 });
 
 function TaskListItem(props) {
@@ -300,12 +308,12 @@ function DashboardGraph(props) {
       <Bar
         data={state}
         options={{
-          title: {
-            display: true,
-            text: `Nilai ${workType} Anda`,
-            fontSize: 16,
-            fontStyle: "normal"
-          },
+          // title: {
+          //   display: true,
+          //   text: `Nilai ${workType} Anda`,
+          //   fontSize: 16,
+          //   fontStyle: "normal"
+          // },
           legend: {
             display: false,
             position: "right",
@@ -341,6 +349,26 @@ function DashboardGraph(props) {
       />
     </div>
   );
+}
+
+function sortAscByCreatedAt(rows) {
+  const stabilizedThis = rows.map((el, index) => [el, index]);
+  const descendingComparator = (a, b, orderBy) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  const comparator =  (a, b) => descendingComparator(a, b, "createdAt");
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
 }
 
 function ListAssessments(props) {
@@ -494,25 +522,33 @@ function ListAssessments(props) {
           assessment.type === "Kuis" &&
           assessment.posted
         ) {
-          result.push(
-            <AssessmentListItem
-              work_title={assessment.name}
-              work_category_avatar={workCategoryAvatar}
-              work_subject={
-                category === "subject"
-                  ? null
-                  : all_subjects_map.get(assessment.subject)
-              }
-              // work_status={workStatus}
-              work_starttime={moment(assessment.start_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_endtime={moment(assessment.end_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_dateposted={assessment.createdAt}
-            />
-          );
+          result.push({
+            name: assessment.name,
+            workCategoryAvatar: workCategoryAvatar,
+            subject: assessment.subject,
+            start_date: assessment.start_date,
+            end_date: assessment.end_date,
+            createdAt: assessment.createdAt
+          });
+          // result.push(
+          //   <AssessmentListItem
+          //     work_title={assessment.name}
+          //     work_category_avatar={workCategoryAvatar}
+          //     work_subject={
+          //       category === "subject"
+          //         ? null
+          //         : all_subjects_map.get(assessment.subject)
+          //     }
+          //     // work_status={workStatus}
+          //     work_starttime={moment(assessment.start_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_endtime={moment(assessment.end_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_dateposted={assessment.createdAt}
+          //   />
+          // );
         }
       }
       if (type === "Ujian") {
@@ -523,37 +559,64 @@ function ListAssessments(props) {
           assessment.type === "Ujian" &&
           assessment.posted
         ) {
-          result.push(
-            <AssessmentListItem
-              work_title={assessment.name}
-              work_category_avatar={workCategoryAvatar}
-              work_subject={
-                category === "subject"
-                  ? null
-                  : all_subjects_map.get(assessment.subject)
-              }
-              // work_status={workStatus}
-              work_starttime={moment(assessment.start_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_endtime={moment(assessment.end_date)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_dateposted={assessment.createdAt}
-            />
-          );
+          result.push({
+            name: assessment.name,
+            workCategoryAvatar: workCategoryAvatar,
+            subject: assessment.subject,
+            start_date: assessment.start_date,
+            end_date: assessment.end_date,
+            createdAt: assessment.createdAt
+          });
+          // result.push(
+          //   <AssessmentListItem
+          //     work_title={assessment.name}
+          //     work_category_avatar={workCategoryAvatar}
+          //     work_subject={
+          //       category === "subject"
+          //         ? null
+          //         : all_subjects_map.get(assessment.subject)
+          //     }
+          //     // work_status={workStatus}
+          //     work_starttime={moment(assessment.start_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_endtime={moment(assessment.end_date)
+          //       .locale("id")
+          //       .format("DD MMM YYYY, HH:mm")}
+          //     work_dateposted={assessment.createdAt}
+          //   />
+          // );
         }
       }
     }
   }
   if (result.length === 0) {
-    result.push(
+    return (
       <Typography variant="subtitle1" align="center" color="textSecondary">
         Kosong
       </Typography>
     );
+  } else {
+    return sortAscByCreatedAt(result).map((row) => (
+      <AssessmentListItem
+        work_title={row.name}
+        work_category_avatar={row.workCategoryAvatar}
+        work_subject={
+          category === "subject"
+            ? null
+            : all_subjects_map.get(row.subject)
+        }
+        // work_status={workStatus}
+        work_starttime={moment(row.start_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_endtime={moment(row.end_date)
+          .locale("id")
+          .format("DD MMM YYYY, HH:mm")}
+        work_dateposted={row.createdAt}
+      />
+    ));
   }
-  return result;
 }
 
 function WelcomePanel(props) {
@@ -752,20 +815,43 @@ class Dashboard extends Component {
           );
         } else{
           return (
-            <Typography
-              align="center"
-              color="textSecondary"
-              variant="subtitle-1"
-            >
-              Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-            </Typography>
+            <Grid item style={{ height: "270px", width: "250px" }}>
+              <div className={classes.greyBackground}>
+                <Typography
+                  align="center"
+                  color="textSecondary"
+                  variant="subtitle1"
+                >
+                  Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+              </div>
+            </Grid>
+
+            // <Typography
+            //   align="center"
+            //   color="textSecondary"
+            //   variant="subtitle-1"
+            // >
+            //   Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+            // </Typography>
           );
         }
       } else{
         return (
-          <Typography align="center" color="textSecondary" variant="subtitle-1">
-            Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
-          </Typography>
+          <Grid item style={{ height: "270px", width: "250px" }}>
+            <div className={classes.greyBackground}>
+              <Typography
+                align="center"
+                color="textSecondary"
+                variant="subtitle1"
+              >
+                Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+            </div>
+          </Grid>
+          // <Typography align="center" color="textSecondary" variant="subtitle-1">
+          //   Belum ada Tugas yang telah dinilai untuk mata pelajaran terkait
+          // </Typography>
         );
       }
     }
@@ -822,20 +908,44 @@ class Dashboard extends Component {
           );
         } else{
           return (
-            <Typography
-              align="center"
-              color="textSecondary"
-              variant="subtitle-1"
-            >
-              Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-            </Typography>
+            <Grid item style={{ height: "270px", width: "250px" }}>
+              <div className={classes.greyBackground}>
+                <Typography
+                  align="center"
+                  color="textSecondary"
+                  variant="subtitle1"
+                >
+                  Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+              </div>
+            </Grid>
+
+            // <Typography
+            //   align="center"
+            //   color="textSecondary"
+            //   variant="subtitle-1"
+            // >
+            //   Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+            // </Typography>
           );
         }
       } else{
         return (
-          <Typography align="center" color="textSecondary" variant="subtitle-1">
-            Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
-          </Typography>
+          <Grid item style={{ height: "270px", width: "250px" }}>
+            <div className={classes.greyBackground}>
+              <Typography
+                align="center"
+                color="textSecondary"
+                variant="subtitle1"
+              >
+                Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+              </Typography>
+            </div>
+          </Grid>
+
+          // <Typography align="center" color="textSecondary" variant="subtitle-1">
+          //   Belum ada {type} yang telah dinilai untuk mata pelajaran terkait
+          // </Typography>
         );
       }
     }
@@ -855,31 +965,38 @@ class Dashboard extends Component {
           flag = false;
         }
         if (flag) {
-          result.push(
-            <TaskListItem
-              classes={classes}
-              work_title={task.name}
-              work_sender={all_subjects_map.get(task.subject)}
-              work_deadline_mobile={moment(task.deadline)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_deadline_desktop={moment(task.deadline)
-                .locale("id")
-                .format("DD MMM YYYY, HH:mm")}
-              work_link={`/tugas-murid/${task._id}`}
-              work_dateposted={task.createdAt}
-            />
-          );
+          result.push({
+            _id: task._id,
+            name: task.name,
+            subject: task.subject,
+            deadline: task.deadline,
+            createdAt: task.createdAt
+          });
         }
       });
       if (result.length === 0) {
-        result.push(
+        return (
           <Typography variant="subtitle1" align="center" color="textSecondary">
             Kosong
           </Typography>
         );
+      } else {
+        return sortAscByCreatedAt(result).map((row) => (
+          <TaskListItem
+            classes={classes}
+            work_title={row.name}
+            work_sender={all_subjects_map.get(row.subject)}
+            work_deadline_mobile={moment(row.deadline)
+              .locale("id")
+              .format("DD MMM YYYY, HH:mm")}
+            work_deadline_desktop={moment(row.deadline)
+              .locale("id")
+              .format("DD MMM YYYY, HH:mm")}
+            work_link={`/tugas-murid/${row._id}`}
+            work_dateposted={row.createdAt}
+          />
+        ));
       }
-      return result;
     }
 
     function listTasksTeacher() {
@@ -899,32 +1016,41 @@ class Dashboard extends Component {
             number_students_assigned
           ) {
             let task = tasksCollection[i];
-            result.push(
-              <TaskListItem
-                classes={classes}
-                work_title={task.name}
-                work_sender={all_subjects_map.get(task.subject)}
-                work_deadline_mobile={moment(task.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-                work_deadline_desktop={moment(task.deadline)
-                  .locale("id")
-                  .format("DD MMM YYYY, HH:mm")}
-                work_link={`/tugas-guru/${task._id}`}
-                work_dateposted={task.createdAt}
-              />
-            );
+            result.push({
+              _id: task._id,
+              name: task.name,
+              subject: task.subject,
+              deadline: task.deadline,
+              createdAt: task.createdAt
+            })
           }
         }
       }
       if (result.length === 0) {
-        result.push(
+        return (
           <Typography variant="subtitle1" align="center" color="textSecondary">
             Kosong
           </Typography>
         );
+      } else {
+        return sortAscByCreatedAt(result).map((row) => {
+          return (
+            <TaskListItem
+              classes={classes}
+              work_title={row.name}
+              work_sender={all_subjects_map.get(row.subject)}
+              work_deadline_mobile={moment(row.deadline)
+                .locale("id")
+                .format("DD MMM YYYY, HH:mm")}
+              work_deadline_desktop={moment(row.deadline)
+                .locale("id")
+                .format("DD MMM YYYY, HH:mm")}
+              work_link={`/tugas-guru/${row._id}`}
+              work_dateposted={row.createdAt}
+            />
+          )
+        });
       }
-      return result;
     }
 
     function listAssessmentsTeacher(assessmentType) {
@@ -981,25 +1107,7 @@ class Dashboard extends Component {
           </Typography>
         );
       } else {
-        // sorting: assessment yang paling awal dibuat akan ditampilkan paling atas, yang paling terakhir dibuat akan ditampilkan paling bawah
-        const stabilizedThis = result.map((el, index) => [el, index]);
-        const descendingComparator = (a, b, orderBy) => {
-          if (b[orderBy] < a[orderBy]) {
-            return -1;
-          }
-          if (b[orderBy] > a[orderBy]) {
-            return 1;
-          }
-          return 0;
-        }
-        const comparator =  (a, b) => descendingComparator(a, b, "createdAt");
-        stabilizedThis.sort((a, b) => {
-          const order = comparator(a[0], b[0]);
-          if (order !== 0) return order;
-          return a[1] - b[1];
-        });
-
-        return stabilizedThis.map((el) => el[0]).map((row) => {
+        return sortAscByCreatedAt(result).map((row) => {
           return (
             <AssessmentListItemTeacher
               classes={classes}
@@ -1196,7 +1304,7 @@ class Dashboard extends Component {
                           <Grid item>
                             <Grid container alignItems="center">
                               <Typography variant="h5" color="primary">
-                                Diagram Batang Tugas
+                                Nilai Tugas Anda
                               </Typography>
                             </Grid>
                           </Grid>
@@ -1244,7 +1352,7 @@ class Dashboard extends Component {
                           <Grid item>
                             <Grid container alignItems="center">
                               <Typography variant="h5" color="primary">
-                                Diagram Batang Kuis
+                                Nilai Kuis Anda
                               </Typography>
                             </Grid>
                           </Grid>
@@ -1303,7 +1411,7 @@ class Dashboard extends Component {
                           <Grid item>
                             <Grid container alignItems="center">
                               <Typography variant="h5" color="primary">
-                                Diagram Batang Ujian
+                                Nilai Ujian Anda
                               </Typography>
                             </Grid>
                           </Grid>
