@@ -1428,8 +1428,8 @@ class EditAssessment extends Component {
           // redirectLink={(this.state.type === "Kuis") ? `/daftar-kuis` : `/daftar-ujian`}
           redirectLink={
             this.state.type === "Kuis"
-              ? `/kuis-guru/${success}`
-              : `/ujian-guru/${success}`
+              ? `/kuis-guru/${this.props.match.params.id}`
+              : `/ujian-guru/${this.props.match.params.id}`
           }
         />
         <form onSubmit={(e) => this.onSubmit(e)}>
