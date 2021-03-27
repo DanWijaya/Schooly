@@ -257,9 +257,6 @@ function ReportView(props) {
   // kelas = classesCollection.kelas        (ini tidak ada kalau rolenya "Other". ini akan berisi document Kelas yang ditempati murid)
   // id                                     (ini tidak ada kalau rolenya "Other". akan berisi id murid)
 
-  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
-  const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
-
   const {
     getTasksBySC,
     getKuisBySC,
@@ -270,14 +267,9 @@ function ReportView(props) {
     getStudentsByClass,
     getAllTask,
     tasksCollection,
-    getOneUser
+    getOneUser,
+    setCurrentClass
   } = props;
-  const { all_classes, all_classes_map } = props.classesCollection;
-
-  const { user, students_by_class, selectedUser } = props.auth;
-  const { all_subjects_map, all_subjects } = props.subjectsCollection;
-  const allTaskArray = props.tasksCollection; // mengambil data dari DB
-  const { all_assessments } = props.assessmentsCollection;
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -285,10 +277,23 @@ function ReportView(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [rows, setRows] = React.useState([]); // elemen array ini adalah Object atau Map yang masing-masing key-value nya menyatakan nilai satu sel
+  const [headers, setHeaders] = React.useState([]); // elemennya berupa string nama-nama kolom pada tabel
+
+
+  const { all_classes, all_classes_map } = props.classesCollection;
+
+  const { user, students_by_class, selectedUser } = props.auth;
+  const { all_subjects_map, all_subjects } = props.subjectsCollection;
+  const allTaskArray = props.tasksCollection; // mengambil data dari DB
+  const { all_assessments } = props.assessmentsCollection;
+
   const { name, _id } = selectedUser;
   const id = _id
 
   const [kelas, setKelas] = React.useState("");
+
+  console.log(props.classesCollection)
 
   console.log(selectedUser)
 
@@ -298,9 +303,10 @@ function ReportView(props) {
   }, [selectedUser]);
 
   React.useEffect(() => {
-    setKelas(props.classesCollection.kelas.name);
+    console.log(props.classesCollection)
+    setKelas(props.classesCollection.kelas);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.classesCollection]);
+  }, [props.classesCollection.kelas]);
 
   const countAllClassUpdate = React.useRef(0);
   const countMIDependencyUpdate = React.useRef(0);
@@ -886,7 +892,7 @@ function ReportView(props) {
     getAllSubjects();
     getAllSubjects("map");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role]);
+  }, []);
 
   // menentukan status guru (wali atau nonwali) setelah all_classes sudah ada
   React.useEffect(() => {
@@ -1201,7 +1207,7 @@ function ReportView(props) {
             <Grid item>
               <Typography>
                 <b>Kelas: </b>
-                {kelas}
+                {kelas.name}
               </Typography>
             </Grid>
           </Grid>
@@ -1601,6 +1607,7 @@ function ReportView(props) {
 ReportView.propTypes = {
   auth: PropTypes.object.isRequired,
   getOneUser: PropTypes.func.isRequired,
+  setCurrentClass: PropTypes.func.isRequired,
   classesCollection: PropTypes.object.isRequired,
   subjectsCollection: PropTypes.object.isRequired,
   tasksCollection: PropTypes.array.isRequired,
@@ -1625,5 +1632,6 @@ export default connect(mapStateToProps, {
   getAllClass,
   getAllSubjects,
   getAllTask,
-  getOneUser
+  getOneUser,
+  setCurrentClass
 })(ReportView);
