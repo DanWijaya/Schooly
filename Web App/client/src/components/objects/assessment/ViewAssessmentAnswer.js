@@ -1178,65 +1178,6 @@ function ViewAssessmentTeacher(props) {
             </Hidden> */}
 
             <Grid container spacing={2}>
-              <Hidden xsDown>
-                <Grid
-                  item
-                  xs={12}
-                  md={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginTop: "10px",
-                  }}
-                >
-                  <Typography>Navigasi Soal :</Typography>
-                  <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
-                    <Badge
-                      badgeContent={
-                        <HelpOutlineIcon
-                          className={classes.navigationHelpIcon}
-                        />
-                      }
-                      variant="standard"
-                      style={{ marginLeft: "4px" }}
-                    >
-                      {/* Hanya Sebagai Anchor */}
-                      <Typography style={{ display: "none" }}>:</Typography>
-                    </Badge>
-                  </LightTooltip>
-                </Grid>
-                <Grid container item>
-                  <ToggleButtonGroup
-                    value={qnsIndex}
-                    exclusive
-                    onChange={(e, newIndex) => {
-                      handleChangeToggleButton(e, newIndex);
-                    }}
-                    aria-label="question index"
-                    classes={{
-                      root: classes.toggleGroupRoot,
-                      grouped: classes.toggleGroupChildren,
-                    }}
-                  >
-                    {hasLongtextQst.current === true
-                      ? isAssessmentLoaded() && longtextGrades
-                        ? selectedAssessments.questions.map((qns, i) => {
-                            return questionPage(classes, i + 1, qns.type);
-                          })
-                        : null
-                      : hasLongtextQst.current === false
-                      ? isAssessmentLoaded()
-                        ? selectedAssessments.questions.map((qns, i) => {
-                            return questionPage(classes, i + 1, qns.type);
-                          })
-                        : null
-                      : null}
-                  </ToggleButtonGroup>
-                </Grid>
-              </Hidden>
-            </Grid>
-
-            <Grid container spacing={2}>
               <Grid item xs={12} style={{ marginTop: "18px" }}>
                 <Divider className={classes.dividerColor} />
               </Grid>
@@ -1327,6 +1268,64 @@ function ViewAssessmentTeacher(props) {
 
           {/* Tab Panel Per Soal */}
           <div hidden={value === 1} style={{ padding: "24px" }}>
+            <Hidden xsDown>
+              <Paper style={{ padding: "15px", marginBottom: "20px" }}>
+                <Grid
+                  item
+                  xs={12}
+                  md={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "10px",
+                  }}
+                >
+                  <Typography>Navigasi Soal :</Typography>
+                  <LightTooltip title="Soal yang sudah diberi bobot dan nilai untuk semua murid akan diberi badge hijau. Soal akan diberi badge merah jika bobot atau nilai belum lengkap.">
+                    <Badge
+                      badgeContent={
+                        <HelpOutlineIcon
+                          className={classes.navigationHelpIcon}
+                        />
+                      }
+                      variant="standard"
+                      style={{ marginLeft: "4px" }}
+                    >
+                      {/* Hanya Sebagai Anchor */}
+                      <Typography style={{ display: "none" }}>:</Typography>
+                    </Badge>
+                  </LightTooltip>
+                </Grid>
+                <Grid container item>
+                  <ToggleButtonGroup
+                    value={qnsIndex}
+                    exclusive
+                    onChange={(e, newIndex) => {
+                      handleChangeToggleButton(e, newIndex);
+                    }}
+                    aria-label="question index"
+                    classes={{
+                      root: classes.toggleGroupRoot,
+                      grouped: classes.toggleGroupChildren,
+                    }}
+                  >
+                    {hasLongtextQst.current === true
+                      ? isAssessmentLoaded() && longtextGrades
+                        ? selectedAssessments.questions.map((qns, i) => {
+                            return questionPage(classes, i + 1, qns.type);
+                          })
+                        : null
+                      : hasLongtextQst.current === false
+                      ? isAssessmentLoaded()
+                        ? selectedAssessments.questions.map((qns, i) => {
+                            return questionPage(classes, i + 1, qns.type);
+                          })
+                        : null
+                      : null}
+                  </ToggleButtonGroup>
+                </Grid>
+              </Paper>
+            </Hidden>
             <Hidden smUp>
               <Paper>
                 <Grid
@@ -1405,7 +1404,7 @@ function ViewAssessmentTeacher(props) {
 
           {/* Tab Panel Per Murid */}
           <div hidden={value === 0} style={{ padding: "24px" }}>
-            <Hidden smUp>
+            {/* <Hidden smUp>
               <Paper>
                 <Grid
                   item
@@ -1448,7 +1447,7 @@ function ViewAssessmentTeacher(props) {
                   </Button>
                 </Grid>
               </Paper>
-            </Hidden>
+            </Hidden> */}
             <Paper className={classes.perStudentSelect}>
               <div className={classes.selectDiv}>
                 <Grid container>

@@ -27,10 +27,12 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  InputAdornment,
   Paper,
   TableSortLabel,
   Typography,
   Snackbar,
+  TextField,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -44,8 +46,12 @@ import EditIcon from "@material-ui/icons/Edit";
 import SortIcon from "@material-ui/icons/Sort";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import { GoSearch } from "react-icons/go";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { AiOutlineUserSwitch } from "react-icons/ai";
+import ClearIcon from "@material-ui/icons/Clear";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 function createData(_id, name, homeroomTeacher, size, absent) {
   return { _id, name, homeroomTeacher, size, absent };
@@ -80,7 +86,7 @@ function stableSort(array, comparator) {
 }
 
 function ClassListToolbar(props) {
-  const { classes, user, order, orderBy, onRequestSort } = props;
+  const { classes, user, order, orderBy, onRequestSort, searchFilter, updateSearchFilter, searchBarFocus, setSearchBarFocus} = props;
   const { all_students, all_teachers } = props;
   const { getStudents, handleOpenSnackbar } = props;
   const { all_classes, all_classes_map } = props.classesCollection;
@@ -120,6 +126,14 @@ function ClassListToolbar(props) {
   };
   const handleCloseCSVMenu = () => {
     setCSVAnchor(null);
+  };
+
+  const onChange = (e) => {
+    updateSearchFilter(e.target.value);
+  };
+
+  const onClear = (e) => {
+    updateSearchFilter("");
   };
 
   const handleClickExport = () => {
@@ -434,8 +448,159 @@ function ClassListToolbar(props) {
   };
   return (
     <div className={classes.toolbar}>
-      <Typography variant="h4">Daftar Kelas</Typography>
+      {/* <Typography variant="h4">Daftar Kelas</Typography> */}
       <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? null : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              {/* <MenuBookIcon className={classes.titleIcon} fontSize="large" /> */}
+              <Typography variant="h4">Daftar Kelas</Typography>
+            </div>
+          )}
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            {/* <MenuBookIcon className={classes.titleIcon} fontSize="large" /> */}
+            <Typography variant="h4">Daftar Kelas</Typography>
+          </div>
+        </Hidden>
+        <Hidden mdUp implementation="css">
+          {searchBarFocus ? (
+            <div style={{ display: "flex" }}>
+              <IconButton
+                onClick={() => {
+                  setSearchBarFocus(false);
+                  updateSearchFilter("");
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              <TextField
+                fullWidth
+                variant="outlined"
+                id="searchFilterMobile"
+                value={searchFilter}
+                onChange={onChange}
+                autoFocus
+                onClick={(e) => setSearchBarFocus(true)}
+                placeholder="Kelas"
+                style={{
+                  maxWidth: (user.role === "Admin" ? "110px" : "200px"),
+                  marginLeft: "10px",
+                }}
+                InputProps={{
+                  startAdornment: searchBarFocus ? null : (
+                    <InputAdornment
+                      position="start"
+                      style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                    >
+                      <IconButton size="small">
+                        <GoSearch />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                    >
+                      <IconButton
+                        size="small"
+                        id="searchFilterMobile"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onClear(e, "searchFilterMobile");
+                        }}
+                        style={{
+                          opacity: 0.5,
+                          visibility: !searchFilter ? "hidden" : "visible",
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  style: {
+                    borderRadius: "22.5px",
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <LightTooltip title="Search" style={{ marginLeft: "5px" }}>
+              <IconButton
+                className={classes.goSearchButton}
+                onClick={() => setSearchBarFocus(true)}
+              >
+                <GoSearch className={classes.goSearchIconMobile} />
+              </IconButton>
+            </LightTooltip>
+          )}
+        </Hidden>
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Hidden smDown implementation="css">
+          <TextField
+            variant="outlined"
+            id="searchFilterDesktop"
+            value={searchFilter}
+            onChange={onChange}
+            onClick={() => setSearchBarFocus(true)}
+            onBlur={() => setSearchBarFocus(false)}
+            placeholder="Cari Kelas"
+            style={{
+              maxWidth: "250px",
+              marginRight: "10px",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  style={{ marginLeft: "-5px", marginRight: "-5px" }}
+                >
+                  <IconButton size="small">
+                    <GoSearch />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ marginLeft: "-10px", marginRight: "-10px" }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClear(e, "searchFilterDesktop");
+                    }}
+                    style={{
+                      opacity: 0.5,
+                      visibility: !searchFilter ? "hidden" : "visible",
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "22.5px",
+              },
+            }}
+          />
+        </Hidden>
         {user.role === "Admin" ? (
           <div>
             <Hidden smUp implementation="css">
@@ -701,6 +866,8 @@ function ClassList(props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(null);
   const [selectedClassId, setSelectedClassId] = React.useState(null);
   const [selectedClassName, setSelectedClassName] = React.useState(null);
+  const [searchFilter, updateSearchFilter] = React.useState("");
+  const [searchBarFocus, setSearchBarFocus] = React.useState(false);
 
   const { classesCollection, tasksCollection } = props;
   const {
@@ -768,7 +935,9 @@ function ClassList(props) {
   const retrieveClasses = () => {
     if (classesCollection.all_classes.length > 0) {
       rows = [];
-      classesCollection.all_classes.map((data, i) => classItem(data, i));
+      classesCollection.all_classes.filter((item) =>
+        item.name.toLowerCase().includes(searchFilter.toLowerCase())
+      ).map((data, i) => classItem(data, i));
     }
   };
 
@@ -857,6 +1026,11 @@ function ClassList(props) {
         // updateStudentsClass={updateStudentsClass}
         tasksCollection={tasksCollection}
         all_assessments={all_assessments}
+        setSearchBarFocus={setSearchBarFocus}
+        searchBarFocus={searchBarFocus}
+        //Two props added for search filter.
+        searchFilter={searchFilter}
+        updateSearchFilter={updateSearchFilter}
       />
       <Divider variant="inset" className={classes.titleDivider} />
       <Grid container spacing={2}>
