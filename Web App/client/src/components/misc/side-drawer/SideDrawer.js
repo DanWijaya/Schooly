@@ -180,6 +180,11 @@ function DrawerContent(props) {
         <BsClipboardData className={classes.drawerListItemIcon} />,
         "Ujian",
       ],
+      [
+        `/lihat-rapor/${user._id}`,
+        <AssessmentIcon className={classes.drawerListItemIcon} />,
+        "Rapor",
+      ],
     ];
   } else {
     ListItemContents = [

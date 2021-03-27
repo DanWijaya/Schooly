@@ -876,6 +876,7 @@ function ViewClass(props) {
   }
 
   React.useEffect(() => {
+    window.scrollTo(0, 0);
     if (user.role === "Student") {
       if (user.kelas && (user.kelas === classId)) {
         // jika murid ini sudah ditempatkan ke suatu kelas dan 
