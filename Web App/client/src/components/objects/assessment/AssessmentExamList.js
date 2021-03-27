@@ -757,10 +757,10 @@ function AssessmentList(props) {
             align="center"
             style={{ marginTop: "25px" }}
           >
-            Mulai : {currentDialogInfo.start_date}
+            Mulai: {currentDialogInfo.start_date}
           </Typography>
           <Typography variant="subtitle1" align="center">
-            Selesai : {currentDialogInfo.end_date}
+            Selesai: {currentDialogInfo.end_date}
           </Typography>
           <Typography
             variant="subtitle2"

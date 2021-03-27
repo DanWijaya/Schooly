@@ -466,10 +466,10 @@ function ListAssessments(props) {
               align="center"
               style={{ marginTop: "25px" }}
             >
-              Mulai : {currentDialogInfo.start_date}
+              Mulai: {currentDialogInfo.start_date}
             </Typography>
             <Typography variant="subtitle1" align="center">
-              Selesai : {currentDialogInfo.end_date}
+              Selesai: {currentDialogInfo.end_date}
             </Typography>
             <Typography
               variant="subtitle2"
@@ -1060,21 +1060,21 @@ class Dashboard extends Component {
       let lowerCaseType = (assessmentType === "Kuis") ? "kuis" : "ujian";
 
       for (let i = 0; i < all_assessments.length; i++) {
-        let assessment = all_assessments[i]; 
+        let assessment = all_assessments[i];
         if (assessment.type === assessmentType) {
-          
+
           // jika terdapat soal uraian pada kuis ini dan sudah ada 1 atau lebih murid yg mengumpulkan jawaban
           if ((assessment.question_weight.longtext !== null) && (assessment.submissions) && (Object.keys(assessment.submissions).length > 0)) {
 
             // jika ada murid yang jawaban uraiannya sudah dinilai
             if ((assessment.grades) && (Object.keys(assessment.grades).length > 0)) {
-              
+
               // untuk setiap murid yang sudah mengumpulkan jawaban
               for (const studentId of Object.keys(assessment.submissions)) {
-                
+
                 // jika ada jawaban uraian yang belum dinilai
                 if (!(Object.keys(assessment.grades).includes(studentId) && (assessment.grades[studentId].total_grade !== null))) {
-                  
+
                   // tampilkan di list
                   result.push({
                     _id: assessment._id,
@@ -1551,7 +1551,7 @@ class Dashboard extends Component {
                 style={{ marginTop: "20px" }}
               >
                 <Grid container direction="column" spacing={2}>
-                  <Grid item> 
+                  <Grid item>
                     <Paper style={{ padding: "20px" }}>
                       <Grid
                         container

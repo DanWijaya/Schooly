@@ -1074,11 +1074,12 @@ function ClassList(props) {
                               variant="body1"
                               color="textSecondary"
                               align="center"
+                              style={{ marginTop: "5px" }}
                             >
                               Wali Kelas: {row.homeroomTeacher}
                             </Typography>
                           :
-                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", marginTop: "5px"}}>
                               <Typography
                                 variant="body1"
                                 color="textSecondary"
