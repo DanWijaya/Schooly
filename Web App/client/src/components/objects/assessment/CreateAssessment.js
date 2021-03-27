@@ -232,6 +232,7 @@ class CreateAssessment extends Component {
       class_assigned: [],
       start_date: new Date(),
       end_date: new Date(),
+      type: "",
       openDeleteDialog: false,
       openUploadDialog: false,
       success: false,
@@ -239,7 +240,6 @@ class CreateAssessment extends Component {
       rowsPerPage: 10,
       qnsListitem: [],
       posted: false,
-      type: "",
       snackbarOpen: false,
       snackbarMessage: "",
       anchorEl: null,
@@ -250,7 +250,7 @@ class CreateAssessment extends Component {
         checkbox: undefined,
         shorttext: undefined,
       }, // weight radio, checkbox, shorttext akan diset null ketika masih bernilai undefined saat tombol create assessment ditekan 
-      longtextWeight: [null],
+      longtextWeight: [-1],
       // array longtextWeight akan memiliki elemen sebanyak pertanyaan di assessment
       // longtextWeight[0] = 10 -> berarti pertanyaan nomor 1 adalah soal uraian dan memiliki bobot 10
       // longtextWeight[1] = -1 -> berarti pertanyaan nomor 2 adalah soal non uraian
