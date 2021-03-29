@@ -28,6 +28,7 @@ router.post("/create", (req, res) => {
         walikelas: req.body.walikelas._id,
         nihil: req.body.nihil,
         ukuran: req.body.ukuran,
+        subject_assigned: req.body.subject_assigned
       });
 
       newKelas

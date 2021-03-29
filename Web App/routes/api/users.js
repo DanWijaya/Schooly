@@ -124,6 +124,8 @@ router.post("/login", (req, res) => {
           payload.tugas = user.tugas;
         } else if (user.role === "Teacher") {
           payload.subject_teached = user.subject_teached;
+          payload.class_teached = user.class_teached;
+          payload.class_to_subject = user.class_to_subject;
         }
         // Sign token
         jwt.sign(
@@ -221,6 +223,8 @@ router.post("/update/data/:id", (req, res) => {
         payload.tugas = user.tugas;
       } else if (user.role === "Teacher") {
         payload.subject_teached = user.subject_teached;
+        payload.class_teached = user.class_teached;
+        payload.class_to_subject = user.class_to_subject;
       }
 
       jwt.sign(
@@ -322,6 +326,8 @@ router.post(
           payload.kelas = user.kelas;
         } else if (user.role === "Teacher") {
           payload.subject_teached = user.subject_teached;
+          payload.class_teached = user.class_teached;
+          payload.class_to_subject = user.class_to_subject;
         }
         // Sign token
         jwt.sign(
