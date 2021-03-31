@@ -20,6 +20,7 @@ import {
 } from "@material-ui/core";
 import UploadDialog from "../../misc/dialog/UploadDialog";
 import { withStyles } from "@material-ui/core/styles";
+import { Autocomplete }from '@material-ui/lab';
 
 const styles = (theme) => ({
   root: {
@@ -120,6 +121,16 @@ class CreateClass extends Component {
     const { classes, success, errors } = this.props;
 
     const { all_teachers, user } = this.props.auth;
+
+    const top100Films = [
+      { title: 'The Shawshank Redemption', year: 1994 },
+      { title: 'The Godfather', year: 1972 },
+      { title: 'The Godfather: Part II', year: 1974 },
+      { title: 'The Dark Knight', year: 2008 },
+      { title: '12 Angry Men', year: 1957 },
+      { title: "Schindler's List", year: 1993 },
+      { title: 'Pulp Fiction', year: 1994 }
+    ]
     // console.log(errors);
     // console.log(all_teachers);
     document.title = "Schooly | Buat Kelas";
@@ -197,6 +208,41 @@ class CreateClass extends Component {
                     </Select>
                     <FormHelperText error>
                       {Boolean(errors.walikelas) ? errors.walikelas : null}
+                    </FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    component="label"
+                    for="matapelajaran"
+                    color="primary"
+                  >
+                    Mata Pelajaran
+                  </Typography>
+                  <FormControl
+                    id="matapelajaran"
+                    color="primary"
+                    fullWidth
+                  >
+                    <Autocomplete
+                      multiple
+                      id="tags-outlined"
+                      options={top100Films} // Dummy
+                      getOptionLabel={(option) => option.title}
+                      filterSelectedOptions
+                      size="small"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          style={{border: "none"}}
+                        />
+                      )}   
+                    />
+                    <FormHelperText>
+
                     </FormHelperText>
                   </FormControl>
                 </Grid>
